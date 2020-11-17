@@ -121,7 +121,8 @@ export const useJarWithAPY = (jars: Input): Output => {
       const totalValueStaked = totalSupply * pricePerToken;
       const uniAPY = valueRewardedPerYear / totalValueStaked;
 
-      return [{ uni: uniAPY * 100 * 0.725 }];
+      // no more UNI being distributed
+      return [{ uni: 0 * 100 * 0.725 }];
     }
 
     return [];
