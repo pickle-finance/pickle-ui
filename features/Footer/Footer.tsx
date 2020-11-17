@@ -62,7 +62,7 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="http://discord.gg/gR85hmC"
+        href="http://discord.gg/uG6WhYkM8n"
       >
         Discord
       </NavItem>
