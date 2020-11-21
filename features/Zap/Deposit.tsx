@@ -58,8 +58,7 @@ export const Deposit: FC = () => {
     <Card>
       <h2>Deposit</h2>
       <p>
-        This deposits your token into a soft-pegged pool on Curve and then into
-        a PickleJar and subsequently a Pickle farm.
+        This deposits your token into a PickleJar and subsequently into a Pickle farm. 
       </p>
       <h3>Deposit Token</h3>
       <Select
