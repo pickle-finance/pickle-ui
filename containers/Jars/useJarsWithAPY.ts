@@ -192,19 +192,19 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
-        if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
-          const leverageBN = await jar.strategy.callStatic.getCurrentLeverage();
-          const leverage = parseFloat(formatEther(leverageBN));
+        // if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
+        //   const leverageBN = await jar.strategy.callStatic.getCurrentLeverage();
+        //   const leverage = parseFloat(formatEther(leverageBN));
 
-          const compDaiAPYsWithLeverage = compDaiAPYs.map((x) => {
-            const key = Object.keys(x)[0];
-            return {
-              [key]: x[key] * leverage,
-            };
-          });
+        //   const compDaiAPYsWithLeverage = compDaiAPYs.map((x) => {
+        //     const key = Object.keys(x)[0];
+        //     return {
+        //       [key]: x[key] * leverage,
+        //     };
+        //   });
 
-          APYs = [...compDaiAPYsWithLeverage];
-        }
+        //   APYs = [...compDaiAPYsWithLeverage];
+        // }
 
         const totalAPY = APYs.map((x) => {
           return Object.values(x).reduce((acc, y) => acc + y, 0);
