@@ -29,6 +29,16 @@ const Content = styled.div`
   align-items: center;
 `;
 
+const Alert = styled.div`
+  color: white;
+  background: red;
+  text-transform: uppercase;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const TopBar: FC = () => {
   const { address } = Connection.useContainer();
   const isConnected = address !== null;
@@ -43,6 +53,12 @@ export const TopBar: FC = () => {
           {isConnected ? <DesktopNetworkIndicator /> : <DesktopConnect />}
         </MaxWidthWrapper>
       </Container>
+      <Alert>
+        <div>
+          We are currently investing an issue with the DAI jar & farm, please do
+          not deposit into it.
+        </div>
+      </Alert>
       {isConnected ? <MobileNetworkIndicator /> : <MobileConnect />}
     </>
   );
