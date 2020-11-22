@@ -55,7 +55,7 @@ export const TopBar: FC = () => {
       </Container>
       <Alert>
         <div>
-          We are currently investing an issue with the DAI jar & farm, please do
+          We are currently investigating an issue with the DAI jar & farm, please do
           not deposit into it.
         </div>
       </Alert>
