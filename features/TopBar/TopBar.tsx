@@ -53,6 +53,12 @@ export const TopBar: FC = () => {
           {isConnected ? <DesktopNetworkIndicator /> : <DesktopConnect />}
         </MaxWidthWrapper>
       </Container>
+      <Alert>	
+        <div>	
+          We are currently investigating an issue with the DAI jar & farm,	
+          please do not deposit into it.	
+        </div>	
+      </Alert>
       {isConnected ? <MobileNetworkIndicator /> : <MobileConnect />}
     </>
   );
