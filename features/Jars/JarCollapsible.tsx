@@ -236,7 +236,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                 });
               }
             }}
-            disabled={depositButton.disabled}
+            disabled={depositButton.disabled || depositTokenName === "DAI"}
             style={{ width: "100%" }}
           >
             {depositButton.text}
