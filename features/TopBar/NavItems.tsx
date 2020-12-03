@@ -56,9 +56,6 @@ export const NavItems: FC = () => {
       <Link href="/stake" passHref>
         <NavItem active={router.pathname.startsWith("/stake")}>stake</NavItem>
       </Link>
-      <Link href="/swap" passHref>
-        <NavItem active={router.pathname.startsWith("/swap")}>Swap</NavItem>
-      </Link>
       <a
         href="https://pickle.fyi"
         target="_blank"
