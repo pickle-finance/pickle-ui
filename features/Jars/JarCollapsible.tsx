@@ -65,6 +65,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": "/rencrv.png",
   "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": "/3crv.png",
   "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940": "/btc.png",
+  "0x6B175474E89094C44Da98b954EedeAC495271d0F": "/dai.png",
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
