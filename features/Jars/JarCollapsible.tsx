@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 
-import { useState, FC, useEffect } from "react";
+import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
@@ -31,7 +31,33 @@ interface ButtonStatus {
   text: string;
 }
 
-export const JAR_DEPOSIT_TOKEN_TO_ICON: { [key: string]: string } = {
+const JarName = styled(Grid)({
+  display: "flex",
+});
+
+const LpIcon = ({
+  swapIconSrc,
+  tokenIconSrc,
+  className,
+}: {
+  swapIconSrc: string;
+  tokenIconSrc: string;
+  className?: string;
+}) => {
+  return (
+    <div className={className} css={{ position: "relative" }}>
+      <img src={swapIconSrc} css={{ width: `50px` }} />
+      <img
+        src={tokenIconSrc}
+        css={{ position: "absolute", right: -3, bottom: -3, width: `20px` }}
+      />
+    </div>
+  );
+};
+
+export const JAR_DEPOSIT_TOKEN_TO_ICON: {
+  [key: string]: string | ReactNode;
+} = {
   "0xC25a3A3b969415c80451098fa907EC722572917F": "/sCRV.png",
   "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
   "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
@@ -39,12 +65,38 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: { [key: string]: string } = {
   "0x49849C98ae39Fff122806C06791Fa73784FB3675": "/rencrv.png",
   "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": "/3crv.png",
   "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940": "/btc.png",
-  "0x6B175474E89094C44Da98b954EedeAC495271d0F": "/dai.png",
+  "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
+  ),
+  "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x06da0fd433C1A5d7a4faa01111c044910A184553": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/btc.png"} />
+  ),
+  "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
+  ),
 };
 
-const JarIcon = ({ src }: { src: string }) => (
-  <div style={{ float: "left", marginRight: "0.75rem" }}>
-    <img src={src} style={{ width: `24px`, marginTop: "0.5rem" }} />
+const JarIcon = ({ src }: { src: string | ReactNode }) => (
+  <div
+    style={{
+      float: "left",
+      margin: "auto 0",
+      marginRight: "1rem",
+      minHeight: 0,
+      display: "flex",
+    }}
+  >
+    {typeof src === "string" ? (
+      <img src={src} style={{ width: `50px` }} />
+    ) : (
+      src
+    )}
   </div>
 );
 
@@ -157,7 +209,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
       shadow
       preview={
         <Grid.Container gap={1}>
-          <Grid xs={24} sm={12} md={5} lg={5}>
+          <JarName xs={24} sm={12} md={5} lg={5}>
             <JarIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
@@ -175,7 +227,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                 {depositTokenName}
               </a>
             </div>
-          </Grid>
+          </JarName>
           <Grid xs={24} sm={12} md={4} lg={4}>
             <Data>
               <Tooltip text={tooltipText}>
