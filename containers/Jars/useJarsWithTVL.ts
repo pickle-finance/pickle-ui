@@ -43,6 +43,16 @@ const isUniswapPool = (jarName: string): boolean => {
   );
 };
 
+const isSushiswapPool = (jarName: string): boolean => {
+  return (
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDC ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI
+  );
+};
+
 export const useJarWithTVL = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
@@ -106,7 +116,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     return { ...jar, tvlUSD, usdPerPToken, ratio };
   };
 
-  const measureUniswapTVL = async (jar: JarWithAPY) => {
+  const measureUniswapAndSushiswapTVL = async (jar: JarWithAPY) => {
     if (!uniswapv2Pair || !prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
@@ -206,7 +216,9 @@ export const useJarWithTVL = (jars: Input): Output => {
         if (isCurvePool(jar.jarName)) {
           return measureCurveTVL(jar);
         } else if (isUniswapPool(jar.jarName)) {
-          return measureUniswapTVL(jar);
+          return measureUniswapAndSushiswapTVL(jar);
+        } else if (isSushiswapPool(jar.jarName)) {
+          return measureUniswapAndSushiswapTVL(jar);
         }
 
         if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {

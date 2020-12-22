@@ -22,16 +22,6 @@ function useJars() {
     }
   }, [jarsWithTVL]);
 
-  // log out TVL for each jar
-  // if (jarsWithTVL) {
-  //   jarsWithTVL.forEach((jar) => {
-  //     if (jar.tvlUSD) {
-  //       console.log(
-  //         `${jar.depositTokenName} Jar TVL: $${jar.tvlUSD?.toLocaleString()}`,
-  //       );
-  //     }
-  //   });
-  // }
   return { jars: jarsWithTVL };
 }
 
