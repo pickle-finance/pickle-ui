@@ -143,5 +143,9 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
     return "wbtc";
   }
 
+  if (l === "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e") {
+    return "yfi";
+  }
+
   throw new Error(`Unknown token address: ${tokenAddress}`);
 };

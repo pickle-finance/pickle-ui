@@ -81,7 +81,9 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         const valueStakedInFarm =
           (farmingJar.usdPerPToken || 0) * numTokensInPool;
 
-        let apy = farm.valueRewarded.perYear / valueStakedInFarm;
+        let apy =
+          farm.valueRewarded.perYear &&
+          farm.valueRewarded.perYear / valueStakedInFarm;
         if (farm.poolIndex === 16) {
           apy = 0;
         }
