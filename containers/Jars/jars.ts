@@ -48,6 +48,22 @@ export const DEPOSIT_TOKENS_NAME = {
   DAI: "DAI",
 };
 
+export const JAR_ACTIVE: Record<string, boolean> = {
+  [DEPOSIT_TOKENS_NAME.sCRV]: true,
+  [DEPOSIT_TOKENS_NAME.renCRV]: true,
+  [DEPOSIT_TOKENS_NAME["3CRV"]]: true,
+  [DEPOSIT_TOKENS_NAME.UNIV2_ETH_DAI]: false,
+  [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDC]: false,
+  [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDT]: false,
+  [DEPOSIT_TOKENS_NAME.UNIV2_ETH_WBTC]: false,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_DAI]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDC]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDT]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_WBTC]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YFI]: true,
+  [DEPOSIT_TOKENS_NAME.DAI]: false,
+};
+
 export const DEPOSIT_TOKENS_LINK = {
   sCRV: "https://www.curve.fi/susdv2/deposit",
   renCRV: "https://www.curve.fi/ren/deposit",
