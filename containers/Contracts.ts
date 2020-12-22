@@ -31,6 +31,8 @@ import { Erc20Factory } from "./Contracts/Erc20Factory";
 import { Uniswapv2PairFactory } from "./Contracts/Uniswapv2PairFactory";
 import { Instabrine } from "./Contracts/Instabrine";
 import { InstabrineFactory } from "./Contracts/InstabrineFactory";
+import { SushiChef } from "./Contracts/SushiChef";
+import { SushiChefFactory } from "./Contracts/SushiChefFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -75,6 +77,7 @@ export const UNI_ETH_WBTC_STAKING_REWARDS =
   "0xCA35e32e7926b96A9988f61d510E038108d8068e";
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
+export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
@@ -95,6 +98,7 @@ function useContracts() {
   const [threePool, setThreePool] = useState<Pool | null>(null);
   const [comptroller, setComptroller] = useState<Comptroller | null>(null);
   const [cToken, setCToken] = useState<Ctoken | null>(null);
+  const [sushiChef, setSushiChef] = useState<SushiChef | null>(null);
 
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
@@ -149,6 +153,7 @@ function useContracts() {
         Uniswapv2ProxyLogicFactory.connect(UNISWAPV2_PROXY_LOGIC, signer),
       );
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
+      setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
     }
   };
 
@@ -176,6 +181,7 @@ function useContracts() {
     uniswapv2ProxyLogic,
     curveProxyLogic,
     instabrine,
+    sushiChef,
   };
 }
 

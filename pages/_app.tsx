@@ -19,6 +19,7 @@ import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
+import { SushiPairs } from "../containers/SushiPairs";
 
 const WithContainers: FC = ({ children }) => (
   <Connection.Provider>
@@ -29,13 +30,15 @@ const WithContainers: FC = ({ children }) => (
             <Pickles.Provider>
               <PickleStaking.Provider>
                 <UniV2Pairs.Provider>
-                  <Jars.Provider>
-                    <Farms.Provider>
-                      <UserJars.Provider>
-                        <UserFarms.Provider>{children}</UserFarms.Provider>
-                      </UserJars.Provider>
-                    </Farms.Provider>
-                  </Jars.Provider>
+                  <SushiPairs.Provider>
+                    <Jars.Provider>
+                      <Farms.Provider>
+                        <UserJars.Provider>
+                          <UserFarms.Provider>{children}</UserFarms.Provider>
+                        </UserJars.Provider>
+                      </Farms.Provider>
+                    </Jars.Provider>
+                  </SushiPairs.Provider>
                 </UniV2Pairs.Provider>
               </PickleStaking.Provider>
             </Pickles.Provider>

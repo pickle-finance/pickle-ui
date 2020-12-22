@@ -2,21 +2,12 @@ import { useEffect, useState } from "react";
 
 import { Connection } from "../Connection";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
-import { PICKLE_ETH_FARM } from "../Farms/farms";
 
 export interface UniLPAPY {
   pairAddress: string;
   reserveUSD: number;
   dailyVolumeUSD: number;
 }
-
-const UNI_LP_TOKENS = [
-  PICKLE_ETH_FARM,
-  JAR_DEPOSIT_TOKENS.UNIV2_ETH_DAI,
-  JAR_DEPOSIT_TOKENS.UNIV2_ETH_USDC,
-  JAR_DEPOSIT_TOKENS.UNIV2_ETH_USDT,
-  JAR_DEPOSIT_TOKENS.UNIV2_ETH_WBTC,
-];
 
 const SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI,
@@ -26,16 +17,16 @@ const SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI,
 ];
 
-export const useUniPairDayData = () => {
+export const useSushiPairDayData = () => {
   const { signer } = Connection.useContainer();
 
-  const [uniPairDayData, setUniPairDayData] = useState<Array<UniLPAPY> | null>(
-    null,
-  );
+  const [sushiPairDayData, setSushiPairDayData] = useState<Array<
+    UniLPAPY
+  > | null>(null);
 
   const queryTheGraph = async () => {
     const res = await fetch(
-      "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2",
+      "https://api.thegraph.com/subgraphs/name/zippoxer/sushiswap-subgraph-fork",
       {
         credentials: "omit",
         headers: {
@@ -45,8 +36,9 @@ export const useUniPairDayData = () => {
           "Accept-Language": "en-US,en;q=0.5",
           "Content-Type": "application/json",
         },
-        referrer: "https://thegraph.com/explorer/subgraph/uniswap/uniswap-v2",
-        body: `{"query":"{\\n  pairDayDatas(first: ${UNI_LP_TOKENS.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${UNI_LP_TOKENS.join(
+        referrer:
+          "https://thegraph.com/explorer/subgraph/zippoxer/sushiswap-subgraph-fork",
+        body: `{"query":"{\\n  pairDayDatas(first: ${SUSHI_LP_TOKENS.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${SUSHI_LP_TOKENS.join(
           '\\", \\"',
         )}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
@@ -54,12 +46,12 @@ export const useUniPairDayData = () => {
       },
     ).then((x) => x.json());
 
-    setUniPairDayData(res.data.pairDayDatas);
+    setSushiPairDayData(res.data.pairDayDatas);
   };
 
-  const getUniPairDayAPY = (pair: string) => {
-    if (uniPairDayData) {
-      const filteredPair = uniPairDayData.filter(
+  const getSushiPairDayAPY = (pair: string) => {
+    if (sushiPairDayData) {
+      const filteredPair = sushiPairDayData.filter(
         (x) => x.pairAddress.toLowerCase() === pair.toLowerCase(),
       );
 
@@ -82,6 +74,6 @@ export const useUniPairDayData = () => {
   }, [signer]);
 
   return {
-    getUniPairDayAPY,
+    getSushiPairDayAPY,
   };
 };
