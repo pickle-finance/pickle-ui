@@ -25,7 +25,6 @@ export const JarList: FC = () => {
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
-  console.log(activeJars, inactiveJars);
 
   return (
     <Container>
