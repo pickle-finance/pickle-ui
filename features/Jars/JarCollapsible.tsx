@@ -12,6 +12,7 @@ import {
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
+import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 
 interface DataProps {
   isZero?: boolean;
@@ -35,25 +36,6 @@ const JarName = styled(Grid)({
   display: "flex",
 });
 
-const LpIcon = ({
-  swapIconSrc,
-  tokenIconSrc,
-  className,
-}: {
-  swapIconSrc: string;
-  tokenIconSrc: string;
-  className?: string;
-}) => {
-  return (
-    <div className={className} css={{ position: "relative" }}>
-      <img src={swapIconSrc} css={{ width: `50px` }} />
-      <img
-        src={tokenIconSrc}
-        css={{ position: "absolute", right: -3, bottom: -3, width: `20px` }}
-      />
-    </div>
-  );
-};
 
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
@@ -82,24 +64,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
   ),
 };
-
-const JarIcon = ({ src }: { src: string | ReactNode }) => (
-  <div
-    style={{
-      float: "left",
-      margin: "auto 0",
-      marginRight: "1rem",
-      minHeight: 0,
-      display: "flex",
-    }}
-  >
-    {typeof src === "string" ? (
-      <img src={src} style={{ width: `50px` }} />
-    ) : (
-      src
-    )}
-  </div>
-);
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -211,7 +175,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
       preview={
         <Grid.Container gap={1}>
           <JarName xs={24} sm={12} md={5} lg={5}>
-            <JarIcon
+            <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
                   depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON

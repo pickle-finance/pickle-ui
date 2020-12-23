@@ -18,14 +18,6 @@ const UNI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.UNIV2_ETH_WBTC,
 ];
 
-const SUSHI_LP_TOKENS = [
-  JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI,
-  JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDC,
-  JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT,
-  JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC,
-  JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI,
-];
-
 export const useUniPairDayData = () => {
   const { signer } = Connection.useContainer();
 
@@ -54,7 +46,7 @@ export const useUniPairDayData = () => {
       },
     ).then((x) => x.json());
 
-    setUniPairDayData(res.data.pairDayDatas);
+    res.data.pairDayDatas && setUniPairDayData(res.data.pairDayDatas); // Sometimes the graph call fails
   };
 
   const getUniPairDayAPY = (pair: string) => {
@@ -84,4 +76,4 @@ export const useUniPairDayData = () => {
   return {
     getUniPairDayAPY,
   };
-};
+};;;;;;
