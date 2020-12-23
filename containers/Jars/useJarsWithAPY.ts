@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 
-import {
-  STRATEGY_NAMES,
-  DEPOSIT_TOKENS_JAR_NAMES,
-  JAR_DEPOSIT_TOKENS,
-} from "./jars";
+import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS } from "./jars";
 import { Prices } from "../Prices";
 import {
   UNI_ETH_DAI_STAKING_REWARDS,
@@ -19,14 +15,31 @@ import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
 import { useCurveSNXAPY } from "./useCurveSNXAPY";
 import { useUniPairDayData } from "./useUniPairDayData";
+import { useSushiPairDayData } from "./useSushiPairDayData";
 import { formatEther } from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
 import { useCompAPY } from "./useCompAPY";
+import erc20 from "@studydefi/money-legos/erc20";
 
 import compound from "@studydefi/money-legos/compound";
 
 import { Contract as MulticallContract } from "ethers-multicall";
 import { Connection } from "../Connection";
+import { SushiPairs } from "../SushiPairs";
+
+const AVERAGE_BLOCK_TIME = 13.22;
+
+interface SushiPoolId {
+  [key: string]: number;
+}
+
+const sushiPoolIds: SushiPoolId = {
+  "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": 2,
+  "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": 1,
+  "0x06da0fd433C1A5d7a4faa01111c044910A184553": 0,
+  "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": 21,
+  "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": 11,
+};
 
 export interface JarApy {
   [k: string]: number;
@@ -46,7 +59,8 @@ export const useJarWithAPY = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
-  const { getPairData } = UniV2Pairs.useContainer();
+  const { getPairData: getSushiPairData } = SushiPairs.useContainer();
+  const { getPairData: getUniPairData } = UniV2Pairs.useContainer();
   const {
     stakingRewards,
     susdPool,
@@ -55,8 +69,10 @@ export const useJarWithAPY = (jars: Input): Output => {
     renPool,
     threeGauge,
     threePool,
+    sushiChef,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
+  const { getSushiPairDayAPY } = useSushiPairDayData();
   const { rawStats: curveRawStats } = useCurveRawStats();
   const { APYs: susdCrvAPY } = useCurveCrvAPY(
     jars,
@@ -81,6 +97,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     susdPool,
     stakingRewards ? stakingRewards.attach(SCRV_STAKING_REWARDS) : null,
   );
+
   const { APYs: compDaiAPYs } = useCompAPY(compound.cDAI.address);
 
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
@@ -88,7 +105,7 @@ export const useJarWithAPY = (jars: Input): Output => {
   );
 
   const calculateUNIAPY = async (rewardsAddress: string) => {
-    if (stakingRewards && prices?.uni && getPairData && multicallProvider) {
+    if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
       const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
@@ -112,7 +129,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         formatEther(uniRewardsForDurationBN),
       );
 
-      const { pricePerToken } = await getPairData(stakingToken);
+      const { pricePerToken } = await getUniPairData(stakingToken);
 
       const uniRewardsPerYear =
         uniRewardsForDuration * ((360 * 24 * 60 * 60) / rewardsDuration);
@@ -128,6 +145,50 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateSushiAPY = async (lpTokenAddress: string) => {
+    if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
+      const poolId = sushiPoolIds[lpTokenAddress];
+      const multicallSushiChef = new MulticallContract(
+        sushiChef.address,
+        sushiChef.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        sushiPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallSushiChef.sushiPerBlock(),
+        multicallSushiChef.totalAllocPoint(),
+        multicallSushiChef.poolInfo(poolId),
+        lpToken.balanceOf(sushiChef.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const sushiRewardsPerBlock =
+        (parseFloat(formatEther(sushiPerBlockBN)) *
+          0.9 *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      const sushiRewardsPerYear =
+        sushiRewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+      const valueRewardedPerYear = prices.sushi * sushiRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const sushiAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [{ sushi: sushiAPY * 100 * 0.8 }];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
       const [
@@ -135,11 +196,21 @@ export const useJarWithAPY = (jars: Input): Output => {
         uniEthUsdcApy,
         uniEthUsdtApy,
         uniEthWBtcApy,
+        sushiEthDaiApy,
+        sushiEthUsdcApy,
+        sushiEthUsdtApy,
+        sushiEthWBtcApy,
+        sushiEthYfiApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDT_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_WBTC_STAKING_REWARDS),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDC),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -189,6 +260,41 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...uniEthWBtcApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_ETH_WBTC),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI) {
+          APYs = [
+            ...sushiEthDaiApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDC) {
+          APYs = [
+            ...sushiEthUsdcApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDC),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDT) {
+          APYs = [
+            ...sushiEthUsdtApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC) {
+          APYs = [
+            ...sushiEthWBtcApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI) {
+          APYs = [
+            ...sushiEthYfiApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
           ];
         }
 

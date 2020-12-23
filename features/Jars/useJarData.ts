@@ -21,6 +21,8 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
         const balance = await getBalance(jar.depositToken.address);
         const deposited = await getBalance(jar.contract.address);
 
+        console.log(deposited, jar.contract.address, jar.jarName)
+
         return {
           name: jar.jarName,
           jarContract: jar.contract,

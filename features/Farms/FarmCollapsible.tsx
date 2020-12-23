@@ -16,6 +16,7 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -54,13 +55,22 @@ const FARM_LP_TO_ICON = {
   "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33": "/3crv.png",
   "0x2E35392F4c36EBa7eCAFE4de34199b2373Af22ec": "/rencrv.png",
   "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87": "/dai.png",
+  "0x55282dA27a3a02ffe599f6D11314D239dAC89135": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
+  ),
+  "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xde74b6c547bd574c3527316a2eE30cd8F6041525": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/btc.png"} />
+  ),
+  "0x3261D9408604CC8607b687980D40135aFA26FfED": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
+  ),
 };
-
-const FarmIcon = ({ src }: { src: string }) => (
-  <div style={{ float: "left", marginRight: "0.75rem" }}>
-    <img src={src} style={{ width: `24px`, marginTop: "0.5rem" }} />
-  </div>
-);
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -214,7 +224,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       preview={
         <Grid.Container gap={1}>
           <Grid xs={24} sm={12} md={5} lg={5}>
-            <FarmIcon
+            <TokenIcon
               src={
                 FARM_LP_TO_ICON[
                   depositToken.address as keyof typeof FARM_LP_TO_ICON

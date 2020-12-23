@@ -78,6 +78,26 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pDAI",
     poolName: "pDAI",
   },
+  "0x55282dA27a3a02ffe599f6D11314D239dAC89135": {
+    tokenName: "pSLP DAI",
+    poolName: "pSLP DAI",
+  },
+  "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43": {
+    tokenName: "pSLP USDC",
+    poolName: "pSLP USDC",
+  },
+  "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE": {
+    tokenName: "pSLP USDT",
+    poolName: "pSLP USDT",
+  },
+  "0xde74b6c547bd574c3527316a2eE30cd8F6041525": {
+    tokenName: "pSLP WBTC",
+    poolName: "pSLP WBTC",
+  },
+  "0x3261D9408604CC8607b687980D40135aFA26FfED": {
+    tokenName: "pSLP YFI",
+    poolName: "pSLP YFI",
+  },
 };
 
 function useFarms() {

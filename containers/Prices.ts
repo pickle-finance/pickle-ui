@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin&vs_currencies=usd";
+  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance&vs_currencies=usd";
 
 type UsdPrice = { usd: number };
 
@@ -18,6 +18,8 @@ interface Response {
   uniswap: UsdPrice;
   havven: UsdPrice;
   "wrapped-bitcoin": UsdPrice;
+  sushi: UsdPrice;
+  "yearn-finance": UsdPrice;
 }
 
 interface PriceObject {
@@ -31,6 +33,8 @@ interface PriceObject {
   crv: number;
   snx: number;
   uni: number;
+  sushi: number;
+  yfi: number;
   wbtc: number;
 }
 
@@ -66,6 +70,8 @@ function usePrices() {
       crv: response["curve-dao-token"].usd,
       snx: response["havven"].usd,
       uni: response["uniswap"].usd,
+      sushi: response["sushi"].usd,
+      yfi: response["yearn-finance"].usd,
       wbtc: response["wrapped-bitcoin"].usd,
     };
     setPrices(prices);

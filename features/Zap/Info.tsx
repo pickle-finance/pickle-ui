@@ -45,14 +45,14 @@ export const Info: FC = () => {
       pendingPickle: formatNumber(prenCRVData?.pendingPickle),
       totalValue: formatDollar(prenCRVData?.totalValue),
     },
-    {
-      token: getTokenLabel("DAI"),
-      jar: getLPLabel("pDAI"),
-      totalApy: getAPYTooltip(pDAIAPYs),
-      stakedValue: formatDollar(pDAIData?.stakedValue),
-      pendingPickle: formatNumber(pDAIData?.pendingPickle),
-      totalValue: formatDollar(pDAIData?.totalValue),
-    },
+    // {
+    //   token: getTokenLabel("DAI"),
+    //   jar: getLPLabel("pDAI"),
+    //   totalApy: getAPYTooltip(pDAIAPYs),
+    //   stakedValue: formatDollar(pDAIData?.stakedValue),
+    //   pendingPickle: formatNumber(pDAIData?.pendingPickle),
+    //   totalValue: formatDollar(pDAIData?.totalValue),
+    // },
     {
       token: getTokenLabel("USDC"),
       jar: getLPLabel("3poolCRV"),
