@@ -16,6 +16,7 @@ const UNI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.UNIV2_ETH_USDC,
   JAR_DEPOSIT_TOKENS.UNIV2_ETH_USDT,
   JAR_DEPOSIT_TOKENS.UNIV2_ETH_WBTC,
+  JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI,
 ];
 
 export const useUniPairDayData = () => {
@@ -76,4 +77,4 @@ export const useUniPairDayData = () => {
   return {
     getUniPairDayAPY,
   };
-};;;;;;
+};

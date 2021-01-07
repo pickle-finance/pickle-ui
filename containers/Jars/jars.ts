@@ -29,6 +29,7 @@ export const JAR_DEPOSIT_TOKENS = {
   UNIV2_ETH_USDC: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc",
   UNIV2_ETH_USDT: "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852",
   UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
+  UNIV2_BAC_DAI: "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD",
   DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
 };
 
@@ -40,6 +41,7 @@ export const DEPOSIT_TOKENS_NAME = {
   UNIV2_ETH_USDC: "UNI USDC/ETH",
   UNIV2_ETH_USDT: "UNI USDT/ETH",
   UNIV2_ETH_WBTC: "UNI WBTC/ETH",
+  UNIV2_BAC_DAI: "UNI BAC/DAI",
   SUSHI_ETH_DAI: "SLP DAI/ETH",
   SUSHI_ETH_USDC: "SLP USDC/ETH",
   SUSHI_ETH_USDT: "SLP USDT/ETH",
@@ -56,6 +58,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDC]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDT]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_WBTC]: false,
+  [DEPOSIT_TOKENS_NAME.UNIV2_BAC_DAI]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_DAI]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDC]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDT]: true,
@@ -76,6 +79,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.uniswap.org/#/add/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
   UNIV2_ETH_WBTC:
     "https://app.uniswap.org/#/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
+  UNIV2_BAC_DAI:
+    "https://app.uniswap.org/#/add/0x3449FC1Cd036255BA1EB19d65fF4BA2b8903A69a/0x6B175474E89094C44Da98b954EedeAC495271d0F",
   SUSHI_ETH_DAI:
     "https://exchange.sushiswapclassic.org/#/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
   SUSHI_ETH_USDC:
@@ -97,6 +102,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   UNIV2_ETH_USDC: "pJar 0.69b",
   UNIV2_ETH_USDT: "pJar 0.69c",
   UNIV2_ETH_WBTC: "pJar 0.69d",
+  UNIV2_BAC_DAI: "pJar 0.99f",
   DAI: "pJar 0.88a",
   sCRV_OLD: "pJar 0 (old)",
   UNIV2_ETH_DAI_OLD: "pJar 0.69a (old)",
@@ -145,6 +151,10 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
 
   if (l === "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e") {
     return "yfi";
+  }
+
+  if (l === "0x3449fc1cd036255ba1eb19d65ff4ba2b8903a69a") {
+    return "bas";
   }
 
   throw new Error(`Unknown token address: ${tokenAddress}`);

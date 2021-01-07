@@ -39,7 +39,8 @@ const isUniswapPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC_OLD ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI
   );
 };
 

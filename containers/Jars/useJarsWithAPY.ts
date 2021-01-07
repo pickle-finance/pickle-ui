@@ -9,6 +9,7 @@ import {
   UNI_ETH_WBTC_STAKING_REWARDS,
   SCRV_STAKING_REWARDS,
   Contracts,
+  BASIS_BAC_DAI_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -53,6 +54,10 @@ export interface JarWithAPY extends Jar {
 type Input = Array<Jar> | null;
 type Output = {
   jarsWithAPY: Array<JarWithAPY> | null;
+};
+
+const getCompoundingAPY = (apr: number) => {
+  return 100 * (Math.pow(1 + apr / 365, 365) - 1);
 };
 
 export const useJarWithAPY = (jars: Input): Output => {
@@ -145,6 +150,41 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateBasisAPY = async (rewardsAddress: string) => {
+    if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.lpt(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const basRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+
+      const basRewardsPerYear = basRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.bas * basRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const basAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [{ bas: getCompoundingAPY(basAPY * 0.8) }];
+    }
+
+    return [];
+  };
+
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
@@ -183,7 +223,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const sushiAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
-      return [{ sushi: sushiAPY * 100 * 0.8 }];
+      return [{ sushi: getCompoundingAPY(sushiAPY * 0.8) }];
     }
 
     return [];
@@ -196,6 +236,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         uniEthUsdcApy,
         uniEthUsdtApy,
         uniEthWBtcApy,
+        basisBacDaiApy,
         sushiEthDaiApy,
         sushiEthUsdcApy,
         sushiEthUsdtApy,
@@ -206,6 +247,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDT_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_WBTC_STAKING_REWARDS),
+        calculateBasisAPY(BASIS_BAC_DAI_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
@@ -260,6 +302,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...uniEthWBtcApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_ETH_WBTC),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI) {
+          APYs = [
+            ...basisBacDaiApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI),
           ];
         }
 

@@ -15,6 +15,7 @@ const addresses = {
   usdt: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   susd: "0x57Ab1ec28D129707052df4dF418D58a2D46d5f51",
   wbtc: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+  bac: "0x3449FC1Cd036255BA1EB19d65fF4BA2b8903A69a",
 };
 
 interface Token {
@@ -31,6 +32,7 @@ const usdc: Token = { address: addresses.usdc, priceId: "usdc", decimals: 6 };
 const usdt: Token = { address: addresses.usdt, priceId: "usdt", decimals: 6 };
 const susd: Token = { address: addresses.susd, priceId: "susd", decimals: 18 };
 const wbtc: Token = { address: addresses.wbtc, priceId: "wbtc", decimals: 8 };
+const bac: Token = { address: addresses.bac, priceId: "bac", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -43,6 +45,7 @@ export const PAIR_INFO: PairMap = {
   "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852": { a: usdt, b: weth },
   "0xf80758aB42C3B07dA84053Fd88804bCB6BAA4b5c": { a: susd, b: weth },
   "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940": { a: wbtc, b: weth },
+  "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD": { a: bac, b: dai },
 };
 
 function useUniV2Pairs() {
