@@ -154,7 +154,7 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
   }
 
   if (l === "0x3449fc1cd036255ba1eb19d65ff4ba2b8903a69a") {
-    return "bas";
+    return "bac";
   }
 
   throw new Error(`Unknown token address: ${tokenAddress}`);

@@ -22,6 +22,8 @@ function useJars() {
     }
   }, [jarsWithTVL]);
 
+  console.log(jarsWithAPY);
+
   return { jars: jarsWithTVL };
 }
 
