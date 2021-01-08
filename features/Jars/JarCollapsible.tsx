@@ -36,7 +36,6 @@ const JarName = styled(Grid)({
   display: "flex",
 });
 
-
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
@@ -62,6 +61,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
+  ),
+  "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
 };
 

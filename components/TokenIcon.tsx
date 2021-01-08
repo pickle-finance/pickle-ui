@@ -11,10 +11,16 @@ export const LpIcon = ({
 }) => {
   return (
     <div className={className} css={{ position: "relative" }}>
-      <img src={swapIconSrc} css={{ width: `40px` }} />
+      <img src={swapIconSrc} css={{ width: `50px` }} />
       <img
         src={tokenIconSrc}
-        css={{ position: "absolute", right: -3, bottom: -3, width: `20px` }}
+        css={{
+          position: "absolute",
+          right: -3,
+          bottom: -3,
+          width: `25px`,
+          borderRadius: "100%",
+        }}
       />
     </div>
   );

@@ -53,6 +53,10 @@ const isSushiswapPool = (jarName: string): boolean => {
   );
 };
 
+const isBasisUniLpPool = (jarName: string): boolean => {
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI;
+};
+
 export const useJarWithTVL = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
@@ -183,6 +187,73 @@ export const useJarWithTVL = (jars: Input): Output => {
     };
   };
 
+  const measureBasisUniLpTVL = async (jar: JarWithAPY) => {
+    if (!uniswapv2Pair || !prices) {
+      return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
+    }
+
+    const uniPair = uniswapv2Pair.attach(jar.depositToken.address);
+
+    const [
+      supply,
+      balance,
+      totalUNI,
+      token0,
+      token1,
+      ratio,
+    ] = await Promise.all([
+      jar.contract.totalSupply(),
+      jar.contract.balance().catch(() => ethers.BigNumber.from(0)),
+      uniPair.totalSupply(),
+      uniPair.token0(),
+      uniPair.token1(),
+      jar.contract.getRatio().catch(() => ethers.utils.parseEther("1")),
+    ]);
+
+    const Dai = uniswapv2Pair.attach(erc20.dai.address);
+
+    const otherToken =
+      token0.toLowerCase() === erc20.dai.address.toLowerCase()
+        ? token1
+        : token0;
+
+    const OtherToken = uniswapv2Pair.attach(otherToken);
+
+    const [daiInPool, otherTokenInPool, otherTokenDec] = await Promise.all([
+      Dai.balanceOf(uniPair.address),
+      OtherToken.balanceOf(uniPair.address),
+      OtherToken.decimals(),
+    ]);
+
+    const dec18 = parseEther("1");
+
+    const otherTokenPerUni = otherTokenInPool.mul(dec18).div(totalUNI);
+    const daiPerUni = daiInPool.mul(dec18).div(totalUNI);
+
+    const otherTokenBal = parseFloat(
+      ethers.utils.formatUnits(
+        otherTokenPerUni.mul(balance).div(dec18),
+        otherTokenDec,
+      ),
+    );
+    const daiBal = parseFloat(
+      ethers.utils.formatEther(daiPerUni.mul(balance).div(dec18)),
+    );
+
+    const otherTokenPriceId = getPriceId(otherToken);
+    const tvlUSD =
+      otherTokenBal * prices[otherTokenPriceId] + daiBal * prices.dai;
+
+    const usdPerPToken = tvlUSD / parseFloat(formatEther(supply));
+
+    return {
+      ...jar,
+      tvlUSD,
+      usdPerPToken,
+      ratio: parseFloat(formatEther(ratio)),
+    };
+  };
+
   const measureCompoundTVL = async (jar: JarWithAPY) => {
     if (!prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
@@ -219,6 +290,8 @@ export const useJarWithTVL = (jars: Input): Output => {
           return measureUniswapAndSushiswapTVL(jar);
         } else if (isSushiswapPool(jar.jarName)) {
           return measureUniswapAndSushiswapTVL(jar);
+        } else if (isBasisUniLpPool(jar.jarName)) {
+          return measureBasisUniLpTVL(jar);
         }
 
         if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {

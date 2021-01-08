@@ -25,6 +25,10 @@ type Output = {
   APYs: Array<{ [key: string]: number }>;
 };
 
+const getCompoundingAPY = (apr: number) => {
+  return 100 * (Math.pow(1 + apr / 365, 365) - 1);
+};
+
 export const useCurveCrvAPY = (
   jars: Input,
   underlyingPrice: number | null,
@@ -83,6 +87,6 @@ export const useCurveCrvAPY = (
   }, [jars, prices]);
 
   return {
-    APYs: [{ crv: CRVAPY || 0 }],
+    APYs: [{ crv: getCompoundingAPY((CRVAPY || 0) / 100) }],
   };
 };
