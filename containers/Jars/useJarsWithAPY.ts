@@ -10,6 +10,7 @@ import {
   SCRV_STAKING_REWARDS,
   Contracts,
   BASIS_BAC_DAI_STAKING_REWARDS,
+  MITH_MIC_USDT_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -151,7 +152,7 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   const calculateBasisAPY = async (rewardsAddress: string) => {
-    if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
+    if (stakingRewards && prices?.bas && getUniPairData && multicallProvider) {
       const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
@@ -178,8 +179,48 @@ export const useJarWithAPY = (jars: Input): Output => {
       const totalValueStaked = totalSupply * pricePerToken;
       const basAPY = valueRewardedPerYear / totalValueStaked;
 
-      // no more UNI being distributed
       return [{ bas: getCompoundingAPY(basAPY * 0.8) }];
+    }
+
+    return [];
+  };
+
+  const calculateMithAPY = async (rewardsAddress: string) => {
+    if (
+      stakingRewards &&
+      prices?.mis &&
+      getSushiPairData &&
+      multicallProvider
+    ) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.lpt(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const misRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      console.log(stakingToken);
+      const { pricePerToken } = await getSushiPairData(stakingToken);
+
+      const misRewardsPerYear = misRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.mis * misRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const misAPY = valueRewardedPerYear / totalValueStaked;
+      console.log(misAPY);
+
+      return [{ mis: getCompoundingAPY(misAPY * 0.8) }];
     }
 
     return [];
@@ -254,6 +295,9 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
       ]);
+      const mithMicUsdtApy = await calculateMithAPY(
+        MITH_MIC_USDT_STAKING_REWARDS,
+      );
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -309,6 +353,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...basisBacDaiApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT) {
+          APYs = [
+            ...mithMicUsdtApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIC_USDT),
           ];
         }
 

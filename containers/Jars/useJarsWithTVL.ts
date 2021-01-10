@@ -31,7 +31,8 @@ const isCurvePool = (jarName: string): boolean => {
   );
 };
 
-const isUniswapPool = (jarName: string): boolean => {
+// UniV2/SLP pools
+const isUniPool = (jarName: string): boolean => {
   return (
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI_OLD ||
@@ -39,22 +40,15 @@ const isUniswapPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC_OLD ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC
-  );
-};
-
-const isSushiswapPool = (jarName: string): boolean => {
-  return (
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT
   );
-};
-
-const isBasisUniLpPool = (jarName: string): boolean => {
-  return jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI;
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
@@ -120,7 +114,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     return { ...jar, tvlUSD, usdPerPToken, ratio };
   };
 
-  const measureUniswapAndSushiswapTVL = async (jar: JarWithAPY) => {
+  const measureUniJarTVL = async (jar: JarWithAPY) => {
     if (!uniswapv2Pair || !prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
@@ -143,106 +137,43 @@ export const useJarWithTVL = (jars: Input): Output => {
       jar.contract.getRatio().catch(() => ethers.utils.parseEther("1")),
     ]);
 
-    const WEth = uniswapv2Pair.attach(erc20.weth.address);
-
-    const otherToken =
-      token0.toLowerCase() === erc20.weth.address.toLowerCase()
-        ? token1
-        : token0;
-
-    const OtherToken = uniswapv2Pair.attach(otherToken);
-
-    const [wethInPool, otherTokenInPool, otherTokenDec] = await Promise.all([
-      WEth.balanceOf(uniPair.address),
-      OtherToken.balanceOf(uniPair.address),
-      OtherToken.decimals(),
-    ]);
-
-    const dec18 = parseEther("1");
-
-    const otherTokenPerUni = otherTokenInPool.mul(dec18).div(totalUNI);
-    const wethPerUni = wethInPool.mul(dec18).div(totalUNI);
-
-    const otherTokenBal = parseFloat(
-      ethers.utils.formatUnits(
-        otherTokenPerUni.mul(balance).div(dec18),
-        otherTokenDec,
-      ),
-    );
-    const wethBal = parseFloat(
-      ethers.utils.formatEther(wethPerUni.mul(balance).div(dec18)),
-    );
-
-    const otherTokenPriceId = getPriceId(otherToken);
-    const tvlUSD =
-      otherTokenBal * prices[otherTokenPriceId] + wethBal * prices.eth;
-
-    const usdPerPToken = tvlUSD / parseFloat(formatEther(supply));
-
-    return {
-      ...jar,
-      tvlUSD,
-      usdPerPToken,
-      ratio: parseFloat(formatEther(ratio)),
-    };
-  };
-
-  const measureBasisUniLpTVL = async (jar: JarWithAPY) => {
-    if (!uniswapv2Pair || !prices) {
-      return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
-    }
-
-    const uniPair = uniswapv2Pair.attach(jar.depositToken.address);
+    const Token0 = uniswapv2Pair.attach(token0);
+    const Token1 = uniswapv2Pair.attach(token1);
 
     const [
-      supply,
-      balance,
-      totalUNI,
-      token0,
-      token1,
-      ratio,
+      token0InPool,
+      token1InPool,
+      token0Decimal,
+      token1Decimal,
     ] = await Promise.all([
-      jar.contract.totalSupply(),
-      jar.contract.balance().catch(() => ethers.BigNumber.from(0)),
-      uniPair.totalSupply(),
-      uniPair.token0(),
-      uniPair.token1(),
-      jar.contract.getRatio().catch(() => ethers.utils.parseEther("1")),
-    ]);
-
-    const Dai = uniswapv2Pair.attach(erc20.dai.address);
-
-    const otherToken =
-      token0.toLowerCase() === erc20.dai.address.toLowerCase()
-        ? token1
-        : token0;
-
-    const OtherToken = uniswapv2Pair.attach(otherToken);
-
-    const [daiInPool, otherTokenInPool, otherTokenDec] = await Promise.all([
-      Dai.balanceOf(uniPair.address),
-      OtherToken.balanceOf(uniPair.address),
-      OtherToken.decimals(),
+      Token0.balanceOf(uniPair.address),
+      Token1.balanceOf(uniPair.address),
+      Token0.decimals(),
+      Token1.decimals(),
     ]);
 
     const dec18 = parseEther("1");
 
-    const otherTokenPerUni = otherTokenInPool.mul(dec18).div(totalUNI);
-    const daiPerUni = daiInPool.mul(dec18).div(totalUNI);
+    const token0PerUni = token0InPool.mul(dec18).div(totalUNI);
+    const token1PerUni = token1InPool.mul(dec18).div(totalUNI);
 
-    const otherTokenBal = parseFloat(
+    const token0Bal = parseFloat(
       ethers.utils.formatUnits(
-        otherTokenPerUni.mul(balance).div(dec18),
-        otherTokenDec,
+        token0PerUni.mul(balance).div(dec18),
+        token0Decimal,
       ),
     );
-    const daiBal = parseFloat(
-      ethers.utils.formatEther(daiPerUni.mul(balance).div(dec18)),
+    const token1Bal = parseFloat(
+      ethers.utils.formatUnits(
+        token1PerUni.mul(balance).div(dec18),
+        token1Decimal,
+      ),
     );
 
-    const otherTokenPriceId = getPriceId(otherToken);
+    const token0PriceId = getPriceId(token0);
+    const token1PriceId = getPriceId(token1);
     const tvlUSD =
-      otherTokenBal * prices[otherTokenPriceId] + daiBal * prices.dai;
+      token0Bal * prices[token0PriceId] + token1Bal * prices[token1PriceId];
 
     const usdPerPToken = tvlUSD / parseFloat(formatEther(supply));
 
@@ -286,12 +217,8 @@ export const useJarWithTVL = (jars: Input): Output => {
       const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
         if (isCurvePool(jar.jarName)) {
           return measureCurveTVL(jar);
-        } else if (isUniswapPool(jar.jarName)) {
-          return measureUniswapAndSushiswapTVL(jar);
-        } else if (isSushiswapPool(jar.jarName)) {
-          return measureUniswapAndSushiswapTVL(jar);
-        } else if (isBasisUniLpPool(jar.jarName)) {
-          return measureBasisUniLpTVL(jar);
+        } else if (isUniPool(jar.jarName)) {
+          return measureUniJarTVL(jar);
         }
 
         if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
