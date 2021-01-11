@@ -98,6 +98,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP YFI",
     poolName: "pSLP YFI",
   },
+  "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30 ": {
+    tokenName: "pMICUSDT",
+    poolName: "pMICUSDT",
+  },
 };
 
 function useFarms() {
