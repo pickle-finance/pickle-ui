@@ -10,6 +10,7 @@ import {
   SCRV_STAKING_REWARDS,
   Contracts,
   BASIS_BAC_DAI_STAKING_REWARDS,
+  MITH_MIC_USDT_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -48,6 +49,7 @@ export interface JarApy {
 
 export interface JarWithAPY extends Jar {
   totalAPY: number;
+  apr: number;
   APYs: Array<JarApy>;
 }
 
@@ -144,14 +146,14 @@ export const useJarWithAPY = (jars: Input): Output => {
       const uniAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
-      return [{ uni: 0 * 100 * 0.725 }];
+      return [{ uni: 0 * 100 * 0.725, apr: 0 }];
     }
 
     return [];
   };
 
   const calculateBasisAPY = async (rewardsAddress: string) => {
-    if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
+    if (stakingRewards && prices?.bas && getUniPairData && multicallProvider) {
       const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
@@ -178,8 +180,52 @@ export const useJarWithAPY = (jars: Input): Output => {
       const totalValueStaked = totalSupply * pricePerToken;
       const basAPY = valueRewardedPerYear / totalValueStaked;
 
-      // no more UNI being distributed
-      return [{ bas: getCompoundingAPY(basAPY * 0.8) }];
+      return [
+        { bas: getCompoundingAPY(basAPY * 0.8), apr: basAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
+  const calculateMithAPY = async (rewardsAddress: string) => {
+    if (
+      stakingRewards &&
+      prices?.mis &&
+      getSushiPairData &&
+      multicallProvider
+    ) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.lpt(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const misRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      console.log(stakingToken);
+      const { pricePerToken } = await getSushiPairData(stakingToken);
+
+      const misRewardsPerYear = misRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.mis * misRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const misAPY = valueRewardedPerYear / totalValueStaked;
+      console.log(misAPY);
+
+      return [
+        { mis: getCompoundingAPY(misAPY * 0.8), apr: misAPY * 0.8 * 100 },
+      ];
     }
 
     return [];
@@ -223,7 +269,9 @@ export const useJarWithAPY = (jars: Input): Output => {
       const sushiAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
-      return [{ sushi: getCompoundingAPY(sushiAPY * 0.8) }];
+      return [
+        { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
+      ];
     }
 
     return [];
@@ -254,6 +302,9 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
       ]);
+      const mithMicUsdtApy = await calculateMithAPY(
+        MITH_MIC_USDT_STAKING_REWARDS,
+      );
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -312,6 +363,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT) {
+          APYs = [
+            ...mithMicUsdtApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIC_USDT),
+          ];
+        }
+
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI) {
           APYs = [
             ...sushiEthDaiApy,
@@ -361,14 +419,24 @@ export const useJarWithAPY = (jars: Input): Output => {
         //   APYs = [...compDaiAPYsWithLeverage];
         // }
 
-        const totalAPY = APYs.map((x) => {
-          return Object.values(x).reduce((acc, y) => acc + y, 0);
-        }).reduce((acc, x) => acc + x, 0);
+        let apr = 0;
+        APYs.map((x) => {
+          if (x.apr) {
+            apr += x.apr;
+            delete x.apr;
+          }
+        });
+
+        // const totalAPY = APYs.map((x) => {
+        //   return Object.values(x).reduce((acc, y) => acc + y, 0);
+        // }).reduce((acc, x) => acc + x, 0);
+        const totalAPY = getCompoundingAPY(apr / 100) + (APYs[0]?.lp || 0);
 
         return {
           ...jar,
           APYs,
           totalAPY,
+          apr,
         };
       });
 

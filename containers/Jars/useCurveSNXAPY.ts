@@ -24,6 +24,10 @@ type Output = {
   APYs: Array<{ [key: string]: number }>;
 };
 
+const getCompoundingAPY = (apr: number) => {
+  return 100 * (Math.pow(1 + apr / 365, 365) - 1);
+};
+
 export const useCurveSNXAPY = (
   jars: Input,
   pool: Pool | null,
@@ -76,6 +80,6 @@ export const useCurveSNXAPY = (
   }, [jars, prices]);
 
   return {
-    APYs: [{ snx: SNXAPY || 0 }],
+    APYs: [{ snx: getCompoundingAPY((SNXAPY || 0) / 100), apr: SNXAPY || 0 }],
   };
 };

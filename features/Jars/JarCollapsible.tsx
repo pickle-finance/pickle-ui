@@ -65,6 +65,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
+  "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
+  ),
 };
 
 const setButtonStatus = (
@@ -111,6 +114,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     APYs,
     totalAPY,
     depositTokenLink,
+    apr,
   } = jarData;
 
   const balNum = parseFloat(formatEther(balance));
@@ -201,7 +205,22 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                 {totalAPY.toFixed(2) + "%" || "--"}
               </Tooltip>
             </Data>
-            <Label>APY</Label>
+            <Data>
+              <Tooltip
+                text={`This yield is calculated in real time from a base rate of ${apr.toFixed(
+                  2,
+                )}% which we auto-compound at least daily.`}
+              >
+                <div style={{ display: "flex", marginTop: 5 }}>
+                  <span>APY</span>
+                  <img
+                    src="./question.svg"
+                    width="15px"
+                    style={{ marginLeft: 5 }}
+                  />
+                </div>
+              </Tooltip>
+            </Data>
           </Grid>
           <Grid xs={24} sm={8} md={5} lg={5}>
             <Data isZero={balNum === 0}>{balStr}</Data>

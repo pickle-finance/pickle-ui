@@ -16,6 +16,7 @@ const addresses = {
   susd: "0x57Ab1ec28D129707052df4dF418D58a2D46d5f51",
   wbtc: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
   yfi: "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
+  mic: "0x368b3a58b5f49392e5c9e4c998cb0bb966752e51",
 };
 
 interface Token {
@@ -32,6 +33,7 @@ const usdc: Token = { address: addresses.usdc, priceId: "usdc", decimals: 6 };
 const usdt: Token = { address: addresses.usdt, priceId: "usdt", decimals: 6 };
 const yfi: Token = { address: addresses.yfi, priceId: "yfi", decimals: 18 };
 const wbtc: Token = { address: addresses.wbtc, priceId: "wbtc", decimals: 8 };
+const mic: Token = { address: addresses.mic, priceId: "mic", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -43,6 +45,7 @@ export const PAIR_INFO: PairMap = {
   "0x06da0fd433C1A5d7a4faa01111c044910A184553": { a: usdt, b: weth },
   "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": { a: wbtc, b: weth },
   "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": { a: yfi, b: weth },
+  "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb": { a: mic, b: usdt },
 };
 
 function useSushiPairs() {

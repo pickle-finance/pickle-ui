@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash&vs_currencies=usd";
+  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash&vs_currencies=usd";
 
 type UsdPrice = { usd: number };
 
@@ -22,6 +22,8 @@ interface Response {
   "yearn-finance": UsdPrice;
   "basis-share": UsdPrice;
   "basis-cash": UsdPrice;
+  "mithril-share": UsdPrice;
+  "mith-cash": UsdPrice;
 }
 
 interface PriceObject {
@@ -40,6 +42,8 @@ interface PriceObject {
   wbtc: number;
   bas: number;
   bac: number;
+  mis: number;
+  mic: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -79,6 +83,8 @@ function usePrices() {
       wbtc: response["wrapped-bitcoin"].usd,
       bas: response["basis-share"].usd,
       bac: response["basis-cash"].usd,
+      mis: response["mithril-share"].usd,
+      mic: response["mith-cash"].usd,
     };
     setPrices(prices);
   };

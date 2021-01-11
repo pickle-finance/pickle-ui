@@ -17,6 +17,7 @@ export const PICKLE_JARS = {
 };
 
 export const JAR_DEPOSIT_TOKENS = {
+  SUSHI_MIC_USDT: "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb",
   UNIV2_BAC_DAI: "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD",
   SUSHI_ETH_DAI: "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f",
   SUSHI_ETH_USDC: "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0",
@@ -42,6 +43,7 @@ export const DEPOSIT_TOKENS_NAME = {
   UNIV2_ETH_USDT: "UNI USDT/ETH",
   UNIV2_ETH_WBTC: "UNI WBTC/ETH",
   UNIV2_BAC_DAI: "UNI BAC/DAI",
+  SUSHI_MIC_USDT: "SLP MIC/USDT",
   SUSHI_ETH_DAI: "SLP DAI/ETH",
   SUSHI_ETH_USDC: "SLP USDC/ETH",
   SUSHI_ETH_USDT: "SLP USDT/ETH",
@@ -59,6 +61,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDT]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_WBTC]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_BAC_DAI]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_MIC_USDT]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_DAI]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDC]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDT]: true,
@@ -81,6 +84,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.uniswap.org/#/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
   UNIV2_BAC_DAI:
     "https://app.uniswap.org/#/add/0x3449FC1Cd036255BA1EB19d65fF4BA2b8903A69a/0x6B175474E89094C44Da98b954EedeAC495271d0F",
+  SUSHI_MIC_USDT:
+    "https://exchange.sushiswapclassic.org/#/add/0x368B3a58B5f49392e5C9E4C998cb0bB966752E51/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   SUSHI_ETH_DAI:
     "https://exchange.sushiswapclassic.org/#/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
   SUSHI_ETH_USDC:
@@ -103,6 +108,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   UNIV2_ETH_USDT: "pJar 0.69c",
   UNIV2_ETH_WBTC: "pJar 0.69d",
   UNIV2_BAC_DAI: "pJar 0.99f",
+  SUSHI_MIC_USDT: "pJar 0.99g",
   DAI: "pJar 0.88a",
   sCRV_OLD: "pJar 0 (old)",
   UNIV2_ETH_DAI_OLD: "pJar 0.69a (old)",
@@ -155,6 +161,10 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
 
   if (l === "0x3449fc1cd036255ba1eb19d65ff4ba2b8903a69a") {
     return "bac";
+  }
+
+  if (l === "0x368b3a58b5f49392e5c9e4c998cb0bb966752e51") {
+    return "mic";
   }
 
   throw new Error(`Unknown token address: ${tokenAddress}`);

@@ -87,6 +87,6 @@ export const useCurveCrvAPY = (
   }, [jars, prices]);
 
   return {
-    APYs: [{ crv: getCompoundingAPY((CRVAPY || 0) / 100) }],
+    APYs: [{ crv: getCompoundingAPY((CRVAPY || 0) / 100), apr: CRVAPY || 0 }],
   };
 };
