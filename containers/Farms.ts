@@ -98,6 +98,9 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP YFI",
     poolName: "pSLP YFI",
   },
+  "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": {
+    tokenName: "pBACDAI",
+    poolName: "pBACDAI"
 };
 
 function useFarms() {
