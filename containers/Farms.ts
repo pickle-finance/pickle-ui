@@ -102,6 +102,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pMICUSDT",
     poolName: "pMICUSDT",
   },
+  "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": {
+    tokenName: "UNI BAC/DAI",
+    poolName: "Basis Power",
+  },
 };
 
 function useFarms() {
