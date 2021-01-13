@@ -427,10 +427,17 @@ export const useJarWithAPY = (jars: Input): Output => {
           }
         });
 
+        let lp = 0;
+        APYs.map((x) => {
+          if (x.lp) {
+            lp += x.lp;
+          }
+        });
+
         // const totalAPY = APYs.map((x) => {
         //   return Object.values(x).reduce((acc, y) => acc + y, 0);
         // }).reduce((acc, x) => acc + x, 0);
-        const totalAPY = getCompoundingAPY(apr / 100) + (APYs[0]?.lp || 0);
+        const totalAPY = getCompoundingAPY(apr / 100) + lp;
 
         return {
           ...jar,
