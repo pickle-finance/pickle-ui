@@ -209,7 +209,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               <Tooltip
                 text={`This yield is calculated in real time from a base rate of ${apr.toFixed(
                   2,
-                )}% which we auto-compound at least daily.`}
+                )}% which we auto-compound.`}
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
                   <span>APY</span>
