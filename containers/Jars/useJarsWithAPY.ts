@@ -269,9 +269,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const sushiAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
-      return [
-        { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
-      ];
+      return [{ sushi: getCompoundingAPY(sushiAPY), apr: sushiAPY * 100 }];
     }
 
     return [];
