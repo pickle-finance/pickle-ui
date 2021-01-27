@@ -10,7 +10,9 @@ import {
   SCRV_STAKING_REWARDS,
   Contracts,
   BASIS_BAC_DAI_STAKING_REWARDS,
+  BASIS_BAS_DAI_STAKING_REWARDS,
   MITH_MIC_USDT_STAKING_REWARDS,
+  MITH_MIS_USDT_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -300,8 +302,14 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
       ]);
+      const basisBasDaiApy = await calculateBasisAPY(
+        BASIS_BAS_DAI_STAKING_REWARDS,
+      );
       const mithMicUsdtApy = await calculateMithAPY(
         MITH_MIC_USDT_STAKING_REWARDS,
+      );
+      const mithMisUsdtApy = await calculateMithAPY(
+        MITH_MIS_USDT_STAKING_REWARDS,
       );
 
       const promises = jars.map(async (jar) => {
@@ -361,10 +369,24 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAS_DAI) {
+          APYs = [
+            ...basisBasDaiApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI),
+          ];
+        }
+
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT) {
           APYs = [
             ...mithMicUsdtApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIC_USDT),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT) {
+          APYs = [
+            ...mithMisUsdtApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIS_USDT),
           ];
         }
 

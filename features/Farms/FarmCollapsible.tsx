@@ -73,8 +73,14 @@ const FARM_LP_TO_ICON = {
   "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
+  "0x9018eDe0972f7902a852B1332a0F616BDaF4bb17": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.png"} />
+  ),
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
+  ),
+  "0x0FAA189afE8aE97dE1d2F01E471297678842146d": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
   ),
 };
 

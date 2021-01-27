@@ -65,8 +65,14 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
+  "0x0379dA7a5895D13037B6937b109fA8607a659ADF": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.png"} />
+  ),
   "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
+  ),
+  "0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
   ),
 };
 

@@ -102,9 +102,17 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pMICUSDT",
     poolName: "pMICUSDT",
   },
+  "0x0FAA189afE8aE97dE1d2F01E471297678842146d": {
+    tokenName: "pMISUSDT",
+    poolName: "MIS Power",
+  },
   "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": {
     tokenName: "UNI BAC/DAI",
     poolName: "Basis Power",
+  },
+  "0x9018eDe0972f7902a852B1332a0F616BDaF4bb17": {
+    tokenName: "UNI BAS/DAI",
+    poolName: "BAS Power",
   },
 };
 
