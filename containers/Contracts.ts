@@ -35,11 +35,15 @@ import { Instabrine } from "./Contracts/Instabrine";
 import { InstabrineFactory } from "./Contracts/InstabrineFactory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChefFactory } from "./Contracts/SushiChefFactory";
+import { Dill } from "./Contracts/Dill";
+import { DillFactory } from "./Contracts/DillFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
   "0xa17a8883dA1aBd57c690DF9Ebf58fC194eDAb66F";
+
+export const DILL = "0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf";
 
 export const COMPTROLLER_ADDR = "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B";
 
@@ -122,6 +126,7 @@ function useContracts() {
   const [comptroller, setComptroller] = useState<Comptroller | null>(null);
   const [cToken, setCToken] = useState<Ctoken | null>(null);
   const [sushiChef, setSushiChef] = useState<SushiChef | null>(null);
+  const [dill, setDill] = useState<Dill | null>(null);
 
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
@@ -183,6 +188,7 @@ function useContracts() {
       );
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
+      setDill(DillFactory.connect(DILL, signer));
     }
   };
 
@@ -214,6 +220,7 @@ function useContracts() {
     instabrine,
     sushiChef,
     basisStaking,
+    dill,
   };
 }
 

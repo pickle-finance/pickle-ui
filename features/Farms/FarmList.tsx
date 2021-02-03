@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { Spacer, Grid, Checkbox } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 
 import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms } from "../../containers/UserFarms";
@@ -47,12 +47,24 @@ export const FarmList: FC = () => {
           </Checkbox>
         </Grid>
       </Grid.Container>
-      <h2>Active</h2>
+      <Spacer y={0.5} />
+      <div
+        css={{
+          justifyContent: "space-between",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <h2>Active</h2>
+        <Button size="small">Boost Selected Farms</Button>
+      </div>
       <Grid.Container gap={1}>
         {activeFarms.map((farmData) => (
-          <Grid xs={24} key={farmData.poolIndex}>
-            <FarmCollapsible farmData={farmData} />
-          </Grid>
+          <>
+            <Grid xs={24} key={farmData.poolIndex}>
+              <FarmCollapsible farmData={farmData} />
+            </Grid>
+          </>
         ))}
       </Grid.Container>
       <Spacer y={1} />
