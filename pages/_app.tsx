@@ -6,6 +6,8 @@ import * as types from "styled-components/cssprop";
 
 import "../styles/reset.css";
 import "../styles/global.scss";
+import "react-day-picker/lib/style.css";
+
 import { geistTheme } from "../styles/geistTheme";
 import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
@@ -20,6 +22,7 @@ import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { SushiPairs } from "../containers/SushiPairs";
+import { Dill } from "../containers/Dill";
 
 const WithContainers: FC = ({ children }) => (
   <Connection.Provider>
@@ -29,17 +32,19 @@ const WithContainers: FC = ({ children }) => (
           <Prices.Provider>
             <Pickles.Provider>
               <PickleStaking.Provider>
-                <UniV2Pairs.Provider>
-                  <SushiPairs.Provider>
-                    <Jars.Provider>
-                      <Farms.Provider>
-                        <UserJars.Provider>
-                          <UserFarms.Provider>{children}</UserFarms.Provider>
-                        </UserJars.Provider>
-                      </Farms.Provider>
-                    </Jars.Provider>
-                  </SushiPairs.Provider>
-                </UniV2Pairs.Provider>
+                <Dill.Provider>
+                  <UniV2Pairs.Provider>
+                    <SushiPairs.Provider>
+                      <Jars.Provider>
+                        <Farms.Provider>
+                          <UserJars.Provider>
+                            <UserFarms.Provider>{children}</UserFarms.Provider>
+                          </UserJars.Provider>
+                        </Farms.Provider>
+                      </Jars.Provider>
+                    </SushiPairs.Provider>
+                  </UniV2Pairs.Provider>
+                </Dill.Provider>
               </PickleStaking.Provider>
             </Pickles.Provider>
           </Prices.Provider>

@@ -1,7 +1,15 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import {
+  Button,
+  Link,
+  Input,
+  Grid,
+  Spacer,
+  Tooltip,
+  Checkbox,
+} from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
@@ -242,29 +250,37 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
               <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3}>
+          <Grid xs={24} sm={6} md={4} lg={3} css={{ textAlign: "center" }}>
             <Tooltip text={apy === 0 ? "--" : tooltipText}>
               <div>{apy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
               <Label>Total APY</Label>
             </Tooltip>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={3} lg={2.5} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={3} lg={2.5} css={{ textAlign: "center" }}>
             <Data isZero={bal === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={3} lg={2.5} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum === 0}>{stakedStr}</Data>
             <Label>Staked</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
             <Label>Value Staked</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
+            <Label>Current Boost</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={2} css={{ textAlign: "center" }}>
+            <Checkbox size="large" />
+            <Label>Boost</Label>
           </Grid>
         </Grid.Container>
       }
