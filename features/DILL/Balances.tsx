@@ -34,6 +34,7 @@ export const Balances: FC<{
 
   const unlockTime = new Date();
   unlockTime.setTime(+(dillStats.lockEndDate?.toString() || 0) * 1000);
+  const isLocked = Boolean(+(dillStats.lockEndDate?.toString() || 0) * 1000);
 
   return (
     <Grid.Container gap={2}>
@@ -55,7 +56,13 @@ export const Balances: FC<{
       </Grid>
       <Grid xs={24} sm={12} md={12}>
         <Card>
-          <h2>Locked (until {formatDate(unlockTime)})</h2>
+          <h2>
+            {isLocked ? (
+              <>Locked (until {formatDate(unlockTime)})</>
+            ) : (
+              "Unlocked"
+            )}
+          </h2>
           <DataPoint>
             <span>
               {dillStats.lockedAmount !== null
@@ -83,59 +90,6 @@ export const Balances: FC<{
           </DataPoint>
         </Card>
       </Grid>
-      {/* <Grid xs={24} sm={12} md={8}>
-        <Card>
-          <h2>{rewardsTokenName} Earned</h2>
-          <DataPoint>
-            <span>
-              {earned
-                ? Number(formatEther(earned)).toLocaleString(undefined, {
-                    minimumFractionDigits: 8,
-                    maximumFractionDigits: 8,
-                  })
-                : "--"}
-            </span>
-            <Icon />
-          </DataPoint>
-        </Card>
-      </Grid>
-      <Grid xs={24} sm={12} md={8}>
-        <Card>
-          <h2>
-            {rewardsTokenName} Reward Every {rewardsDurationInDays} Days
-          </h2>
-          <DataPoint>
-            <span>
-              {rewardForDuration
-                ? Number(formatEther(rewardForDuration)).toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    },
-                  )
-                : "--"}
-            </span>
-            <Icon />
-          </DataPoint>
-        </Card>
-      </Grid>
-      <Grid xs={24} sm={24} md={8}>
-        <Card>
-          <h2>Current APY</h2>
-          <DataPoint>
-            <span>
-              {APY
-                ? (100 * APY).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                : "--"}
-              %
-            </span>
-          </DataPoint>
-        </Card>
-      </Grid> */}
     </Grid.Container>
   );
 };
