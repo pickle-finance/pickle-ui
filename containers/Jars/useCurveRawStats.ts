@@ -19,6 +19,7 @@ export interface RawStatAPYs {
   husd: number;
   usdn: number;
   usdk: number;
+  steth: number;
 }
 
 export const useCurveRawStats = (): { rawStats: null | RawStatAPYs } => {

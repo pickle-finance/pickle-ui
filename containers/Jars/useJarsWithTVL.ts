@@ -26,7 +26,8 @@ const isCurvePool = (jarName: string): boolean => {
   return (
     jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"] ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV
   );
 };
 

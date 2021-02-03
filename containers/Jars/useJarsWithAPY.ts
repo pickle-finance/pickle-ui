@@ -11,6 +11,7 @@ import {
   Contracts,
   BASIS_BAC_DAI_STAKING_REWARDS,
   MITH_MIC_USDT_STAKING_REWARDS,
+  STECRV_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -28,6 +29,7 @@ import compound from "@studydefi/money-legos/compound";
 import { Contract as MulticallContract } from "ethers-multicall";
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
+import { useCurveLdoAPY } from "./useCurveLdoAPY";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 
@@ -77,6 +79,8 @@ export const useJarWithAPY = (jars: Input): Output => {
     threeGauge,
     threePool,
     sushiChef,
+    steCRVPool,
+    steCRVGauge,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -86,6 +90,12 @@ export const useJarWithAPY = (jars: Input): Output => {
     prices?.usdc || null,
     susdGauge,
     susdPool,
+  );
+  const { APYs: stEthCrvAPY } = useCurveCrvAPY(
+    jars,
+    prices?.eth || null,
+    steCRVGauge,
+    steCRVPool,
   );
   const { APYs: threePoolCrvAPY } = useCurveCrvAPY(
     jars,
@@ -103,6 +113,11 @@ export const useJarWithAPY = (jars: Input): Output => {
     jars,
     susdPool,
     stakingRewards ? stakingRewards.attach(SCRV_STAKING_REWARDS) : null,
+  );
+  const { APYs: stEthLdoAPY } = useCurveLdoAPY(
+    jars,
+    steCRVPool,
+    stakingRewards ? stakingRewards.attach(STECRV_STAKING_REWARDS) : null,
   );
 
   const { APYs: compDaiAPYs } = useCompAPY(compound.cDAI.address);
@@ -312,6 +327,14 @@ export const useJarWithAPY = (jars: Input): Output => {
             { lp: curveRawStats?.ren2 || 0 },
             ...susdCrvAPY,
             ...susdSNXAPY,
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV) {
+          APYs = [
+            { lp: curveRawStats?.steth || 0 },
+            ...stEthLdoAPY,
+            ...stEthCrvAPY,
           ];
         }
 

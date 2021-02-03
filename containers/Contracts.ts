@@ -53,6 +53,8 @@ export const GAUGE_CONTROLLER_ADDR =
   "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB";
 export const SUSD_GAUGE_ADDR = "0xA90996896660DEcC6E997655E065b23788857849";
 export const SUSD_POOL_ADDR = "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD";
+export const STETH_GAUGE_ADDR = "0x182B723a58739a9c974cFDB385ceaDb237453c28";
+export const STETH_POOL_ADDR = "0xDC24316b9AE028F1497c275EB9192a3Ea0f67022";
 export const RENBTC_GAUGE_ADDR = "0xB1F2cdeC61db658F091671F5f199635aEF202CAC";
 export const RENBTC_POOL_ADDR = "0x93054188d876f558f4a66B2EF1d97d16eDf0895B";
 export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
@@ -66,6 +68,8 @@ export const RENBTC_CRV = "0x49849C98ae39Fff122806C06791Fa73784FB3675";
 
 export const SCRV_STAKING_REWARDS =
   "0xDCB6A51eA3CA5d3Fd898Fd6564757c7aAeC3ca92";
+export const STECRV_STAKING_REWARDS =
+  "0x99ac10631F69C753DDb595D074422a0922D9056B";
 
 export const UNI_ETH_DAI_STAKING_REWARDS =
   "0xa1484c3aa22a66c62b77e0ae78e15258bd0cb711";
@@ -96,6 +100,8 @@ function useContracts() {
   ] = useState<GaugeController | null>(null);
   const [susdGauge, setSUSDGauge] = useState<Gauge | null>(null);
   const [susdPool, setSUSDPool] = useState<Pool | null>(null);
+  const [steCRVGauge, setSteCRVGauge] = useState<Gauge | null>(null);
+  const [steCRVPool, setSteCRVPool] = useState<Pool | null>(null);
   const [renGauge, setRENGauge] = useState<Gauge | null>(null);
   const [renPool, setRENPool] = useState<Pool | null>(null);
   const [threeGauge, setThreeGauge] = useState<Gauge | null>(null);
@@ -133,6 +139,8 @@ function useContracts() {
       );
       setSUSDGauge(GaugeFactory.connect(SUSD_GAUGE_ADDR, signer));
       setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, signer));
+      setSteCRVGauge(GaugeFactory.connect(STETH_GAUGE_ADDR, signer));
+      setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, signer));
       setRENGauge(GaugeFactory.connect(RENBTC_GAUGE_ADDR, signer));
       setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, signer));
       setThreeGauge(GaugeFactory.connect(THREE_GAUGE_ADDR, signer));
@@ -172,10 +180,12 @@ function useContracts() {
     susdGauge,
     renGauge,
     threeGauge,
+    steCRVGauge,
     gaugeController,
     susdPool,
     renPool,
     threePool,
+    steCRVPool,
     stakingRewards,
     uniswapv2Pair,
     erc20,

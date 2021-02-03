@@ -4,6 +4,7 @@ export const PICKLE_JARS = {
   psCRV: "0x68d14d66B2B0d6E157c06Dc8Fefa3D8ba0e66a89",
   prenBTCWBTC: "0x2E35392F4c36EBa7eCAFE4de34199b2373Af22ec",
   p3CRV: "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33",
+  psteCRV: "0x77c8a58d940a322aea02dbc8ee4a30350d4239ad",
   pSUSHIETHDAI: "0x55282da27a3a02ffe599f6d11314d239dac89135",
   pSUSHIETHUSDC: "0x8c2d16b7f6d3f989eb4878ecf13d695a7d504e43",
   pSUSHIETHUSDT: "0xa7a37ae5cb163a3147de83f15e15d8e5f94d6bce",
@@ -17,6 +18,7 @@ export const PICKLE_JARS = {
 };
 
 export const JAR_DEPOSIT_TOKENS = {
+  steCRV: "0x06325440D014e39736583c165C2963BA99fAf14E",
   SUSHI_MIC_USDT: "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb",
   UNIV2_BAC_DAI: "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD",
   SUSHI_ETH_DAI: "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f",
@@ -38,6 +40,7 @@ export const DEPOSIT_TOKENS_NAME = {
   sCRV: "sCRV",
   renCRV: "renBTCCRV",
   "3CRV": "3poolCRV",
+  steCRV: "steCRV (ETH-stETH)",
   UNIV2_ETH_DAI: "UNI DAI/ETH",
   UNIV2_ETH_USDC: "UNI USDC/ETH",
   UNIV2_ETH_USDT: "UNI USDT/ETH",
@@ -56,6 +59,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.sCRV]: true,
   [DEPOSIT_TOKENS_NAME.renCRV]: true,
   [DEPOSIT_TOKENS_NAME["3CRV"]]: true,
+  [DEPOSIT_TOKENS_NAME.steCRV]: true,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_DAI]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDC]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDT]: false,
@@ -74,6 +78,7 @@ export const DEPOSIT_TOKENS_LINK = {
   sCRV: "https://www.curve.fi/susdv2/deposit",
   renCRV: "https://www.curve.fi/ren/deposit",
   "3CRV": "https://www.curve.fi/3pool/deposit",
+  steCRV: "https://www.curve.fi/steth/deposit",
   UNIV2_ETH_DAI:
     "https://app.uniswap.org/#/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
   UNIV2_ETH_USDC:
@@ -103,6 +108,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   sCRV: "pJar 0a",
   renCRV: "pJar 0b",
   "3CRV": "pJar 0c",
+  steCRV: "pJar 1.00st",
   UNIV2_ETH_DAI: "pJar 0.69a",
   UNIV2_ETH_USDC: "pJar 0.69b",
   UNIV2_ETH_USDT: "pJar 0.69c",
@@ -165,6 +171,10 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
 
   if (l === "0x368b3a58b5f49392e5c9e4c998cb0bb966752e51") {
     return "mic";
+  }
+
+  if (l === "0x5a98fcbea516cf06857215779fd812ca3bef1b32") {
+    return "ldo";
   }
 
   throw new Error(`Unknown token address: ${tokenAddress}`);
