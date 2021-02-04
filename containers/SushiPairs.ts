@@ -35,7 +35,7 @@ const usdt: Token = { address: addresses.usdt, priceId: "usdt", decimals: 6 };
 const yfi: Token = { address: addresses.yfi, priceId: "yfi", decimals: 18 };
 const wbtc: Token = { address: addresses.wbtc, priceId: "wbtc", decimals: 8 };
 const mic: Token = { address: addresses.mic, priceId: "mic", decimals: 18 };
-const mis: Token = { address: addresses.mis, priceId: "mic", decimals: 18 };
+const mis: Token = { address: addresses.mis, priceId: "mis", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
