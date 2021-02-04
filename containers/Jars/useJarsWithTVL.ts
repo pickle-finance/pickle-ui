@@ -47,7 +47,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT
   );
 };
 
@@ -58,6 +59,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     uniswapv2Pair,
     susdPool,
     renPool,
+    steCRVPool,
     threePool,
   } = Contracts.useContainer();
 
@@ -82,6 +84,11 @@ export const useJarWithTVL = (jars: Input): Output => {
     if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV) {
       pool = renPool;
       pricePerUnderlying = prices?.wbtc;
+    }
+
+    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV) {
+      pool = steCRVPool;
+      pricePerUnderlying = prices?.eth;
     }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
@@ -115,6 +122,7 @@ export const useJarWithTVL = (jars: Input): Output => {
   };
 
   const measureUniJarTVL = async (jar: JarWithAPY) => {
+    console.log(jar);
     if (!uniswapv2Pair || !prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
