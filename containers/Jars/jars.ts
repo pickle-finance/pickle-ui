@@ -114,7 +114,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   sCRV: "pJar 0a",
   renCRV: "pJar 0b",
   "3CRV": "pJar 0c",
-  steCRV: "pJar 1.00st",
+  steCRV: "pJar 0d",
   UNIV2_ETH_DAI: "pJar 0.69a",
   UNIV2_ETH_USDC: "pJar 0.69b",
   UNIV2_ETH_USDT: "pJar 0.69c",
