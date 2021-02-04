@@ -39,7 +39,6 @@ export const useCurveLdoAPY = (
   const [ldoAPY, setLdoAPY] = useState<number | null>(null);
 
   const getLdoAPY = async () => {
-    console.error("ashdfuihwqierjioasdjfioasjdfiasjdfioajsdfio");
     if (stakingRewards && pool && multicallProvider && prices?.ldo) {
       const mcPool = new MulticallContract(
         pool.address,

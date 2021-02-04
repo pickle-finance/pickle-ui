@@ -12,6 +12,7 @@ import {
   BASIS_BAC_DAI_STAKING_REWARDS,
   MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
+  MITH_MIS_USDT_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -228,7 +229,6 @@ export const useJarWithAPY = (jars: Input): Output => {
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const misRewardRate = parseFloat(formatEther(rewardRateBN));
 
-      console.log(stakingToken);
       const { pricePerToken } = await getSushiPairData(stakingToken);
 
       const misRewardsPerYear = misRewardRate * (360 * 24 * 60 * 60);
@@ -236,7 +236,6 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       const totalValueStaked = totalSupply * pricePerToken;
       const misAPY = valueRewardedPerYear / totalValueStaked;
-      console.log(misAPY);
 
       return [
         { mis: getCompoundingAPY(misAPY * 0.8), apr: misAPY * 0.8 * 100 },
@@ -318,6 +317,9 @@ export const useJarWithAPY = (jars: Input): Output => {
       const mithMicUsdtApy = await calculateMithAPY(
         MITH_MIC_USDT_STAKING_REWARDS,
       );
+      const mithMisUsdtApy = await calculateMithAPY(
+        MITH_MIS_USDT_STAKING_REWARDS,
+      );
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -388,6 +390,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mithMicUsdtApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIC_USDT),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT) {
+          APYs = [
+            ...mithMisUsdtApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIS_USDT),
           ];
         }
 
