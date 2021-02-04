@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash&vs_currencies=usd";
+  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao&vs_currencies=usd";
 
 type UsdPrice = { usd: number };
 
@@ -24,6 +24,7 @@ interface Response {
   "basis-cash": UsdPrice;
   "mithril-share": UsdPrice;
   "mith-cash": UsdPrice;
+  "lido-dao": UsdPrice;
 }
 
 interface PriceObject {
@@ -44,6 +45,7 @@ interface PriceObject {
   bac: number;
   mis: number;
   mic: number;
+  ldo: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -85,6 +87,7 @@ function usePrices() {
       bac: response["basis-cash"].usd,
       mis: response["mithril-share"].usd,
       mic: response["mith-cash"].usd,
+      ldo: response["lido-dao"].usd,
     };
     setPrices(prices);
   };
