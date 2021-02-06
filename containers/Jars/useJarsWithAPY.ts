@@ -304,6 +304,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthUsdtApy,
         sushiEthWBtcApy,
         sushiEthYfiApy,
+        sushiEthyveCRVApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
@@ -315,6 +316,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
       ]);
       const mithMicUsdtApy = await calculateMithAPY(
         MITH_MIC_USDT_STAKING_REWARDS,
@@ -434,6 +436,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...sushiEthYfiApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV) {
+          APYs = [
+            ...sushiEthyveCRVApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
           ];
         }
 
