@@ -123,7 +123,6 @@ export const useJarWithTVL = (jars: Input): Output => {
   };
 
   const measureUniJarTVL = async (jar: JarWithAPY) => {
-    console.log(jar);
     if (!uniswapv2Pair || !prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
@@ -181,8 +180,13 @@ export const useJarWithTVL = (jars: Input): Output => {
 
     const token0PriceId = getPriceId(token0);
     const token1PriceId = getPriceId(token1);
-    const tvlUSD =
-      token0Bal * prices[token0PriceId] + token1Bal * prices[token1PriceId];
+
+    let tvlUSD;
+    if (prices[token0PriceId]) {
+      tvlUSD = 2 * token0Bal * prices[token0PriceId];
+    } else {
+      tvlUSD = 2 * token1Bal * prices[token1PriceId];
+    }
 
     const usdPerPToken = tvlUSD / parseFloat(formatEther(supply));
 
