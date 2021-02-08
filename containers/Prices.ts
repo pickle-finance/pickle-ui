@@ -46,6 +46,7 @@ interface PriceObject {
   mis: number;
   mic: number;
   ldo: number;
+  yvecrv: number;
 }
 
 export type PriceIds = keyof PriceObject;

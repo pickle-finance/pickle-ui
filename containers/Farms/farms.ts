@@ -60,4 +60,7 @@ export const JAR_FARM_MAP = {
   "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87": {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.DAI,
   },
+  "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48": {
+    jarName: DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV,
+  },
 };

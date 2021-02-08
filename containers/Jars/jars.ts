@@ -11,6 +11,7 @@ export const PICKLE_JARS = {
   pSUSHIETHWBTC: "0xde74b6c547bd574c3527316a2ee30cd8f6041525",
   pSUSHIETHYFI: "0x3261D9408604CC8607b687980D40135aFA26FfED",
   pSUSHIMISUSDT: "0x0FAA189afE8aE97dE1d2F01E471297678842146d",
+  pSUSHIETHYVECRV: "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48",
   pUNIETHDAI: "0xCffA068F1E44D98D3753966eBd58D4CFe3BB5162",
   pUNIETHUSDC: "0x53Bf2E62fA20e2b4522f05de3597890Ec1b352C6",
   pUNIETHUSDT: "0x09FC573c502037B149ba87782ACC81cF093EC6ef",
@@ -19,6 +20,7 @@ export const PICKLE_JARS = {
 };
 
 export const JAR_DEPOSIT_TOKENS = {
+  SUSHI_ETH_YVECRV: "0x10B47177E92Ef9D5C6059055d92DdF6290848991",
   steCRV: "0x06325440D014e39736583c165C2963BA99fAf14E",
   SUSHI_MIS_USDT: "0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0",
   SUSHI_MIC_USDT: "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb",
@@ -55,6 +57,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH_USDT: "SLP USDT/ETH",
   SUSHI_ETH_WBTC: "SLP WBTC/ETH",
   SUSHI_ETH_YFI: "SLP YFI/ETH",
+  SUSHI_ETH_YVECRV: "SLP YVECRV/ETH",
   DAI: "DAI",
 };
 
@@ -75,6 +78,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDT]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_WBTC]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YFI]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YVECRV]: true,
   [DEPOSIT_TOKENS_NAME.DAI]: false,
 };
 
@@ -107,6 +111,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://exchange.sushiswapclassic.org/#/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
   SUSHI_ETH_YFI:
     "https://exchange.sushiswapclassic.org/#/add/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/ETH",
+  SUSHI_ETH_YVECRV:
+    "https://sushiswap.fi/pair/0x10b47177e92ef9d5c6059055d92ddf6290848991",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
 };
 
@@ -132,6 +138,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_USDT: "pJar 0.99c",
   SUSHI_ETH_WBTC: "pJar 0.99d",
   SUSHI_ETH_YFI: "pJar 0.99e",
+  SUSHI_ETH_YVECRV: "pJar 0.99i",
 };
 
 export const STRATEGY_NAMES = {
@@ -186,6 +193,10 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
 
   if (l === "0x5a98fcbea516cf06857215779fd812ca3bef1b32") {
     return "ldo";
+  }
+
+  if (l === "0xc5bddf9843308380375a611c18b50fb9341f502a") {
+    return "yvecrv";
   }
 
   throw new Error(`Unknown token address: ${tokenAddress}`);
