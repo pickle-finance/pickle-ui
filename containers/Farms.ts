@@ -106,15 +106,15 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "UNI BAC/DAI",
     poolName: "Basis Power",
   },
-  "0x77c8a58d940a322aea02dbc8ee4a30350d4239ad": {
+  "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": {
     tokenName: "stEthCrv",
     poolName: "stETH-ETH",
   },
-  "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48": {
+  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": {
     tokenName: "pSLP yveCRV",
-    poolName: "backscratcher",
+    poolName: "Back Scratcher",
   },
-  "0x0faa189afe8ae97de1d2f01e471297678842146d": {
+  "0x0FAA189afE8aE97dE1d2F01E471297678842146d": {
     tokenName: "pSLP MIS/USDT",
     poolName: "pSLP MIS/USDT",
   },
