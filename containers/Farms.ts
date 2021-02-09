@@ -99,12 +99,24 @@ export const FarmInfo: IFarmInfo = {
     poolName: "pSLP YFI",
   },
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": {
-    tokenName: "pMICUSDT",
-    poolName: "pMICUSDT",
+    tokenName: "pSLP MIC/USDT",
+    poolName: "pSLP MIC/USDT",
   },
   "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": {
     tokenName: "UNI BAC/DAI",
     poolName: "Basis Power",
+  },
+  "0x77c8a58d940a322aea02dbc8ee4a30350d4239ad": {
+    tokenName: "stEthCrv",
+    poolName: "stETH-ETH",
+  },
+  "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48": {
+    tokenName: "pSLP yveCRV",
+    poolName: "backscratcher",
+  },
+  "0x0faa189afe8ae97de1d2f01e471297678842146d": {
+    tokenName: "pSLP MIS/USDT",
+    poolName: "pSLP MIS/USDT",
   },
 };
 
