@@ -76,6 +76,15 @@ const FARM_LP_TO_ICON = {
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
   ),
+  "0x0FAA189afE8aE97dE1d2F01E471297678842146d": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
+  ),
+  "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
+    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
+  ),
+  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
+  ),
 };
 
 const setButtonStatus = (
