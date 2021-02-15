@@ -1,4 +1,3 @@
-// @ts-nocheck 
 import { makeStyles, createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
