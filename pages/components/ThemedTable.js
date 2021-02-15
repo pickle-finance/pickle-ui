@@ -22,9 +22,9 @@ const theme = createMuiTheme({
 const useStyles = makeStyles((theme) => ({
   earnPaper: {
     borderRadius: "3px",
-    backgroundColor: cardColor,
+    backgroundColor: "#0e1d15",
     minHeight: "calc(100% - 32px)",
-    boxShadow: `0px 3px ${pickleGreen}`,
+    border: `1px solid ${pickleGreen}`,
   },
   tableHeader: {
     borderBottom: "1px solid gray",
