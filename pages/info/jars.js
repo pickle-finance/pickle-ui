@@ -4,9 +4,12 @@ import Typography from "@material-ui/core/Typography";
 import { crvJars, sushiJars, uniJars } from "../util/jars";
 import { getJarChart, getStakingChart, getProtocolData } from "../util/api";
 import { materialBlack } from "../util/constants";
-import JarValueChart from "./JarValueChart";
+import JarValueChart from "../components/JarValueChart";
 import Grid from "@material-ui/core/Grid";
 import clsx from "clsx";
+import { Page } from "@geist-ui/react";
+import { TopBar } from "../../features/TopBar/TopBar";
+import { Footer } from "../../features/Footer/Footer";
 
 export const useStyles = makeStyles(() => ({
   title: {
@@ -19,10 +22,14 @@ export const useStyles = makeStyles(() => ({
   },
   separator: {
     marginTop: "25px",
-  }
+  },
 }));
 
-const chartSkeletons = (charts) => Array.from({length: charts.length}, (c, i) => ({asset: `${i}`, data: []}));
+const chartSkeletons = (charts) =>
+  Array.from({ length: charts.length }, (c, i) => ({
+    asset: `${i}`,
+    data: [],
+  }));
 
 export default function Dashboard() {
   const classes = useStyles();
@@ -61,39 +68,47 @@ export default function Dashboard() {
         sushiJars: sushiData,
         uniJars: uniData,
       });
-    }
+    };
     retrieveDashboardData();
   }, []);
-  
+
   const jars = dashboardData.sushiJars.concat(dashboardData.uniJars);
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
-          <Typography variant="h4">
-            pJar 0
-          </Typography>
+      <TopBar />
+      <Page>
+        <Grid container spacing={2}>
+          <Grid
+            item
+            xs={12}
+            className={clsx(classes.section, classes.separator)}
+          >
+            <h1>pJar 0</h1>
+          </Grid>
+          {dashboardData.crvJars.map((jar) => {
+            return (
+              <Grid item xs={12} sm={6} key={jar.asset}>
+                <JarValueChart jar={jar} />
+              </Grid>
+            );
+          })}
+          <Grid
+            item
+            xs={12}
+            className={clsx(classes.section, classes.separator)}
+          >
+            <h1>pJar 0.99</h1>
+          </Grid>
+          {jars.concat().map((jar, i) => {
+            return (
+              <Grid item xs={12} sm={6} key={i}>
+                <JarValueChart jar={jar} />
+              </Grid>
+            );
+          })}
         </Grid>
-        {dashboardData.crvJars.map((jar) => {
-          return (
-            <Grid item xs={12} sm={6} key={jar.asset} >
-              <JarValueChart jar={jar} />
-            </Grid>
-          );
-        })}
-        <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
-          <Typography variant="h4">
-            pJar 0.99
-          </Typography>
-        </Grid>
-        {jars.concat().map((jar, i) => {
-          return (
-            <Grid item xs={12} sm={6} key={i} >
-              <JarValueChart jar={jar} />
-            </Grid>
-          );
-        })}
-      </Grid>
+      </Page>
+      <Footer />
     </>
   );
 }

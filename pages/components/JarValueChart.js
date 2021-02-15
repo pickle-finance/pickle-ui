@@ -1,12 +1,20 @@
-import React, { useRef, useState, useEffect } from 'react';
-import Paper from '@material-ui/core/Paper';
+import React, { useRef, useState, useEffect } from "react";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
-import { materialBlack, pickleGreen, cardColor, pickleNeon, graphFill, pickleBlue } from '../util/constants';
-import Avatar from '@material-ui/core/Avatar';
-import Skeleton from '@material-ui/lab/Skeleton';
+import Typography from "@material-ui/core/Typography";
+import {
+  materialBlack,
+  pickleGreen,
+  cardColor,
+  pickleNeon,
+  graphFill,
+  pickleBlue,
+  pickleWhite
+} from "../util/constants";
+import Avatar from "@material-ui/core/Avatar";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { AreaChart, Area, YAxis, XAxis, Tooltip } from "recharts";
-import { normalize } from '../util/constants';
+import { normalize } from "../util/constants";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -55,11 +63,11 @@ const useStyles = makeStyles((theme) => ({
     textShadow: `${pickleGreen} 0 0 18px`,
   },
   chartHeader: {
-    color: materialBlack,
+    color: pickleWhite,
     display: "flex",
     alignItems: "center",
     marginBottom: theme.spacing(0.8),
-  }
+  },
 }));
 
 const formatValue = (value) => {
@@ -77,18 +85,19 @@ const formatY = (value) => {
   return value.toFixed(0);
 };
 
+const formatDollars = (num) =>
+  "$" +
+  num.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
 export default function JarValueChart(props) {
   const classes = useStyles();
-  const {
-    data,
-    asset,
-    name,
-    format,
-    formatter,
-  } = props.jar;
+  const { data, asset, name, format, formatter } = props.jar;
   const formatTooltip = (value) => {
     return [`${formatValue(value)}`, formatter ? formatter : "TVL"];
-  }
+  };
   const formatDate = (tick) => {
     let formattedDate = moment(tick).format("l");
     return formattedDate.slice(0, formattedDate.lastIndexOf("/"));
@@ -105,21 +114,19 @@ export default function JarValueChart(props) {
     handleResize();
   }, []);
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return _ => {
-      window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return (_) => {
+      window.removeEventListener("resize", handleResize);
     };
   });
-
-  const valueFormat = format ? format : "${0}";
 
   let value;
   if (data.length > 0) {
     const currentValue = data[data.length - 1].y;
-    value = normalize(valueFormat.format(currentValue));
+    value = formatDollars(currentValue)
   }
 
-  const icon = `./assets/${asset.toLowerCase()}.png`;
+  const icon = `/assets/${asset.toLowerCase()}.png`;
   const tooltipFormat = {
     backgroundColor: cardColor,
     border: `1px solid ${pickleGreen}`,
@@ -128,43 +135,81 @@ export default function JarValueChart(props) {
   };
   return (
     <>
-      { data.length > 0 ?
+      {data.length > 0 ? (
         <>
           <div className={classes.chartHeader}>
-            <Avatar variant='square' alt={asset} src={icon} className={classes.avatar} />
-            <Typography variant='h6' className={classes.chartHeader}>
+            <Avatar
+              variant="square"
+              alt={asset}
+              src={icon}
+              className={classes.avatar}
+            />
+            <Typography variant="h6" className={classes.chartHeader}>
               {name ? name : asset}: {value}
             </Typography>
           </div>
-        </> :
+        </>
+      ) : (
         <>
           <div className={classes.chartHeaderSkeleton}>
-            <Skeleton variant="circle" animation="wave" className={classes.chartAvatarSkeleton} />
-            <Skeleton variant="rect" animation="wave" width={width * 0.6} className={classes.chartTextSkeleton} />
+            <Skeleton
+              variant="circle"
+              animation="wave"
+              className={classes.chartAvatarSkeleton}
+            />
+            <Skeleton
+              variant="rect"
+              animation="wave"
+              width={width * 0.6}
+              className={classes.chartTextSkeleton}
+            />
           </div>
         </>
-      }
+      )}
       <Paper className={classes.picklePaper} ref={targetRef}>
-        { data.length > 0 ? 
-        <>
-          <AreaChart width={width} height={300} data={data}
-            margin={{ top: 15, right: 10, left: -15, bottom: 0 }}>
-            <Area type="monotone" dataKey="y" stroke={pickleNeon} fill={graphFill} />
-            <YAxis tickFormatter={formatY} domain={[0, "auto"]} tick={{ fill: materialBlack }} />
-            <XAxis
-                dataKey = "x"
-                domain = {["dataMin", "dataMax"]}
-                name = "Time"
-                tickFormatter = {formatDate}
-                type = "number"
+        {data.length > 0 ? (
+          <>
+            <AreaChart
+              width={width}
+              height={300}
+              data={data}
+              margin={{ top: 15, right: 10, left: -15, bottom: 0 }}
+            >
+              <Area
+                type="monotone"
+                dataKey="y"
+                stroke={pickleNeon}
+                fill={graphFill}
+              />
+              <YAxis
+                tickFormatter={formatY}
+                domain={[0, "auto"]}
                 tick={{ fill: materialBlack }}
               />
-            <Tooltip contentStyle={tooltipFormat} formatter={formatTooltip} labelFormatter={formatLabel} separator={": "} />
-          </AreaChart>
-        </>
-           :
-          <Skeleton variant="rect" animation="wave" width={width} height={300} />
-        }
+              <XAxis
+                dataKey="x"
+                domain={["dataMin", "dataMax"]}
+                name="Time"
+                tickFormatter={formatDate}
+                type="number"
+                tick={{ fill: materialBlack }}
+              />
+              <Tooltip
+                contentStyle={tooltipFormat}
+                formatter={formatTooltip}
+                labelFormatter={formatLabel}
+                separator={": "}
+              />
+            </AreaChart>
+          </>
+        ) : (
+          <Skeleton
+            variant="rect"
+            animation="wave"
+            width={width}
+            height={300}
+          />
+        )}
       </Paper>
     </>
   );
