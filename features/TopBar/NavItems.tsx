@@ -63,6 +63,9 @@ export const NavItems: FC = () => {
         style={{ textDecoration: "none" }}
       >
         <NavItem>FAQ</NavItem>
+        <Link href="/info" passHref>
+          <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
+        </Link>
       </a>
     </div>
   );
