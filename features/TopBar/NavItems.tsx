@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Popover } from "@geist-ui/react";
 
 interface NavItemProps {
   active?: boolean;
@@ -43,6 +44,14 @@ const NavItem = styled.a<NavItemProps>`
   }
 `;
 
+const infoItems = (router) => (
+  <div style={{ padding: '0 10px' }}>
+  <p><Link href="/info/earn" passHref><NavItem active={router.pathname.startsWith("/info/earn")}>Profit</NavItem></Link></p>
+  <p><Link href="/info/jars"><NavItem active={router.pathname.startsWith("/info/jars")}>Jars</NavItem></Link></p>
+  <p><Link href="/info/stats"><NavItem active={router.pathname.startsWith("/info/stats")}>Stats</NavItem></Link></p>
+</div>
+);
+
 export const NavItems: FC = () => {
   const router = useRouter();
   return (
@@ -63,10 +72,12 @@ export const NavItems: FC = () => {
         style={{ textDecoration: "none" }}
       >
         <NavItem>FAQ</NavItem>
+      </a>
+      <Popover content={infoItems(router)} trigger="hover">
         <Link href="/info" passHref>
           <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
         </Link>
-      </a>
+      </Popover>
     </div>
   );
 };
