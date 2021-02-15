@@ -17,7 +17,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
+import { Page } from "@geist-ui/react";
 import { TopBar } from "../features/TopBar/TopBar";
+import { Footer } from "../features/Footer/Footer";
 import {
   backgroundColor,
   cardColor,
@@ -428,7 +430,7 @@ export default function Brining() {
   return (
     <>
       <TopBar />
-      <Container className={classes.root}>
+      <Page>
         <Grid container spacing={5} className={classes.pickleHeader}>
           <Grid item xs={12} sm={6}>
             <Card>
@@ -540,8 +542,8 @@ export default function Brining() {
             </TableBody>
           </Table>
         </TableContainer>
-
-      </Container>
+      </Page>
+      <Footer />
     </>
   );
 }
