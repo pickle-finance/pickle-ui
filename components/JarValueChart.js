@@ -14,7 +14,6 @@ import {
 import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { AreaChart, Area, YAxis, XAxis, Tooltip } from "recharts";
-import { normalize } from "../util/constants";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({

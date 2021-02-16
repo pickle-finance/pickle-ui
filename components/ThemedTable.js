@@ -61,7 +61,7 @@ export default function ThemedTable(props) {
         <Table>
           <TableHead>
             <TableRow>
-              {headers.map((header, i) => <Header title={header} index={i} key={i} />)}
+              {headers?.map((header, i) => <Header title={header} index={i} key={i} />)}
             </TableRow>
           </TableHead>
           <TableBody>

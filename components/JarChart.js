@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import { pickleGreen, backgroundColor, cardColor } from './constants';
+import { pickleGreen, backgroundColor, cardColor } from '../util/constants';
 import JarValueChart from './JarValueChart';
 import Skeleton from '@material-ui/lab/Skeleton';
 

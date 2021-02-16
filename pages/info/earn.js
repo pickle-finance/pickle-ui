@@ -17,17 +17,17 @@ import {
   getCoinData,
   formatUsd,
   getFarmData,
-} from "../util/api";
+} from "../../util/api";
 import {
   cardColor,
   pickleGreen,
   materialBlack,
   pickleWhite,
-} from "../util/constants";
-import InfoCardContent from "../components/InfoCardContent";
-import EarnRow from "../components/EarnRow";
-import ThemedTable from "../components/ThemedTable";
-import { jars } from "../util/jars";
+} from "../../util/constants";
+import InfoCardContent from "../../components/InfoCardContent";
+import EarnRow from "../../components/EarnRow";
+import ThemedTable from "../../components/ThemedTable";
+import { jars } from "../../util/jars";
 import { Connection } from "../../containers/Connection";
 import { TopBar } from "../../features/TopBar/TopBar";
 import { Footer } from "../../features/Footer/Footer";

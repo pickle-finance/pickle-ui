@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import Web3 from "web3";
 
 const getApi = () => {
   if (process.env.NODE_ENV === "production") {
@@ -115,17 +114,4 @@ const coingeckoApi = "https://api.coingecko.com/api/v3";
 export const getCoinData = async (coin) => {
   return await fetch(`${coingeckoApi}/coins/${coin}`)
     .then(response => response.json());
-};
-
-// web3 badger functions
-
-export const enableWeb3 = async () => {
-  let account;
-  if (window.ethereum) {
-    account = await window.ethereum.send('eth_requestAccounts');
-  }
-  if (account) {
-    return new Web3(Web3.givenProvider).eth;
-  }
-  return account;
 };

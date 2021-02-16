@@ -26,15 +26,15 @@ import {
   pickleGreen,
   pickleWhite,
   materialBlack,
-} from "./util/constants";
+} from "../util/constants";
 import {
   getProtocolData,
   getStakingData,
   getFarmData,
   getPerformanceData,
   getCoinData,
-} from "./util/api";
-import { powerPool, jars } from "./util/jars";
+} from "../util/api";
+import { powerPool, jars } from "../util/jars";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
