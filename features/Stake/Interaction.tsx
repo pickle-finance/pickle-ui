@@ -71,7 +71,7 @@ export const Interaction: FC<{
   } = ERC20Transfer.useContainer();
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
-    disabled: false,
+    disabled: true,
     text: "Stake",
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
