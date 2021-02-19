@@ -20,6 +20,8 @@ import Paper from "@material-ui/core/Paper";
 import { Page } from "@geist-ui/react";
 import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
+import { Jars } from "../containers/Jars";
+import { UniV2Pairs } from "../containers/UniV2Pairs";
 import {
   backgroundColor,
   cardColor,
@@ -402,6 +404,11 @@ export default function Brining() {
   const [stakingInfo, setStakingInfo] = useState(undefined);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [pickleData, setPickleData] = useState(undefined);
+  const [liquidity, setLiquidity] = useState<number | null>(null);
+
+  const { getPairData } = UniV2Pairs.useContainer();
+  const { jars: pickleJars } = Jars.useContainer();
+
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
     const updateStaking = async () => setStakingInfo(await getStakingData());
@@ -422,10 +429,26 @@ export default function Brining() {
       updateJars();
       updatePickleData();
     };
+    const getLiquidity = async () => {
+      if (getPairData) {
+        const { totalValueOfPair } = await getPairData(
+          "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819",
+        );
+        setLiquidity(totalValueOfPair);
+      }
+    };
+    getLiquidity();
     updateInfo();
     const interval = setInterval(() => updateInfo(), 600000);
     return () => clearInterval(interval);
   }, []);
+
+  let totalValueLocked = null;
+  if (pickleJars) {
+    totalValueLocked = pickleJars.reduce((acc, x) => {
+      return acc + (x?.tvlUSD || 0);
+    }, liquidity || 0);
+  }
 
   return (
     <>
@@ -437,13 +460,13 @@ export default function Brining() {
               <h2>Total Value Locked</h2>
               <DataPoint>
                 <span>
-                  {protocolInfo ? getUSD(protocolInfo.totalValue) : undefined}
+                  {totalValueLocked ? getUSD(totalValueLocked) : "--"}
                 </span>
               </DataPoint>
               <Card.Footer>
-                {protocolInfo
-                  ? `Jar Value Locked: ${getUSD(protocolInfo.jarValue)}`
-                  : undefined}
+                {totalValueLocked
+                  ? `Jar Value Locked: ${getUSD(totalValueLocked - liquidity)}`
+                  : "--"}
               </Card.Footer>
             </Card>
           </Grid>
@@ -542,7 +565,7 @@ export default function Brining() {
             </TableBody>
           </Table>
         </TableContainer>
-      <Footer />
+        <Footer />
       </Page>
     </>
   );
