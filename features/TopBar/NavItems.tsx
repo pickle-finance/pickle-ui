@@ -47,8 +47,8 @@ const NavItem = styled.a<NavItemProps>`
 const infoItems = (router) => (
   <div style={{ padding: '0 10px' }}>
   <p><Link href="/info/earn" passHref><NavItem active={router.pathname.startsWith("/info/earn")}>Profit</NavItem></Link></p>
-  <p><Link href="/info/jars"><NavItem active={router.pathname.startsWith("/info/jars")}>Jars</NavItem></Link></p>
-  <p><Link href="/info/stats"><NavItem active={router.pathname.startsWith("/info/stats")}>Stats</NavItem></Link></p>
+  <p><Link href="/info/jars" passHref><NavItem active={router.pathname.startsWith("/info/jars")}>Jars</NavItem></Link></p>
+  <p><Link href="/info/stats" passHref><NavItem active={router.pathname.startsWith("/info/stats")}>Stats</NavItem></Link></p>
 </div>
 );
 
