@@ -90,7 +90,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2rem",
   },
   addressInput: {
-    width: "25rem",
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
     color: pickleWhite,
@@ -299,6 +298,7 @@ export default function Earn(props) {
               variant="outlined"
               className={classes.addressInput}
               onKeyDown={handleAccount}
+              width="28rem"
             />
             <img src="/assets/jar.png" alt="" className={classes.pickle} />
           </div>
