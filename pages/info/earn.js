@@ -107,13 +107,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Earn(props) {
   const classes = useStyles();
 
-  const [account, setAccount] = useState(undefined);
-  const [accountData, setAccountData] = useState(undefined);
   const { address } = Connection.useContainer();
+  const [account, setAccount] = useState(address);
+  const [accountData, setAccountData] = useState(undefined);
 
   useEffect(() => {
-    setAccount(address)
-  }, address)
+    account ? setAccount(account) : setAccount(address)
+  }, account)
 
   useEffect(() => {
     const updateAccountData = async () => {
@@ -240,7 +240,7 @@ export default function Earn(props) {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={4}>
                     <InfoCardContent
-                      title={"Account Balance"}
+                      title={"Deposited Balance"}
                       value={
                         accountData
                           ? formatUsd(accountData.balance)
@@ -304,8 +304,8 @@ export default function Earn(props) {
             <img src="/assets/jar.png" alt="" className={classes.pickle} />
           </div>
         )}
-      <Footer />
       </Page>
+      <Footer />
     </ThemeProvider>
   );
 }

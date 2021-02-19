@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { pickleGreen, cardColor, materialBlack } from "../../util/constants";
+import { pickleGreen, cardColor, materialBlack, pickleWhite } from "../../util/constants";
 import JarPerformanceChart from "../../components/JarPerformanceChart";
 import { getPerformanceData, getPerformanceChart } from "../../util/api";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   table: {
-    maxWidth: "90%",
+    maxWidth: "100%",
     margin: "auto",
     flexGrow: 1,
   },
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     color: materialBlack,
-    letterSpacing: "3px",
     fontSize: ".7rem",
   },
   title: {
@@ -155,7 +154,7 @@ export default function Statistics() {
                   })}
                 </TableBody>
               </Table>
-              <div className={clsx(classes.header, classes.update)}>
+              <div style={{color: pickleWhite, padding:"5px"}} className={clsx(classes.header, classes.update)}>
                 Last Updated:{" "}
                 {performanceData.performance.length > 0
                   ? moment(
