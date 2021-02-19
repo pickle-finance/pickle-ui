@@ -107,8 +107,8 @@ export default function Dashboard() {
             );
           })}
         </Grid>
-      </Page>
       <Footer />
+      </Page>
     </>
   );
 }

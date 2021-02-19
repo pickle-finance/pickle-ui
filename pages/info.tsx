@@ -542,8 +542,8 @@ export default function Brining() {
             </TableBody>
           </Table>
         </TableContainer>
-      </Page>
       <Footer />
+      </Page>
     </>
   );
 }

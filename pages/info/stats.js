@@ -168,8 +168,8 @@ export default function Statistics() {
             </TableContainer>
           </Grid>
         </Grid>
-      </Page>
       <Footer />
+      </Page>
     </>
   );
 }

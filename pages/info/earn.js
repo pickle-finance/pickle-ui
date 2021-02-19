@@ -304,8 +304,8 @@ export default function Earn(props) {
             <img src="/assets/jar.png" alt="" className={classes.pickle} />
           </div>
         )}
-      </Page>
       <Footer />
+      </Page>
     </ThemeProvider>
   );
 }
