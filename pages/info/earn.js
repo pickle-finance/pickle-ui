@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import CardContent from "@material-ui/core/CardContent";
-import { Page } from "@geist-ui/react";
+import { Page, Input } from "@geist-ui/react";
 import {
   getUserEarnings,
   getCoinData,
@@ -87,14 +87,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    fontFamily: "roboto",
     fontSize: "2rem",
   },
   addressInput: {
-    width: "375px",
+    width: "25rem",
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
-    color: materialBlack,
+    color: pickleWhite,
   },
   pickle: {
     maxHeight: "100%",
@@ -294,9 +293,9 @@ export default function Earn(props) {
         {!account && (
           <div className={classes.address}>
             How are you brining?
-            <TextField
+            <Input
               id="account"
-              label="Ethereum Address"
+              label="Address"
               variant="outlined"
               className={classes.addressInput}
               onKeyDown={handleAccount}
@@ -304,8 +303,8 @@ export default function Earn(props) {
             <img src="/assets/jar.png" alt="" className={classes.pickle} />
           </div>
         )}
-      </Page>
       <Footer />
+      </Page>
     </ThemeProvider>
   );
 }
