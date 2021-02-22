@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import clsx from "clsx";
 import { Page } from "@geist-ui/react";
 import { TopBar } from "../../features/TopBar/TopBar";
+import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
 export const useStyles = makeStyles(() => ({
@@ -77,6 +78,7 @@ export default function Dashboard() {
     <>
       <TopBar />
       <Page>
+        <InfoBar/>
         <Grid container spacing={2}>
           <Grid
             item

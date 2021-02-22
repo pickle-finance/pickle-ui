@@ -30,6 +30,7 @@ import ThemedTable from "../../components/ThemedTable";
 import { jars } from "../../util/jars";
 import { Connection } from "../../containers/Connection";
 import { TopBar } from "../../features/TopBar/TopBar";
+import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
 const theme = createMuiTheme({
@@ -224,6 +225,7 @@ export default function Earn(props) {
     <ThemeProvider theme={theme}>
       <TopBar />
       <Page>
+      <InfoBar />
         {account && (
           <>
             <Card className={classes.wallet}>

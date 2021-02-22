@@ -17,6 +17,7 @@ import moment from "moment";
 import clsx from "clsx";
 import { Page } from "@geist-ui/react";
 import { TopBar } from "../../features/TopBar/TopBar";
+import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +92,7 @@ export default function Statistics() {
     <>
       <TopBar />
       <Page>
+        <InfoBar/>
         <Grid container spacing={2}>
           <Grid item xs={12} className={classes.section}>
             <Typography variant="h4" className={classes.title}>
