@@ -34,9 +34,6 @@ import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
 const theme = createMuiTheme({
-  typography: {
-    fontFamily: "roboto",
-  },
   palette: {
     primary: {
       main: cardColor,
@@ -47,7 +44,6 @@ const theme = createMuiTheme({
 const useStyles = makeStyles((theme) => ({
   wallet: {
     fontSize: "1.2rem",
-    fontFamily: "roboto",
     backgroundColor: "#0e1d15",
     boxShadow: `0px 3px ${pickleGreen}`,
     border: `1px solid ${pickleGreen}`,
@@ -79,7 +75,6 @@ const useStyles = makeStyles((theme) => ({
   },
   jarCard: {
     fontSize: "1.4rem",
-    fontFamily: "roboto",
     color: materialBlack,
   },
   address: {
