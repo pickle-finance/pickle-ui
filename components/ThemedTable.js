@@ -11,9 +11,6 @@ import Paper from "@material-ui/core/Paper";
 import { pickleGreen, materialBlack, cardColor } from "../util/constants"
 
 const theme = createMuiTheme({
-  typography: {
-    fontFamily: "roboto",
-  },
   tableCell: {
     backgroundColor: "black",
   }
