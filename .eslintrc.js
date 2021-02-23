@@ -8,4 +8,11 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "prettier",
   ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "@typescript-eslint/ban-ts-ignore": "off"
+  }
 };
