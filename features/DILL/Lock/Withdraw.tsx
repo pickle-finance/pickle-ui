@@ -56,7 +56,7 @@ export const Withdraw: FC<{
     getTransferStatus,
   } = ERC20Transfer.useContainer();
 
-  const [stakeButton, setStakeButton] = useState<ButtonStatus>({
+  const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
     text: "Withdraw",
   });
@@ -65,9 +65,14 @@ export const Withdraw: FC<{
 
   useEffect(() => {
     if (pickle && dill && address) {
-      const stakeStatus = getTransferStatus(pickle.address, dill.address);
+      const withdrawStatus = getTransferStatus(pickle.address, dill.address);
 
-      setButtonStatus(stakeStatus, "Staking...", "Stake", setStakeButton);
+      setButtonStatus(
+        withdrawStatus,
+        "Withdrawing...",
+        "Withdraw",
+        setWithdrawButton,
+      );
     }
   }, [blockNum, transferStatus]);
 
@@ -76,11 +81,12 @@ export const Withdraw: FC<{
       <Spacer y={0.5} />
       <Grid xs={24} md={24}>
         <Button
-          disabled={stakeButton.disabled}
+          disabled={withdrawButton.disabled}
           onClick={() => {
             if (pickle && signer && dill) {
               transfer({
                 token: "withdraw",
+                approval: false,
                 recipient: dill.address,
                 transferCallback: async () => {
                   return dill.connect(signer).withdraw({ gasLimit: 1000000 });
@@ -90,7 +96,7 @@ export const Withdraw: FC<{
           }}
           style={{ width: "100%" }}
         >
-          {stakeButton.text}
+          {withdrawButton.text}
         </Button>
       </Grid>
     </Grid.Container>

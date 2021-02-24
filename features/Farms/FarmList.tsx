@@ -48,16 +48,6 @@ export const FarmList: FC = () => {
         </Grid>
       </Grid.Container>
       <Spacer y={0.5} />
-      <div
-        css={{
-          justifyContent: "space-between",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <h2>Active</h2>
-        <Button size="small">Boost Selected Farms</Button>
-      </div>
       <Grid.Container gap={1}>
         {activeFarms.map((farmData) => (
           <>

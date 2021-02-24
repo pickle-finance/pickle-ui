@@ -36,8 +36,8 @@ function useConnection() {
     window.ethereum.on("chainIdChanged", () => window.location.reload());
     window.ethereum.on("chainChanged", () => window.location.reload());
 
-    const ethMulticallProvider = new MulticallProvider(provider);
-    await ethMulticallProvider.init();
+    const ethMulticallProvider = new MulticallProvider(provider, 1);
+    // await ethMulticallProvider.init();
 
     // set states
     setSigner(signer);

@@ -70,10 +70,15 @@ export const IncreaseTime: FC<{
     text: "Extend Lock Time",
   });
 
-  const dateAfter = getDayOffset(
-    dateFromEpoch(+(dillStats.lockEndDate?.toString() || 0)),
-    7,
-  );
+  let dateAfter;
+  if (dillStats.lockEndDate?.toString()) {
+    dateAfter = getDayOffset(
+      dateFromEpoch(+(dillStats.lockEndDate?.toString() || 0)),
+      7,
+    );
+  } else {
+    dateAfter = getDayOffset(new Date(), 7);
+  }
   const dateBefore = getDayOffset(new Date(), 365 * 4);
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
@@ -97,12 +102,16 @@ export const IncreaseTime: FC<{
     }
   }, [blockNum, transferStatus]);
 
+  const lockingWeeks = getWeekDiff(new Date(), unlockTime);
+
   return (
     <Grid.Container gap={2}>
       <Spacer y={0.5} />
       <Grid xs={24} md={24}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>Lock for: {getWeekDiff(new Date(), unlockTime)} weeks</div>
+          <div>
+            Lock for: {lockingWeeks} week{lockingWeeks > 1 ? "s" : ""}
+          </div>
           <Link
             color
             href="#"

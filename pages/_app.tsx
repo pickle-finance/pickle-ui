@@ -23,6 +23,8 @@ import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { SushiPairs } from "../containers/SushiPairs";
 import { Dill } from "../containers/Dill";
+import { Gauges } from "../containers/Gauges";
+import { UserGauges } from "../containers/UserGauges";
 
 const WithContainers: FC = ({ children }) => (
   <Connection.Provider>
@@ -37,9 +39,15 @@ const WithContainers: FC = ({ children }) => (
                     <SushiPairs.Provider>
                       <Jars.Provider>
                         <Farms.Provider>
-                          <UserJars.Provider>
-                            <UserFarms.Provider>{children}</UserFarms.Provider>
-                          </UserJars.Provider>
+                          <Gauges.Provider>
+                            <UserJars.Provider>
+                              <UserFarms.Provider>
+                                <UserGauges.Provider>
+                                  {children}
+                                </UserGauges.Provider>
+                              </UserFarms.Provider>
+                            </UserJars.Provider>
+                          </Gauges.Provider>
                         </Farms.Provider>
                       </Jars.Provider>
                     </SushiPairs.Provider>

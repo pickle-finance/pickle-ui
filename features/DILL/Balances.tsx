@@ -30,11 +30,11 @@ export const Balances: FC<{
 }> = ({ dillStats }) => {
   const { pickleBalance } = useBalances();
   const { balance: dillBalance } = Dill.useContainer();
-  console.log(dillStats.lockEndDate);
 
   const unlockTime = new Date();
   unlockTime.setTime(+(dillStats.lockEndDate?.toString() || 0) * 1000);
-  const isLocked = Boolean(+(dillStats.lockEndDate?.toString() || 0) * 1000);
+  const isLocked = Boolean(+(dillStats.lockEndDate?.toString() || 0));
+  const isExpired = unlockTime < new Date();
 
   return (
     <Grid.Container gap={2}>
@@ -58,7 +58,11 @@ export const Balances: FC<{
         <Card>
           <h2>
             {isLocked ? (
-              <>Locked (until {formatDate(unlockTime)})</>
+              isExpired ? (
+                <>Expired (since {formatDate(unlockTime)})</>
+              ) : (
+                <>Locked (until {formatDate(unlockTime)})</>
+              )
             ) : (
               "Unlocked"
             )}
