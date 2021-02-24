@@ -369,7 +369,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
-        calculateBasisAPY(BASIS_BAC_DAI_V1_STAKING_REWARDS),
+        calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
       ]);
 
