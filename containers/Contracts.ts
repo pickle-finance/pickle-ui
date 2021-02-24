@@ -15,14 +15,14 @@ import { Ctoken } from "./Contracts/Ctoken";
 import { CtokenFactory } from "./Contracts/CtokenFactory";
 import { Masterchef } from "./Contracts/Masterchef";
 import { GaugeController } from "./Contracts/GaugeController";
-import { Gauge } from "./Contracts/Gauge";
+import { CurveGauge } from "./Contracts/CurveGauge";
 import { Pool } from "./Contracts/Pool";
 import { Controller } from "./Contracts/Controller";
 import { Erc20 } from "./Contracts/Erc20";
 import { Uniswapv2Pair } from "./Contracts/Uniswapv2Pair";
 import { MasterchefFactory } from "./Contracts/MasterchefFactory";
 import { GaugeControllerFactory } from "./Contracts/GaugeControllerFactory";
-import { GaugeFactory } from "./Contracts/GaugeFactory";
+import { CurveGaugeFactory } from "./Contracts/CurveGaugeFactory";
 import { PoolFactory } from "./Contracts/PoolFactory";
 import { StakingRewards } from "./Contracts/StakingRewards";
 import { StakingRewardsFactory } from "./Contracts/StakingRewardsFactory";
@@ -37,6 +37,10 @@ import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChefFactory } from "./Contracts/SushiChefFactory";
 import { Dill } from "./Contracts/Dill";
 import { DillFactory } from "./Contracts/DillFactory";
+import { Gauge } from "./Contracts/Gauge";
+import { GaugeFactory } from "./Contracts/GaugeFactory";
+import { GaugeProxy } from "./Contracts/GaugeProxy";
+import { GaugeProxyFactory } from "./Contracts/GaugeProxyFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -103,6 +107,7 @@ export const MIRROR_MIR_UST_STAKING_REWARDS =
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
+export const GAUGE_PROXY = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
@@ -115,18 +120,20 @@ function useContracts() {
     gaugeController,
     setGaugeController,
   ] = useState<GaugeController | null>(null);
-  const [susdGauge, setSUSDGauge] = useState<Gauge | null>(null);
+  const [susdGauge, setSUSDGauge] = useState<CurveGauge | null>(null);
   const [susdPool, setSUSDPool] = useState<Pool | null>(null);
   const [steCRVGauge, setSteCRVGauge] = useState<Gauge | null>(null);
   const [steCRVPool, setSteCRVPool] = useState<Pool | null>(null);
-  const [renGauge, setRENGauge] = useState<Gauge | null>(null);
+  const [renGauge, setRENGauge] = useState<CurveGauge | null>(null);
   const [renPool, setRENPool] = useState<Pool | null>(null);
-  const [threeGauge, setThreeGauge] = useState<Gauge | null>(null);
+  const [threeGauge, setThreeGauge] = useState<CurveGauge | null>(null);
   const [threePool, setThreePool] = useState<Pool | null>(null);
   const [comptroller, setComptroller] = useState<Comptroller | null>(null);
   const [cToken, setCToken] = useState<Ctoken | null>(null);
   const [sushiChef, setSushiChef] = useState<SushiChef | null>(null);
   const [dill, setDill] = useState<Dill | null>(null);
+  const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
+  const [gauge, setGauge] = useState<Gauge | null>(null);
 
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
@@ -156,13 +163,13 @@ function useContracts() {
       setGaugeController(
         GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, signer),
       );
-      setSUSDGauge(GaugeFactory.connect(SUSD_GAUGE_ADDR, signer));
+      setSUSDGauge(CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, signer));
       setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, signer));
       setSteCRVGauge(GaugeFactory.connect(STETH_GAUGE_ADDR, signer));
       setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, signer));
-      setRENGauge(GaugeFactory.connect(RENBTC_GAUGE_ADDR, signer));
+      setRENGauge(CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, signer));
       setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, signer));
-      setThreeGauge(GaugeFactory.connect(THREE_GAUGE_ADDR, signer));
+      setThreeGauge(CurveGaugeFactory.connect(THREE_GAUGE_ADDR, signer));
       setThreePool(PoolFactory.connect(THREE_POOL_ADDR, signer));
 
       setStakingRewards(
@@ -189,6 +196,8 @@ function useContracts() {
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
       setDill(DillFactory.connect(DILL, signer));
+      setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
+      setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
     }
   };
 
@@ -221,6 +230,8 @@ function useContracts() {
     sushiChef,
     basisStaking,
     dill,
+    gaugeProxy,
+    gauge,
   };
 }
 

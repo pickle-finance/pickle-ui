@@ -33,6 +33,8 @@
     "react-dom": "^16.13.1",
     "react-is": "^16.13.1",
     "react-jazzicon": "^0.1.3",
+    "react-number-format": "^4.4.4",
+    "react-query": "^3.12.0",
     "rxjs": "^6.6.3",
     "sass": "^1.26.11",
     "styled-components": "^5.2.0",

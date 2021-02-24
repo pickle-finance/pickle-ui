@@ -49,7 +49,7 @@ export const useUniPairDayData = () => {
       },
     ).then((x) => x.json());
 
-    res.data.pairDayDatas && setUniPairDayData(res.data.pairDayDatas); // Sometimes the graph call fails
+    res.data?.pairDayDatas && setUniPairDayData(res.data.pairDayDatas); // Sometimes the graph call fails
   };
 
   const getUniPairDayAPY = (pair: string) => {

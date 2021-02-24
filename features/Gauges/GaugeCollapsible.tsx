@@ -12,8 +12,11 @@ import {
 } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
-import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
-import { UserFarmData } from "../../containers/UserFarms";
+import {
+  JAR_GAUGE_MAP,
+  PICKLE_ETH_GAUGE,
+} from "../../containers/Gauges/gauges";
+import { UserGaugeData } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
@@ -25,6 +28,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -45,7 +49,7 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
-const FARM_LP_TO_ICON = {
+const GAUGE_LP_TO_ICON = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": "/pickle.png",
   "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
   "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
@@ -81,23 +85,8 @@ const FARM_LP_TO_ICON = {
   "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
-  "0x748712686a78737DA0b7643DF78Fdf2778dC5944": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.svg"} />
-  ),
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
-  ),
-  "0x0FAA189afE8aE97dE1d2F01E471297678842146d": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
-  ),
-  "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
-    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
-  ),
-  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
-  ),
-  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir-ust.png"} />
   ),
 };
 
@@ -132,14 +121,13 @@ const setButtonStatus = (
   }
 };
 
-export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
-  farmData,
+export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
+  gaugeData,
 }) => {
   const { jars } = Jars.useContainer();
 
   const {
     poolName,
-    poolIndex,
     depositToken,
     depositTokenName,
     balance,
@@ -147,7 +135,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     harvestable,
     usdPerToken,
     apy,
-  } = farmData;
+  } = gaugeData;
   const stakedNum = parseFloat(formatEther(staked));
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -171,7 +159,6 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { masterchef } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
 
   const [stakeAmount, setStakeAmount] = useState("");
@@ -194,15 +181,15 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
 
   const maybeJar =
-    JAR_FARM_MAP[depositToken.address as keyof typeof JAR_FARM_MAP];
+    JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
   if (jars && maybeJar) {
-    const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
-    APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
+    const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
+    APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
   }
 
   const { getUniPairDayAPY } = useUniPairDayData();
-  if (depositToken.address.toLowerCase() === PICKLE_ETH_FARM.toLowerCase()) {
-    APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_FARM)];
+  if (depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()) {
+    APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
   }
 
   const tooltipText = APYs.map((x) => {
@@ -216,19 +203,16 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   }).reduce((acc, x) => acc + x, 0);
 
   useEffect(() => {
-    if (masterchef) {
+    if (gaugeData) {
       const stakeStatus = getTransferStatus(
         depositToken.address,
-        masterchef.address,
+        gaugeData.address,
       );
       const unstakeStatus = getTransferStatus(
-        masterchef.address,
+        gaugeData.address,
         depositToken.address,
       );
-      const harvestStatus = getTransferStatus(
-        masterchef.address,
-        poolIndex.toString(),
-      );
+      const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
 
       setButtonStatus(stakeStatus, "Staking...", "Stake", setStakeButton);
       setButtonStatus(
@@ -246,17 +230,19 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     }
   }, [erc20TransferStatuses]);
 
+  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
       shadow
       preview={
         <Grid.Container gap={1}>
-          <Grid xs={24} sm={12} md={5} lg={5}>
+          <Grid xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
               src={
-                FARM_LP_TO_ICON[
-                  depositToken.address as keyof typeof FARM_LP_TO_ICON
+                GAUGE_LP_TO_ICON[
+                  depositToken.address as keyof typeof GAUGE_LP_TO_ICON
                 ]
               }
             />
@@ -265,30 +251,34 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
               <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3}>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Tooltip text={apy === 0 ? "--" : tooltipText}>
               <div>{apy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
               <Label>Total APY</Label>
             </Tooltip>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={bal === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum === 0}>{stakedStr}</Data>
             <Label>Staked</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
             <Label>Value Staked</Label>
           </Grid>
+          {/* <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Input placeholder="The Evil Rabbit" />
+            <Label>Boost</Label>
+          </Grid> */}
         </Grid.Container>
       }
     >
@@ -319,14 +309,12 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           <Button
             disabled={stakeButton.disabled}
             onClick={() => {
-              if (masterchef && signer) {
+              if (gauge && signer) {
                 transfer({
                   token: depositToken.address,
-                  recipient: masterchef.address,
+                  recipient: gauge.address,
                   transferCallback: async () => {
-                    return masterchef
-                      .connect(signer)
-                      .deposit(poolIndex, ethers.utils.parseEther(stakeAmount));
+                    return gauge.deposit(ethers.utils.parseEther(stakeAmount));
                   },
                 });
               }
@@ -361,18 +349,15 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           <Button
             disabled={unstakeButton.disabled}
             onClick={() => {
-              if (masterchef && signer) {
+              if (gauge && signer) {
                 transfer({
-                  token: masterchef.address,
+                  token: gauge.address,
                   recipient: depositToken.address,
                   approval: false,
                   transferCallback: async () => {
-                    return masterchef
-                      .connect(signer)
-                      .withdraw(
-                        poolIndex,
-                        ethers.utils.parseEther(unstakeAmount),
-                      );
+                    return gauge.withdraw(
+                      ethers.utils.parseEther(unstakeAmount),
+                    );
                   },
                 });
               }
@@ -388,13 +373,13 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
-              if (masterchef && signer) {
+              if (gauge && signer) {
                 transfer({
-                  token: masterchef.address,
-                  recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
                   approval: false,
                   transferCallback: async () => {
-                    return masterchef.connect(signer).withdraw(poolIndex, 0);
+                    return gauge.getReward();
                   },
                 });
               }

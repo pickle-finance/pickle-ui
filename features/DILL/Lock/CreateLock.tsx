@@ -18,6 +18,7 @@ import {
   getEpochSecondForDay,
   getWeekDiff,
 } from "../../../utils/date";
+import { SelectPeriod } from "../../../components/SelectPeriod";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -98,6 +99,7 @@ export const CreateLock: FC<{
       setButtonStatus(lockStatus, "Locking...", "Create Lock", setLockButton);
     }
   }, [blockNum, transferStatus]);
+  const lockingWeeks = getWeekDiff(new Date(), unlockTime);
 
   return (
     <Grid.Container gap={2}>
@@ -134,7 +136,7 @@ export const CreateLock: FC<{
           </Grid>
           <Grid xs={12} sm={12} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div>Lock for: {getWeekDiff(new Date(), unlockTime)} weeks</div>
+              Lock for: {lockingWeeks} week{lockingWeeks > 1 ? "s" : ""}
               <Link
                 color
                 href="#"
@@ -149,6 +151,7 @@ export const CreateLock: FC<{
               </Link>
             </div>
             <Spacer y={0.5} />
+            {/* <SelectPeriod /> */}
             <DayPicker
               value={unlockTime}
               onDayChange={handleDayChange}

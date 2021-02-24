@@ -8,6 +8,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "prettier",
   ],
+<<<<<<< HEAD
   "env": {
     "browser": true,
     "node": true
@@ -15,4 +16,9 @@ module.exports = {
   "rules": {
     "@typescript-eslint/ban-ts-ignore": "off"
   }
+=======
+  rules: {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+  },
+>>>>>>> Add Gauge & DILL page, integration with contracts
 };

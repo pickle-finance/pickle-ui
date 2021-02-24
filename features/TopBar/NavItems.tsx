@@ -62,6 +62,9 @@ export const NavItems: FC = () => {
       <Link href="/farms" passHref>
         <NavItem active={router.pathname.startsWith("/farms")}>farms</NavItem>
       </Link>
+      <Link href="/gauges" passHref>
+        <NavItem active={router.pathname.startsWith("/gauges")}>gauges</NavItem>
+      </Link>
       <Link href="/stake" passHref>
         <NavItem active={router.pathname.startsWith("/stake")}>stake</NavItem>
       </Link>
