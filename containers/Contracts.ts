@@ -17,7 +17,6 @@ import { Masterchef } from "./Contracts/Masterchef";
 import { GaugeController } from "./Contracts/GaugeController";
 import { Gauge } from "./Contracts/Gauge";
 import { Pool } from "./Contracts/Pool";
-import { StakingRewards } from "./Contracts/StakingRewards";
 import { Controller } from "./Contracts/Controller";
 import { Erc20 } from "./Contracts/Erc20";
 import { Uniswapv2Pair } from "./Contracts/Uniswapv2Pair";
@@ -25,7 +24,10 @@ import { MasterchefFactory } from "./Contracts/MasterchefFactory";
 import { GaugeControllerFactory } from "./Contracts/GaugeControllerFactory";
 import { GaugeFactory } from "./Contracts/GaugeFactory";
 import { PoolFactory } from "./Contracts/PoolFactory";
+import { StakingRewards } from "./Contracts/StakingRewards";
 import { StakingRewardsFactory } from "./Contracts/StakingRewardsFactory";
+import { BasisStaking } from "./Contracts/BasisStaking";
+import { BasisStakingFactory } from "./Contracts/BasisStakingFactory";
 import { ControllerFactory } from "./Contracts/ControllerFactory";
 import { Erc20Factory } from "./Contracts/Erc20Factory";
 import { Uniswapv2PairFactory } from "./Contracts/Uniswapv2PairFactory";
@@ -79,12 +81,18 @@ export const UNI_ETH_USDT_STAKING_REWARDS =
   "0x6c3e4cb2e96b01f4b866965a91ed4437839a121a";
 export const UNI_ETH_WBTC_STAKING_REWARDS =
   "0xCA35e32e7926b96A9988f61d510E038108d8068e";
-export const BASIS_BAC_DAI_STAKING_REWARDS =
-  "0x067d4D3CE63450E74F880F86b5b52ea3edF9Db0f";
 export const MITH_MIC_USDT_STAKING_REWARDS =
   "0x9D9418803F042CCd7647209b0fFd617981D5c619";
 export const MITH_MIS_USDT_STAKING_REWARDS =
   "0x14E33e1D6Cc4D83D7476492C0A52b3d4F869d892";
+export const BASIS_BAC_DAI_V1_STAKING_REWARDS =
+  "0x067d4D3CE63450E74F880F86b5b52ea3edF9Db0f";
+export const BASIS_BAC_DAI_STAKING_REWARDS =
+  "0x7E7aE8923876955d6Dcb7285c04065A1B9d6ED8c";
+export const BASIS_BAS_DAI_STAKING_REWARDS =
+  "0x5859Adb05988946B9d08dcE2E12ae29af58120C0";
+export const BASIS_BAC_DAI_PID = 0;
+export const BASIS_BAS_DAI_PID = 1;
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
@@ -115,6 +123,7 @@ function useContracts() {
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
   );
+  const [basisStaking, setBasisStaking] = useState<BasisStaking | null>(null);
   const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
     null,
   );
@@ -150,6 +159,9 @@ function useContracts() {
 
       setStakingRewards(
         StakingRewardsFactory.connect(ethers.constants.AddressZero, signer),
+      );
+      setBasisStaking(
+        BasisStakingFactory.connect(ethers.constants.AddressZero, signer),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(ethers.constants.AddressZero, signer),
@@ -198,6 +210,7 @@ function useContracts() {
     curveProxyLogic,
     instabrine,
     sushiChef,
+    basisStaking,
   };
 }
 

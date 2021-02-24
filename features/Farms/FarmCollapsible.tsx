@@ -73,6 +73,9 @@ const FARM_LP_TO_ICON = {
   "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
+  "0x748712686a78737da0b7643df78fdf2778dc5944": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.svg"} />
+  ),
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
   ),

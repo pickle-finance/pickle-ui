@@ -13,6 +13,10 @@ import {
   MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
   MITH_MIS_USDT_STAKING_REWARDS,
+  BASIS_BAS_DAI_PID,
+  BASIS_BAS_DAI_STAKING_REWARDS,
+  BASIS_BAC_DAI_PID,
+  BASIS_BAC_DAI_V1_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -83,6 +87,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     sushiChef,
     steCRVPool,
     steCRVGauge,
+    basisStaking,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -205,6 +210,44 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateBasisV2APY = async (rewardsAddress: string, pid: number) => {
+    if (basisStaking && prices?.bas && getUniPairData && multicallProvider) {
+      const multicallBasisStaking = new MulticallContract(
+        rewardsAddress,
+        basisStaking.interface.fragments,
+      );
+
+      console.log(rewardsAddress, pid, "check");
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallBasisStaking.rewardRatePerPool(pid),
+        multicallBasisStaking.tokenOf(pid),
+        multicallBasisStaking.totalSupply(pid),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const basRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+
+      const basRewardsPerYear = basRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.bas * basRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const basAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { bas: getCompoundingAPY(basAPY * 0.8), apr: basAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateMithAPY = async (rewardsAddress: string) => {
     if (
       stakingRewards &&
@@ -299,32 +342,36 @@ export const useJarWithAPY = (jars: Input): Output => {
         uniEthUsdcApy,
         uniEthUsdtApy,
         uniEthWBtcApy,
-        basisBacDaiApy,
         sushiEthDaiApy,
         sushiEthUsdcApy,
         sushiEthUsdtApy,
         sushiEthWBtcApy,
         sushiEthYfiApy,
-        sushiEthyveCRVApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDT_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_WBTC_STAKING_REWARDS),
-        calculateBasisAPY(BASIS_BAC_DAI_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
-        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
       ]);
-      const mithMicUsdtApy = await calculateMithAPY(
-        MITH_MIC_USDT_STAKING_REWARDS,
-      );
-      const mithMisUsdtApy = await calculateMithAPY(
-        MITH_MIS_USDT_STAKING_REWARDS,
-      );
+
+      const [
+        mithMicUsdtApy,
+        mithMisUsdtApy,
+        sushiEthyveCRVApy,
+        basisBacDaiApy,
+        basisBasDaiApy,
+      ] = await Promise.all([
+        calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
+        calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
+        calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
+        calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
+      ]);
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -388,6 +435,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...basisBacDaiApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAS_DAI) {
+          APYs = [
+            ...basisBasDaiApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI),
           ];
         }
 
