@@ -102,7 +102,7 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP MIC/USDT",
     poolName: "pSLP MIC/USDT",
   },
-  "0x748712686a78737da0b7643df78fdf2778dc5944": {
+  "0x748712686a78737DA0b7643DF78Fdf2778dC5944": {
     tokenName: "pUNI BASv2/DAI",
     poolName: "pUNI BASv2/DAI",
   },
