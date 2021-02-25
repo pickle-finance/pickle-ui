@@ -217,8 +217,6 @@ export const useJarWithAPY = (jars: Input): Output => {
         basisStaking.interface.fragments,
       );
 
-      console.log(rewardsAddress, pid, "check");
-
       const [
         rewardRateBN,
         stakingToken,
@@ -274,14 +272,12 @@ export const useJarWithAPY = (jars: Input): Output => {
       const misRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getSushiPairData(stakingToken);
-      console.log(pricePerToken, stakingToken);
 
       const misRewardsPerYear = misRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.mis * misRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
       const misAPY = valueRewardedPerYear / totalValueStaked;
-      console.log(misAPY);
 
       return [
         { mis: getCompoundingAPY(misAPY * 0.8), apr: misAPY * 0.8 * 100 },
