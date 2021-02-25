@@ -37,8 +37,8 @@ const susd: Token = { address: addresses.susd, priceId: "susd", decimals: 18 };
 const wbtc: Token = { address: addresses.wbtc, priceId: "wbtc", decimals: 8 };
 const bac: Token = { address: addresses.bac, priceId: "bac", decimals: 18 };
 const bas: Token = { address: addresses.bas, priceId: "bas", decimals: 18 };
-const mir: Token = { address: addresses.bac, priceId: "mir", decimals: 18 };
-const ust: Token = { address: addresses.bas, priceId: "ust", decimals: 18 };
+const mir: Token = { address: addresses.mir, priceId: "mir", decimals: 18 };
+const ust: Token = { address: addresses.ust, priceId: "ust", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
