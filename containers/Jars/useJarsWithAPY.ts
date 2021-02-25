@@ -17,6 +17,7 @@ import {
   BASIS_BAS_DAI_STAKING_REWARDS,
   BASIS_BAC_DAI_PID,
   BASIS_BAC_DAI_V1_STAKING_REWARDS,
+  MIRROR_MIR_UST_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
