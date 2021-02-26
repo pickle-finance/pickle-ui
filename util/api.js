@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 
 const pickleApi = "https://api.pickle-jar.info";
-console.log(pickleApi);
 
 export const getJarChart = async (assets) => {
   const jarData = assets.map(async (asset) => {
