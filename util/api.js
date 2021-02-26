@@ -1,15 +1,10 @@
 import fetch from "node-fetch";
 
-const getApi = () => {
-  if (process.env.NODE_ENV === "production") {
-    return "https://api.pickle-jar.info";
-  }
-  return "https://thzdn4atqa.execute-api.us-west-1.amazonaws.com/brining";
-};
-const pickleApi = getApi();
+const pickleApi = "https://api.pickle-jar.info";
+console.log(pickleApi);
 
 export const getJarChart = async (assets) => {
-  const jarData = assets.map(async asset => {
+  const jarData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
     return {
       asset: asset,
@@ -20,17 +15,19 @@ export const getJarChart = async (assets) => {
 };
 
 const getJarChartData = async (asset) => {
-  return await fetch(`${pickleApi}/chart/jar/${asset}?count=4400`)
-    .then(response => response.json());
+  return await fetch(
+    `${pickleApi}/chart/jar/${asset}?count=4400`,
+  ).then((response) => response.json());
 };
 
 export const getStakingData = async () => {
-  return await fetch(`${pickleApi}/protocol/reward`)
-    .then(response => response.json());
+  return await fetch(`${pickleApi}/protocol/reward`).then((response) =>
+    response.json(),
+  );
 };
 
 export const getStakingChart = async (assets) => {
-  const stakingData = assets.map(async asset => {
+  const stakingData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
     return {
       asset: asset,
@@ -41,12 +38,13 @@ export const getStakingChart = async (assets) => {
 };
 
 const getStakingChartData = async (asset) => {
-  return await fetch(`${pickleApi}/chart/reward/${asset}?count=4400`)
-    .then(response => response.json());
+  return await fetch(
+    `${pickleApi}/chart/reward/${asset}?count=4400`,
+  ).then((response) => response.json());
 };
 
 export const getPerformanceChart = async (assets) => {
-  const performanceData = assets.map(async asset => {
+  const performanceData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
     return {
       asset: asset,
@@ -57,44 +55,49 @@ export const getPerformanceChart = async (assets) => {
 };
 
 const getPerformanceChartData = async (asset) => {
-  return await fetch(`${pickleApi}/chart/jar/${asset}/performance`)
-    .then(response => response.json());
+  return await fetch(
+    `${pickleApi}/chart/jar/${asset}/performance`,
+  ).then((response) => response.json());
 };
 
 export const getPerformanceData = async (assets) => {
-  const performanceData = assets.map(async asset => {
+  const performanceData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
     return {
       asset: asset,
-      ...await getAssetPerformanceData(assetKey.toLowerCase()),
+      ...(await getAssetPerformanceData(assetKey.toLowerCase())),
     };
   });
   return await Promise.all(performanceData);
 };
 
 const getAssetPerformanceData = async (asset) => {
-  return await fetch(`${pickleApi}/protocol/jar/${asset}/performance`)
-    .then(response => response.json());
+  return await fetch(
+    `${pickleApi}/protocol/jar/${asset}/performance`,
+  ).then((response) => response.json());
 };
 
 export const getUserEarnings = async (userId) => {
-  return await fetch(`${pickleApi}/protocol/earnings/${userId}`)
-    .then(response => {
+  return await fetch(`${pickleApi}/protocol/earnings/${userId}`).then(
+    (response) => {
       if (response.status === 404) {
         return undefined;
       }
       return response.json();
-    })
+    },
+  );
 };
 
 export const getProtocolData = async () => {
-  return await fetch(`${pickleApi}/protocol/value?tokens=true`)
-    .then(response => response.json());
+  return await fetch(
+    `${pickleApi}/protocol/value?tokens=true`,
+  ).then((response) => response.json());
 };
 
 export const getFarmData = async () => {
-  return await fetch(`${pickleApi}/protocol/farm`)
-    .then(response => response.json());
+  return await fetch(`${pickleApi}/protocol/farm`).then((response) =>
+    response.json(),
+  );
 };
 
 export const formatUsd = (value) => {
@@ -112,6 +115,7 @@ export const formatUsd = (value) => {
 const coingeckoApi = "https://api.coingecko.com/api/v3";
 
 export const getCoinData = async (coin) => {
-  return await fetch(`${coingeckoApi}/coins/${coin}`)
-    .then(response => response.json());
+  return await fetch(`${coingeckoApi}/coins/${coin}`).then((response) =>
+    response.json(),
+  );
 };
