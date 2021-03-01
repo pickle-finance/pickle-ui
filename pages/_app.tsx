@@ -60,14 +60,11 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           rel="stylesheet"
         />
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+        <script 
+          async 
+          src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB">
+        />
 
-          gtag('config', 'G-R1CT5KTZCB');
-        </script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -75,7 +72,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
 
-                    gtag('config', 'UA-177779197-1', {
+                    gtag('config', 'G-R1CT5KTZCB', {
                       page_path: window.location.pathname,
                     });
                   `,
