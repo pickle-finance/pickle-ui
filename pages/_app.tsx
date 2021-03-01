@@ -63,7 +63,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <script 
           async 
           src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB">
-        />
+        ></script>
 
         <script
           dangerouslySetInnerHTML={{
