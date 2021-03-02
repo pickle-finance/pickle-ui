@@ -174,6 +174,8 @@ const FarmRow = (props) => {
     item.valueBalance = 0;
   }
 
+  if (!jar) return <></>;
+
   return (
     <TableRow key={farm}>
       <TableCell className={classes.farmTableCell}>
@@ -344,12 +346,10 @@ export default function Brining() {
   const [picklePerBlock, setPicklePerBlock] = useState(undefined);
   const [jarInfo, setJarInfo] = useState(undefined);
   const [farmInfo, setFarmInfo] = useState(undefined);
-  const [stakingInfo, setStakingInfo] = useState(undefined);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [pickleData, setPickleData] = useState(undefined);
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
-    const updateStaking = async () => setStakingInfo(await getStakingData());
     const updateJars = async () => setJarInfo(await getPerformanceData(jarOptions));
     const updateFarms = async () => {
       const farms = await getFarmData();
@@ -360,7 +360,6 @@ export default function Brining() {
     const updatePickleData = async () => setPickleData(await getCoinData('pickle-finance'));
     const updateInfo = async () => {
       updateProtocol();
-      updateStaking();
       updateFarms();
       updateJars();
       updatePickleData();
