@@ -6,6 +6,9 @@ export const SYMBOL_TO_TOKEN = {
   DAI: "/dai.png",
   USDC: "/usdc.png",
   USDT: "/usdt.png",
+  ETH: "/ethereum.png",
+  CRV: "/crv.png",
+  YVECRV: "/yvecrv.png"
 };
 
 export const getTokenLabel = (

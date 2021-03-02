@@ -7,25 +7,16 @@ import { TokenSymbol } from "./useBalance";
 const { parseUnits } = ethers.utils;
 const { Zero, MaxUint256 } = ethers.constants;
 
-const TOKEN = {
+const tokenInfo = {
   renBTC: "0xeb4c2781e4eba804ce9a9803c67d0893436bb27d",
   wBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
   DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-  ETH: "",
-  CRV: "0xD533a949740bb3306d119CC777fa900bA034cd52"
+  CRV: "0xD533a949740bb3306d119CC777fa900bA034cd52",
+  ETH: ""
 };
 
-const CURVE_POOLS = {
-  ren: "0x93054188d876f558f4a66B2EF1d97d16eDf0895B",
-  "3pool": "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7",
-};
-
-const CURVE_LP = {
-  ren: "0x49849C98ae39Fff122806C06791Fa73784FB3675",
-  "3pool": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
-};
 
 export const useDeposit = (
   inputToken: TokenSymbol,
@@ -42,9 +33,9 @@ export const useDeposit = (
   }
   else{
     approve = async () => {
-      if (!instabrine || yveCrvZap || !inputToken || !decimals || !erc20 || !address) return;
+      if (!yveCrvZap || !inputToken || !decimals || !erc20 || !address) return;
       const amount = parseUnits(rawAmount, decimals);
-      const token = erc20.attach(TOKEN[inputToken]);
+      const token = erc20.attach(tokenInfo[inputToken]);
       const allowance = await token.allowance(address, instabrine.address);
   
       if (!allowance.gte(amount)) {

@@ -35,6 +35,8 @@ import { Instabrine } from "./Contracts/Instabrine";
 import { InstabrineFactory } from "./Contracts/InstabrineFactory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChefFactory } from "./Contracts/SushiChefFactory";
+import { YveCrvZap } from "./Contracts/YveCrvZap";
+import { YveCrvZapFactory } from "./Contracts/YveCrvZapFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -99,6 +101,7 @@ export const MIRROR_MIR_UST_STAKING_REWARDS =
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
+export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
@@ -143,6 +146,8 @@ function useContracts() {
 
   const [instabrine, setInstabrine] = useState<Instabrine | null>(null);
 
+  const [yveCrvZap, setYveCrvZap] = useState<YveCrvZap | null>(null);
+
   const initContracts = async () => {
     if (signer) {
       setPickle(Erc20Factory.connect(PICKLE_TOKEN_ADDR, signer));
@@ -183,6 +188,7 @@ function useContracts() {
       );
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
+      setYveCrvZap(YveCrvZapFactory.connect(YVECRV_ZAP, signer));
     }
   };
 

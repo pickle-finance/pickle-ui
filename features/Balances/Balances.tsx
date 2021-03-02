@@ -7,6 +7,7 @@ import { UniV2Pairs } from "../../containers/UniV2Pairs";
 import { Connection } from "../../containers/Connection";
 import { Jars } from "../../containers/Jars";
 import { PickleStaking } from "../../containers/PickleStaking";
+import { DepositZap } from "../Zap/DepositZap";
 import { ethers } from "ethers";
 
 const Container = styled(Grid.Container)`
@@ -133,38 +134,7 @@ export const Balances: FC = () => {
           </Card>
         </Grid>
         <Grid xs={24} sm={24} md={12}>
-          <Card>
-            <h2>Staked</h2>
-            <DataPoint>
-              <span>
-                {staked !== null
-                  ? Number(ethers.utils.formatEther(staked)).toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      },
-                    )
-                  : "--"}
-              </span>
-              <PickleIcon />
-            </DataPoint>
-            <Card.Footer>
-              Earned:&nbsp;
-              <span>
-                {earned !== null
-                  ? Number(ethers.utils.formatEther(earned)).toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 8,
-                        maximumFractionDigits: 8,
-                      },
-                    )
-                  : "--"}{" "}
-                WETH
-              </span>
-            </Card.Footer>
-          </Card>
+          <DepositZap />
         </Grid>
         <Grid xs={24} sm={12} md={12}>
           <Card>
