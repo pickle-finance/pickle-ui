@@ -35,8 +35,8 @@ import { Instabrine } from "./Contracts/Instabrine";
 import { InstabrineFactory } from "./Contracts/InstabrineFactory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChefFactory } from "./Contracts/SushiChefFactory";
-import { YveCrvZap } from "./Contracts/YveCrvZap";
-import { YveCrvZapFactory } from "./Contracts/YveCrvZapFactory";
+import { YvecrvZap } from "./Contracts/YveCrvZap";
+import { YvecrvZapFactory } from "./Contracts/YveCrvZapFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -146,7 +146,7 @@ function useContracts() {
 
   const [instabrine, setInstabrine] = useState<Instabrine | null>(null);
 
-  const [yveCrvZap, setYveCrvZap] = useState<YveCrvZap | null>(null);
+  const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
 
   const initContracts = async () => {
     if (signer) {
@@ -188,7 +188,7 @@ function useContracts() {
       );
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
-      setYveCrvZap(YveCrvZapFactory.connect(YVECRV_ZAP, signer));
+      setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
     }
   };
 
@@ -220,6 +220,7 @@ function useContracts() {
     instabrine,
     sushiChef,
     basisStaking,
+    yveCrvZap
   };
 }
 

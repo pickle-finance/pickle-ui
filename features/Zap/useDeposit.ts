@@ -34,25 +34,21 @@ export const useDeposit = (
 ) => {
   const { address } = Connection.useContainer();
   const { instabrine, erc20, masterchef, yveCrvZap } = Contracts.useContainer();
-  let approve;
-  if(inputToken == "ETH"){
-      approve = async () => {
-        return;
-      }
-  }
-  else{
-    approve = async () => {
-      if (!instabrine || yveCrvZap || !inputToken || !decimals || !erc20 || !address) return;
-      const amount = parseUnits(rawAmount, decimals);
-      const token = erc20.attach(TOKEN[inputToken]);
-      const allowance = await token.allowance(address, instabrine.address);
-  
-      if (!allowance.gte(amount)) {
-        const tx = await token.approve(instabrine.address, MaxUint256);
-        await tx.wait();
-      }
-    };
-  }
+  const approve = async () => {
+    if (!instabrine || !yveCrvZap || !inputToken || !decimals || !erc20 || !address) return;
+    const amount = parseUnits(rawAmount, decimals);
+    const token = erc20.attach(TOKEN[inputToken]);
+    const allowance = await token.allowance(address, instabrine.address);
+    const isZap = inputToken === "CRV";
+    if (!allowance.gte(amount) && !isZap) {
+      const tx = await token.approve(instabrine.address, MaxUint256);
+      await tx.wait();
+    }
+    if (!allowance.gte(amount) && isZap) { // ETH yveCRV zap
+      const tx = await token.approve(yveCrvZap.address, MaxUint256);
+      await tx.wait();
+    }
+  };
 
   const deposit = async () => {
     if (
@@ -68,31 +64,6 @@ export const useDeposit = (
     const amount = parseUnits(rawAmount, decimals);
 
     if (inputToken === "DAI") {
-      // go into pDAI
-      const tx = await instabrine.primitiveToPickleJar(
-        TOKEN.DAI,
-        amount,
-        PICKLE_JARS.pDAI,
-      );
-      await tx.wait();
-
-      // go into pDAI farm
-      const pDAI = erc20.attach(PICKLE_JARS.pDAI);
-      const pTokenAmount = await pDAI.balanceOf(address);
-      const allowance = await pDAI.allowance(address, masterchef.address);
-
-      if (!allowance.gte(amount)) {
-        const tx = await pDAI.approve(masterchef.address, MaxUint256);
-        await tx.wait();
-      }
-
-      const tx2 = await masterchef.deposit(BigNumber.from(16), pTokenAmount, {
-        gasLimit: 200000,
-      });
-      await tx2.wait();
-    }
-
-    if (inputToken === "ETH") {
       // go into pDAI
       const tx = await instabrine.primitiveToPickleJar(
         TOKEN.DAI,
@@ -177,7 +148,68 @@ export const useDeposit = (
       });
       await tx2.wait();
     }
-  };
 
+    if (inputToken === "CRV") {
+      // go into prenBTC
+      const tx = await yveCrvZap.zapInCRV(amount);
+      await tx.wait();
+
+      // go into pYvecrv farm
+      const pYvecrv = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
+      const pTokenAmount = await pYvecrv.balanceOf(address);
+      const allowance = await pYvecrv.allowance(address, masterchef.address);
+
+      if (!allowance.gte(amount)) {
+        const tx = await pYvecrv.approve(masterchef.address, MaxUint256);
+        await tx.wait();
+      }
+
+      const tx2 = await masterchef.deposit(BigNumber.from(26), pTokenAmount, {
+        gasLimit: 200000,
+      });
+      await tx2.wait();
+    }
+
+  };
   return { approve, deposit };
+};
+
+
+export const useDepositEth = (
+  rawAmount: string
+) => {
+  const { address } = Connection.useContainer();
+  const { erc20, masterchef, yveCrvZap } = Contracts.useContainer();
+
+  const depositEth = async () => {
+    if (
+      !address ||
+      !masterchef ||
+      !yveCrvZap
+    ) return;
+
+    const amount = parseUnits(rawAmount, 18);
+    console.log(yveCrvZap);
+    const overrideOptions = {
+      value: amount
+    };
+    const tx = await yveCrvZap.zapInETH(overrideOptions);
+    await tx.wait();
+
+    // go into pYvecrv farm
+    const pYvecrv = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
+    const pTokenAmount = await pYvecrv.balanceOf(address);
+    const allowance = await pYvecrv.allowance(address, masterchef.address);
+
+    if (!allowance.gte(amount)) {
+      const tx = await pYvecrv.approve(masterchef.address, MaxUint256);
+      await tx.wait();
+    }
+
+    const tx2 = await masterchef.deposit(BigNumber.from(26), pTokenAmount, {
+      gasLimit: 200000,
+    });
+    await tx2.wait();
+  }
+  return { depositEth };
 };

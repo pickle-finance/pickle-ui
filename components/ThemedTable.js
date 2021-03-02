@@ -68,4 +68,4 @@ export default function ThemedTable(props) {
       </TableContainer>
     </ThemeProvider>
   );
-};
+}

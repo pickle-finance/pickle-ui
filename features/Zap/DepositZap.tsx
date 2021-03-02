@@ -3,6 +3,7 @@ import { Card, Select, Spacer, Input, Button, Link } from "@geist-ui/react";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useDeposit } from "./useDeposit";
+import { useDepositEth } from "./useDeposit";
 
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
@@ -22,19 +23,34 @@ export const DepositZap: FC = () => {
   };
 
   const { approve, deposit } = useDeposit(inputToken, amount, decimals);
+  const { depositEth } = useDepositEth(amount);
   const handleDeposit = async () => {
     if (amount && decimals) {
-      try {
-        if(inputToken!="ETH") setTxState("Approving...");
-        if(inputToken!="ETH") await approve();
-        setTxState("Depositing...");
-        await deposit();
-        setTxState(null);
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-        setTxState(null);
-        return;
+      if(inputToken == "ETH"){
+        try {
+          setTxState("Zapping...");
+          await depositEth();
+          setTxState(null);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+          setTxState(null);
+          return;
+        }
+      }
+      else{
+        try {
+          setTxState("Approving...");
+          await approve();
+          setTxState("Zapping...");
+          await deposit();
+          setTxState(null);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+          setTxState(null);
+          return;
+        }
       }
     }
   };
@@ -55,7 +71,7 @@ export const DepositZap: FC = () => {
     <Card>
       <h2>Zap</h2>
       <p>
-        This Zaps one asset into a Sushi LP position and deposits to Pickle Jar.
+        Zap ETH or CRV into Sushi ETH/yveCRV and auto-deposit to Pickle Jar.
       </p>
       <h3>Deposit Token</h3>
       <Select
@@ -103,7 +119,7 @@ export const DepositZap: FC = () => {
         onClick={handleDeposit}
         disabled={disableZap()}
       >
-        {txState || "Deposit"}
+        {txState || "Zap"}
       </Button>
     </Card>
   );
