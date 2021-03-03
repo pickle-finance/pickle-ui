@@ -160,7 +160,7 @@ export const useDeposit = (
       // go into pYvecrv
       const tx = await yveCrvZap.zapInCRV(
         amount,
-        {gasLimit: 3000000}
+        {gasLimit: 900000}
       );
       await tx.wait();
 
@@ -201,7 +201,8 @@ export const useDepositEth = (
     const amount = parseUnits(rawAmount, 18);
     console.log(yveCrvZap);
     const overrideOptions = {
-      value: amount
+      value: amount,
+      gasLimit: 900000
     };
     const tx = await yveCrvZap.zapInETH(overrideOptions);
     await tx.wait();
