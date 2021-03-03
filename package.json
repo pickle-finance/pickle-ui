@@ -12,7 +12,7 @@
     "postinstall": "yarn typechain & typesync",
     "lint": "eslint --ignore-path .gitignore . --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc",
-    "typechain": "typechain --target ethers-v5 --outDir ./containers/Contracts './containers/ABIs/*.json'"
+    "typechain": "typechain --target ethers-v5 --outDir ./containers/Contracts ./containers/ABIs/**/*.json"
   },
   "prettier": {
     "trailingComma": "all"
