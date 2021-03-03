@@ -36,15 +36,22 @@ export const useDeposit = (
   const { instabrine, erc20, masterchef, yveCrvZap } = Contracts.useContainer();
   const approve = async () => {
     if (!instabrine || !yveCrvZap || !inputToken || !decimals || !erc20 || !address) return;
+    const isZap = inputToken === "CRV";
     const amount = parseUnits(rawAmount, decimals);
     const token = erc20.attach(TOKEN[inputToken]);
-    const allowance = await token.allowance(address, instabrine.address);
-    const isZap = inputToken === "CRV";
+    let allowance;
+    if(isZap){
+      allowance = await token.allowance(address, yveCrvZap.address);
+    }
+    else{
+      allowance = await token.allowance(address, instabrine.address);
+    }
     if (!allowance.gte(amount) && !isZap) {
       const tx = await token.approve(instabrine.address, MaxUint256);
       await tx.wait();
     }
     if (!allowance.gte(amount) && isZap) { // ETH yveCRV zap
+      console.log("ZAP TIME",allowance.gte(amount))
       const tx = await token.approve(yveCrvZap.address, MaxUint256);
       await tx.wait();
     }
@@ -148,10 +155,13 @@ export const useDeposit = (
       });
       await tx2.wait();
     }
-
+    
     if (inputToken === "CRV") {
-      // go into prenBTC
-      const tx = await yveCrvZap.zapInCRV(amount);
+      // go into pYvecrv
+      const tx = await yveCrvZap.zapInCRV(
+        amount,
+        {gasLimit: 3000000}
+      );
       await tx.wait();
 
       // go into pYvecrv farm
