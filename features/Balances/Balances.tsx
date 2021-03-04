@@ -7,7 +7,7 @@ import { UniV2Pairs } from "../../containers/UniV2Pairs";
 import { Connection } from "../../containers/Connection";
 import { Jars } from "../../containers/Jars";
 import { PickleStaking } from "../../containers/PickleStaking";
-import { DepositZap } from "../Zap/DepositZap";
+import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
 
 const Container = styled(Grid.Container)`
@@ -133,8 +133,8 @@ export const Balances: FC = () => {
             </Card.Footer>
           </Card>
         </Grid>
-        <Grid xs={24} sm={24} md={12}>
-          <DepositZap />
+        <Grid xs={24} sm={12} md={12}>
+          <PriceComponent />
         </Grid>
         <Grid xs={24} sm={12} md={12}>
           <Card>
