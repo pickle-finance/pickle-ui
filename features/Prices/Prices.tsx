@@ -59,7 +59,7 @@ const CoinIcon = ({ src }: { src: string }) => (
 export const Prices: FC = () => {
   const { prices } = PricesContainer.useContainer();
   return (
-    <Card>
+    <Card style={{height:"169px"}}>
       <Card.Content >
         <TradeButton
           href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5"

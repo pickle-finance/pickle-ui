@@ -4,6 +4,7 @@ import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useDeposit } from "./useDeposit";
 import { useDepositEth } from "./useDeposit";
+import { TokenIcon } from "../../components/TokenIcon"
 
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
@@ -69,9 +70,9 @@ export const DepositZap: FC = () => {
   ];
   return (
     <Card>
-      <h2>Zap</h2>
+      <h2><TokenIcon src="/yvecrv.png"/>Zap to yveCRV</h2>
       <p>
-        Zap ETH or CRV into Sushi ETH/yveCRV and auto-deposit to Pickle Jar.
+        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to Pickle Jar.
       </p>
       <h3>Deposit Token</h3>
       <Select
@@ -98,7 +99,7 @@ export const DepositZap: FC = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          lineHeight: "1.625rem",
+          lineHeight: "1.25rem",
         }}
       >
         <div>Balance: {balanceStr !== null ? formatValue(balanceStr) : 0}</div>
