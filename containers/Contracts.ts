@@ -35,8 +35,9 @@ import { Instabrine } from "./Contracts/Instabrine";
 import { InstabrineFactory } from "./Contracts/InstabrineFactory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChefFactory } from "./Contracts/SushiChefFactory";
-import { YvecrvZap } from "./Contracts/YveCrvZap";
-import { YvecrvZapFactory } from "./Contracts/YveCrvZapFactory";
+import { YvecrvZap } from "./Contracts/YvecrvZap"; 
+import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
+
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
