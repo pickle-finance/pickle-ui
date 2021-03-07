@@ -73,6 +73,9 @@ const FARM_LP_TO_ICON = {
   "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
   ),
+  "0x748712686a78737DA0b7643DF78Fdf2778dC5944": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.svg"} />
+  ),
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
   ),
@@ -84,6 +87,9 @@ const FARM_LP_TO_ICON = {
   ),
   "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
+  ),
+  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir-ust.png"} />
   ),
 };
 

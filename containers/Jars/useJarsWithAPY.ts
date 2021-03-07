@@ -14,6 +14,11 @@ import {
   STECRV_STAKING_REWARDS,
   MITH_MIS_USDT_STAKING_REWARDS,
   SUSHI_OPIUM_ETH_STAKING_REWARDS,
+  BASIS_BAS_DAI_PID,
+  BASIS_BAS_DAI_STAKING_REWARDS,
+  BASIS_BAC_DAI_PID,
+  BASIS_BAC_DAI_V1_STAKING_REWARDS,
+  MIRROR_MIR_UST_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -84,6 +89,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     sushiChef,
     steCRVPool,
     steCRVGauge,
+    basisStaking,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -206,6 +212,42 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateBasisV2APY = async (rewardsAddress: string, pid: number) => {
+    if (basisStaking && prices?.bas && getUniPairData && multicallProvider) {
+      const multicallBasisStaking = new MulticallContract(
+        rewardsAddress,
+        basisStaking.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallBasisStaking.rewardRatePerPool(pid),
+        multicallBasisStaking.tokenOf(pid),
+        multicallBasisStaking.totalSupply(pid),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const basRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+
+      const basRewardsPerYear = basRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.bas * basRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const basAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { bas: getCompoundingAPY(basAPY * 0.8), apr: basAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateMithAPY = async (rewardsAddress: string) => {
     if (
       stakingRewards &&
@@ -232,14 +274,12 @@ export const useJarWithAPY = (jars: Input): Output => {
       const misRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getSushiPairData(stakingToken);
-      console.log(pricePerToken, stakingToken);
 
       const misRewardsPerYear = misRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.mis * misRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
       const misAPY = valueRewardedPerYear / totalValueStaked;
-      console.log(misAPY);
 
       return [
         { mis: getCompoundingAPY(misAPY * 0.8), apr: misAPY * 0.8 * 100 },
@@ -286,6 +326,43 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       return [
         { opium: getCompoundingAPY(opiumAPY * 0.8), apr: opiumAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
+  const calculateMirAPY = async (rewardsAddress: string) => {
+    if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.lpt(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const mirRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+      console.log(pricePerToken, stakingToken);
+
+      const mirRewardsPerYear = mirRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.mir * mirRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const mirAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { mir: getCompoundingAPY(mirAPY * 0.8), apr: mirAPY * 0.8 * 100 },
       ];
     }
 
@@ -343,41 +420,43 @@ export const useJarWithAPY = (jars: Input): Output => {
         uniEthUsdcApy,
         uniEthUsdtApy,
         uniEthWBtcApy,
-        basisBacDaiApy,
         sushiEthDaiApy,
         sushiEthUsdcApy,
         sushiEthUsdtApy,
         sushiEthWBtcApy,
         sushiEthYfiApy,
-        sushiEthyveCRVApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDT_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_WBTC_STAKING_REWARDS),
-        calculateBasisAPY(BASIS_BAC_DAI_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_DAI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
-        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
       ]);
-      const mithMicUsdtApy = await calculateMithAPY(
-        MITH_MIC_USDT_STAKING_REWARDS,
-      );
 
-      const sushiOpiumEthApy = await calculateOpiumAPY(
-        SUSHI_OPIUM_ETH_STAKING_REWARDS,
-      );
-
-      const mithMisUsdtApy = await calculateMithAPY(
-        MITH_MIS_USDT_STAKING_REWARDS,
-      );
+      const [
+        mithMicUsdtApy,
+        mithMisUsdtApy,
+        sushiOpiumEthApy,
+        sushiEthyveCRVApy,
+        basisBacDaiApy,
+        basisBasDaiApy,
+        mirrorMirUstApy,
+      ] = await Promise.all([
+        calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
+        calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
+        calculateOpiumAPY(SUSHI_OPIUM_ETH_STAKING_REWARDS),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
+        calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
+        calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
+        calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
+      ]);
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
-        console.log("jar ===========>", jar);
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV) {
           APYs = [
@@ -438,6 +517,20 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...basisBacDaiApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAS_DAI) {
+          APYs = [
+            ...basisBasDaiApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MIR_UST) {
+          APYs = [
+            ...mirrorMirUstApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST),
           ];
         }
 

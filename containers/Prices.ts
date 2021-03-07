@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Copium&vs_currencies=usd";
+  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Copium%2Cmirror-protocol%2Cterrausd&vs_currencies=usd";
 
 type UsdPrice = { usd: number };
 
@@ -26,6 +26,8 @@ interface Response {
   "mith-cash": UsdPrice;
   "lido-dao": UsdPrice;
   opium: UsdPrice;
+  "mirror-protocol": UsdPrice;
+  "terrausd": UsdPrice;
 }
 
 interface PriceObject {
@@ -49,6 +51,8 @@ interface PriceObject {
   ldo: number;
   yvecrv: number;
   opium: number;
+  mir: number;
+  ust: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -92,6 +96,8 @@ function usePrices() {
       mic: response["mith-cash"].usd,
       ldo: response["lido-dao"].usd,
       opium: response["opium"].usd,
+      mir: response["mirror-protocol"].usd,
+      ust: response["terrausd"].usd,
     };
     setPrices(prices);
   };
