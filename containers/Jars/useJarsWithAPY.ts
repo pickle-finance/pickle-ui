@@ -13,6 +13,7 @@ import {
   MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
   MITH_MIS_USDT_STAKING_REWARDS,
+  SUSHI_OPIUM_ETH_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -248,6 +249,49 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateOpiumAPY = async (rewardsAddress: string) => {
+    if (
+      stakingRewards &&
+      prices?.opium &&
+      getSushiPairData &&
+      multicallProvider
+    ) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.underlying(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const opiumRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getSushiPairData(stakingToken);
+      console.log(pricePerToken, stakingToken);
+
+      const opiumRewardsPerYear = opiumRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.opium * opiumRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const opiumAPY = valueRewardedPerYear / totalValueStaked;
+      console.log(opiumAPY);
+
+      return [
+        { opium: getCompoundingAPY(opiumAPY * 0.8), apr: opiumAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
@@ -322,12 +366,18 @@ export const useJarWithAPY = (jars: Input): Output => {
       const mithMicUsdtApy = await calculateMithAPY(
         MITH_MIC_USDT_STAKING_REWARDS,
       );
+
+      const sushiOpiumEthApy = await calculateOpiumAPY(
+        SUSHI_OPIUM_ETH_STAKING_REWARDS,
+      );
+
       const mithMisUsdtApy = await calculateMithAPY(
         MITH_MIS_USDT_STAKING_REWARDS,
       );
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
+        console.log("jar ===========>", jar);
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV) {
           APYs = [
@@ -402,6 +452,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mithMisUsdtApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_MIS_USDT),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_OPIUM_ETH) {
+          APYs = [
+            ...sushiOpiumEthApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_OPIUM_ETH),
           ];
         }
 

@@ -295,6 +295,21 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "underlying",
+    "outputs": [
+      {
+        "internalType": "contract ERC20Detailed",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "totalSupply",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "payable": false,
