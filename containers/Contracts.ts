@@ -122,7 +122,7 @@ function useContracts() {
   ] = useState<GaugeController | null>(null);
   const [susdGauge, setSUSDGauge] = useState<CurveGauge | null>(null);
   const [susdPool, setSUSDPool] = useState<Pool | null>(null);
-  const [steCRVGauge, setSteCRVGauge] = useState<Gauge | null>(null);
+  const [steCRVGauge, setSteCRVGauge] = useState<CurveGauge | null>(null);
   const [steCRVPool, setSteCRVPool] = useState<Pool | null>(null);
   const [renGauge, setRENGauge] = useState<CurveGauge | null>(null);
   const [renPool, setRENPool] = useState<Pool | null>(null);
@@ -165,7 +165,7 @@ function useContracts() {
       );
       setSUSDGauge(CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, signer));
       setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, signer));
-      setSteCRVGauge(GaugeFactory.connect(STETH_GAUGE_ADDR, signer));
+      setSteCRVGauge(CurveGaugeFactory.connect(STETH_GAUGE_ADDR, signer));
       setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, signer));
       setRENGauge(CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, signer));
       setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, signer));

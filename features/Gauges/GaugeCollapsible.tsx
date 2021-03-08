@@ -29,6 +29,7 @@ import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
+import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -49,46 +50,7 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
-const GAUGE_LP_TO_ICON = {
-  "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": "/pickle.png",
-  "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
-  "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
-  "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852": "/usdt.png",
-  "0xf80758aB42C3B07dA84053Fd88804bCB6BAA4b5c": "/susd.png",
-  "0xf79Ae82DCcb71ca3042485c85588a3E0C395D55b": "/punidai.png",
-  "0x46206E9BDaf534d057be5EcF231DaD2A1479258B": "/puniusdc.png",
-  "0x3a41AB1e362169974132dEa424Fb8079Fd0E94d8": "/puniusdt.png",
-  "0x2385D31f1EB3736bE0C3629E6f03C4b3cd997Ffd": "/pscrv.png",
-  "0xCffA068F1E44D98D3753966eBd58D4CFe3BB5162": "/dai-gold.png",
-  "0x53Bf2E62fA20e2b4522f05de3597890Ec1b352C6": "/usdc-gold.png",
-  "0x09FC573c502037B149ba87782ACC81cF093EC6ef": "/usdt-gold.png",
-  "0x68d14d66B2B0d6E157c06Dc8Fefa3D8ba0e66a89": "/curve-gold.png",
-  "0xc80090AA05374d336875907372EE4ee636CBC562": "/btc.png",
-  "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33": "/3crv.png",
-  "0x2E35392F4c36EBa7eCAFE4de34199b2373Af22ec": "/rencrv.png",
-  "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87": "/dai.png",
-  "0x55282dA27a3a02ffe599f6D11314D239dAC89135": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
-  ),
-  "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
-  ),
-  "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
-  ),
-  "0xde74b6c547bd574c3527316a2eE30cd8F6041525": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/btc.png"} />
-  ),
-  "0x3261D9408604CC8607b687980D40135aFA26FfED": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
-  ),
-  "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
-  ),
-  "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
-  ),
-};
+const GAUGE_LP_TO_ICON = FARM_LP_TO_ICON;
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -234,7 +196,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
 
   return (
     <Collapse
-      style={{ borderWidth: "1px", boxShadow: "none" }}
+      style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
       shadow
       preview={
         <Grid.Container gap={1}>

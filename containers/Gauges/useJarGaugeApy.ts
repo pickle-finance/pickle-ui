@@ -40,7 +40,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
           gauge.token as keyof typeof JAR_GAUGE_MAP
         ];
 
-        const gaugeingJar = jars.filter((x) => x.jarName === jarName)[0];
+        const gaugeingJar = jars?.filter((x) => x.jarName === jarName)[0];
 
         if (!gaugeingJar) {
           return new MulticallContract(mlErc20.dai.address, mlErc20.abi);

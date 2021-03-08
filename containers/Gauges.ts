@@ -4,17 +4,13 @@ import { useFetchGauges } from "./Gauges/useFetchGauges";
 import { useWithReward } from "./Gauges/useWithReward";
 import { useUniV2Apy } from "./Gauges/useUniV2Apy";
 import { useJarGaugeApy } from "./Gauges/useJarGaugeApy";
+import { FarmInfo } from "./Farms";
 
 interface IGaugeInfo {
   [key: string]: { tokenName: string; poolName: string };
 }
 
-export const GaugeInfo: IGaugeInfo = {
-  "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": {
-    tokenName: "UNI PICKLE/ETH",
-    poolName: "Pickle Power",
-  },
-};
+export const GaugeInfo = FarmInfo;
 
 function useGauges() {
   const { rawGauges } = useFetchGauges();
