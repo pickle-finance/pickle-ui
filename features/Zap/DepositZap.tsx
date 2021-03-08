@@ -72,7 +72,7 @@ export const DepositZap: FC = () => {
     <Card>
       <h2><TokenIcon src="/yvecrv.png"/>Zap to yveCRV</h2>
       <p>
-        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to <a href="/farms">Pickle Jar</a>.
+        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to <a href="/farms">Pickle Farm</a>.
       </p>
       <h3>Deposit Token</h3>
       <Select
