@@ -101,6 +101,16 @@ export const CreateLock: FC<{
   }, [blockNum, transferStatus]);
   const lockingWeeks = getWeekDiff(new Date(), unlockTime);
 
+  const displayLockTime = () => {
+    if(lockingWeeks < 52) {
+      return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`
+    }
+    else {
+      const years = Number(lockingWeeks/52).toFixed(1) 
+      return `${years} ${years === "1.0" ? "year" : "years"}` 
+    }
+  }
+
   const setLockTime = (value: string) => {
     if (pickleBN) {
       switch (value) {
@@ -155,7 +165,7 @@ export const CreateLock: FC<{
           </Grid>
           <Grid xs={12} sm={12} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              Lock for: {lockingWeeks} week{lockingWeeks > 1 ? "s" : ""}
+              Lock for: {displayLockTime()}
               <Link
                 color
                 href="#"
