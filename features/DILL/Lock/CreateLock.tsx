@@ -67,6 +67,7 @@ export const CreateLock: FC<{
 }> = () => {
   const { pickleBalance, pickleBN } = useBalances();
   const [lockAmount, setlockAmount] = useState("");
+  const [dillReceived, setDillReceived] = useState(0);
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
@@ -102,31 +103,28 @@ export const CreateLock: FC<{
   const lockingWeeks = getWeekDiff(new Date(), unlockTime);
 
   const displayLockTime = () => {
-    if(lockingWeeks < 52) {
-      return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`
+    if (lockingWeeks < 52) {
+      return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
+    } else {
+      const years = Number(lockingWeeks / 52).toFixed(1);
+      return `${years} ${years === "1.0" ? "year" : "years"}`;
     }
-    else {
-      const years = Number(lockingWeeks/52).toFixed(1) 
-      return `${years} ${years === "1.0" ? "year" : "years"}` 
-    }
-  }
+  };
 
-  const setLockTime = (value: string) => {
-    if (pickleBN) {
-      switch (value) {
-        case "1":
-          setUnlockTime(getDayOffset(new Date(), 7));
-          break;
-        case "2":
-          setUnlockTime(getDayOffset(new Date(), 30 ));
-          break;
-        case "3":
-          setUnlockTime(getDayOffset(new Date(), 364 ));
-          break;
-        case "4":
-          setUnlockTime(getDayOffset(new Date(), 365 * 4));
-          break;
-      }
+  const setLockTime = async (value: string) => {
+    switch (value) {
+      case "1":
+        await setUnlockTime(getDayOffset(new Date(), 7));
+        break;
+      case "2":
+        await setUnlockTime(getDayOffset(new Date(), 30));
+        break;
+      case "3":
+        await setUnlockTime(getDayOffset(new Date(), 364));
+        break;
+      case "4":
+        await setUnlockTime(getDayOffset(new Date(), 365 * 4));
+        break;
     }
   };
 
@@ -203,7 +201,11 @@ export const CreateLock: FC<{
           </Grid>
         </Grid.Container>
         <Spacer y={0.5} />
-        <Radio.Group onChange={(e) => setLockTime(e.toString())} useRow>
+        <Radio.Group
+          value="1"
+          onChange={(e) => setLockTime(e.toString())}
+          useRow
+        >
           <Radio value="1">
             1 week
             <Radio.Desc style={{ color: "grey" }}>
@@ -224,13 +226,13 @@ export const CreateLock: FC<{
           </Radio>
           <Radio value="4">
             4 years
-            <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = 1 DILL
-            </Radio.Desc>
+            <Radio.Desc style={{ color: "grey" }}>1 PICKLE = 1 DILL</Radio.Desc>
           </Radio>
         </Radio.Group>
-
         <Spacer y={0.5} />
+        <p>You will receive <strong>{lockAmount ? lockingWeeks/(365.25*4/7)*parseInt(lockAmount): 0} </strong>DILL</p>
+
+        <Spacer y={1} />
         <Button
           disabled={lockButton.disabled || !+lockAmount}
           onClick={() => {
