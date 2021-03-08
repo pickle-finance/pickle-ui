@@ -196,25 +196,25 @@ export const CreateLock: FC<{
         <Radio.Group onChange={(e) => setLockTime(e.toString())} useRow>
           <Radio value="1">
             1 week
-            <Radio.Desc style={{ color: "white" }}>
+            <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = 0.0048 DILL
             </Radio.Desc>
           </Radio>
           <Radio value="2">
             1 month
-            <Radio.Desc style={{ color: "white" }}>
+            <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = 0.021 DILL
             </Radio.Desc>
           </Radio>
           <Radio value="3">
             1 year
-            <Radio.Desc style={{ color: "white" }}>
+            <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = 0.25 DILL
             </Radio.Desc>
           </Radio>
           <Radio value="4">
             4 years
-            <Radio.Desc style={{ color: "white" }}>
+            <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = 1 DILL
             </Radio.Desc>
           </Radio>
