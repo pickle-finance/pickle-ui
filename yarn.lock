@@ -973,16 +973,22 @@
     regenerator-runtime "^0.13.4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.13.tgz#0a21452352b02542db0ffb928ac2d3ca7cb6d66d"
   integrity sha512-8+3UMPBrjFa/6TtKi/7sehPKqfAm4g6K+YQjyyFOLUTxzOngcRZTlAVY8sc2CORJYqdHQY8gRPHmn+qo15rCBw==
 =======
+=======
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
 "@babel/runtime@^7.12.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2":
   version "7.13.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.7.tgz#d494e39d198ee9ca04f4dcb76d25d9d7a1dc961a"
   integrity sha512-h+ilqoX998mRVM5FtB5ijRuHUDVt5l3yfoOi2uh18Z/O3hvyaHQ39NpxVkCIG5yFs+mLq/ewFp8Bss6zmWv6ZA==
+<<<<<<< HEAD
 >>>>>>> Add Gauge & DILL page, integration with contracts
+=======
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1028,10 +1034,112 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+<<<<<<< HEAD
 "@emotion/hash@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
   integrity sha512-kBJtf7PH6aWwZ6fka3zQ0p6SBYzx4fl1LoZXE2RrnYST9Xljm7WfKJrU4g/Xr3Beg72MLrp1AWNUmuYJTL7Cow==
+=======
+"@bit/lekanmedia.shared-ui.date-picker@^0.0.4":
+  version "0.0.4"
+  resolved "https://node.bit.dev/lekanmedia.shared-ui.date-picker/-/lekanmedia.shared-ui.date-picker-0.0.4.tgz#7e5adf344f7b477fddd0993e2810d1531cd8a10b"
+  integrity sha1-flrfNE97R3/d0Jk+KBDRUxzYoQs=
+  dependencies:
+    "@bit/lekanmedia.shared-ui.dropdown" "0.0.5"
+    "@bit/primefaces.primereact.calendar" "3.1.0"
+    react "^16.8.6"
+
+"@bit/lekanmedia.shared-ui.dropdown@0.0.5":
+  version "0.0.5"
+  resolved "https://node.bit.dev/lekanmedia.shared-ui.dropdown/-/lekanmedia.shared-ui.dropdown-0.0.5.tgz#fef90fbb273c4d7514274e8d574b28f0b64c79c9"
+  integrity sha1-/vkPuyc8TXUUJ06NV0so8LZMeck=
+  dependencies:
+    "@bit/lekanmedia.shared-ui.primary-button" "1.0.7"
+    react "^16.8.6"
+
+"@bit/lekanmedia.shared-ui.internal.should-render@1.0.0":
+  version "1.0.0"
+  resolved "https://node.bit.dev/lekanmedia.shared-ui.internal.should-render/-/lekanmedia.shared-ui.internal.should-render-1.0.0.tgz#068b3b0556542ccff879f383872e57f45d098e1e"
+  integrity sha1-Bos7BVZULM/4efODhy5X9F0Jjh4=
+
+"@bit/lekanmedia.shared-ui.primary-button@1.0.7":
+  version "1.0.7"
+  resolved "https://node.bit.dev/lekanmedia.shared-ui.primary-button/-/lekanmedia.shared-ui.primary-button-1.0.7.tgz#6273b1a76905569d340857d05b2eb7b9ae83c044"
+  integrity sha1-YnOxp2kFVp00CFfQWy63ua6DwEQ=
+  dependencies:
+    "@bit/lekanmedia.shared-ui.internal.should-render" "1.0.0"
+    "@bit/lekanmedia.shared-ui.spinner" "0.0.2"
+    material-icons "^0.3.1"
+    react "^16.8.6"
+
+"@bit/lekanmedia.shared-ui.spinner@0.0.2":
+  version "0.0.2"
+  resolved "https://node.bit.dev/lekanmedia.shared-ui.spinner/-/lekanmedia.shared-ui.spinner-0.0.2.tgz#f2a65280439da6860e01c5f2515c6b5f66aa0800"
+  integrity sha1-8qZSgEOdpoYOAcXyUVxrX2aqCAA=
+  dependencies:
+    react "^16.8.6"
+
+"@bit/primefaces.primereact.button@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.button/-/primefaces.primereact.button-3.1.0.tgz#6b611240328460497a6565ab1a62e478ba9b034b"
+  integrity sha1-a2ESQDKEYEl6ZWWrGmLkeLqbA0s=
+  dependencies:
+    "@bit/primefaces.primereact.internal.utild" "3.1.0"
+    "@bit/primefaces.primereact.tooltip" "3.1.0"
+    classnames "^2.2.6"
+    prop-types "^15.6.2"
+    react "^16.6.3"
+
+"@bit/primefaces.primereact.calendar@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.calendar/-/primefaces.primereact.calendar-3.1.0.tgz#184028fc1648c2a9ecf68c2822368ac45e75fd1f"
+  integrity sha1-GEAo/BZIwqns9owoIjaKxF51/R8=
+  dependencies:
+    "@bit/primefaces.primereact.button" "3.1.0"
+    "@bit/primefaces.primereact.inputtext" "3.1.0"
+    "@bit/primefaces.primereact.tooltip" "3.1.0"
+    "@bit/primefaces.primereact.utils.dom-handler" "3.1.0"
+    classnames "^2.2.6"
+    prop-types "^15.6.2"
+    react "^16.6.3"
+    react-dom "^16.6.3"
+
+"@bit/primefaces.primereact.inputtext@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.inputtext/-/primefaces.primereact.inputtext-3.1.0.tgz#c39d2303eebc8e0a7fb85c2d0b96b7ba107086ce"
+  integrity sha1-w50jA+68jgp/uFwtC5a3uhBwhs4=
+  dependencies:
+    "@bit/primefaces.primereact.keyfilter" "3.1.0"
+    "@bit/primefaces.primereact.tooltip" "3.1.0"
+    "@bit/primefaces.primereact.utils.dom-handler" "3.1.0"
+    classnames "^2.2.6"
+    prop-types "^15.6.2"
+    react "^16.6.3"
+
+"@bit/primefaces.primereact.internal.utild@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.internal.utild/-/primefaces.primereact.internal.utild-3.1.0.tgz#645a984221b617733266489c76ca23815e6c683a"
+  integrity sha1-ZFqYQiG2F3MyZkicdsojgV5saDo=
+
+"@bit/primefaces.primereact.keyfilter@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.keyfilter/-/primefaces.primereact.keyfilter-3.1.0.tgz#b23d691eb6d4f5068ec822d3b2e378ac4c55714a"
+  integrity sha1-sj1pHrbU9QaOyCLTsuN4rExVcUo=
+  dependencies:
+    "@bit/primefaces.primereact.utils.dom-handler" "3.1.0"
+
+"@bit/primefaces.primereact.tooltip@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.tooltip/-/primefaces.primereact.tooltip-3.1.0.tgz#4513c37f9e7204c7b692e79afe51f5a31e672c87"
+  integrity sha1-RRPDf55yBMe2kuea/lH1ox5nLIc=
+  dependencies:
+    "@bit/primefaces.primereact.utils.dom-handler" "3.1.0"
+
+"@bit/primefaces.primereact.utils.dom-handler@3.1.0":
+  version "3.1.0"
+  resolved "https://node.bit.dev/primefaces.primereact.utils.dom-handler/-/primefaces.primereact.utils.dom-handler-3.1.0.tgz#c76ccdd1ad283cda3697ecc4dfc08434f3136ba4"
+  integrity sha1-x2zN0a0oPNo2l+zE38CENPMTa6Q=
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
 
 "@emotion/is-prop-valid@^0.8.8":
   version "0.8.8"
@@ -3139,7 +3247,11 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+<<<<<<< HEAD
 classnames@2.2.6, classnames@^2.2.5:
+=======
+classnames@2.2.6, classnames@^2.2.6:
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -5488,11 +5600,14 @@ map-visit@^1.0.0:
     object-visit "^1.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 math-expression-evaluator@^1.2.14:
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.3.7.tgz#1b62225db86af06f7ea1fd9576a34af605a5b253"
   integrity sha512-nrbaifCl42w37hYd6oRLvoymFK42tWB+WQTMFtksDGQMi5GvlJwnz/CsS30FFAISFLtX+A0csJ0xLiuuyyec7w==
 =======
+=======
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
 match-sorter@^6.0.2:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/match-sorter/-/match-sorter-6.3.0.tgz#454a1b31ed218cddbce6231a0ecb5fdc549fed01"
@@ -5505,7 +5620,10 @@ material-icons@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/material-icons/-/material-icons-0.3.1.tgz#425e06e2448632d6249d6e1ffe2993682c5b171e"
   integrity sha512-5Hbj76A6xDPcDZEbM4oxTknhWuMwGWnAHVLLPCEq9eVlcHb0fn4koU9ZeyMy1wjARtDEPAHfd5ZdL2Re5hf0zQ==
+<<<<<<< HEAD
 >>>>>>> Add Gauge & DILL page, integration with contracts
+=======
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
 
 md5.js@^1.3.4:
   version "1.3.5"
@@ -6357,10 +6475,14 @@ promise-inflight@^1.0.1:
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
 =======
 prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
 >>>>>>> Add Gauge & DILL page, integration with contracts
+=======
+prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -6485,6 +6607,16 @@ react-dom@^16.6.3:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
+react-dom@^16.6.3:
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
+  integrity sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.19.1"
+
 react-is@16.13.1, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -6505,11 +6637,14 @@ react-jazzicon@^0.1.3:
     prop-types "^15.5.10"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 =======
+=======
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
 react-number-format@^4.4.4:
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.4.4.tgz#2a7f50be404f990ec15855cc6babfeae1be16351"
@@ -6525,7 +6660,10 @@ react-query@^3.12.0:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
     match-sorter "^6.0.2"
+<<<<<<< HEAD
 >>>>>>> Add Gauge & DILL page, integration with contracts
+=======
+>>>>>>> 6885cf0efd646e8abbdb2574e2af3c8a2f727b1b
 
 react-refresh@0.8.3:
   version "0.8.3"
@@ -6573,6 +6711,15 @@ react-transition-group@^4.4.0:
     prop-types "^15.6.2"
 
 react@^16.13.1:
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
+  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+
+react@^16.6.3, react@^16.8.6:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
