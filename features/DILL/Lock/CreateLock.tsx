@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
 import { parseEther, formatEther } from "ethers/lib/utils";
 
 import { useBalances } from "../../Balances/useBalances";
@@ -101,6 +101,25 @@ export const CreateLock: FC<{
   }, [blockNum, transferStatus]);
   const lockingWeeks = getWeekDiff(new Date(), unlockTime);
 
+  const setLockTime = (value: string) => {
+    if (pickleBN) {
+      switch (value) {
+        case "1":
+          setUnlockTime(getDayOffset(new Date(), 7));
+          break;
+        case "2":
+          setUnlockTime(getDayOffset(new Date(), 30 ));
+          break;
+        case "3":
+          setUnlockTime(getDayOffset(new Date(), 364 ));
+          break;
+        case "4":
+          setUnlockTime(getDayOffset(new Date(), 365 * 4));
+          break;
+      }
+    }
+  };
+
   return (
     <Grid.Container gap={2}>
       <Spacer y={0.5} />
@@ -173,6 +192,34 @@ export const CreateLock: FC<{
             />
           </Grid>
         </Grid.Container>
+        <Spacer y={0.5} />
+        <Radio.Group onChange={(e) => setLockTime(e.toString())} useRow>
+          <Radio value="1">
+            1 week
+            <Radio.Desc style={{ color: "white" }}>
+              1 PICKLE = 0.0048 DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value="2">
+            1 month
+            <Radio.Desc style={{ color: "white" }}>
+              1 PICKLE = 0.021 DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value="3">
+            1 year
+            <Radio.Desc style={{ color: "white" }}>
+              1 PICKLE = 0.25 DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value="4">
+            4 years
+            <Radio.Desc style={{ color: "white" }}>
+              1 PICKLE = 1 DILL
+            </Radio.Desc>
+          </Radio>
+        </Radio.Group>
+
         <Spacer y={0.5} />
         <Button
           disabled={lockButton.disabled || !+lockAmount}
