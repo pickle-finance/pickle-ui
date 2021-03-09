@@ -131,7 +131,6 @@ export const DEPOSIT_TOKENS_LINK = {
   SUSHI_ETH_YVECRV:
     "https://sushiswap.fi/pair/0x10b47177e92ef9d5c6059055d92ddf6290848991",
   SUSHI_OPIUM_ETH:
-    "https://exchange.sushi.com/#/add/ETH/0x888888888889C00c67689029D7856AAC1065eC11",
     "https://app.sushiswap.fi/pair/0x10b47177e92ef9d5c6059055d92ddf6290848991",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
 };
