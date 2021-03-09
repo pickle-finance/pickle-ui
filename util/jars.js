@@ -6,7 +6,8 @@ export const crvJars = [
 
 export const uniJars = [
   "BAC-DAI",
-  "BAS-DAI",
+  "BAS2-DAI",
+  "MIR-UST"
 ];
 
 export const sushiJars = [
