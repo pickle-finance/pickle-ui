@@ -122,6 +122,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP MIS/USDT",
     poolName: "pSLP MIS/USDT",
   },
+  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": {
+    tokenName: "pUNIV2 MIR/UST",
+    poolName: "pUNIV2 MIR/UST",
+  },
 };
 
 function useFarms() {
