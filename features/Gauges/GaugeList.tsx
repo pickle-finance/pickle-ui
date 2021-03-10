@@ -6,6 +6,7 @@ import { GaugeCollapsible } from "./GaugeCollapsible";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
+import { VoteCollapsible } from "./VoteCollapsible";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -96,7 +97,8 @@ export const GaugeList: FC = () => {
           </Checkbox>
         </Grid>
       </Grid.Container>
-      <Spacer y={0.5} />
+      <h2>Vote</h2>
+      <VoteCollapsible/>
       <div
         css={{
           justifyContent: "space-between",
@@ -104,7 +106,7 @@ export const GaugeList: FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>Active</h2>
+        <h2>Active Farms</h2>
         <Button
           size="small"
           css={{ width: "80px !important", minWidth: "0 !important" }}
@@ -117,7 +119,7 @@ export const GaugeList: FC = () => {
       <Grid.Container gap={1}>{activeGauges.map(renderGauge)}</Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {showInactive && <h2>Inactive</h2>}
+        {showInactive && <h2>Inactive Farms</h2>}
         {showInactive && inactiveGauges.map(renderGauge)}
       </Grid.Container>
     </Container>
