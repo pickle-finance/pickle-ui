@@ -7,11 +7,27 @@ import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
+import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
+import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
+import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
+import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
+import { isArray } from "util";
+
+interface Weights {
+  [key: string]: number;
+}
+
+const Label = styled.div`
+  font-family: "Source Sans Pro";
+`;
 
 export const VoteCollapsible: FC = () => {
   const { gaugeData } = UserGauges.useContainer();
+  const [votingFarms, setVotingFarms] = useState();
+  const [voteWeights, setVoteWeights] = useState<Weights>({});
+  const { status: voteTxStatus, vote } = useGaugeProxy();
 
   if (!gaugeData) {
     return null;
@@ -24,8 +40,64 @@ export const VoteCollapsible: FC = () => {
     </Select.Option>
   );
 
-  const selectHandler = (address: string) => {
-    console.log(address);
+  const handleSelect = (addresses: string | string[]) => {
+    const selectedFarms = isArray(addresses)
+      ? addresses.map((x) => activeGauges.find((y) => y.address === x))
+      : null;
+
+    setVotingFarms(selectedFarms);
+  };
+
+  const renderVotingOption = (gauge: UserGaugeData) => {
+    const {
+      poolName,
+      depositToken,
+      depositTokenName,
+      balance,
+      staked,
+      harvestable,
+      usdPerToken,
+      apy,
+    } = gauge;
+    return (
+      <>
+        <Grid xs={24} sm={12} md={6} lg={6}>
+          <TokenIcon
+            src={
+              GAUGE_LP_TO_ICON[
+                depositToken.address as keyof typeof GAUGE_LP_TO_ICON
+              ]
+            }
+          />
+          <div style={{ width: "100%" }}>
+            <div style={{ fontSize: `1rem` }}>{poolName}</div>
+            <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
+          </div>
+        </Grid>
+        <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
+          <div>Current PICKLE APY: 10%</div>
+        </Grid>
+        <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
+          <div>Current PICKLE APY: 10%</div>
+        </Grid>
+        <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
+          <PercentageInput
+            placeholder="0%"
+            css={{
+              width: "60px !important",
+              minWidth: 0,
+              marginLeft: 30,
+            }}
+            onValueChange={({ floatValue }) => {
+              setVoteWeights({
+                ...voteWeights,
+                [gauge.address]: floatValue,
+              });
+            }}
+          />
+        </Grid>
+      </>
+    );
   };
 
   return (
@@ -41,13 +113,23 @@ export const VoteCollapsible: FC = () => {
     >
       <Spacer y={1} />
       <Select
-        placeholder="Select farms you wish to boost"
+        placeholder="Select farms to boost"
         multiple
         width="100%"
         initialValue={[]}
+        onChange={(value) => handleSelect(value)}
       >
         {activeGauges.map(renderSelectOptions)}
       </Select>
+      <Spacer y={0.5} />
+      <h3>Selected Farms</h3>
+      {votingFarms ? (
+        <Grid.Container gap={1}>
+          {votingFarms.map(renderVotingOption)}
+        </Grid.Container>
+      ) : (
+        "Please select farms from dropdown"
+      )}
     </Collapse>
   );
 };

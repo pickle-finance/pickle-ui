@@ -40,7 +40,7 @@ export const GaugeList: FC = () => {
 
   const activeGauges = gaugeData.filter((x) => true);
   const inactiveGauges = gaugeData.filter((x) => false);
-
+  
   const renderGauge = (gauge: UserGaugeData) => (
     <Grid xs={24} key={gauge.address}>
       <div css={{ display: "flex", alignItems: "center" }}>
@@ -98,7 +98,7 @@ export const GaugeList: FC = () => {
         </Grid>
       </Grid.Container>
       <h2>Vote</h2>
-      <VoteCollapsible/>
+      <VoteCollapsible />
       <div
         css={{
           justifyContent: "space-between",
