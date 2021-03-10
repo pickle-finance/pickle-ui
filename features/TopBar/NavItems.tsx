@@ -78,6 +78,14 @@ export const NavItems: FC = () => {
           <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
         </Link>
       </Popover>
+      <a
+        href="https://feedback.pickle.finance/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none" }}
+      >
+        <NavItem>feedback</NavItem>
+      </a>
     </div>
   );
 };

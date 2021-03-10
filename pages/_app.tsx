@@ -76,11 +76,29 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                       page_path: window.location.pathname,
                     });
 
+
+                    >!function(w,d,i,s){function l(){if(!d.getElementById(i)){var f=d.getElementsByTagName(s)[0],e=d.createElement(s);e.type="text/javascript",e.async=!0,e.src="https://canny.io/sdk.js",f.parentNode.insertBefore(e,f)}}if("function"!=typeof w.Canny){var c=function(){c.q.push(arguments)};c.q=[],w.Canny=c,"complete"===d.readyState?l():w.attachEvent?w.attachEvent("onload",l):w.addEventListener("load",l,!1)}}(window,document,"canny-jssdk","script");
+
+                    Canny('identify', {
+                      appID: '603cf06a10aac45a5b355b04',
+                      user: {
+                        // Replace these values with the current user's data
+                        email: user.email,
+                        name: user.name,
+                        id: user.id,
+
+                        // These fields are optional, but recommended:
+                        avatarURL: user.avatarURL,
+                        created: new Date(user.created).toISOString(),
+                      },
+                    });
+
                     window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src="https://cdn.heapanalytics.com/js/heap-"+e+".js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(r,a);for(var n=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],o=0;o<p.length;o++)heap[p[o]]=n(p[o])};   
                     heap.load("109300057");
                   `,
           }}
         />
+        
         <meta property="og:title" content="Farm PICKLE tokens" />
         <meta
           property="og:description"
