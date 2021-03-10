@@ -37,14 +37,14 @@ export const useWithReward = (rawGauges: Input): Output => {
 
         return {
           ...gauge,
-          // picklesRewarded: {
-          //   perBlock: pickleRewardedPerBlock,
-          //   perYear: pickleRewardedPerBlock * 276 * 24 * 365,
-          // },
-          // valueRewarded: {
-          //   perBlock: valRewardedPerBlock,
-          //   perYear: valRewardedPerBlock * 276 * 24 * 365,
-          // },
+          picklesRewarded: {
+            perBlock: pickleRewardedPerBlock,
+            perYear: pickleRewardedPerBlock * 276 * 24 * 365,
+          },
+          valueRewarded: {
+            perBlock: valRewardedPerBlock,
+            perYear: valRewardedPerBlock * 276 * 24 * 365,
+          },
         };
       });
       setGauges(newGauges);

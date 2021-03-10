@@ -23,6 +23,16 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
+interface DataProps {
+  isZero?: boolean;
+}
+
+const Data = styled.div<DataProps>`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: ${(props) => (props.isZero ? "#444" : "unset")};
+`;
+
 export const VoteCollapsible: FC = () => {
   const { gaugeData } = UserGauges.useContainer();
   const [votingFarms, setVotingFarms] = useState();
@@ -59,6 +69,8 @@ export const VoteCollapsible: FC = () => {
       usdPerToken,
       apy,
     } = gauge;
+
+    console.log("gauge apy", gauge.apy)
     return (
       <>
         <Grid xs={24} sm={12} md={6} lg={6}>
@@ -75,7 +87,10 @@ export const VoteCollapsible: FC = () => {
           </div>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
-          <div>Current PICKLE APY: 10%</div>
+           <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+              asdf
+            </Data>
+          <Label>Current PICKLE APY</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
           <div>Current PICKLE APY: 10%</div>

@@ -45,8 +45,6 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
             gauge.interface.fragments,
           );
 
-          console.log("gaugeContract", gaugeContract)
-
           return [
             c.balanceOf(address),
             gaugeContract.balanceOf(address),

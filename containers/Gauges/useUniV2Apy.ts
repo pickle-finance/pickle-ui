@@ -88,7 +88,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
 
         // calculate APY
         const valueStakedInGauge = pricePerToken * numTokensInPool;
-        const apy = 0; //gauge.valueRewarded.perYear / valueStakedInGauge;
+        const apy = gauge.valueRewarded.perYear / valueStakedInGauge;
         return {
           ...gauge,
           apy,

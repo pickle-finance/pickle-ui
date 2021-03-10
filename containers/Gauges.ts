@@ -18,8 +18,7 @@ function useGauges() {
   const { uniV2GaugesWithApy } = useUniV2Apy(gaugesWithReward);
   const { jarGaugeWithApy } = useJarGaugeApy(gaugesWithReward);
 
-  console.log("uniV2GaugesWithApy", rawGauges);
-
+  
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
     console.log(gauge.token);
     const { tokenName, poolName } = GaugeInfo[gauge.token];
@@ -29,7 +28,7 @@ function useGauges() {
       poolName,
     };
   });
-
+  
   const jarGauges = jarGaugeWithApy?.map((gauge) => {
     const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {
@@ -38,9 +37,11 @@ function useGauges() {
       poolName,
     };
   });
-
+  
+  const gauges = uniGauges && jarGauges ? [...uniGauges, ...jarGauges] : null
+  console.log("All gauges", gauges);
   return {
-    gauges: uniGauges && jarGauges ? [...uniGauges, ...jarGauges] : null,
+    gauges,
   };
 }
 
