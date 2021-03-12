@@ -33,11 +33,24 @@ const Data = styled.div<DataProps>`
   color: ${(props) => (props.isZero ? "#444" : "unset")};
 `;
 
+const formatPercent = (decimal: number) => {
+  if (decimal) {
+    return (decimal * 100).toFixed(2);
+  }
+};
+
 export const VoteCollapsible: FC = () => {
   const { gaugeData } = UserGauges.useContainer();
   const [votingFarms, setVotingFarms] = useState();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const { status: voteTxStatus, vote } = useGaugeProxy();
+
+  let totalGaugeWeight = 0;
+  for (let i = 0; i < gaugeData?.length; i++) {
+    totalGaugeWeight += voteWeights[gaugeData[i].address] || 0;
+  }
+
+  const weightsValid = totalGaugeWeight === 100;
 
   if (!gaugeData) {
     return null;
@@ -68,9 +81,9 @@ export const VoteCollapsible: FC = () => {
       harvestable,
       usdPerToken,
       apy,
+      allocPoint,
     } = gauge;
 
-    console.log("gauge apy", gauge.apy)
     return (
       <>
         <Grid xs={24} sm={12} md={6} lg={6}>
@@ -86,16 +99,19 @@ export const VoteCollapsible: FC = () => {
             <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
           </div>
         </Grid>
-        <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
-           <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              asdf
-            </Data>
-          <Label>Current PICKLE APY</Label>
+        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Data isZero={apy === 0}>{formatPercent(apy)}%</Data>
+          <Label>Base PICKLE APY</Label>
+        </Grid>
+        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Data isZero={apy === 0}>{formatPercent(apy * 2.5)}%</Data>
+          <Label>Max PICKLE APY</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
-          <div>Current PICKLE APY: 10%</div>
+          <Data isZero={allocPoint === 0}>{formatPercent(allocPoint)}%</Data>
+          <Label>Current reward weight</Label>
         </Grid>
-        <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
+        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "center" }}>
           <PercentageInput
             placeholder="0%"
             css={{
@@ -139,9 +155,36 @@ export const VoteCollapsible: FC = () => {
       <Spacer y={0.5} />
       <h3>Selected Farms</h3>
       {votingFarms ? (
-        <Grid.Container gap={1}>
-          {votingFarms.map(renderVotingOption)}
-        </Grid.Container>
+        <>
+          <Grid.Container gap={1}>
+            {votingFarms.map(renderVotingOption)}
+          </Grid.Container>
+          <Spacer y={0.5} />
+          <Grid.Container gap={2}>
+            <Grid xs={24} md={12}>
+              <Button
+                disabled={
+                  !weightsValid || voteTxStatus === TransactionStatus.Pending
+                }
+                onClick={() => {}}
+                style={{ width: "100%" }}
+              >
+                Estimate new weights
+              </Button>
+            </Grid>
+            <Grid xs={24} md={12}>
+              <Button
+                disabled={
+                  !weightsValid || voteTxStatus === TransactionStatus.Pending
+                }
+                onClick={() => {}}
+                style={{ width: "100%" }}
+              >
+                Estimate new weights
+              </Button>
+            </Grid>
+          </Grid.Container>
+        </>
       ) : (
         "Please select farms from dropdown"
       )}

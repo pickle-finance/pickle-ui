@@ -33,9 +33,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
   const { masterchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairDataPrefill } = UniV2Pairs.useContainer();
-
-  console.log(inputGauges);
-
+  
   const calculateApy = async () => {
     if (
       provider &&
