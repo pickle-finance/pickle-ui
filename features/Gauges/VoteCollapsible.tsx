@@ -11,6 +11,7 @@ import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
+import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { isArray } from "util";
@@ -41,8 +42,10 @@ const formatPercent = (decimal: number) => {
 
 export const VoteCollapsible: FC = () => {
   const { gaugeData } = UserGauges.useContainer();
+  const { balance: dillBalance } = Dill.useContainer();
   const [votingFarms, setVotingFarms] = useState();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
+  const [newWeights, setNewWeights] = useState();
   const { status: voteTxStatus, vote } = useGaugeProxy();
 
   let totalGaugeWeight = 0;
@@ -71,19 +74,44 @@ export const VoteCollapsible: FC = () => {
     setVotingFarms(selectedFarms);
   };
 
+  const calculateNewWeights = () => {
+    console.log("active", activeGauges);
+    if (weightsValid) {
+      const voteArray = Object.entries(voteWeights).map((e) => ({
+        [e[0]]: e[1],
+      }));
+      const newWeights = voteArray.map((x) => {
+        const gaugeAddress = Object.keys(x)[0];
+        const gauge = activeGauges.find(
+          (gauge) => gauge.address === gaugeAddress,
+        );
+        if (gauge && dillBalance) {
+          // Revise user's weight distribution for new estimate
+          const estimatedWeight =
+            (gauge.gaugeWeight -
+              gauge.userWeight +
+              (+dillBalance.toString() * Object.values(x)[0]) / 100) /
+            gauge.totalWeight;
+          return { [gauge.address]: estimatedWeight };
+        } else {
+          return null;
+        }
+      });
+      setNewWeights(newWeights);
+    }
+  };
+
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
       poolName,
       depositToken,
       depositTokenName,
-      balance,
-      staked,
-      harvestable,
-      usdPerToken,
       apy,
       allocPoint,
+      address,
     } = gauge;
-
+    const newWeight = newWeights ? newWeights.find(x => x[address])[address] : null
+    
     return (
       <>
         <Grid xs={24} sm={12} md={6} lg={6}>
@@ -108,10 +136,12 @@ export const VoteCollapsible: FC = () => {
           <Label>Max PICKLE APY</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
-          <Data isZero={allocPoint === 0}>{formatPercent(allocPoint)}%</Data>
+          <Data isZero={allocPoint === 0}>
+            {formatPercent(allocPoint)}% {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
+          </Data>
           <Label>Current reward weight</Label>
         </Grid>
-        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "center" }}>
+        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "right" }}>
           <PercentageInput
             placeholder="0%"
             css={{
@@ -154,19 +184,19 @@ export const VoteCollapsible: FC = () => {
       </Select>
       <Spacer y={0.5} />
       <h3>Selected Farms</h3>
-      {votingFarms ? (
+      {votingFarms?.length ? (
         <>
           <Grid.Container gap={1}>
             {votingFarms.map(renderVotingOption)}
           </Grid.Container>
-          <Spacer y={0.5} />
+          <Spacer y={1} />
           <Grid.Container gap={2}>
             <Grid xs={24} md={12}>
               <Button
                 disabled={
                   !weightsValid || voteTxStatus === TransactionStatus.Pending
                 }
-                onClick={() => {}}
+                onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
                 Estimate new weights
@@ -177,7 +207,7 @@ export const VoteCollapsible: FC = () => {
                 disabled={
                   !weightsValid || voteTxStatus === TransactionStatus.Pending
                 }
-                onClick={() => {}}
+                onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
                 Estimate new weights

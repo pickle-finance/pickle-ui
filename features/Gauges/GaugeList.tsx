@@ -73,6 +73,8 @@ export const GaugeList: FC = () => {
       weights.push(voteWeights[gaugeData[i].address]);
     }
 
+    console.log(tokens, weights)
+
     vote(tokens, weights);
   };
 

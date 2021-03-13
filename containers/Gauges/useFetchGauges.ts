@@ -19,7 +19,6 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
 
   const getGauges = async () => {
     if (gaugeProxy && multicallProvider) {
-      console.log("gaugeProxy", gaugeProxy);
       const tokens = await gaugeProxy.tokens();
       console.log("tokens", tokens);
       const totalWeight = await gaugeProxy.totalWeight();
@@ -51,6 +50,8 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
             +gaugeWeights[idx].toString() / +totalWeight.toString() || 0,
           token: token,
           gaugeAddress: gaugeAddresses[idx],
+          gaugeWeight: +gaugeWeights[idx].toString(),
+          totalWeight: +totalWeight.toString()
         };
       });
 

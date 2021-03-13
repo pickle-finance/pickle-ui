@@ -39,7 +39,6 @@ function useGauges() {
   });
   
   const gauges = uniGauges && jarGauges ? [...uniGauges, ...jarGauges] : null
-  console.log("All gauges", gauges);
   return {
     gauges,
   };
