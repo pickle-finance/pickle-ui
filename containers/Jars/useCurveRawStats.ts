@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Prices } from "../Prices";
 
-const curveAPYsURL = "https://www.curve.fi/raw-stats/apys.json";
+const curveAPYsURL = "https://stats.curve.fi/raw-stats/apys.json";
 
 export interface RawStatAPYs {
   compound: number;
