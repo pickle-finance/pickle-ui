@@ -103,7 +103,7 @@ export const GaugeList: FC = () => {
       <h2>Current Weights</h2>
       <GaugeChartCollapsible gauges={activeGauges}/>
       <h2>Vote</h2>
-      <VoteCollapsible />
+      <VoteCollapsible gauges={activeGauges}/>
       <div
         css={{
           justifyContent: "space-between",

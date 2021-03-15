@@ -40,58 +40,76 @@ const formatPercent = (decimal: number) => {
   }
 };
 
-export const VoteCollapsible: FC = () => {
-  const { gaugeData } = UserGauges.useContainer();
-  const { balance: dillBalance } = Dill.useContainer();
+export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
+  gauges,
+}) => {
+  const { balance: dillBalanceBN } = Dill.useContainer();
   const [votingFarms, setVotingFarms] = useState();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState();
   const { status: voteTxStatus, vote } = useGaugeProxy();
 
   let totalGaugeWeight = 0;
-  for (let i = 0; i < gaugeData?.length; i++) {
-    totalGaugeWeight += voteWeights[gaugeData[i].address] || 0;
+  for (let i = 0; i < gauges?.length; i++) {
+    totalGaugeWeight += voteWeights[gauges[i].address] || 0;
   }
 
   const weightsValid = totalGaugeWeight === 100;
 
-  if (!gaugeData) {
+  if (!gauges) {
     return null;
   }
-  const activeGauges = gaugeData.filter((x) => true);
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
     <Select.Option value={gauge.address}>
-      <Checkbox>{gauge.address}</Checkbox>
+      {gauge.address}
     </Select.Option>
   );
 
   const handleSelect = (addresses: string | string[]) => {
     const selectedFarms = isArray(addresses)
-      ? addresses.map((x) => activeGauges.find((y) => y.address === x))
+      ? addresses.map((x) => gauges.find((y) => y.address === x))
       : null;
 
     setVotingFarms(selectedFarms);
   };
 
+  const handleBoost = () => {
+    const tokens: string[] = [];
+    const weights: number[] = [];
+
+    if (!gauges || !weightsValid) return;
+    for (let i = 0; i < gauges.length; i++) {
+      tokens.push(gauges[i].depositToken.address);
+      weights.push(voteWeights[gauges[i].address]);
+    }
+
+    console.log(tokens, weights);
+
+    vote(tokens, weights);
+  };
+
   const calculateNewWeights = () => {
-    console.log("active", activeGauges);
+    console.log("active gauges", gauges);
     if (weightsValid) {
       const voteArray = Object.entries(voteWeights).map((e) => ({
         [e[0]]: e[1],
       }));
       const newWeights = voteArray.map((x) => {
         const gaugeAddress = Object.keys(x)[0];
-        const gauge = activeGauges.find(
+        const gauge = gauges.find(
           (gauge) => gauge.address === gaugeAddress,
         );
-        if (gauge && dillBalance) {
+        if (gauge && dillBalanceBN) {
+
+          const dillBalance = +dillBalanceBN.toString()
           // Revise user's weight distribution for new estimate
           const estimatedWeight =
             (gauge.gaugeWeight -
               gauge.userWeight +
-              (+dillBalance.toString() * Object.values(x)[0]) / 100) /
-            gauge.totalWeight;
+              (dillBalance * Object.values(x)[0]) / 100) /
+            (gauge.totalWeight);
+            console.log(gauge.gaugeWeight, gauge.userWeight, +dillBalance.toString(),Object.values(x)[0], gauge.totalWeight)
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;
@@ -110,8 +128,10 @@ export const VoteCollapsible: FC = () => {
       allocPoint,
       address,
     } = gauge;
-    const newWeight = newWeights ? newWeights.find(x => x[address])[address] : null
-    
+    const newWeight = newWeights
+      ? newWeights.find((x) => x[address])[address]
+      : null;
+
     return (
       <>
         <Grid xs={24} sm={12} md={6} lg={6}>
@@ -137,7 +157,8 @@ export const VoteCollapsible: FC = () => {
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
           <Data isZero={allocPoint === 0}>
-            {formatPercent(allocPoint)}% {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
+            {formatPercent(allocPoint)}%{" "}
+            {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
           </Data>
           <Label>Current reward weight</Label>
         </Grid>
@@ -180,7 +201,7 @@ export const VoteCollapsible: FC = () => {
         initialValue={[]}
         onChange={(value) => handleSelect(value)}
       >
-        {activeGauges.map(renderSelectOptions)}
+        {gauges.map(renderSelectOptions)}
       </Select>
       <Spacer y={0.5} />
       <h3>Selected Farms</h3>
@@ -207,10 +228,10 @@ export const VoteCollapsible: FC = () => {
                 disabled={
                   !weightsValid || voteTxStatus === TransactionStatus.Pending
                 }
-                onClick={() => calculateNewWeights()}
+                onClick={() => handleBoost()}
                 style={{ width: "100%" }}
               >
-                Estimate new weights
+                Submit vote
               </Button>
             </Grid>
           </Grid.Container>
