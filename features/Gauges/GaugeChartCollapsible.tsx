@@ -1,14 +1,15 @@
 import styled from "styled-components";
+import dynamic from "next/dynamic"
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select, Checkbox } from "@geist-ui/react";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
-import Chart from "react-apexcharts";
 import Collapse from "../Collapsible/Collapse";
+import { pickleWhite } from "../../util/constants";
+const Chart = dynamic(() => import('react-apexcharts'), {ssr:false})
 
 export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
 }) => {
-  console.log("gggg", gauges);
   const gaugeChartData = gauges.map((gauge) => {
     const { allocPoint, depositTokenName } = gauge;
     return {
@@ -16,7 +17,8 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       depositTokenName,
     };
   });
-  console.log("ggg", gaugeChartData);
+  const depositTokenName = gaugeChartData.map((x) => x.depositTokenName);
+
   const chartOptions = {
     series: gaugeChartData.map((x) => x.allocPoint),
     options: {
@@ -24,16 +26,26 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         width: 480,
         type: "pie",
       },
-      labels: gaugeChartData.map((x) => x.depositTokenName),
+      labels: depositTokenName,
+      dataLabels: {
+        formatter(val, opts) {
+          const name = depositTokenName[opts.seriesIndex];
+          return [name, val.toFixed(1) + "%"];
+        },
+        style: {
+          colors: [pickleWhite],
+          fontSize: '10px'
+        },
+      },
+      legend: {
+        show: false,
+      },
       responsive: [
         {
           breakpoint: 480,
           options: {
             chart: {
               width: 200,
-            },
-            legend: {
-              position: "bottom",
             },
           },
         },
