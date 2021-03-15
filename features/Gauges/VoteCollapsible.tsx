@@ -61,14 +61,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
-    <Select.Option value={gauge.address}>
-      {gauge.address}
+    <Select.Option value={gauge.depositTokenName}>
+      {gauge.depositTokenName}
     </Select.Option>
   );
 
-  const handleSelect = (addresses: string | string[]) => {
-    const selectedFarms = isArray(addresses)
-      ? addresses.map((x) => gauges.find((y) => y.address === x))
+  const handleSelect = (depositTokens: string | string[]) => {
+    const selectedFarms = isArray(depositTokens)
+      ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
 
     setVotingFarms(selectedFarms);
