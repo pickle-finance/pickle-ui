@@ -7,6 +7,7 @@ import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
+import { GaugeChartCollapsible } from "./GaugeChartCollapsible"
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -71,7 +72,7 @@ export const GaugeList: FC = () => {
     for (let i = 0; i < gaugeData.length; i++) {
       tokens.push(gaugeData[i].depositToken.address);
       weights.push(voteWeights[gaugeData[i].address]);
-    }
+    } 
 
     console.log(tokens, weights)
 
@@ -99,6 +100,8 @@ export const GaugeList: FC = () => {
           </Checkbox>
         </Grid>
       </Grid.Container>
+      <h2>Current Weights</h2>
+      <GaugeChartCollapsible gauges={activeGauges}/>
       <h2>Vote</h2>
       <VoteCollapsible />
       <div
