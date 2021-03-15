@@ -18,7 +18,6 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "@bit/lekanmedia.shared-ui.date-picker": "^0.0.4",
     "@ethersproject/abstract-provider": "^5.0.4",
     "@geist-ui/react": "^2.0.2",
     "@geist-ui/react-icons": "^1.0.0",
