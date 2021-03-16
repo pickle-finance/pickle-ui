@@ -20,7 +20,6 @@ function useGauges() {
 
   
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
-    console.log(gauge.token);
     const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {
       ...gauge,

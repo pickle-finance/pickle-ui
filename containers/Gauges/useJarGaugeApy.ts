@@ -27,7 +27,6 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
-    jars = [];
     console.log(inputGauges, masterchef, jars, prices, multicallProvider);
     if (inputGauges && masterchef && prices && multicallProvider) {
       console.log(inputGauges, "inputGauges");
@@ -61,7 +60,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
           gauge.token as keyof typeof JAR_GAUGE_MAP
         ];
 
-        const gaugeingJar = jars.filter((x) => x.jarName === jarName)[0];
+        const gaugeingJar = jars?.filter((x) => x.jarName === jarName)[0];
 
         // early return for gauges based on deactivated jars
         if (!gaugeingJar) {
@@ -84,12 +83,8 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         const valueStakedInGauge =
           (gaugeingJar.usdPerPToken || 0) * numTokensInPool;
 
-        let apy = 0;
-        // gauge.valueRewarded.perYear &&
-        // gauge.valueRewarded.perYear / valueStakedInGauge;
-        // if (gauge.poolIndex === 16) {
-        //   apy = 0;
-        // }
+        let apy = (gauge.valueRewarded.perYear &&
+          gauge.valueRewarded.perYear / valueStakedInGauge) || 0;
 
         return {
           ...gauge,
