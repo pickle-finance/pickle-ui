@@ -29,8 +29,6 @@ export const GaugeList: FC = () => {
     totalGaugeWeight += voteWeights[gaugeData[i].address] || 0;
   }
 
-  const weightsValid = totalGaugeWeight === 100;
-
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
@@ -46,38 +44,9 @@ export const GaugeList: FC = () => {
     <Grid xs={24} key={gauge.address}>
       <div css={{ display: "flex", alignItems: "center" }}>
         <GaugeCollapsible gaugeData={gauge} />
-        <PercentageInput
-          placeholder="0%"
-          css={{
-            width: "60px !important",
-            minWidth: 0,
-            marginLeft: 30,
-          }}
-          onValueChange={({ floatValue }) => {
-            setVoteWeights({
-              ...voteWeights,
-              [gauge.address]: floatValue,
-            });
-          }}
-        />
       </div>
     </Grid>
   );
-
-  const handleBoost = () => {
-    const tokens: string[] = [];
-    const weights: number[] = [];
-
-    if (!gaugeData) return;
-    for (let i = 0; i < gaugeData.length; i++) {
-      tokens.push(gaugeData[i].depositToken.address);
-      weights.push(voteWeights[gaugeData[i].address]);
-    } 
-
-    console.log(tokens, weights)
-
-    vote(tokens, weights);
-  };
 
   return (
     <Container>
@@ -112,14 +81,6 @@ export const GaugeList: FC = () => {
         }}
       >
         <h2>Active Farms</h2>
-        <Button
-          size="small"
-          css={{ width: "80px !important", minWidth: "0 !important" }}
-          disabled={!weightsValid || voteTxStatus === TransactionStatus.Pending}
-          onClick={handleBoost}
-        >
-          Boost
-        </Button>
       </div>
       <Grid.Container gap={1}>{activeGauges.map(renderGauge)}</Grid.Container>
       <Spacer y={1} />
