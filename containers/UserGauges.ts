@@ -27,6 +27,7 @@ export interface UserGaugeData {
   gaugeWeight: number;
   totalWeight: number;
   userWeight: number;
+  userCurrentWeights: number;
 }
 
 const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
@@ -66,16 +67,18 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
             c.balanceOf(address),
             gaugeContract.balanceOf(address),
             gaugeContract.earned(address),
-            gaugeProxyContract.votes(x.token, address)
+            gaugeProxyContract.votes(x.token, address),
+            gaugeProxyContract.usedWeights(address)
           ];
         }),
       );
 
         const newGaugeData = gauges.map((gauge, idx) => {
-        const balance = balancesUserInfosHarvestables[idx * 4];
-        const staked = balancesUserInfosHarvestables[idx * 4 + 1];
-        const harvestable = balancesUserInfosHarvestables[idx * 4 + 2];
-        const userWeight = balancesUserInfosHarvestables[idx * 4 + 3];
+        const balance = balancesUserInfosHarvestables[idx * 5];
+        const staked = balancesUserInfosHarvestables[idx * 5 + 1];
+        const harvestable = balancesUserInfosHarvestables[idx * 5 + 2];
+        const userWeight = balancesUserInfosHarvestables[idx * 5 + 3];
+        const userCurrentWeights = balancesUserInfosHarvestables[idx * 5 + 4];
 
         return {
           allocPoint: gauge.allocPoint,
@@ -91,6 +94,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           gaugeWeight: gauge.gaugeWeight,
           totalWeight: gauge.totalWeight,
           userWeight: +userWeight.toString(),
+          userCurrentWeights: +userCurrentWeights.toString(),
         };
       });
 

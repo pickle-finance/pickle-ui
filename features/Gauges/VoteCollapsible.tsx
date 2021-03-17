@@ -108,8 +108,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
             (gauge.gaugeWeight -
               gauge.userWeight +
               (dillBalance * Object.values(x)[0]) / 100) /
-            (gauge.totalWeight);
-            console.log(gauge.gaugeWeight, gauge.userWeight, +dillBalance.toString(),Object.values(x)[0], gauge.totalWeight)
+            (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
+            console.log(gauge.gaugeWeight, gauge.userWeight, +dillBalance.toString(),Object.values(x)[0], gauge.totalWeight, gauge.userCurrentWeights)
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;
