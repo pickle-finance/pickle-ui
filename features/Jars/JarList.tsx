@@ -8,6 +8,7 @@ import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { PAIR_INFO as SUSHI_PAIRS } from "../../containers/SushiPairs";
+import { PAIR_INFO as UNI_PAIRS } from "../../containers/UniV2Pairs";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -32,7 +33,13 @@ export const JarList: FC = () => {
     (jar) => SUSHI_PAIRS[jar.depositToken.address],
   );
 
-  const remainingJars = activeJars.filter((jar) => !sushiJars.includes(jar))
+  const uniJars = activeJars.filter(
+    (jar) => UNI_PAIRS[jar.depositToken.address],
+  );
+
+  const remainingJars = activeJars.filter(
+    (jar) => !sushiJars.includes(jar) && !uniJars.includes(jar),
+  );
 
   return (
     <Container>
@@ -55,7 +62,10 @@ export const JarList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        <JarGroupCollapsible jarData={sushiJars} category="SushiSwap"/>
+        <JarGroupCollapsible jarData={sushiJars} category="SushiSwap" />
+      </Grid.Container>
+      <Grid.Container gap={1}>
+        <JarGroupCollapsible jarData={uniJars} category="Uniswap" />
       </Grid.Container>
       <Grid.Container gap={1}>
         {remainingJars.map((jar) => (

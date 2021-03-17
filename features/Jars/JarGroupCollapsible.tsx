@@ -7,12 +7,31 @@ import Collapse from "../Collapsible/Collapse";
 
 import { JarCollapsible, JAR_DEPOSIT_TOKEN_TO_ICON } from "./JarCollapsible";
 import { UserJarData } from "../../containers/UserJars";
+import { RootRef } from "@material-ui/core";
+
+const renderCategoryLogo = (category: string) => {
+  switch (category.toLowerCase()) {
+    case "sushiswap":
+      return (
+        <img
+          style={{ height: "30px", paddingLeft: "5px" }}
+          src="/sushiswap.png"
+        ></img>
+      );
+    case "uniswap":
+      return (
+        <img
+          style={{ height: "30px", paddingLeft: "5px" }}
+          src="/uniswap.png"
+        ></img>
+      );
+  }
+};
 
 export const JarGroupCollapsible: FC<{
   jarData: UserJarData[];
   category: string;
 }> = ({ jarData, category }) => {
-  console.log("jarData", jarData);
   return (
     <Collapse
       style={{ marginBottom: "10px", width: "100%" }}
@@ -20,12 +39,7 @@ export const JarGroupCollapsible: FC<{
         <Grid.Container>
           <Grid xs={24} sm={12} md={5} lg={5}>
             <strong>{category}</strong>
-            {category.toLowerCase() === "sushiswap" ? (
-              <img
-                style={{ height: "30px", paddingLeft: "5px" }}
-                src="/sushiswap.png"
-              ></img>
-            ) : null}
+            {renderCategoryLogo(category)}
           </Grid>
           <Grid xs={24} sm={12} md={12} lg={12}>
             <Grid.Container>
