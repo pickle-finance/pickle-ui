@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { Spacer, Grid, Checkbox } from "@geist-ui/react";
 
 import { JarCollapsible } from "./JarCollapsible";
+import { JarGroupCollapsible } from "./JarGroupCollapsible";
 import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
+import { PAIR_INFO as SUSHI_PAIRS } from "../../containers/SushiPairs";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -25,6 +27,12 @@ export const JarList: FC = () => {
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
+
+  const sushiJars = activeJars.filter(
+    (jar) => SUSHI_PAIRS[jar.depositToken.address],
+  );
+
+  const remainingJars = activeJars.filter((jar) => !sushiJars.includes(jar))
 
   return (
     <Container>
@@ -47,7 +55,10 @@ export const JarList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {activeJars.map((jar) => (
+        <JarGroupCollapsible jarData={sushiJars} category="SushiSwap"/>
+      </Grid.Container>
+      <Grid.Container gap={1}>
+        {remainingJars.map((jar) => (
           <Grid xs={24} key={jar.name}>
             <JarCollapsible jarData={jar} />
           </Grid>

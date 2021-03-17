@@ -68,7 +68,6 @@ const Collapse: React.FC<React.PropsWithChildren<CollapseProps>> = ({
         .collapse {
           padding: ${theme.layout.gap} 0;
           border-top: 1px solid var(--accent-color);
-          border-bottom: 1px solid var(--accent-color);
         }
         .shadow {
           box-shadow: var(--accent-glow-color) 0 0 6px 0;
