@@ -35,9 +35,8 @@ import { Instabrine } from "./Contracts/Instabrine";
 import { InstabrineFactory } from "./Contracts/InstabrineFactory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChefFactory } from "./Contracts/SushiChefFactory";
-import { YvecrvZap } from "./Contracts/YvecrvZap"; 
+import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
-
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -99,6 +98,17 @@ export const BASIS_BAS_DAI_PID = 1;
 
 export const MIRROR_MIR_UST_STAKING_REWARDS =
   "0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF";
+
+export const MIRROR_MTSLA_UST_STAKING_REWARDS =
+  "0x43DFb87a26BA812b0988eBdf44e3e341144722Ab";
+export const MIRROR_MAAPL_UST_STAKING_REWARDS =
+  "0x735659C8576d88A2Eb5C810415Ea51cB06931696";
+export const MIRROR_MQQQ_UST_STAKING_REWARDS =
+  "0xc1d2ca26A59E201814bF6aF633C3b3478180E91F";
+export const MIRROR_MSLV_UST_STAKING_REWARDS =
+  "0xDB278fb5f7d4A7C3b83F80D18198d872Bbf7b923";
+export const MIRROR_MBABA_UST_STAKING_REWARDS =
+  "0x769325E8498bF2C2c3cFd6464A60fA213f26afcc";
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
@@ -221,7 +231,7 @@ function useContracts() {
     instabrine,
     sushiChef,
     basisStaking,
-    yveCrvZap
+    yveCrvZap,
   };
 }
 
