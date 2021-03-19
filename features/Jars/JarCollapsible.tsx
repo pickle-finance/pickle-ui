@@ -71,6 +71,21 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x87dA823B6fC8EB8575a235A824690fda94674c88": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir.png"} />
   ),
+  "0x5233349957586A8207c52693A959483F9aeAA50C": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tesla.png"} />
+  ),
+  "0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/apple.png"} />
+  ),
+  "0x9E3B47B861B451879d43BBA404c35bdFb99F0a6c": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/qqq.png"} />
+  ),
+  "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/slv.png"} />
+  ),
+  "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/baba.png"} />
+  ),
   "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
   ),

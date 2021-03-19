@@ -18,6 +18,11 @@ import {
   BASIS_BAC_DAI_PID,
   BASIS_BAC_DAI_V1_STAKING_REWARDS,
   MIRROR_MIR_UST_STAKING_REWARDS,
+  MIRROR_MTSLA_UST_STAKING_REWARDS,
+  MIRROR_MAAPL_UST_STAKING_REWARDS,
+  MIRROR_MQQQ_UST_STAKING_REWARDS,
+  MIRROR_MSLV_UST_STAKING_REWARDS,
+  MIRROR_MBABA_UST_STAKING_REWARDS
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -399,15 +404,30 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthyveCRVApy,
         basisBacDaiApy,
         basisBasDaiApy,
-        mirrorMirUstApy,
+
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
         calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
-        calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
       ]);
+
+      const [
+        mirrorMirUstApy,
+        mirrorMtslaUstApy,
+        mirrorMaaplUstApy,
+        mirrorMqqqUstApy,
+        mirrorMslvUstApy,
+        mirrorMbabaUstApy,
+      ] = await Promise.all([
+        calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
+        calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
+        calculateMirAPY(MIRROR_MAAPL_UST_STAKING_REWARDS),
+        calculateMirAPY(MIRROR_MQQQ_UST_STAKING_REWARDS),
+        calculateMirAPY(MIRROR_MSLV_UST_STAKING_REWARDS),
+        calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS)
+      ])
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -485,6 +505,41 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMirUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MTSLA_UST) {
+          APYs = [
+            ...mirrorMtslaUstApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MAAPL_UST) {
+          APYs = [
+            ...mirrorMaaplUstApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MQQQ_UST) {
+          APYs = [
+            ...mirrorMqqqUstApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MSLV_UST) {
+          APYs = [
+            ...mirrorMslvUstApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST) {
+          APYs = [
+            ...mirrorMbabaUstApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST),
           ];
         }
 
