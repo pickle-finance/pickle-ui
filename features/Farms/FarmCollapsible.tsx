@@ -55,6 +55,24 @@ const FARM_LP_TO_ICON = {
   "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33": "/3crv.png",
   "0x2E35392F4c36EBa7eCAFE4de34199b2373Af22ec": "/rencrv.png",
   "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87": "/dai.png",
+  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir-ust.png"} />
+  ),
+  "0xaFB2FE266c215B5aAe9c4a9DaDC325cC7a497230": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tesla.png"} />
+  ),
+  "0xF303B35D5bCb4d9ED20fB122F5E268211dEc0EBd": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/apple.png"} />
+  ),
+  "0x7C8de3eE2244207A54b57f45286c9eE1465fee9f": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/qqq.png"} />
+  ),
+  "0x1ed1fD33b62bEa268e527A622108fe0eE0104C07": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/slv.png"} />
+  ),
+  "0x1CF137F651D8f0A4009deD168B442ea2E870323A": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/baba.png"} />
+  ),
   "0x55282dA27a3a02ffe599f6D11314D239dAC89135": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
@@ -87,9 +105,6 @@ const FARM_LP_TO_ICON = {
   ),
   "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
-  ),
-  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir-ust.png"} />
   ),
 };
 
