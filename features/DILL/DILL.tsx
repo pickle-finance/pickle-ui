@@ -3,6 +3,7 @@ import { Spacer } from "@geist-ui/react";
 
 import { Balances } from "./Balances";
 import { Interaction } from "./Interaction";
+import { Claim } from "./Claim";
 import { Dill } from "../../containers/Dill";
 
 export const DillFeature: FC = () => {
@@ -14,6 +15,8 @@ export const DillFeature: FC = () => {
       <Balances dillStats={dillStats} />
       <Spacer />
       <Interaction dillStats={dillStats} />
+      <Spacer />
+      <Claim />
     </>
   );
 };
