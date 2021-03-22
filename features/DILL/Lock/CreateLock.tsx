@@ -17,8 +17,9 @@ import {
   getDayOffset,
   getEpochSecondForDay,
   getWeekDiff,
-} from "../../../utils/date";
+} from "../../../util/date";
 import { SelectPeriod } from "../../../components/SelectPeriod";
+import { estimateDillForDate, estimateDillForPeriod } from "../../../util/dill";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -62,12 +63,14 @@ const setButtonStatus = (
   }
 };
 
+const DAY = 86400;
+const WEEK = 7 * 86400;
+
 export const CreateLock: FC<{
   dillStats: UseDillOutput;
 }> = () => {
   const { pickleBalance, pickleBN } = useBalances();
   const [lockAmount, setlockAmount] = useState("");
-  const [dillReceived, setDillReceived] = useState(0);
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
@@ -92,6 +95,9 @@ export const CreateLock: FC<{
   };
 
   const { dill } = Contracts.useContainer();
+
+  const unlockTimeRounded =
+    Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
 
   useEffect(() => {
     if (pickle && dill && address) {
@@ -127,6 +133,12 @@ export const CreateLock: FC<{
         break;
     }
   };
+
+  useEffect(() => {
+    if (getEpochSecondForDay(unlockTime) !== unlockTimeRounded) {
+      setUnlockTime(new Date(unlockTimeRounded * 1000));
+    }
+  }, [unlockTime, unlockTimeRounded]);
 
   return (
     <Grid.Container gap={2}>
@@ -209,19 +221,19 @@ export const CreateLock: FC<{
           <Radio value="1">
             1 week
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = 0.0048 DILL
+              1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(3)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value="2">
             1 month
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = 0.021 DILL
+              1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(3)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value="3">
             1 year
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = 0.25 DILL
+              1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(3)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value="4">
@@ -230,7 +242,15 @@ export const CreateLock: FC<{
           </Radio>
         </Radio.Group>
         <Spacer y={0.5} />
-        <p>You will receive <strong>{lockAmount ? lockingWeeks/(365.25*4/7)*parseInt(lockAmount): 0} </strong>DILL</p>
+        <p>
+          You will receive{" "}
+          <strong>
+            {lockAmount
+              ? estimateDillForDate(+lockAmount, unlockTime).toFixed(4)
+              : 0}{" "}
+          </strong>
+          DILL
+        </p>
 
         <Spacer y={1} />
         <Button

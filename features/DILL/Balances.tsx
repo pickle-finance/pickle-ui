@@ -5,7 +5,7 @@ import { formatEther } from "ethers/lib/utils";
 
 import { useBalances } from "../Balances/useBalances";
 import { Dill, UseDillOutput } from "../../containers/Dill";
-import { formatDate } from "../../utils/date";
+import { formatDate } from "../../util/date";
 
 const DataPoint = styled.div`
   font-size: 24px;

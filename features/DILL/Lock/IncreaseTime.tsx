@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
 
 import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
@@ -16,7 +16,8 @@ import {
   getDayOffset,
   getEpochSecondForDay,
   getWeekDiff,
-} from "../../../utils/date";
+} from "../../../util/date";
+import { estimateDillForPeriod } from "../../../util/dill";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -53,6 +54,9 @@ const setButtonStatus = (
     });
   }
 };
+
+const DAY = 86400;
+const WEEK = 7 * 86400;
 
 export const IncreaseTime: FC<{
   dillStats: UseDillOutput;
@@ -104,14 +108,47 @@ export const IncreaseTime: FC<{
 
   const lockingWeeks = getWeekDiff(new Date(), unlockTime);
 
+  const setLockTime = async (value: string) => {
+    switch (value) {
+      case "1":
+        await setUnlockTime(getDayOffset(new Date(), 7));
+        break;
+      case "2":
+        await setUnlockTime(getDayOffset(new Date(), 30));
+        break;
+      case "3":
+        await setUnlockTime(getDayOffset(new Date(), 364));
+        break;
+      case "4":
+        await setUnlockTime(getDayOffset(new Date(), 365 * 4));
+        break;
+    }
+  };
+
+  const displayLockTime = () => {
+    if (lockingWeeks < 52) {
+      return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
+    } else {
+      const years = Number(lockingWeeks / 52).toFixed(1);
+      return `${years} ${years === "1.0" ? "year" : "years"}`;
+    }
+  };
+
+  const unlockTimeRounded =
+    Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
+
+  useEffect(() => {
+    if (getEpochSecondForDay(unlockTime) !== unlockTimeRounded) {
+      setUnlockTime(new Date(unlockTimeRounded * 1000));
+    }
+  }, [unlockTime, unlockTimeRounded]);
+
   return (
     <Grid.Container gap={2}>
       <Spacer y={0.5} />
       <Grid xs={24} md={24}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>
-            Lock for: {lockingWeeks} week{lockingWeeks > 1 ? "s" : ""}
-          </div>
+          <div>Lock for: {displayLockTime()}</div>
           <Link
             color
             href="#"
@@ -144,6 +181,35 @@ export const IncreaseTime: FC<{
           style={{ width: "100%" }}
         />
         <Spacer y={0.5} />
+        <Radio.Group
+          value="1"
+          onChange={(e) => setLockTime(e.toString())}
+          useRow
+        >
+          <Radio value="1">
+            1 week
+            <Radio.Desc style={{ color: "grey" }}>
+              1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(3)} DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value="2">
+            1 month
+            <Radio.Desc style={{ color: "grey" }}>
+              1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(3)} DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value="3">
+            1 year
+            <Radio.Desc style={{ color: "grey" }}>
+              1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(3)} DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value="4">
+            4 years
+            <Radio.Desc style={{ color: "grey" }}>1 PICKLE = 1 DILL</Radio.Desc>
+          </Radio>
+        </Radio.Group>
+        <Spacer y={1.5} />
         <Button
           disabled={extendButton.disabled}
           onClick={() => {
