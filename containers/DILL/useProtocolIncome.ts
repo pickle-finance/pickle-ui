@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import fetch from "node-fetch";
 import { ethers } from "ethers";
-import { getAssetPerformanceData } from "../util/api.js";
-import { crvJars, uniJars, sushiJars } from "../util/jars.js";
+import { getAssetPerformanceData } from "../../util/api.js";
+import { crvJars, uniJars, sushiJars } from "../../util/jars.js";
 
-export interface UseIncomeOutput {
-  weeklyIncome?: number | null;
-}
-
-export function useProtocolIncome(): UseIncomeOutput {
-  const [weeklyIncome, setWeeklyIncome] = useState();
+export function useProtocolIncome() {
+  const [weeklyProfit, setWeeklyProfit] = useState<number | null>(null);
+  const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(null);
   const jarList = [...crvJars, ...uniJars, ...sushiJars];
 
   const getWeeklyIncome = async () => {
@@ -27,11 +24,15 @@ export function useProtocolIncome(): UseIncomeOutput {
       }),
     );
 
-    const weeklyIncome = jarPerformance.reduce((acc, currJar) => {
+    const profit = jarPerformance.reduce((acc, currJar) => {
       const jarTVL = currJar.liquidity_locked;
       return acc + (jarTVL * currJar.apy * 0.01 * 0.2) / 52;
-    }, 0);
-    setWeeklyIncome(weeklyIncome);
+    }, 0) as number;
+    
+    const weeklyDistribution = profit * 0.45;
+
+    setWeeklyProfit(profit)
+    setWeeklyDistribution(weeklyDistribution);
   };
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export function useProtocolIncome(): UseIncomeOutput {
   }, []);
 
   return {
-    weeklyIncome,
+    weeklyProfit,
+    weeklyDistribution,
   };
 }

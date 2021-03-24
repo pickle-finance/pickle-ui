@@ -16,7 +16,7 @@ export const DillFeature: FC = () => {
       <Spacer />
       <Interaction dillStats={dillStats} />
       <Spacer />
-      <Claim />
+      <Claim dillStats={dillStats}/>
     </>
   );
 };
