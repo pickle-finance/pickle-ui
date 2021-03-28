@@ -7,7 +7,12 @@ export const crvJars = [
 export const uniJars = [
   "BAC-DAI",
   "BAS2-DAI",
-  "MIR-UST"
+  "MIR-UST",
+  "MTSLA-UST",
+  "MAAPL-UST",
+  "MQQQ-UST",
+  "MSLV-UST",
+  "MBABA-UST"   
 ];
 
 export const sushiJars = [
