@@ -47,13 +47,12 @@ const setButtonStatus = (
   }
 };
 
-const formatDollars = (num: number) =>
+const formatNumber = (num: number) =>
   num &&
-  ("$" +
-    num.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }) ||
+  (num.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }) ||
     0);
 
 const formatPercent = (decimal: number) =>
@@ -68,9 +67,11 @@ export const Claim: FC<{
 }> = ({ dillStats }) => {
   const { blockNum, address, signer } = Connection.useContainer();
   const { feeShare } = Contracts.useContainer();
+  const [claimable, setClaimable] = useState<number | null>(null);
+  
   const [claimButton, setClaimButton] = useState<ButtonStatus>({
-    disabled: false,
-    text: "Claim XXX PICKLEs",
+    disabled: claimable ? false : true,
+    text: `Claim ${claimable ? formatNumber(claimable) : "0"} PICKLEs`,
   });
   const {
     status: transferStatus,
@@ -86,15 +87,30 @@ export const Claim: FC<{
   useEffect(() => {
     if (address && feeShare) {
       const claimStatus = getTransferStatus("claim", feeShare.address);
+      const claimable = dillStats.userClaimable
+        ? parseFloat(formatEther(dillStats.userClaimable))
+        : null;
 
-      setButtonStatus(
-        claimStatus,
-        "Claiming...",
-        "Claim XXX PICKLEs",
-        setClaimButton,
-      );
+      if (claimable) {
+        setClaimButton({
+          disabled: false,
+          text: `Claim ${formatNumber(claimable)} PICKLEs`,
+        });
+        setButtonStatus(
+          claimStatus,
+          "Claiming...",
+          `Claim ${formatNumber(claimable)} PICKLEs`,
+          setClaimButton,
+        );
+      } else {
+        setClaimButton({
+          disabled: true,
+          text: "Claim 0 PICKLEs",
+        });
+      }
+      setClaimable(claimable);
     }
-  }, [blockNum, transferStatus]);
+  }, [blockNum, transferStatus, address]);
 
   return (
     <>
@@ -102,16 +118,18 @@ export const Claim: FC<{
         <Grid xs={24} sm={24} md={24}>
           <Card>
             <h2>Claim</h2>
-            <div>Weekly profit: {formatDollars(dillStats?.weeklyProfit)}</div>
+            <div>Weekly profit: ${formatNumber(dillStats?.weeklyProfit)}</div>
             &nbsp;
             <div>
-              Weekly distribution:{" "}
-              {formatDollars(dillStats?.weeklyDistribution)}
+              Weekly distribution: $
+              {formatNumber(dillStats?.weeklyDistribution)}
             </div>
             &nbsp;
             <div>DILL holder APY: {formatPercent(dillAPY)}</div>
             &nbsp;
-            <div>Next distribution: {dillStats.nextDistribution}</div>
+            <div>
+              Next distribution: {dillStats.nextDistribution?.toDateString()}
+            </div>
             &nbsp;
             <Spacer />
             <Button
