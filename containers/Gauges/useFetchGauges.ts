@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts, GAUGE_PROXY } from "../Contracts";
 
 import { Contract as MulticallContract } from "ethers-multicall";
 
