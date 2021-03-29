@@ -98,6 +98,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
   ),
+  "0x795065dcc9f64b5614c407a6efdc400da6221fb0": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/sushiswap.png"} />
+  ),
 };
 
 const setButtonStatus = (

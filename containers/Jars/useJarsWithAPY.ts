@@ -22,7 +22,7 @@ import {
   MIRROR_MAAPL_UST_STAKING_REWARDS,
   MIRROR_MQQQ_UST_STAKING_REWARDS,
   MIRROR_MSLV_UST_STAKING_REWARDS,
-  MIRROR_MBABA_UST_STAKING_REWARDS
+  MIRROR_MBABA_UST_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -55,6 +55,7 @@ const sushiPoolIds: SushiPoolId = {
   "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": 21,
   "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": 11,
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": 132,
+  "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": 12,
 };
 
 export interface JarApy {
@@ -386,6 +387,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthUsdtApy,
         sushiEthWBtcApy,
         sushiEthYfiApy,
+        sushiEthApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
@@ -396,6 +398,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_USDT),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
       ]);
 
       const [
@@ -404,7 +407,6 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthyveCRVApy,
         basisBacDaiApy,
         basisBasDaiApy,
-
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
@@ -426,8 +428,8 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMirAPY(MIRROR_MAAPL_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MQQQ_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MSLV_UST_STAKING_REWARDS),
-        calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS)
-      ])
+        calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
+      ]);
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -596,6 +598,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...sushiEthyveCRVApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH) {
+          APYs = [
+            ...sushiEthApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
           ];
         }
 
