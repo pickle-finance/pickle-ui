@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-import { useState, FC, useEffect } from "react";
+import { useState, FC, useEffect, useRef } from "react";
 import { Button, Grid, Spacer, Select, Checkbox } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import {
@@ -49,6 +49,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState();
   const { status: voteTxStatus, vote } = useGaugeProxy();
+  let titleRef = useRef();
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -71,7 +72,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   );
 
   const handleSelect = (depositTokens: string | string[]) => {
-    window.document.getElementById("geist-ui-dropdown").click(); // hack to get select to close
+    titleRef.current.click(); // hack to get select to close
     const selectedFarms = isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
@@ -110,7 +111,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
 
-          console.log(
+          console.log(`gauge: ${gauge.poolName}`,
             gauge.gaugeWeight,
             gauge.userWeight,
             +dillBalance.toString(),
@@ -191,7 +192,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               minWidth: 0,
               marginLeft: 30,
             }}
-            value={voteWeights[gauge.address] ? voteWeights[gauge.address] : null }
+            value={
+              voteWeights[gauge.address] ? voteWeights[gauge.address] : null
+            }
             onValueChange={({ floatValue }) => {
               setVoteWeights({
                 ...voteWeights,
@@ -219,14 +222,13 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       <Select
         placeholder="Select farms to boost"
         multiple
-        clearable={true}
         width="100%"
         onChange={(value) => handleSelect(value)}
       >
         {gauges.map(renderSelectOptions)}
       </Select>
       <Spacer y={0.5} />
-      <h3>Selected Farms</h3>
+      <h3 ref={titleRef}>Selected Farms</h3>
       {votingFarms?.length ? (
         <>
           <Grid.Container gap={1}>
@@ -242,7 +244,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
-                {(weightsValid) ? "Estimate new weights" : "Estimate (weights must total 100%)" } 
+                {weightsValid
+                  ? "Estimate new weights"
+                  : "Estimate (weights must total 100%)"}
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
