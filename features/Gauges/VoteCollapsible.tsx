@@ -15,6 +15,7 @@ import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { isArray } from "util";
+import { pickleWhite } from "../../util/constants";
 
 interface Weights {
   [key: string]: number;
@@ -61,12 +62,16 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
-    <Select.Option value={gauge.depositTokenName}>
+    <Select.Option
+      style={{ color: pickleWhite }}
+      value={gauge.depositTokenName}
+    >
       {gauge.depositTokenName}
     </Select.Option>
   );
 
   const handleSelect = (depositTokens: string | string[]) => {
+    window.document.getElementById("geist-ui-dropdown").click(); // hack to get select to close
     const selectedFarms = isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
@@ -84,8 +89,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       weights.push(voteWeights[gauges[i].address]);
     }
 
-    console.log(tokens, weights);
-
     vote(tokens, weights);
   };
 
@@ -97,19 +100,24 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       }));
       const newWeights = voteArray.map((x) => {
         const gaugeAddress = Object.keys(x)[0];
-        const gauge = gauges.find(
-          (gauge) => gauge.address === gaugeAddress,
-        );
+        const gauge = gauges.find((gauge) => gauge.address === gaugeAddress);
         if (gauge && dillBalanceBN) {
-
-          const dillBalance = +dillBalanceBN.toString()
+          const dillBalance = +dillBalanceBN.toString();
           // Revise user's weight distribution for new estimate
           const estimatedWeight =
             (gauge.gaugeWeight -
               gauge.userWeight +
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
-            console.log(gauge.gaugeWeight, gauge.userWeight, +dillBalance.toString(),Object.values(x)[0], gauge.totalWeight, gauge.userCurrentWeights)
+
+          console.log(
+            gauge.gaugeWeight,
+            gauge.userWeight,
+            +dillBalance.toString(),
+            Object.values(x)[0],
+            gauge.totalWeight,
+            gauge.userCurrentWeights,
+          );
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;
@@ -118,6 +126,19 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       setNewWeights(newWeights);
     }
   };
+
+  const initializeVoteWeights = async () => {
+    gauges.forEach((gauge) => {
+      setVoteWeights({
+        ...voteWeights,
+        [gauge.address]: 0,
+      });
+    });
+  };
+
+  useEffect(() => {
+    initializeVoteWeights();
+  }, []);
 
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
@@ -129,7 +150,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       address,
     } = gauge;
     const newWeight = newWeights
-      ? newWeights.find((x) => x[address])[address]
+      ? newWeights.find((x: UserGaugeData) => x[address])[address]
       : null;
 
     return (
@@ -170,6 +191,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               minWidth: 0,
               marginLeft: 30,
             }}
+            value={voteWeights[gauge.address] ? voteWeights[gauge.address] : null }
             onValueChange={({ floatValue }) => {
               setVoteWeights({
                 ...voteWeights,
@@ -197,8 +219,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       <Select
         placeholder="Select farms to boost"
         multiple
+        clearable={true}
         width="100%"
-        initialValue={[]}
         onChange={(value) => handleSelect(value)}
       >
         {gauges.map(renderSelectOptions)}
@@ -220,7 +242,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
-                Estimate new weights
+                {(weightsValid) ? "Estimate new weights" : "Estimate (weights must total 100%)" } 
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
