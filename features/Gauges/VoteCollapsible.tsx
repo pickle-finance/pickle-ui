@@ -71,12 +71,34 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     </Select.Option>
   );
 
-  const handleSelect = (depositTokens: string | string[]) => {
+  const compare = (otherArray) => {
+    return (current) => {
+      return (
+        otherArray.filter((other) => {
+          return other.address == current.address;
+        }).length == 0
+      );
+    };
+  };
+
+  const handleSelect = async (depositTokens: string | string[]) => {
     titleRef.current.click(); // hack to get select to close
+
     const selectedFarms = isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
 
+    const absentGauges = gauges.filter(compare(selectedFarms));
+    console.log("absent", absentGauges);
+
+    const newVoteWeights = absentGauges.reduce((acc,curr)=> {
+      return {
+        ...acc,
+        [curr.address]: 0
+      }
+    }, voteWeights)
+    setNewWeights(null)
+    setVoteWeights(newVoteWeights)
     setVotingFarms(selectedFarms);
   };
 
@@ -94,7 +116,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const calculateNewWeights = () => {
-    console.log("active gauges", gauges);
+    console.log("voting weights", voteWeights);
     if (weightsValid) {
       const voteArray = Object.entries(voteWeights).map((e) => ({
         [e[0]]: e[1],
@@ -111,7 +133,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
 
-          console.log(`gauge: ${gauge.poolName}`,
+          console.log(
+            `gauge: ${gauge.poolName}`,
             gauge.gaugeWeight,
             gauge.userWeight,
             +dillBalance.toString(),
@@ -129,12 +152,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const initializeVoteWeights = async () => {
-    gauges.forEach((gauge) => {
-      setVoteWeights({
-        ...voteWeights,
-        [gauge.address]: 0,
-      });
-    });
+    
+    const initialWeights = gauges.reduce((acc,curr)=> {
+      return {
+        ...acc,
+        [curr.address]: 0
+      }
+    }, {})
+    setVoteWeights(initialWeights)
   };
 
   useEffect(() => {
@@ -193,12 +218,12 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               marginLeft: 30,
             }}
             value={
-              voteWeights[gauge.address] ? voteWeights[gauge.address] : null
+              voteWeights[address] ? voteWeights[address] : 0
             }
-            onValueChange={({ floatValue }) => {
-              setVoteWeights({
+            onValueChange={async ({ floatValue }) => {
+               setVoteWeights({
                 ...voteWeights,
-                [gauge.address]: floatValue,
+                [address]: floatValue,
               });
             }}
           />
