@@ -67,7 +67,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
             c.balanceOf(address),
             gaugeContract.balanceOf(address),
             gaugeContract.earned(address),
-            gaugeProxyContract.votes(x.token, address),
+            gaugeProxyContract.votes(address, x.token),
             gaugeProxyContract.usedWeights(address)
           ];
         }),

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect, useRef } from "react";
-import { Button, Grid, Spacer, Select, Checkbox } from "@geist-ui/react";
+import { Button, Grid, Spacer, Select } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import {
   JAR_GAUGE_MAP,
@@ -47,7 +47,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const { balance: dillBalanceBN } = Dill.useContainer();
   const [votingFarms, setVotingFarms] = useState();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
-  const [newWeights, setNewWeights] = useState();
+  const [newWeights, setNewWeights] = useState(null);
   const { status: voteTxStatus, vote } = useGaugeProxy();
   let titleRef = useRef();
 
@@ -89,16 +89,15 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       : null;
 
     const absentGauges = gauges.filter(compare(selectedFarms));
-    console.log("absent", absentGauges);
 
-    const newVoteWeights = absentGauges.reduce((acc,curr)=> {
+    const newVoteWeights = absentGauges.reduce((acc, curr) => {
       return {
         ...acc,
-        [curr.address]: 0
-      }
-    }, voteWeights)
-    setNewWeights(null)
-    setVoteWeights(newVoteWeights)
+        [curr.address]: 0,
+      };
+    }, voteWeights);
+    setNewWeights(null);
+    setVoteWeights(newVoteWeights);
     setVotingFarms(selectedFarms);
   };
 
@@ -116,7 +115,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const calculateNewWeights = () => {
-    console.log("voting weights", voteWeights);
     if (weightsValid) {
       const voteArray = Object.entries(voteWeights).map((e) => ({
         [e[0]]: e[1],
@@ -151,20 +149,26 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     }
   };
 
-  const initializeVoteWeights = async () => {
-    
-    const initialWeights = gauges.reduce((acc,curr)=> {
+  const initialize = async () => {
+    const initialWeights = gauges.reduce((acc, curr) => {
       return {
         ...acc,
-        [curr.address]: 0
-      }
-    }, {})
-    setVoteWeights(initialWeights)
+        [curr.address]: 0,
+      };
+    }, {});
+
+    const updatedFarms = votingFarms
+      ? votingFarms.map((x) => gauges.find((y) => y.address === x.address))
+      : null;
+
+    setVoteWeights(initialWeights);
+    setVotingFarms(updatedFarms);
+    setNewWeights(null);
   };
 
   useEffect(() => {
-    initializeVoteWeights();
-  }, []);
+    initialize();
+  }, [gauges]);
 
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
@@ -180,7 +184,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       : null;
 
     return (
-      <>
+      <Grid.Container
+        style={{ width: "100%", paddingBottom: "10px" }}
+        key={address}
+      >
         <Grid xs={24} sm={12} md={6} lg={6}>
           <TokenIcon
             src={
@@ -217,18 +224,16 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               minWidth: 0,
               marginLeft: 30,
             }}
-            value={
-              voteWeights[address] ? voteWeights[address] : 0
-            }
+            value={voteWeights[address] ? voteWeights[address] : 0}
             onValueChange={async ({ floatValue }) => {
-               setVoteWeights({
+              setVoteWeights({
                 ...voteWeights,
                 [address]: floatValue,
               });
             }}
           />
         </Grid>
-      </>
+      </Grid.Container>
     );
   };
 
@@ -256,9 +261,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       <h3 ref={titleRef}>Selected Farms</h3>
       {votingFarms?.length ? (
         <>
-          <Grid.Container gap={1}>
-            {votingFarms.map(renderVotingOption)}
-          </Grid.Container>
+          {votingFarms.map(renderVotingOption)}
+
           <Spacer y={1} />
           <Grid.Container gap={2}>
             <Grid xs={24} md={12}>
