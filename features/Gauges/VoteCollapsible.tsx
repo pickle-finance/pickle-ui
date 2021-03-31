@@ -29,6 +29,32 @@ interface DataProps {
   isZero?: boolean;
 }
 
+interface ButtonStatus {
+  disabled: boolean;
+  text: string;
+}
+
+const setButtonStatus = (
+  status: TransactionStatus,
+  transfering: string,
+  idle: string,
+  setButtonText: (arg0: ButtonStatus) => void,
+) => {
+  if (status === TransactionStatus.Pending) {
+    setButtonText({
+      disabled: true,
+      text: transfering,
+    });
+  }
+
+  if (status === TransactionStatus.Confirmed) {
+    setButtonText({
+      disabled: false,
+      text: idle,
+    });
+  }
+};
+
 const Data = styled.div<DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -46,9 +72,13 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 }) => {
   const { balance: dillBalanceBN } = Dill.useContainer();
   const [votingFarms, setVotingFarms] = useState();
+  const { status: voteTxStatus, vote } = useGaugeProxy();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState(null);
-  const { status: voteTxStatus, vote } = useGaugeProxy();
+  const [voteButton, setVoteButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Submit Vote",
+  });
   let titleRef = useRef();
 
   let totalGaugeWeight = 0;
@@ -131,21 +161,22 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
 
-          console.log(
-            `gauge: ${gauge.poolName}`,
-            gauge.gaugeWeight,
-            gauge.userWeight,
-            +dillBalance.toString(),
-            Object.values(x)[0],
-            gauge.totalWeight,
-            gauge.userCurrentWeights,
-          );
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;
         }
       });
       setNewWeights(newWeights);
+    }
+  };
+
+  const weightEstimateText = () => {
+    if (voteButton.disabled) {
+      return "Estimate new weights";
+    } else {
+      return weightsValid
+        ? "Estimate new weights"
+        : "Estimate (weights must total 100%)";
     }
   };
 
@@ -169,6 +200,20 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   useEffect(() => {
     initialize();
   }, [gauges]);
+
+  useEffect(() => {
+    const balance = +dillBalanceBN?.toString();
+    const buttonText = balance ? "Submit Vote" : "DILL balance needed to vote";
+
+    if (balance) {
+      setButtonStatus(voteTxStatus, "Voting...", buttonText, setVoteButton);
+    } else {
+      setVoteButton({
+        disabled: true,
+        text: buttonText,
+      });
+    }
+  }, [voteTxStatus]);
 
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
@@ -268,25 +313,25 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
             <Grid xs={24} md={12}>
               <Button
                 disabled={
-                  !weightsValid || voteTxStatus === TransactionStatus.Pending
+                  !weightsValid ||
+                  voteTxStatus === TransactionStatus.Pending ||
+                  voteButton.disabled
                 }
                 onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
-                {weightsValid
-                  ? "Estimate new weights"
-                  : "Estimate (weights must total 100%)"}
+                {weightEstimateText()}
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
               <Button
-                disabled={
-                  !weightsValid || voteTxStatus === TransactionStatus.Pending
-                }
-                onClick={() => handleBoost()}
+                disabled={voteButton.disabled || !weightsValid}
+                onClick={() => {
+                  if (vote) handleBoost();
+                }}
                 style={{ width: "100%" }}
               >
-                Submit vote
+                {voteButton.text}
               </Button>
             </Grid>
           </Grid.Container>

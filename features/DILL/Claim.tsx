@@ -21,13 +21,6 @@ const setButtonStatus = (
   idle: string,
   setButtonText: (arg0: ButtonStatus) => void,
 ) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
   if (status === ERC20TransferStatus.Transfering) {
     setButtonText({
       disabled: true,
