@@ -62,7 +62,7 @@ export const PAIR_INFO: PairMap = {
   "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb": { a: mic, b: usdt },
   "0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0": { a: mis, b: usdt },
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": { a: weth, b: yvecrv },
-  "0x795065dcc9f64b5614c407a6efdc400da6221fb0": { a: sushi, b: weth },
+  "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": { a: sushi, b: weth },
 };
 
 function useSushiPairs() {
