@@ -9,6 +9,7 @@ export interface UseDillOutput {
   lockedAmount?: ethers.BigNumber | null;
   lockEndDate?: ethers.BigNumber | null;
   balance?: ethers.BigNumber | null;
+  totalSupply?: ethers.BigNumber | null;
 }
 
 export function useDill(): UseDillOutput {
@@ -17,22 +18,23 @@ export function useDill(): UseDillOutput {
   const [lockedAmount, setLockedAmount] = useState<ethers.BigNumber | null>();
   const [lockEndDate, setLockEndDate] = useState<ethers.BigNumber | null>();
   const [balance, setBalance] = useState<ethers.BigNumber | null>();
+  const [totalSupply, setTotalSupply] = useState<ethers.BigNumber | null>();
 
   useEffect(() => {
     if (dill && address) {
       const f = async () => {
         const dillContract = dill.attach(DILL);
 
-        console.log(dillContract);
-
-        const [lockStats, balance] = await Promise.all([
+        const [lockStats, balance, totalSupply] = await Promise.all([
           dillContract.locked(address),
           dillContract["balanceOf(address)"](address),
+          dillContract["totalSupply()"](),
         ]);
 
         setLockedAmount(lockStats?.amount);
         setLockEndDate(lockStats?.end);
         setBalance(balance);
+        setTotalSupply(totalSupply);
       };
 
       f();
@@ -43,6 +45,7 @@ export function useDill(): UseDillOutput {
     lockedAmount,
     lockEndDate,
     balance,
+    totalSupply,
   };
 }
 

@@ -9,20 +9,21 @@ export interface RawGauge {
   token: string;
   gaugeAddress: string;
   allocPoint: number;
+  derivedSupply: number;
+  rewardRate: number;
+  gaugeWeight: number;
 }
 
 export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
   const { blockNum, multicallProvider } = Connection.useContainer();
-  const { gaugeProxy } = Contracts.useContainer();
+  const { gaugeProxy, gauge } = Contracts.useContainer();
 
   const [gauges, setGauges] = useState<Array<RawGauge> | null>(null);
 
   const getGauges = async () => {
-    if (gaugeProxy && multicallProvider) {
+    if (gaugeProxy && multicallProvider && gauge) {
       const tokens = await gaugeProxy.tokens();
-      console.log("tokens", tokens);
       const totalWeight = await gaugeProxy.totalWeight();
-      console.log("totalWeight", totalWeight);
 
       const mcGaugeProxy = new MulticallContract(
         gaugeProxy.address,
@@ -41,7 +42,23 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
         }),
       );
 
-      console.log("gaugeWeights", gaugeWeights);
+      const gaugeRewardRates = await multicallProvider.all(
+        tokens.map((token, index) => {
+          return new MulticallContract(
+            gaugeAddresses[index],
+            gauge.interface.fragments,
+          ).rewardRate();
+        }),
+      );
+
+      const derivedSupplies = await multicallProvider.all(
+        tokens.map((token, index) => {
+          return new MulticallContract(
+            gaugeAddresses[index],
+            gauge.interface.fragments,
+          ).derivedSupply();
+        }),
+      );
 
       // extract response and convert to something we can use
       const gauges = tokens.map((token, idx) => {
@@ -51,11 +68,12 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           token: token,
           gaugeAddress: gaugeAddresses[idx],
           gaugeWeight: +gaugeWeights[idx].toString(),
-          totalWeight: +totalWeight.toString()
+          totalWeight: +totalWeight.toString(),
+          rewardRate: +gaugeRewardRates[idx].toString(),
+          derivedSupply: +derivedSupplies[idx].toString(),
         };
       });
 
-      console.log("gauges", gauges);
       setGauges(gauges);
     }
   };

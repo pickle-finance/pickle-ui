@@ -27,9 +27,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
-    console.log(inputGauges, masterchef, jars, prices, multicallProvider);
     if (inputGauges && masterchef && prices && multicallProvider) {
-      console.log(inputGauges, "inputGauges");
       const jarGauges = inputGauges?.filter(
         (gauge) => JAR_GAUGE_MAP[gauge.token as keyof typeof JAR_GAUGE_MAP],
       );
@@ -66,7 +64,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         if (!gaugeingJar) {
           return {
             ...gauge,
-            apy: 0,
+            fullApy: 0,
             usdPerToken: 0,
             totalValue: 0,
             valueStakedInGauge: 0,
@@ -82,13 +80,13 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
 
         const valueStakedInGauge =
           (gaugeingJar.usdPerPToken || 0) * numTokensInPool;
-
-        let apy = (gauge.valueRewarded.perYear &&
-          gauge.valueRewarded.perYear / valueStakedInGauge) || 0;
+        const fullApy = gaugeingJar.usdPerPToken
+          ? (gauge.rewardRatePerYear * prices.pickle) / gaugeingJar.usdPerPToken
+          : 0;
 
         return {
           ...gauge,
-          apy,
+          fullApy,
           usdPerToken: gaugeingJar.usdPerPToken || 0,
           totalValue: gaugeingJar.tvlUSD || 0,
           valueStakedInGauge,

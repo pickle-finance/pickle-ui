@@ -15,7 +15,7 @@ import { ethers } from "ethers";
 const { formatEther } = ethers.utils;
 
 export interface GaugeWithApy extends GaugeWithReward {
-  apy: number;
+  fullApy: number;
   usdPerToken: number;
   totalValue: number;
   valueStakedInGauge: number;
@@ -33,7 +33,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
   const { masterchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairDataPrefill } = UniV2Pairs.useContainer();
-  
+
   const calculateApy = async () => {
     if (
       provider &&
@@ -86,10 +86,12 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
 
         // calculate APY
         const valueStakedInGauge = pricePerToken * numTokensInPool;
-        const apy = gauge.valueRewarded.perYear / valueStakedInGauge;
+        const fullApy =
+          (gauge.rewardRatePerYear * prices.pickle) / pricePerToken;
+
         return {
           ...gauge,
-          apy,
+          fullApy,
           usdPerToken: pricePerToken,
           totalValue: totalValueOfPair,
           valueStakedInGauge,

@@ -30,6 +30,7 @@ import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
+import { useDill } from "../../containers/Dill";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -96,8 +97,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     staked,
     harvestable,
     usdPerToken,
-    apy,
+    fullApy,
   } = gaugeData;
+  const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(formatEther(staked));
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -140,7 +142,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   });
 
   // Get Jar APY (if its from a Jar)
-  let APYs: JarApy[] = [{ pickle: apy * 100 }];
+  let APYs: JarApy[] = [];
+  const pickleAPYMin = fullApy * 100 * 0.4;
+  const pickleAPYMax = fullApy * 100;
 
   const maybeJar =
     JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
@@ -154,15 +158,21 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
   }
 
-  const tooltipText = APYs.map((x) => {
-    const k = Object.keys(x)[0];
-    const v = Object.values(x)[0];
-    return `${k}: ${v.toFixed(2)}%`;
-  }).join(" + ");
+  const tooltipText =
+    `pickle: ${pickleAPYMin.toFixed(2)}%~${pickleAPYMax.toFixed(2)}% + ` +
+    APYs.map((x) => {
+      const k = Object.keys(x)[0];
+      const v = Object.values(x)[0];
+      return `${k}: ${v.toFixed(2)}%`;
+    }).join(" + ");
 
   const totalAPY = APYs.map((x) => {
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
+  const boost = +(dillSupply?.toString() || 0)
+    ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
+    : 0;
+  const realAPY = totalAPY + pickleAPYMin + pickleAPYMax * 0.6 * boost;
 
   useEffect(() => {
     if (gaugeData) {
@@ -214,22 +224,34 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             </div>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Tooltip text={apy === 0 ? "--" : tooltipText}>
-              <div>{apy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
-              <Label>Total APY</Label>
+            <Tooltip text={totalAPY + fullApy === 0 ? "--" : tooltipText}>
+              <div>
+                {totalAPY + fullApy === 0
+                  ? "--%"
+                  : `${(totalAPY + pickleAPYMin).toFixed(2)}~${(
+                      totalAPY + pickleAPYMax
+                    ).toFixed(2)}` + "%"}
+              </div>
+              <Label>APY Range</Label>
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Tooltip text={totalAPY + fullApy === 0 ? "--" : tooltipText}>
+              <div>{realAPY === 0 ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+              <Label>Total APY</Label>
+            </Tooltip>
+          </Grid>
+          <Grid xs={24} sm={6} md={2} lg={2} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={6} md={2.5} lg={2.5} css={{ textAlign: "center" }}>
             <Data isZero={bal === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={6} md={2.5} lg={2.5} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum === 0}>{stakedStr}</Data>
             <Label>Staked</Label>
           </Grid>
@@ -237,10 +259,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
             <Label>Value Staked</Label>
           </Grid>
-          {/* <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Input placeholder="The Evil Rabbit" />
-            <Label>Boost</Label>
-          </Grid> */}
         </Grid.Container>
       }
     >

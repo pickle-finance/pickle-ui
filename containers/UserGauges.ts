@@ -23,7 +23,7 @@ export interface UserGaugeData {
   harvestable: ethers.BigNumber;
   usdPerToken: number;
   allocPoint: number;
-  apy: number;
+  fullApy: number;
   gaugeWeight: number;
   totalWeight: number;
   userWeight: number;
@@ -68,12 +68,12 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
             gaugeContract.balanceOf(address),
             gaugeContract.earned(address),
             gaugeProxyContract.votes(x.token, address),
-            gaugeProxyContract.usedWeights(address)
+            gaugeProxyContract.usedWeights(address),
           ];
         }),
       );
 
-        const newGaugeData = gauges.map((gauge, idx) => {
+      const newGaugeData = gauges.map((gauge, idx) => {
         const balance = balancesUserInfosHarvestables[idx * 5];
         const staked = balancesUserInfosHarvestables[idx * 5 + 1];
         const harvestable = balancesUserInfosHarvestables[idx * 5 + 2];
@@ -90,7 +90,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           staked: staked,
           usdPerToken: gauge.usdPerToken,
           harvestable,
-          apy: gauge.apy,
+          fullApy: gauge.fullApy,
           gaugeWeight: gauge.gaugeWeight,
           totalWeight: gauge.totalWeight,
           userWeight: +userWeight.toString(),

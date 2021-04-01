@@ -84,32 +84,25 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       weights.push(voteWeights[gauges[i].address]);
     }
 
-    console.log(tokens, weights);
-
     vote(tokens, weights);
   };
 
   const calculateNewWeights = () => {
-    console.log("active gauges", gauges);
     if (weightsValid) {
       const voteArray = Object.entries(voteWeights).map((e) => ({
         [e[0]]: e[1],
       }));
       const newWeights = voteArray.map((x) => {
         const gaugeAddress = Object.keys(x)[0];
-        const gauge = gauges.find(
-          (gauge) => gauge.address === gaugeAddress,
-        );
+        const gauge = gauges.find((gauge) => gauge.address === gaugeAddress);
         if (gauge && dillBalanceBN) {
-
-          const dillBalance = +dillBalanceBN.toString()
+          const dillBalance = +dillBalanceBN.toString();
           // Revise user's weight distribution for new estimate
           const estimatedWeight =
             (gauge.gaugeWeight -
               gauge.userWeight +
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
-            console.log(gauge.gaugeWeight, gauge.userWeight, +dillBalance.toString(),Object.values(x)[0], gauge.totalWeight, gauge.userCurrentWeights)
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;

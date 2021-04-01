@@ -107,7 +107,7 @@ export const MIRROR_MIR_UST_STAKING_REWARDS =
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
-export const GAUGE_PROXY = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
+export const GAUGE_PROXY = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
