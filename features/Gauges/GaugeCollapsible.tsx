@@ -173,7 +173,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const realAPY = totalAPY + pickleAPY;
 
   const apyRangeTooltipText = [
-    `pickle: ${pickleAPYMin.toFixed(2)}%~${pickleAPYMax.toFixed(2)}% + `,
+    `pickle: ${pickleAPYMin.toFixed(2)}%~${pickleAPYMax.toFixed(2)}%`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
@@ -181,7 +181,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     }),
   ].join(" + ");
   const yourApyTooltipText = [
-    `pickle: ${pickleAPY.toFixed(2)}% + `,
+    `pickle: ${pickleAPY.toFixed(2)}%`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
