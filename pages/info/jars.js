@@ -78,7 +78,7 @@ export default function Dashboard() {
     <>
       <TopBar />
       <Page>
-        <InfoBar/>
+        <InfoBar />
         <Grid container spacing={2}>
           <Grid
             item
@@ -109,7 +109,7 @@ export default function Dashboard() {
             );
           })}
         </Grid>
-      <Footer />
+        <Footer />
       </Page>
     </>
   );

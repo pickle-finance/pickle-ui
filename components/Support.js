@@ -1,8 +1,8 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import { Avatar } from "@material-ui/core";
-import { pickleNeon } from '../util/constants';
+import { pickleNeon } from "../util/constants";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,30 +44,75 @@ export default function Support() {
   return (
     <div className={classes.footer}>
       <div className={classes.footerItem}>
-        <Avatar variant="square" src={"./assets/pickle.png"} className={classes.pickle} />
+        <Avatar
+          variant="square"
+          src={"./assets/pickle.png"}
+          className={classes.pickle}
+        />
         <Typography variant="caption">
-          <a href="https://forms.gle/sXxBQcemyxAPGDJZ9" target="_blank" rel="noopener noreferrer" className={classes.footerText}>Feedback</a>
+          <a
+            href="https://forms.gle/sXxBQcemyxAPGDJZ9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.footerText}
+          >
+            Feedback
+          </a>
         </Typography>
         -
         <Typography variant="caption">
-          <a href="https://gitcoin.co/grants/1510/pickle-jar-info" target="_blank" rel="noopener noreferrer" className={classes.footerText}>Support</a>
+          <a
+            href="https://gitcoin.co/grants/1510/pickle-jar-info"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.footerText}
+          >
+            Support
+          </a>
         </Typography>
         -
         <Typography variant="caption">
-          <a href="https://pickle.fyi/" target="_blank" rel="noopener noreferrer" className={classes.footerText}>How To</a>
+          <a
+            href="https://pickle.fyi/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.footerText}
+          >
+            How To
+          </a>
         </Typography>
-        <Avatar variant="square" src={"./assets/pickle-mirror.png"} className={classes.pickle} />
+        <Avatar
+          variant="square"
+          src={"./assets/pickle-mirror.png"}
+          className={classes.pickle}
+        />
       </div>
       <div className={classes.footerItem}>
         <Typography variant="caption">
-          <a href="https://twitter.com/axejintao" target="_blank" rel="noopener noreferrer"
-          className={classes.footerText}>Made with <span role="img" aria-label="heart">💚</span> by @axejintao</a>
+          <a
+            href="https://twitter.com/axejintao"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.footerText}
+          >
+            Made with{" "}
+            <span role="img" aria-label="heart">
+              💚
+            </span>{" "}
+            by @axejintao
+          </a>
         </Typography>
       </div>
       <div className={classes.footerItem}>
         <Typography variant="caption">
-          <a href="https://etherscan.io/address/0xbb2281ca5b4d07263112604d1f182ad0ab26a252" target="_blank" rel="noopener noreferrer"
-            className={clsx(classes.footerText, classes.address)}>0xbb2281ca5b4d07263112604d1f182ad0ab26a252</a>
+          <a
+            href="https://etherscan.io/address/0xbb2281ca5b4d07263112604d1f182ad0ab26a252"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={clsx(classes.footerText, classes.address)}
+          >
+            0xbb2281ca5b4d07263112604d1f182ad0ab26a252
+          </a>
         </Typography>
       </div>
     </div>

@@ -1,7 +1,7 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { pickleGreen } from '../util/constants';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { pickleGreen } from "../util/constants";
 
 const useStyles = makeStyles(() => ({
   brining: {
@@ -17,7 +17,7 @@ export default function Brining() {
 
   return (
     <>
-      <Typography variant='h2' className={classes.brining}>
+      <Typography variant="h2" className={classes.brining}>
         Brining...
       </Typography>
     </>

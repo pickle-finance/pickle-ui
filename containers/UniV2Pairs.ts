@@ -44,11 +44,23 @@ const bac: Token = { address: addresses.bac, priceId: "bac", decimals: 18 };
 const bas: Token = { address: addresses.bas, priceId: "bas", decimals: 18 };
 const mir: Token = { address: addresses.mir, priceId: "mir", decimals: 18 };
 const ust: Token = { address: addresses.ust, priceId: "ust", decimals: 18 };
-const mtsla: Token = { address: addresses.mtsla, priceId: "mtsla", decimals: 18 };
-const maapl: Token = { address: addresses.maapl, priceId: "maapl", decimals: 18 };
+const mtsla: Token = {
+  address: addresses.mtsla,
+  priceId: "mtsla",
+  decimals: 18,
+};
+const maapl: Token = {
+  address: addresses.maapl,
+  priceId: "maapl",
+  decimals: 18,
+};
 const mqqq: Token = { address: addresses.mqqq, priceId: "mqqq", decimals: 18 };
 const mslv: Token = { address: addresses.mslv, priceId: "mslv", decimals: 18 };
-const mbaba: Token = { address: addresses.mbaba, priceId: "mbaba", decimals: 18 };
+const mbaba: Token = {
+  address: addresses.mbaba,
+  priceId: "mbaba",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };

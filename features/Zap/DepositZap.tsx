@@ -4,7 +4,7 @@ import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useDeposit } from "./useDeposit";
 import { useDepositEth } from "./useDeposit";
-import { TokenIcon } from "../../components/TokenIcon"
+import { TokenIcon } from "../../components/TokenIcon";
 
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
@@ -27,7 +27,7 @@ export const DepositZap: FC = () => {
   const { depositEth } = useDepositEth(amount);
   const handleDeposit = async () => {
     if (amount && decimals) {
-      if(inputToken == "ETH"){
+      if (inputToken == "ETH") {
         try {
           setTxState("Zapping...");
           await depositEth();
@@ -38,8 +38,7 @@ export const DepositZap: FC = () => {
           setTxState(null);
           return;
         }
-      }
-      else{
+      } else {
         try {
           setTxState("Approving...");
           await approve();
@@ -66,13 +65,17 @@ export const DepositZap: FC = () => {
 
   const inputTokens = [
     { symbol: "ETH", label: getTokenLabel("ETH") },
-    { symbol: "CRV", label: getTokenLabel("CRV") }
+    { symbol: "CRV", label: getTokenLabel("CRV") },
   ];
   return (
     <Card>
-      <h2><TokenIcon src="/yvecrv.png"/>Zap to yveCRV</h2>
+      <h2>
+        <TokenIcon src="/yvecrv.png" />
+        Zap to yveCRV
+      </h2>
       <p>
-        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to <a href="/farms">Pickle Farm</a>.
+        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to{" "}
+        <a href="/farms">Pickle Farm</a>.
       </p>
       <h3>Deposit Token</h3>
       <Select

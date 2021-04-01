@@ -8,7 +8,7 @@ export const SYMBOL_TO_TOKEN = {
   USDT: "/usdt.png",
   ETH: "/ethereum.png",
   CRV: "/crv.png",
-  YVECRV: "/yvecrv.png"
+  YVECRV: "/yvecrv.png",
 };
 
 export const getTokenLabel = (

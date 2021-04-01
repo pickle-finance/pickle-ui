@@ -56,7 +56,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MQQQ_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MSLV_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV 
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH
   );
 };
 
@@ -131,7 +132,6 @@ export const useJarWithTVL = (jars: Input): Output => {
 
   const measureUniJarTVL = async (jar: JarWithAPY) => {
     if (!uniswapv2Pair || !prices) {
-      console.log(jar, tvlUSD)
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 

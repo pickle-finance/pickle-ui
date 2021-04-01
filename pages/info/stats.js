@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { pickleGreen, cardColor, materialBlack, pickleWhite } from "../../util/constants";
+import {
+  pickleGreen,
+  cardColor,
+  materialBlack,
+  pickleWhite,
+} from "../../util/constants";
 import JarPerformanceChart from "../../components/JarPerformanceChart";
 import { getPerformanceData, getPerformanceChart } from "../../util/api";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -92,7 +97,7 @@ export default function Statistics() {
     <>
       <TopBar />
       <Page>
-        <InfoBar/>
+        <InfoBar />
         <Grid container spacing={2}>
           <Grid item xs={12} className={classes.section}>
             <Typography variant="h4" className={classes.title}>
@@ -156,7 +161,10 @@ export default function Statistics() {
                   })}
                 </TableBody>
               </Table>
-              <div style={{color: pickleWhite, padding:"5px"}} className={clsx(classes.header, classes.update)}>
+              <div
+                style={{ color: pickleWhite, padding: "5px" }}
+                className={clsx(classes.header, classes.update)}
+              >
                 Last Updated:{" "}
                 {performanceData.performance.length > 0
                   ? moment(
@@ -169,7 +177,7 @@ export default function Statistics() {
             </TableContainer>
           </Grid>
         </Grid>
-      <Footer />
+        <Footer />
       </Page>
     </>
   );

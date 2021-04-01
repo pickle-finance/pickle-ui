@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Cmirror-protocol%2Cterrausd%2Cmirrored-tesla%2Cmirrored-apple%2Cmirrored-invesco-qqq-trust%2Cmirrored-ishares-silver-trust%2Cmirrored-alibaba&vs_currencies=usd";
+  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Cmirror-protocol%2Cterrausd%2Cmirrored-tesla%2Cmirrored-apple%2Cmirrored-invesco-qqq-trust%2Cmirrored-ishares-silver-trust%2Cmirrored-alibaba%2Cvecrv-dao-yvault&vs_currencies=usd";
 
 type UsdPrice = { usd: number };
 
@@ -25,8 +25,9 @@ interface Response {
   "mithril-share": UsdPrice;
   "mith-cash": UsdPrice;
   "lido-dao": UsdPrice;
+  "vecrv-dao-yvault": UsdPrice;
   "mirror-protocol": UsdPrice;
-  "terrausd": UsdPrice;
+  terrausd: UsdPrice;
   "mirrored-tesla": UsdPrice;
   "mirrored-apple": UsdPrice;
   "mirrored-invesco-qqq-trust": UsdPrice;
@@ -103,6 +104,7 @@ function usePrices() {
       mis: response["mithril-share"].usd,
       mic: response["mith-cash"].usd,
       ldo: response["lido-dao"].usd,
+      yvecrv: response["vecrv-dao-yvault"].usd,
       mir: response["mirror-protocol"].usd,
       ust: response["terrausd"].usd,
       mtsla: response["mirrored-tesla"].usd,
@@ -110,7 +112,6 @@ function usePrices() {
       mqqq: response["mirrored-invesco-qqq-trust"].usd,
       mslv: response["mirrored-ishares-silver-trust"].usd,
       mbaba: response["mirrored-alibaba"].usd,
-      
     };
     setPrices(prices);
   };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
@@ -455,7 +454,7 @@ export default function Brining() {
     <>
       <TopBar />
       <Page>
-      <InfoBar />
+        <InfoBar />
         <Grid container spacing={5} className={classes.pickleHeader}>
           <Grid item xs={12} sm={6}>
             <Card>
