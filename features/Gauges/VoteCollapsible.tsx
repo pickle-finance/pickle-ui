@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-import { useState, FC, useEffect } from "react";
-import { Button, Grid, Spacer, Select, Checkbox } from "@geist-ui/react";
+import { useState, FC, useEffect, useRef } from "react";
+import { Button, Grid, Spacer, Select } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import {
   JAR_GAUGE_MAP,
@@ -15,6 +15,7 @@ import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { isArray } from "util";
+import { pickleWhite } from "../../util/constants";
 
 interface Weights {
   [key: string]: number;
@@ -27,6 +28,32 @@ const Label = styled.div`
 interface DataProps {
   isZero?: boolean;
 }
+
+interface ButtonStatus {
+  disabled: boolean;
+  text: string;
+}
+
+const setButtonStatus = (
+  status: TransactionStatus,
+  transfering: string,
+  idle: string,
+  setButtonText: (arg0: ButtonStatus) => void,
+) => {
+  if (status === TransactionStatus.Pending) {
+    setButtonText({
+      disabled: true,
+      text: transfering,
+    });
+  }
+
+  if (status === TransactionStatus.Confirmed) {
+    setButtonText({
+      disabled: false,
+      text: idle,
+    });
+  }
+};
 
 const Data = styled.div<DataProps>`
   overflow: hidden;
@@ -45,9 +72,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 }) => {
   const { balance: dillBalanceBN } = Dill.useContainer();
   const [votingFarms, setVotingFarms] = useState();
-  const [voteWeights, setVoteWeights] = useState<Weights>({});
-  const [newWeights, setNewWeights] = useState();
   const { status: voteTxStatus, vote } = useGaugeProxy();
+  const [voteWeights, setVoteWeights] = useState<Weights>({});
+  const [newWeights, setNewWeights] = useState(null);
+  const [voteButton, setVoteButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Submit Vote",
+  });
+  let titleRef = useRef();
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -61,16 +93,41 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
-    <Select.Option value={gauge.depositTokenName}>
+    <Select.Option
+      style={{ color: pickleWhite }}
+      value={gauge.depositTokenName}
+    >
       {gauge.depositTokenName}
     </Select.Option>
   );
 
-  const handleSelect = (depositTokens: string | string[]) => {
+  const compare = (otherArray) => {
+    return (current) => {
+      return (
+        otherArray.filter((other) => {
+          return other.address == current.address;
+        }).length == 0
+      );
+    };
+  };
+
+  const handleSelect = async (depositTokens: string | string[]) => {
+    titleRef.current.click(); // hack to get select to close
+
     const selectedFarms = isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
 
+    const absentGauges = gauges.filter(compare(selectedFarms));
+
+    const newVoteWeights = absentGauges.reduce((acc, curr) => {
+      return {
+        ...acc,
+        [curr.address]: 0,
+      };
+    }, voteWeights);
+    setNewWeights(null);
+    setVoteWeights(newVoteWeights);
     setVotingFarms(selectedFarms);
   };
 
@@ -112,6 +169,51 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     }
   };
 
+  const weightEstimateText = () => {
+    if (voteButton.disabled) {
+      return "Estimate new weights";
+    } else {
+      return weightsValid
+        ? "Estimate new weights"
+        : "Estimate (weights must total 100%)";
+    }
+  };
+
+  const initialize = async () => {
+    const initialWeights = gauges.reduce((acc, curr) => {
+      return {
+        ...acc,
+        [curr.address]: 0,
+      };
+    }, {});
+
+    const updatedFarms = votingFarms
+      ? votingFarms.map((x) => gauges.find((y) => y.address === x.address))
+      : null;
+
+    setVoteWeights(initialWeights);
+    setVotingFarms(updatedFarms);
+    setNewWeights(null);
+  };
+
+  useEffect(() => {
+    initialize();
+  }, [gauges]);
+
+  useEffect(() => {
+    const balance = +dillBalanceBN?.toString();
+    const buttonText = balance ? "Submit Vote" : "DILL balance needed to vote";
+
+    if (balance) {
+      setButtonStatus(voteTxStatus, "Voting...", buttonText, setVoteButton);
+    } else {
+      setVoteButton({
+        disabled: true,
+        text: buttonText,
+      });
+    }
+  }, [voteTxStatus]);
+
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
       poolName,
@@ -122,11 +224,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       address,
     } = gauge;
     const newWeight = newWeights
-      ? newWeights.find((x) => x[address])[address]
+      ? newWeights.find((x: UserGaugeData) => x[address])[address]
       : null;
 
     return (
-      <>
+      <Grid.Container
+        style={{ width: "100%", paddingBottom: "10px" }}
+        key={address}
+      >
         <Grid xs={24} sm={12} md={6} lg={6}>
           <TokenIcon
             src={
@@ -163,15 +268,16 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               minWidth: 0,
               marginLeft: 30,
             }}
-            onValueChange={({ floatValue }) => {
+            value={voteWeights[address] ? voteWeights[address] : 0}
+            onValueChange={async ({ floatValue }) => {
               setVoteWeights({
                 ...voteWeights,
-                [gauge.address]: floatValue,
+                [address]: floatValue,
               });
             }}
           />
         </Grid>
-      </>
+      </Grid.Container>
     );
   };
 
@@ -191,40 +297,40 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         placeholder="Select farms to boost"
         multiple
         width="100%"
-        initialValue={[]}
         onChange={(value) => handleSelect(value)}
       >
         {gauges.map(renderSelectOptions)}
       </Select>
       <Spacer y={0.5} />
-      <h3>Selected Farms</h3>
+      <h3 ref={titleRef}>Selected Farms</h3>
       {votingFarms?.length ? (
         <>
-          <Grid.Container gap={1}>
-            {votingFarms.map(renderVotingOption)}
-          </Grid.Container>
+          {votingFarms.map(renderVotingOption)}
+
           <Spacer y={1} />
           <Grid.Container gap={2}>
             <Grid xs={24} md={12}>
               <Button
                 disabled={
-                  !weightsValid || voteTxStatus === TransactionStatus.Pending
+                  !weightsValid ||
+                  voteTxStatus === TransactionStatus.Pending ||
+                  voteButton.disabled
                 }
                 onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
-                Estimate new weights
+                {weightEstimateText()}
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
               <Button
-                disabled={
-                  !weightsValid || voteTxStatus === TransactionStatus.Pending
-                }
-                onClick={() => handleBoost()}
+                disabled={voteButton.disabled || !weightsValid}
+                onClick={() => {
+                  if (vote) handleBoost();
+                }}
                 style={{ width: "100%" }}
               >
-                Submit vote
+                {voteButton.text}
               </Button>
             </Grid>
           </Grid.Container>

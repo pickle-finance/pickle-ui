@@ -41,6 +41,8 @@ import { Gauge } from "./Contracts/Gauge";
 import { GaugeFactory } from "./Contracts/GaugeFactory";
 import { GaugeProxy } from "./Contracts/GaugeProxy";
 import { GaugeProxyFactory } from "./Contracts/GaugeProxyFactory";
+import { FeeShareFactory } from "./Contracts/FeeShareFactory";
+import { FeeShare } from "./Contracts/FeeShare";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -107,7 +109,8 @@ export const MIRROR_MIR_UST_STAKING_REWARDS =
 
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
-export const GAUGE_PROXY = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
+export const GAUGE_PROXY = "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1";
+export const FEE_SHARE = "0xc995ee5c216f4aa76e4704d8d639115403fd75f6";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
@@ -134,6 +137,7 @@ function useContracts() {
   const [dill, setDill] = useState<Dill | null>(null);
   const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
   const [gauge, setGauge] = useState<Gauge | null>(null);
+  const [feeShare, setFeeShare] = useState<FeeShare | null>(null);
 
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
@@ -198,6 +202,7 @@ function useContracts() {
       setDill(DillFactory.connect(DILL, signer));
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
+      setFeeShare(FeeShareFactory.connect(FEE_SHARE, signer));
     }
   };
 
@@ -232,6 +237,7 @@ function useContracts() {
     dill,
     gaugeProxy,
     gauge,
+    feeShare,
   };
 }
 

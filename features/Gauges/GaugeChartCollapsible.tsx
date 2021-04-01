@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import dynamic from "next/dynamic"
+import dynamic from "next/dynamic";
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select, Checkbox } from "@geist-ui/react";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
-const Chart = dynamic(() => import('react-apexcharts'), {ssr:false})
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
@@ -20,7 +20,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const depositTokenName = gaugeChartData.map((x) => x.depositTokenName);
 
   const chartOptions = {
-    series: gaugeChartData.map((x) => x.allocPoint),
+    series: gaugeChartData.map((x) => Math.round(x.allocPoint * 100) / 100 ),
     options: {
       chart: {
         width: 480,
@@ -28,17 +28,23 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       },
       labels: depositTokenName,
       dataLabels: {
-        formatter(val, opts) {
-          const name = depositTokenName[opts.seriesIndex];
-          return [name, val.toFixed(1) + "%"];
-        },
+        // formatter(val, opts) {
+        //   const name = depositTokenName[opts.seriesIndex];
+        //   return [name, val.toFixed(1) + "%"];
+        // },
         style: {
           colors: [pickleWhite],
-          fontSize: '10px'
+          fontSize: "12px",
         },
       },
       legend: {
-        show: false,
+        show: true,
+        labels: {
+          colors: [pickleWhite],
+        }
+      },
+      value: {
+        show: false
       },
       responsive: [
         {
@@ -56,7 +62,13 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
       shadow
-      preview={<div>View allocation of PICKLE reward weights</div>}
+      preview={
+          <div >
+            View allocation of PICKLE reward weights &nbsp;
+            <p style={{margin:"0px"}}>(based on votes cast by DILL holders)</p>
+          </div>
+        
+      }
     >
       <Spacer y={1} />
       {gauges?.length ? (

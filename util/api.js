@@ -70,7 +70,7 @@ export const getPerformanceData = async (assets) => {
   return await Promise.all(performanceData);
 };
 
-const getAssetPerformanceData = async (asset) => {
+export const getAssetPerformanceData = async (asset) => {
   return await fetch(
     `${pickleApi}/protocol/jar/${asset}/performance`,
   ).then((response) => response.json());
