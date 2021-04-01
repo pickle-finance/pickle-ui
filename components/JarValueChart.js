@@ -9,7 +9,7 @@ import {
   pickleNeon,
   graphFill,
   pickleBlue,
-  pickleWhite
+  pickleWhite,
 } from "../util/constants";
 import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -28,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: "2px",
     height: "40px",
+    color: pickleWhite,
+    marginBottom: theme.spacing(0.8),
   },
   chartTextSkeleton: {
     opacity: 0.3,
@@ -60,12 +61,6 @@ const useStyles = makeStyles((theme) => ({
   tagline: {
     color: pickleNeon,
     textShadow: `${pickleGreen} 0 0 18px`,
-  },
-  chartHeader: {
-    color: pickleWhite,
-    display: "flex",
-    alignItems: "center",
-    marginBottom: theme.spacing(0.8),
   },
 }));
 
@@ -122,7 +117,7 @@ export default function JarValueChart(props) {
   let value;
   if (data.length > 0) {
     const currentValue = data[data.length - 1].y;
-    value = formatDollars(currentValue)
+    value = formatDollars(currentValue);
   }
 
   const icon = `/assets/${asset.toLowerCase()}.png`;

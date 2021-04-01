@@ -132,7 +132,6 @@ export const useJarWithTVL = (jars: Input): Output => {
 
   const measureUniJarTVL = async (jar: JarWithAPY) => {
     if (!uniswapv2Pair || !prices) {
-      console.log(jar, tvlUSD);
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 

@@ -67,7 +67,9 @@ export const InfoBar: FC = () => {
             <NavItem active={router.pathname.endsWith("/info")}>Info</NavItem>
           </Link>
           <Link href="/info/earn" passHref>
-            <NavItem active={router.pathname.startsWith("/info/earn")}>Profit</NavItem>
+            <NavItem active={router.pathname.startsWith("/info/earn")}>
+              Profit
+            </NavItem>
           </Link>
           <Link href="/info/jars" passHref>
             <NavItem active={router.pathname.startsWith("/info/jars")}>

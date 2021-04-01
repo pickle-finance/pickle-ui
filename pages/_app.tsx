@@ -60,9 +60,9 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           rel="stylesheet"
         />
 
-        <script 
-          async 
-          src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB">
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"
         ></script>
 
         <script
@@ -98,7 +98,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                   `,
           }}
         />
-        
+
         <meta property="og:title" content="Farm PICKLE tokens" />
         <meta
           property="og:description"
