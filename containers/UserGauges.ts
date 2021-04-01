@@ -28,6 +28,7 @@ export interface UserGaugeData {
   totalWeight: number;
   userWeight: number;
   userCurrentWeights: number;
+  totalSupply: number;
 }
 
 const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
@@ -95,6 +96,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           totalWeight: gauge.totalWeight,
           userWeight: +userWeight.toString(),
           userCurrentWeights: +userCurrentWeights.toString(),
+          totalSupply: gauge.totalSupply,
         };
       });
 

@@ -158,21 +158,36 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
   }
 
-  const tooltipText =
-    `pickle: ${pickleAPYMin.toFixed(2)}%~${pickleAPYMax.toFixed(2)}% + ` +
-    APYs.map((x) => {
-      const k = Object.keys(x)[0];
-      const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
-    }).join(" + ");
-
   const totalAPY = APYs.map((x) => {
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
-  const boost = +(dillSupply?.toString() || 0)
+  const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
     : 0;
-  const realAPY = totalAPY + pickleAPYMin + pickleAPYMax * 0.6 * boost;
+
+  const _balance = stakedNum;
+  const _derived = _balance * 0.4;
+  const _adjusted = gaugeData.totalSupply * dillRatio * 0.6;
+  const pickleAPY =
+    (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
+  const realAPY = totalAPY + pickleAPY;
+
+  const apyRangeTooltipText = [
+    `pickle: ${pickleAPYMin.toFixed(2)}%~${pickleAPYMax.toFixed(2)}% + `,
+    ...APYs.map((x) => {
+      const k = Object.keys(x)[0];
+      const v = Object.values(x)[0];
+      return `${k}: ${v.toFixed(2)}%`;
+    }),
+  ].join(" + ");
+  const yourApyTooltipText = [
+    `pickle: ${pickleAPY.toFixed(2)}% + `,
+    ...APYs.map((x) => {
+      const k = Object.keys(x)[0];
+      const v = Object.values(x)[0];
+      return `${k}: ${v.toFixed(2)}%`;
+    }),
+  ].join(" + ");
 
   useEffect(() => {
     if (gaugeData) {
@@ -224,7 +239,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             </div>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Tooltip text={totalAPY + fullApy === 0 ? "--" : tooltipText}>
+            <Tooltip
+              text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
+            >
               <div>
                 {totalAPY + fullApy === 0
                   ? "--%"
@@ -236,9 +253,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Tooltip text={totalAPY + fullApy === 0 ? "--" : tooltipText}>
+            <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
               <div>{realAPY === 0 ? "--%" : `${realAPY.toFixed(2)}%`}</div>
-              <Label>Total APY</Label>
+              <Label>Your APY</Label>
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={2} lg={2} css={{ textAlign: "center" }}>

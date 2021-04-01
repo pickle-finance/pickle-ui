@@ -12,6 +12,7 @@ export interface RawGauge {
   derivedSupply: number;
   rewardRate: number;
   gaugeWeight: number;
+  totalSupply: number;
 }
 
 export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
@@ -60,6 +61,15 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
         }),
       );
 
+      const totalSupplies = await multicallProvider.all(
+        tokens.map((token, index) => {
+          return new MulticallContract(
+            gaugeAddresses[index],
+            gauge.interface.fragments,
+          ).totalSupply();
+        }),
+      );
+
       // extract response and convert to something we can use
       const gauges = tokens.map((token, idx) => {
         return {
@@ -71,6 +81,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           totalWeight: +totalWeight.toString(),
           rewardRate: +gaugeRewardRates[idx].toString(),
           derivedSupply: +derivedSupplies[idx].toString(),
+          totalSupply: +totalSupplies[idx].toString(),
         };
       });
 
