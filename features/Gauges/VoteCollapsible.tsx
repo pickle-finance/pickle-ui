@@ -2,20 +2,21 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect, useRef } from "react";
 import { Button, Grid, Spacer, Select } from "@geist-ui/react";
-import { formatEther } from "ethers/lib/utils";
-import {
-  JAR_GAUGE_MAP,
-  PICKLE_ETH_GAUGE,
-} from "../../containers/Gauges/gauges";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
+import { Connection } from "../../containers/Connection";
 import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
+import { Contracts } from "../../containers/Contracts";
 import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { isArray } from "util";
 import { pickleWhite } from "../../util/constants";
+import {
+  ERC20Transfer,
+  Status as ERC20TransferStatus,
+} from "../../containers/Erc20Transfer";
 
 interface Weights {
   [key: string]: number;
@@ -35,19 +36,23 @@ interface ButtonStatus {
 }
 
 const setButtonStatus = (
-  status: TransactionStatus,
+  status: ERC20TransferStatus,
   transfering: string,
   idle: string,
   setButtonText: (arg0: ButtonStatus) => void,
 ) => {
-  if (status === TransactionStatus.Pending) {
+  if (status === ERC20TransferStatus.Transfering) {
     setButtonText({
       disabled: true,
       text: transfering,
     });
   }
 
-  if (status === TransactionStatus.Confirmed) {
+  if (
+    status === ERC20TransferStatus.Success ||
+    status === ERC20TransferStatus.Failed ||
+    status === ERC20TransferStatus.Cancelled
+  ) {
     setButtonText({
       disabled: false,
       text: idle,
@@ -72,13 +77,24 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 }) => {
   const { balance: dillBalanceBN } = Dill.useContainer();
   const [votingFarms, setVotingFarms] = useState();
-  const { status: voteTxStatus, vote } = useGaugeProxy();
+  const { vote } = useGaugeProxy();
+  const { gaugeProxy } = Contracts.useContainer();
+  const { blockNum, address, signer } = Connection.useContainer();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState(null);
   const [voteButton, setVoteButton] = useState<ButtonStatus>({
     disabled: false,
     text: "Submit Vote",
   });
+  const {
+    status: transferStatus,
+    transfer,
+    getTransferStatus,
+  } = ERC20Transfer.useContainer();
+
+  const [currWeights, setCurrWeights] = useState(
+    gauges.map((x) => x.allocPoint),
+  );
   let titleRef = useRef();
 
   let totalGaugeWeight = 0;
@@ -141,7 +157,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       weights.push(voteWeights[gauges[i].address]);
     }
 
-    vote(tokens, weights);
+    return { tokens, weights };
   };
 
   const calculateNewWeights = () => {
@@ -180,20 +196,25 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const initialize = async () => {
-    const initialWeights = gauges.reduce((acc, curr) => {
-      return {
-        ...acc,
-        [curr.address]: 0,
-      };
-    }, {});
+    const newWeights = gauges.map((x) => x.allocPoint);
+    if (JSON.stringify(newWeights) != JSON.stringify(currWeights)) {
+      console.log("Ohshit im here");
+      const initialWeights = gauges.reduce((acc, curr) => {
+        return {
+          ...acc,
+          [curr.address]: 0,
+        };
+      }, {});
 
-    const updatedFarms = votingFarms
-      ? votingFarms.map((x) => gauges.find((y) => y.address === x.address))
-      : null;
+      const updatedFarms = votingFarms
+        ? votingFarms.map((x) => gauges.find((y) => y.address === x.address))
+        : null;
 
-    setVoteWeights(initialWeights);
-    setVotingFarms(updatedFarms);
-    setNewWeights(null);
+      setVoteWeights(initialWeights);
+      setVotingFarms(updatedFarms);
+      setNewWeights(null);
+      setCurrWeights(newWeights);
+    }
   };
 
   useEffect(() => {
@@ -201,18 +222,23 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }, [gauges]);
 
   useEffect(() => {
-    const balance = +dillBalanceBN?.toString();
-    const buttonText = balance ? "Submit Vote" : "DILL balance needed to vote";
+    if (gaugeProxy) {
+      const voteStatus = getTransferStatus("vote", gaugeProxy.address);
+      const balance = +dillBalanceBN?.toString();
+      const buttonText = balance
+        ? "Submit Vote"
+        : "DILL balance needed to vote";
 
-    if (balance) {
-      setButtonStatus(voteTxStatus, "Voting...", buttonText, setVoteButton);
-    } else {
-      setVoteButton({
-        disabled: true,
-        text: buttonText,
-      });
+      if (balance) {
+        setButtonStatus(voteStatus, "Voting...", buttonText, setVoteButton);
+      } else {
+        setVoteButton({
+          disabled: true,
+          text: buttonText,
+        });
+      }
     }
-  }, [voteTxStatus]);
+  }, [transferStatus]);
 
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
@@ -226,6 +252,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     const newWeight = newWeights
       ? newWeights.find((x: UserGaugeData) => x[address])[address]
       : null;
+
+    console.log(poolName, address, voteWeights[address]);
 
     return (
       <Grid.Container
@@ -254,7 +282,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           <Label>Max PICKLE APY</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
-          <Data isZero={allocPoint === 0}>
+          <Data>
             {formatPercent(allocPoint)}%{" "}
             {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
           </Data>
@@ -268,7 +296,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               minWidth: 0,
               marginLeft: 30,
             }}
-            value={voteWeights[address] ? voteWeights[address] : 0}
+            value={voteWeights[address] ? voteWeights[address] : null}
             onValueChange={async ({ floatValue }) => {
               setVoteWeights({
                 ...voteWeights,
@@ -313,7 +341,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               <Button
                 disabled={
                   !weightsValid ||
-                  voteTxStatus === TransactionStatus.Pending ||
+                  transferStatus === ERC20TransferStatus.Transfering ||
                   voteButton.disabled
                 }
                 onClick={() => calculateNewWeights()}
@@ -326,7 +354,17 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               <Button
                 disabled={voteButton.disabled || !weightsValid}
                 onClick={() => {
-                  if (vote) handleBoost();
+                  const { tokens, weights } = handleBoost();
+                  if (gaugeProxy) {
+                    transfer({
+                      token: "vote",
+                      recipient: gaugeProxy.address,
+                      transferCallback: async () => {
+                        return gaugeProxy.connect(signer).vote(tokens, weights.map((weight) => ethers.BigNumber.from((weight * 100).toFixed(0))))
+                      },
+                      approval: false,
+                    });
+                  }
                 }}
                 style={{ width: "100%" }}
               >
