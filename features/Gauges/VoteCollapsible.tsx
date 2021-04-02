@@ -196,9 +196,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const initialize = async () => {
+    console.log("gauges", gauges)
     const newWeights = gauges.map((x) => x.allocPoint);
     if (JSON.stringify(newWeights) != JSON.stringify(currWeights)) {
-      console.log("Ohshit im here");
       const initialWeights = gauges.reduce((acc, curr) => {
         return {
           ...acc,
@@ -245,15 +245,13 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       poolName,
       depositToken,
       depositTokenName,
-      apy,
+      fullApy,
       allocPoint,
       address,
     } = gauge;
     const newWeight = newWeights
       ? newWeights.find((x: UserGaugeData) => x[address])[address]
       : null;
-
-    console.log(poolName, address, voteWeights[address]);
 
     return (
       <Grid.Container
@@ -273,13 +271,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
             <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
           </div>
         </Grid>
-        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "center" }}>
-          <Data isZero={apy === 0}>{formatPercent(apy)}%</Data>
-          <Label>Base PICKLE APY</Label>
-        </Grid>
-        <Grid xs={24} sm={4} md={4} lg={4} css={{ textAlign: "center" }}>
-          <Data isZero={apy === 0}>{formatPercent(apy * 2.5)}%</Data>
-          <Label>Max PICKLE APY</Label>
+        <Grid xs={24} sm={8} md={8} lg={8} css={{ textAlign: "center" }}>
+          <Data isZero={fullApy === 0}>{formatPercent(fullApy*0.4)}%~{formatPercent(fullApy*0.4)}%</Data>
+          <Label>PICKLE APY range</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
           <Data>
@@ -296,7 +290,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               minWidth: 0,
               marginLeft: 30,
             }}
-            value={voteWeights[address] ? voteWeights[address] : null}
+            value={voteWeights[address] ? voteWeights[address] : 0}
             onValueChange={async ({ floatValue }) => {
               setVoteWeights({
                 ...voteWeights,
@@ -341,7 +335,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               <Button
                 disabled={
                   !weightsValid ||
-                  transferStatus === ERC20TransferStatus.Transfering ||
                   voteButton.disabled
                 }
                 onClick={() => calculateNewWeights()}
