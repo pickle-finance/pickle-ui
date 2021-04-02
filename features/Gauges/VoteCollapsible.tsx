@@ -176,6 +176,16 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               gauge.userWeight +
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
+
+          // console.log(
+          //   estimatedWeight,
+          //   gauge.gaugeWeight,
+          //   gauge.userWeight,
+          //   (dillBalance * Object.values(x)[0]) / 100,
+          //   gauge.totalWeight,
+          //   gauge.userCurrentWeights,
+          // );
+
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;
@@ -196,7 +206,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const initialize = async () => {
-    console.log("gauges", gauges)
+    console.log(gauges)
     const newWeights = gauges.map((x) => x.allocPoint);
     if (JSON.stringify(newWeights) != JSON.stringify(currWeights)) {
       const initialWeights = gauges.reduce((acc, curr) => {
@@ -250,7 +260,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       address,
     } = gauge;
     const newWeight = newWeights
-      ? newWeights.find((x: UserGaugeData) => x[address])[address]
+      ? newWeights.find((x: UserGaugeData) => x[address] >= 0)[address]
       : null;
 
     return (
@@ -272,7 +282,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           </div>
         </Grid>
         <Grid xs={24} sm={8} md={8} lg={8} css={{ textAlign: "center" }}>
-          <Data isZero={fullApy === 0}>{formatPercent(fullApy*0.4)}%~{formatPercent(fullApy)}%</Data>
+          <Data isZero={fullApy === 0}>
+            {formatPercent(fullApy * 0.4)}%~{formatPercent(fullApy)}%
+          </Data>
           <Label>PICKLE APY range</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
@@ -333,10 +345,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           <Grid.Container gap={2}>
             <Grid xs={24} md={12}>
               <Button
-                disabled={
-                  !weightsValid ||
-                  voteButton.disabled
-                }
+                disabled={!weightsValid || voteButton.disabled}
                 onClick={() => calculateNewWeights()}
                 style={{ width: "100%" }}
               >
@@ -353,7 +362,12 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                       token: "vote",
                       recipient: gaugeProxy.address,
                       transferCallback: async () => {
-                        return gaugeProxy.connect(signer).vote(tokens, weights.map((weight) => ethers.BigNumber.from((weight * 100).toFixed(0))))
+                        return gaugeProxy.connect(signer).vote(
+                          tokens,
+                          weights.map((weight) =>
+                            ethers.BigNumber.from((weight * 100).toFixed(0)),
+                          ),
+                        );
                       },
                       approval: false,
                     });

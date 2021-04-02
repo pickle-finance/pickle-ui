@@ -41,7 +41,8 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         show: true,
         labels: {
           colors: [pickleWhite],
-        }
+        },
+        offsetY: -20
       },
       value: {
         show: false
