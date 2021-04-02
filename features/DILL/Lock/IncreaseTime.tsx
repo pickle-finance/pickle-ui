@@ -189,19 +189,19 @@ export const IncreaseTime: FC<{
           <Radio value="1">
             1 week
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(3)} DILL
+              1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value="2">
             1 month
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(3)} DILL
+              1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value="3">
             1 year
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(3)} DILL
+              1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value="4">

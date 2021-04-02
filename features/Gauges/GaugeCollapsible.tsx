@@ -84,6 +84,11 @@ const setButtonStatus = (
   }
 };
 
+const formatAPY = (apy: number) => {
+  if (apy === Number.POSITIVE_INFINITY) return "∞%";
+  return apy.toFixed(2) + "%";
+};
+
 export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   gaugeData,
 }) => {
@@ -173,7 +178,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const realAPY = totalAPY + pickleAPY;
 
   const apyRangeTooltipText = [
-    `pickle: ${pickleAPYMin.toFixed(2)}%~${pickleAPYMax.toFixed(2)}%`,
+    `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
@@ -181,7 +186,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     }),
   ].join(" + ");
   const yourApyTooltipText = [
-    `pickle: ${pickleAPY.toFixed(2)}%`,
+    `pickle: ${formatAPY(pickleAPY)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
@@ -245,16 +250,16 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               <div>
                 {totalAPY + fullApy === 0
                   ? "--%"
-                  : `${(totalAPY + pickleAPYMin).toFixed(2)}~${(
-                      totalAPY + pickleAPYMax
-                    ).toFixed(2)}` + "%"}
+                  : `${formatAPY(totalAPY + pickleAPYMin)} ~ ${formatAPY(
+                      totalAPY + pickleAPYMax,
+                    )}`}
               </div>
               <Label>APY Range</Label>
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
             <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
-              <div>{realAPY === 0 ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+              <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
               <Label>Your APY</Label>
             </Tooltip>
           </Grid>
