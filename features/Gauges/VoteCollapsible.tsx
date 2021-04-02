@@ -272,7 +272,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           </div>
         </Grid>
         <Grid xs={24} sm={8} md={8} lg={8} css={{ textAlign: "center" }}>
-          <Data isZero={fullApy === 0}>{formatPercent(fullApy*0.4)}%~{formatPercent(fullApy*0.4)}%</Data>
+          <Data isZero={fullApy === 0}>{formatPercent(fullApy*0.4)}%~{formatPercent(fullApy)}%</Data>
           <Label>PICKLE APY range</Label>
         </Grid>
         <Grid xs={24} sm={6} md={6} lg={6} css={{ textAlign: "center" }}>
