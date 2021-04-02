@@ -20,33 +20,41 @@ import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { SushiPairs } from "../containers/SushiPairs";
+import { Web3ReactProvider } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+
+const getLibrary = (provider: any) => {
+  return new Web3Provider(provider);
+};
 
 const WithContainers: FC = ({ children }) => (
-  <Connection.Provider>
-    <Contracts.Provider>
-      <Balances.Provider>
-        <ERC20Transfer.Provider>
-          <Prices.Provider>
-            <Pickles.Provider>
-              <PickleStaking.Provider>
-                <UniV2Pairs.Provider>
-                  <SushiPairs.Provider>
-                    <Jars.Provider>
-                      <Farms.Provider>
-                        <UserJars.Provider>
-                          <UserFarms.Provider>{children}</UserFarms.Provider>
-                        </UserJars.Provider>
-                      </Farms.Provider>
-                    </Jars.Provider>
-                  </SushiPairs.Provider>
-                </UniV2Pairs.Provider>
-              </PickleStaking.Provider>
-            </Pickles.Provider>
-          </Prices.Provider>
-        </ERC20Transfer.Provider>
-      </Balances.Provider>
-    </Contracts.Provider>
-  </Connection.Provider>
+  <Web3ReactProvider getLibrary={getLibrary}>
+    <Connection.Provider>
+      <Contracts.Provider>
+        <Balances.Provider>
+          <ERC20Transfer.Provider>
+            <Prices.Provider>
+              <Pickles.Provider>
+                <PickleStaking.Provider>
+                  <UniV2Pairs.Provider>
+                    <SushiPairs.Provider>
+                      <Jars.Provider>
+                        <Farms.Provider>
+                          <UserJars.Provider>
+                            <UserFarms.Provider>{children}</UserFarms.Provider>
+                          </UserJars.Provider>
+                        </Farms.Provider>
+                      </Jars.Provider>
+                    </SushiPairs.Provider>
+                  </UniV2Pairs.Provider>
+                </PickleStaking.Provider>
+              </Pickles.Provider>
+            </Prices.Provider>
+          </ERC20Transfer.Provider>
+        </Balances.Provider>
+      </Contracts.Provider>
+    </Connection.Provider>
+  </Web3ReactProvider>
 );
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {

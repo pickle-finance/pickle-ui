@@ -4,84 +4,40 @@ import { ethers } from "ethers";
 import { Provider as MulticallProvider } from "ethers-multicall";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
+import { useWeb3React } from "@web3-react/core";
 
 type Provider = ethers.providers.Provider;
 type Network = ethers.providers.Network;
 
 function useConnection() {
+  const { account, library } = useWeb3React();
+
   const [
     multicallProvider,
     setMulticallProvider,
   ] = useState<MulticallProvider | null>(null);
+
   const [provider, setProvider] = useState<Provider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
-  const [address, setAddress] = useState<string | null>(null);
+  const [address, setAddress] = useState<string | null | undefined>(null);
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const attemptConnection = async () => {
-    if (window.ethereum === undefined) {
-      throw Error("MetaMask not found, please visit https://metamask.io/");
-    }
-
-    // get provider, address, and network
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    const signer = await provider.getSigner();
-    const address = await signer.getAddress();
-    const network = await provider.getNetwork();
-
-    // make sure page refreshes when network is changed
-    // https://github.com/MetaMask/metamask-extension/issues/8226
-    window.ethereum.on("chainIdChanged", () => window.location.reload());
-    window.ethereum.on("chainChanged", () => window.location.reload());
-
-    const ethMulticallProvider = new MulticallProvider(provider);
-    await ethMulticallProvider.init();
-
-    // set states
-    setSigner(signer);
-    setProvider(provider);
-    setMulticallProvider(ethMulticallProvider);
-    setAddress(address);
-    setNetwork(network);
-  };
-
-  const connect = async () => {
-    try {
-      await attemptConnection();
-      window.ethereum.on("accountsChanged", () => attemptConnection());
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
-    }
-  };
-
-  const checkAndConnect = async () => {
-    if (window?.ethereum?.request) {
-      const availableAccounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-      if (availableAccounts.length > 0) {
-        connect();
-      }
-    }
-  };
-
-  useEffect(() => {
-    // connect if we already have metamask approval
-    try {
-      checkAndConnect();
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
   // create observable to stream new blocks
   useEffect(() => {
-    if (provider) {
+    if (library) {
+      setProvider(library);
+      setAddress(account);
+
+      setSigner(library.getSigner());
+      library.getNetwork().then((network: any) => setNetwork(network));
+
+      const ethMulticallProvider = new MulticallProvider(library);
+      ethMulticallProvider
+        .init()
+        .then(() => setMulticallProvider(ethMulticallProvider));
       const observable = new Observable<number>((subscriber) => {
-        provider.on("block", (blockNumber: number) =>
+        library.on("block", (blockNumber: number) =>
           subscriber.next(blockNumber),
         );
       });
@@ -93,10 +49,9 @@ function useConnection() {
         }
       });
     }
-  }, [provider]);
+  }, [library]);
 
   return {
-    connect,
     multicallProvider,
     provider,
     address,
