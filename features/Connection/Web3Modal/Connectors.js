@@ -7,7 +7,7 @@ import { infura } from "../../../secrets.json";
 
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
-  1: `https://mainnet.infura.io/v3/${infura}`,
+  1: `https://mainnet.infura.io/v3/${process.env.infura}`,
 };
 
 export const injected = new InjectedConnector({
