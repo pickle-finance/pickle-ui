@@ -6,7 +6,7 @@ import { PortisConnector } from "@web3-react/portis-connector";
 
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
-  1: `https://mainnet.infura.io/v3/${process.env.infura}`,
+  1: process.env.Alchemy,
 };
 
 export const injected = new InjectedConnector({
@@ -22,16 +22,16 @@ export const walletconnect = new WalletConnectConnector({
 
 export const walletlink = new WalletLinkConnector({
   url: RPC_URLS[1],
-  appName: "Saffron",
-  appLogoUrl: "https://app.saffron.finance/assets/images/saffron.png",
+  appName: "Pickle Finance",
+  appLogoUrl: "pickle.png",
 });
 
 export const fortmatic = new FortmaticConnector({
-  apiKey: process.env.REACT_APP_FORTMATIC_API_KEY,
+  apiKey: process.env.Fortmatic,
   chainId: 1,
 });
 
 export const portis = new PortisConnector({
-  dAppId: process.env.REACT_APP_PORTIS_DAPP_ID,
-  networks: [1, 100],
+  dAppId: process.env.Portis,
+  networks: [1],
 });

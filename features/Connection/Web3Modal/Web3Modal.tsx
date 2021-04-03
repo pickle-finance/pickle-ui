@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ConnectorItem from "./ConnectorItem";
-import styled from "styled-components";
 import { FC } from "react";
 import {
   injected,
@@ -11,7 +10,7 @@ import {
 } from "./Connectors";
 import { Modal, Grid } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
-
+import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
 interface Web3ModalProps {
   setVisible: Function;
 }
@@ -91,6 +90,9 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     const { ethereum } = window;
     setEthereum(ethereum);
   }, []);
+
+  const triedEager = useEagerConnect();
+  useInactiveListener(!triedEager || !!activatingConnector);
 
   return (
     <Modal width="500px" {...rest}>

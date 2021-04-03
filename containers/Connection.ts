@@ -28,19 +28,21 @@ function useConnection() {
     if (library) {
       setProvider(library);
       setAddress(account);
-
       setSigner(library.getSigner());
+
       library.getNetwork().then((network: any) => setNetwork(network));
 
       const ethMulticallProvider = new MulticallProvider(library);
       ethMulticallProvider
         .init()
         .then(() => setMulticallProvider(ethMulticallProvider));
+
       const observable = new Observable<number>((subscriber) => {
         library.on("block", (blockNumber: number) =>
           subscriber.next(blockNumber),
         );
       });
+
       // debounce to prevent subscribers making unnecessary calls
       observable.pipe(debounceTime(1000)).subscribe((blockNumber) => {
         // Update every 5 blocks otherwise its very laggy
