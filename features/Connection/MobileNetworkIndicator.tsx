@@ -2,7 +2,6 @@ import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 import { Connection } from "../../containers/Connection";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import { useWeb3React } from "@web3-react/core";
 
 const Container = styled.div`
   display: none;
@@ -69,7 +68,6 @@ const ConnectContainer = styled.div`
 `;
 
 export const MobileNetworkIndicator: FC = () => {
-  const { deactivate } = useWeb3React();
   const { address, network } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
   const networkName = network?.name === "homestead" ? "mainnet" : network?.name;
@@ -84,7 +82,6 @@ export const MobileNetworkIndicator: FC = () => {
           <BlockNumber>{networkName + ` `}</BlockNumber>
           <Circle />
         </Right>
-        <a onClick={() => deactivate()}>Disconnect</a>
       </ConnectContainer>
     </Container>
   );

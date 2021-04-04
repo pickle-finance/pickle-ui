@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 
-type Provider = ethers.providers.Provider;
 type Network = ethers.providers.Network;
 
 function useConnection() {
@@ -17,19 +16,12 @@ function useConnection() {
     setMulticallProvider,
   ] = useState<MulticallProvider | null>(null);
 
-  const [provider, setProvider] = useState<Provider | null>(null);
-  const [signer, setSigner] = useState<ethers.Signer | null>(null);
-  const [address, setAddress] = useState<string | null | undefined>(null);
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
-      setProvider(library);
-      setAddress(account);
-      setSigner(library.getSigner());
-
       library.getNetwork().then((network: any) => setNetwork(network));
 
       const ethMulticallProvider = new MulticallProvider(library);
@@ -50,16 +42,19 @@ function useConnection() {
           setBlockNum(blockNumber);
         }
       });
+    } else {
+      setMulticallProvider(null);
+      setBlockNum(null);
     }
   }, [library]);
 
   return {
     multicallProvider,
-    provider,
-    address,
+    provider: library,
+    address: account,
     network,
     blockNum,
-    signer,
+    signer: library?.getSigner(),
   };
 }
 

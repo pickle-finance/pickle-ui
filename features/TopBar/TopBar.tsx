@@ -2,7 +2,6 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Logo } from "./Logo";
 import { NavItems } from "./NavItems";
-import { useWeb3React } from "@web3-react/core";
 
 // import components from the Connection feature
 import { DesktopConnect } from "../Connection/DesktopConnect";
@@ -41,9 +40,8 @@ const Alert = styled.div`
 `;
 
 export const TopBar: FC = () => {
-  const { library } = useWeb3React();
-  const { address } = Connection.useContainer();
-  const isConnected = !!library && !!address;
+  const { address, provider } = Connection.useContainer();
+  const isConnected = !!provider && !!address;
   return (
     <>
       <Container>
