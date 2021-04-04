@@ -10,20 +10,21 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
 }) => {
+
   const gaugeChartData = gauges.map((gauge) => {
     const { allocPoint, depositTokenName } = gauge;
     return {
       allocPoint,
       depositTokenName,
     };
-  });
+  }).sort((a,b)=> b.allocPoint - a.allocPoint);
+
   const depositTokenName = gaugeChartData.map((x) => x.depositTokenName);
 
   const chartOptions = {
-    series: gaugeChartData.map((x) => Math.round(x.allocPoint * 100) / 100 ),
+    series: gaugeChartData.map((x) => Math.round(x.allocPoint * 100) / 100),
     options: {
       chart: {
-        width: 480,
         type: "pie",
       },
       labels: depositTokenName,
@@ -42,10 +43,15 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         labels: {
           colors: [pickleWhite],
         },
-        offsetY: -20
+        formatter(seriesName, opts) {
+          const globals = opts.w.globals;
+          const vals = globals.initialSeries;
+          const names = globals.labels;
+          return [`${seriesName}: ${vals[names.indexOf(seriesName)] * 100}%`];
+        },
       },
       value: {
-        show: false
+        show: false,
       },
       responsive: [
         {
@@ -64,11 +70,10 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
       shadow
       preview={
-          <div >
-            View allocation of PICKLE reward weights &nbsp;
-            <p style={{margin:"0px"}}>(based on votes cast by DILL holders)</p>
-          </div>
-        
+        <div>
+          View allocation of PICKLE reward weights &nbsp;
+          <p style={{ margin: "0px" }}>(based on votes cast by DILL holders)</p>
+        </div>
       }
     >
       <Spacer y={1} />
@@ -77,7 +82,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           options={chartOptions.options}
           series={chartOptions.series}
           type="pie"
-          width={480}
+          width={600}
         />
       ) : (
         "There are no active Farms"
