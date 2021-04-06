@@ -25,6 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { useMigrate } from "./UseMigrate"
 
 interface ButtonStatus {
   disabled: boolean;
@@ -173,6 +174,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
+  const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked)
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -189,6 +191,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     disabled: false,
     text: "Harvest",
   });
+
+  const [migrateState, setMigrateState] = useState<string | null>(null);
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
@@ -214,6 +218,23 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const totalAPY = APYs.map((x) => {
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
+
+  const handleMigrate = async () => {
+    if (balance) {
+      try {
+        setMigrateState("Withdrawing...");
+        await withdraw();
+        setMigrateState("Migrating...");
+        await deposit();
+        setMigrateState(null);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setMigrateState(null);
+        return;
+      }
+    }
+  };
 
   useEffect(() => {
     if (masterchef) {
@@ -382,8 +403,10 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             {unstakeButton.text}
           </Button>
         </Grid>
-        <Spacer />
-        <Grid xs={24}>
+      </Grid.Container>
+      <Spacer />
+      <Grid.Container gap={2}>
+        <Grid xs={24} md={12}>
           <Spacer />
           <Button
             disabled={harvestButton.disabled}
@@ -413,6 +436,16 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           >
             PICKLEs are automatically harvested on staking and unstaking.
           </div>
+        </Grid>
+        <Grid xs={24} md={12}>
+          <Spacer />
+          <Button
+            disabled={migrateState !== null}
+            onClick={handleMigrate}
+            style={{ width: "100%" }}
+          >
+             {migrateState || "Migrate"}
+          </Button>
         </Grid>
       </Grid.Container>
     </Collapse>
