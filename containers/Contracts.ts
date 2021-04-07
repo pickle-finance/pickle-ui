@@ -41,8 +41,8 @@ import { Gauge } from "./Contracts/Gauge";
 import { GaugeFactory } from "./Contracts/GaugeFactory";
 import { GaugeProxy } from "./Contracts/GaugeProxy";
 import { GaugeProxyFactory } from "./Contracts/GaugeProxyFactory";
-import { FeeShareFactory } from "./Contracts/FeeShareFactory";
-import { FeeShare } from "./Contracts/FeeShare";
+import { FeeDistributorFactory } from "./Contracts/FeeDistributorFactory";
+import { FeeDistributor } from "./Contracts/FeeDistributor";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -110,7 +110,7 @@ export const MIRROR_MIR_UST_STAKING_REWARDS =
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x209507Fa5927d9fd94491D84dAbA24F582D9dE57";
-export const FEE_SHARE = "0xc995ee5c216f4aa76e4704d8d639115403fd75f6";
+export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
@@ -137,7 +137,9 @@ function useContracts() {
   const [dill, setDill] = useState<Dill | null>(null);
   const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
   const [gauge, setGauge] = useState<Gauge | null>(null);
-  const [feeShare, setFeeShare] = useState<FeeShare | null>(null);
+  const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(
+    null,
+  );
 
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
@@ -202,7 +204,7 @@ function useContracts() {
       setDill(DillFactory.connect(DILL, signer));
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
-      setFeeShare(FeeShareFactory.connect(FEE_SHARE, signer));
+      setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
     }
   };
 
@@ -237,7 +239,7 @@ function useContracts() {
     dill,
     gaugeProxy,
     gauge,
-    feeShare,
+    feeDistributor,
   };
 }
 

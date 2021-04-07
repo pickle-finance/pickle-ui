@@ -14,6 +14,8 @@ export const Interaction: FC<{
   unlockTime.setTime(+(dillStats.lockEndDate?.toString() || 0) * 1000);
   const isExpired = unlockTime < new Date();
 
+  console.log(dillStats);
+
   return (
     <Card>
       <h2>Lock PICKLEs for DILL</h2>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
-import { Contracts, DILL, FEE_SHARE } from "./Contracts";
+import { Contracts, DILL, FEE_DISTRIBUTOR } from "./Contracts";
 import { Connection } from "./Connection";
 import { Prices } from "../containers/Prices";
 import { useProtocolIncome } from "./DILL/useProtocolIncome";
@@ -21,7 +21,7 @@ export interface UseDillOutput {
 
 export function useDill(): UseDillOutput {
   const { blockNum, address } = Connection.useContainer();
-  const { dill, feeShare } = Contracts.useContainer();
+  const { dill, feeDistributor } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { weeklyProfit, weeklyDistribution } = useProtocolIncome();
   const [lockedAmount, setLockedAmount] = useState<ethers.BigNumber | null>();
@@ -33,34 +33,33 @@ export function useDill(): UseDillOutput {
   const [nextDistribution, setNextDistribution] = useState<Date | null>(null);
 
   useEffect(() => {
-    if (dill && feeShare && address && prices) {
+    if (dill && feeDistributor && address && prices) {
       const f = async () => {
         const dillContract = dill.attach(DILL);
-        const feeShareContract = feeShare.attach(FEE_SHARE);
+        const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
+
+        const epochTime = 604800;
 
         const [
           lockStats,
           balance,
           totalSupply,
           userClaimable,
-          epochStart,
-          currentEpoch,
-          epochTime,
+          timeCursor,
         ] = await Promise.all([
           dillContract.locked(address),
           dillContract["balanceOf(address)"](address),
           dillContract["totalSupply()"](),
-          feeShareContract["getClaimable(address)"](address),
-          feeShareContract["startTime()"](),
-          feeShareContract["currentEpoch()"](),
-          feeShareContract["epoch_period()"](),
+          feeDistributorContract.callStatic["claim(address)"](address),
+          feeDistributorContract["time_cursor()"](),
         ]);
+        console.log(lockStats, balance, totalSupply);
 
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
 
         const nextDistribution = new Date(
-          epochStart.add(currentEpoch.mul(epochTime)).toNumber() * 1000,
+          timeCursor.add(epochTime).toNumber() * 1000,
         );
 
         setLockedAmount(lockStats?.amount);
