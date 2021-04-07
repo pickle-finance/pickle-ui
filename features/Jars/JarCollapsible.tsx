@@ -71,6 +71,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x87dA823B6fC8EB8575a235A824690fda94674c88": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir.png"} />
   ),
+  "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fei.png"} />
+  ),
   "0x5233349957586A8207c52693A959483F9aeAA50C": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tesla.png"} />
   ),
