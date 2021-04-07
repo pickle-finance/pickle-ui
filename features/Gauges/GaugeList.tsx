@@ -7,7 +7,7 @@ import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
-import { GaugeChartCollapsible } from "./GaugeChartCollapsible"
+import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -39,7 +39,7 @@ export const GaugeList: FC = () => {
 
   const activeGauges = gaugeData.filter((x) => true);
   const inactiveGauges = gaugeData.filter((x) => false);
-  
+
   const renderGauge = (gauge: UserGaugeData) => (
     <Grid xs={24} key={gauge.address}>
       <div css={{ display: "flex", alignItems: "center" }}>
@@ -49,11 +49,11 @@ export const GaugeList: FC = () => {
   );
 
   return (
-    <Container>
-      <Grid.Container gap={1}>
+    <>
+      <Grid.Container>
         <Grid md={12}>
           <p>
-            Gauges allow you to earn PICKLEs by staking tokens.
+            Farms allow you to earn PICKLEs by staking tokens.
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.
@@ -65,14 +65,14 @@ export const GaugeList: FC = () => {
             size="medium"
             onChange={(e) => setShowInactive(e.target.checked)}
           >
-            Show Inactive Gauges
+            Show Inactive Farms
           </Checkbox>
         </Grid>
       </Grid.Container>
       <h2>Current Weights</h2>
-      <GaugeChartCollapsible gauges={activeGauges}/>
+      <GaugeChartCollapsible gauges={activeGauges} />
       <h2>Vote</h2>
-      <VoteCollapsible gauges={activeGauges}/>
+      <VoteCollapsible gauges={activeGauges} />
       <div
         css={{
           justifyContent: "space-between",
@@ -88,6 +88,6 @@ export const GaugeList: FC = () => {
         {showInactive && <h2>Inactive Farms</h2>}
         {showInactive && inactiveGauges.map(renderGauge)}
       </Grid.Container>
-    </Container>
+    </>
   );
 };

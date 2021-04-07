@@ -59,17 +59,15 @@ export const NavItems: FC = () => {
       <Link href="/jars" passHref>
         <NavItem active={router.pathname.startsWith("/jars")}>jars</NavItem>
       </Link>
+      
       <Link href="/farms" passHref>
-        <NavItem active={router.pathname.startsWith("/farms")}>farms</NavItem>
-      </Link>
-      <Link href="/gauges" passHref>
-        <NavItem active={router.pathname.startsWith("/gauges")}>gauges</NavItem>
-      </Link>
-      <Link href="/stake" passHref>
-        <NavItem active={router.pathname.startsWith("/stake")}>stake</NavItem>
+        <NavItem active={router.pathname.endsWith("farms")}>farms</NavItem>
       </Link>
       <Link href="/dill" passHref>
         <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>
+      </Link>
+      <Link href="/stake" passHref>
+        <NavItem active={router.pathname.startsWith("/stake")}>stake</NavItem>
       </Link>
       <a
         href="https://docs.pickle.finance/"

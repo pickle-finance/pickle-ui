@@ -250,7 +250,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               <div>
                 {totalAPY + fullApy === 0
                   ? "--%"
-                  : `${formatAPY(totalAPY + pickleAPYMin)} ~ ${formatAPY(
+                  : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
                       totalAPY + pickleAPYMax,
                     )}`}
               </div>

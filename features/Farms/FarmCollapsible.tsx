@@ -25,7 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { useMigrate } from "./UseMigrate"
+import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -174,7 +174,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
-  const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked)
+  const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked);
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -405,49 +405,23 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         </Grid>
       </Grid.Container>
       <Spacer />
-      <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
-          <Spacer />
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (masterchef && signer) {
-                transfer({
-                  token: masterchef.address,
-                  recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return masterchef.connect(signer).withdraw(poolIndex, 0);
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {harvestButton.text}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "0.8rem",
-            }}
-          >
-            PICKLEs are automatically harvested on staking and unstaking.
-          </div>
-        </Grid>
-        <Grid xs={24} md={12}>
-          <Spacer />
-          <Button
-            disabled={migrateState !== null}
-            onClick={handleMigrate}
-            style={{ width: "100%" }}
-          >
-             {migrateState || "Migrate"}
-          </Button>
-        </Grid>
-      </Grid.Container>
+      <Button
+        disabled={migrateState !== null}
+        onClick={handleMigrate}
+        style={{ width: "100%" }}
+      >
+        {migrateState || "Migrate"}
+      </Button>
+      <div
+        style={{
+          width: "100%",
+          textAlign: "center",
+          fontFamily: "Source Sans Pro",
+          fontSize: "0.8rem",
+        }}
+      >
+        Your tokens will be unstaked and deposited in the new Farms. This process requires a number of transactions.
+      </div>
     </Collapse>
   );
 };
