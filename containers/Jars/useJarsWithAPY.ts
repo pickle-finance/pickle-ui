@@ -345,7 +345,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         totalSupplyBN,
       ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
-        multicallUniStakingRewards.lpt(),
+        multicallUniStakingRewards.stakingToken(),
         multicallUniStakingRewards.totalSupply(),
       ]);
 
