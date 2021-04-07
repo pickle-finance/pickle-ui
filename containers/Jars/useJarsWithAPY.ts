@@ -23,6 +23,7 @@ import {
   MIRROR_MQQQ_UST_STAKING_REWARDS,
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
+  FEI_TRIBE_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -331,6 +332,43 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateFeiAPY = async (rewardsAddress: string) => {
+    if (stakingRewards && prices?.tribe && getUniPairData && multicallProvider) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.lpt(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const tribeRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+      console.log(pricePerToken, stakingToken);
+
+      const tribeRewardsPerYear = tribeRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const tribeAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { tribe: getCompoundingAPY(tribeAPY * 0.8), apr: tribeAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
@@ -422,6 +460,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         mirrorMqqqUstApy,
         mirrorMslvUstApy,
         mirrorMbabaUstApy,
+        feiTribeApy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
@@ -429,6 +468,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMirAPY(MIRROR_MQQQ_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MSLV_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
+        calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS)
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -542,6 +582,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMbabaUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE) {
+          APYs = [
+            ...feiTribeApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_FEI_TRIBE),
           ];
         }
 

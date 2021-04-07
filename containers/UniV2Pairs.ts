@@ -24,6 +24,8 @@ const addresses = {
   mqqq: "0x13B02c8dE71680e71F0820c996E4bE43c2F57d15",
   mslv: "0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676",
   mbaba: "0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72",
+  fei: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
+  tribe: "0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B",
 };
 
 interface Token {
@@ -61,6 +63,8 @@ const mbaba: Token = {
   priceId: "mbaba",
   decimals: 18,
 };
+const fei: Token = { address: addresses.fei, priceId: "fei", decimals: 18 };
+const tribe: Token = { address: addresses.tribe, priceId: "tribe", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -81,6 +85,7 @@ export const PAIR_INFO: PairMap = {
   "0x9E3B47B861B451879d43BBA404c35bdFb99F0a6c": { a: mqqq, b: ust },
   "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe": { a: mslv, b: ust },
   "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363": { a: mbaba, b: ust },
+  "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": { a: fei, b: tribe },
 };
 
 function useUniV2Pairs() {
