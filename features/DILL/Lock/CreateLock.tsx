@@ -266,7 +266,6 @@ export const CreateLock: FC<{
                     .create_lock(
                       parseEther(lockAmount),
                       getEpochSecondForDay(unlockTime),
-                      { gasLimit: 1000000 },
                     );
                 },
               });

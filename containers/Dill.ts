@@ -53,7 +53,6 @@ export function useDill(): UseDillOutput {
           feeDistributorContract.callStatic["claim(address)"](address),
           feeDistributorContract["time_cursor()"](),
         ]);
-        console.log(lockStats, balance, totalSupply);
 
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
