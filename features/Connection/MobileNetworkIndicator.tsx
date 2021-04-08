@@ -60,6 +60,13 @@ const Circle = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
+const ConnectContainer = styled.div`
+  display: flex;
+  a {
+    margin-left: 10px;
+  }
+`;
+
 export const MobileNetworkIndicator: FC = () => {
   const { address, network } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
@@ -70,11 +77,12 @@ export const MobileNetworkIndicator: FC = () => {
         <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
         <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
       </Left>
-
-      <Right>
-        <BlockNumber>{networkName + ` `}</BlockNumber>
-        <Circle />
-      </Right>
+      <ConnectContainer>
+        <Right>
+          <BlockNumber>{networkName + ` `}</BlockNumber>
+          <Circle />
+        </Right>
+      </ConnectContainer>
     </Container>
   );
 };

@@ -8,7 +8,7 @@ interface NavItemProps {
   active?: boolean;
 }
 
-const NavItem = styled.a<NavItemProps>`
+export const NavItem = styled.a<NavItemProps>`
   font-family: "Source Code Pro", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;

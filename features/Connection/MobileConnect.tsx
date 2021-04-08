@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Connection } from "../../containers/Connection";
+import { useModal } from "@geist-ui/react";
+import { Web3Modal } from "./Web3Modal";
 
 const Container = styled.button`
   color: var(--bg-color);
@@ -26,6 +27,11 @@ const Container = styled.button`
 `;
 
 export const MobileConnect: FC = () => {
-  const { connect } = Connection.useContainer();
-  return <Container onClick={connect}>CONNECT WALLET</Container>;
+  const { setVisible, bindings } = useModal();
+  return (
+    <>
+      <Container onClick={() => setVisible(true)}>CONNECT WALLET</Container>
+      <Web3Modal setVisible={setVisible} {...bindings} />
+    </>
+  );
 };

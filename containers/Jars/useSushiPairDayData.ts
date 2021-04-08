@@ -50,7 +50,7 @@ export const useSushiPairDayData = () => {
       },
     ).then((x) => x.json());
 
-    setSushiPairDayData(res.data.pairDayDatas);
+    setSushiPairDayData(res?.data?.pairDayDatas);
   };
 
   const getSushiPairDayAPY = (pair: string) => {

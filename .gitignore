@@ -39,3 +39,4 @@ yarn-error.log*
 
 # Generated Typechain files
 containers/Contracts/*
+secrets.json

@@ -89,9 +89,15 @@ const Circle = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
+const AddressMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const DesktopNetworkIndicator: FC = () => {
   const { address, blockNum } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
+
   return (
     <Container>
       {blockNum && (
