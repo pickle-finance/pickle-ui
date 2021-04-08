@@ -33,7 +33,7 @@ const Farms: FC = () => {
           <Note type="warning" style={{ textAlign: "center" }}>
             You are looking at old, inactive Farms
             <br />
-            To earn $PICKLEs, mgirate to the new Farms
+            To earn $PICKLEs, migrate to the new Farms
             <br />
             Expand on any Farm you have tokens, and click{" "}
             <strong>Migrate</strong>

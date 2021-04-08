@@ -220,7 +220,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   }).reduce((acc, x) => acc + x, 0);
 
   const handleMigrate = async () => {
-    if (balance) {
+    if (stakedNum) {
       try {
         setMigrateState("Withdrawing...");
         await withdraw();
