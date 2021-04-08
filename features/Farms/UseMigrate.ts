@@ -34,10 +34,10 @@ export const FARM_LP_TO_GAUGE = {
 
 export const useMigrate = (jarToken: Erc20, poolIndex: number, balance: BigNumber) => {
   const { address, signer, blockNum } = Connection.useContainer();
-  const { masterchef, erc20 } = Contracts.useContainer();
+  const { masterchef } = Contracts.useContainer();
 
   const deposit = async () => {
-    if (!jarToken || !address || !masterchef || !erc20) return;
+    if (!jarToken || !address ) return;
 
     const gaugeAddress =
       FARM_LP_TO_GAUGE[jarToken.address as keyof typeof FARM_LP_TO_GAUGE];

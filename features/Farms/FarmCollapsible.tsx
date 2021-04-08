@@ -226,7 +226,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         await withdraw();
         setMigrateState("Migrating...");
         await deposit();
-        setMigrateState(null);
+        setMigrateState("Migration successful!");
       } catch (error) {
         console.error(error);
         alert(error.message);
