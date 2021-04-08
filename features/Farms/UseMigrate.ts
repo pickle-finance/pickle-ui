@@ -32,7 +32,11 @@ export const FARM_LP_TO_GAUGE = {
     "0x87eD8047d60bc2617f2B0cC0c715fCfCD5683618", // pUNIBASv2DAI
 };
 
-export const useMigrate = (jarToken: Erc20, poolIndex: number, balance: BigNumber) => {
+export const useMigrate = (
+  jarToken: Erc20,
+  poolIndex: number,
+  balance: BigNumber,
+) => {
   const { address, signer, blockNum } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
 
@@ -53,20 +57,17 @@ export const useMigrate = (jarToken: Erc20, poolIndex: number, balance: BigNumbe
     }
 
     if (gauge && balance) {
-      const tx2 = await gauge.deposit(balance, {
-        gasLimit: 200000,
-      });
+      const tx2 = await gauge.deposit(balance);
       await tx2.wait();
     }
   };
 
   const withdraw = async () => {
-    if(!address || !masterchef || !parseInt(balance.toString())) return
-   
-    
-    const tx = await masterchef.withdraw(poolIndex, balance)
+    if (!address || !masterchef || !parseInt(balance.toString())) return;
+
+    const tx = await masterchef.withdraw(poolIndex, balance);
     await tx.wait();
-  }
+  };
 
   return { deposit, withdraw };
 };

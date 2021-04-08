@@ -177,15 +177,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               (dillBalance * Object.values(x)[0]) / 100) /
             (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
 
-          // console.log(
-          //   estimatedWeight,
-          //   gauge.gaugeWeight,
-          //   gauge.userWeight,
-          //   (dillBalance * Object.values(x)[0]) / 100,
-          //   gauge.totalWeight,
-          //   gauge.userCurrentWeights,
-          // );
-
           return { [gauge.address]: estimatedWeight };
         } else {
           return null;
@@ -206,7 +197,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const initialize = async () => {
-    console.log(gauges)
     const newWeights = gauges.map((x) => x.allocPoint);
     if (JSON.stringify(newWeights) != JSON.stringify(currWeights)) {
       const initialWeights = gauges.reduce((acc, curr) => {

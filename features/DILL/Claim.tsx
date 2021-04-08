@@ -40,11 +40,11 @@ const setButtonStatus = (
   }
 };
 
-const formatNumber = (num: number) =>
+const formatNumber = (num: number, precision?: number) =>
   num &&
   (num.toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: precision || 2,
+    maximumFractionDigits: precision || 2,
   }) ||
     0);
 
@@ -59,12 +59,12 @@ export const Claim: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { blockNum, address, signer } = Connection.useContainer();
-  const { feeShare } = Contracts.useContainer();
+  const { feeDistributor } = Contracts.useContainer();
   const [claimable, setClaimable] = useState<number | null>(null);
-  
+
   const [claimButton, setClaimButton] = useState<ButtonStatus>({
     disabled: claimable ? false : true,
-    text: `Claim ${claimable ? formatNumber(claimable) : "0"} PICKLEs`,
+    text: `Claim ${claimable ? formatNumber(claimable, 3) : "0"} PICKLEs`,
   });
   const {
     status: transferStatus,
@@ -78,8 +78,8 @@ export const Claim: FC<{
       : 0;
 
   useEffect(() => {
-    if (address && feeShare) {
-      const claimStatus = getTransferStatus("claim", feeShare.address);
+    if (address && feeDistributor) {
+      const claimStatus = getTransferStatus("claim", feeDistributor.address);
       const claimable = dillStats.userClaimable
         ? parseFloat(formatEther(dillStats.userClaimable))
         : null;
@@ -87,12 +87,12 @@ export const Claim: FC<{
       if (claimable) {
         setClaimButton({
           disabled: false,
-          text: `Claim ${formatNumber(claimable)} PICKLEs`,
+          text: `Claim ${formatNumber(claimable, 3)} PICKLEs`,
         });
         setButtonStatus(
           claimStatus,
           "Claiming...",
-          `Claim ${formatNumber(claimable)} PICKLEs`,
+          `Claim ${formatNumber(claimable, 3)} PICKLEs`,
           setClaimButton,
         );
       } else {
@@ -103,7 +103,7 @@ export const Claim: FC<{
       }
       setClaimable(claimable);
     }
-  }, [blockNum, transferStatus, address]);
+  }, [blockNum, transferStatus, address, dillStats]);
 
   return (
     <>
@@ -128,14 +128,21 @@ export const Claim: FC<{
             <Button
               disabled={claimButton.disabled}
               onClick={() => {
-                if (signer && address && feeShare) {
+                if (signer && address && feeDistributor) {
                   transfer({
                     token: "claim",
-                    recipient: feeShare.address,
+                    recipient: feeDistributor.address,
                     transferCallback: async () => {
-                      return feeShare.connect(signer).claim(address, {
-                        gasLimit: 1000000,
-                      });
+                      const tx = await feeDistributor
+                        .connect(signer)
+                        ["claim()"]();
+                      tx.wait(0).then(() =>
+                        setClaimButton({
+                          disabled: true,
+                          text: "Claim 0 PICKLEs",
+                        }),
+                      );
+                      return tx;
                     },
                     approval: false,
                   });

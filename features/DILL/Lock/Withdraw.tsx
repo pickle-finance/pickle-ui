@@ -89,7 +89,7 @@ export const Withdraw: FC<{
                 approval: false,
                 recipient: dill.address,
                 transferCallback: async () => {
-                  return dill.connect(signer).withdraw({ gasLimit: 1000000 });
+                  return dill.connect(signer).withdraw();
                 },
               });
             }
