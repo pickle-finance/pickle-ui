@@ -129,7 +129,9 @@ export const IncreaseAmount: FC<{
                 transferCallback: async () => {
                   return dill
                     .connect(signer)
-                    .increase_amount(parseEther(lockAmount));
+                    .increase_amount(parseEther(lockAmount), {
+                      gasLimit: 2800000,
+                    });
                 },
               });
             }

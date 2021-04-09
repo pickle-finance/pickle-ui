@@ -220,7 +220,9 @@ export const IncreaseTime: FC<{
                 transferCallback: async () => {
                   return dill
                     .connect(signer)
-                    .increase_unlock_time(getEpochSecondForDay(unlockTime));
+                    .increase_unlock_time(getEpochSecondForDay(unlockTime), {
+                      gasLimit: 2800000,
+                    });
                 },
                 approval: false,
               });
