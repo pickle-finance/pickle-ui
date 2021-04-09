@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-import { useState, FC, useEffect, useRef } from "react";
+import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select } from "@geist-ui/react";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { Connection } from "../../containers/Connection";
@@ -95,7 +95,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const [currWeights, setCurrWeights] = useState(
     gauges.map((x) => x.allocPoint),
   );
-  let titleRef = useRef();
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -128,8 +127,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const handleSelect = async (depositTokens: string | string[]) => {
-    titleRef.current.click(); // hack to get select to close
-
     const selectedFarms = isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
@@ -326,7 +323,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         {gauges.map(renderSelectOptions)}
       </Select>
       <Spacer y={0.5} />
-      <h3 ref={titleRef}>Selected Farms</h3>
+      <h3>Selected Farms</h3>
       {votingFarms?.length ? (
         <>
           {votingFarms.map(renderVotingOption)}
