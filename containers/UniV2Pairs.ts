@@ -19,6 +19,13 @@ const addresses = {
   bas: "0x106538CC16F938776c7c180186975BCA23875287",
   mir: "0x09a3ecafa817268f77be1283176b946c4ff2e608",
   ust: "0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+  mtsla: "0x21cA39943E91d704678F5D00b6616650F066fD63",
+  maapl: "0xd36932143F6eBDEDD872D5Fb0651f4B72Fd15a84",
+  mqqq: "0x13B02c8dE71680e71F0820c996E4bE43c2F57d15",
+  mslv: "0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676",
+  mbaba: "0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72",
+  fei: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
+  tribe: "0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B",
 };
 
 interface Token {
@@ -39,6 +46,25 @@ const bac: Token = { address: addresses.bac, priceId: "bac", decimals: 18 };
 const bas: Token = { address: addresses.bas, priceId: "bas", decimals: 18 };
 const mir: Token = { address: addresses.mir, priceId: "mir", decimals: 18 };
 const ust: Token = { address: addresses.ust, priceId: "ust", decimals: 18 };
+const mtsla: Token = {
+  address: addresses.mtsla,
+  priceId: "mtsla",
+  decimals: 18,
+};
+const maapl: Token = {
+  address: addresses.maapl,
+  priceId: "maapl",
+  decimals: 18,
+};
+const mqqq: Token = { address: addresses.mqqq, priceId: "mqqq", decimals: 18 };
+const mslv: Token = { address: addresses.mslv, priceId: "mslv", decimals: 18 };
+const mbaba: Token = {
+  address: addresses.mbaba,
+  priceId: "mbaba",
+  decimals: 18,
+};
+const fei: Token = { address: addresses.fei, priceId: "fei", decimals: 18 };
+const tribe: Token = { address: addresses.tribe, priceId: "tribe", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -54,6 +80,12 @@ export const PAIR_INFO: PairMap = {
   "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD": { a: bac, b: dai },
   "0x3E78F2E7daDe07ea685F8612F00477FD97162F1e": { a: bas, b: dai },
   "0x87dA823B6fC8EB8575a235A824690fda94674c88": { a: mir, b: ust },
+  "0x5233349957586A8207c52693A959483F9aeAA50C": { a: mtsla, b: ust },
+  "0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B": { a: maapl, b: ust },
+  "0x9E3B47B861B451879d43BBA404c35bdFb99F0a6c": { a: mqqq, b: ust },
+  "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe": { a: mslv, b: ust },
+  "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363": { a: mbaba, b: ust },
+  "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": { a: fei, b: tribe },
 };
 
 function useUniV2Pairs() {

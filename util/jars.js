@@ -1,13 +1,14 @@
-export const crvJars = [
-  "3poolCRV",
-  "renBTCCRV",
-  "steCRV"
-];
+export const crvJars = ["3poolCRV", "renBTCCRV", "steCRV"];
 
 export const uniJars = [
   "BAC-DAI",
   "BAS2-DAI",
-  "MIR-UST"
+  "MIR-UST",
+  "MTSLA-UST",
+  "MAAPL-UST",
+  "MQQQ-UST",
+  "MSLV-UST",
+  "MBABA-UST",
 ];
 
 export const sushiJars = [

@@ -9,7 +9,6 @@ import { Footer } from "../features/Footer/Footer";
 import { Zap } from "../features/Zap/Zap";
 import { DepositZap } from "../features/Zap/DepositZap";
 
-
 const Home: FC = () => {
   return (
     <>

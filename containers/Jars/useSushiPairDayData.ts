@@ -18,6 +18,7 @@ const SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.SUSHI_MIC_USDT,
   JAR_DEPOSIT_TOKENS.SUSHI_MIS_USDT,
   JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV,
+  JAR_DEPOSIT_TOKENS.SUSHI_ETH,
 ];
 
 export const useSushiPairDayData = () => {
@@ -49,7 +50,7 @@ export const useSushiPairDayData = () => {
       },
     ).then((x) => x.json());
 
-    setSushiPairDayData(res.data.pairDayDatas);
+    setSushiPairDayData(res?.data?.pairDayDatas);
   };
 
   const getSushiPairDayAPY = (pair: string) => {

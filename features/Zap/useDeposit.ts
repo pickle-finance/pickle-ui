@@ -14,7 +14,7 @@ const TOKEN = {
   USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
   ETH: "",
-  CRV: "0xD533a949740bb3306d119CC777fa900bA034cd52"
+  CRV: "0xD533a949740bb3306d119CC777fa900bA034cd52",
 };
 
 const CURVE_POOLS = {
@@ -35,23 +35,31 @@ export const useDeposit = (
   const { address } = Connection.useContainer();
   const { instabrine, erc20, masterchef, yveCrvZap } = Contracts.useContainer();
   const approve = async () => {
-    if (!instabrine || !yveCrvZap || !inputToken || !decimals || !erc20 || !address) return;
+    if (
+      !instabrine ||
+      !yveCrvZap ||
+      !inputToken ||
+      !decimals ||
+      !erc20 ||
+      !address
+    )
+      return;
     const isZap = inputToken === "CRV";
     const amount = parseUnits(rawAmount, decimals);
     const token = erc20.attach(TOKEN[inputToken]);
     let allowance;
-    if(isZap){
+    if (isZap) {
       allowance = await token.allowance(address, yveCrvZap.address);
-    }
-    else{
+    } else {
       allowance = await token.allowance(address, instabrine.address);
     }
     if (!allowance.gte(amount) && !isZap) {
       const tx = await token.approve(instabrine.address, MaxUint256);
       await tx.wait();
     }
-    if (!allowance.gte(amount) && isZap) { // ETH yveCRV zap
-      console.log("ZAP TIME",allowance.gte(amount))
+    if (!allowance.gte(amount) && isZap) {
+      // ETH yveCRV zap
+      console.log("ZAP TIME", allowance.gte(amount));
       const tx = await token.approve(yveCrvZap.address, MaxUint256);
       await tx.wait();
     }
@@ -155,12 +163,10 @@ export const useDeposit = (
       });
       await tx2.wait();
     }
-    
+
     if (inputToken === "CRV") {
       // go into pYvecrv
-      const tx = await yveCrvZap.zapInCRV(
-        amount
-      );
+      const tx = await yveCrvZap.zapInCRV(amount);
       await tx.wait();
 
       // go into pYvecrv farm
@@ -178,29 +184,21 @@ export const useDeposit = (
       });
       await tx2.wait();
     }
-
   };
   return { approve, deposit };
 };
 
-
-export const useDepositEth = (
-  rawAmount: string
-) => {
+export const useDepositEth = (rawAmount: string) => {
   const { address } = Connection.useContainer();
   const { erc20, masterchef, yveCrvZap } = Contracts.useContainer();
 
   const depositEth = async () => {
-    if (
-      !address ||
-      !masterchef ||
-      !yveCrvZap
-    ) return;
+    if (!address || !masterchef || !yveCrvZap) return;
 
     const amount = parseUnits(rawAmount, 18);
     console.log(yveCrvZap);
     const overrideOptions = {
-      value: amount
+      value: amount,
     };
     const tx = await yveCrvZap.zapInETH(overrideOptions);
     await tx.wait();
@@ -219,6 +217,6 @@ export const useDepositEth = (
       gasLimit: 200000,
     });
     await tx2.wait();
-  }
+  };
   return { depositEth };
 };
