@@ -58,6 +58,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pUNIUSDT v2",
     poolName: "pUNIUSDT v2",
   },
+  "0xC1513C1b0B359Bc5aCF7b772100061217838768B": {
+    tokenName: "pUNIV2 FEI/TRIBE",
+    poolName: "pUNIV2 FEI/TRIBE"
+  },
   "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": {
     tokenName: "pUNIV2 MIR/UST",
     poolName: "pUNIV2 MIR/UST",
@@ -122,6 +126,14 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP YFI",
     poolName: "pSLP YFI",
   },
+  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": {
+    tokenName: "pSLP yveCRV",
+    poolName: "Back Scratcher",
+  },
+  "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": {
+    tokenName: "pSLP SUSHI",
+    poolName: "pSLP SUSHI"
+  },
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": {
     tokenName: "pSLP MIC/USDT",
     poolName: "pSLP MIC/USDT",
@@ -137,10 +149,6 @@ export const FarmInfo: IFarmInfo = {
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": {
     tokenName: "stEthCrv",
     poolName: "stETH-ETH",
-  },
-  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": {
-    tokenName: "pSLP yveCRV",
-    poolName: "Back Scratcher",
   },
   "0x0FAA189afE8aE97dE1d2F01E471297678842146d": {
     tokenName: "pSLP MIS/USDT",
