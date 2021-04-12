@@ -74,7 +74,7 @@ export const Claim: FC<{
 
   const dillAPY =
     dillStats.weeklyDistribution && dillStats.lockedValue
-      ? dillStats.weeklyDistribution / dillStats.lockedValue
+      ? dillStats.weeklyDistribution / dillStats.lockedValue * 52
       : 0;
 
   useEffect(() => {
