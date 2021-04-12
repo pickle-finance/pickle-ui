@@ -397,14 +397,14 @@ export const useJarWithAPY = (jars: Input): Output => {
         mithMisUsdtApy,
         sushiEthyveCRVApy,
         basisBacDaiApy,
-        basisBasDaiApy,
+        // basisBasDaiApy,
         mirrorMirUstApy,
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
         calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
-        calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
+        // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
       ]);
 
@@ -475,7 +475,7 @@ export const useJarWithAPY = (jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAS_DAI) {
           APYs = [
-            ...basisBasDaiApy,
+            // ...basisBasDaiApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI),
           ];
         }
