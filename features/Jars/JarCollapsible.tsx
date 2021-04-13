@@ -216,7 +216,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
       shadow
       preview={
         <Grid.Container gap={1}>
-          <JarName xs={24} sm={12} md={5} lg={5}>
+          <JarName xs={24} sm={12} md={7} lg={7}>
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
@@ -235,7 +235,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={4} lg={4}>
+          <Grid xs={24} sm={12} md={5} lg={5}>
             <Data>
               <Tooltip text={tooltipText}>
                 {totalAPY.toFixed(2) + "%" || "--"}
@@ -258,15 +258,15 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               </Tooltip>
             </Data>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={balNum === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>Value</Label>
           </Grid>

@@ -24,6 +24,7 @@ export interface UserJarData {
   APYs: JarApy[];
   totalAPY: number;
   depositTokenLink: string;
+  apr: number;
 }
 
 const useUserJars = (): { jarData: UserJarData[] | null } => {

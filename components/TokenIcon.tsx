@@ -4,21 +4,23 @@ export const LpIcon = ({
   swapIconSrc,
   tokenIconSrc,
   className,
+  size,
 }: {
   swapIconSrc: string;
   tokenIconSrc: string;
   className?: string;
+  size?: string;
 }) => {
   return (
     <div className={className} css={{ position: "relative" }}>
-      <img src={swapIconSrc} css={{ width: `50px` }} />
+      <img src={swapIconSrc} css={{ width: `${size === "sm" ? 30 : 50}px` }} />
       <img
         src={tokenIconSrc}
         css={{
           position: "absolute",
-          right: -3,
-          bottom: -3,
-          width: `25px`,
+          right: -4,
+          bottom: -1,
+          width: `${size === "sm" ? 15 : 25}px`,
           borderRadius: "100%",
         }}
       />
@@ -26,16 +28,26 @@ export const LpIcon = ({
   );
 };
 
-export const TokenIcon = ({ src }: { src: string | ReactNode }) => (
+export const TokenIcon = ({
+  src,
+  size,
+}: {
+  src: string | ReactNode;
+  size?: string;
+}) => (
   <div
     style={{
       float: "left",
       margin: "auto 0",
-      marginRight: "1rem",
+      marginRight: size === "sm" ? 10 : "1rem",
       minHeight: 0,
       display: "flex",
     }}
   >
-    {typeof src === "string" ? <img src={src} css={{ width: `50px` }} /> : src}
+    {typeof src === "string" ? (
+      <img src={src} css={{ width: `${size === "sm" ? 30 : 50}px` }} />
+    ) : (
+      React.cloneElement(src, { size: size })
+    )}
   </div>
 );

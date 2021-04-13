@@ -87,9 +87,9 @@ export const getUserEarnings = async (userId) => {
   );
 };
 
-export const getProtocolData = async () => {
+export const getProtocolData = async (tokens = true) => {
   return await fetch(
-    `${pickleApi}/protocol/value?tokens=true`,
+    `${pickleApi}/protocol/value${tokens ? "?tokens=true" : ""}`,
   ).then((response) => response.json());
 };
 

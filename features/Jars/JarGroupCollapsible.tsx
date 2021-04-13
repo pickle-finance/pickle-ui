@@ -1,13 +1,14 @@
-import { ethers } from "ethers";
-import styled from "styled-components";
-
-import { useState, FC, useEffect, ReactNode } from "react";
-import { Grid, Tooltip } from "@geist-ui/react";
+import FlexBox from "../../components/FlexBox";
+import { FC, useEffect, useState } from "react";
+import BigNumber from "bignumber.js";
+import { Grid } from "@geist-ui/react";
 import Collapse from "../Collapsible/Collapse";
+import { DEPOSIT_TOKENS_API_NAME } from "../../containers/Jars/jargroups";
 
 import { JarCollapsible, JAR_DEPOSIT_TOKEN_TO_ICON } from "./JarCollapsible";
 import { UserJarData } from "../../containers/UserJars";
-import { RootRef } from "@material-ui/core";
+import { TokenIcon } from "../../components/TokenIcon";
+import { getProtocolData } from "../../util/api";
 
 const renderCategoryLogo = (category: string) => {
   switch (category.toLowerCase()) {
@@ -25,54 +26,106 @@ const renderCategoryLogo = (category: string) => {
           src="/uniswap.png"
         ></img>
       );
+    case "curve":
+      return (
+        <img
+          style={{ height: "30px", paddingLeft: "5px" }}
+          src="/crv.png"
+        ></img>
+      );
   }
 };
 
+export const BeautifyValue = (value: number) => {
+  if (value > 1000000) return `${Number(value / 1000000).toFixed(2)}M`;
+  else if (value > 1000) return `${Number(value / 1000).toFixed(2)}K`;
+  return value;
+};
 export const JarGroupCollapsible: FC<{
   jarData: UserJarData[];
   category: string;
 }> = ({ jarData, category }) => {
+  const [totalDeposited, setTotalDeposited] = useState(0);
+  const maxApy = Math.max(...jarData.map((jar) => jar.totalAPY)).toFixed(0);
+  const minApy = Math.min(
+    ...jarData.filter((jar) => jar.totalAPY).map((jar) => jar.totalAPY),
+  ).toFixed(0);
+
+  useEffect(() => {
+    getProtocolData(false).then((res) => {
+      const deposited: number[] = jarData.map(
+        (jar) =>
+          (res as any)[
+            (DEPOSIT_TOKENS_API_NAME as any)[jar.depositToken.address]
+          ],
+      );
+      const totalDeposited = deposited.reduce((a, b) => a + b, 0);
+      setTotalDeposited(totalDeposited);
+    });
+  }, []);
+
   return (
     <Collapse
-      style={{ marginBottom: "10px", width: "100%" }}
+      shadow
+      group
       preview={
         <Grid.Container>
           <Grid xs={24} sm={12} md={5} lg={5}>
-            <strong>{category}</strong>
-            {renderCategoryLogo(category)}
+            <FlexBox alignItems="center">
+              <strong>{category}</strong>
+              {renderCategoryLogo(category)}
+            </FlexBox>
           </Grid>
           <Grid xs={24} sm={12} md={12} lg={12}>
             <Grid.Container>
               {jarData.map((jar) => (
                 <Grid xs={8}>
-                  <div
-                    style={{
-                      float: "left",
-                      margin: "auto 0",
-                      marginRight: "1rem",
-                      minHeight: 0,
-                      display: "flex",
-                    }}
+                  <FlexBox
+                    style={{ marginBottom: 8, marginRight: 10 }}
+                    alignItems="center"
                   >
-                    {jar.depositTokenName}
-                  </div>
+                    <TokenIcon
+                      size="sm"
+                      src={
+                        JAR_DEPOSIT_TOKEN_TO_ICON[
+                          jar.depositToken
+                            .address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                        ]
+                      }
+                    />
+                    <div
+                      style={{
+                        fontSize: 14,
+                      }}
+                    >
+                      {jar.depositTokenName}
+                    </div>
+                  </FlexBox>
                 </Grid>
               ))}
             </Grid.Container>
           </Grid>
 
-          <Grid
-            xs={24}
-            sm={12}
-            md={7}
-            lg={7}
-            style={{
-              justifyContent: "flex-end",
-              display: "flex",
-              paddingRight: "2rem",
-            }}
-          >
-            APY: <strong>9%-53%</strong>
+          <Grid xs={24} sm={12} md={7} lg={7}>
+            <FlexBox
+              flexDirection="column"
+              gap={20}
+              alignItems="flex-end"
+              style={{
+                paddingRight: "2rem",
+              }}
+            >
+              <div>
+                <span>APY: </span>
+                <b>
+                  {minApy}% - {maxApy}%
+                </b>
+              </div>
+              <div>
+                <span>Deposited: </span>
+                <b>{BeautifyValue(totalDeposited)}</b>
+              </div>
+            </FlexBox>
           </Grid>
         </Grid.Container>
       }

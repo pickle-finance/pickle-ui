@@ -277,7 +277,7 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
 
   if (l === "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2") return "sushi";
   if (l === "0x956f47f50a910163d8bf957cf5846d573e7f87ca") return "fei";
-  if( l === "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b") return "tribe";
+  if (l === "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b") return "tribe";
 
   throw new Error(`Unknown token address: ${tokenAddress}`);
 };

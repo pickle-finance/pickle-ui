@@ -112,7 +112,6 @@ const FARM_LP_TO_ICON = {
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
   ),
-
 };
 
 const setButtonStatus = (
@@ -150,7 +149,6 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   farmData,
 }) => {
   const { jars } = Jars.useContainer();
-
   const {
     poolName,
     poolIndex,

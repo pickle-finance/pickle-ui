@@ -7,7 +7,11 @@ import { JarGroupCollapsible } from "./JarGroupCollapsible";
 import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
-import { PAIR_INFO as SUSHI_PAIRS } from "../../containers/SushiPairs";
+import {
+  sushiPools,
+  uniPools,
+  curvePools,
+} from "../../containers/Jars/jargroups";
 import { PAIR_INFO as UNI_PAIRS } from "../../containers/UniV2Pairs";
 
 const Container = styled.div`
@@ -30,15 +34,22 @@ export const JarList: FC = () => {
   );
 
   const sushiJars = activeJars.filter(
-    (jar) => SUSHI_PAIRS[jar.depositToken.address],
+    (jar) => sushiPools[jar.depositToken.address],
   );
 
   const uniJars = activeJars.filter(
-    (jar) => UNI_PAIRS[jar.depositToken.address],
+    (jar) => uniPools[jar.depositToken.address],
+  );
+
+  const curveJars = activeJars.filter(
+    (jar) => curvePools[jar.depositToken.address],
   );
 
   const remainingJars = activeJars.filter(
-    (jar) => !sushiJars.includes(jar) && !uniJars.includes(jar),
+    (jar) =>
+      !sushiJars.includes(jar) &&
+      !uniJars.includes(jar) &&
+      !curveJars.includes(jar),
   );
 
   return (
@@ -66,6 +77,9 @@ export const JarList: FC = () => {
       </Grid.Container>
       <Grid.Container gap={1}>
         <JarGroupCollapsible jarData={uniJars} category="Uniswap" />
+      </Grid.Container>
+      <Grid.Container gap={1}>
+        <JarGroupCollapsible jarData={curveJars} category="Curve" />
       </Grid.Container>
       <Grid.Container gap={1}>
         {remainingJars.map((jar) => (
