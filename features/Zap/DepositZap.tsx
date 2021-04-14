@@ -4,7 +4,14 @@ import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useDeposit } from "./useDeposit";
 import { useDepositEth } from "./useDeposit";
+import { useZapIn } from "./useZapper";
 import { TokenIcon } from "../../components/TokenIcon";
+import {
+  DEFAULT_SLIPPAGE,
+  YVECRVETH_JAR,
+  CRV_ADDRESS,
+  ETH_ADDRESS,
+} from "./constants";
 
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
@@ -14,6 +21,7 @@ const formatValue = (numStr: string) =>
 
 export const DepositZap: FC = () => {
   const [inputToken, setInputToken] = useState<TokenSymbol>("ETH");
+  const [sellTokenAddress, setSellTokenAddress] = useState(ETH_ADDRESS);
   const [amount, setAmount] = useState<string>("0");
   const [txState, setTxState] = useState<string | null>(null);
 
@@ -22,28 +30,19 @@ export const DepositZap: FC = () => {
     e.preventDefault();
     balanceStr !== null && setAmount(balanceStr);
   };
-
-  const { approve, deposit } = useDeposit(inputToken, amount, decimals);
-  const { depositEth } = useDepositEth(amount);
+  
+  const { zapIn } = useZapIn({
+    poolAddress: YVECRVETH_JAR,
+    sellTokenAddress,
+    rawAmount: amount,
+    slippagePercentage: DEFAULT_SLIPPAGE,
+  });
   const handleDeposit = async () => {
     if (amount && decimals) {
-      if (inputToken == "ETH") {
+      {
         try {
           setTxState("Zapping...");
-          await depositEth();
-          setTxState(null);
-        } catch (error) {
-          console.error(error);
-          alert(error.message);
-          setTxState(null);
-          return;
-        }
-      } else {
-        try {
-          setTxState("Approving...");
-          await approve();
-          setTxState("Zapping...");
-          await deposit();
+          await zapIn();
           setTxState(null);
         } catch (error) {
           console.error(error);
@@ -52,6 +51,15 @@ export const DepositZap: FC = () => {
           return;
         }
       }
+    }
+  };
+
+  const setInput = (inputToken: TokenSymbol) => {
+    setInputToken(inputToken);
+    if (inputToken === "ETH") {
+      setSellTokenAddress(ETH_ADDRESS);
+    } else {
+      setSellTokenAddress(CRV_ADDRESS);
     }
   };
 
@@ -83,7 +91,7 @@ export const DepositZap: FC = () => {
         width="100%"
         style={{ maxWidth: "100%" }}
         value={inputToken}
-        onChange={(e) => setInputToken(e.toString() as TokenSymbol)}
+        onChange={(e) => setInput(e.toString())}
       >
         {inputTokens.map((token) => (
           <Select.Option
