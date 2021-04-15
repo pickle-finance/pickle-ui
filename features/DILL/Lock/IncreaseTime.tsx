@@ -16,6 +16,8 @@ import {
   getDayOffset,
   getEpochSecondForDay,
   getWeekDiff,
+  getDayDiff,
+  formatDate,
 } from "../../../util/date";
 import { estimateDillForPeriod } from "../../../util/dill";
 
@@ -73,19 +75,18 @@ export const IncreaseTime: FC<{
     disabled: false,
     text: "Extend Lock Time",
   });
+  const lockEndDate = dateFromEpoch(+(dillStats.lockEndDate?.toString() || 0));
 
-  let dateAfter;
+  let dateAfter: Date;
   if (dillStats.lockEndDate?.toString()) {
-    dateAfter = getDayOffset(
-      dateFromEpoch(+(dillStats.lockEndDate?.toString() || 0)),
-      7,
-    );
+    dateAfter = getDayOffset(lockEndDate, 7);
   } else {
     dateAfter = getDayOffset(new Date(), 7);
   }
   const dateBefore = getDayOffset(new Date(), 365 * 4);
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
+  const [isInvalidLockDate, setInvalidLockDate] = useState(false);
 
   const handleDayChange = (selectedDay: Date) => {
     setUnlockTime(selectedDay);
@@ -106,26 +107,49 @@ export const IncreaseTime: FC<{
     }
   }, [blockNum, transferStatus]);
 
-  const lockingWeeks = getWeekDiff(new Date(), unlockTime);
+  const setUnlockTimeOrInvalid = async (endDate: Date) => {
+    await setInvalidLockDate(false);
+    if (getDayDiff(endDate, dateBefore) > 0) {
+      await setUnlockTime(endDate);
+    } else {
+      await setInvalidLockDate(true);
+    }
+  };
 
+  const lockingWeeks = getWeekDiff(lockEndDate, unlockTime);
   const setLockTime = async (value: string) => {
+    let newUnlockTime: Date;
     switch (value) {
       case "1":
-        await setUnlockTime(getDayOffset(new Date(), 7));
+        newUnlockTime = getDayOffset(lockEndDate, 7);
+        await setUnlockTimeOrInvalid(newUnlockTime);
         break;
       case "2":
-        await setUnlockTime(getDayOffset(new Date(), 30));
+        newUnlockTime = getDayOffset(lockEndDate, 30);
+        await setUnlockTimeOrInvalid(newUnlockTime);
         break;
       case "3":
-        await setUnlockTime(getDayOffset(new Date(), 364));
+        newUnlockTime = getDayOffset(lockEndDate, 30);
+        await setUnlockTimeOrInvalid(newUnlockTime);
         break;
       case "4":
-        await setUnlockTime(getDayOffset(new Date(), 365 * 4));
+        newUnlockTime = getDayOffset(lockEndDate, 30);
+        await setUnlockTimeOrInvalid(newUnlockTime);
         break;
     }
   };
 
-  const displayLockTime = () => {
+  const unlockTimeRounded =
+    Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
+
+  const maxDateRounded =
+    new Date (Math.floor(getEpochSecondForDay(dateBefore) / WEEK) * WEEK * 1000);
+
+  const displayLockExtend = () => {
+    if (isInvalidLockDate)
+      return `selected lock time exceeds maximum lock time of ${formatDate(
+        maxDateRounded,
+      )}`;
     if (lockingWeeks < 52) {
       return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
     } else {
@@ -133,9 +157,6 @@ export const IncreaseTime: FC<{
       return `${years} ${years === "1.0" ? "year" : "years"}`;
     }
   };
-
-  const unlockTimeRounded =
-    Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
 
   useEffect(() => {
     if (getEpochSecondForDay(unlockTime) !== unlockTimeRounded) {
@@ -148,13 +169,18 @@ export const IncreaseTime: FC<{
       <Spacer y={0.5} />
       <Grid xs={24} md={24}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>Lock for: {displayLockTime()}</div>
+          <div>
+            Extend lock by:{" "}
+            <span style={isInvalidLockDate ? { color: "red" } : null}>
+              {displayLockExtend()}
+            </span>
+          </div>
           <Link
             color
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              setUnlockTime(getDayOffset(new Date(), 365 * 4));
+              setUnlockTimeOrInvalid(maxDateRounded)
             }}
           >
             Max
@@ -165,7 +191,9 @@ export const IncreaseTime: FC<{
           value={unlockTime}
           onDayChange={handleDayChange}
           dayPickerProps={{
-            modifiers: { range: { from: dateAfter, to: dateBefore } },
+            modifiers: {
+              range: { from: dateAfter, to: maxDateRounded },
+            },
           }}
           keepFocus={true}
           component={(props: InputProps) => (
@@ -180,6 +208,8 @@ export const IncreaseTime: FC<{
           )}
           style={{ width: "100%" }}
         />
+        <Spacer y={0.5} />
+        <div>Note: your selected date will be rounded to the nearest DILL epoch</div>
         <Spacer y={0.5} />
         <Radio.Group
           value="1"

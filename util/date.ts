@@ -3,8 +3,8 @@ export const getDayDiff = (date1: Date, date2: Date): number => {
 };
 
 export const getDayOffset = (date: Date, offset: number): Date => {
-  const newDate = new Date();
-  newDate.setDate(date.getDate() + offset);
+  const newDate = new Date(date);
+  newDate.setDate(newDate.getDate() + offset);
   return newDate;
 };
 
