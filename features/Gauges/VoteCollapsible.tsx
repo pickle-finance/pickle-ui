@@ -180,16 +180,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         }
       });
       setNewWeights(newWeights);
-    }
-  };
-
-  const weightEstimateText = () => {
-    if (voteButton.disabled) {
-      return "Estimate new weights";
     } else {
-      return weightsValid
-        ? "Estimate new weights"
-        : "Estimate (weights must total 100%)";
+      setNewWeights(null);
     }
   };
 
@@ -219,23 +211,29 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }, [gauges]);
 
   useEffect(() => {
+    calculateNewWeights();
+  }, [weightsValid]);
+
+  useEffect(() => {
     if (gaugeProxy) {
       const voteStatus = getTransferStatus("vote", gaugeProxy.address);
       const balance = +dillBalanceBN?.toString();
       const buttonText = balance
-        ? "Submit Vote"
+        ? weightsValid
+          ? "Submit Vote"
+          : "Submit Vote (weights must total 100%)"
         : "DILL balance needed to vote";
 
-      if (balance) {
+      if (voteStatus === ERC20TransferStatus.Transfering) {
         setButtonStatus(voteStatus, "Voting...", buttonText, setVoteButton);
       } else {
         setVoteButton({
-          disabled: true,
+          disabled: !balance || !weightsValid,
           text: buttonText,
         });
       }
     }
-  }, [transferStatus]);
+  }, [transferStatus, weightsValid]);
 
   const renderVotingOption = (gauge: UserGaugeData) => {
     const {
@@ -330,16 +328,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 
           <Spacer y={1} />
           <Grid.Container gap={2}>
-            <Grid xs={24} md={12}>
-              <Button
-                disabled={!weightsValid || voteButton.disabled}
-                onClick={() => calculateNewWeights()}
-                style={{ width: "100%" }}
-              >
-                {weightEstimateText()}
-              </Button>
-            </Grid>
-            <Grid xs={24} md={12}>
+            <Grid xs={24} md={24}>
               <Button
                 disabled={voteButton.disabled || !weightsValid}
                 onClick={() => {

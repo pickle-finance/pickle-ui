@@ -65,18 +65,12 @@ const setButtonStatus = (
       disabled: true,
       text: "Approving...",
     });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
+  } else if (status === ERC20TransferStatus.Transfering) {
     setButtonText({
       disabled: true,
       text: transfering,
     });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
+  } else {
     setButtonText({
       disabled: false,
       text: idle,
@@ -128,14 +122,14 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, address, blockNum } = Connection.useContainer();
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Stake",
+    text: "Approve and Stake",
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
     disabled: false,
@@ -206,7 +200,12 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
       );
       const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
 
-      setButtonStatus(stakeStatus, "Staking...", "Stake", setStakeButton);
+      setButtonStatus(
+        stakeStatus,
+        "Staking...",
+        approved ? "Stake" : "Approve and Stake",
+        setStakeButton,
+      );
       setButtonStatus(
         unstakeStatus,
         "Unstaking...",
@@ -221,6 +220,22 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
       );
     }
   }, [erc20TransferStatuses]);
+
+  const { erc20 } = Contracts.useContainer();
+  const [approved, setApproved] = useState(false);
+
+  useEffect(() => {
+    const checkAllowance = async () => {
+      if (erc20 && address && signer) {
+        const Token = erc20.attach(depositToken.address).connect(signer);
+        const allowance = await Token.allowance(address, gaugeData.address);
+        if (allowance.gt(ethers.constants.Zero)) {
+          setApproved(true);
+        }
+      }
+    };
+    checkAllowance();
+  }, [blockNum, address, erc20]);
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 

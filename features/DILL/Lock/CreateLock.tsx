@@ -20,6 +20,7 @@ import {
 } from "../../../util/date";
 import { SelectPeriod } from "../../../components/SelectPeriod";
 import { estimateDillForDate, estimateDillForPeriod } from "../../../util/dill";
+import { ethers } from "ethers";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -44,18 +45,12 @@ const setButtonStatus = (
       disabled: true,
       text: "Approving...",
     });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
+  } else if (status === ERC20TransferStatus.Transfering) {
     setButtonText({
       disabled: true,
       text: transfering,
     });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
+  } else {
     setButtonText({
       disabled: false,
       text: idle,
@@ -82,7 +77,7 @@ export const CreateLock: FC<{
 
   const [lockButton, setLockButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Create Lock",
+    text: "Approve and Create Lock",
   });
 
   const dateAfter = getDayOffset(new Date(), 7);
@@ -99,13 +94,21 @@ export const CreateLock: FC<{
   const unlockTimeRounded =
     Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
 
+  const [approved, setApproved] = useState(false);
+
   useEffect(() => {
     if (pickle && dill && address) {
       const lockStatus = getTransferStatus(pickle.address, dill.address);
 
-      setButtonStatus(lockStatus, "Locking...", "Create Lock", setLockButton);
+      setButtonStatus(
+        lockStatus,
+        "Locking...",
+        approved ? "Create Lock" : "Approve and Create Lock",
+        setLockButton,
+      );
     }
-  }, [blockNum, transferStatus]);
+  }, [blockNum, transferStatus, approved]);
+
   const lockingWeeks = getWeekDiff(new Date(), unlockTime);
 
   const displayLockTime = () => {
@@ -133,6 +136,18 @@ export const CreateLock: FC<{
         break;
     }
   };
+
+  useEffect(() => {
+    const checkAllowance = async () => {
+      if (pickle && address && signer && dill) {
+        const allowance = await pickle.allowance(address, dill.address);
+        if (allowance.gt(ethers.constants.Zero)) {
+          setApproved(true);
+        }
+      }
+    };
+    checkAllowance();
+  }, [blockNum, address, pickle]);
 
   useEffect(() => {
     if (getEpochSecondForDay(unlockTime) !== unlockTimeRounded) {
@@ -238,7 +253,10 @@ export const CreateLock: FC<{
           </Radio>
           <Radio value="4">
             4 years
-            <Radio.Desc style={{ color: "grey" }}>1 PICKLE = 1 DILL</Radio.Desc>
+            <Radio.Desc style={{ color: "grey" }}>
+              1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}
+              DILL
+            </Radio.Desc>
           </Radio>
         </Radio.Group>
         <Spacer y={0.5} />
