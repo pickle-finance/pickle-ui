@@ -228,6 +228,8 @@ export const CreateLock: FC<{
           </Grid>
         </Grid.Container>
         <Spacer y={0.5} />
+        <div>Note: your selected date will be rounded to the nearest weekly DILL epoch</div>
+        <Spacer y={0.5} />
         <Radio.Group
           value="1"
           onChange={(e) => setLockTime(e.toString())}

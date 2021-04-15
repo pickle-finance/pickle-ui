@@ -209,7 +209,7 @@ export const IncreaseTime: FC<{
           style={{ width: "100%" }}
         />
         <Spacer y={0.5} />
-        <div>Note: your selected date will be rounded to the nearest DILL epoch</div>
+        <div>Note: your selected date will be rounded to the nearest weekly DILL epoch</div>
         <Spacer y={0.5} />
         <Radio.Group
           value="1"
