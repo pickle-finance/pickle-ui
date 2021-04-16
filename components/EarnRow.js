@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: "none",
     color: materialBlack,
     fontSize: "1.1rem",
-  }
+  },
 }));
 
 export default function EarnRow(props) {
@@ -29,7 +29,7 @@ export default function EarnRow(props) {
   return (
     <TableRow>
       <TableCell className={clsx(classes.asset, classes.tableCell)}>
-        <Avatar variant="square" src={icon} className={classes.asettIcon}/>
+        <Avatar variant="square" src={icon} className={classes.asettIcon} />
         {asset}
       </TableCell>
       <TableCell align="right" className={classes.tableCell}>

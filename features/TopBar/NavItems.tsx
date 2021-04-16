@@ -8,7 +8,7 @@ interface NavItemProps {
   active?: boolean;
 }
 
-const NavItem = styled.a<NavItemProps>`
+export const NavItem = styled.a<NavItemProps>`
   font-family: "Source Code Pro", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
@@ -45,11 +45,29 @@ const NavItem = styled.a<NavItemProps>`
 `;
 
 const infoItems = (router) => (
-  <div style={{ padding: '0 10px' }}>
-  <p><Link href="/info/earn" passHref><NavItem active={router.pathname.startsWith("/info/earn")}>Profit</NavItem></Link></p>
-  <p><Link href="/info/jars" passHref><NavItem active={router.pathname.startsWith("/info/jars")}>Jars</NavItem></Link></p>
-  <p><Link href="/info/stats" passHref><NavItem active={router.pathname.startsWith("/info/stats")}>Stats</NavItem></Link></p>
-</div>
+  <div style={{ padding: "0 10px" }}>
+    <p>
+      <Link href="/info/earn" passHref>
+        <NavItem active={router.pathname.startsWith("/info/earn")}>
+          Profit
+        </NavItem>
+      </Link>
+    </p>
+    <p>
+      <Link href="/info/jars" passHref>
+        <NavItem active={router.pathname.startsWith("/info/jars")}>
+          Jars
+        </NavItem>
+      </Link>
+    </p>
+    <p>
+      <Link href="/info/stats" passHref>
+        <NavItem active={router.pathname.startsWith("/info/stats")}>
+          Stats
+        </NavItem>
+      </Link>
+    </p>
+  </div>
 );
 
 export const NavItems: FC = () => {
@@ -82,6 +100,14 @@ export const NavItems: FC = () => {
           <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
         </Link>
       </Popover>
+      <a
+        href="https://feedback.pickle.finance/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none" }}
+      >
+        <NavItem>feedback</NavItem>
+      </a>
     </div>
   );
 };

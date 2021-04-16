@@ -40,8 +40,8 @@ const Alert = styled.div`
 `;
 
 export const TopBar: FC = () => {
-  const { address } = Connection.useContainer();
-  const isConnected = address !== null;
+  const { address, provider } = Connection.useContainer();
+  const isConnected = !!provider && !!address;
   return (
     <>
       <Container>

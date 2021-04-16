@@ -59,78 +59,34 @@ const CoinIcon = ({ src }: { src: string }) => (
 export const Prices: FC = () => {
   const { prices } = PricesContainer.useContainer();
   return (
-    <Grid.Container gap={2}>
-      <Grid xs={24} sm={24} md={24}>
-        <Card>
-          <Card.Content style={{ height: `304px` }}>
-            <h2>Prices</h2>
-            <TradeButton
-              href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Trade $Pickle
-            </TradeButton>
-            <DataPoint>
-              <Label>
-                <CoinIcon src="/pickle.png" />
-                PICKLE:
-              </Label>
-              <Monospace>
-                {prices?.pickle ? formatDollars(prices.pickle) : "--"}
-              </Monospace>
-            </DataPoint>
-            <DataPoint>
-              <Label>
-                <CoinIcon src="/ethereum.png" />
-                ETH:
-              </Label>
-              <Monospace>
-                {prices?.eth ? formatDollars(prices.eth) : "--"}
-              </Monospace>
-            </DataPoint>
-            <DataPoint>
-              <Label>
-                <CoinIcon src="/dai.png" />
-                DAI:
-              </Label>
-              <Monospace>
-                {prices?.dai ? formatDollars(prices.dai) : "--"}
-              </Monospace>
-            </DataPoint>
-            <DataPoint>
-              <Label>
-                <CoinIcon src="/usdc.png" />
-                USDC:
-              </Label>
-              <Monospace>
-                {prices?.usdc ? formatDollars(prices.usdc) : "--"}
-              </Monospace>
-            </DataPoint>
-            <DataPoint>
-              <Label>
-                <CoinIcon src="/usdt.png" />
-                USDT:
-              </Label>
-              <Monospace>
-                {prices?.usdt ? formatDollars(prices.usdt) : "--"}
-              </Monospace>
-            </DataPoint>
-          </Card.Content>
-          <Card.Footer>
-            <Monospace>
-              Source:&nbsp;
-              <a
-                href="https://www.coingecko.com/en/coins/pickle-finance"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                CoinGecko
-              </a>
-            </Monospace>
-          </Card.Footer>
-        </Card>
-      </Grid>
-    </Grid.Container>
+    <Card style={{ height: "169px" }}>
+      <Card.Content>
+        <TradeButton
+          href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Buy $Pickle
+        </TradeButton>
+        <DataPoint>
+          <Label>
+            <CoinIcon src="/pickle.png" />
+            PICKLE:
+          </Label>
+          <Monospace>
+            {prices?.pickle ? formatDollars(prices.pickle) : "--"}
+          </Monospace>
+        </DataPoint>
+        <DataPoint>
+          <Label>
+            <CoinIcon src="/ethereum.png" />
+            ETH:
+          </Label>
+          <Monospace>
+            {prices?.eth ? formatDollars(prices.eth) : "--"}
+          </Monospace>
+        </DataPoint>
+      </Card.Content>
+    </Card>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
+import { makeStyles } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,9 +35,7 @@ export default function InfoCardContent(props) {
     <div className={classes.cardContent}>
       <Avatar variant="rounded" src={props.icon} className={classes.cardIcon} />
       <div className={classes.cardInfo}>
-        <div className={classes.cardTitle}>
-          {props.title}
-        </div>
+        <div className={classes.cardTitle}>{props.title}</div>
         <div className={classes.cardValue}>
           {props.value !== undefined ? props.value : <Skeleton />}
         </div>
@@ -47,4 +45,4 @@ export default function InfoCardContent(props) {
       </div>
     </div>
   );
-};
+}

@@ -7,6 +7,7 @@ import { Prices } from "../features/Prices/Prices";
 // import { SummaryCard as Jars } from "../features/Jars/SummaryCard";
 import { Footer } from "../features/Footer/Footer";
 import { Zap } from "../features/Zap/Zap";
+import { DepositZap } from "../features/Zap/DepositZap";
 
 const Home: FC = () => {
   return (
@@ -22,7 +23,7 @@ const Home: FC = () => {
               <Balances />
             </Grid>
             <Grid xs={24} sm={24} md={8}>
-              <Prices />
+              <DepositZap />
             </Grid>
             <Grid xs={24} sm={24} md={24}>
               <Zap />

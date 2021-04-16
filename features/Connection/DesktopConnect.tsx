@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Connection } from "../../containers/Connection";
+import { useModal } from "@geist-ui/react";
+import { Web3Modal } from "./Web3Modal";
 
 const Connect = styled.button`
   color: var(--bg-color);
@@ -28,10 +29,11 @@ const Connect = styled.button`
 `;
 
 export const DesktopConnect: FC = () => {
-  const { connect } = Connection.useContainer();
+  const { setVisible, bindings } = useModal();
   return (
     <>
-      <Connect onClick={connect}>Connect Wallet</Connect>
+      <Connect onClick={() => setVisible(true)}>Connect Wallet</Connect>
+      <Web3Modal setVisible={setVisible} {...bindings} />
     </>
   );
 };

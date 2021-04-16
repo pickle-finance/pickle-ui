@@ -58,6 +58,34 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pUNIUSDT v2",
     poolName: "pUNIUSDT v2",
   },
+  "0xC1513C1b0B359Bc5aCF7b772100061217838768B": {
+    tokenName: "pUNIV2 FEI/TRIBE",
+    poolName: "pUNIV2 FEI/TRIBE"
+  },
+  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": {
+    tokenName: "pUNIV2 MIR/UST",
+    poolName: "pUNIV2 MIR/UST",
+  },
+  "0xaFB2FE266c215B5aAe9c4a9DaDC325cC7a497230": {
+    tokenName: "pUNIV2 MTSLA/UST",
+    poolName: "pUNIV2 MTSLA/UST",
+  },
+  "0xF303B35D5bCb4d9ED20fB122F5E268211dEc0EBd": {
+    tokenName: "pUNIV2 MAAPL/UST",
+    poolName: "pUNIV2 MAAPL/UST",
+  },
+  "0x7C8de3eE2244207A54b57f45286c9eE1465fee9f": {
+    tokenName: "pUNIV2 MQQQ/UST",
+    poolName: "pUNIV2 MQQQ/UST",
+  },
+  "0x1ed1fD33b62bEa268e527A622108fe0eE0104C07": {
+    tokenName: "pUNIV2 MSLV/UST",
+    poolName: "pUNIV2 MSLV/UST",
+  },
+  "0x1CF137F651D8f0A4009deD168B442ea2E870323A": {
+    tokenName: "pUNIV2 MBABA/UST",
+    poolName: "pUNIV2 MBABA/UST",
+  },
   "0x68d14d66B2B0d6E157c06Dc8Fefa3D8ba0e66a89": {
     tokenName: "psCRV v2",
     poolName: "psCRV v2",
@@ -98,6 +126,14 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP YFI",
     poolName: "pSLP YFI",
   },
+  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": {
+    tokenName: "pSLP yveCRV",
+    poolName: "Back Scratcher",
+  },
+  "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": {
+    tokenName: "pSLP SUSHI",
+    poolName: "pSLP SUSHI"
+  },
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": {
     tokenName: "pSLP MIC/USDT",
     poolName: "pSLP MIC/USDT",
@@ -114,17 +150,9 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "stEthCrv",
     poolName: "stETH-ETH",
   },
-  "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": {
-    tokenName: "pSLP yveCRV",
-    poolName: "Back Scratcher",
-  },
   "0x0FAA189afE8aE97dE1d2F01E471297678842146d": {
     tokenName: "pSLP MIS/USDT",
     poolName: "pSLP MIS/USDT",
-  },
-  "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": {
-    tokenName: "pUNIV2 MIR/UST",
-    poolName: "pUNIV2 MIR/UST",
   },
 };
 

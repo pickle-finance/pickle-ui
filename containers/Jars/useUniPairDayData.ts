@@ -18,7 +18,13 @@ const UNI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.UNIV2_ETH_WBTC,
   JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI,
   JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI,
-  JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST
+  JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST,
+  JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST,
+  JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST,
+  JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST,
+  JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST,
+  JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST,
+  JAR_DEPOSIT_TOKENS.UNIV2_FEI_TRIBE,
 ];
 
 export const useUniPairDayData = () => {
@@ -49,7 +55,7 @@ export const useUniPairDayData = () => {
       },
     ).then((x) => x.json());
 
-    res.data?.pairDayDatas && setUniPairDayData(res.data.pairDayDatas); // Sometimes the graph call fails
+    res?.data?.pairDayDatas && setUniPairDayData(res?.data?.pairDayDatas); // Sometimes the graph call fails
   };
 
   const getUniPairDayAPY = (pair: string) => {
