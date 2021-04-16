@@ -36,7 +36,6 @@ export const CalcCollapsible: FC<{
     );
 
     if (selectedGauge) {
-      console.log(selectedGauge.totalSupply)
       setBalance(formatEther(selectedGauge.balance));
       setTotalBalance((selectedGauge.totalSupply / 10 ** 18).toString());
     }
@@ -48,13 +47,15 @@ export const CalcCollapsible: FC<{
     const _adjusted = +totalBalance * dillRatio * 0.6;
     const boostFactor =
       Math.min(_baseBalance, _derived + _adjusted) / (_baseBalance * 0.4);
-    const dillRequired = (_baseBalance - _derived) * dillSupplyNum / (+totalBalance * 0.6);
+    const dillRequired =
+      ((_baseBalance - _derived) * dillSupplyNum) / (+totalBalance * 0.6);
     setBoostFactor(boostFactor);
     setDillRequired(dillRequired);
   };
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
     <Select.Option
+      key={gauge.address}
       style={{ color: pickleWhite }}
       value={gauge.depositTokenName}
     >

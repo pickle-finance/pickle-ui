@@ -19,7 +19,11 @@ import {
   getWeekDiff,
 } from "../../../util/date";
 import { SelectPeriod } from "../../../components/SelectPeriod";
-import { estimateDillForDate, estimateDillForPeriod } from "../../../util/dill";
+import {
+  estimateDillForDate,
+  estimateDillForPeriod,
+  roundDateByDillEpoch,
+} from "../../../util/dill";
 import { ethers } from "ethers";
 
 interface ButtonStatus {
@@ -79,6 +83,7 @@ export const CreateLock: FC<{
     disabled: false,
     text: "Approve and Create Lock",
   });
+  const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
   const dateAfter = getDayOffset(new Date(), 7);
   const dateBefore = getDayOffset(new Date(), 365 * 4);
@@ -91,8 +96,7 @@ export const CreateLock: FC<{
 
   const { dill } = Contracts.useContainer();
 
-  const unlockTimeRounded =
-    Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
+  const unlockTimeRounded = roundDateByDillEpoch(unlockTime);
 
   const [approved, setApproved] = useState(false);
 
@@ -115,26 +119,25 @@ export const CreateLock: FC<{
     if (lockingWeeks < 52) {
       return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
     } else {
-      const years = Number(lockingWeeks / 52).toFixed(1);
-      return `${years} ${years === "1.0" ? "year" : "years"}`;
+      const years = Number(lockingWeeks / 52).toFixed(2);
+      return `${years} ${
+        years === "1.0" ? "year" : "years"
+      } (${lockingWeeks} weeks)`;
     }
   };
 
-  const setLockTime = async (value: string) => {
+  const getLockTime = (value: number | undefined): Date => {
     switch (value) {
-      case "1":
-        await setUnlockTime(getDayOffset(new Date(), 7));
-        break;
-      case "2":
-        await setUnlockTime(getDayOffset(new Date(), 30));
-        break;
-      case "3":
-        await setUnlockTime(getDayOffset(new Date(), 364));
-        break;
-      case "4":
-        await setUnlockTime(getDayOffset(new Date(), 365 * 4));
-        break;
+      case 1:
+        return getDayOffset(new Date(), 7);
+      case 2:
+        return getDayOffset(new Date(), 30);
+      case 3:
+        return getDayOffset(new Date(), 364);
+      case 4:
+        return getDayOffset(new Date(), 365 * 4);
     }
+    return (undefined as unknown) as Date;
   };
 
   useEffect(() => {
@@ -154,6 +157,25 @@ export const CreateLock: FC<{
       setUnlockTime(new Date(unlockTimeRounded * 1000));
     }
   }, [unlockTime, unlockTimeRounded]);
+
+  useEffect(() => {
+    const date = getLockTime(dateRadioValue);
+    if (dateRadioValue && date) {
+      setUnlockTime(date);
+    }
+  }, [dateRadioValue]);
+
+  useEffect(() => {
+    if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(1)))
+      setDateRadioValue(1);
+    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(2)))
+      setDateRadioValue(2);
+    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(3)))
+      setDateRadioValue(3);
+    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(4)))
+      setDateRadioValue(4);
+    else setDateRadioValue(undefined);
+  }, [unlockTimeRounded]);
 
   return (
     <Grid.Container gap={2}>
@@ -228,32 +250,31 @@ export const CreateLock: FC<{
           </Grid>
         </Grid.Container>
         <Spacer y={0.5} />
-        <div>Note: your selected date will be rounded to the nearest weekly DILL epoch</div>
+        <div>
+          Note: your selected date will be rounded to the nearest weekly DILL
+          epoch
+        </div>
         <Spacer y={0.5} />
-        <Radio.Group
-          value="1"
-          onChange={(e) => setLockTime(e.toString())}
-          useRow
-        >
-          <Radio value="1">
+        <Radio.Group onChange={(e) => setDateRadioValue(+e.toString())} useRow>
+          <Radio value={1} checked={dateRadioValue === 1}>
             1 week
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value="2">
+          <Radio value={2} checked={dateRadioValue === 2}>
             1 month
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value="3">
+          <Radio value={3} checked={dateRadioValue === 3}>
             1 year
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value="4">
+          <Radio value={4} checked={dateRadioValue === 4}>
             4 years
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}

@@ -39,8 +39,10 @@ export const DayPicker = styled(DayPickerInputWrapper)({
       marginTop: 2,
       ".DayPicker-Day": {
         pointerEvents: "none",
+        color: "grey",
         "&.DayPicker-Day--range": {
           pointerEvents: "all",
+          color: "white",
         },
       },
     },

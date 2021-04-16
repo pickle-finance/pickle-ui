@@ -39,7 +39,6 @@ export function useDill(): UseDillOutput {
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
 
         const epochTime = 604800;
-
         const [
           lockStats,
           balance,
@@ -47,11 +46,13 @@ export function useDill(): UseDillOutput {
           userClaimable,
           timeCursor,
         ] = await Promise.all([
-          dillContract.locked(address),
-          dillContract["balanceOf(address)"](address),
-          dillContract["totalSupply()"](),
-          feeDistributorContract.callStatic["claim(address)"](address),
-          feeDistributorContract["time_cursor()"](),
+          dillContract.locked(address, { gasLimit: 1000000 }),
+          dillContract["balanceOf(address)"](address, { gasLimit: 1000000 }),
+          dillContract["totalSupply()"]({ gasLimit: 1000000 }),
+          feeDistributorContract.callStatic["claim(address)"](address, {
+            gasLimit: 1000000,
+          }),
+          feeDistributorContract["time_cursor()"]({ gasLimit: 1000000 }),
         ]);
 
         const totalLockedValue =
