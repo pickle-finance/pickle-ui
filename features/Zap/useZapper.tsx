@@ -79,7 +79,7 @@ export const useZapIn = ({
           await approveTx.wait();
         }
       }
-      const {from, to, data, value} = await fetchRes(
+      const { from, to, data, value } = await fetchRes(
         getZapperApi("/zap-in/pickle/transaction", {
           slippagePercentage,
           gasPrice,
@@ -89,7 +89,8 @@ export const useZapIn = ({
           ownerAddress: address,
         }),
       );
-      const zapTx = await signer.sendTransaction({from, to, data, value});
+      console.log(data);
+      const zapTx = await signer.sendTransaction({ from, to, data, value });
       await zapTx.wait();
     } catch (error) {
       console.log("Zap Failed", error);
