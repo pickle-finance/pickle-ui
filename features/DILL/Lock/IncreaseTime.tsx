@@ -19,7 +19,10 @@ import {
   getDayDiff,
   formatDate,
 } from "../../../util/date";
-import { estimateDillForPeriod } from "../../../util/dill";
+import {
+  estimateDillForPeriod,
+  roundDateByDillEpoch,
+} from "../../../util/dill";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -86,13 +89,14 @@ export const IncreaseTime: FC<{
   const dateBefore = getDayOffset(new Date(), 365 * 4);
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
-  const [isInvalidLockDate, setInvalidLockDate] = useState(false);
 
   const handleDayChange = (selectedDay: Date) => {
     setUnlockTime(selectedDay);
   };
 
   const { dill } = Contracts.useContainer();
+
+  const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
   useEffect(() => {
     if (pickle && dill && address) {
@@ -107,43 +111,30 @@ export const IncreaseTime: FC<{
     }
   }, [blockNum, transferStatus]);
 
-  const setUnlockTimeOrInvalid = async (endDate: Date) => {
-    await setInvalidLockDate(false);
-    if (getDayDiff(endDate, dateBefore) > 0) {
-      await setUnlockTime(endDate);
-    } else {
-      await setInvalidLockDate(true);
-    }
-  };
+  const isInvalidLockDate = getDayDiff(unlockTime, dateBefore) <= 0;
 
   const lockingWeeks = getWeekDiff(lockEndDate, unlockTime);
-  const setLockTime = async (value: string) => {
-    let newUnlockTime: Date;
+  const totalLockingWeeks = getWeekDiff(new Date(), unlockTime);
+  const getLockTime = (value: number | undefined): Date => {
     switch (value) {
-      case "1":
-        newUnlockTime = getDayOffset(lockEndDate, 7);
-        await setUnlockTimeOrInvalid(newUnlockTime);
-        break;
-      case "2":
-        newUnlockTime = getDayOffset(lockEndDate, 30);
-        await setUnlockTimeOrInvalid(newUnlockTime);
-        break;
-      case "3":
-        newUnlockTime = getDayOffset(lockEndDate, 30);
-        await setUnlockTimeOrInvalid(newUnlockTime);
-        break;
-      case "4":
-        newUnlockTime = getDayOffset(lockEndDate, 30);
-        await setUnlockTimeOrInvalid(newUnlockTime);
-        break;
+      case 1:
+        return getDayOffset(lockEndDate, 7);
+      case 2:
+        return getDayOffset(lockEndDate, 30);
+      case 3:
+        return getDayOffset(lockEndDate, 365);
+      case 4:
+        return getDayOffset(lockEndDate, 4 * 365);
     }
+    return (null as unknown) as Date;
   };
 
   const unlockTimeRounded =
     Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
 
-  const maxDateRounded =
-    new Date (Math.floor(getEpochSecondForDay(dateBefore) / WEEK) * WEEK * 1000);
+  const maxDateRounded = new Date(
+    Math.floor(getEpochSecondForDay(dateBefore) / WEEK) * WEEK * 1000,
+  );
 
   const displayLockExtend = () => {
     if (isInvalidLockDate)
@@ -153,8 +144,21 @@ export const IncreaseTime: FC<{
     if (lockingWeeks < 52) {
       return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
     } else {
-      const years = Number(lockingWeeks / 52).toFixed(1);
-      return `${years} ${years === "1.0" ? "year" : "years"}`;
+      const years = Number(lockingWeeks / 52).toFixed(2);
+      return `${years} ${
+        years === "1.0" ? "year" : "years"
+      } (${lockingWeeks} weeks)`;
+    }
+  };
+
+  const displayTotalLock = () => {
+    if (totalLockingWeeks < 52) {
+      return `${totalLockingWeeks} week${totalLockingWeeks > 1 ? "s" : ""}`;
+    } else {
+      const years = Number(totalLockingWeeks / 52).toFixed(2);
+      return `${years} ${
+        years === "1.0" ? "year" : "years"
+      } (${totalLockingWeeks} weeks)`;
     }
   };
 
@@ -163,6 +167,25 @@ export const IncreaseTime: FC<{
       setUnlockTime(new Date(unlockTimeRounded * 1000));
     }
   }, [unlockTime, unlockTimeRounded]);
+
+  useEffect(() => {
+    const date = getLockTime(dateRadioValue);
+    if (dateRadioValue && date) {
+      setUnlockTime(date);
+    }
+  }, [dateRadioValue]);
+
+  useEffect(() => {
+    if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(1)))
+      setDateRadioValue(1);
+    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(2)))
+      setDateRadioValue(2);
+    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(3)))
+      setDateRadioValue(3);
+    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(4)))
+      setDateRadioValue(4);
+    else setDateRadioValue(undefined);
+  }, [unlockTimeRounded]);
 
   return (
     <Grid.Container gap={2}>
@@ -180,11 +203,17 @@ export const IncreaseTime: FC<{
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              setUnlockTimeOrInvalid(maxDateRounded)
+              setUnlockTime(maxDateRounded);
             }}
           >
             Max
           </Link>
+        </div>
+        <div style={{ marginTop: 5 }}>
+          Lock will expire in:{" "}
+          <span style={isInvalidLockDate ? { color: "red" } : null}>
+            {displayTotalLock()}
+          </span>
         </div>
         <Spacer y={0.5} />
         <DayPicker
@@ -209,32 +238,31 @@ export const IncreaseTime: FC<{
           style={{ width: "100%" }}
         />
         <Spacer y={0.5} />
-        <div>Note: your selected date will be rounded to the nearest weekly DILL epoch</div>
+        <div>
+          Note: your selected date will be rounded to the nearest weekly DILL
+          epoch
+        </div>
         <Spacer y={0.5} />
-        <Radio.Group
-          value="1"
-          onChange={(e) => setLockTime(e.toString())}
-          useRow
-        >
-          <Radio value="1">
+        <Radio.Group onChange={(e) => setDateRadioValue(+e.toString())} useRow>
+          <Radio value={1} checked={dateRadioValue === 1}>
             1 week
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value="2">
+          <Radio value={2} checked={dateRadioValue === 2}>
             1 month
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value="3">
+          <Radio value={3} checked={dateRadioValue === 3}>
             1 year
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value="4">
+          <Radio value={4} checked={dateRadioValue === 4}>
             4 years
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}
@@ -244,7 +272,7 @@ export const IncreaseTime: FC<{
         </Radio.Group>
         <Spacer y={1.5} />
         <Button
-          disabled={extendButton.disabled}
+          disabled={extendButton.disabled || isInvalidLockDate}
           onClick={() => {
             if (pickle && signer && dill) {
               transfer({
