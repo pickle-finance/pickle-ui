@@ -316,7 +316,6 @@ export const useJarWithAPY = (jars: Input): Output => {
       const mirRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
-      console.log(pricePerToken, stakingToken);
 
       const mirRewardsPerYear = mirRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.mir * mirRewardsPerYear;
@@ -353,8 +352,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const tribeRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
-      console.log(pricePerToken, stakingToken);
-
+      
       const tribeRewardsPerYear = tribeRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 

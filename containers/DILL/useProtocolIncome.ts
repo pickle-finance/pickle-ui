@@ -6,7 +6,9 @@ import { crvJars, uniJars, sushiJars } from "../../util/jars.js";
 
 export function useProtocolIncome() {
   const [weeklyProfit, setWeeklyProfit] = useState<number | null>(null);
-  const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(null);
+  const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(
+    null,
+  );
   const jarList = [...crvJars, ...uniJars, ...sushiJars];
 
   const getWeeklyIncome = async () => {
@@ -24,14 +26,14 @@ export function useProtocolIncome() {
       }),
     );
 
-    const profit = jarPerformance.reduce((acc, currJar) => {
+    const profit = jarPerformance.reduce((acc: number, currJar: any) => {
       const jarTVL = currJar.liquidity_locked;
-      return acc + (jarTVL * currJar.apy * 0.01 * 0.2) / 52;
-    }, 0) as number;
-    
+      return +currJar.apy > 0 ? acc + (jarTVL * currJar.apy * 0.01 * 0.2) / 52 : acc;
+    }, 0);
+
     const weeklyDistribution = profit * 0.45;
 
-    setWeeklyProfit(profit)
+    setWeeklyProfit(profit);
     setWeeklyDistribution(weeklyDistribution);
   };
 
