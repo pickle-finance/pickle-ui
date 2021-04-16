@@ -236,7 +236,10 @@ export const IncreaseTime: FC<{
           </Radio>
           <Radio value="4">
             4 years
-            <Radio.Desc style={{ color: "grey" }}>1 PICKLE = 1 DILL</Radio.Desc>
+            <Radio.Desc style={{ color: "grey" }}>
+              1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}
+              DILL
+            </Radio.Desc>
           </Radio>
         </Radio.Group>
         <Spacer y={1.5} />
