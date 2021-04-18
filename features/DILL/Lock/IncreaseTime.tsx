@@ -22,6 +22,7 @@ import {
 import {
   estimateDillForPeriod,
   roundDateByDillEpoch,
+  roundDateByDillEpochSeconds,
 } from "../../../util/dill";
 
 interface ButtonStatus {
@@ -86,7 +87,9 @@ export const IncreaseTime: FC<{
   } else {
     dateAfter = getDayOffset(new Date(), 7);
   }
-  const dateBefore = getDayOffset(new Date(), 365 * 4);
+  const dateBefore = roundDateByDillEpoch(
+    getDayOffset(roundDateByDillEpoch(new Date()), 365 * 4),
+  );
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -111,7 +114,7 @@ export const IncreaseTime: FC<{
     }
   }, [blockNum, transferStatus]);
 
-  const isInvalidLockDate = getDayDiff(unlockTime, dateBefore) <= 0;
+  const isInvalidLockDate = getDayDiff(unlockTime, dateBefore) < 0;
 
   const lockingWeeks = getWeekDiff(lockEndDate, unlockTime);
   const totalLockingWeeks = getWeekDiff(new Date(), unlockTime);
@@ -176,13 +179,13 @@ export const IncreaseTime: FC<{
   }, [dateRadioValue]);
 
   useEffect(() => {
-    if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(1)))
+    if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(1)))
       setDateRadioValue(1);
-    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(2)))
+    else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(2)))
       setDateRadioValue(2);
-    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(3)))
+    else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(3)))
       setDateRadioValue(3);
-    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(4)))
+    else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(4)))
       setDateRadioValue(4);
     else setDateRadioValue(undefined);
   }, [unlockTimeRounded]);
