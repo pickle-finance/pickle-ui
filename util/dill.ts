@@ -12,6 +12,10 @@ export const estimateDillForPeriod = (amount: number, period: number) => {
   return estimateDillForDate(amount, getDayOffset(new Date(), period / 86400));
 };
 
-export const roundDateByDillEpoch = (date: Date) => {
+export const roundDateByDillEpochSeconds = (date: Date) => {
   return Math.floor(getEpochSecondForDay(date) / WEEK) * WEEK;
+};
+
+export const roundDateByDillEpoch = (date: Date): Date => {
+  return new Date(Math.floor(getEpochSecondForDay(date) / WEEK) * WEEK * 1000);
 };

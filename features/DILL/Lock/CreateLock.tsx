@@ -23,6 +23,7 @@ import {
   estimateDillForDate,
   estimateDillForPeriod,
   roundDateByDillEpoch,
+  roundDateByDillEpochSeconds,
 } from "../../../util/dill";
 import { ethers } from "ethers";
 
@@ -86,7 +87,9 @@ export const CreateLock: FC<{
   const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
   const dateAfter = getDayOffset(new Date(), 7);
-  const dateBefore = getDayOffset(new Date(), 365 * 4);
+  const dateBefore = roundDateByDillEpoch(
+    getDayOffset(roundDateByDillEpoch(new Date()), 365 * 4),
+  );
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -96,7 +99,7 @@ export const CreateLock: FC<{
 
   const { dill } = Contracts.useContainer();
 
-  const unlockTimeRounded = roundDateByDillEpoch(unlockTime);
+  const unlockTimeRounded = roundDateByDillEpochSeconds(unlockTime);
 
   const [approved, setApproved] = useState(false);
 
@@ -166,13 +169,13 @@ export const CreateLock: FC<{
   }, [dateRadioValue]);
 
   useEffect(() => {
-    if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(1)))
+    if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(1)))
       setDateRadioValue(1);
-    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(2)))
+    else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(2)))
       setDateRadioValue(2);
-    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(3)))
+    else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(3)))
       setDateRadioValue(3);
-    else if (unlockTimeRounded === roundDateByDillEpoch(getLockTime(4)))
+    else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(4)))
       setDateRadioValue(4);
     else setDateRadioValue(undefined);
   }, [unlockTimeRounded]);
@@ -219,7 +222,7 @@ export const CreateLock: FC<{
                 onClick={(e) => {
                   if (pickleBN) {
                     e.preventDefault();
-                    setUnlockTime(getDayOffset(new Date(), 365 * 4));
+                    setUnlockTime(dateBefore);
                   }
                 }}
               >
