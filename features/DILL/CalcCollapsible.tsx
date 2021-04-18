@@ -18,8 +18,6 @@ export const CalcCollapsible: FC<{
   const [totalBalance, setTotalBalance] = useState("0");
   const [userChanged, setUserChanged] = useState(false);
   const [dillBalance, setDillBalance] = useState("0");
-  console.log("initial dill", dillStats);
-  console.log(dillBalance);
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState();
 
