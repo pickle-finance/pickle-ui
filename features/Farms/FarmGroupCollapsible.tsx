@@ -2,12 +2,11 @@ import FlexBox from "../../components/FlexBox";
 import { FC, useEffect, useState } from "react";
 import { Grid } from "@geist-ui/react";
 import Collapse from "../Collapsible/Collapse";
-import { DEPOSIT_TOKENS_API_NAME } from "../../containers/Jars/jargroups";
 
-import { JarCollapsible, JAR_DEPOSIT_TOKEN_TO_ICON } from "./JarCollapsible";
-import { UserJarData } from "../../containers/UserJars";
+import { FarmCollapsible, FARM_LP_TO_ICON } from "./FarmCollapsible";
 import { TokenIcon } from "../../components/TokenIcon";
 import { getProtocolData } from "../../util/api";
+import { UserFarmData } from "../../containers/UserFarms";
 
 const renderCategoryLogo = (category: string) => {
   switch (category.toLowerCase()) {
@@ -40,44 +39,26 @@ export const BeautifyValue = (value: number) => {
   else if (value > 1000) return `${Number(value / 1000).toFixed(2)}K`;
   return value;
 };
-export const JarGroupCollapsible: FC<{
-  jarData: UserJarData[];
+
+export const FarmGroupCollapsible: FC<{
+  farmData: UserFarmData[];
   category: string;
-}> = ({ jarData, category }) => {
-  const [totalDeposited, setTotalDeposited] = useState(0);
-  const maxApy = Math.max(...jarData.map((jar) => jar.totalAPY)).toFixed(0);
-  const minApy = Math.min(
-    ...jarData.filter((jar) => jar.totalAPY).map((jar) => jar.totalAPY),
-  ).toFixed(0);
-
-  useEffect(() => {
-    getProtocolData(false).then((res) => {
-      const deposited: number[] = jarData.map(
-        (jar) =>
-          (res as any)[
-            (DEPOSIT_TOKENS_API_NAME as any)[jar.depositToken.address]
-          ],
-      );
-      const totalDeposited = deposited.reduce((a, b) => a + b, 0);
-      setTotalDeposited(totalDeposited);
-    });
-  }, []);
-
+}> = ({ farmData, category }) => {
   return (
     <Collapse
       shadow
       group
       preview={
         <Grid.Container>
-          <Grid xs={24} sm={12} md={5} lg={5}>
+          <Grid xs={24} sm={12} md={6} lg={6}>
             <FlexBox alignItems="center">
               <strong>{category}</strong>
               {renderCategoryLogo(category)}
             </FlexBox>
           </Grid>
-          <Grid xs={24} sm={12} md={12} lg={12}>
+          <Grid xs={24} sm={12} md={18} lg={18}>
             <Grid.Container>
-              {jarData.map((jar) => (
+              {farmData.map((farm) => (
                 <Grid xs={8}>
                   <FlexBox
                     style={{ marginBottom: 8, marginRight: 10 }}
@@ -86,9 +67,9 @@ export const JarGroupCollapsible: FC<{
                     <TokenIcon
                       size="sm"
                       src={
-                        JAR_DEPOSIT_TOKEN_TO_ICON[
-                          jar.depositToken
-                            .address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                        FARM_LP_TO_ICON[
+                          farm.depositToken
+                            .address as keyof typeof FARM_LP_TO_ICON
                         ]
                       }
                     />
@@ -97,41 +78,19 @@ export const JarGroupCollapsible: FC<{
                         fontSize: 14,
                       }}
                     >
-                      {jar.depositTokenName}
+                      {farm.depositTokenName}
                     </div>
                   </FlexBox>
                 </Grid>
               ))}
             </Grid.Container>
           </Grid>
-
-          <Grid xs={24} sm={12} md={7} lg={7}>
-            <FlexBox
-              flexDirection="column"
-              gap={20}
-              alignItems="flex-end"
-              style={{
-                paddingRight: "2rem",
-              }}
-            >
-              <div>
-                <span>APY: </span>
-                <b>
-                  {minApy}% - {maxApy}%
-                </b>
-              </div>
-              <div>
-                <span>Deposited: </span>
-                <b>{BeautifyValue(totalDeposited)}</b>
-              </div>
-            </FlexBox>
-          </Grid>
         </Grid.Container>
       }
     >
-      {jarData.map((jar) => (
-        <Grid xs={24} key={jar.name}>
-          <JarCollapsible jarData={jar} />
+      {farmData.map((farm) => (
+        <Grid xs={24} key={farm.poolIndex}>
+          <FarmCollapsible farmData={farm} />
         </Grid>
       ))}
     </Collapse>

@@ -6,7 +6,7 @@ import { PortisConnector } from "@web3-react/portis-connector";
 
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
-  1: process.env.Alchemy,
+  1: process.env.infura,
 };
 
 export const injected = new InjectedConnector({

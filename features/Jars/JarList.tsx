@@ -12,8 +12,6 @@ import {
   uniPools,
   curvePools,
 } from "../../containers/Jars/jargroups";
-import { PAIR_INFO as UNI_PAIRS } from "../../containers/UniV2Pairs";
-
 const Container = styled.div`
   padding-top: 1.5rem;
 `;
@@ -32,7 +30,6 @@ export const JarList: FC = () => {
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
-
   const sushiJars = activeJars.filter(
     (jar) => sushiPools[jar.depositToken.address],
   );

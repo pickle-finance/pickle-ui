@@ -36,7 +36,7 @@ const StyledCollapse = styled.div`
       : css`
           padding: ${({ theme }) => theme.layout.gap} 0;
           background-color: #1f1f1f;
-          margin-top: 8px;
+          margin-bottom: 8px;
         `}
   ${({ shadow }) =>
     shadow &&

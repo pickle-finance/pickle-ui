@@ -9,6 +9,7 @@ export const uniJars = [
   "MQQQ-UST",
   "MSLV-UST",
   "MBABA-UST",
+  "FEI-TRIBE"
 ];
 
 export const sushiJars = [
@@ -20,6 +21,7 @@ export const sushiJars = [
   "MIC-USDT",
   "MIS-USDT",
   "yveCRV-ETH",
+  "SUSHI-ETH",
 ];
 
 export const powerPool = "PICKLE-ETH";

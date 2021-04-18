@@ -37,7 +37,7 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
-const FARM_LP_TO_ICON = {
+export const FARM_LP_TO_ICON = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": "/pickle.png",
   "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
   "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
@@ -274,7 +274,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{poolName}</div>
-              <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
+              <Label style={{ fontSize: `0.85rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3}>
