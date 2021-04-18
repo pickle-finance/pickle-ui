@@ -16,19 +16,17 @@ export const CalcCollapsible: FC<{
   const { address, signer } = Connection.useContainer();
   const [balance, setBalance] = useState("0");
   const [totalBalance, setTotalBalance] = useState("0");
-  const [dillBalance, setDillBalance] = useState(
-    formatEther(dillStats?.balance || 0),
-  );
+  const [userChanged, setUserChanged] = useState(false);
+  const [dillBalance, setDillBalance] = useState("0");
+  console.log("initial dill", dillStats);
+  console.log(dillBalance);
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState();
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
   const dillRatio = dillSupplyNum ? +dillBalance / (dillSupplyNum || 1) : 0;
 
-  if (!gaugeData) {
-    return <h2>Loading...</h2>;
-  }
-  const gauges = gaugeData.filter((x) => true);
+  const gauges = gaugeData?.filter((x) => true);
 
   const handleSelect = async (depositToken: string) => {
     const selectedGauge = gauges.find(
@@ -62,6 +60,15 @@ export const CalcCollapsible: FC<{
       {gauge.depositTokenName}
     </Select.Option>
   );
+
+  useEffect(() => {
+    if (!userChanged && dillStats && dillStats.balance)
+      setDillBalance(formatEther(dillStats.balance.toString() || 0));
+  }, [dillStats]);
+  
+  if (!gaugeData) {
+    return <h2>Loading...</h2>;
+  }
 
   return (
     <Collapse
@@ -103,7 +110,9 @@ export const CalcCollapsible: FC<{
           <div>Your DILL: </div>
           <Spacer y={0.5} />
           <Input
-            onChange={(e) => setDillBalance(e.target.value)}
+            onChange={(e) => {
+              setDillBalance(e.target.value);
+            }}
             value={dillBalance}
             width="100%"
             type="number"

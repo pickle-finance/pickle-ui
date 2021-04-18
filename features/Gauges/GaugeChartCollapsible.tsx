@@ -70,11 +70,11 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 {gaugeChartData.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={shadeColor(colors[index % colors.length], -index * 5)}
+                    fill={shadeColor(colors[index % colors.length], -index * 3)}
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip formatter={(val) => val*100 + "%"}/>
             </PieChart>
           </ResponsiveContainer>
         </div>
