@@ -20,21 +20,37 @@ export const CalcCollapsible: FC<{
   const [dillBalance, setDillBalance] = useState("0");
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState();
+  const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>()
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
   const dillRatio = dillSupplyNum ? +dillBalance / (dillSupplyNum || 1) : 0;
 
-  const gauges = gaugeData?.filter((x) => true);
+  const gauges: UserGaugeData = gaugeData?.filter((x) => true);
 
   const handleSelect = async (depositToken: string) => {
-    const selectedGauge = gauges.find(
+    const selectedGauge: UserGaugeData = gauges.find(
       (x) => x.depositTokenName === depositToken,
     );
 
     if (selectedGauge) {
-      setBalance(formatEther(selectedGauge.balance));
-      setTotalBalance((selectedGauge.totalSupply / 10 ** 18).toString());
+      const balance = +formatEther(
+        selectedGauge.balance.add(selectedGauge.staked),
+      );
+      const balanceUSD = (balance * selectedGauge.usdPerToken).toFixed(2);
+      setBalance(balanceUSD);
+      setTotalBalance(
+        (
+          (selectedGauge.totalSupply * selectedGauge.usdPerToken) /
+          10 ** 18
+        ).toFixed(2),
+      );
+      setSelectedGauge(selectedGauge)
     }
+  };
+
+  const formatAPY = (apy: number) => {
+    if (apy === Number.POSITIVE_INFINITY) return "∞%";
+    return apy.toFixed(2) + "%";
   };
 
   const calculateBoost = () => {
@@ -63,7 +79,7 @@ export const CalcCollapsible: FC<{
     if (!userChanged && dillStats && dillStats.balance)
       setDillBalance(formatEther(dillStats.balance.toString() || 0));
   }, [dillStats]);
-  
+
   if (!gaugeData) {
     return <h2>Loading...</h2>;
   }
@@ -85,23 +101,23 @@ export const CalcCollapsible: FC<{
             {gauges.map(renderSelectOptions)}
           </Select>
           <Spacer y={0.5} />
-          <div>Your pToken balance: </div>
+          <div>Your balance ($): </div>
           <Spacer y={0.5} />
           <Input
             onChange={(e) => setBalance(e.target.value)}
             value={balance}
             width="100%"
-            type="number"
+            type="value"
             size="large"
           />
           <Spacer y={0.5} />
-          <div>Pool balance: </div>
+          <div>Pool balance ($): </div>
           <Spacer y={0.5} />
           <Input
             onChange={(e) => setTotalBalance(e.target.value)}
             value={totalBalance}
             width="100%"
-            type="number"
+            type="value"
             size="large"
           />
           <Spacer y={0.5} />
@@ -109,11 +125,12 @@ export const CalcCollapsible: FC<{
           <Spacer y={0.5} />
           <Input
             onChange={(e) => {
+              setUserChanged(true);
               setDillBalance(e.target.value);
             }}
             value={dillBalance}
             width="100%"
-            type="number"
+            type="value"
             size="large"
           />
           <Spacer />
@@ -133,6 +150,11 @@ export const CalcCollapsible: FC<{
           <div>
             DILL required for max boost:{" "}
             <strong>{dillRequired?.toFixed(3) || null}</strong>
+          </div>
+          <Spacer y={0.5} />
+          <div>
+            PICKLE APY:{" "}
+            <strong>{selectedGauge ? formatAPY(selectedGauge.fullApy / 2.5 * boostFactor * 100) : "0.00%"}</strong>
           </div>
         </Grid>
       </Grid.Container>
