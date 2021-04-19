@@ -13,6 +13,7 @@ export interface UseDillOutput {
   balance?: ethers.BigNumber | null;
   userClaimable?: ethers.BigNumber | null;
   totalSupply: ethers.BigNumber | null;
+  totalLocked: ethers.BigNumber | null;
   lockedValue: number | null;
   weeklyProfit: number | null;
   weeklyDistribution: number | null;
@@ -29,6 +30,7 @@ export function useDill(): UseDillOutput {
   const [balance, setBalance] = useState<ethers.BigNumber | null>();
   const [userClaimable, setUserClaimable] = useState<ethers.BigNumber | null>();
   const [totalSupply, setTotalSupply] = useState<ethers.BigNumber | null>(null);
+  const [totalLocked, setTotalLocked] = useState<ethers.BigNumber | null>(null);
   const [lockedValue, setLockedValue] = useState<number | null>(null);
   const [nextDistribution, setNextDistribution] = useState<Date | null>(null);
 
@@ -43,12 +45,14 @@ export function useDill(): UseDillOutput {
           lockStats,
           balance,
           totalSupply,
+          totalLocked,
           userClaimable,
           timeCursor,
         ] = await Promise.all([
           dillContract.locked(address, { gasLimit: 1000000 }),
           dillContract["balanceOf(address)"](address, { gasLimit: 1000000 }),
           dillContract["totalSupply()"]({ gasLimit: 1000000 }),
+          dillContract["supply()"]({ gasLimit: 1000000 }),
           feeDistributorContract.callStatic["claim(address)"](address, {
             gasLimit: 1000000,
           }),
@@ -66,6 +70,7 @@ export function useDill(): UseDillOutput {
         setLockEndDate(lockStats?.end);
         setBalance(balance);
         setTotalSupply(totalSupply);
+        setTotalLocked(totalLocked);
         setLockedValue(totalLockedValue);
         setUserClaimable(userClaimable.toString() ? userClaimable : null);
         setNextDistribution(nextDistribution);
@@ -81,6 +86,7 @@ export function useDill(): UseDillOutput {
     balance,
     userClaimable,
     totalSupply,
+    totalLocked,
     lockedValue,
     weeklyProfit,
     weeklyDistribution,

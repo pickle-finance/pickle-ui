@@ -288,7 +288,7 @@ export const IncreaseTime: FC<{
                   return dill
                     .connect(signer)
                     .increase_unlock_time(getEpochSecondForDay(unlockTime), {
-                      gasLimit: 280000,
+                      gasLimit: 350000,
                     });
                 },
                 approval: false,

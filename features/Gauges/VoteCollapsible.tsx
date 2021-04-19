@@ -304,7 +304,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         </Grid>
         <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
           <Data isZero={fullApy === 0}>
-            {formatAPY(totalAPY + pickleAPYMin)}~{formatAPY(pickleAPYMax)}
+            {formatAPY(totalAPY + pickleAPYMin)}~{formatAPY(totalAPY + pickleAPYMax)}
           </Data>
           <Label>Total APY range</Label>
         </Grid>

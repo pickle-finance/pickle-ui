@@ -8,7 +8,7 @@ import { Dill, UseDillOutput } from "../../containers/Dill";
 import { formatDate } from "../../util/date";
 
 const DataPoint = styled.div`
-  font-size: 24px;
+  font-size: 22px;
   display: flex;
   align-items: center;
 `;
@@ -38,7 +38,7 @@ export const Balances: FC<{
 
   return (
     <Grid.Container gap={2}>
-      <Grid xs={24} sm={12} md={12}>
+      <Grid xs={24} sm={5} md={5}>
         <Card>
           <h2>PICKLE Balance</h2>
           <DataPoint>
@@ -54,7 +54,7 @@ export const Balances: FC<{
           </DataPoint>
         </Card>
       </Grid>
-      <Grid xs={24} sm={12} md={12}>
+      <Grid xs={24} sm={10} md={10}>
         <Card>
           <h2>
             {isLocked ? (
@@ -74,7 +74,7 @@ export const Balances: FC<{
                     formatEther(dillStats.lockedAmount?.toString() || "0"),
                   ).toLocaleString(undefined, {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 4,
+                    maximumFractionDigits: 2,
                   })
                 : "--"}
             </span>
@@ -86,11 +86,40 @@ export const Balances: FC<{
                     formatEther(dillBalance?.toString() || "0"),
                   ).toLocaleString(undefined, {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 4,
+                    maximumFractionDigits: 2,
                   })
                 : "--"}
             </span>
             &nbsp;DILL
+          </DataPoint>
+        </Card>
+      </Grid>
+      <Grid xs={24} sm={9} md={9}>
+        <Card>
+          <h2>Total Locked</h2>
+          <DataPoint>
+            <span>
+              {pickleBalance !== null
+                ? Number(
+                    formatEther(dillStats.totalLocked?.toString() || "0"),
+                  ).toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })
+                : "--"}
+            </span>
+            <PickleIcon />
+            &nbsp;=&nbsp;
+            <span>
+              ${pickleBalance !== null
+                ? Number(
+                    dillStats.lockedValue?.toString() || "0",
+                  ).toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })
+                : "--"}
+            </span>
           </DataPoint>
         </Card>
       </Grid>
