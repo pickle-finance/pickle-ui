@@ -87,9 +87,7 @@ export const CreateLock: FC<{
   const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
   const dateAfter = getDayOffset(new Date(), 7);
-  const dateBefore = roundDateByDillEpoch(
-    getDayOffset(roundDateByDillEpoch(new Date()), 365 * 4),
-  );
+  const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4));
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -122,7 +120,9 @@ export const CreateLock: FC<{
     if (lockingWeeks < 52) {
       return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
     } else {
-      const years = Number(lockingWeeks / 52).toFixed(2);
+      const years = Number(
+        (+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24,
+      ).toFixed(2);
       return `${years} ${
         years === "1.0" ? "year" : "years"
       } (${lockingWeeks} weeks)`;

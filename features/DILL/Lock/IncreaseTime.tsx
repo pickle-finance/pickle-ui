@@ -87,9 +87,7 @@ export const IncreaseTime: FC<{
   } else {
     dateAfter = getDayOffset(new Date(), 7);
   }
-  const dateBefore = roundDateByDillEpoch(
-    getDayOffset(roundDateByDillEpoch(new Date()), 365 * 4),
-  );
+  const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4));
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -118,6 +116,7 @@ export const IncreaseTime: FC<{
 
   const lockingWeeks = getWeekDiff(lockEndDate, unlockTime);
   const totalLockingWeeks = getWeekDiff(new Date(), unlockTime);
+
   const getLockTime = (value: number | undefined): Date => {
     switch (value) {
       case 1:
@@ -147,7 +146,9 @@ export const IncreaseTime: FC<{
     if (lockingWeeks < 52) {
       return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
     } else {
-      const years = Number(lockingWeeks / 52).toFixed(2);
+      const years = Number(
+        (+unlockTime - +lockEndDate) / 365 / 1000 / 3600 / 24,
+      ).toFixed(2);
       return `${years} ${
         years === "1.0" ? "year" : "years"
       } (${lockingWeeks} weeks)`;
@@ -158,7 +159,9 @@ export const IncreaseTime: FC<{
     if (totalLockingWeeks < 52) {
       return `${totalLockingWeeks} week${totalLockingWeeks > 1 ? "s" : ""}`;
     } else {
-      const years = Number(totalLockingWeeks / 52).toFixed(2);
+      const years = Number(
+        (+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24,
+      ).toFixed(2);
       return `${years} ${
         years === "1.0" ? "year" : "years"
       } (${totalLockingWeeks} weeks)`;
@@ -275,7 +278,7 @@ export const IncreaseTime: FC<{
         </Radio.Group>
         <Spacer y={1.5} />
         <Button
-          disabled={extendButton.disabled || isInvalidLockDate}
+          // disabled={extendButton.disabled || isInvalidLockDate}
           onClick={() => {
             if (pickle && signer && dill) {
               transfer({
