@@ -17,6 +17,7 @@ import {
   BASIS_BAS_DAI_STAKING_REWARDS,
   BASIS_BAC_DAI_PID,
   BASIS_BAC_DAI_V1_STAKING_REWARDS,
+  LQTY_LUSD_ETH_STAKING_REWARDS,
   MIRROR_MIR_UST_STAKING_REWARDS,
   MIRROR_MTSLA_UST_STAKING_REWARDS,
   MIRROR_MAAPL_UST_STAKING_REWARDS,
@@ -332,8 +333,50 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateLqtyAPY = async (rewardsAddress: string) => {
+    if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.uniToken(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const mirRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+      console.log(pricePerToken, stakingToken);
+
+      const mirRewardsPerYear = mirRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.mir * mirRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const mirAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { mir: getCompoundingAPY(mirAPY * 0.8), apr: mirAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateFeiAPY = async (rewardsAddress: string) => {
-    if (stakingRewards && prices?.tribe && getUniPairData && multicallProvider) {
+    if (
+      stakingRewards &&
+      prices?.tribe &&
+      getUniPairData &&
+      multicallProvider
+    ) {
       const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
@@ -407,7 +450,9 @@ export const useJarWithAPY = (jars: Input): Output => {
       const sushiAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
-      return [{ sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 }];
+      return [
+        { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
+      ];
     }
 
     return [];
@@ -461,6 +506,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         mirrorMslvUstApy,
         mirrorMbabaUstApy,
         feiTribeApy,
+        lqtyEthLusdApy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
@@ -468,7 +514,8 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMirAPY(MIRROR_MQQQ_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MSLV_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
-        calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS)
+        calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
+        calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -589,6 +636,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...feiTribeApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_FEI_TRIBE),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH) {
+          APYs = [
+            ...lqtyEthLusdApy,
+            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_LUSD_ETH),
           ];
         }
 

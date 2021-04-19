@@ -26,6 +26,7 @@ const addresses = {
   mbaba: "0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72",
   fei: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
   tribe: "0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B",
+  lusd: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
 };
 
 interface Token {
@@ -64,7 +65,12 @@ const mbaba: Token = {
   decimals: 18,
 };
 const fei: Token = { address: addresses.fei, priceId: "fei", decimals: 18 };
-const tribe: Token = { address: addresses.tribe, priceId: "tribe", decimals: 18 };
+const tribe: Token = {
+  address: addresses.tribe,
+  priceId: "tribe",
+  decimals: 18,
+};
+const lusd: Token = { address: addresses.lusd, priceId: "lusd", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -86,6 +92,7 @@ export const PAIR_INFO: PairMap = {
   "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe": { a: mslv, b: ust },
   "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363": { a: mbaba, b: ust },
   "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": { a: fei, b: tribe },
+  "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": { a: lusd, b: weth },
 };
 
 function useUniV2Pairs() {

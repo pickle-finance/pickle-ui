@@ -13,7 +13,7 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars"
+import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -104,6 +104,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/sushiswap.png"} />
+  ),
+  "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
   ),
 };
 
@@ -211,8 +214,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     return `${k}: ${v.toFixed(2)}%`;
   }).join(" + ");
 
-  const isDisabledJar = depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI || depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI
-
+  const isDisabledJar =
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI;
 
   return (
     <Collapse
@@ -301,7 +305,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer  && !isDisabledJar) {
+              if (signer && !isDisabledJar) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -314,7 +318,11 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                 });
               }
             }}
-            disabled={depositButton.disabled || depositTokenName === "DAI" || isDisabledJar }
+            disabled={
+              depositButton.disabled ||
+              depositTokenName === "DAI" ||
+              isDisabledJar
+            }
             style={{ width: "100%" }}
           >
             {depositButton.text}
