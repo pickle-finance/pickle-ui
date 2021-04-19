@@ -156,6 +156,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     setVotingFarms(selectedFarms);
   };
 
+  const handleSelectAll = () => {
+    handleSelect(gauges.map((gauge) => gauge.depositTokenName));
+  };
+
   const handleBoost = () => {
     const tokens: string[] = [];
     const weights: number[] = [];
@@ -304,7 +308,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         </Grid>
         <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
           <Data isZero={fullApy === 0}>
-            {formatAPY(totalAPY + pickleAPYMin)}~{formatAPY(totalAPY + pickleAPYMax)}
+            {formatAPY(totalAPY + pickleAPYMin)}~
+            {formatAPY(totalAPY + pickleAPYMax)}
           </Data>
           <Label>Total APY range</Label>
         </Grid>
@@ -354,14 +359,30 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       }
     >
       <Spacer y={1} />
-      <Select
-        placeholder="Select farms to boost"
-        multiple
-        width="100%"
-        onChange={(value) => handleSelect(value)}
-      >
-        {gauges.map(renderSelectOptions)}
-      </Select>
+      <div css={{ display: "flex" }}>
+        <Select
+          placeholder="Select farms to boost"
+          multiple
+          width="100%"
+          onChange={(value) => handleSelect(value)}
+        >
+          {gauges.map(renderSelectOptions)}
+        </Select>
+        <Button
+          size="large"
+          css={{
+            height: "unset !important",
+            display: "flex !important",
+            alignItems: "center",
+            marginLeft: "20px",
+            width: "120px !important",
+            minWidth: "0 !important",
+          }}
+          onClick={handleSelectAll}
+        >
+          Select All
+        </Button>
+      </div>
       <Spacer y={0.5} />
       <h3>Selected Farms</h3>
       {votingFarms?.length ? (
