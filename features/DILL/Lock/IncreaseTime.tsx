@@ -193,6 +193,8 @@ export const IncreaseTime: FC<{
     else setDateRadioValue(undefined);
   }, [unlockTimeRounded]);
 
+  if (dateAfter > dateBefore) return <></>;
+
   return (
     <Grid.Container gap={2}>
       <Spacer y={0.5} />
@@ -278,7 +280,7 @@ export const IncreaseTime: FC<{
         </Radio.Group>
         <Spacer y={1.5} />
         <Button
-          // disabled={extendButton.disabled || isInvalidLockDate}
+          disabled={extendButton.disabled || isInvalidLockDate}
           onClick={() => {
             if (pickle && signer && dill) {
               transfer({
