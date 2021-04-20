@@ -111,10 +111,10 @@ export const Claim: FC<{
         <Grid xs={24} sm={24} md={24}>
           <Card>
             <h2>Claim</h2>
-            <div>Weekly profit: ${formatNumber(dillStats?.weeklyProfit)}</div>
+            <div>Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}</div>
             &nbsp;
             <div>
-              Weekly distribution: $
+              Weekly distribution (45% of revenue): $
               {formatNumber(dillStats?.weeklyDistribution)}
             </div>
             &nbsp;
