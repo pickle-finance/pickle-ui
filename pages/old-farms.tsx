@@ -31,9 +31,9 @@ const Farms: FC = () => {
           </Link>
           <Spacer />
           <Note type="warning" style={{ textAlign: "center" }}>
-            You are looking at old, inactive Farms
+            These Farms will stop earning $PICKLEs on Thu, Apr 22, 2021 (12 AM GMT)
             <br />
-            To earn $PICKLEs, migrate to the new Farms
+            To earn $PICKLEs, migrate to the new Farms on or after that date
             <br />
             Expand on any Farm you have tokens, and click{" "}
             <strong>Migrate</strong>

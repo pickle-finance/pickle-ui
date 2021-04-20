@@ -46,7 +46,7 @@ export const Balances: FC<{
               {pickleBalance !== null
                 ? Number(pickleBalance).toLocaleString(undefined, {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 4,
+                    maximumFractionDigits: 2,
                   })
                 : "--"}
             </span>
@@ -113,7 +113,7 @@ export const Balances: FC<{
             <span>
               ${pickleBalance !== null
                 ? Number(
-                    dillStats.lockedValue?.toString() || "0",
+                    dillStats.totalPickleValue?.toString() || "0",
                   ).toLocaleString(undefined, {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
