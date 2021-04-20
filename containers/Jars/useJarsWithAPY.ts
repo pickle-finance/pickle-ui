@@ -339,7 +339,6 @@ export const useJarWithAPY = (jars: Input): Output => {
         rewardsAddress,
         stakingRewards.interface.fragments,
       );
-
       const [
         rewardRateBN,
         stakingToken,

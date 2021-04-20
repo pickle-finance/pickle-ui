@@ -60,7 +60,7 @@ export const FarmInfo: IFarmInfo = {
   },
   "0xC1513C1b0B359Bc5aCF7b772100061217838768B": {
     tokenName: "pUNIV2 FEI/TRIBE",
-    poolName: "pUNIV2 FEI/TRIBE"
+    poolName: "pUNIV2 FEI/TRIBE",
   },
   "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": {
     tokenName: "pUNIV2 MIR/UST",
@@ -132,7 +132,7 @@ export const FarmInfo: IFarmInfo = {
   },
   "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": {
     tokenName: "pSLP SUSHI",
-    poolName: "pSLP SUSHI"
+    poolName: "pSLP SUSHI",
   },
   "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": {
     tokenName: "pSLP MIC/USDT",
@@ -153,6 +153,10 @@ export const FarmInfo: IFarmInfo = {
   "0x0FAA189afE8aE97dE1d2F01E471297678842146d": {
     tokenName: "pSLP MIS/USDT",
     poolName: "pSLP MIS/USDT",
+  },
+  "0x927e3bCBD329e89A8765B52950861482f0B227c4": {
+    tokenName: "pUNIV2 LUSD/ETH",
+    poolName: "pUNIV2 LUSD/ETH",
   },
 };
 
