@@ -427,7 +427,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       </Grid.Container>
       <Spacer />
       <Button
-        disabled={true} //migrateState !== null
+        disabled={migrateState !== null} 
         onClick={handleMigrate}
         style={{ width: "100%" }}
       >
