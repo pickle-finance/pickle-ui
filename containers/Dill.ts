@@ -15,6 +15,7 @@ export interface UseDillOutput {
   totalSupply: ethers.BigNumber | null;
   totalLocked: ethers.BigNumber | null;
   lockedValue: number | null;
+  totalPickleValue: number | null;
   weeklyProfit: number | null;
   weeklyDistribution: number | null;
   nextDistribution: Date | null;
@@ -32,6 +33,7 @@ export function useDill(): UseDillOutput {
   const [totalSupply, setTotalSupply] = useState<ethers.BigNumber | null>(null);
   const [totalLocked, setTotalLocked] = useState<ethers.BigNumber | null>(null);
   const [lockedValue, setLockedValue] = useState<number | null>(null);
+  const [totalPickleValue, setTotalPickleValue] = useState<number | null>(null);
   const [nextDistribution, setNextDistribution] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -62,6 +64,9 @@ export function useDill(): UseDillOutput {
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
 
+        const totalPickleValue =
+          prices.pickle * parseFloat(ethers.utils.formatEther(totalLocked));
+
         const nextDistribution = new Date(
           timeCursor.add(epochTime).toNumber() * 1000,
         );
@@ -72,6 +77,7 @@ export function useDill(): UseDillOutput {
         setTotalSupply(totalSupply);
         setTotalLocked(totalLocked);
         setLockedValue(totalLockedValue);
+        setTotalPickleValue(totalPickleValue);
         setUserClaimable(userClaimable.toString() ? userClaimable : null);
         setNextDistribution(nextDistribution);
       };
@@ -88,6 +94,7 @@ export function useDill(): UseDillOutput {
     totalSupply,
     totalLocked,
     lockedValue,
+    totalPickleValue,
     weeklyProfit,
     weeklyDistribution,
     nextDistribution,
