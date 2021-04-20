@@ -18,6 +18,8 @@ const Gauges: FC = () => {
             <Link href="/old-farms" passHref style={{ color: "var(--link-color)" }}>
               Click here to see the old Farms
             </Link>
+            <br />
+            The new Farms go live Thursday April 22, 12 AM GMT
           </Note>
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
             Farms
