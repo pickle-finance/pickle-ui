@@ -121,7 +121,6 @@ export const FARM_LP_TO_ICON = {
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
   ),
-
 };
 
 const setButtonStatus = (
@@ -428,7 +427,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       </Grid.Container>
       <Spacer />
       <Button
-        disabled={migrateState !== null}
+        disabled={true} //migrateState !== null
         onClick={handleMigrate}
         style={{ width: "100%" }}
       >
@@ -442,7 +441,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           fontSize: "0.8rem",
         }}
       >
-        Your tokens will be unstaked and deposited in the new Farms. This process requires a number of transactions.
+        Your tokens will be unstaked and deposited in the new Farms. This
+        process requires a number of transactions.
       </div>
     </Collapse>
   );
