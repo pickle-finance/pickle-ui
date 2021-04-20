@@ -10,6 +10,7 @@ import { Pool } from "../Contracts/Pool";
 import { Gauge } from "../Contracts/Gauge";
 
 import { Contract as MulticallContract } from "ethers-multicall";
+import { CurveGauge } from "../Contracts/CurveGauge";
 
 export interface JarApy {
   [k: string]: number;
@@ -32,7 +33,7 @@ const getCompoundingAPY = (apr: number) => {
 export const useCurveCrvAPY = (
   jars: Input,
   underlyingPrice: number | null,
-  gauge: Gauge | null,
+  gauge: CurveGauge | null,
   pool: Pool | null,
 ): Output => {
   const { prices } = Prices.useContainer();

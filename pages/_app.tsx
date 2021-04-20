@@ -6,6 +6,8 @@ import * as types from "styled-components/cssprop";
 
 import "../styles/reset.css";
 import "../styles/global.scss";
+import "react-day-picker/lib/style.css";
+
 import { geistTheme } from "../styles/geistTheme";
 import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
@@ -20,6 +22,9 @@ import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { SushiPairs } from "../containers/SushiPairs";
+import { Dill } from "../containers/Dill";
+import { Gauges } from "../containers/Gauges";
+import { UserGauges } from "../containers/UserGauges";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
@@ -37,15 +42,23 @@ const WithContainers: FC = ({ children }) => (
               <Pickles.Provider>
                 <PickleStaking.Provider>
                   <UniV2Pairs.Provider>
-                    <SushiPairs.Provider>
-                      <Jars.Provider>
-                        <Farms.Provider>
-                          <UserJars.Provider>
-                            <UserFarms.Provider>{children}</UserFarms.Provider>
-                          </UserJars.Provider>
-                        </Farms.Provider>
-                      </Jars.Provider>
-                    </SushiPairs.Provider>
+                    <Dill.Provider>
+                      <SushiPairs.Provider>
+                        <Jars.Provider>
+                          <Farms.Provider>
+                            <Gauges.Provider>
+                              <UserJars.Provider>
+                                <UserFarms.Provider>
+                                  <UserGauges.Provider>
+                                    {children}
+                                  </UserGauges.Provider>
+                                </UserFarms.Provider>
+                              </UserJars.Provider>
+                            </Gauges.Provider>
+                          </Farms.Provider>
+                        </Jars.Provider>
+                      </SushiPairs.Provider>
+                    </Dill.Provider>
                   </UniV2Pairs.Provider>
                 </PickleStaking.Provider>
               </Pickles.Provider>

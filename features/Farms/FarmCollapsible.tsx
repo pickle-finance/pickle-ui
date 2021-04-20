@@ -1,7 +1,15 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import {
+  Button,
+  Link,
+  Input,
+  Grid,
+  Spacer,
+  Tooltip,
+  Checkbox,
+} from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
@@ -17,6 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -37,7 +46,7 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
-const FARM_LP_TO_ICON = {
+export const FARM_LP_TO_ICON = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": "/pickle.png",
   "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
   "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
@@ -187,6 +196,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
+  const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked);
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -203,6 +213,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     disabled: false,
     text: "Harvest",
   });
+
+  const [migrateState, setMigrateState] = useState<string | null>(null);
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
@@ -228,6 +240,23 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const totalAPY = APYs.map((x) => {
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
+
+  const handleMigrate = async () => {
+    if (stakedNum) {
+      try {
+        setMigrateState("Withdrawing...");
+        await withdraw();
+        setMigrateState("Migrating...");
+        await deposit();
+        setMigrateState("Migration successful!");
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setMigrateState(null);
+        return;
+      }
+    }
+  };
 
   useEffect(() => {
     if (masterchef) {
@@ -396,39 +425,25 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             {unstakeButton.text}
           </Button>
         </Grid>
-        <Spacer />
-        <Grid xs={24}>
-          <Spacer />
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (masterchef && signer) {
-                transfer({
-                  token: masterchef.address,
-                  recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return masterchef.connect(signer).withdraw(poolIndex, 0);
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {harvestButton.text}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "0.8rem",
-            }}
-          >
-            PICKLEs are automatically harvested on staking and unstaking.
-          </div>
-        </Grid>
       </Grid.Container>
+      <Spacer />
+      <Button
+        disabled={migrateState !== null}
+        onClick={handleMigrate}
+        style={{ width: "100%" }}
+      >
+        {migrateState || "Migrate"}
+      </Button>
+      <div
+        style={{
+          width: "100%",
+          textAlign: "center",
+          fontFamily: "Source Sans Pro",
+          fontSize: "0.8rem",
+        }}
+      >
+        Your tokens will be unstaked and deposited in the new Farms. This process requires a number of transactions.
+      </div>
     </Collapse>
   );
 };
