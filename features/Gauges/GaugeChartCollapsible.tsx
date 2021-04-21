@@ -32,9 +32,8 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const gaugeChartData = gauges
     .map((gauge) => {
       const { allocPoint, depositTokenName } = gauge;
-      const rounded = Math.round(allocPoint * 100) / 100;
       return {
-        allocPoint: rounded,
+        allocPoint,
         depositTokenName,
       };
     })
@@ -74,7 +73,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                   />
                 ))}
               </Pie>
-              <Tooltip formatter={(val) => val*100 + "%"}/>
+              <Tooltip formatter={(val) => (val * 100).toFixed(2) + "%"} />
             </PieChart>
           </ResponsiveContainer>
         </div>
