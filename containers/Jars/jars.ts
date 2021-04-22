@@ -165,9 +165,9 @@ export const DEPOSIT_TOKENS_LINK = {
   SUSHI_ETH_YFI:
     "https://exchange.sushiswapclassic.org/#/add/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/ETH",
   SUSHI_ETH_YVECRV:
-    "https://app.sushiswap.fi/pair/0x10b47177e92ef9d5c6059055d92ddf6290848991",
+    "https://exchange.sushiswapclassic.org/#/add/0xc5bddf9843308380375a611c18b50fb9341f502a/ETH",
   SUSHI_ETH:
-    "https://app.sushi.com/pair/0x795065dcc9f64b5614c407a6efdc400da6221fb0",
+    "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
 };
 
