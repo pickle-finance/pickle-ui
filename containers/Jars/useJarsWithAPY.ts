@@ -350,19 +350,19 @@ export const useJarWithAPY = (jars: Input): Output => {
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
-      const mirRewardRate = parseFloat(formatEther(rewardRateBN));
+      const lqtyRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
       console.log(pricePerToken, stakingToken);
 
-      const mirRewardsPerYear = mirRewardRate * (360 * 24 * 60 * 60);
-      const valueRewardedPerYear = prices.mir * mirRewardsPerYear;
+      const mirRewardsPerYear = lqtyRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.lqty * mirRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
-      const mirAPY = valueRewardedPerYear / totalValueStaked;
+      const lqtyAPY = valueRewardedPerYear / totalValueStaked;
 
       return [
-        { mir: getCompoundingAPY(mirAPY * 0.8), apr: mirAPY * 0.8 * 100 },
+        { lqty: getCompoundingAPY(lqtyAPY * 0.8), apr: lqtyAPY * 0.8 * 100 },
       ];
     }
 
