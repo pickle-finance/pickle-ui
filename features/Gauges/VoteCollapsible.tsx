@@ -284,9 +284,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       return Object.values(x).reduce((acc, y) => acc + y, 0);
     }).reduce((acc, x) => acc + x, 0);
 
-    const newWeight = newWeights
-      ? newWeights?.find((x: UserGaugeData) => x[address] >= 0)[address]
-      : null;
+    const newWeightMaybe = newWeights?.find(
+      (x: UserGaugeData) => x[address] >= 0,
+    );
+    const newWeight = newWeightMaybe ? newWeightMaybe[address] : null;
 
     return (
       <Grid.Container
@@ -392,7 +393,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           <Spacer y={1} />
           <Grid.Container gap={2}>
             <Grid xs={24} md={24}>
-              <span style={{float:"right"}}>Curent allocation: {totalGaugeWeight}%</span>
+              <span style={{ float: "right" }}>
+                Curent allocation: {totalGaugeWeight}%
+              </span>
               <Button
                 disabled={voteButton.disabled || !weightsValid}
                 onClick={() => {
