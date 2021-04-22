@@ -13,7 +13,7 @@ const Container = styled.div`
 export const FarmList: FC = () => {
   const { signer } = Connection.useContainer();
   const { farmData } = UserFarms.useContainer();
-  const [showInactive, setShowInactive] = useState<boolean>(false);
+  const [showInactive, setShowInactive] = useState<boolean>(true);
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
