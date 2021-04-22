@@ -68,6 +68,9 @@ export const FARM_LP_TO_ICON = {
   "0xC1513C1b0B359Bc5aCF7b772100061217838768B": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fei.png"} />
   ),
+  "0x927e3bCBD329e89A8765B52950861482f0B227c4": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
+  ),
   "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir-ust.png"} />
   ),
