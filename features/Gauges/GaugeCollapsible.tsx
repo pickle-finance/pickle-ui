@@ -139,6 +139,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     disabled: false,
     text: "Harvest",
   });
+  const [exitButton, setExitButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Harvest and Exit",
+  });
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [];
@@ -199,6 +203,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
         depositToken.address,
       );
       const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
+      const exitStatus = getTransferStatus(gaugeData.address, "exit");
 
       setButtonStatus(
         stakeStatus,
@@ -217,6 +222,12 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
         "Harvesting...",
         "Harvest",
         setHarvestButton,
+      );
+      setButtonStatus(
+        exitStatus,
+        "Exiting...",
+        "Harvest and Exit",
+        setExitButton,
       );
     }
   }, [erc20TransferStatuses]);
@@ -385,38 +396,50 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Button>
         </Grid>
         <Spacer />
-        <Grid xs={24}>
-          <Spacer />
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gauge.address,
-                  recipient: gauge.address, // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return gauge.getReward();
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {harvestButton.text}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "0.8rem",
-            }}
-          >
-            PICKLEs are automatically harvested on staking and unstaking.
-          </div>
-        </Grid>
+        
       </Grid.Container>
+      <Grid.Container gap={2}>
+          <Grid xs={24} md={12}>
+            <Button
+              disabled={harvestButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: gauge.address, // Doesn't matter since we don't need approval
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.getReward();
+                    },
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {harvestButton.text}
+            </Button>
+          </Grid>
+          <Grid xs={24} md={12}>
+            <Button
+              disabled={harvestButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: gauge.address, // Doesn't matter since we don't need approval
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.exit();
+                    },
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {exitButton.text}
+            </Button>
+          </Grid>
+        </Grid.Container>
     </Collapse>
   );
 };
