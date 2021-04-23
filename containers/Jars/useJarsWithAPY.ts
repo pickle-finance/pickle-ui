@@ -61,6 +61,10 @@ const sushiPoolIds: SushiPoolId = {
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": 12,
 };
 
+const alchemixPoolIds: SushiPoolId = {
+  "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 2,
+}
+
 export interface JarApy {
   [k: string]: number;
 }
@@ -98,6 +102,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     steCRVPool,
     steCRVGauge,
     basisStaking,
+    stakingPools
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -411,45 +416,40 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   const calculateAlcxAPY = async (lpTokenAddress: string) => {
-    if (sushiChef && prices?.alcx && getSushiPairData && multicallProvider) {
-      const poolId = sushiPoolIds[lpTokenAddress];
-      const multicallSushiChef = new MulticallContract(
-        sushiChef.address,
-        sushiChef.interface.fragments,
+    if (stakingPools && prices?.alcx && getSushiPairData && multicallProvider) {
+      const poolId = alchemixPoolIds[lpTokenAddress];
+      const multicallStakingPools = new MulticallContract(
+        stakingPools.address,
+        stakingPools.interface.fragments,
       );
       const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [
-        sushiPerBlockBN,
+        rewardRateBN,
         totalAllocPointBN,
-        poolInfo,
+        poolRewardWeightBN,
         totalSupplyBN,
       ] = await multicallProvider.all([
-        multicallSushiChef.sushiPerBlock(),
-        multicallSushiChef.totalAllocPoint(),
-        multicallSushiChef.poolInfo(poolId),
-        lpToken.balanceOf(sushiChef.address),
+        multicallStakingPools.rewardRate(),
+        multicallStakingPools.totalRewardWeight(),
+        multicallStakingPools.getPoolRewardWeight(poolId),
+        lpToken.balanceOf(stakingPools.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
-      const sushiRewardsPerBlock =
-        (parseFloat(formatEther(sushiPerBlockBN)) *
-          0.9 *
-          poolInfo.allocPoint.toNumber()) /
-        totalAllocPointBN.toNumber();
 
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
-      const sushiRewardsPerYear =
-        sushiRewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
-      const valueRewardedPerYear = prices.sushi * sushiRewardsPerYear;
+      const alcxRewardsPerYear = rewardRateBN.toNumber() * ((360 * 24 * 60 * 60)) ;
+      const poolRewardsPerYear = alcxRewardsPerYear * poolRewardWeightBN.toString() / totalAllocPointBN.toString()
+      const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
-      const sushiAPY = valueRewardedPerYear / totalValueStaked;
+      const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
       return [
-        { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
+        { alcx: getCompoundingAPY(alcxAPY * 0.8), apr: alcxAPY * 0.8 * 100 },
       ];
     }
 
