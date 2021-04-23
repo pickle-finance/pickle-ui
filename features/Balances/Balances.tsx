@@ -41,7 +41,7 @@ const PickleIcon = ({ size = "24px", margin = "0 0 0 0.5rem" }) => (
 const formatPickles = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 3,
+    maximumFractionDigits: 2,
   });
 const formatDollars = (num: number) =>
   "$" +

@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
+import { UserGauges } from "../../containers/UserGauges";
 
 export const usePendingPickles = (): { pendingPickles: number | null } => {
   const { address, blockNum } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
+  const { gaugeData } = UserGauges.useContainer();
   const [pendingPickles, setPendingPickles] = useState<number | null>(null);
 
   const getData = async () => {
-    if (address && masterchef) {
+    if (address && masterchef && gaugeData) {
       const poolLengthBN = await masterchef.poolLength();
       const poolLength = poolLengthBN.toNumber();
 
@@ -24,9 +26,16 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
       const pendingPickles = await Promise.all(promises);
 
       // add up all the pending pickles from each pool
-      const totalPendingPickles = pendingPickles.reduce(
+      const totalMasterchefPickles = pendingPickles.reduce(
         (a, b) => a + Number(ethers.utils.formatUnits(b)),
         0,
+      );
+
+      const totalPendingPickles = gaugeData.reduce(
+        (a, b) => a + parseFloat(
+          ethers.utils.formatEther(b.harvestable || 0),
+        ),
+        totalMasterchefPickles,
       );
 
       setPendingPickles(totalPendingPickles);

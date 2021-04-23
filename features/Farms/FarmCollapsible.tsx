@@ -1,7 +1,15 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import {
+  Button,
+  Link,
+  Input,
+  Grid,
+  Spacer,
+  Tooltip,
+  Checkbox,
+} from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
@@ -17,6 +25,8 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { PICKLE_JARS } from "../../containers/Jars/jars"
+import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -37,7 +47,7 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
-const FARM_LP_TO_ICON = {
+export const FARM_LP_TO_ICON = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": "/pickle.png",
   "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
   "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
@@ -57,6 +67,9 @@ const FARM_LP_TO_ICON = {
   "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87": "/dai.png",
   "0xC1513C1b0B359Bc5aCF7b772100061217838768B": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fei.png"} />
+  ),
+  "0x927e3bCBD329e89A8765B52950861482f0B227c4": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
   ),
   "0x3Bcd97dCA7b1CED292687c97702725F37af01CaC": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir-ust.png"} />
@@ -112,7 +125,6 @@ const FARM_LP_TO_ICON = {
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
   ),
-
 };
 
 const setButtonStatus = (
@@ -187,6 +199,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
+  const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked);
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -203,6 +216,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     disabled: false,
     text: "Harvest",
   });
+
+  const [migrateState, setMigrateState] = useState<string | null>(null);
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
@@ -228,6 +243,25 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const totalAPY = APYs.map((x) => {
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
+
+  const isDisabledFarm = depositToken.address === PICKLE_JARS.pUNIBACDAI || depositToken.address === PICKLE_JARS.pUNIBASDAI
+
+  const handleMigrate = async () => {
+    if (stakedNum) {
+      try {
+        setMigrateState("Withdrawing...");
+        await withdraw();
+        setMigrateState("Migrating...");
+        await deposit();
+        setMigrateState("Migration successful!");
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setMigrateState(null);
+        return;
+      }
+    }
+  };
 
   useEffect(() => {
     if (masterchef) {
@@ -331,7 +365,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled}
+            disabled={stakeButton.disabled || isDisabledFarm}
             onClick={() => {
               if (masterchef && signer) {
                 transfer({
@@ -373,7 +407,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={unstakeButton.disabled}
+            disabled={unstakeButton.disabled || isDisabledFarm}
             onClick={() => {
               if (masterchef && signer) {
                 transfer({
@@ -396,39 +430,26 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             {unstakeButton.text}
           </Button>
         </Grid>
-        <Spacer />
-        <Grid xs={24}>
-          <Spacer />
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (masterchef && signer) {
-                transfer({
-                  token: masterchef.address,
-                  recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return masterchef.connect(signer).withdraw(poolIndex, 0);
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {harvestButton.text}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "0.8rem",
-            }}
-          >
-            PICKLEs are automatically harvested on staking and unstaking.
-          </div>
-        </Grid>
       </Grid.Container>
+      <Spacer />
+      <Button
+        disabled={migrateState !== null || isDisabledFarm} 
+        onClick={handleMigrate}
+        style={{ width: "100%" }}
+      >
+        {migrateState || "Migrate"}
+      </Button>
+      <div
+        style={{
+          width: "100%",
+          textAlign: "center",
+          fontFamily: "Source Sans Pro",
+          fontSize: "0.8rem",
+        }}
+      >
+        Your tokens will be unstaked and deposited in the new Farms. This
+        process requires a number of transactions.
+      </div>
     </Collapse>
   );
 };

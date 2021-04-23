@@ -28,19 +28,9 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
       connector: walletconnect,
     },
     {
-      icon: "portis.svg",
-      title: "Portis",
-      connector: portis,
-    },
-    {
       icon: "coinbase.svg",
       title: "Coinbase",
       connector: walletlink,
-    },
-    {
-      icon: "fortmatic.svg",
-      title: "Fortmatic",
-      connector: fortmatic,
     },
   ];
   const [activatingConnector, setActivatingConnector] = useState();

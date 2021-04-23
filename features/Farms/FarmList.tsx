@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { Spacer, Grid, Checkbox } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 
 import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms } from "../../containers/UserFarms";
@@ -13,7 +13,7 @@ const Container = styled.div`
 export const FarmList: FC = () => {
   const { signer } = Connection.useContainer();
   const { farmData } = UserFarms.useContainer();
-  const [showInactive, setShowInactive] = useState<boolean>(false);
+  const [showInactive, setShowInactive] = useState<boolean>(true);
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
@@ -47,12 +47,14 @@ export const FarmList: FC = () => {
           </Checkbox>
         </Grid>
       </Grid.Container>
-      <h2>Active</h2>
+      <Spacer y={0.5} />
       <Grid.Container gap={1}>
         {activeFarms.map((farmData) => (
-          <Grid xs={24} key={farmData.poolIndex}>
-            <FarmCollapsible farmData={farmData} />
-          </Grid>
+          <>
+            <Grid xs={24} key={farmData.poolIndex}>
+              <FarmCollapsible farmData={farmData} />
+            </Grid>
+          </>
         ))}
       </Grid.Container>
       <Spacer y={1} />

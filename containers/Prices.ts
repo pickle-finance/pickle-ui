@@ -1,41 +1,9 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
+import CoinGecko from "coingecko-api";
 
 const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Cmirror-protocol%2Cterrausd%2Cmirrored-tesla%2Cmirrored-apple%2Cmirrored-invesco-qqq-trust%2Cmirrored-ishares-silver-trust%2Cmirrored-alibaba%2Cvecrv-dao-yvault%2Cfei-protocol%2Ctribe-2&vs_currencies=usd";
-
-type UsdPrice = { usd: number };
-
-interface Response {
-  dai: UsdPrice;
-  ["compound-governance-token"]: UsdPrice;
-  ethereum: UsdPrice;
-  nusd: UsdPrice;
-  "pickle-finance": UsdPrice;
-  tether: UsdPrice;
-  "usd-coin": UsdPrice;
-  "curve-dao-token": UsdPrice;
-  uniswap: UsdPrice;
-  havven: UsdPrice;
-  "wrapped-bitcoin": UsdPrice;
-  sushi: UsdPrice;
-  "yearn-finance": UsdPrice;
-  "basis-share": UsdPrice;
-  "basis-cash": UsdPrice;
-  "mithril-share": UsdPrice;
-  "mith-cash": UsdPrice;
-  "lido-dao": UsdPrice;
-  "vecrv-dao-yvault": UsdPrice;
-  "mirror-protocol": UsdPrice;
-  terrausd: UsdPrice;
-  "mirrored-tesla": UsdPrice;
-  "mirrored-apple": UsdPrice;
-  "mirrored-invesco-qqq-trust": UsdPrice;
-  "mirrored-ishares-silver-trust": UsdPrice;
-  "mirrored-alibaba": UsdPrice;
-  "fei-protocol": UsdPrice;
-  "tribe-2": UsdPrice;
-}
+  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Cmirror-protocol%2Cterrausd%2Cmirrored-tesla%2Cmirrored-apple%2Cmirrored-invesco-qqq-trust%2Cmirrored-ishares-silver-trust%2Cmirrored-alibaba%2Cvecrv-dao-yvault%2Cfei-protocol%2Ctribe-2%2Cliquity-usd%2Cliquity&vs_currencies=usd";
 
 interface PriceObject {
   dai: number;
@@ -65,7 +33,9 @@ interface PriceObject {
   mslv: number;
   mbaba: number;
   fei: number;
-  tribe: number
+  tribe: number;
+  lusd: number;
+  lqty: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -74,20 +44,42 @@ function usePrices() {
   const [prices, setPrices] = useState<PriceObject | null>(null);
 
   const getPrices = async () => {
-    const response: Response = await fetch(requestURL, {
-      headers: {
-        accept: "application/json",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
-      },
-      referrer: "https://www.coingecko.com/",
-      referrerPolicy: "strict-origin-when-cross-origin",
-      body: null,
-      method: "GET",
-      mode: "cors",
-      credentials: "omit",
-    }).then((x) => x.json());
+    const CoinGeckoClient = new CoinGecko();
+    const { data: response } = await CoinGeckoClient.simple.price({
+      ids: [
+        "pickle-finance",
+        "ethereum",
+        "dai",
+        "usd-coin",
+        "compound-governance-token",
+        "curve-dao-token",
+        "tether",
+        "uniswap",
+        "havven",
+        "nusd",
+        "wrapped-bitcoin",
+        "sushi",
+        "yearn-finance",
+        "basis-share",
+        "basis-cash",
+        "mithril-share",
+        "mith-cash",
+        "lido-dao",
+        "mirror-protocol",
+        "terrausd",
+        "mirrored-tesla",
+        "mirrored-apple",
+        "mirrored-invesco-qqq-trust",
+        "mirrored-ishares-silver-trust",
+        "mirrored-alibaba",
+        "vecrv-dao-yvault",
+        "fei-protocol",
+        "tribe-2",
+        "liquity-usd",
+        "liquity",
+      ],
+      vs_currencies: ["usd"],
+    });
 
     const prices: PriceObject = {
       dai: response.dai.usd,
@@ -117,7 +109,9 @@ function usePrices() {
       mslv: response["mirrored-ishares-silver-trust"].usd,
       mbaba: response["mirrored-alibaba"].usd,
       fei: response["fei-protocol"].usd,
-      tribe: response["tribe-2"].usd
+      tribe: response["tribe-2"].usd,
+      lusd: response["liquity-usd"].usd,
+      lqty: response["liquity"].usd,
     };
     setPrices(prices);
   };
