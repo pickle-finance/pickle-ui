@@ -13,6 +13,7 @@ export const PICKLE_JARS = {
   pSUSHIMISUSDT: "0x0FAA189afE8aE97dE1d2F01E471297678842146d",
   pSUSHIETHYVECRV: "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48",
   pSUSHIETH: "0xECb520217DccC712448338B0BB9b08Ce75AD61AE",
+  pSUSHIETHALCX: "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9",
   pUNIETHDAI: "0xCffA068F1E44D98D3753966eBd58D4CFe3BB5162",
   pUNIETHUSDC: "0x53Bf2E62fA20e2b4522f05de3597890Ec1b352C6",
   pUNIETHUSDT: "0x09FC573c502037B149ba87782ACC81cF093EC6ef",
@@ -51,6 +52,7 @@ export const JAR_DEPOSIT_TOKENS = {
   SUSHI_ETH_WBTC: "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58",
   SUSHI_ETH_YFI: "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C",
   SUSHI_ETH: "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0",
+  SUSHI_ETH_ALCX: "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8",
   sCRV: "0xC25a3A3b969415c80451098fa907EC722572917F",
   renCRV: "0x49849C98ae39Fff122806C06791Fa73784FB3675",
   "3CRV": "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
@@ -89,6 +91,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH_YFI: "SLP YFI/ETH",
   SUSHI_ETH_YVECRV: "SLP YVECRV/ETH",
   SUSHI_ETH: "SLP SUSHI/ETH",
+  SUSHI_ETH_ALCX: "SLP ALCX/ETH",
   DAI: "DAI",
 };
 
@@ -120,6 +123,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YFI]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YVECRV]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: true,
   [DEPOSIT_TOKENS_NAME.DAI]: false,
 };
 
@@ -174,6 +178,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://exchange.sushiswapclassic.org/#/add/0xc5bddf9843308380375a611c18b50fb9341f502a/ETH",
   SUSHI_ETH:
     "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
+  SUSHI_ETH_ALCX:
+    "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
 };
 
@@ -210,6 +216,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_YFI: "pJar 0.99e",
   SUSHI_ETH_YVECRV: "pJar 0.99i",
   SUSHI_ETH: "pJar 0.99q",
+  SUSHI_ETH_ALCX: "pJar 0.99s"
 };
 
 export const STRATEGY_NAMES = {
@@ -285,7 +292,8 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
   if (l === "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2") return "sushi";
   if (l === "0x956f47f50a910163d8bf957cf5846d573e7f87ca") return "fei";
   if (l === "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b") return "tribe";
-  if (l === "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b") return "tribe";
   if (l === "0x5f98805a4e8be255a32880fdec7f6728c6568ba0") return "lusd";
+
+  if (l === "0xdbdb4d16eda451d0503b854cf79d55697f90c8df") return "alcx";
   throw new Error(`Unknown token address: ${tokenAddress}`);
 };

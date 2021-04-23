@@ -25,6 +25,7 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
+  ALCHEMIX_ALCX_ETH_STAKING_REWARDS
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -409,6 +410,52 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateAlcxAPY = async (lpTokenAddress: string) => {
+    if (sushiChef && prices?.alcx && getSushiPairData && multicallProvider) {
+      const poolId = sushiPoolIds[lpTokenAddress];
+      const multicallSushiChef = new MulticallContract(
+        sushiChef.address,
+        sushiChef.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        sushiPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallSushiChef.sushiPerBlock(),
+        multicallSushiChef.totalAllocPoint(),
+        multicallSushiChef.poolInfo(poolId),
+        lpToken.balanceOf(sushiChef.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const sushiRewardsPerBlock =
+        (parseFloat(formatEther(sushiPerBlockBN)) *
+          0.9 *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      const sushiRewardsPerYear =
+        sushiRewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+      const valueRewardedPerYear = prices.sushi * sushiRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const sushiAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [
+        { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
@@ -487,12 +534,14 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthyveCRVApy,
         // basisBacDaiApy,
         // basisBasDaiApy,
+        alcxEthAlcxApy
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
+        calculateAlcxAPY(ALCHEMIX_ALCX_ETH_STAKING_REWARDS)
       ]);
 
       const [
@@ -703,6 +752,12 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...sushiEthApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
+          ];
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
+          APYs = [
+            ...alcxEthAlcxApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
           ];
         }
 
