@@ -25,7 +25,7 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
-  ALCHEMIX_ALCX_ETH_STAKING_REWARDS
+  ALCHEMIX_ALCX_ETH_STAKING_POOLS
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -440,14 +440,13 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
-      const alcxRewardsPerYear = rewardRateBN.toNumber() * ((360 * 24 * 60 * 60)) ;
+      const alcxRewardsPerYear = parseFloat(formatEther(rewardRateBN)) * ((360 * 24 * 60 * 60)) ;
       const poolRewardsPerYear = alcxRewardsPerYear * poolRewardWeightBN.toString() / totalAllocPointBN.toString()
       const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
-      // no more UNI being distributed
       return [
         { alcx: getCompoundingAPY(alcxAPY * 0.8), apr: alcxAPY * 0.8 * 100 },
       ];
@@ -541,7 +540,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
-        calculateAlcxAPY(ALCHEMIX_ALCX_ETH_STAKING_REWARDS)
+        calculateAlcxAPY(ALCHEMIX_ALCX_ETH_STAKING_POOLS)
       ]);
 
       const [

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
 
-import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
+import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId, DEPOSIT_TOKENS_NAME } from "./jars";
 import { JarWithAPY } from "./useJarsWithAPY";
 
 import { Contract as MulticallContract } from "ethers-multicall";
@@ -58,7 +58,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX
   );
 };
 
