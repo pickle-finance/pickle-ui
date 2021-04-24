@@ -45,6 +45,8 @@ import { FeeDistributorFactory } from "./Contracts/FeeDistributorFactory";
 import { FeeDistributor } from "./Contracts/FeeDistributor";
 import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
+import { YvboostMigrator } from "./Contracts/YvboostMigrator";
+import { YvboostMigratorFactory } from "./Contracts/YvboostMigratorFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -132,6 +134,8 @@ export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
+export const YVBOOST_MIGRATOR = "0xEa5Bc9e65dacD198F44b7542AcbCB40c4cb455Ba";
+
 function useContracts() {
   const { signer } = Connection.useContainer();
 
@@ -183,6 +187,11 @@ function useContracts() {
 
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
 
+  const [
+    yvBoostMigrator,
+    setyvBoostMigrator,
+  ] = useState<YvboostMigrator | null>(null);
+
   const initContracts = async () => {
     if (signer) {
       setPickle(Erc20Factory.connect(PICKLE_TOKEN_ADDR, signer));
@@ -228,6 +237,7 @@ function useContracts() {
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
       setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
+      setyvBoostMigrator(YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer));
     }
   };
 
@@ -264,6 +274,7 @@ function useContracts() {
     gauge,
     feeDistributor,
     yveCrvZap,
+    yvBoostMigrator,
   };
 }
 

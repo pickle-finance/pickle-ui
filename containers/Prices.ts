@@ -36,6 +36,7 @@ interface PriceObject {
   tribe: number;
   lusd: number;
   lqty: number;
+  yvboost: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -77,6 +78,7 @@ function usePrices() {
         "tribe-2",
         "liquity-usd",
         "liquity",
+        // "yvboost",
       ],
       vs_currencies: ["usd"],
     });
@@ -112,6 +114,7 @@ function usePrices() {
       tribe: response["tribe-2"].usd,
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
+      yvboost: 0, // to update once CG provides yvboost price
     };
     setPrices(prices);
   };
