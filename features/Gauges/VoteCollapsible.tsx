@@ -394,7 +394,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           <Grid.Container gap={2}>
             <Grid xs={24} md={24}>
               <span style={{ float: "right" }}>
-                Curent allocation: {totalGaugeWeight}%
+                Current allocation: {totalGaugeWeight}%
               </span>
               <Button
                 disabled={voteButton.disabled || !weightsValid}
