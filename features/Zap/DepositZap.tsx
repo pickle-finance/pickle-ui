@@ -1,11 +1,12 @@
 import { FC, useState } from "react";
-import { Card, Select, Spacer, Input, Button, Link } from "@geist-ui/react";
+import { Card, Select, Spacer, Input, Button } from "@geist-ui/react";
+import Link from "next/link";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
-import { useDeposit } from "./useDeposit";
-import { useDepositEth } from "./useDeposit";
 import { useZapIn } from "./useZapper";
 import { TokenIcon } from "../../components/TokenIcon";
+import { useMigrate } from "../../features/Farms/UseMigrate";
+
 import {
   DEFAULT_SLIPPAGE,
   YVECRVETH_JAR,
@@ -30,19 +31,26 @@ export const DepositZap: FC = () => {
     e.preventDefault();
     balanceStr !== null && setAmount(balanceStr);
   };
-  
+
   const { zapIn } = useZapIn({
     poolAddress: YVECRVETH_JAR,
     sellTokenAddress,
     rawAmount: amount,
     slippagePercentage: DEFAULT_SLIPPAGE,
   });
+
+  const {
+    depositYvboost,
+  } = useMigrate(null, 0, null, null);
+
   const handleDeposit = async () => {
     if (amount && decimals) {
       {
         try {
           setTxState("Zapping...");
           await zapIn();
+          setTxState("Depositing in Farm...");
+          await depositYvboost();
           setTxState(null);
         } catch (error) {
           console.error(error);
@@ -78,12 +86,12 @@ export const DepositZap: FC = () => {
   return (
     <Card>
       <h2>
-        <TokenIcon src="/yvecrv.png" />
-        Zap to yveCRV
+        <TokenIcon src="/yvboost.png" />
+        Zap to yvBOOST
       </h2>
       <p>
-        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to{" "}
-        <a href="/farms">Pickle Farm</a>.
+        Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to{" "}
+        <Link href="/farms" passHref>Pickle Farm</Link>.
       </p>
       <h3>Deposit Token</h3>
       <Select

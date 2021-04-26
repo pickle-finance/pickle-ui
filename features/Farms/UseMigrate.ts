@@ -55,10 +55,10 @@ const YVBOOST_GAUGE = "0xDA481b277dCe305B97F4091bD66595d57CF31634";
 const YVECRV_GAUGE = " 0xd3F6732D758008E59e740B2bc2C1b5E420b752c2";
 
 export const useMigrate = (
-  jarToken: Erc20,
+  jarToken: Erc20 | null,
   poolIndex: number,
-  balance: BigNumber,
-  staked: BigNumber,
+  balance: BigNumber | null,
+  staked: BigNumber | null,
 ) => {
   const { address, signer, blockNum } = Connection.useContainer();
   const { masterchef, yvBoostMigrator, erc20 } = Contracts.useContainer();

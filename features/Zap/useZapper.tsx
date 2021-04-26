@@ -65,8 +65,6 @@ export const useZapIn = ({
             ownerAddress: address,
           }),
         );
-        console.log("approval state", approvalState);
-
         if (!approvalState.isApproved) {
           const { from, to, data } = await fetchRes(
             getZapperApi("/zap-in/pickle/approval-transaction", {
@@ -89,7 +87,6 @@ export const useZapIn = ({
           ownerAddress: address,
         }),
       );
-      console.log(data);
       const zapTx = await signer.sendTransaction({ from, to, data, value });
       await zapTx.wait();
     } catch (error) {

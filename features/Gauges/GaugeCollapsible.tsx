@@ -494,11 +494,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                 }}
               >
                 Your tokens will be unstaked and migrated to the yvBOOST pJar
-                and staked in the new{" "}
-                <Link color href="/farms">
-                  Farms
-                </Link>
-                . <br />
+                and staked in the Farm.<br />
                 This process will require a number of transactions.
                 {isSuccess ? (
                   <p style={{ fontWeight: "bold" }}>

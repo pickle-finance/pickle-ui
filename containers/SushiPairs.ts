@@ -140,7 +140,15 @@ function useSushiPairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-    const totalValueOfPair = priceA * numAInPair + priceB * numBInPair;
+
+    let totalValueOfPair;
+    // In case price one token is not listed on coingecko
+    if (priceA) {
+      totalValueOfPair = 2 * priceA * numAInPair;
+    } else {
+      totalValueOfPair = 2 * priceB * numBInPair;
+    }
+    
     const totalSupply = parseFloat(ethers.utils.formatEther(totalSupplyBN)); // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 
