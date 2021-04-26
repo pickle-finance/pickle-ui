@@ -130,6 +130,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP yveCRV",
     poolName: "Back Scratcher",
   },
+  "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378": {
+    tokenName: "pSLP yvBOOST",
+    poolName: "Back Scratcher",
+  },
   "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": {
     tokenName: "pSLP SUSHI",
     poolName: "pSLP SUSHI",
