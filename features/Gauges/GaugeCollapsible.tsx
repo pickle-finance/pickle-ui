@@ -371,7 +371,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled}
+            disabled={stakeButton.disabled || isyveCRVFarm}
             onClick={() => {
               if (gauge && signer) {
                 transfer({

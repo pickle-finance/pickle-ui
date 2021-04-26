@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 
 import { FarmCollapsible } from "./FarmCollapsible";
-import { UserFarms } from "../../containers/UserFarms";
+import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
+
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -26,6 +28,20 @@ export const FarmList: FC = () => {
   const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
+  const indexofYvecrv = inactiveFarms.findIndex(x=>x.depositToken.address.toLowerCase() === PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase())
+
+  console.log(inactiveFarms, indexofYvecrv)
+
+  console.log("index", indexofYvecrv)
+
+  const moveInArray = (arr: UserFarmData[], from: number, to: number) => {
+    var item = arr.splice(from, 1);
+  
+    if (!item.length) return;
+    arr.splice(to, 0, item[0]);
+  };
+
+  moveInArray(inactiveFarms, indexofYvecrv, 1)
   return (
     <Container>
       <Grid.Container gap={1}>
