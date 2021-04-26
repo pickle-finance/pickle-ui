@@ -134,7 +134,7 @@ export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
-export const YVBOOST_MIGRATOR = "0xEa5Bc9e65dacD198F44b7542AcbCB40c4cb455Ba";
+export const YVBOOST_MIGRATOR = "0x61Dde5da89fB3a099035bd9b3f94d1105A22F3d9";
 
 function useContracts() {
   const { signer } = Connection.useContainer();
