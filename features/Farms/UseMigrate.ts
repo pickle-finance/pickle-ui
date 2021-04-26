@@ -6,6 +6,7 @@ import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 import { Erc20 } from "../../containers/Contracts/Erc20";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { getStats } from "../../features/Zap/useZapper";
+import { Gauge } from "../../containers/Contracts/Gauge";
 
 export const FARM_LP_TO_GAUGE = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819":
@@ -51,6 +52,7 @@ export const FARM_LP_TO_GAUGE = {
 };
 
 const YVBOOST_GAUGE = "0xDA481b277dCe305B97F4091bD66595d57CF31634";
+const YVECRV_GAUGE = " 0xd3F6732D758008E59e740B2bc2C1b5E420b752c2";
 
 export const useMigrate = (
   jarToken: Erc20,
@@ -87,6 +89,14 @@ export const useMigrate = (
     if (!address || !masterchef || !parseInt(staked.toString())) return;
 
     const tx = await masterchef.withdraw(poolIndex, staked);
+    await tx.wait();
+  };
+
+
+  const withdrawGauge = async (gauge: Gauge) => {
+    if (!address || !gauge || !parseInt(staked.toString())) return;
+  
+    const tx = await gauge.withdrawAll();
     await tx.wait();
   };
 
@@ -128,11 +138,9 @@ export const useMigrate = (
     }
 
     const tx2 = await yvBoostMigrator.Migrate(pYvcrvBalance, minOut, {
-      gasLimit: 1300000,
+      gasLimit: 1100000,
     });
     await tx2.wait();
-
-    return;
   };
 
   const depositYvboost = async () => {
@@ -154,9 +162,7 @@ export const useMigrate = (
       const tx2 = await gauge.deposit(pYvboostBalance);
       await tx2.wait();
     }
-
-    return;
   };
 
-  return { deposit, withdraw, migrateYvboost, depositYvboost };
+  return { deposit, withdraw, migrateYvboost, depositYvboost, withdrawGauge };
 };

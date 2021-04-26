@@ -203,7 +203,12 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
-  const { deposit, withdraw, migrateYvboost, depositYvboost } = useMigrate(depositToken, poolIndex, balance, staked);
+  const { deposit, withdraw, migrateYvboost, depositYvboost } = useMigrate(
+    depositToken,
+    poolIndex,
+    balance,
+    staked,
+  );
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -223,6 +228,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
 
   const [migrateState, setMigrateState] = useState<string | null>(null);
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
+  const [isSuccess, setSuccess] = useState<boolean>(false);
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
@@ -283,11 +289,12 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         await migrateYvboost();
         setYvMigrateState("Migrated! Staking in Farm...");
         await depositYvboost();
-        setMigrateState("Migration successful!");
+        setYvMigrateState(null);
+        setSuccess(true);
       } catch (error) {
         console.error(error);
         alert(error.message);
-        setMigrateState(null);
+        setYvMigrateState(null);
         return;
       }
     }
@@ -465,11 +472,11 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       {isyveCRVFarm ? (
         <>
           <Button
-            disabled={yvMigrateState !== null || isDisabledFarm}
+            disabled={yvMigrateState !== null}
             onClick={handleYvboostMigrate}
             style={{ width: "100%", textTransform: "none" }}
           >
-            {yvMigrateState || 'Migrate yveCRV-ETH LP to yvBOOST-ETH LP'}
+            {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
           </Button>
           <div
             style={{
@@ -480,9 +487,20 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             }}
           >
             Your tokens will be unstaked and migrated to the yvBOOST pJar and
-            staked in the new <Link href="/farms">Farms</Link>. <br />
-            This process will require a number of transactions. <br />
-            Read more about yvBOOST <a>here</a>.
+            staked in the new{" "}
+            <Link color href="/farms">
+              Farms
+            </Link>
+            . <br />
+            This process will require a number of transactions.
+            {isSuccess ? (
+              <p style={{fontWeight: "bold"}}>
+                Migration completed! See your deposits{" "}
+                <Link color href="/farms">
+                  here
+                </Link>
+              </p>
+            ) : null}
           </div>
         </>
       ) : (
