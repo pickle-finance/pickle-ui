@@ -25,7 +25,7 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
-  ALCHEMIX_ALCX_ETH_STAKING_POOLS
+  ALCHEMIX_ALCX_ETH_STAKING_POOLS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -63,7 +63,7 @@ const sushiPoolIds: SushiPoolId = {
 
 const alchemixPoolIds: SushiPoolId = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 2,
-}
+};
 
 export interface JarApy {
   [k: string]: number;
@@ -102,7 +102,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     steCRVPool,
     steCRVGauge,
     basisStaking,
-    stakingPools
+    stakingPools,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -358,7 +358,6 @@ export const useJarWithAPY = (jars: Input): Output => {
       const lqtyRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
-      console.log(pricePerToken, stakingToken);
 
       const mirRewardsPerYear = lqtyRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.lqty * mirRewardsPerYear;
@@ -400,7 +399,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const tribeRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
-      
+
       const tribeRewardsPerYear = tribeRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 
@@ -440,10 +439,13 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
-      const alcxRewardsPerYear = parseFloat(formatEther(rewardRateBN)) * ((360 * 24 * 60 * 60)) ;
-      const poolRewardsPerYear = alcxRewardsPerYear * poolRewardWeightBN.toString() / totalAllocPointBN.toString()
+      const alcxRewardsPerYear =
+        parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME;
+      const poolRewardsPerYear =
+        (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
+        totalAllocPointBN.toString();
       const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
-
+      
       const totalValueStaked = totalSupply * pricePerToken;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
@@ -533,14 +535,14 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthyveCRVApy,
         // basisBacDaiApy,
         // basisBasDaiApy,
-        alcxEthAlcxApy
+        alcxEthAlcxApy,
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
-        calculateAlcxAPY(ALCHEMIX_ALCX_ETH_STAKING_POOLS)
+        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
       ]);
 
       const [
@@ -753,11 +755,13 @@ export const useJarWithAPY = (jars: Input): Output => {
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
           ];
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
-          APYs = [
-            ...alcxEthAlcxApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-          ];
+        }
+
+          if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
+            APYs = [
+              ...alcxEthAlcxApy,
+              ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+            ];
         }
 
         // if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
