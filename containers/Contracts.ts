@@ -45,6 +45,8 @@ import { FeeDistributorFactory } from "./Contracts/FeeDistributorFactory";
 import { FeeDistributor } from "./Contracts/FeeDistributor";
 import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
+import { StakingPools } from "./Contracts/StakingPools";
+import { StakingPoolsFactory } from "./Contracts/StakingPoolsFactory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -126,6 +128,9 @@ export const MIRROR_MBABA_UST_STAKING_REWARDS =
 export const FEI_TRIBE_STAKING_REWARDS =
   "0x18305DaAe09Ea2F4D51fAa33318be5978D251aBd";
 
+export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
+  "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
+
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
@@ -182,6 +187,7 @@ function useContracts() {
   const [instabrine, setInstabrine] = useState<Instabrine | null>(null);
 
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
+  const [stakingPools, setStakingPools] = useState<StakingPools | null>(null);
 
   const initContracts = async () => {
     if (signer) {
@@ -228,6 +234,7 @@ function useContracts() {
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
       setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
+      setStakingPools(StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer));
     }
   };
 
@@ -264,6 +271,7 @@ function useContracts() {
     gauge,
     feeDistributor,
     yveCrvZap,
+    stakingPools
   };
 }
 
