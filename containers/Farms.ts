@@ -158,6 +158,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pUNIV2 LUSD/ETH",
     poolName: "pUNIV2 LUSD/ETH",
   },
+  "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9": {
+    tokenName: "pSLP ALCX/ETH",
+    poolName: "pSLP ALCX/ETH",
+  },
 };
 
 function useFarms() {
