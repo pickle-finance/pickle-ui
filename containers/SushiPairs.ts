@@ -5,7 +5,7 @@ import erc20 from "@studydefi/money-legos/erc20";
 import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",

@@ -8,7 +8,7 @@ import { Prices } from "../Prices";
 import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
 import { JarWithAPY } from "./useJarsWithAPY";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { Connection } from "../Connection";
 
 export interface JarWithTVL extends JarWithAPY {

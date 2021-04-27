@@ -5,7 +5,7 @@
   "author": "BigBrainBriner <bigbrainbriner@protonmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn typechain && next",
+    "dev": "yarn typechain && next",@0xsquenc/
     "build": "yarn typechain && next build",
     "start": "yarn typechain && next start",
     "format": "prettier --write \"./**/*.{json,js,jsx,ts,tsx}\" --ignore-path .gitignore",
@@ -34,7 +34,7 @@
     "clsx": "^1.1.1",
     "coingecko-api": "^1.0.10",
     "ethers": "^5.0.14",
-    "ethers-multicall": "^0.1.3",
+    "@0xsequence/multicall": "^0.1.3",
     "fontsource-roboto": "^4.0.0",
     "moment": "^2.29.1",
     "next": "^9.5.3",

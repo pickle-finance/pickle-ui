@@ -9,7 +9,7 @@ import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";
 import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { FarmWithReward } from "./useWithReward";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { ethers } from "ethers";
 
 const { formatEther } = ethers.utils;

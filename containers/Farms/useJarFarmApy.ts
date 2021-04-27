@@ -11,7 +11,7 @@ import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;

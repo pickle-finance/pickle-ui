@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
-import { Provider as MulticallProvider } from "ethers-multicall";
+import { Provider as MulticallProvider } from "@0xsequence/multicall";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
@@ -9,7 +9,7 @@ import { useWeb3React } from "@web3-react/core";
 type Network = ethers.providers.Network;
 
 function useConnection() {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const [
     multicallProvider,
@@ -55,6 +55,7 @@ function useConnection() {
     network,
     blockNum,
     signer: library?.getSigner(),
+    chainId,
   };
 }
 

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Connection } from "../Connection";
 import { Contracts, GAUGE_PROXY } from "../Contracts";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export interface RawGauge {
   token: string;

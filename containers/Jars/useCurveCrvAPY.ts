@@ -9,7 +9,7 @@ import { Jar } from "./useFetchJars";
 import { Pool } from "../Contracts/Pool";
 import { Gauge } from "../Contracts/Gauge";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { CurveGauge } from "../Contracts/CurveGauge";
 
 export interface JarApy {

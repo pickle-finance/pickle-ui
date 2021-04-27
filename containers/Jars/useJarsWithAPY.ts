@@ -39,7 +39,7 @@ import erc20 from "@studydefi/money-legos/erc20";
 
 import compound from "@studydefi/money-legos/compound";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
@@ -394,7 +394,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const tribeRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
-      
+
       const tribeRewardsPerYear = tribeRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 

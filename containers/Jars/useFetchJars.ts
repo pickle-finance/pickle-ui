@@ -15,7 +15,7 @@ import {
   DEPOSIT_TOKENS_LINK,
 } from "./jars";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export type Jar = {
   depositToken: Erc20Contract;

@@ -7,7 +7,7 @@ import { Jar } from "./useFetchJars";
 import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { Connection } from "../Connection";
 
 export interface JarApy {

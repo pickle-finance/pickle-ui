@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { Connection } from "../../containers/Connection";
 import { Tooltip } from "@geist-ui/react";
+import { config } from "../../containers/config";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -30,6 +31,7 @@ const AddressBox = styled.a`
   background: var(--bg-color);
   border-top-right-radius: 0;
   border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
 
   &:hover {
     text-shadow: none;
@@ -65,6 +67,24 @@ const BlockBox = styled.a`
   }
 `;
 
+const NetworkBox = styled.div`
+  display: flex;
+  align-items: center;
+  display: flex;
+  align-items: center;
+  color: #5ec591;
+  background: #161616;
+  padding: 0.5rem 1rem;
+  border: 1px solid #004221;
+  transform: translateX(4px);
+  text-decoration: none;
+  margin-left: -1px;
+
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+`;
+
 const pulse = keyframes`
   0% { background-color: #5ec591; }
   50% { background-color: #7fa491; }
@@ -89,13 +109,8 @@ const Circle = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
-const AddressMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export const DesktopNetworkIndicator: FC = () => {
-  const { address, blockNum } = Connection.useContainer();
+  const { address, blockNum, chainId } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
   return (
@@ -115,6 +130,7 @@ export const DesktopNetworkIndicator: FC = () => {
           </BlockBox>
         </Tooltip>
       )}
+      <NetworkBox>{chainId ? config.chains[chainId].name : ""}</NetworkBox>
       <AddressBox
         href={`https://etherscan.io/address/${address}`}
         target="_blank"

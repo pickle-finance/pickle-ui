@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export interface RawFarm {
   lpToken: string;

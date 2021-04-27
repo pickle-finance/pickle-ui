@@ -11,7 +11,7 @@ import { ERC20Transfer } from "./Erc20Transfer";
 
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export interface UserFarmData {
   poolName: string;

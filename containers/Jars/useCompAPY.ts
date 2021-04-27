@@ -6,7 +6,7 @@ import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { formatEther, parseEther } from "ethers/lib/utils";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 type Output = {
   APYs: Array<{ [key: string]: number }>;

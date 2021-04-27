@@ -45,6 +45,7 @@ import { FeeDistributorFactory } from "./Contracts/FeeDistributorFactory";
 import { FeeDistributor } from "./Contracts/FeeDistributor";
 import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
+import { config } from "./config";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -133,7 +134,10 @@ export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
 function useContracts() {
-  const { signer } = Connection.useContainer();
+  const { signer, chainId } = Connection.useContainer();
+  const addresses = chainId
+    ? config.addresses[config.chains[chainId].name]
+    : null;
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -184,10 +188,10 @@ function useContracts() {
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
 
   const initContracts = async () => {
-    if (signer) {
-      setPickle(Erc20Factory.connect(PICKLE_TOKEN_ADDR, signer));
-      setMasterchef(MasterchefFactory.connect(MASTERCHEF_ADDR, signer));
-      setController(ControllerFactory.connect(CONTROLLER_ADDR, signer));
+    if (signer && addresses) {
+      setPickle(Erc20Factory.connect(addresses.pickle, signer));
+      setMasterchef(MasterchefFactory.connect(addresses.masterChef, signer));
+      setController(ControllerFactory.connect(addresses.controller, signer));
       setGaugeController(
         GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, signer),
       );

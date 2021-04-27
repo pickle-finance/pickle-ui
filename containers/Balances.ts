@@ -5,7 +5,7 @@ import { Connection } from "./Connection";
 import { Contracts } from "./Contracts";
 import { ethers } from "ethers";
 
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 interface TokenBalances {
   [k: string]: ethers.BigNumber;
