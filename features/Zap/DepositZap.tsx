@@ -98,7 +98,7 @@ export const DepositZap: FC = () => {
         ))}
       </Select>
       <Spacer />
-      <div
+      {/* <div
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -109,7 +109,7 @@ export const DepositZap: FC = () => {
         <Link color href="#" onClick={setToMax}>
           Max
         </Link>
-      </div>
+      </div> */}
       <Input
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
@@ -117,14 +117,16 @@ export const DepositZap: FC = () => {
         type="number"
         size="large"
       />
-      <Spacer />
+      <Spacer y={0.5}/>
       <Button
         style={{ width: "100%" }}
-        onClick={handleDeposit}
-        disabled={disableZap()}
+        onClick={()=>{}}
+        disabled={true}
       >
         {txState || "Zap"}
       </Button>
+      <Spacer y={0.4}/>
+      Zaps temporarily disabled 
     </Card>
   );
 };
