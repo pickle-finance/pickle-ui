@@ -121,11 +121,8 @@ export const Claim: FC<{
             <div>DILL holder APY: {formatPercent(dillAPY)}</div>
             &nbsp;
             <div>
-              Next distribution: Thu Apr 29 2021
-            </div>
-            {/* <div>
               Next distribution: {dillStats.nextDistribution?.toDateString()}
-            </div> */}
+            </div>
             &nbsp;
             <Spacer />
             <Button
