@@ -7,7 +7,7 @@ import { useJarGaugeApy } from "./Gauges/useJarGaugeApy";
 import { FarmInfo } from "./Farms";
 
 interface IGaugeInfo {
-  [key: string]: { tokenName: string; poolName: string; tokenLink: string; };
+  [key: string]: { tokenName: string; poolName: string; };
 }
 
 export const GaugeInfo = FarmInfo;
@@ -19,21 +19,19 @@ function useGauges() {
   const { jarGaugeWithApy } = useJarGaugeApy(gaugesWithReward);
 
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
-    const { tokenName, poolName, tokenLink } = GaugeInfo[gauge.token];
+    const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {
       ...gauge,
       tokenName,
-      tokenLink,
       poolName,
     };
   });
 
   const jarGauges = jarGaugeWithApy?.map((gauge) => {
-    const { tokenName, poolName, tokenLink } = GaugeInfo[gauge.token];
+    const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {
       ...gauge,
       tokenName,
-      tokenLink,
       poolName,
     };
   });

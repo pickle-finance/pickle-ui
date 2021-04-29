@@ -92,7 +92,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     poolName,
     depositToken,
     depositTokenName,
-    depositTokenLink,
     balance,
     staked,
     harvestable,
@@ -267,13 +266,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{poolName}</div>
-              <Label style={{ fontSize: `1rem` }}>
-                <a
-                  href={depositTokenLink}
-                  target="_"
-                  style={{ fontSize: `1rem` }}
-                >{depositTokenName}</a>
-              </Label>
+              <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>

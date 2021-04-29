@@ -18,7 +18,6 @@ export interface UserGaugeData {
   address: string;
   depositToken: Erc20Contract;
   depositTokenName: string;
-  depositTokenLink: string;
   balance: ethers.BigNumber;
   staked: ethers.BigNumber;
   harvestable: ethers.BigNumber;
@@ -88,7 +87,6 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           address: gauge.gaugeAddress,
           depositToken: erc20.attach(gauge.token),
           depositTokenName: gauge.tokenName,
-          depositTokenLink: gauge.tokenLink,
           balance,
           staked: staked,
           usdPerToken: gauge.usdPerToken,
