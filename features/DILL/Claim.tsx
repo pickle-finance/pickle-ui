@@ -114,18 +114,19 @@ export const Claim: FC<{
             <div>Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}</div>
             &nbsp;
             <div>
-              Weekly distribution (45% of revenue): $
+              Projected weekly distribution (45% of revenue): $
               {formatNumber(dillStats?.weeklyDistribution)}
             </div>
             &nbsp;
             <div>DILL holder APY: {formatPercent(dillAPY)}</div>
             &nbsp;
             <div>
-              Next distribution: Thu May 6 2021
-            </div>
-            {/* <div>
               Next distribution: {dillStats.nextDistribution?.toDateString()}
-            </div> */}
+            </div>
+            &nbsp;
+            <div>
+              Last week's distribution: ${formatNumber(dillStats?.lastDistributionValue)}
+            </div>
             &nbsp;
             <Spacer />
             <Button
