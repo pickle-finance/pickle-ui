@@ -25,7 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars"
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
@@ -247,7 +247,9 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
 
-  const isDisabledFarm = depositToken.address === PICKLE_JARS.pUNIBACDAI || depositToken.address === PICKLE_JARS.pUNIBASDAI
+  const isDisabledFarm =
+    depositToken.address === PICKLE_JARS.pUNIBACDAI ||
+    depositToken.address === PICKLE_JARS.pUNIBASDAI;
 
   const handleMigrate = async () => {
     if (stakedNum) {
@@ -435,24 +437,60 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         </Grid>
       </Grid.Container>
       <Spacer />
-      <Button
-        disabled={migrateState !== null || isDisabledFarm} 
-        onClick={handleMigrate}
-        style={{ width: "100%" }}
-      >
-        {migrateState || "Migrate"}
-      </Button>
-      <div
-        style={{
-          width: "100%",
-          textAlign: "center",
-          fontFamily: "Source Sans Pro",
-          fontSize: "0.8rem",
-        }}
-      >
-        Your tokens will be unstaked and deposited in the new Farms. This
-        process requires a number of transactions.
-      </div>
+      {isDisabledFarm ? (
+        <>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (masterchef && signer) {
+                transfer({
+                  token: masterchef.address,
+                  recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return masterchef.connect(signer).withdraw(poolIndex, 0);
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {harvestButton.text}
+          </Button>
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "Source Sans Pro",
+              fontSize: "1rem",
+            }}
+          >
+            Please harvest your earned PICKLEs. The Basis Cash Jars/Farms are no longer operating. <br/>
+            Claim your Uniswap LP tokens according to the instructions <a href="https://twitter.com/picklefinance/status/1386942926983372800">here</a>
+          </div>
+        </>
+      ) : (
+        <>
+          <Button
+            disabled={migrateState !== null || isDisabledFarm}
+            onClick={handleMigrate}
+            style={{ width: "100%" }}
+          >
+            {migrateState || "Migrate"}
+          </Button>
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "Source Sans Pro",
+              fontSize: "1rem",
+            }}
+          >
+            Your tokens will be unstaked and deposited in the new Farms. This
+            process requires a number of transactions.
+          </div>
+        </>
+      )}
     </Collapse>
   );
 };
