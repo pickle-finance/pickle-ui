@@ -440,6 +440,20 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             </Button>
           </Grid>
         </Grid.Container>
+        <Grid.Container gap={2}>
+        <Grid xs={24} style={{paddingBottom: 0}}>
+          <span>
+            <a
+              href={`https://etherscan.io/address/${gauge.address}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              View Contract
+            </a>
+          </span>
+        </Grid>
+      </Grid.Container>
     </Collapse>
   );
 };

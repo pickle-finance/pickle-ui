@@ -7,7 +7,7 @@ import { useJarGaugeApy } from "./Gauges/useJarGaugeApy";
 import { FarmInfo } from "./Farms";
 
 interface IGaugeInfo {
-  [key: string]: { tokenName: string; poolName: string };
+  [key: string]: { tokenName: string; poolName: string; };
 }
 
 export const GaugeInfo = FarmInfo;
