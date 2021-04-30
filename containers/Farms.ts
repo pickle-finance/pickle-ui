@@ -6,7 +6,7 @@ import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 
 interface IFarmInfo {
-  [key: string]: { tokenName: string; poolName: string };
+  [key: string]: { tokenName: string; poolName: string; };
 }
 
 export const FarmInfo: IFarmInfo = {
