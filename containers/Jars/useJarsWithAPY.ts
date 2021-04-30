@@ -39,10 +39,10 @@ import erc20 from "@studydefi/money-legos/erc20";
 
 import compound from "@studydefi/money-legos/compound";
 
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
+import { Contract } from "@ethersproject/contracts";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 
@@ -144,9 +144,10 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateUNIAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
-      const multicallUniStakingRewards = new MulticallContract(
+      const multicallUniStakingRewards = new Contract(
         rewardsAddress,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
       const [
@@ -154,7 +155,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         uniRewardsForDurationBN,
         stakingToken,
         totalSupplyBN,
-      ] = await multicallProvider.all([
+      ] = await Promise.all([
         multicallUniStakingRewards.rewardsDuration(),
         multicallUniStakingRewards.getRewardForDuration(),
         multicallUniStakingRewards.stakingToken(),
@@ -185,16 +186,13 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateBasisAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.bas && getUniPairData && multicallProvider) {
-      const multicallUniStakingRewards = new MulticallContract(
+      const multicallUniStakingRewards = new Contract(
         rewardsAddress,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
-      const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.lpt(),
         multicallUniStakingRewards.totalSupply(),
@@ -221,16 +219,13 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateBasisV2APY = async (rewardsAddress: string, pid: number) => {
     if (basisStaking && prices?.bas && getUniPairData && multicallProvider) {
-      const multicallBasisStaking = new MulticallContract(
+      const multicallBasisStaking = new Contract(
         rewardsAddress,
         basisStaking.interface.fragments,
+        multicallProvider,
       );
 
-      const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
         multicallBasisStaking.rewardRatePerPool(pid),
         multicallBasisStaking.tokenOf(pid),
         multicallBasisStaking.totalSupply(pid),
@@ -262,16 +257,13 @@ export const useJarWithAPY = (jars: Input): Output => {
       getSushiPairData &&
       multicallProvider
     ) {
-      const multicallUniStakingRewards = new MulticallContract(
+      const multicallUniStakingRewards = new Contract(
         rewardsAddress,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
-      const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.lpt(),
         multicallUniStakingRewards.totalSupply(),
@@ -298,16 +290,13 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateMirAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
-      const multicallUniStakingRewards = new MulticallContract(
+      const multicallUniStakingRewards = new Contract(
         rewardsAddress,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
-      const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.lpt(),
         multicallUniStakingRewards.totalSupply(),
@@ -334,15 +323,12 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
-      const multicallUniStakingRewards = new MulticallContract(
+      const multicallUniStakingRewards = new Contract(
         rewardsAddress,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
-      const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.uniToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -375,16 +361,13 @@ export const useJarWithAPY = (jars: Input): Output => {
       getUniPairData &&
       multicallProvider
     ) {
-      const multicallUniStakingRewards = new MulticallContract(
+      const multicallUniStakingRewards = new Contract(
         rewardsAddress,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
-      const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.stakingToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -412,18 +395,23 @@ export const useJarWithAPY = (jars: Input): Output => {
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
-      const multicallSushiChef = new MulticallContract(
+      const multicallSushiChef = new Contract(
         sushiChef.address,
         sushiChef.interface.fragments,
+        multicallProvider,
       );
-      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+      const lpToken = new Contract(
+        lpTokenAddress,
+        erc20.abi,
+        multicallProvider,
+      );
 
       const [
         sushiPerBlockBN,
         totalAllocPointBN,
         poolInfo,
         totalSupplyBN,
-      ] = await multicallProvider.all([
+      ] = await Promise.all([
         multicallSushiChef.sushiPerBlock(),
         multicallSushiChef.totalAllocPoint(),
         multicallSushiChef.poolInfo(poolId),

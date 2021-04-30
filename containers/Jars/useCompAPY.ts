@@ -1,12 +1,10 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { formatEther, parseEther } from "ethers/lib/utils";
-
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 type Output = {
   APYs: Array<{ [key: string]: number }>;
@@ -36,14 +34,16 @@ export const useCompAPY = (
     ) {
       const CToken = cToken.attach(ctokenAddress);
 
-      const multicallCToken = new MulticallContract(
+      const multicallCToken = new Contract(
         CToken.address,
         CToken.interface.fragments,
+        multicallProvider,
       );
 
-      const mutlicallComptroller = new MulticallContract(
+      const mutlicallComptroller = new Contract(
         comptroller.address,
         comptroller.interface.fragments,
+        multicallProvider,
       );
 
       const [
@@ -65,7 +65,7 @@ export const useCompAPY = (
         supplyTokens,
         borrowState,
         borrowSpeed,
-      ] = await multicallProvider.all([
+      ] = await Promise.all([
         mutlicallComptroller.compSupplyState(ctokenAddress),
         mutlicallComptroller.compSpeeds(ctokenAddress),
         multicallCToken.exchangeRateStored(),

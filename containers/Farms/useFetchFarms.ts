@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { BigNumber } from "ethers";
+import { BigNumber, Contract } from "ethers";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
-
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export interface RawFarm {
   lpToken: string;
@@ -25,12 +23,13 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
       const poolLengthBN = (await masterchef.poolLength()) as BigNumber;
       const poolLength = parseInt(poolLengthBN.toString());
 
-      const mcMasterchef = new MulticallContract(
+      const mcMasterchef = new Contract(
         masterchef.address,
         masterchef.interface.fragments,
+        multicallProvider,
       );
 
-      const farmInfo = await multicallProvider.all(
+      const farmInfo = await Promise.all(
         Array(parseInt(poolLength.toString()))
           .fill(0)
           .map((_, poolIndex) => {

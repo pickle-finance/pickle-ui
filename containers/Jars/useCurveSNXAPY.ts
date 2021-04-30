@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Prices } from "../Prices";
@@ -7,7 +7,6 @@ import { Jar } from "./useFetchJars";
 import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { Connection } from "../Connection";
 
 export interface JarApy {
@@ -40,18 +39,20 @@ export const useCurveSNXAPY = (
 
   const getSNXAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.snx) {
-      const mcPool = new MulticallContract(
+      const mcPool = new Contract(
         pool.address,
         pool.interface.fragments,
+        multicallProvider,
       );
 
-      const mcStakingRewards = new MulticallContract(
+      const mcStakingRewards = new Contract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
       const [rewardsDuration, rewardsRate, totalSupply, virtualPrice] = (
-        await multicallProvider.all([
+        await Promise.all([
           mcStakingRewards.DURATION(),
           mcStakingRewards.rewardRate(),
           mcStakingRewards.totalSupply(),

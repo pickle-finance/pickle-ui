@@ -25,7 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars"
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
@@ -198,7 +198,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked);
 
   const [stakeAmount, setStakeAmount] = useState("");
@@ -244,7 +244,9 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
 
-  const isDisabledFarm = depositToken.address === PICKLE_JARS.pUNIBACDAI || depositToken.address === PICKLE_JARS.pUNIBASDAI
+  const isDisabledFarm =
+    depositToken.address === PICKLE_JARS["Ethereum"].pUNIBACDAI ||
+    depositToken.address === PICKLE_JARS["Ethereum"].pUNIBASDAI;
 
   const handleMigrate = async () => {
     if (stakedNum) {
@@ -433,7 +435,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       </Grid.Container>
       <Spacer />
       <Button
-        disabled={migrateState !== null || isDisabledFarm} 
+        disabled={migrateState !== null || isDisabledFarm}
         onClick={handleMigrate}
         style={{ width: "100%" }}
       >

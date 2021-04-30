@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Connection } from "./Connection";
 import { Contracts } from "./Contracts";
-import { ethers } from "ethers";
-
-import { Contract as MulticallContract } from "@0xsequence/multicall";
+import { ethers, Contract } from "ethers";
 
 interface TokenBalances {
   [k: string]: ethers.BigNumber;
@@ -25,9 +23,13 @@ function useBalances() {
 
   const updateBalances = async () => {
     if (erc20 && address && provider && multicallProvider) {
-      const balances = await multicallProvider.all(
+      const balances = await Promise.all(
         tokenAddresses.map((x) => {
-          const c = new MulticallContract(x, erc20.interface.fragments);
+          const c = new Contract(
+            x,
+            erc20.interface.fragments,
+            multicallProvider,
+          );
           return c.balanceOf(address);
         }),
       );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 
 import { Jars } from "./Jars";
 import { Farms } from "./Farms";
@@ -10,8 +10,6 @@ import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
-
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export interface UserFarmData {
   poolName: string;
@@ -37,17 +35,19 @@ const useUserFarms = (): { farmData: UserFarmData[] | null } => {
 
   const updateFarmData = async () => {
     if (farms && erc20 && masterchef && address && multicallProvider) {
-      const mcMasterchef = new MulticallContract(
+      const mcMasterchef = new Contract(
         masterchef.address,
         masterchef.interface.fragments,
+        multicallProvider,
       );
 
-      const balancesUserInfosHarvestables = await multicallProvider.all(
+      const balancesUserInfosHarvestables = await Promise.all(
         farms
           .map((x) => {
-            const c = new MulticallContract(
+            const c = new Contract(
               x.lpToken,
               erc20.interface.fragments,
+              multicallProvider,
             );
 
             return [

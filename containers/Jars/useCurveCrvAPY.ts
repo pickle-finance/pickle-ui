@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Connection } from "../Connection";
@@ -9,7 +9,6 @@ import { Jar } from "./useFetchJars";
 import { Pool } from "../Contracts/Pool";
 import { Gauge } from "../Contracts/Gauge";
 
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { CurveGauge } from "../Contracts/CurveGauge";
 
 export interface JarApy {
@@ -51,14 +50,16 @@ export const useCurveCrvAPY = (
       prices?.crv &&
       multicallProvider
     ) {
-      const mcGauge = new MulticallContract(
+      const mcGauge = new Contract(
         gauge.address,
         gauge.interface.fragments,
+        multicallProvider,
       );
 
-      const mcPool = new MulticallContract(
+      const mcPool = new Contract(
         pool.address,
         pool.interface.fragments,
+        multicallProvider,
       );
 
       const weight = await gaugeController["gauge_relative_weight(address)"](
@@ -66,7 +67,7 @@ export const useCurveCrvAPY = (
       ).then((x) => parseFloat(ethers.utils.formatUnits(x)));
 
       const [workingSupply, gaugeRate, virtualPrice] = (
-        await multicallProvider.all([
+        await Promise.all([
           mcGauge.working_supply(),
           mcGauge.inflation_rate(),
           mcPool.get_virtual_price(),

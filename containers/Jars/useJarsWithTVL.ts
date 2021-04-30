@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
 
@@ -8,7 +8,6 @@ import { Prices } from "../Prices";
 import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
 import { JarWithAPY } from "./useJarsWithAPY";
 
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 import { Connection } from "../Connection";
 
 export interface JarWithTVL extends JarWithAPY {
@@ -105,18 +104,20 @@ export const useJarWithTVL = (jars: Input): Output => {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 
-    const multicallJarContract = new MulticallContract(
+    const multicallJarContract = new Contract(
       jar.contract.address,
       jar.contract.interface.fragments,
+      multicallProvider,
     );
 
-    const multicallPoolContract = new MulticallContract(
+    const multicallPoolContract = new Contract(
       pool.address,
       pool.interface.fragments,
+      multicallProvider,
     );
 
     const [supply, balance, virtualPrice, ratio] = (
-      await multicallProvider.all([
+      await Promise.all([
         multicallJarContract.totalSupply(),
         multicallJarContract.balance(),
         multicallPoolContract.get_virtual_price(),

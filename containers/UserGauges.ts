@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 
 import { Jars } from "./Jars";
 import { Gauges } from "./Gauges";
@@ -10,8 +10,6 @@ import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
 import { Erc20 as Erc20Contract } from "./Contracts/Erc20";
-
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 export interface UserGaugeData {
   poolName: string;
@@ -51,17 +49,23 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
       gaugeProxy &&
       multicallProvider
     ) {
-      const balancesUserInfosHarvestables = await multicallProvider.all(
+      const balancesUserInfosHarvestables = await Promise.all(
         gauges.flatMap((x) => {
-          const c = new MulticallContract(x.token, erc20.interface.fragments);
-          const gaugeContract = new MulticallContract(
+          const c = new Contract(
+            x.token,
+            erc20.interface.fragments,
+            multicallProvider,
+          );
+          const gaugeContract = new Contract(
             x.gaugeAddress,
             gauge.interface.fragments,
+            multicallProvider,
           );
 
-          const gaugeProxyContract = new MulticallContract(
+          const gaugeProxyContract = new Contract(
             gaugeProxy.address,
             gaugeProxy.interface.fragments,
+            multicallProvider,
           );
 
           return [

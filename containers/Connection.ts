@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
-import { Provider as MulticallProvider } from "@0xsequence/multicall";
+import { providers } from "@0xsequence/multicall";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
+import { config } from "./config";
 
 type Network = ethers.providers.Network;
 
@@ -14,7 +15,7 @@ function useConnection() {
   const [
     multicallProvider,
     setMulticallProvider,
-  ] = useState<MulticallProvider | null>(null);
+  ] = useState<providers.MulticallProvider | null>(null);
 
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
@@ -24,10 +25,12 @@ function useConnection() {
     if (library) {
       library.getNetwork().then((network: any) => setNetwork(network));
 
-      const ethMulticallProvider = new MulticallProvider(library);
-      ethMulticallProvider
-        .init()
-        .then(() => setMulticallProvider(ethMulticallProvider));
+      setMulticallProvider(
+        new providers.MulticallProvider(library, {
+          timeWindow: 0,
+          batchSize: 100,
+        }),
+      );
 
       const observable = new Observable<number>((subscriber) => {
         library.on("block", (blockNumber: number) =>
@@ -38,7 +41,7 @@ function useConnection() {
       // debounce to prevent subscribers making unnecessary calls
       observable.pipe(debounceTime(1000)).subscribe((blockNumber) => {
         // Update every 5 blocks otherwise its very laggy
-        if (blockNumber > (blockNum || 0) + 5) {
+        if (blockNumber > (blockNum || 0) + (chainId == 1 ? 5 : 20)) {
           setBlockNum(blockNumber);
         }
       });
@@ -56,6 +59,7 @@ function useConnection() {
     blockNum,
     signer: library?.getSigner(),
     chainId,
+    chainName: chainId && config.chains[chainId].name,
   };
 }
 

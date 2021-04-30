@@ -40,9 +40,9 @@ const TOKEN: { [key in Token]: string } = {
 };
 
 const JAR_ENUM_TO_ADDR: { [key in Jar]: string } = {
-  [Jar.prenBTCCRV]: PICKLE_JARS.prenBTCWBTC,
-  [Jar.p3poolCRV]: PICKLE_JARS.p3CRV,
-  [Jar.pDAI]: PICKLE_JARS.pDAI,
+  [Jar.prenBTCCRV]: PICKLE_JARS["Ethereum"].prenBTCWBTC,
+  [Jar.p3poolCRV]: PICKLE_JARS["Ethereum"].p3CRV,
+  [Jar.pDAI]: PICKLE_JARS["Ethereum"].pDAI,
 };
 
 export const useExitToToken = (jar: Jar, token: Token) => {

@@ -13,7 +13,7 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { JAR_DEPOSIT_TOKENS["Ethereum"] } from "../../containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -215,8 +215,8 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
   }).join(" + ");
 
   const isDisabledJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI;
+    depositToken.address === JAR_DEPOSIT_TOKENS["Ethereum"].UNIV2_BAC_DAI ||
+    depositToken.address === JAR_DEPOSIT_TOKENS["Ethereum"].UNIV2_BAS_DAI;
 
   return (
     <Collapse

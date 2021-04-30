@@ -39,10 +39,12 @@ export const GaugeList: FC = () => {
   }
 
   const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS.pUNIBACDAI ||
-    depositToken === PICKLE_JARS.pUNIBASDAI;
+    depositToken === PICKLE_JARS["Ethereum"].pUNIBACDAI ||
+    depositToken === PICKLE_JARS["Ethereum"].pUNIBASDAI;
 
-  const activeGauges = gaugeData.filter((x) => !isDisabledFarm(x.depositToken.address));
+  const activeGauges = gaugeData.filter(
+    (x) => !isDisabledFarm(x.depositToken.address),
+  );
   const inactiveGauges = gaugeData.filter((x) => false);
 
   const renderGauge = (gauge: UserGaugeData) => (

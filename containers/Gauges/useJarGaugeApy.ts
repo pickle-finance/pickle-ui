@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
@@ -11,7 +11,6 @@ import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;
@@ -40,16 +39,21 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         const gaugeingJar = jars?.filter((x) => x.jarName === jarName)[0];
 
         if (!gaugeingJar) {
-          return new MulticallContract(mlErc20.dai.address, mlErc20.abi);
+          return new Contract(
+            mlErc20.dai.address,
+            mlErc20.abi,
+            multicallProvider,
+          );
         }
 
-        return new MulticallContract(
+        return new Contract(
           gaugeingJar.contract.address,
           gaugeingJar.contract.interface.fragments,
+          multicallProvider,
         );
       });
 
-      const gaugeBalances = await multicallProvider?.all(
+      const gaugeBalances = await Promise.all(
         gaugeingJarsMCContracts.map((x) => x.balanceOf(masterchef.address)),
       );
 

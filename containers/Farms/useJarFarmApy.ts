@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
@@ -11,7 +11,6 @@ import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
-import { Contract as MulticallContract } from "@0xsequence/multicall";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;
@@ -40,16 +39,21 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
         if (!farmingJar) {
-          return new MulticallContract(mlErc20.dai.address, mlErc20.abi);
+          return new Contract(
+            mlErc20.dai.address,
+            mlErc20.abi,
+            multicallProvider,
+          );
         }
 
-        return new MulticallContract(
+        return new Contract(
           farmingJar.contract.address,
           farmingJar.contract.interface.fragments,
+          multicallProvider,
         );
       });
 
-      const farmBalances = await multicallProvider?.all(
+      const farmBalances = await Promise.all(
         farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address)),
       );
 
