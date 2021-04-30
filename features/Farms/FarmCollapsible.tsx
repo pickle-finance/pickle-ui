@@ -128,6 +128,9 @@ export const FARM_LP_TO_ICON = {
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
   ),
+  "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
+  ),
 };
 
 const setButtonStatus = (
@@ -300,6 +303,102 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     }
   };
 
+  const renderButton = () => {
+    if(isyveCRVFarm) {
+      return (
+        <>
+          <Button
+            disabled={yvMigrateState !== null}
+            onClick={handleYvboostMigrate}
+            style={{ width: "100%", textTransform: "none" }}
+          >
+            {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+          </Button>
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "Source Sans Pro",
+              fontSize: "1rem",
+            }}
+          >
+            Your tokens will be unstaked and migrated to the yvBOOST pJar and
+            staked in the new{" "}
+            <Link color href="/farms">
+              Farms
+            </Link>
+            . <br />
+            This process will require a number of transactions.
+            {isSuccess ? (
+              <p style={{fontWeight: "bold"}}>
+                Migration completed! See your deposits{" "}
+                <Link color href="/farms">
+                  here
+                </Link>
+              </p>
+            ) : null}
+          </div>
+        </>
+      )
+    } else if(isDisabledFarm) {
+      return (
+        <>
+        <Button
+          disabled={harvestButton.disabled}
+          onClick={() => {
+            if (masterchef && signer) {
+              transfer({
+                token: masterchef.address,
+                recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
+                approval: false,
+                transferCallback: async () => {
+                  return masterchef.connect(signer).withdraw(poolIndex, 0);
+                },
+              });
+            }
+          }}
+          style={{ width: "100%" }}
+        >
+          {harvestButton.text}
+        </Button>
+        <div
+          style={{
+            width: "100%",
+            textAlign: "center",
+            fontFamily: "Source Sans Pro",
+            fontSize: "1rem",
+          }}
+        >
+          Please harvest your earned PICKLEs. The Basis Cash Jars/Farms are no longer operating. <br/>
+          Claim your Uniswap LP tokens according to the instructions <a href="https://twitter.com/picklefinance/status/1386942926983372800">here</a>
+        </div>
+      </>
+      )
+    } else {
+      return (
+        <>
+        <Button
+          disabled={migrateState !== null || isDisabledFarm}
+          onClick={handleMigrate}
+          style={{ width: "100%" }}
+        >
+          {migrateState || "Migrate"}
+        </Button>
+        <div
+          style={{
+            width: "100%",
+            textAlign: "center",
+            fontFamily: "Source Sans Pro",
+            fontSize: "1rem",
+          }}
+        >
+          Your tokens will be unstaked and deposited in the new Farms. This
+          process requires a number of transactions.
+        </div>
+      </>
+      )
+    }
+
   useEffect(() => {
     if (masterchef) {
       const stakeStatus = getTransferStatus(
@@ -469,62 +568,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         </Grid>
       </Grid.Container>
       <Spacer />
-      {isyveCRVFarm ? (
-        <>
-          <Button
-            disabled={yvMigrateState !== null}
-            onClick={handleYvboostMigrate}
-            style={{ width: "100%", textTransform: "none" }}
-          >
-            {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "1rem",
-            }}
-          >
-            Your tokens will be unstaked and migrated to the yvBOOST pJar and
-            staked in the new{" "}
-            <Link color href="/farms">
-              Farms
-            </Link>
-            . <br />
-            This process will require a number of transactions.
-            {isSuccess ? (
-              <p style={{fontWeight: "bold"}}>
-                Migration completed! See your deposits{" "}
-                <Link color href="/farms">
-                  here
-                </Link>
-              </p>
-            ) : null}
-          </div>
-        </>
-      ) : (
-        <>
-          <Button
-            disabled={migrateState !== null || isDisabledFarm}
-            onClick={handleMigrate}
-            style={{ width: "100%" }}
-          >
-            {migrateState || "Migrate"}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "0.8rem",
-            }}
-          >
-            Your tokens will be unstaked and deposited in the new Farms. This
-            process requires a number of transactions.
-          </div>
-        </>
-      )}
+      {renderButton}
     </Collapse>
   );
 };

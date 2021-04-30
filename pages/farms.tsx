@@ -19,7 +19,7 @@ const Gauges: FC = () => {
               Click here to see the old Farms
             </Link>
             <br />
-            The new Farms go live Thursday April 22, 12 AM GMT
+            The new Farms are live and earning $PICKLEs
           </Note>
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
             Farms

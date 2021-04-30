@@ -20,6 +20,7 @@ const SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV,
   JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST,
   JAR_DEPOSIT_TOKENS.SUSHI_ETH,
+  JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX
 ];
 
 export const useSushiPairDayData = () => {
@@ -43,7 +44,7 @@ export const useSushiPairDayData = () => {
         },
         referrer:
           "https://thegraph.com/explorer/subgraph/zippoxer/sushiswap-subgraph-fork",
-        body: `{"query":"{\\n  pairDayDatas(first: ${SUSHI_LP_TOKENS.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${SUSHI_LP_TOKENS.join(
+        body: `{"query":"{\\n  pairDayDatas(first: ${SUSHI_LP_TOKENS.length}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${SUSHI_LP_TOKENS.join(
           '\\", \\"',
         )}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
@@ -63,9 +64,9 @@ export const useSushiPairDayData = () => {
       if (filteredPair.length > 0) {
         const selected = filteredPair[0];
 
-        // 0.3% fee to LP
+        // 0.25% fee to LP
         const apy =
-          (selected.dailyVolumeUSD / selected.reserveUSD) * 0.003 * 365 * 100;
+          (selected.dailyVolumeUSD / selected.reserveUSD) * 0.0025 * 365 * 100;
 
         return [{ lp: apy }];
       }

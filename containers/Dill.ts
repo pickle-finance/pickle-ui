@@ -19,6 +19,7 @@ export interface UseDillOutput {
   weeklyProfit: number | null;
   weeklyDistribution: number | null;
   nextDistribution: Date | null;
+  lastDistributionValue: number | null;
 }
 
 export function useDill(): UseDillOutput {
@@ -35,12 +36,18 @@ export function useDill(): UseDillOutput {
   const [lockedValue, setLockedValue] = useState<number | null>(null);
   const [totalPickleValue, setTotalPickleValue] = useState<number | null>(null);
   const [nextDistribution, setNextDistribution] = useState<Date | null>(null);
+  const [lastDistributionValue, setLastDistributionValue] = useState<number | null>(null);
 
   useEffect(() => {
     if (dill && feeDistributor && address && prices) {
       const f = async () => {
         const dillContract = dill.attach(DILL);
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
+        const distributionEvents = await feeDistributor.queryFilter(
+          feeDistributor.filters.CheckpointToken(),
+        );
+        const lastDistribution =
+          distributionEvents[distributionEvents.length - 1];
 
         const epochTime = 604800;
         const [
@@ -68,8 +75,11 @@ export function useDill(): UseDillOutput {
           prices.pickle * parseFloat(ethers.utils.formatEther(totalLocked));
 
         const nextDistribution = new Date(
-          timeCursor.add(epochTime).toNumber() * 1000,
+          timeCursor.toNumber() * 1000,
         );
+        
+        const lastDistributionValue = 
+        prices.pickle * parseFloat(ethers.utils.formatEther(lastDistribution?.args.tokens))
 
         setLockedAmount(lockStats?.amount);
         setLockEndDate(lockStats?.end);
@@ -80,6 +90,7 @@ export function useDill(): UseDillOutput {
         setTotalPickleValue(totalPickleValue);
         setUserClaimable(userClaimable.toString() ? userClaimable : null);
         setNextDistribution(nextDistribution);
+        setLastDistributionValue(lastDistributionValue)
       };
 
       f();
@@ -98,6 +109,7 @@ export function useDill(): UseDillOutput {
     weeklyProfit,
     weeklyDistribution,
     nextDistribution,
+    lastDistributionValue
   };
 }
 

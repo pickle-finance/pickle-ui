@@ -21,6 +21,7 @@ const addresses = {
   yvecrv: "0xc5bDdf9843308380375a611c18B50Fb9341f502A",
   sushi: "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
   yvboost: "0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a",
+  alcx: "0xdbdb4d16eda451d0503b854cf79d55697f90c8df"
 };
 
 interface Token {
@@ -54,6 +55,11 @@ const yvboost: Token = {
   priceId: "yvboost",
   decimals: 18,
 };
+const alcx: Token = {
+  address: addresses.alcx,
+  priceId: "alcx",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -70,6 +76,7 @@ export const PAIR_INFO: PairMap = {
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": { a: weth, b: yvecrv },
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": { a: sushi, b: weth },
   "0x9461173740D27311b176476FA27e94C681b1Ea6b": { a: weth, b: yvboost },
+  "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": { a: weth, b: alcx },
 };
 
 function useSushiPairs() {
