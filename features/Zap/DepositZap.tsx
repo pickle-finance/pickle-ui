@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Card, Select, Spacer, Input, Button } from "@geist-ui/react";
+import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist-ui/react";
 import Link from "next/link";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
@@ -17,7 +17,7 @@ import {
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: parseFloat(numStr) < 1 ? 18 : 4,
+    maximumFractionDigits: parseFloat(numStr) < 1 ? 6 : 4,
   });
 
 export const DepositZap: FC = () => {
@@ -114,7 +114,7 @@ export const DepositZap: FC = () => {
         ))}
       </Select>
       <Spacer />
-      {/* <div
+      <div
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -122,10 +122,10 @@ export const DepositZap: FC = () => {
         }}
       >
         <div>Balance: {balanceStr !== null ? formatValue(balanceStr) : 0}</div>
-        <Link color href="#" onClick={setToMax}>
+        <DisplayLink color href="#" onClick={setToMax}>
           Max
-        </Link>
-      </div> */}
+        </DisplayLink>
+      </div>
       <Input
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
@@ -133,16 +133,14 @@ export const DepositZap: FC = () => {
         type="number"
         size="large"
       />
-      <Spacer y={0.5}/>
+      <Spacer />
       <Button
         style={{ width: "100%" }}
-        onClick={()=>{}}
-        disabled={true}
+        onClick={handleDeposit}
+        disabled={disableZap()}
       >
         {txState || "Zap"}
       </Button>
-      <Spacer y={0.4}/>
-      Zaps temporarily disabled 
     </Card>
   );
 };

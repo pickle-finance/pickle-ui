@@ -329,6 +329,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             </Link>
             . <br />
             This process will require a number of transactions.
+            <br/>
+            Learn more about yvBOOST <a target="_" href="https://twitter.com/iearnfinance/status/1376912409688956932">here</a>.
             {isSuccess ? (
               <p style={{fontWeight: "bold"}}>
                 Migration completed! See your deposits{" "}
@@ -398,6 +400,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       </>
       )
     }
+  }
 
   useEffect(() => {
     if (masterchef) {
@@ -568,7 +571,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         </Grid>
       </Grid.Container>
       <Spacer />
-      {renderButton}
+      {renderButton()}
     </Collapse>
   );
 };

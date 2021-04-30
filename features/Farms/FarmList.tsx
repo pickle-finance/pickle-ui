@@ -30,10 +30,6 @@ export const FarmList: FC = () => {
 
   const indexofYvecrv = inactiveFarms.findIndex(x=>x.depositToken.address.toLowerCase() === PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase())
 
-  console.log(inactiveFarms, indexofYvecrv)
-
-  console.log("index", indexofYvecrv)
-
   const moveInArray = (arr: UserFarmData[], from: number, to: number) => {
     var item = arr.splice(from, 1);
   

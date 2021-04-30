@@ -48,6 +48,8 @@ export const GaugeList: FC = () => {
 
   const indexofYvboost = activeGauges.findIndex(x=>x.address.toLowerCase() === PICKLE_JARS.pyvBOOSTETH.toLowerCase())-1
 
+  const indexofAlcx = activeGauges.findIndex(x=>x.address.toLowerCase() === PICKLE_JARS.pSUSHIETHALCX.toLowerCase())-1
+
   const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
     var item = arr.splice(from, 1);
   
@@ -55,6 +57,7 @@ export const GaugeList: FC = () => {
     arr.splice(to, 0, item[0]);
   };
 
+  moveInArray(activeGauges, indexofAlcx, 2)
   moveInArray(activeGauges, indexofYvboost, 2)
 
   const renderGauge = (gauge: UserGaugeData) => (
@@ -89,7 +92,7 @@ export const GaugeList: FC = () => {
       <h2>Current Weights</h2>
       <GaugeChartCollapsible gauges={activeGauges} />
       <h2>Vote</h2>
-      <VoteCollapsible gauges={activeGauges} />
+      <VoteCollapsible gauges={activeGauges.filter(x => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV)} />
       <div
         css={{
           justifyContent: "space-between",

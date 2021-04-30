@@ -496,6 +496,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                 Your tokens will be unstaked and migrated to the yvBOOST pJar
                 and staked in the Farm.<br />
                 This process will require a number of transactions.
+                <br/>
+            Learn more about yvBOOST <a target="_" href="https://twitter.com/iearnfinance/status/1376912409688956932">here</a>.
                 {isSuccess ? (
                   <p style={{ fontWeight: "bold" }}>
                     Migration completed! See your deposits{" "}
