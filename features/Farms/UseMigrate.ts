@@ -96,7 +96,7 @@ export const useMigrate = (
   const withdrawGauge = async (gauge: Gauge) => {
     if (!address || !gauge || !parseInt(staked.toString())) return;
   
-    const tx = await gauge.withdrawAll();
+    const tx = await gauge.exit();
     await tx.wait();
   };
 

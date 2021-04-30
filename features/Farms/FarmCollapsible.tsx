@@ -372,7 +372,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           }}
         >
           Please harvest your earned PICKLEs. The Basis Cash Jars/Farms are no longer operating. <br/>
-          Claim your Uniswap LP tokens according to the instructions <a href="https://twitter.com/picklefinance/status/1386942926983372800">here</a>
+          Claim your Uniswap LP tokens according to the instructions <a href="https://twitter.com/iearnfinance/status/1388131568481411077">here</a>
         </div>
       </>
       )
