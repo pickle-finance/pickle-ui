@@ -60,7 +60,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH
   );
 };
 
