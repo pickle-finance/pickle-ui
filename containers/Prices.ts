@@ -37,6 +37,7 @@ interface PriceObject {
   lusd: number;
   lqty: number;
   alcx: number;
+  luna: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -78,7 +79,8 @@ function usePrices() {
         "tribe-2",
         "liquity-usd",
         "liquity",
-        "alchemix"
+        "alchemix",
+        "terra-luna",
       ],
       vs_currencies: ["usd"],
     });
@@ -114,7 +116,8 @@ function usePrices() {
       tribe: response["tribe-2"].usd,
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
-      alcx: response["alchemix"].usd
+      alcx: response["alchemix"].usd,
+      luna: response["terra-luna"].usd,
     };
     setPrices(prices);
   };
