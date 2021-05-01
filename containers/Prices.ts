@@ -36,6 +36,7 @@ interface PriceObject {
   tribe: number;
   lusd: number;
   lqty: number;
+  yvboost: number;
   alcx: number;
   luna: number;
 }
@@ -79,7 +80,8 @@ function usePrices() {
         "tribe-2",
         "liquity-usd",
         "liquity",
-        "alchemix",
+        // "yvboost",
+        "alchemix"
         "terra-luna",
       ],
       vs_currencies: ["usd"],
@@ -116,6 +118,7 @@ function usePrices() {
       tribe: response["tribe-2"].usd,
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
+      yvboost: 0, // to update once CG provides yvboost price
       alcx: response["alchemix"].usd,
       luna: response["terra-luna"].usd,
     };

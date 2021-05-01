@@ -60,6 +60,7 @@ const sushiPoolIds: SushiPoolId = {
   "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": 11,
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": 132,
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": 12,
+  "0x9461173740D27311b176476FA27e94C681b1Ea6b": 230, 
 };
 
 const alchemixPoolIds: SushiPoolId = {
@@ -584,6 +585,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         mithMicUsdtApy,
         mithMisUsdtApy,
         sushiEthyveCRVApy,
+        sushiEthyvboostApy,
         // basisBacDaiApy,
         // basisBasDaiApy,
         alcxEthAlcxApy,
@@ -591,6 +593,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
@@ -804,6 +807,14 @@ export const useJarWithAPY = (jars: Input): Output => {
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
           ];
         }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST) {
+          APYs = [
+            ...sushiEthyvboostApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST),
+          ];
+        }
+
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH) {
           APYs = [

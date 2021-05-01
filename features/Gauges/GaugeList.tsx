@@ -30,6 +30,7 @@ export const GaugeList: FC = () => {
     totalGaugeWeight += voteWeights[gaugeData[i].address] || 0;
   }
 
+
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
@@ -44,6 +45,20 @@ export const GaugeList: FC = () => {
 
   const activeGauges = gaugeData.filter((x) => !isDisabledFarm(x.depositToken.address));
   const inactiveGauges = gaugeData.filter((x) => false);
+
+  const indexofYvboost = activeGauges.findIndex(x=>x.address.toLowerCase() === PICKLE_JARS.pyvBOOSTETH.toLowerCase())-1
+
+  const indexofAlcx = activeGauges.findIndex(x=>x.address.toLowerCase() === PICKLE_JARS.pSUSHIETHALCX.toLowerCase())-1
+
+  const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
+    var item = arr.splice(from, 1);
+  
+    if (!item.length) return;
+    arr.splice(to, 0, item[0]);
+  };
+
+  moveInArray(activeGauges, indexofAlcx, 2)
+  moveInArray(activeGauges, indexofYvboost, 2)
 
   const renderGauge = (gauge: UserGaugeData) => (
     <Grid xs={24} key={gauge.address}>
@@ -77,7 +92,7 @@ export const GaugeList: FC = () => {
       <h2>Current Weights</h2>
       <GaugeChartCollapsible gauges={activeGauges} />
       <h2>Vote</h2>
-      <VoteCollapsible gauges={activeGauges} />
+      <VoteCollapsible gauges={activeGauges.filter(x => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV)} />
       <div
         css={{
           justifyContent: "space-between",

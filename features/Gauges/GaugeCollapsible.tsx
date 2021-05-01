@@ -31,6 +31,8 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
+import { useMigrate } from "../Farms/UseMigrate";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -100,6 +102,13 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   } = gaugeData;
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(formatEther(staked));
+  const balanceNum = parseFloat(formatEther(balance));
+  const { deposit, withdraw, migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
+    depositToken,
+    0,
+    balance,
+    staked,
+  );
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -143,6 +152,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     disabled: false,
     text: "Harvest and Exit",
   });
+
+  const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
+  const [isSuccess, setSuccess] = useState<boolean>(false);
+
+  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [];
@@ -191,6 +205,30 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
       return `${k}: ${v.toFixed(2)}%`;
     }),
   ].join(" + ");
+
+  const isyveCRVFarm =
+    depositToken.address.toLowerCase() ===
+    PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
+
+  const handleYvboostMigrate = async () => {
+    if (stakedNum || balanceNum) {
+      try {
+        setYvMigrateState("Withdrawing from Farm...");
+        await withdrawGauge(gauge);
+        setYvMigrateState("Migrating to yvBOOST pJar...");
+        await migrateYvboost();
+        setYvMigrateState("Migrated! Staking in Farm...");
+        await depositYvboost();
+        setYvMigrateState(null);
+        setSuccess(true);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setYvMigrateState(null);
+        return;
+      }
+    }
+  };
 
   useEffect(() => {
     if (gaugeData) {
@@ -247,8 +285,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     };
     checkAllowance();
   }, [blockNum, address, erc20]);
-
-  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
   return (
     <Collapse
@@ -335,7 +371,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled}
+            disabled={stakeButton.disabled || isyveCRVFarm}
             onClick={() => {
               if (gauge && signer) {
                 transfer({
@@ -396,62 +432,83 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Button>
         </Grid>
         <Spacer />
-        
       </Grid.Container>
       <Grid.Container gap={2}>
-          <Grid xs={24} md={12}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.getReward();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {harvestButton.text}
-            </Button>
-          </Grid>
-          <Grid xs={24} md={12}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.exit();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {exitButton.text}
-            </Button>
-          </Grid>
-        </Grid.Container>
-        <Grid.Container gap={2}>
-        <Grid xs={24} style={{paddingBottom: 0}}>
-          <span>
-            <a
-              href={`https://etherscan.io/address/${gauge.address}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
-            >
-              View Contract
-            </a>
-          </span>
+        <Grid xs={24} md={12}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.getReward();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {harvestButton.text}
+          </Button>
+        </Grid>
+        <Grid xs={24} md={12}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.exit();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {exitButton.text}
+          </Button>
+        </Grid>
+
+        <Grid xs={24}>
+          {isyveCRVFarm ? (
+            <>
+              <Button
+                disabled={yvMigrateState !== null}
+                onClick={handleYvboostMigrate}
+                style={{ width: "100%", textTransform: "none" }}
+              >
+                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+              </Button>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontFamily: "Source Sans Pro",
+                  fontSize: "1rem",
+                }}
+              >
+                Your tokens will be unstaked and migrated to the yvBOOST pJar
+                and staked in the Farm.<br />
+                This process will require a number of transactions.
+                <br/>
+            Learn more about yvBOOST <a target="_" href="https://twitter.com/iearnfinance/status/1388131568481411077">here</a>.
+                {isSuccess ? (
+                  <p style={{ fontWeight: "bold" }}>
+                    Migration completed! See your deposits{" "}
+                    <Link color href="/farms">
+                      here
+                    </Link>
+                  </p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>
