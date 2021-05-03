@@ -81,7 +81,7 @@ function usePrices() {
         "liquity-usd",
         "liquity",
         // "yvboost",
-        "alchemix"
+        "alchemix",
         "terra-luna",
       ],
       vs_currencies: ["usd"],
