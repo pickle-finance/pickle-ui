@@ -1,8 +1,6 @@
 export const crvJars = ["3poolCRV", "renBTCCRV", "steCRV"];
 
 export const uniJars = [
-  "BAC-DAI",
-  "BAS2-DAI",
   "MIR-UST",
   "MTSLA-UST",
   "MAAPL-UST",
@@ -19,8 +17,6 @@ export const sushiJars = [
   "SLP-USDT",
   "SLP-WBTC",
   "SLP-YFI",
-  "MIC-USDT",
-  "MIS-USDT",
   "yveCRV-ETH",
   "yvBOOST-ETH",
   "SUSHI-ETH",
