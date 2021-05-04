@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
 
 const { parseEther } = ethers.utils;
 const { MaxUint256 } = ethers.constants;
@@ -40,9 +40,9 @@ const TOKEN: { [key in Token]: string } = {
 };
 
 const JAR_ENUM_TO_ADDR: { [key in Jar]: string } = {
-  [Jar.prenBTCCRV]: PICKLE_JARS["Ethereum"].prenBTCWBTC,
-  [Jar.p3poolCRV]: PICKLE_JARS["Ethereum"].p3CRV,
-  [Jar.pDAI]: PICKLE_JARS["Ethereum"].pDAI,
+  [Jar.prenBTCCRV]: PICKLE_JARS.prenBTCWBTC,
+  [Jar.p3poolCRV]: PICKLE_JARS.p3CRV,
+  [Jar.pDAI]: PICKLE_JARS.pDAI,
 };
 
 export const useExitToToken = (jar: Jar, token: Token) => {

@@ -19,14 +19,14 @@ import {
 import { UserGaugeData } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
-import { Jars } from "../../containers/Jars";
+import { Jars } from "../../containers/Jars-Polygon";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { JarApy } from "../../containers/Jars-Ethereum/useJarsWithAPY";
+import { useUniPairDayData } from "../../containers/Jars-Ethereum/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
@@ -396,50 +396,49 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Button>
         </Grid>
         <Spacer />
-        
       </Grid.Container>
       <Grid.Container gap={2}>
-          <Grid xs={24} md={12}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.getReward();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {harvestButton.text}
-            </Button>
-          </Grid>
-          <Grid xs={24} md={12}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.exit();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {exitButton.text}
-            </Button>
-          </Grid>
-        </Grid.Container>
+        <Grid xs={24} md={12}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.getReward();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {harvestButton.text}
+          </Button>
+        </Grid>
+        <Grid xs={24} md={12}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.exit();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {exitButton.text}
+          </Button>
+        </Grid>
+      </Grid.Container>
     </Collapse>
   );
 };

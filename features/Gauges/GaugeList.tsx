@@ -8,7 +8,7 @@ import { Connection } from "../../containers/Connection";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -39,8 +39,8 @@ export const GaugeList: FC = () => {
   }
 
   const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS["Ethereum"].pUNIBACDAI ||
-    depositToken === PICKLE_JARS["Ethereum"].pUNIBASDAI;
+    depositToken === PICKLE_JARS.pUNIBACDAI ||
+    depositToken === PICKLE_JARS.pUNIBASDAI;
 
   const activeGauges = gaugeData.filter(
     (x) => !isDisabledFarm(x.depositToken.address),

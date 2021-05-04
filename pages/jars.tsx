@@ -3,9 +3,13 @@ import { Page } from "@geist-ui/react";
 
 import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
-import { JarList } from "../features/Jars/JarList";
+import { JarList as JarListEthereum } from "../features/Jars-Ethereum/JarList";
+import { JarList as JarListPolygon } from "../features/Jars-Polygon/JarList";
+import { Connection } from "../containers/Connection";
 
 const Jars: FC = () => {
+  const { chainName } = Connection.useContainer();
+
   return (
     <>
       <TopBar />
@@ -14,7 +18,7 @@ const Jars: FC = () => {
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
             Jars
           </h1>
-          <JarList />
+          {chainName === "Polygon" ? <JarListPolygon /> : <JarListEthereum />}
         </Page.Content>
         <Footer />
       </Page>

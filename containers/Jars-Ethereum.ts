@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 import { Balances } from "./Balances";
-import { useFetchJars } from "./Jars/useFetchJars";
-import { useJarWithAPY } from "./Jars/useJarsWithAPY";
-import { useJarWithTVL } from "./Jars/useJarsWithTVL";
+import { useFetchJars } from "./Jars-Ethereum/useFetchJars";
+import { useJarWithAPY } from "./Jars-Ethereum/useJarsWithAPY";
+import { useJarWithTVL } from "./Jars-Ethereum/useJarsWithTVL";
 
 function useJars() {
   const { jars: rawJars } = useFetchJars();

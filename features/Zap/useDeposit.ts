@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
 import { TokenSymbol } from "./useBalance";
 
 const { parseUnits } = ethers.utils;
@@ -83,12 +83,12 @@ export const useDeposit = (
       const tx = await instabrine.primitiveToPickleJar(
         TOKEN.DAI,
         amount,
-        PICKLE_JARS["Ethereum"].pDAI,
+        PICKLE_JARS.pDAI,
       );
       await tx.wait();
 
       // go into pDAI farm
-      const pDAI = erc20.attach(PICKLE_JARS["Ethereum"].pDAI);
+      const pDAI = erc20.attach(PICKLE_JARS.pDAI);
       const pTokenAmount = await pDAI.balanceOf(address);
       const allowance = await pDAI.allowance(address, masterchef.address);
 
@@ -114,12 +114,12 @@ export const useDeposit = (
           inputToken === "USDT" ? amount : Zero,
         ],
         CURVE_LP["3pool"],
-        PICKLE_JARS["Ethereum"].p3CRV,
+        PICKLE_JARS.p3CRV,
       );
       await tx.wait();
 
       // go into p3CRV farm
-      const p3CRV = erc20.attach(PICKLE_JARS["Ethereum"].p3CRV);
+      const p3CRV = erc20.attach(PICKLE_JARS.p3CRV);
       const pTokenAmount = await p3CRV.balanceOf(address);
       const allowance = await p3CRV.allowance(address, masterchef.address);
 
@@ -144,12 +144,12 @@ export const useDeposit = (
           inputToken === "wBTC" ? amount : Zero,
         ],
         CURVE_LP.ren,
-        PICKLE_JARS["Ethereum"].prenBTCWBTC,
+        PICKLE_JARS.prenBTCWBTC,
       );
       await tx.wait();
 
       // go into prenCRV farm
-      const prenCRV = erc20.attach(PICKLE_JARS["Ethereum"].prenBTCWBTC);
+      const prenCRV = erc20.attach(PICKLE_JARS.prenBTCWBTC);
       const pTokenAmount = await prenCRV.balanceOf(address);
       const allowance = await prenCRV.allowance(address, masterchef.address);
 
@@ -170,7 +170,7 @@ export const useDeposit = (
       await tx.wait();
 
       // go into pYvecrv farm
-      const pYvecrv = erc20.attach(PICKLE_JARS["Ethereum"].pSUSHIETHYVECRV);
+      const pYvecrv = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
       const pTokenAmount = await pYvecrv.balanceOf(address);
       const allowance = await pYvecrv.allowance(address, masterchef.address);
 
@@ -196,7 +196,6 @@ export const useDepositEth = (rawAmount: string) => {
     if (!address || !masterchef || !yveCrvZap) return;
 
     const amount = parseUnits(rawAmount, 18);
-    console.log(yveCrvZap);
     const overrideOptions = {
       value: amount,
     };
@@ -204,7 +203,7 @@ export const useDepositEth = (rawAmount: string) => {
     await tx.wait();
 
     // go into pYvecrv farm
-    const pYvecrv = erc20.attach(PICKLE_JARS["Ethereum"].pSUSHIETHYVECRV);
+    const pYvecrv = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
     const pTokenAmount = await pYvecrv.balanceOf(address);
     const allowance = await pYvecrv.allowance(address, masterchef.address);
 

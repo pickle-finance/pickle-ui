@@ -17,7 +17,7 @@ import { Prices } from "../containers/Prices";
 import { Pickles } from "../containers/Pickles";
 import { PickleStaking } from "../containers/PickleStaking";
 import { Farms } from "../containers/Farms";
-import { Jars } from "../containers/Jars";
+import { Jars } from "../containers/Jars-Polygon";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
@@ -27,9 +27,9 @@ import { Gauges } from "../containers/Gauges";
 import { UserGauges } from "../containers/UserGauges";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ComethPairs } from "../containers/ComethPairs";
 
 const getLibrary = (provider: any) => {
-  console.log(provider);
   return new Web3Provider(provider);
 };
 
@@ -43,23 +43,25 @@ const WithContainers: FC = ({ children }) => (
               <Pickles.Provider>
                 <PickleStaking.Provider>
                   <UniV2Pairs.Provider>
-                    <Dill.Provider>
-                      <SushiPairs.Provider>
-                        <Jars.Provider>
-                          <Farms.Provider>
-                            <Gauges.Provider>
-                              <UserJars.Provider>
-                                <UserFarms.Provider>
-                                  <UserGauges.Provider>
-                                    {children}
-                                  </UserGauges.Provider>
-                                </UserFarms.Provider>
-                              </UserJars.Provider>
-                            </Gauges.Provider>
-                          </Farms.Provider>
-                        </Jars.Provider>
-                      </SushiPairs.Provider>
-                    </Dill.Provider>
+                    <ComethPairs.Provider>
+                      <Dill.Provider>
+                        <SushiPairs.Provider>
+                          <Jars.Provider>
+                            <Farms.Provider>
+                              <Gauges.Provider>
+                                <UserJars.Provider>
+                                  <UserFarms.Provider>
+                                    <UserGauges.Provider>
+                                      {children}
+                                    </UserGauges.Provider>
+                                  </UserFarms.Provider>
+                                </UserJars.Provider>
+                              </Gauges.Provider>
+                            </Farms.Provider>
+                          </Jars.Provider>
+                        </SushiPairs.Provider>
+                      </Dill.Provider>
+                    </ComethPairs.Provider>
                   </UniV2Pairs.Provider>
                 </PickleStaking.Provider>
               </Pickles.Provider>

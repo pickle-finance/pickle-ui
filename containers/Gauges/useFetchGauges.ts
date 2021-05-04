@@ -15,13 +15,13 @@ export interface RawGauge {
 }
 
 export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
-  const { blockNum, multicallProvider } = Connection.useContainer();
+  const { blockNum, multicallProvider, chainName } = Connection.useContainer();
   const { gaugeProxy, gauge } = Contracts.useContainer();
 
   const [gauges, setGauges] = useState<Array<RawGauge> | null>(null);
 
   const getGauges = async () => {
-    if (gaugeProxy && multicallProvider && gauge) {
+    if (gaugeProxy && multicallProvider && gauge && chainName === "Ethereum") {
       const tokens = await gaugeProxy.tokens();
       const totalWeight = await gaugeProxy.totalWeight();
 

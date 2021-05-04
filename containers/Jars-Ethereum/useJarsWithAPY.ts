@@ -338,7 +338,6 @@ export const useJarWithAPY = (jars: Input): Output => {
       const lqtyRewardRate = parseFloat(formatEther(rewardRateBN));
 
       const { pricePerToken } = await getUniPairData(stakingToken);
-      console.log(pricePerToken, stakingToken);
 
       const mirRewardsPerYear = lqtyRewardRate * (360 * 24 * 60 * 60);
       const valueRewardedPerYear = prices.lqty * mirRewardsPerYear;

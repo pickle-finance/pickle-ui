@@ -21,9 +21,9 @@ import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
-import { Jars } from "../../containers/Jars";
+import { useUniPairDayData } from "../../containers/Jars-Ethereum/useUniPairDayData";
+import { JarApy } from "../../containers/Jars-Ethereum/useJarsWithAPY";
+import { Jars } from "../../containers/Jars-Polygon";
 
 interface Weights {
   [key: string]: number;

@@ -4,8 +4,11 @@ import Link from "next/link";
 import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
 import { GaugeList } from "../features/Gauges/GaugeList";
+import { Connection } from "../containers/Connection";
 
 const Gauges: FC = () => {
+  const { chainName } = Connection.useContainer();
+
   return (
     <>
       <TopBar />
@@ -15,7 +18,11 @@ const Gauges: FC = () => {
             Welcome to the new Farms. If you're looking for tokens you
             deposited, it may be in our old Farms
             <br />
-            <Link href="/old-farms" passHref style={{ color: "var(--link-color)" }}>
+            <Link
+              href="/old-farms"
+              passHref
+              style={{ color: "var(--link-color)" }}
+            >
               Click here to see the old Farms
             </Link>
             <br />
@@ -24,7 +31,11 @@ const Gauges: FC = () => {
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
             Farms
           </h1>
-          <GaugeList />
+          {chainName === "Polygon" ? (
+            "No farms are available on Polygon network yet."
+          ) : (
+            <GaugeList />
+          )}
         </Page.Content>
         <Footer />
       </Page>

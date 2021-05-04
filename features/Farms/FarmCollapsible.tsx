@@ -16,16 +16,16 @@ import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
-import { Jars } from "../../containers/Jars";
+import { Jars } from "../../containers/Jars-Polygon";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { JarApy } from "../../containers/Jars-Ethereum/useJarsWithAPY";
+import { useUniPairDayData } from "../../containers/Jars-Ethereum/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
 import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
@@ -245,8 +245,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   }).reduce((acc, x) => acc + x, 0);
 
   const isDisabledFarm =
-    depositToken.address === PICKLE_JARS["Ethereum"].pUNIBACDAI ||
-    depositToken.address === PICKLE_JARS["Ethereum"].pUNIBASDAI;
+    depositToken.address === PICKLE_JARS.pUNIBACDAI ||
+    depositToken.address === PICKLE_JARS.pUNIBASDAI;
 
   const handleMigrate = async () => {
     if (stakedNum) {

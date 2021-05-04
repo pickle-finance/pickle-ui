@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { Contract, ethers } from "ethers";
 
-import { Jars } from "./Jars";
+import { Jars } from "./Jars-Polygon";
 import { Farms } from "./Farms";
 import { Balances } from "./Balances";
 import { Contracts } from "./Contracts";

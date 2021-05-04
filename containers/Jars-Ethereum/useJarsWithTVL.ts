@@ -62,7 +62,7 @@ const isUniPool = (jarName: string): boolean => {
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const {
     uniswapv2Pair,
@@ -120,7 +120,9 @@ export const useJarWithTVL = (jars: Input): Output => {
       await Promise.all([
         multicallJarContract.totalSupply(),
         multicallJarContract.balance(),
-        multicallPoolContract.get_virtual_price(),
+        chainName === "Ethereum"
+          ? multicallPoolContract.get_virtual_price()
+          : 0,
         multicallJarContract.getRatio(),
       ])
     ).map((x) => parseFloat(formatEther(x)));

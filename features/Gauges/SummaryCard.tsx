@@ -4,9 +4,9 @@ import { JAR_FARM_MAP } from "../../containers/Farms/farms";
 import { Card, Table, Tooltip } from "@geist-ui/react";
 import { Farms } from "../../containers/Farms";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
-import { Jars } from "../../containers/Jars";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { Jars } from "../../containers/Jars-Polygon";
+import { JarApy } from "../../containers/Jars-Ethereum/useJarsWithAPY";
+import { useUniPairDayData } from "../../containers/Jars-Ethereum/useUniPairDayData";
 
 export const SummaryCard: FC = () => {
   const { farms } = Farms.useContainer();

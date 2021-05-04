@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { UserJarData } from "../../containers/UserJars";
 
-import { Jars } from "../../containers/Jars";
+import { Jars } from "../../containers/Jars-Polygon";
 import { Balances } from "../../containers/Balances";
 import { Connection } from "../../containers/Connection";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";

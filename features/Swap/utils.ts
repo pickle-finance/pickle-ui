@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { CurveProxyLogic } from "../../containers/Contracts/CurveProxyLogic";
-import { PICKLE_JARS["Ethereum"] } from "../../containers/Jars/jars";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 import {
   THREE_CRV,
   THREE_POOL_ADDR,
@@ -17,9 +17,9 @@ export const isCurveJar = (address: string): boolean => {
   const l = address.toLowerCase();
 
   return (
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].p3CRV.toLowerCase() ||
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].psCRV.toLowerCase() ||
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].prenBTCWBTC.toLowerCase()
+    l === PICKLE_JARS.p3CRV.toLowerCase() ||
+    l === PICKLE_JARS.psCRV.toLowerCase() ||
+    l === PICKLE_JARS.prenBTCWBTC.toLowerCase()
   );
 };
 
@@ -27,41 +27,33 @@ export const isUniswapV2Jar = (address: string): boolean => {
   const l = address.toLowerCase();
 
   return (
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHDAI.toLowerCase() ||
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHUSDC.toLowerCase() ||
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHUSDT.toLowerCase() ||
-    l === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHWBTC.toLowerCase()
+    l === PICKLE_JARS.pUNIETHDAI.toLowerCase() ||
+    l === PICKLE_JARS.pUNIETHUSDC.toLowerCase() ||
+    l === PICKLE_JARS.pUNIETHUSDT.toLowerCase() ||
+    l === PICKLE_JARS.pUNIETHWBTC.toLowerCase()
   );
 };
 
 export const isPrimitiveJar = (address: string): boolean => {
   const l = address.toLowerCase();
 
-  return l === PICKLE_JARS["Ethereum"]["Ethereum"].pDAI.toLowerCase();
+  return l === PICKLE_JARS.pDAI.toLowerCase();
 };
 
 export const getUniswapUnderlying = (jarAddressLowerCase: string): string => {
-  if (
-    jarAddressLowerCase === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHDAI.toLowerCase()
-  ) {
+  if (jarAddressLowerCase === PICKLE_JARS.pUNIETHDAI.toLowerCase()) {
     return erc20.dai.address;
   }
 
-  if (
-    jarAddressLowerCase === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHUSDC.toLowerCase()
-  ) {
+  if (jarAddressLowerCase === PICKLE_JARS.pUNIETHUSDC.toLowerCase()) {
     return erc20.usdc.address;
   }
 
-  if (
-    jarAddressLowerCase === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHUSDT.toLowerCase()
-  ) {
+  if (jarAddressLowerCase === PICKLE_JARS.pUNIETHUSDT.toLowerCase()) {
     return "0xdac17f958d2ee523a2206206994597c13d831ec7";
   }
 
-  if (
-    jarAddressLowerCase === PICKLE_JARS["Ethereum"]["Ethereum"].pUNIETHWBTC.toLowerCase()
-  ) {
+  if (jarAddressLowerCase === PICKLE_JARS.pUNIETHWBTC.toLowerCase()) {
     return erc20.wbtc.address;
   }
 
@@ -77,21 +69,21 @@ export const getRemoveCurveData = (
   let index = ethers.BigNumber.from(0);
   let underlying = "";
 
-  if (fromJarAddressLowerCase === PICKLE_JARS["Ethereum"].p3CRV.toLowerCase()) {
+  if (fromJarAddressLowerCase === PICKLE_JARS.p3CRV.toLowerCase()) {
     curve = THREE_POOL_ADDR;
     curveLp = THREE_CRV;
     index = ethers.BigNumber.from(0);
     underlying = erc20.dai.address;
   }
 
-  if (fromJarAddressLowerCase === PICKLE_JARS["Ethereum"].psCRV.toLowerCase()) {
+  if (fromJarAddressLowerCase === PICKLE_JARS.psCRV.toLowerCase()) {
     curve = SUSDV2_DEPOSIT_ADDR;
     curveLp = SUSDV2_CRV;
     index = ethers.BigNumber.from(0);
     underlying = erc20.dai.address;
   }
 
-  if (fromJarAddressLowerCase === PICKLE_JARS["Ethereum"].prenBTCWBTC.toLowerCase()) {
+  if (fromJarAddressLowerCase === PICKLE_JARS.prenBTCWBTC.toLowerCase()) {
     curve = RENBTC_POOL_ADDR;
     curveLp = RENBTC_CRV;
     index = ethers.BigNumber.from(1);
@@ -118,7 +110,7 @@ export const getSupplyCurveData = (
   let curveUnderlyingIndex: ethers.BigNumber = ethers.BigNumber.from(0);
   let curveUnderlying = "";
 
-  if (toJarAddressLowerCase === PICKLE_JARS["Ethereum"].p3CRV.toLowerCase()) {
+  if (toJarAddressLowerCase === PICKLE_JARS.p3CRV.toLowerCase()) {
     curve = THREE_POOL_ADDR;
     curveFunctionSig = ethers.utils
       .id("add_liquidity(uint256[3],uint256)")
@@ -128,7 +120,7 @@ export const getSupplyCurveData = (
     curveUnderlying = erc20.dai.address;
   }
 
-  if (toJarAddressLowerCase === PICKLE_JARS["Ethereum"].psCRV.toLowerCase()) {
+  if (toJarAddressLowerCase === PICKLE_JARS.psCRV.toLowerCase()) {
     curve = SUSD_POOL_ADDR;
     curveFunctionSig = ethers.utils
       .id("add_liquidity(uint256[4],uint256)")
@@ -138,7 +130,7 @@ export const getSupplyCurveData = (
     curveUnderlying = erc20.dai.address;
   }
 
-  if (toJarAddressLowerCase === PICKLE_JARS["Ethereum"].prenBTCWBTC.toLowerCase()) {
+  if (toJarAddressLowerCase === PICKLE_JARS.prenBTCWBTC.toLowerCase()) {
     curve = RENBTC_POOL_ADDR;
     curveFunctionSig = ethers.utils
       .id("add_liquidity(uint256[2],uint256)")

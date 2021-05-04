@@ -8,7 +8,7 @@ import { Prices } from "../Prices";
 import { JAR_GAUGE_MAP } from "./gauges";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
-import { Jars } from "../Jars";
+import { Jars } from "../Jars-Polygon";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
 

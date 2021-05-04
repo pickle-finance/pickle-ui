@@ -2,8 +2,8 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Grid, Select } from "@geist-ui/react";
 
-import { JAR_DEPOSIT_TOKEN_TO_ICON } from "../Jars/JarCollapsible";
-import { JarWithTVL } from "../../containers/Jars/useJarsWithTVL";
+import { JAR_DEPOSIT_TOKEN_TO_ICON } from "../Jars-Ethereum/JarCollapsible";
+import { JarWithTVL } from "../../containers/Jars-Ethereum/useJarsWithTVL";
 
 const Option = styled(Select.Option)`
   height: 3rem !important;

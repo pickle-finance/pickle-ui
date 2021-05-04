@@ -21,7 +21,7 @@ export function useStakingRewards(
   stakingRewardsAddress: string,
   rewardsTokenPrice: number | null,
 ): UseStakingRewardsOutput {
-  const { blockNum, address } = Connection.useContainer();
+  const { blockNum, address, chainName } = Connection.useContainer();
   const { stakingRewards, pickle } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
 
@@ -58,7 +58,7 @@ export function useStakingRewards(
   };
 
   useEffect(() => {
-    if (stakingRewards && address) {
+    if (stakingRewards && address && chainName === "Ethereum") {
       const f = async () => {
         const pickleRewards = stakingRewards.attach(stakingRewardsAddress);
 

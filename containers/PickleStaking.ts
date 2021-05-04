@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 import { useStakingRewards } from "./Staking/useStakingRewards";
 
 function usePickleStaking() {
-  const { blockNum, address } = Connection.useContainer();
+  const { blockNum, address, chainName } = Connection.useContainer();
   const { susdPool } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
 
@@ -26,7 +26,7 @@ function usePickleStaking() {
   );
 
   useEffect(() => {
-    if (susdPool) {
+    if (susdPool && chainName === "Ethereum") {
       const f = async () => {
         const virtualPriceBN = await susdPool.get_virtual_price();
         const virtualPrice = parseFloat(
