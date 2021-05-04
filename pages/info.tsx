@@ -395,6 +395,13 @@ const getUSD = (value) => {
   return `$${formatNumber(value)}`;
 };
 
+const retiredJars = [  
+  "BAC-DAI",
+  "BAS2-DAI",
+  "MIC-USDT", 
+  "MIS-USDT"
+]
+
 export default function Brining() {
   const classes = useStyles();
 
@@ -412,8 +419,11 @@ export default function Brining() {
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
     const updateStaking = async () => setStakingInfo(await getStakingData());
-    const updateJars = async () =>
-      setJarInfo(await getPerformanceData(jarOptions));
+    const updateJars = async () => {
+      const jarInfo = await getPerformanceData(jarOptions)
+      const jarInfoFiltered = jarInfo.filter(jar => !retiredJars.includes(jar.asset.toUpperCase()))
+      setJarInfo(jarInfoFiltered);
+    }
     const updateFarms = async () => {
       const farms = await getFarmData();
       setPicklePerBlock(farms.picklePerBlock);
