@@ -229,7 +229,8 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST;
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST || 
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
 
   const lunaAPY = isMStonksJar && (APYs[2] ? APYs[2].luna ?? 0 : 0);
   console.log(lunaAPY);
