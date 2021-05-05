@@ -125,16 +125,15 @@ export const useMigrate = (
 
     let minOut;
     if (yveCrvStats && yvboostStats) {
-      // const yveCrvPrice = yveCrvStats.pricePerToken;
-      // const yvboostPrice = yvboostStats.pricePerToken;
-      // minOut = pYvcrvBalance
-      //   .mul(ethers.utils.parseEther(yveCrvPrice.toString()))
-      //   .mul(97)
-      //   .div(100)
-      //   .div(ethers.utils.parseEther(yvboostPrice.toString()));
-      minOut = pYvcrvBalance.div(2);
+      const yveCrvPrice = yveCrvStats.pricePerToken;
+      const yvboostPrice = yvboostStats.pricePerToken;
+      minOut = pYvcrvBalance
+        .mul(ethers.utils.parseEther(yveCrvPrice.toString()))
+        .mul(97)
+        .div(100)
+        .div(ethers.utils.parseEther(yvboostPrice.toString()));
     } else {
-      minOut = pYvcrvBalance.div(2);
+      minOut = pYvcrvBalance.mul(3).div(4);
     }
 
     const tx2 = await yvBoostMigrator.Migrate(pYvcrvBalance, minOut, {
