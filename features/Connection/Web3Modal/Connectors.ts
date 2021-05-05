@@ -3,7 +3,7 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
-  1: process.env.infura,
+  1: process.env.infura as string,
 };
 
 export const injected = new InjectedConnector({

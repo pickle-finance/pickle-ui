@@ -1,11 +1,11 @@
 import styled, { css } from "styled-components";
 import Loader from "react-loader-spinner";
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 
 interface ConnectorItemProps {
   icon: string;
   title: string;
-  onClick: Function;
+  onClick: MouseEventHandler<HTMLDivElement>;
   loading: boolean;
   disabled: boolean;
 }
@@ -42,12 +42,12 @@ const StyledContainer = styled.div<ContainerProps>`
   }
 `;
 
-const centerStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-};
+const LoaderContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 
 const ConnectorItem: FC<ConnectorItemProps> = ({
   icon,
@@ -57,25 +57,11 @@ const ConnectorItem: FC<ConnectorItemProps> = ({
   disabled,
 }) => {
   return (
-    <StyledContainer
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
-      onClick={onClick}
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      disabled={loading || disabled}
-    >
+    <StyledContainer onClick={onClick} disabled={loading || disabled}>
       {loading && (
-        <Loader
-          type="TailSpin"
-          color="#aaa"
-          height={50}
-          width={50}
-          style={centerStyle}
-        />
+        <LoaderContainer>
+          <Loader type="TailSpin" color="#aaa" height={50} width={50} />
+        </LoaderContainer>
       )}
       <img src={`wallet/${icon}`} width="30px" alt="wallet" />
       {title}

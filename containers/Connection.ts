@@ -1,28 +1,26 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
-import { ethers } from "ethers";
+import type { providers } from "ethers";
 import { Provider as MulticallProvider } from "ethers-multicall";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 
-type Network = ethers.providers.Network;
-
 function useConnection() {
-  const { account, library } = useWeb3React();
+  const { account, library } = useWeb3React<providers.Web3Provider>();
 
   const [
     multicallProvider,
     setMulticallProvider,
   ] = useState<MulticallProvider | null>(null);
 
-  const [network, setNetwork] = useState<Network | null>(null);
+  const [network, setNetwork] = useState<providers.Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
-      library.getNetwork().then((network: any) => setNetwork(network));
+      library.getNetwork().then((network) => setNetwork(network));
 
       const ethMulticallProvider = new MulticallProvider(library);
       ethMulticallProvider
