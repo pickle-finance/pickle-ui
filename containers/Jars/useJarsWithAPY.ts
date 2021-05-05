@@ -27,6 +27,7 @@ import {
   FEI_TRIBE_STAKING_REWARDS,
   ALCHEMIX_ALCX_ETH_STAKING_POOLS,
 } from "../Contracts";
+import { getProtocolData } from "../../util/api";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
@@ -148,6 +149,7 @@ export const useJarWithAPY = (jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
+  const [tvlData, setTVLData] = useState<Array<Object>>([]);
 
   const calculateUNIAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
@@ -441,12 +443,13 @@ export const useJarWithAPY = (jars: Input): Output => {
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const alcxRewardsPerYear =
-        parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME;
+        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
+        AVERAGE_BLOCK_TIME;
       const poolRewardsPerYear =
         (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
         totalAllocPointBN.toString();
       const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
-      
+
       const totalValueStaked = totalSupply * pricePerToken;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
@@ -456,6 +459,54 @@ export const useJarWithAPY = (jars: Input): Output => {
     }
 
     return [];
+  };
+
+  const getLunaAPY = (tokenAddress: string) => {
+    const TOTAL_REWARD = 1084.43;
+    let reward, apy;
+    switch (tokenAddress) {
+      case JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST:
+        reward = (TOTAL_REWARD * 25);
+        apy =
+          tvlData && tvlData["mir-ust"]
+            ? (((prices?.luna ?? 0) * reward) / tvlData["mir-ust"]) * 26
+            : 0;
+        break;
+      case JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST:
+        reward = (TOTAL_REWARD * 15);
+        apy = tvlData["mtsla-ust"]
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mtsla-ust"]*2)) * 26
+          : 0;
+        break;
+      case JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST:
+        reward = (TOTAL_REWARD * 15);
+        apy = tvlData["maapl-ust"]
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["maapl-ust"]*2)) * 26
+          : 0;
+        break;
+      case JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST:
+        reward = (TOTAL_REWARD * 15);
+        apy = tvlData["mqqq-ust"]
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mqqq-ust"]*2)) * 26
+          : 0;
+        break;
+      case JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST:
+        reward = (TOTAL_REWARD * 15);
+        apy = tvlData["mslv-ust"]
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mslv-ust"]*2)) * 26
+          : 0;
+        break;
+      case JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST:
+        reward = (TOTAL_REWARD * 15);
+        apy = tvlData["mbaba-ust"]
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mbaba-ust"]*2)) * 26
+          : 0;
+        break;
+      default:
+        return [];
+    }
+
+    return [{ luna: apy }];
   };
 
   const calculateSushiAPY = async (lpTokenAddress: string) => {
@@ -639,11 +690,11 @@ export const useJarWithAPY = (jars: Input): Output => {
         //     ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI),
         //   ];
         // }
-
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MIR_UST) {
           APYs = [
             ...mirrorMirUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST),
+            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST),
           ];
         }
 
@@ -651,6 +702,7 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMtslaUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST),
+            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST),
           ];
         }
 
@@ -658,6 +710,7 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMaaplUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST),
+            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST),
           ];
         }
 
@@ -665,6 +718,7 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMqqqUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST),
+            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST),
           ];
         }
 
@@ -672,6 +726,7 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMslvUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST),
+            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST),
           ];
         }
 
@@ -679,6 +734,7 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMbabaUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST),
+            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST),
           ];
         }
 
@@ -765,14 +821,13 @@ export const useJarWithAPY = (jars: Input): Output => {
             ...sushiEthApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
           ];
-
         }
 
-          if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
-            APYs = [
-              ...alcxEthAlcxApy,
-              ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-            ];
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
+          APYs = [
+            ...alcxEthAlcxApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+          ];
         }
 
         // if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
@@ -824,6 +879,7 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   useEffect(() => {
+    getProtocolData().then((tvlData) => setTVLData(tvlData));
     calculateAPY();
   }, [jars, prices]);
 

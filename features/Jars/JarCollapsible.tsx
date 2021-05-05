@@ -224,6 +224,23 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI;
 
+  const isMStonksJar =
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST || 
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
+
+  let lunaAPY  
+  if(isMStonksJar && (APYs[2])){
+    lunaAPY = APYs[2].luna
+  } else if(isMStonksJar && (APYs[1])) {
+    lunaAPY = APYs[1].luna
+  } else {
+    lunaAPY = 0
+  }
+  
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -249,11 +266,23 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={4} lg={4}>
+          <Grid xs={24} sm={12} md={5} lg={5}>
             <Data>
               <Tooltip text={tooltipText}>
                 {totalAPY.toFixed(2) + "%" || "--"}
               </Tooltip>
+              {isMStonksJar && lunaAPY && (
+                <>
+                  <span>+{lunaAPY.toFixed(2)} %</span>
+                  <Tooltip text="LUNA rewards are additionally rewarded to depositors for 2 weeks. These rewards will be airdropped at the end of the 2 week period">
+                    <img
+                      src="./luna.webp"
+                      width="15px"
+                      style={{ marginLeft: 5 }}
+                    />
+                  </Tooltip>
+                </>
+              )}
             </Data>
             <Data>
               <Tooltip
@@ -272,15 +301,15 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               </Tooltip>
             </Data>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={5}>
             <Data isZero={balNum === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>Value</Label>
           </Grid>

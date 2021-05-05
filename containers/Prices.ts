@@ -38,6 +38,7 @@ interface PriceObject {
   lqty: number;
   yvboost: number;
   alcx: number;
+  luna: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -80,7 +81,8 @@ function usePrices() {
         "liquity-usd",
         "liquity",
         // "yvboost",
-        "alchemix"
+        "alchemix",
+        "terra-luna",
       ],
       vs_currencies: ["usd"],
     });
@@ -117,7 +119,8 @@ function usePrices() {
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
       yvboost: 0, // to update once CG provides yvboost price
-      alcx: response["alchemix"].usd
+      alcx: response["alchemix"].usd,
+      luna: response["terra-luna"].usd,
     };
     setPrices(prices);
   };
