@@ -83,11 +83,11 @@ export function useDill(): UseDillOutput {
 
         const nextDistribution = new Date(timeCursor.toNumber() * 1000);
 
-        const lastDistributionPickles = parseFloat(ethers.utils.formatEther(lastDistribution?.args.tokens))
+        const lastDistributionPickles = parseFloat(
+          ethers.utils.formatEther(lastDistribution?.args?.tokens),
+        );
 
-        const lastDistributionValue =
-          prices.pickle * lastDistributionPickles
-;
+        const lastDistributionValue = prices.pickle * lastDistributionPickles;
 
         setLockedAmount(lockStats?.amount);
         setLockEndDate(lockStats?.end);
@@ -98,7 +98,7 @@ export function useDill(): UseDillOutput {
         setTotalPickleValue(totalPickleValue);
         setUserClaimable(userClaimable.toString() ? userClaimable : null);
         setNextDistribution(nextDistribution);
-        setLastDistribution(lastDistributionPickles)
+        setLastDistribution(lastDistributionPickles);
         setLastDistributionValue(lastDistributionValue);
       };
 
