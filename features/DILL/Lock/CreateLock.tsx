@@ -18,7 +18,6 @@ import {
   getEpochSecondForDay,
   getWeekDiff,
 } from "../../../util/date";
-import { SelectPeriod } from "../../../components/SelectPeriod";
 import {
   estimateDillForDate,
   estimateDillForPeriod,

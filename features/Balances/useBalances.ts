@@ -31,7 +31,7 @@ export const useBalances = (): IUseBalances => {
       setPickleBN(balanceBN);
 
       // get pickle total supply
-      const totalSupplyBN = (await pickle.totalSupply()) as BigNumber;
+      const totalSupplyBN = await pickle.totalSupply();
       const totalSupply = ethers.utils.formatUnits(totalSupplyBN);
       setTotalSupply(Number(totalSupply));
     }
