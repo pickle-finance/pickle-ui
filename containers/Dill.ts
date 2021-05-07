@@ -23,6 +23,8 @@ export interface UseDillOutput {
   lastDistributionValue: number | null;
 }
 
+const WEEK = 7 * 86400;
+
 export function useDill(): UseDillOutput {
   const { blockNum, address } = Connection.useContainer();
   const { dill, feeDistributor } = Contracts.useContainer();
@@ -47,15 +49,7 @@ export function useDill(): UseDillOutput {
       const f = async () => {
         const dillContract = dill.attach(DILL);
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
-        const distributionEventsRaw = await feeDistributor.queryFilter(
-          feeDistributor.filters.CheckpointToken(),
-        );
-        const distributionEvents = distributionEventsRaw.filter((x) =>
-          parseFloat(ethers.utils.formatEther(x?.args.tokens)),
-        );
 
-        const lastDistribution =
-          distributionEvents[distributionEvents.length - 1];
 
         const [
           lockStats,
@@ -75,6 +69,10 @@ export function useDill(): UseDillOutput {
           feeDistributorContract["time_cursor()"]({ gasLimit: 1000000 }),
         ]);
 
+        const lastDistribution = await feeDistributorContract["tokens_per_week(uint256)"](timeCursor.sub(ethers.BigNumber.from(WEEK)),{
+          gasLimit: 1000000,
+        }) 
+
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
 
@@ -84,7 +82,7 @@ export function useDill(): UseDillOutput {
         const nextDistribution = new Date(timeCursor.toNumber() * 1000);
 
         const lastDistributionPickles = parseFloat(
-          ethers.utils.formatEther(lastDistribution?.args?.tokens),
+          ethers.utils.formatEther(lastDistribution),
         );
 
         const lastDistributionValue = prices.pickle * lastDistributionPickles;
