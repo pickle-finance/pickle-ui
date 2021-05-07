@@ -137,7 +137,7 @@ export const useMigrate = (
     }
 
     const tx2 = await yvBoostMigrator.Migrate(pYvcrvBalance, minOut, {
-      gasLimit: 1100000,
+      gasLimit: 1300000,
     });
     await tx2.wait();
   };
