@@ -47,6 +47,7 @@ import { SushiPairs } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 
 const AVERAGE_BLOCK_TIME = 13.22;
+const YEARN_API = "https://vaults.finance/all";
 
 interface SushiPoolId {
   [key: string]: number;
@@ -60,12 +61,14 @@ const sushiPoolIds: SushiPoolId = {
   "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": 11,
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": 132,
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": 12,
-  "0x9461173740D27311b176476FA27e94C681b1Ea6b": 230, 
+  "0x9461173740D27311b176476FA27e94C681b1Ea6b": 230,
 };
 
 const alchemixPoolIds: SushiPoolId = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 2,
 };
+
+const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
 
 export interface JarApy {
   [k: string]: number;
@@ -105,6 +108,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     steCRVGauge,
     basisStaking,
     stakingPools,
+    yearnRegistry,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -466,40 +470,40 @@ export const useJarWithAPY = (jars: Input): Output => {
     let reward, apy;
     switch (tokenAddress) {
       case JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST:
-        reward = (TOTAL_REWARD * 25);
+        reward = TOTAL_REWARD * 25;
         apy =
           tvlData && tvlData["mir-ust"]
             ? (((prices?.luna ?? 0) * reward) / tvlData["mir-ust"]) * 26
             : 0;
         break;
       case JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST:
-        reward = (TOTAL_REWARD * 15);
+        reward = TOTAL_REWARD * 15;
         apy = tvlData["mtsla-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mtsla-ust"]*2)) * 26
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mtsla-ust"] * 2)) * 26
           : 0;
         break;
       case JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST:
-        reward = (TOTAL_REWARD * 15);
+        reward = TOTAL_REWARD * 15;
         apy = tvlData["maapl-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["maapl-ust"]*2)) * 26
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["maapl-ust"] * 2)) * 26
           : 0;
         break;
       case JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST:
-        reward = (TOTAL_REWARD * 15);
+        reward = TOTAL_REWARD * 15;
         apy = tvlData["mqqq-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mqqq-ust"]*2)) * 26
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mqqq-ust"] * 2)) * 26
           : 0;
         break;
       case JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST:
-        reward = (TOTAL_REWARD * 15);
+        reward = TOTAL_REWARD * 15;
         apy = tvlData["mslv-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mslv-ust"]*2)) * 26
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mslv-ust"] * 2)) * 26
           : 0;
         break;
       case JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST:
-        reward = (TOTAL_REWARD * 15);
+        reward = TOTAL_REWARD * 15;
         apy = tvlData["mbaba-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mbaba-ust"]*2)) * 26
+          ? (((prices?.luna ?? 0) * reward) / (tvlData["mbaba-ust"] * 2)) * 26
           : 0;
         break;
       default:
@@ -555,6 +559,17 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateYearnAPY = async (depositToken: string) => {
+    if (yearnRegistry) {
+      const vault = await yearnRegistry.latestVault(depositToken);
+      const yearnData = await fetchRes(YEARN_API);
+      const { data } = yearnData.find(
+        (x) => x.address.toLowerCase() === depositToken.toLowerCase(),
+      );
+      return data && [{ yearn: data.oneWeekSample, apr: data.oneWeekSample * 100}];
+    }
+  };
+
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
       const [
@@ -589,6 +604,8 @@ export const useJarWithAPY = (jars: Input): Output => {
         // basisBacDaiApy,
         // basisBasDaiApy,
         alcxEthAlcxApy,
+        usdcApy,
+        crvLusdApy,
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
@@ -597,6 +614,8 @@ export const useJarWithAPY = (jars: Input): Output => {
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.USDC),
+        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);
 
       const [
@@ -815,7 +834,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
-
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH) {
           APYs = [
             ...sushiEthApy,
@@ -827,6 +845,19 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...alcxEthAlcxApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+          ];
+        }
+
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
+          APYs = [
+            ...usdcApy,
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
+          APYs = [
+            ...crvLusdApy,
           ];
         }
 
