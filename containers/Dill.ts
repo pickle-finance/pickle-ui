@@ -68,11 +68,12 @@ export function useDill(): UseDillOutput {
           feeDistributorContract["time_cursor()"]({ gasLimit: 1000000 }),
         ]);
 
-        const lastDistribution = await feeDistributorContract[
-          "tokens_per_week(uint256)"
-        ](timeCursor.sub(ethers.BigNumber.from(WEEK*2)), {
-          gasLimit: 1000000,
-        });
+        const lastDistribution = await feeDistributorContract.tokens_per_week(
+          timeCursor.sub(ethers.BigNumber.from(WEEK * 2)),
+          {
+            gasLimit: 1000000,
+          },
+        );
 
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
