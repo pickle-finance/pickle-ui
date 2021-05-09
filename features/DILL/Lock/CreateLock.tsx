@@ -87,7 +87,7 @@ export const CreateLock: FC<{
   const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
   const dateAfter = getDayOffset(new Date(), 7);
-  const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4));
+  const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4 - 1));
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -138,7 +138,7 @@ export const CreateLock: FC<{
       case 3:
         return getDayOffset(new Date(), 364);
       case 4:
-        return getDayOffset(new Date(), 365 * 4);
+        return getDayOffset(new Date(), 365 * 4 - 1);
     }
     return (undefined as unknown) as Date;
   };
