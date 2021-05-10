@@ -122,6 +122,8 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
 };
 
+const USDC_SCALE = ethers.utils.parseUnits("1", 12);
+
 const setButtonStatus = (
   status: ERC20TransferStatus,
   transfering: string,
@@ -168,10 +170,13 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     depositTokenLink,
     apr,
   } = jarData;
-  console.log(jarData)
-
-  const balNum = parseFloat(formatEther(balance));
-  const depositedNum = parseFloat(formatEther(deposited));
+  const isUsdc =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
+  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+  const depositedNum = parseFloat(
+    formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+  );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: balNum < 1 ? 18 : 4,
@@ -236,18 +241,18 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST || 
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
 
-  let lunaAPY  
-  if(isMStonksJar && (APYs[2])){
-    lunaAPY = APYs[2].luna
-  } else if(isMStonksJar && (APYs[1])) {
-    lunaAPY = APYs[1].luna
+  let lunaAPY;
+  if (isMStonksJar && APYs[2]) {
+    lunaAPY = APYs[2].luna;
+  } else if (isMStonksJar && APYs[1]) {
+    lunaAPY = APYs[1].luna;
   } else {
-    lunaAPY = 0
+    lunaAPY = 0;
   }
-  
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -333,7 +338,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(formatEther(balance));
+                setDepositAmount(
+                  formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+                );
               }}
             >
               Max
@@ -377,7 +384,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               <Tooltip
                 text={`${
                   deposited && ratio
-                    ? parseFloat(formatEther(deposited)) * ratio
+                    ? parseFloat(
+                        formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                      ) * ratio
                     : 0
                 } ${depositTokenName}`}
               >
