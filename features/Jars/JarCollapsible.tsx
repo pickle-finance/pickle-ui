@@ -114,6 +114,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
   ),
+  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
+  ),
 };
 
 const setButtonStatus = (
@@ -162,6 +168,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     depositTokenLink,
     apr,
   } = jarData;
+  console.log(jarData)
 
   const balNum = parseFloat(formatEther(balance));
   const depositedNum = parseFloat(formatEther(deposited));

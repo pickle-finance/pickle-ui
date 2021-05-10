@@ -235,8 +235,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_YVBOOST: "pJar 0.99y",
   SUSHI_ETH: "pJar 0.99q",
   SUSHI_ETH_ALCX: "pJar 0.99x",
-  USDC: "pJar Y1",
-  lusdCRV: "pJar Y2"
+  USDC: "pJar Y-1",
+  lusdCRV: "pJar Y-2"
 };
 
 export const STRATEGY_NAMES = {

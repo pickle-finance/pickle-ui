@@ -561,13 +561,26 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateYearnAPY = async (depositToken: string) => {
     if (yearnRegistry) {
-      const vault = await yearnRegistry.latestVault(depositToken);
+      const vault = await yearnRegistry.latestVault(depositToken, {
+        gasLimit: 1000000,
+      });
       const yearnData = await fetchRes(YEARN_API);
-      const { data } = yearnData.find(
-        (x) => x.address.toLowerCase() === depositToken.toLowerCase(),
+      const vaultData = yearnData.find(
+        (x) => x.address.toLowerCase() === vault.toLowerCase(),
       );
-      return data && [{ yearn: data.oneWeekSample, apr: data.oneWeekSample * 100}];
+      if (vaultData) {
+        const apr = vaultData.apy.data.oneWeekSample
+          ? vaultData.apy.data.oneWeekSample
+          : vaultData.apy.data.netApy;
+        return [
+          {
+            yearn: apr * 100,
+            apr: apr * 100,
+          },
+        ];
+      }
     }
+    return [];
   };
 
   const calculateAPY = async () => {
@@ -614,8 +627,8 @@ export const useJarWithAPY = (jars: Input): Output => {
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.USDC),
-        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);
 
       const [
@@ -640,6 +653,7 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
+        let totalAPY = 0;
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV) {
           APYs = [
@@ -848,17 +862,14 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
-
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
-          APYs = [
-            ...usdcApy,
-          ];
+          APYs = [...usdcApy];
+          totalAPY = usdcApy[0].apr
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
-          APYs = [
-            ...crvLusdApy,
-          ];
+          APYs = [...crvLusdApy];
+          totalAPY = crvLusdApy[0].apr;
         }
 
         // if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
@@ -893,7 +904,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         // const totalAPY = APYs.map((x) => {
         //   return Object.values(x).reduce((acc, y) => acc + y, 0);
         // }).reduce((acc, x) => acc + x, 0);
-        const totalAPY = getCompoundingAPY(apr / 100) + lp;
+        if(!totalAPY) totalAPY = getCompoundingAPY(apr / 100) + lp;
 
         return {
           ...jar,
