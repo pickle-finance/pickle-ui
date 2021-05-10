@@ -208,11 +208,15 @@ export default function DillDashboard() {
       const from = timestamps[0];
       const to = timestamps[timestamps.length - 1];
       const prices = await getPricesBetween(from, to);
-      setPricesAtDistributions(prices, distributions);
+      if (prices.length) {
+        setPricesAtDistributions(prices, distributions);
+      }
       distributions.forEach((d) => {
-        d.dollars = (d.price * d.pickles).toFixed(2);
         d.picklesPerDill = (d.pickles / d.dills).toFixed(4);
-        d.dollarsPerDill = (d.dollars / d.dills).toFixed(2);
+        if (d.price) {
+          d.dollars = (d.price * d.pickles).toFixed(2);
+          d.dollarsPerDill = (d.dollars / d.dills).toFixed(2);
+        }
       });
       await Promise.all(timestamps.map(async (t, idx) => {
         const veForAt = feeDistributorContract["ve_for_at(address,uint256)"];
