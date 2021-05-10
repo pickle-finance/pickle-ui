@@ -81,6 +81,11 @@ export const InfoBar: FC = () => {
               Stats
             </NavItem>
           </Link>
+          <Link href="/info/dill" passHref>
+            <NavItem active={router.pathname.startsWith("/info/dill")}>
+              DILL
+            </NavItem>
+          </Link>
         </Content>
       </MaxWidthWrapper>
     </div>

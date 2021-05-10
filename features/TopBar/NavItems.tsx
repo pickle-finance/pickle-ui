@@ -67,6 +67,13 @@ const infoItems = (router) => (
         </NavItem>
       </Link>
     </p>
+    <p>
+      <Link href="/info/dill" passHref>
+        <NavItem active={router.pathname.startsWith("/info/dill")}>
+          DILL
+        </NavItem>
+      </Link>
+    </p>
   </div>
 );
 
