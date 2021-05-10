@@ -146,7 +146,6 @@ export default function DillDashboard() {
       if (address && timeCursor && dill && weeklyDistribution && picklePrice) {
         const pastDist = await getPastDistributions();
         const projectedDist = await getProjectedDistribution();
-        console.log('projectedDistribution', projectedDist);
         setDistributions([...pastDist, projectedDist]);
       }
     }
@@ -156,7 +155,7 @@ export default function DillDashboard() {
       const pickles = dollars / picklePrice;
       const dillContract = dill.attach(DILL);
       const totalSupply = dillContract["totalSupply()"];
-      const dillSupply = await totalSupply({gasLimit: 1000000});
+      const dillSupply = await totalSupply({ gasLimit: 1000000 });
       const dills = parseFloat(ethers.utils.formatEther(dillSupply));
       const picklesPerDill = (pickles / dills).toFixed(4);
       const dollarsPerDill = (dollars / dills).toFixed(2);
@@ -169,18 +168,13 @@ export default function DillDashboard() {
         dollars,
         picklesPerDill,
         dollarsPerDill,
-        myDills: 0,
-        myPickles: 0,
         projected: true
       };
-      if (address) {
-        const dillContract = dill.attach(DILL);
-        const balanceOf = dillContract["balanceOf(address)"];
-        const myDillTokens = await balanceOf(address, { gasLimit: 1000000 });
-        const myDills = parseFloat(ethers.utils.formatEther(myDillTokens));
-        projectedDistribution.myDills = myDills;
-        projectedDistribution.myPickles = myDills * pickles / dills;
-      }
+      const balanceOf = dillContract["balanceOf(address)"];
+      const myDillTokens = await balanceOf(address, { gasLimit: 1000000 });
+      const myDills = parseFloat(ethers.utils.formatEther(myDillTokens));
+      projectedDistribution.myDills = myDills;
+      projectedDistribution.myPickles = myDills * pickles / dills;
       return projectedDistribution;
     }
 
@@ -202,12 +196,12 @@ export default function DillDashboard() {
       }));
       const tokensPerWeek = feeDistributorContract["tokens_per_week(uint256)"];
       await Promise.all(timestamps.map(async (t, idx) => {
-        const pickleTokens = await tokensPerWeek(t, {gasLimit: 1000000});
+        const pickleTokens = await tokensPerWeek(t, { gasLimit: 1000000 });
         distributions[idx].pickles = parseFloat(ethers.utils.formatEther(pickleTokens));
       }));
       const veSupply = feeDistributorContract["ve_supply(uint256)"];
       await Promise.all(timestamps.map(async (t, idx) => {
-        const dillTokens = await veSupply(t, {gasLimit: 1000000});
+        const dillTokens = await veSupply(t, { gasLimit: 1000000 });
         distributions[idx].dills = parseFloat(ethers.utils.formatEther(dillTokens));
       }));
 
@@ -219,19 +213,15 @@ export default function DillDashboard() {
         d.dollars = (d.price * d.pickles).toFixed(2);
         d.picklesPerDill = (d.pickles / d.dills).toFixed(4);
         d.dollarsPerDill = (d.dollars / d.dills).toFixed(2);
-        d.myDills = 0;
-        d.myPickles = 0;
       });
-      if (address) {
-        await Promise.all(timestamps.map(async (t, idx) => {
-          const veForAt = feeDistributorContract["ve_for_at(address,uint256)"];
-          const myDillTokens = await veForAt(address, t, {gasLimit: 1000000});
-          const myDills = parseFloat(ethers.utils.formatEther(myDillTokens));
-          const { pickles, dills } = distributions[idx];
-          distributions[idx].myDills = myDills;
-          distributions[idx].myPickles = myDills * pickles / dills;
-        }));
-      }
+      await Promise.all(timestamps.map(async (t, idx) => {
+        const veForAt = feeDistributorContract["ve_for_at(address,uint256)"];
+        const myDillTokens = await veForAt(address, t, { gasLimit: 1000000 });
+        const myDills = parseFloat(ethers.utils.formatEther(myDillTokens));
+        const { pickles, dills } = distributions[idx];
+        distributions[idx].myDills = myDills;
+        distributions[idx].myPickles = myDills * pickles / dills;
+      }));
       return distributions;
     }
 
