@@ -155,7 +155,7 @@ const setButtonStatus = (
   }
 };
 
-export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
+export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> = ({ jarData, isYearnJar = false }) => {
   const {
     name,
     jarContract,
@@ -173,6 +173,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
   const isUsdc =
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
+    
   const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
@@ -186,7 +187,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     maximumFractionDigits: depositedNum < 1 ? 18 : 4,
   });
   const depositedUnderlyingStr = (
-    parseFloat(formatEther(deposited)) * ratio
+    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 18 : 4,
@@ -226,11 +227,11 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
   }, [erc20TransferStatuses]);
 
-  const tooltipText = APYs.map((x) => {
+  const tooltipText = !isYearnJar ? APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
     return `${k}: ${v.toFixed(2)}%`;
-  }).join(" + ");
+  }).join(" + ") : "";
 
   const isDisabledJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
@@ -298,7 +299,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
             </Data>
             <Data>
               <Tooltip
-                text={`This yield is calculated in real time from a base rate of ${apr.toFixed(
+                text={isYearnJar ? `This jar deposits into Yearn's ${APYs[1].vault}, The base rate of ${apr.toFixed(2)} is provided by the underlying Yearn strategy` : `This yield is calculated in real time from a base rate of ${apr.toFixed(
                   2,
                 )}% which we auto-compound regularly.`}
               >
@@ -362,7 +363,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(ethers.utils.parseEther(depositAmount));
+                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
                   },
                 });
               }
@@ -399,7 +400,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setWithdrawAmount(formatEther(deposited));
+                setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
               }}
             >
               Max
@@ -423,7 +424,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .withdraw(ethers.utils.parseEther(withdrawAmount));
+                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
                   },
                 });
               }

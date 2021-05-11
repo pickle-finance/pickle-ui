@@ -577,6 +577,7 @@ export const useJarWithAPY = (jars: Input): Output => {
             yearn: apr * 100,
             apr: apr * 100,
           },
+          { vault: vaultData.name },
         ];
       }
     }
@@ -864,7 +865,7 @@ export const useJarWithAPY = (jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
           APYs = [...usdcApy];
-          totalAPY = usdcApy[0].apr
+          totalAPY = usdcApy[0].apr;
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
@@ -904,7 +905,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         // const totalAPY = APYs.map((x) => {
         //   return Object.values(x).reduce((acc, y) => acc + y, 0);
         // }).reduce((acc, x) => acc + x, 0);
-        if(!totalAPY) totalAPY = getCompoundingAPY(apr / 100) + lp;
+        if (!totalAPY) totalAPY = getCompoundingAPY(apr / 100) + lp;
 
         return {
           ...jar,

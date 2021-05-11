@@ -140,6 +140,11 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.DAI]: false,
 };
 
+export const JAR_YEARN: Record<string, boolean> = {
+  [DEPOSIT_TOKENS_NAME.USDC]: true,
+  [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+}
+
 export const DEPOSIT_TOKENS_LINK = {
   sCRV: "https://www.curve.fi/susdv2/deposit",
   renCRV: "https://www.curve.fi/ren/deposit",
