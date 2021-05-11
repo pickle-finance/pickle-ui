@@ -144,8 +144,9 @@ export default function DillDashboard() {
 
     async function updateDistributions() {
       if (address && timeCursor && dill && weeklyDistribution && picklePrice) {
-        const pastDist = await getPastDistributions();
-        const projectedDist = await getProjectedDistribution();
+        const [pastDist, projectedDist] = await Promise.all(
+            [getPastDistributions(), getProjectedDistribution()]
+        );
         setDistributions([...pastDist, projectedDist]);
       }
     }
@@ -178,11 +179,27 @@ export default function DillDashboard() {
       return projectedDistribution;
     }
 
+    async function getTokenData(timestamp, address) {
+      const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
+      const tokensPerWeek = feeDistributorContract["tokens_per_week(uint256)"];
+      const veSupply = feeDistributorContract["ve_supply(uint256)"];
+      const veForAt = feeDistributorContract["ve_for_at(address,uint256)"];
+      const [pickleTokens, veTokens, myVeTokens] = await Promise.all([
+          tokensPerWeek(timestamp, { gasLimit: 1000000 }),
+          veSupply(timestamp, { gasLimit: 1000000 }),
+          veForAt(address, timestamp, { gasLimit: 1000000 })
+      ]);
+      return {
+        pickles: parseFloat(ethers.utils.formatEther(pickleTokens)),
+        dills: parseFloat(ethers.utils.formatEther(veTokens)),
+        myDills: parseFloat(ethers.utils.formatEther(myVeTokens))
+      }
+    }
+
     async function getPastDistributions() {
       const WEEK = 604800;
       // This the official start - 2021 Apr 23
       const FIRST_DISTRIBUTION = 1619049600;
-      const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
       const timestamps = [];
       let currentTime = timeCursor;
       while (timestamps.length < maxPastDist && currentTime
@@ -194,23 +211,19 @@ export default function DillDashboard() {
         date: getDateStr(t),
         timestamp: t
       }));
-      const tokensPerWeek = feeDistributorContract["tokens_per_week(uint256)"];
-      await Promise.all(timestamps.map(async (t, idx) => {
-        const pickleTokens = await tokensPerWeek(t, { gasLimit: 1000000 });
-        distributions[idx].pickles = parseFloat(ethers.utils.formatEther(pickleTokens));
-      }));
-      const veSupply = feeDistributorContract["ve_supply(uint256)"];
-      await Promise.all(timestamps.map(async (t, idx) => {
-        const dillTokens = await veSupply(t, { gasLimit: 1000000 });
-        distributions[idx].dills = parseFloat(ethers.utils.formatEther(dillTokens));
-      }));
-
       const from = timestamps[0];
       const to = timestamps[timestamps.length - 1];
       const prices = await getPricesBetween(from, to);
       if (prices.length) {
         setPricesAtDistributions(prices, distributions);
       }
+      await Promise.all(timestamps.map(async (t, idx) => {
+        const { pickles, dills, myDills } = await getTokenData(t, address);
+        distributions[idx].pickles = pickles;
+        distributions[idx].dills = dills;
+        distributions[idx].myDills = myDills;
+        distributions[idx].myPickles = myDills * pickles / dills;
+      }));
       distributions.forEach((d) => {
         d.picklesPerDill = (d.pickles / d.dills).toFixed(4);
         if (d.price) {
@@ -218,14 +231,6 @@ export default function DillDashboard() {
           d.dollarsPerDill = (d.dollars / d.dills).toFixed(2);
         }
       });
-      await Promise.all(timestamps.map(async (t, idx) => {
-        const veForAt = feeDistributorContract["ve_for_at(address,uint256)"];
-        const myDillTokens = await veForAt(address, t, { gasLimit: 1000000 });
-        const myDills = parseFloat(ethers.utils.formatEther(myDillTokens));
-        const { pickles, dills } = distributions[idx];
-        distributions[idx].myDills = myDills;
-        distributions[idx].myPickles = myDills * pickles / dills;
-      }));
       return distributions;
     }
 
