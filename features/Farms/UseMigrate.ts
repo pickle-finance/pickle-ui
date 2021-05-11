@@ -1,8 +1,7 @@
 import { BigNumber, ethers } from "ethers";
-import { useEffect, useState } from "react";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
-import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { Erc20 } from "../../containers/Contracts/Erc20";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { getStats } from "../../features/Zap/useZapper";
@@ -92,10 +91,9 @@ export const useMigrate = (
     await tx.wait();
   };
 
-
   const withdrawGauge = async (gauge: Gauge) => {
     if (!address || !gauge || !parseInt(staked.toString())) return;
-  
+
     const tx = await gauge.exit();
     await tx.wait();
   };
