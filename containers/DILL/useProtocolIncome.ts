@@ -13,7 +13,7 @@ export function useProtocolIncome() {
 
   const getWeeklyIncome = async () => {
     const jarList = await fetch(
-      `https://api.pickle-jar.info/protocol/pools`,
+      `https://by34byvida.execute-api.us-west-1.amazonaws.com/prod/protocol/pools`,
     ).then((response) => response.json());
 
     const jarPerformance = await Promise.all(
