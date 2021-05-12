@@ -3,52 +3,52 @@ import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 import { Connection } from "./Connection";
 
-import { CurveProxyLogic } from "./Contracts/CurveProxyLogic";
-import { CurveProxyLogicFactory } from "./Contracts/CurveProxyLogicFactory";
-import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
-import { Uniswapv2ProxyLogicFactory } from "./Contracts/Uniswapv2ProxyLogicFactory";
-import { Strategy } from "./Contracts/Strategy";
-import { StrategyFactory } from "./Contracts/StrategyFactory";
-import { Comptroller } from "./Contracts/Comptroller";
-import { ComptrollerFactory } from "./Contracts/ComptrollerFactory";
-import { Ctoken } from "./Contracts/Ctoken";
-import { CtokenFactory } from "./Contracts/CtokenFactory";
-import { Masterchef } from "./Contracts/Masterchef";
-import { GaugeController } from "./Contracts/GaugeController";
-import { CurveGauge } from "./Contracts/CurveGauge";
-import { Pool } from "./Contracts/Pool";
-import { Controller } from "./Contracts/Controller";
-import { Erc20 } from "./Contracts/Erc20";
-import { Uniswapv2Pair } from "./Contracts/Uniswapv2Pair";
-import { MasterchefFactory } from "./Contracts/MasterchefFactory";
-import { GaugeControllerFactory } from "./Contracts/GaugeControllerFactory";
-import { CurveGaugeFactory } from "./Contracts/CurveGaugeFactory";
-import { PoolFactory } from "./Contracts/PoolFactory";
-import { StakingRewards } from "./Contracts/StakingRewards";
-import { StakingRewardsFactory } from "./Contracts/StakingRewardsFactory";
 import { BasisStaking } from "./Contracts/BasisStaking";
-import { BasisStakingFactory } from "./Contracts/BasisStakingFactory";
-import { ControllerFactory } from "./Contracts/ControllerFactory";
-import { Erc20Factory } from "./Contracts/Erc20Factory";
-import { Uniswapv2PairFactory } from "./Contracts/Uniswapv2PairFactory";
-import { Instabrine } from "./Contracts/Instabrine";
-import { InstabrineFactory } from "./Contracts/InstabrineFactory";
-import { SushiChef } from "./Contracts/SushiChef";
-import { SushiChefFactory } from "./Contracts/SushiChefFactory";
+import { BasisStaking__factory as BasisStakingFactory } from "./Contracts/factories/BasisStaking__factory";
+import { Comptroller } from "./Contracts/Comptroller";
+import { Comptroller__factory as ComptrollerFactory } from "./Contracts/factories/Comptroller__factory";
+import { Controller } from "./Contracts/Controller";
+import { Controller__factory as ControllerFactory } from "./Contracts/factories/Controller__factory";
+import { Ctoken } from "./Contracts/Ctoken";
+import { Ctoken__factory as CtokenFactory } from "./Contracts/factories/Ctoken__factory";
+import { CurveGauge } from "./Contracts/CurveGauge";
+import { CurveGauge__factory as CurveGaugeFactory } from "./Contracts/factories/CurveGauge__factory";
+import { CurveProxyLogic } from "./Contracts/CurveProxyLogic";
+import { CurveProxyLogic__factory as CurveProxyLogicFactory } from "./Contracts/factories/CurveProxyLogic__factory";
 import { Dill } from "./Contracts/Dill";
-import { DillFactory } from "./Contracts/DillFactory";
-import { Gauge } from "./Contracts/Gauge";
-import { GaugeFactory } from "./Contracts/GaugeFactory";
-import { GaugeProxy } from "./Contracts/GaugeProxy";
-import { GaugeProxyFactory } from "./Contracts/GaugeProxyFactory";
-import { FeeDistributorFactory } from "./Contracts/FeeDistributorFactory";
+import { Dill__factory as DillFactory } from "./Contracts/factories/Dill__factory";
+import { Erc20 } from "./Contracts/Erc20";
+import { Erc20__factory as Erc20Factory } from "./Contracts/factories/Erc20__factory";
 import { FeeDistributor } from "./Contracts/FeeDistributor";
-import { YvecrvZap } from "./Contracts/YvecrvZap";
-import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
-import { YvboostMigrator } from "./Contracts/YvboostMigrator";
-import { YvboostMigratorFactory } from "./Contracts/YvboostMigratorFactory";
+import { FeeDistributor__factory as FeeDistributorFactory } from "./Contracts/factories/FeeDistributor__factory";
+import { Gauge } from "./Contracts/Gauge";
+import { Gauge__factory as GaugeFactory } from "./Contracts/factories/Gauge__factory";
+import { GaugeController } from "./Contracts/GaugeController";
+import { GaugeController__factory as GaugeControllerFactory } from "./Contracts/factories/GaugeController__factory";
+import { GaugeProxy } from "./Contracts/GaugeProxy";
+import { GaugeProxy__factory as GaugeProxyFactory } from "./Contracts/factories/GaugeProxy__factory";
+import { Instabrine } from "./Contracts/Instabrine";
+import { Instabrine__factory as InstabrineFactory } from "./Contracts/factories/Instabrine__factory";
+import { Masterchef } from "./Contracts/Masterchef";
+import { Masterchef__factory as MasterchefFactory } from "./Contracts/factories/Masterchef__factory";
+import { Pool } from "./Contracts/Pool";
+import { Pool__factory as PoolFactory } from "./Contracts/factories/Pool__factory";
 import { StakingPools } from "./Contracts/StakingPools";
-import { StakingPoolsFactory } from "./Contracts/StakingPoolsFactory";
+import { StakingPools__factory as StakingPoolsFactory } from "./Contracts/factories/StakingPools__factory";
+import { StakingRewards } from "./Contracts/StakingRewards";
+import { StakingRewards__factory as StakingRewardsFactory } from "./Contracts/factories/StakingRewards__factory";
+import { Strategy } from "./Contracts/Strategy";
+import { Strategy__factory as StrategyFactory } from "./Contracts/factories/Strategy__factory";
+import { SushiChef } from "./Contracts/SushiChef";
+import { SushiChef__factory as SushiChefFactory } from "./Contracts/factories/SushiChef__factory";
+import { Uniswapv2Pair } from "./Contracts/Uniswapv2Pair";
+import { Uniswapv2Pair__factory as Uniswapv2PairFactory } from "./Contracts/factories/Uniswapv2Pair__factory";
+import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
+import { Uniswapv2ProxyLogic__factory as Uniswapv2ProxyLogicFactory } from "./Contracts/factories/Uniswapv2ProxyLogic__factory";
+import { YvboostMigrator } from "./Contracts/YvboostMigrator";
+import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/factories/YvboostMigrator__factory";
+import { YvecrvZap } from "./Contracts/YvecrvZap";
+import { YvecrvZap__factory as YvecrvZapFactory } from "./Contracts/factories/YvecrvZap__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -243,8 +243,12 @@ function useContracts() {
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
       setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
-      setyvBoostMigrator(YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer));
-      setStakingPools(StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer));
+      setyvBoostMigrator(
+        YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer),
+      );
+      setStakingPools(
+        StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer),
+      );
     }
   };
 
@@ -282,7 +286,7 @@ function useContracts() {
     feeDistributor,
     yveCrvZap,
     yvBoostMigrator,
-    stakingPools
+    stakingPools,
   };
 }
 

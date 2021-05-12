@@ -50,7 +50,6 @@ export function useDill(): UseDillOutput {
         const dillContract = dill.attach(DILL);
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
 
-
         const [
           lockStats,
           balance,
@@ -69,9 +68,11 @@ export function useDill(): UseDillOutput {
           feeDistributorContract["time_cursor()"]({ gasLimit: 1000000 }),
         ]);
 
-        const lastDistribution = await feeDistributorContract["tokens_per_week(uint256)"](timeCursor.sub(ethers.BigNumber.from(WEEK)),{
+        const lastDistribution = await feeDistributorContract[
+          "tokens_per_week(uint256)"
+        ](timeCursor.sub(ethers.BigNumber.from(WEEK)), {
           gasLimit: 1000000,
-        }) 
+        });
 
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
