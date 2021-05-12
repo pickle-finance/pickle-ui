@@ -299,7 +299,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
             </Data>
             <Data>
               <Tooltip
-                text={isYearnJar ? `This jar deposits into Yearn's ${APYs[1].vault}, The base rate of ${apr.toFixed(2)} is provided by the underlying Yearn strategy` : `This yield is calculated in real time from a base rate of ${apr.toFixed(
+                text={isYearnJar ? `This jar deposits into Yearn's ${APYs[1].vault}, The base rate of ${apr.toFixed(2)}% is provided by the underlying Yearn strategy` : `This yield is calculated in real time from a base rate of ${apr.toFixed(
                   2,
                 )}% which we auto-compound regularly.`}
               >
