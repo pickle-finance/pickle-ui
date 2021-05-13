@@ -70,7 +70,7 @@ export function useDill(): UseDillOutput {
 
         const lastDistribution = await feeDistributorContract[
           "tokens_per_week(uint256)"
-        ](timeCursor.sub(ethers.BigNumber.from(WEEK)), {
+        ](timeCursor.sub(ethers.BigNumber.from(WEEK*2)), {
           gasLimit: 1000000,
         });
 
