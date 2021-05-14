@@ -9,14 +9,9 @@ import {
   UNI_ETH_WBTC_STAKING_REWARDS,
   SCRV_STAKING_REWARDS,
   Contracts,
-  BASIS_BAC_DAI_STAKING_REWARDS,
   MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
   MITH_MIS_USDT_STAKING_REWARDS,
-  BASIS_BAS_DAI_PID,
-  BASIS_BAS_DAI_STAKING_REWARDS,
-  BASIS_BAC_DAI_PID,
-  BASIS_BAC_DAI_V1_STAKING_REWARDS,
   LQTY_LUSD_ETH_STAKING_REWARDS,
   MIRROR_MIR_UST_STAKING_REWARDS,
   MIRROR_MTSLA_UST_STAKING_REWARDS,
@@ -440,12 +435,13 @@ export const useJarWithAPY = (jars: Input): Output => {
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const alcxRewardsPerYear =
-        parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME;
+        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
+        AVERAGE_BLOCK_TIME;
       const poolRewardsPerYear =
         (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
         totalAllocPointBN.toString();
       const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
-      
+
       const totalValueStaked = totalSupply * pricePerToken;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
@@ -754,14 +750,13 @@ export const useJarWithAPY = (jars: Input): Output => {
             ...sushiEthApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
           ];
-
         }
 
-          if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
-            APYs = [
-              ...alcxEthAlcxApy,
-              ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-            ];
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
+          APYs = [
+            ...alcxEthAlcxApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+          ];
         }
 
         // if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {

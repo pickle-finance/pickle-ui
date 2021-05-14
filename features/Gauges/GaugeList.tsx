@@ -9,6 +9,7 @@ import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { useJarData } from "../Jars/useJarData";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -21,6 +22,7 @@ interface Weights {
 export const GaugeList: FC = () => {
   const { signer } = Connection.useContainer();
   const { gaugeData } = UserGauges.useContainer();
+  const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const { status: voteTxStatus, vote } = useGaugeProxy();
@@ -42,7 +44,10 @@ export const GaugeList: FC = () => {
     depositToken === PICKLE_JARS.pUNIBACDAI ||
     depositToken === PICKLE_JARS.pUNIBASDAI;
 
-  const activeGauges = gaugeData.filter((x) => !isDisabledFarm(x.depositToken.address));
+  const activeGauges = gaugeData.filter(
+    (x) => !isDisabledFarm(x.depositToken.address),
+  );
+
   const inactiveGauges = gaugeData.filter((x) => false);
 
   const renderGauge = (gauge: UserGaugeData) => (

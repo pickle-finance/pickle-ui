@@ -86,8 +86,6 @@ const formatAPY = (apy: number) => {
 export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   gaugeData,
 }) => {
-  const { jars } = Jars.useContainer();
-
   const {
     poolName,
     depositToken,
@@ -97,6 +95,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     harvestable,
     usdPerToken,
     fullApy,
+    jar,
   } = gaugeData;
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(formatEther(staked));
@@ -149,11 +148,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
-  const maybeJar =
-    JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
-  if (jars && maybeJar) {
-    const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
-    APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
+  if (jar) {
+    APYs = jar?.APYs ? [...APYs, ...jar.APYs] : APYs;
   }
 
   const { getUniPairDayAPY } = useUniPairDayData();
@@ -396,52 +392,51 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Button>
         </Grid>
         <Spacer />
-        
       </Grid.Container>
       <Grid.Container gap={2}>
-          <Grid xs={24} md={12}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.getReward();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {harvestButton.text}
-            </Button>
-          </Grid>
-          <Grid xs={24} md={12}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.exit();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {exitButton.text}
-            </Button>
-          </Grid>
-        </Grid.Container>
-        <Grid.Container gap={2}>
-        <Grid xs={24} style={{paddingBottom: 0}}>
+        <Grid xs={24} md={12}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.getReward();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {harvestButton.text}
+          </Button>
+        </Grid>
+        <Grid xs={24} md={12}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.exit();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {exitButton.text}
+          </Button>
+        </Grid>
+      </Grid.Container>
+      <Grid.Container gap={2}>
+        <Grid xs={24} style={{ paddingBottom: 0 }}>
           <span>
             <a
               href={`https://etherscan.io/address/${gauge.address}`}
