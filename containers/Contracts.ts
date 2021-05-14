@@ -234,7 +234,9 @@ function useContracts() {
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
       setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
-      setStakingPools(StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer));
+      setStakingPools(
+        StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer),
+      );
     }
   };
 
@@ -271,7 +273,7 @@ function useContracts() {
     gauge,
     feeDistributor,
     yveCrvZap,
-    stakingPools
+    stakingPools,
   };
 }
 
