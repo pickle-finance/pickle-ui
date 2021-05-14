@@ -55,6 +55,17 @@ const formatPercent = (decimal: number) =>
     maximumFractionDigits: 2,
   }) + "%";
 
+const PickleIcon = ({ size = "16px" }) => (
+  <img
+    src="/pickle.png"
+    alt="pickle"
+    style={{
+      width: size,
+      verticalAlign: `text-bottom`,
+    }}
+  />
+);
+
 export const Claim: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
@@ -74,7 +85,7 @@ export const Claim: FC<{
 
   const dillAPY =
     dillStats.weeklyDistribution && dillStats.lockedValue
-      ? dillStats.weeklyDistribution / dillStats.lockedValue * 52
+      ? (dillStats.weeklyDistribution / dillStats.lockedValue) * 52
       : 0;
 
   useEffect(() => {
@@ -104,14 +115,15 @@ export const Claim: FC<{
       setClaimable(claimable);
     }
   }, [blockNum, transferStatus, address, dillStats]);
-
   return (
     <>
       <Grid.Container gap={2}>
         <Grid xs={24} sm={24} md={24}>
           <Card>
             <h2>Claim</h2>
-            <div>Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}</div>
+            <div>
+              Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}
+            </div>
             &nbsp;
             <div>
               Projected weekly distribution (45% of revenue): $
@@ -125,7 +137,9 @@ export const Claim: FC<{
             </div>
             &nbsp;
             <div>
-              Last week's distribution: ${formatNumber(dillStats?.lastDistributionValue)}
+              Last week's distribution: $
+              {formatNumber(dillStats?.lastDistributionValue)} (
+              {formatNumber(dillStats?.lastDistribution)} <PickleIcon />)
             </div>
             &nbsp;
             <Spacer />

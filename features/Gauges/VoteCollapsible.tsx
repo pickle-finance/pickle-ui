@@ -281,7 +281,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     }
 
     const totalAPY = APYs.map((x) => {
-      return Object.values(x).reduce((acc, y) => acc + y, 0);
+      return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
     }).reduce((acc, x) => acc + x, 0);
 
     const newWeightMaybe = newWeights?.find(

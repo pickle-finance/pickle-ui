@@ -9,6 +9,7 @@ import { JAR_GAUGE_MAP } from "./gauges";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
 import { Contract as MulticallContract } from "ethers-multicall";
@@ -78,10 +79,13 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
           ethers.utils.formatEther(gaugeBalance),
         );
 
+        // calculate APY
+        const isUsdc =
+          gauge.token.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
         const valueStakedInGauge =
           (gaugeingJar.usdPerPToken || 0) * numTokensInPool;
         const fullApy = gaugeingJar.usdPerPToken
-          ? (gauge.rewardRatePerYear * prices.pickle) / gaugeingJar.usdPerPToken
+          ? (gauge.rewardRatePerYear * prices.pickle) / (gaugeingJar.usdPerPToken  * (isUsdc ? 1e12 : 1))
           : 0;
 
         return {

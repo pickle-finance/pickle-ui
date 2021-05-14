@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import { Strategy as StrategyContract } from "../Contracts/Strategy";
 import { Jar as JarContract } from "../Contracts/Jar";
-import { JarFactory } from "../Contracts/JarFactory";
+import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory";
 import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
-import { Erc20Factory } from "../Contracts/Erc20Factory";
+import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__factory";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
@@ -27,39 +27,78 @@ export type Jar = {
   strategyName: string;
 };
 
+const IsV5Jars = (address: string): boolean => {
+  return address === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV;
+};
+
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const { blockNum, provider, multicallProvider } = Connection.useContainer();
-  const { controller, strategy } = Contracts.useContainer();
+  const { controller, controllerv5, strategy } = Contracts.useContainer();
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
-    if (controller && provider && strategy && multicallProvider) {
+    if (
+      controller &&
+      controllerv5 &&
+      provider &&
+      strategy &&
+      multicallProvider
+    ) {
       const multicallController = new MulticallContract(
         controller.address,
         controller.interface.fragments,
       );
 
-      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS).map(
-        ([k, tokenAddress]) => {
+      const multicallControllerv5 = new MulticallContract(
+        controllerv5.address,
+        controllerv5.interface.fragments,
+      );
+
+      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS)
+        .filter(([key, address]) => !IsV5Jars(address))
+        .map(([k, tokenAddress]) => {
           return {
             key: k,
             value: tokenAddress,
           };
-        },
-      );
+        });
 
-      const jarAddresses = await multicallProvider.all(
+      const tokenKVV5 = Object.entries(JAR_DEPOSIT_TOKENS)
+        .filter(([key, address]) => IsV5Jars(address))
+        .map(([k, tokenAddress]) => {
+          return {
+            key: k,
+            value: tokenAddress,
+          };
+        });
+
+      let jarAddresses = await multicallProvider.all(
         tokenKV.map((t) => {
           return multicallController.jars(t.value);
         }),
       );
 
-      const strategyAddresses = await multicallProvider.all(
+      const jarAddressesv5 = await multicallProvider.all(
+        tokenKVV5.map((t) => {
+          return multicallControllerv5.jars(t.value);
+        }),
+      );
+
+      jarAddresses = [...jarAddresses, ...jarAddressesv5];
+
+      let strategyAddresses = await multicallProvider.all(
         tokenKV.map((t) => {
           return multicallController.strategies(t.value);
         }),
       );
+
+      const strategyAddressesV5 = await multicallProvider.all(
+        tokenKVV5.map((t) => {
+          return multicallControllerv5.strategies(t.value);
+        }),
+      );
+      strategyAddresses = [...strategyAddresses, ...strategyAddressesV5];
 
       const strategyNames = await multicallProvider.all(
         strategyAddresses.map((s) => {
@@ -73,6 +112,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       );
 
       const jarData = tokenKV
+        .concat(tokenKVV5)
         .map((kv, idx) => {
           return {
             [kv.key]: {
