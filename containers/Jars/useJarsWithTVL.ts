@@ -111,10 +111,10 @@ export const useJarWithTVL = (jars: Input): Output => {
       pricePerUnderlying = prices?.eth;
     }
 
-    // if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
-    //   pool = lusdPool;
-    //   pricePerUnderlying = prices?.dai;
-    // }
+    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
+      pool = lusdPool;
+      pricePerUnderlying = prices?.dai;
+    }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
