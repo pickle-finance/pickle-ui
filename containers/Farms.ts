@@ -166,6 +166,14 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP ALCX/ETH",
     poolName: "pSLP ALCX/ETH",
   },
+  "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94": {
+    tokenName: "pYearnUSDCv2",
+    poolName: "Pickled Yearn USDC",
+  },
+  "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2": {
+    tokenName: "pYearnLusdCRV",
+    poolName: "Pickled Yearn LUSD",
+  },
 };
 
 function useFarms() {

@@ -30,6 +30,9 @@ export const PICKLE_JARS = {
   pUNIETHLUSD: "0x927e3bCBD329e89A8765B52950861482f0B227c4",
   pyvBOOSTETH: "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378",
   pDAI: "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87",
+  pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
+  pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
+  pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -63,6 +66,8 @@ export const JAR_DEPOSIT_TOKENS = {
   UNIV2_ETH_USDT: "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852",
   UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
   DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+  USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA"
 };
 
 export const DEPOSIT_TOKENS_NAME = {
@@ -96,6 +101,8 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH_YVBOOST: "SLP YVBOOST/ETH",
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
   DAI: "DAI",
+  USDC: "USDC",
+  lusdCRV: "lusdCRV"
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -128,8 +135,15 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YVBOOST]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: true,
+  [DEPOSIT_TOKENS_NAME.USDC]: true,
+  [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
   [DEPOSIT_TOKENS_NAME.DAI]: false,
 };
+
+export const JAR_YEARN: Record<string, boolean> = {
+  [DEPOSIT_TOKENS_NAME.USDC]: true,
+  [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+}
 
 export const DEPOSIT_TOKENS_LINK = {
   sCRV: "https://www.curve.fi/susdv2/deposit",
@@ -187,6 +201,8 @@ export const DEPOSIT_TOKENS_LINK = {
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
+  USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  lusdCRV: "https://curve.fi/lusd/deposit"
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -223,7 +239,9 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_YVECRV: "pJar 0.99i",
   SUSHI_ETH_YVBOOST: "pJar 0.99y",
   SUSHI_ETH: "pJar 0.99q",
-  SUSHI_ETH_ALCX: "pJar 0.99x"
+  SUSHI_ETH_ALCX: "pJar 0.99x",
+  USDC: "pJar Y-1",
+  lusdCRV: "pJar Y-2"
 };
 
 export const STRATEGY_NAMES = {

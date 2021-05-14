@@ -34,6 +34,8 @@ import { Masterchef__factory as MasterchefFactory } from "./Contracts/factories/
 import { Pool } from "./Contracts/Pool";
 import { Pool__factory as PoolFactory } from "./Contracts/factories/Pool__factory";
 import { StakingPools } from "./Contracts/StakingPools";
+import { YearnRegistry } from "./Contracts/YearnRegistry";
+import { YearnRegistry__factory as YearnRegistryFactory } from "./Contracts/factories/YearnRegistry__factory";
 import { StakingPools__factory as StakingPoolsFactory } from "./Contracts/factories/StakingPools__factory";
 import { StakingRewards } from "./Contracts/StakingRewards";
 import { StakingRewards__factory as StakingRewardsFactory } from "./Contracts/factories/StakingRewards__factory";
@@ -77,6 +79,7 @@ export const RENBTC_GAUGE_ADDR = "0xB1F2cdeC61db658F091671F5f199635aEF202CAC";
 export const RENBTC_POOL_ADDR = "0x93054188d876f558f4a66B2EF1d97d16eDf0895B";
 export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
+export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 
@@ -141,6 +144,8 @@ export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
 export const YVBOOST_MIGRATOR = "0x61Dde5da89fB3a099035bd9b3f94d1105A22F3d9";
 
+export const YEARN_REGISTRY = "0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804";
+
 function useContracts() {
   const { signer } = Connection.useContainer();
 
@@ -192,6 +197,10 @@ function useContracts() {
 
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
   const [stakingPools, setStakingPools] = useState<StakingPools | null>(null);
+  const [yearnRegistry, setYearnRegistry] = useState<YearnRegistry | null>(
+    null,
+  );
+  const [lusdPool, setLusdPool] = useState<Pool | null>(null);
 
   const [
     yvBoostMigrator,
@@ -249,6 +258,9 @@ function useContracts() {
       setStakingPools(
         StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer),
       );
+      setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
+
+      setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
     }
   };
 
@@ -287,6 +299,8 @@ function useContracts() {
     yveCrvZap,
     yvBoostMigrator,
     stakingPools,
+    yearnRegistry,
+    lusdPool,
   };
 }
 

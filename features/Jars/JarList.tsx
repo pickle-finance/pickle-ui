@@ -8,7 +8,7 @@ import Switch from "@material-ui/core/Switch";
 import { JarCollapsible } from "./JarCollapsible";
 import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
-import { JAR_ACTIVE } from "../../containers/Jars/jars";
+import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { backgroundColor, pickleGreen } from "../../util/constants";
 
 const Container = styled.div`
@@ -40,7 +40,14 @@ export const JarList: FC = () => {
   }
 
   if (!jarData) return <h2>Loading...</h2>;
-  const activeJars = jarData.filter((jar) => JAR_ACTIVE[jar.depositTokenName]);
+  const activeJars = jarData.filter(
+    (jar) =>
+      JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
+  );
+  const yearnJars = jarData.filter(
+    (jar) =>
+      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],
+  );
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
@@ -75,8 +82,15 @@ export const JarList: FC = () => {
           />
           Show Your Jars
         </Grid>
+        <Grid xs={24}></Grid>
+        Powered by Yearn ⚡
+        {yearnJars.map((jar) => (
+          <Grid xs={24} key={jar.name}>
+            <JarCollapsible jarData={jar} isYearnJar={true}/>
+          </Grid>
+        ))}
       </Grid.Container>
-      <Spacer y={1} />
+      <Spacer y={2} />
       <Grid.Container gap={1}>
         {(showUserJars ? userJars : activeJars).map((jar) => (
           <Grid xs={24} key={jar.name}>

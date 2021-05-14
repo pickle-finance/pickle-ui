@@ -69,26 +69,38 @@ export const GaugeList: FC = () => {
     parseFloat(formatEther(gauge.staked)),
   );
 
-  const indexofYvboost =
-    activeGauges.findIndex(
-      (x) => x.address.toLowerCase() === PICKLE_JARS.pyvBOOSTETH.toLowerCase(),
-    ) - 1;
-
-  const indexofAlcx =
-    activeGauges.findIndex(
-      (x) =>
-        x.address.toLowerCase() === PICKLE_JARS.pSUSHIETHALCX.toLowerCase(),
-    ) - 1;
-
   const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
     var item = arr.splice(from, 1);
 
     if (!item.length) return;
     arr.splice(to, 0, item[0]);
   };
+  
+  const indexofAlcx = activeGauges.findIndex(
+    (x) =>
+      x.depositToken.address.toLowerCase() ===
+      PICKLE_JARS.pSUSHIETHALCX.toLowerCase(),
+  );
+  moveInArray(activeGauges, indexofAlcx, 1);
+  
+  const indexofYvboost = activeGauges.findIndex(
+    (x) =>
+      x.depositToken.address.toLowerCase() ===
+      PICKLE_JARS.pyvBOOSTETH.toLowerCase(),
+  );
+  moveInArray(activeGauges, indexofYvboost, 1);
 
-  moveInArray(activeGauges, indexofAlcx, 2);
-  moveInArray(activeGauges, indexofYvboost, 2);
+  const indexofLUSD = activeGauges.findIndex(
+    (x) =>
+      x.depositToken.address.toLowerCase() ===
+      PICKLE_JARS.pyLUSDCRV.toLowerCase(),
+  );
+  moveInArray(activeGauges, indexofLUSD, 1);
+  const indexofUSDC = activeGauges.findIndex(
+    (x) =>
+      x.depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase(),
+  );
+  moveInArray(activeGauges, indexofUSDC, 1);
 
   const renderGauge = (gauge: UserGaugeData) => (
     <Grid xs={24} key={gauge.address}>
