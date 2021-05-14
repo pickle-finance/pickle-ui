@@ -54,6 +54,7 @@ const Label = styled.div`
 `;
 
 const GAUGE_LP_TO_ICON = FARM_LP_TO_ICON;
+const USDC_SCALE = ethers.utils.parseUnits("1", 12);
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -100,9 +101,13 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     usdPerToken,
     fullApy,
   } = gaugeData;
+  const isUsdc =
+    depositToken.address.toLowerCase() ===
+    PICKLE_JARS.pyUSDC.toLowerCase();
+
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
-  const stakedNum = parseFloat(formatEther(staked));
-  const balanceNum = parseFloat(formatEther(balance));
+  const stakedNum = parseFloat(formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked));
+  const balanceNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const { deposit, withdraw, migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
     depositToken,
     0,
@@ -113,7 +118,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const bal = parseFloat(formatEther(balance));
+  const bal = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: bal < 1 ? 18 : 4,
@@ -176,7 +181,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   }
 
   const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce((acc, y) => acc + y, 0);
+    return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
   }).reduce((acc, x) => acc + x, 0);
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
@@ -194,17 +199,17 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
     }),
-  ].join(" + ");
+  ].filter(x=>x).join(" + ");
   const yourApyTooltipText = [
     `pickle: ${formatAPY(pickleAPY)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
     }),
-  ].join(" + ");
+  ].filter(x=>x).join(" + ");
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -356,7 +361,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setStakeAmount(formatEther(balance));
+                setStakeAmount(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
               }}
             >
               Max
@@ -378,7 +383,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                   token: depositToken.address,
                   recipient: gauge.address,
                   transferCallback: async () => {
-                    return gauge.deposit(ethers.utils.parseEther(stakeAmount));
+                    return gauge.deposit(ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18));
                   },
                 });
               }
@@ -396,7 +401,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setUnstakeAmount(formatEther(staked));
+                setUnstakeAmount(formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked));
               }}
             >
               Max
@@ -420,7 +425,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                   approval: false,
                   transferCallback: async () => {
                     return gauge.withdraw(
-                      ethers.utils.parseEther(unstakeAmount),
+                      ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
                     );
                   },
                 });

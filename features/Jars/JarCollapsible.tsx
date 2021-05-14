@@ -227,11 +227,11 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
     setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
   }, [erc20TransferStatuses]);
 
-  const tooltipText = !isYearnJar ? APYs.map((x) => {
+  const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
-    return `${k}: ${v.toFixed(2)}%`;
-  }).join(" + ") : "";
+    return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
+  }).filter(x=>x).join(" + ");
 
   const isDisabledJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
