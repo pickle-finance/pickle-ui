@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import { Strategy as StrategyContract } from "../Contracts/Strategy";
 import { Jar as JarContract } from "../Contracts/Jar";
-import { JarFactory } from "../Contracts/JarFactory";
+import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory";
 import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
-import { Erc20Factory } from "../Contracts/Erc20Factory";
+import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__factory";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";

@@ -1,20 +1,39 @@
 import { FC, useState } from "react";
+import { formatEther } from "ethers/lib/utils";
 import styled from "styled-components";
 import { Spacer, Grid, Checkbox } from "@geist-ui/react";
+import { withStyles } from "@material-ui/core/styles";
+import Switch from "@material-ui/core/Switch";
 
 import { JarCollapsible } from "./JarCollapsible";
 import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
+import { backgroundColor, pickleGreen } from "../../util/constants";
 
 const Container = styled.div`
   padding-top: 1.5rem;
 `;
 
+const GreenSwitch = withStyles({
+  switchBase: {
+    color: backgroundColor,
+    "&$checked": {
+      color: pickleGreen,
+    },
+    "&$checked + $track": {
+      backgroundColor: pickleGreen,
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
+
 export const JarList: FC = () => {
   const { signer } = Connection.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState(false);
+  const [showUserJars, setShowUserJars] = useState<boolean>(false);
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
@@ -33,6 +52,10 @@ export const JarList: FC = () => {
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
 
+  const userJars = jarData.filter((jar) =>
+    parseFloat(formatEther(jar.deposited)),
+  );
+
   return (
     <Container>
       <Grid.Container gap={1}>
@@ -45,11 +68,19 @@ export const JarList: FC = () => {
         <Grid md={12} style={{ textAlign: "right" }}>
           <Checkbox
             checked={showInactive}
+            color="green"
             size="medium"
             onChange={(e) => setShowInactive(e.target.checked)}
           >
             Show Inactive Jars
           </Checkbox>
+          {" "}
+          <GreenSwitch
+            style={{ top: "-2px" }}
+            checked={showUserJars}
+            onChange={() => setShowUserJars(!showUserJars)}
+          />
+          Show Your Jars
         </Grid>
         <Grid xs={24}></Grid>
         Powered by Yearn ⚡
@@ -61,12 +92,13 @@ export const JarList: FC = () => {
       </Grid.Container>
       <Spacer y={2} />
       <Grid.Container gap={1}>
-        {activeJars.map((jar) => (
+        {(showUserJars ? userJars : activeJars).map((jar) => (
           <Grid xs={24} key={jar.name}>
             <JarCollapsible jarData={jar} />
           </Grid>
         ))}
       </Grid.Container>
+
       <Spacer y={1} />
       <Grid.Container gap={1}>
         {showInactive && <h2>Inactive</h2>}

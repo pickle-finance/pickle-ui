@@ -28,7 +28,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
@@ -108,12 +108,13 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked));
   const balanceNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
-  const { deposit, withdraw, migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
-    depositToken,
-    0,
-    balance,
-    staked,
-  );
+  const {
+    deposit,
+    withdraw,
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+  } = useMigrate(depositToken, 0, balance, staked);
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -499,10 +500,18 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                 }}
               >
                 Your tokens will be unstaked and migrated to the yvBOOST pJar
-                and staked in the Farm.<br />
+                and staked in the Farm.
+                <br />
                 This process will require a number of transactions.
-                <br/>
-            Learn more about yvBOOST <a target="_" href="https://twitter.com/iearnfinance/status/1388131568481411077">here</a>.
+                <br />
+                Learn more about yvBOOST{" "}
+                <a
+                  target="_"
+                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                >
+                  here
+                </a>
+                .
                 {isSuccess ? (
                   <p style={{ fontWeight: "bold" }}>
                     Migration completed! See your deposits{" "}
