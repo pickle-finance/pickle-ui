@@ -85,7 +85,7 @@ export const CreateLock: FC<{
   });
   const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
-  const dateAfter = getDayOffset(new Date(), 7);
+  const dateAfter = roundDateByDillEpoch(getDayOffset(new Date(), 14));
   const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4 - 1));
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
@@ -131,11 +131,11 @@ export const CreateLock: FC<{
   const getLockTime = (value: number | undefined): Date => {
     switch (value) {
       case 1:
-        return getDayOffset(new Date(), 7);
-      case 2:
         return getDayOffset(new Date(), 30);
+      case 2:
+        return getDayOffset(new Date(), 365);
       case 3:
-        return getDayOffset(new Date(), 364);
+        return getDayOffset(new Date(), 2 * 365);
       case 4:
         return getDayOffset(new Date(), 365 * 4 - 1);
     }
@@ -259,21 +259,21 @@ export const CreateLock: FC<{
         <Spacer y={0.5} />
         <Radio.Group onChange={(e) => setDateRadioValue(+e.toString())} useRow>
           <Radio value={1} checked={dateRadioValue === 1}>
-            1 week
-            <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, WEEK).toFixed(4)} DILL
-            </Radio.Desc>
-          </Radio>
-          <Radio value={2} checked={dateRadioValue === 2}>
             1 month
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
-          <Radio value={3} checked={dateRadioValue === 3}>
+          <Radio value={2} checked={dateRadioValue === 2}>
             1 year
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(4)} DILL
+            </Radio.Desc>
+          </Radio>
+          <Radio value={3} checked={dateRadioValue === 3}>
+            2 years
+            <Radio.Desc style={{ color: "grey" }}>
+              1 PICKLE = {estimateDillForPeriod(1, 2 * DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value={4} checked={dateRadioValue === 4}>
