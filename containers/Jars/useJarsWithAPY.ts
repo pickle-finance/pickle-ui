@@ -428,7 +428,13 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   const calculateAlcxAPY = async (lpTokenAddress: string) => {
-    if (stakingPools && prices?.alcx && getSushiPairData && multicallProvider) {
+    if (
+      stakingPools &&
+      prices?.alcx &&
+      getSushiPairData &&
+      getAlusd3CrvData &&
+      multicallProvider
+    ) {
       const poolId = alchemixPoolIds[lpTokenAddress];
       const multicallStakingPools = new MulticallContract(
         stakingPools.address,
@@ -450,7 +456,14 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
 
-      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+      let tokenPrice: number;
+      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX) {
+        const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+        tokenPrice = pricePerToken;
+      } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
+        const { pricePerToken } = await getAlusd3CrvData(lpTokenAddress);
+        tokenPrice = pricePerToken;
+      }
 
       const alcxRewardsPerYear =
         (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
@@ -458,20 +471,30 @@ export const useJarWithAPY = (jars: Input): Output => {
       const poolRewardsPerYear =
         (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
         totalAllocPointBN.toString();
+
       const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
 
-      const totalValueStaked = totalSupply * pricePerToken;
+      const totalValueStaked = totalSupply * tokenPrice;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
-      return [
-        { alcx: getCompoundingAPY(alcxAPY * 0.8), apr: alcxAPY * 0.8 * 100 },
-      ];
+      let apy;
+      const compoundingAPY = getCompoundingAPY(alcxAPY * 0.8);
+
+      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX) {
+        apy = { alcx: compoundingAPY };
+      } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
+        apy = { alcxAlusd3crv: compoundingAPY };
+      }
+      return [{ ...apy, apr: alcxAPY * 0.8 * 100 }];
     }
 
     return [];
   };
 
-  const calculateAlcxAPYforAlusd3crv = async (lpTokenAddress: string) => {
+  const calculateAlcxNakedAPY = async (
+    alusdAPY: number,
+    lpTokenAddress: string,
+  ) => {
     if (stakingPools && prices?.alcx && getAlusd3CrvData && multicallProvider) {
       const poolId = alchemixPoolIds[lpTokenAddress];
       const multicallStakingPools = new MulticallContract(
@@ -494,7 +517,7 @@ export const useJarWithAPY = (jars: Input): Output => {
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
 
-      const { pricePerToken } = await getAlusd3CrvData(lpTokenAddress);
+      let tokenPrice: number = prices.alcx;
 
       const alcxRewardsPerYear =
         (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
@@ -502,62 +525,16 @@ export const useJarWithAPY = (jars: Input): Output => {
       const poolRewardsPerYear =
         (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
         totalAllocPointBN.toString();
+
       const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
 
-      const totalValueStaked = totalSupply * pricePerToken;
+      const totalValueStaked = totalSupply * tokenPrice;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
-      return [
-        {
-          alcxAlusd3crv: getCompoundingAPY(alcxAPY * 0.8),
-          apr: alcxAPY * 0.8 * 100,
-        },
-      ];
-    }
+      const alcxNakedAPY =
+        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].alcxAlusd3crv) / 100;
 
-    return [];
-  };
-
-  const calculateAlcxAPYforAlcx = async (lpTokenAddress: string) => {
-    if (stakingPools && prices?.alcx && multicallProvider) {
-      const poolId = alchemixPoolIds[lpTokenAddress];
-      const multicallStakingPools = new MulticallContract(
-        stakingPools.address,
-        stakingPools.interface.fragments,
-      );
-      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
-
-      const [
-        rewardRateBN,
-        totalAllocPointBN,
-        poolRewardWeightBN,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
-        multicallStakingPools.rewardRate(),
-        multicallStakingPools.totalRewardWeight(),
-        multicallStakingPools.getPoolRewardWeight(poolId),
-        lpToken.balanceOf(stakingPools.address),
-      ]);
-
-      const totalSupply = parseFloat(formatEther(totalSupplyBN));
-
-      const alcxRewardsPerYear =
-        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
-        AVERAGE_BLOCK_TIME;
-      const poolRewardsPerYear =
-        (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
-        totalAllocPointBN.toString();
-      const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
-
-      const totalValueStaked = totalSupply * prices.alcx;
-      const alcxAPY = valueRewardedPerYear / totalValueStaked;
-
-      return [
-        {
-          alcxNaked: getCompoundingAPY(alcxAPY * 0.8),
-          apr: alcxAPY * 0.8 * 100,
-        },
-      ];
+      return [{ alcxNaked: alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
     }
 
     return [];
@@ -717,7 +694,6 @@ export const useJarWithAPY = (jars: Input): Output => {
         // basisBasDaiApy,
         alcxEthAlcxApy,
         alcxAlusd3crvApy,
-        alcxNakedApy,
         usdcApy,
         crvLusdApy,
       ] = await Promise.all([
@@ -728,11 +704,12 @@ export const useJarWithAPY = (jars: Input): Output => {
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        calculateAlcxAPYforAlusd3crv(JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV),
-        calculateAlcxAPYforAlcx(ALCX),
+        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);
+
+      const alcxNakedApy = await calculateAlcxNakedAPY(alcxAlusd3crvApy, ALCX);
 
       const [
         mirrorMirUstApy,
