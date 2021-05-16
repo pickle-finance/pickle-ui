@@ -426,6 +426,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                       .connect(signer)
                       .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
                   },
+                  approval: false
                 });
               }
             }}
