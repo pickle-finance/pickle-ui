@@ -190,7 +190,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
 
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
-  const _adjusted = (gaugeData.totalSupply / 10 ** 18) * dillRatio * 0.6;
+  const _adjusted = (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
   const realAPY = totalAPY + pickleAPY;
