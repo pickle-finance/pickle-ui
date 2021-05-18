@@ -13,7 +13,7 @@ function useCurvePairs() {
   // don't return a function if it's not ready to be used
   if (!multicallProvider || !alusdPool) return { getAlusd3CrvData: null };
 
-  const getAlusd3CrvData = async (pairAddress: string) => {
+  const getAlusd3CrvData = async () => {
     const multicallPoolContract = new MulticallContract(
       alusdPool.address,
       alusdPool.interface.fragments,

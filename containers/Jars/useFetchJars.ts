@@ -6,6 +6,9 @@ import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory"
 import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
 import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__factory";
 
+import { Jarsymbiotic } from "../Contracts/Jarsymbiotic";
+import { Jarsymbiotic__factory as JarsymbioticFactory } from "../Contracts/factories/Jarsymbiotic__factory";
+
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import {
@@ -22,7 +25,7 @@ export type Jar = {
   depositTokenName: string;
   depositTokenLink: string;
   jarName: string;
-  contract: JarContract;
+  contract: JarContract | Jarsymbiotic;
   strategy: StrategyContract;
   strategyName: string;
 };
@@ -130,6 +133,10 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       const newJars = await Promise.all(
         Object.entries(JAR_DEPOSIT_TOKENS).map(async ([k, tokenAddress]) => {
           const { jarAddress, strategyAddress, strategyName } = jarData[k];
+          let contract;
+          if (tokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV)
+            contract = JarsymbioticFactory.connect(jarAddress, provider);
+          else contract = JarFactory.connect(jarAddress, provider);
           return {
             depositToken: Erc20Factory.connect(tokenAddress, provider),
             depositTokenName:
@@ -142,7 +149,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
               ],
             depositTokenLink:
               DEPOSIT_TOKENS_LINK[k as keyof typeof DEPOSIT_TOKENS_LINK],
-            contract: JarFactory.connect(jarAddress, provider),
+            contract,
           };
         }),
       );

@@ -46,6 +46,8 @@ import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { CurvePairs } from "../CurvePairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
+import { Jarsymbiotic } from "../Contracts/Jarsymbiotic";
+import { BigNumber } from "@ethersproject/bignumber";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 const YEARN_API = "https://vaults.finance/all";
@@ -95,7 +97,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (jars: Input): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, address } = Connection.useContainer();
   const { controller, controllerv5, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
@@ -461,7 +463,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         const { pricePerToken } = await getSushiPairData(lpTokenAddress);
         tokenPrice = pricePerToken;
       } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
-        const { pricePerToken } = await getAlusd3CrvData(lpTokenAddress);
+        const { pricePerToken } = await getAlusd3CrvData();
         tokenPrice = pricePerToken;
       }
 
@@ -483,12 +485,33 @@ export const useJarWithAPY = (jars: Input): Output => {
       if (lpTokenAddress === JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX) {
         apy = { alcx: compoundingAPY };
       } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
-        apy = { alcxAlusd3crv: compoundingAPY };
+        apy = { baseAlcx: compoundingAPY };
       }
+
       return [{ ...apy, apr: alcxAPY * 0.8 * 100 }];
     }
 
     return [];
+  };
+
+  const calculatePendingAlcxRewards = async (
+    jar: Jarsymbiotic,
+    address: string,
+  ) => {
+    if (multicallProvider) {
+      const multicallSymbiotic = new MulticallContract(
+        jar.address,
+        jar.interface.fragments,
+      );
+
+      const [pendingReward] = await multicallProvider.all([
+        multicallSymbiotic.pendingRewardOfUser(address),
+      ]);
+
+      const pendingAlcx = parseFloat(formatEther(pendingReward));
+      return { pendingAlcx: pendingAlcx };
+    }
+    return {};
   };
 
   const calculateAlcxNakedAPY = async (
@@ -532,9 +555,9 @@ export const useJarWithAPY = (jars: Input): Output => {
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
       const alcxNakedAPY =
-        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].alcxAlusd3crv) / 100;
+        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].baseAlcx) / 100;
 
-      return [{ alcxNaked: alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
+      return [{ compoundingAlcx: alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
     }
 
     return [];
@@ -944,8 +967,13 @@ export const useJarWithAPY = (jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV) {
           APYs = [...alcxAlusd3crvApy, ...alcxNakedApy];
+          const alcxPending = await calculatePendingAlcxRewards(
+            jar.contract as Jarsymbiotic,
+            address,
+          );
+          jar = { ...jar, ...alcxPending };
           totalAPY =
-            alcxAlusd3crvApy[0].alcxAlusd3crv + alcxNakedApy[0].alcxNaked;
+            alcxAlusd3crvApy[0]?.baseAlcx + alcxNakedApy[0]?.compoundingAlcx;
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
@@ -998,7 +1026,6 @@ export const useJarWithAPY = (jars: Input): Output => {
         //   return Object.values(x).reduce((acc, y) => acc + y, 0);
         // }).reduce((acc, x) => acc + x, 0);
         if (!totalAPY) totalAPY = getCompoundingAPY(apr / 100) + lp;
-
         return {
           ...jar,
           APYs,

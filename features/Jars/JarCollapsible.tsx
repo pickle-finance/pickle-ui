@@ -175,6 +175,7 @@ export const JarCollapsible: FC<{
     totalAPY,
     depositTokenLink,
     apr,
+    pendingAlcx,
   } = jarData;
   const isUsdc =
     depositToken.address.toLowerCase() ===
@@ -256,6 +257,8 @@ export const JarCollapsible: FC<{
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
+  const isAlusdJar =
+    depositToken.address === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV;
 
   let lunaAPY;
   if (isMStonksJar && APYs[2]) {
@@ -344,7 +347,13 @@ export const JarCollapsible: FC<{
           </Grid>
           <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
-            <Label>Value</Label>
+            {isAlusdJar ? (
+              <Tooltip text={`Pending Alcx rewards: ${pendingAlcx}`}>
+                <Label>Value</Label>
+              </Tooltip>
+            ) : (
+              <Label>Value</Label>
+            )}
           </Grid>
         </Grid.Container>
       }
