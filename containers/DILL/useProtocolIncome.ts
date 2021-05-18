@@ -13,7 +13,7 @@ export function useProtocolIncome() {
 
   const getWeeklyIncome = async () => {
     const jarList = await fetch(
-      `https://by34byvida.execute-api.us-west-1.amazonaws.com/prod/protocol/pools`,
+      `https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools`,
     ).then((response) => response.json());
 
     const jarPerformance = await Promise.all(
