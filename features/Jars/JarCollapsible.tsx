@@ -346,13 +346,22 @@ export const JarCollapsible: FC<{
             <Label>Deposited</Label>
           </Grid>
           <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             {isAlusdJar ? (
-              <Tooltip text={`Pending Alcx rewards: ${pendingAlcx}`}>
+              <Tooltip
+                text={`Pending Alcx rewards: ${pendingAlcx?.toFixed(3)}`}
+              >
+                <Data isZero={usdPerPToken * depositedNum === 0}>
+                  ${valueStr}
+                </Data>
                 <Label>Value</Label>
               </Tooltip>
             ) : (
-              <Label>Value</Label>
+              <>
+                <Data isZero={usdPerPToken * depositedNum === 0}>
+                  ${valueStr}
+                </Data>
+                <Label>Value</Label>
+              </>
             )}
           </Grid>
         </Grid.Container>

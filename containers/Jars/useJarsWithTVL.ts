@@ -119,7 +119,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     }
     if (jar.jarName == DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV) {
       pool = alusdPool;
-      pricePerUnderlying = prices?.alusd;
+      pricePerUnderlying = 1;
     }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
