@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { Connection } from "../../containers/Connection";
-import { Tooltip } from "@geist-ui/react";
+import { Modal, Select, Tooltip } from "@geist-ui/react";
 import { config } from "../../containers/config";
 
 const Container = styled.div`
@@ -67,24 +67,6 @@ const BlockBox = styled.a`
   }
 `;
 
-const NetworkBox = styled.div`
-  display: flex;
-  align-items: center;
-  display: flex;
-  align-items: center;
-  color: #5ec591;
-  background: #161616;
-  padding: 0.5rem 1rem;
-  border: 1px solid #004221;
-  transform: translateX(4px);
-  text-decoration: none;
-  margin-left: -1px;
-
-  @media screen and (max-width: 800px) {
-    display: none;
-  }
-`;
-
 const pulse = keyframes`
   0% { background-color: #5ec591; }
   50% { background-color: #7fa491; }
@@ -110,11 +92,46 @@ const Circle = styled.div`
 `;
 
 export const DesktopNetworkIndicator: FC = () => {
-  const { address, blockNum, chainId } = Connection.useContainer();
+  const { address, blockNum, chainId, switchChain } = Connection.useContainer();
+  const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
+  const [switchChainName, setSwitchChainName] = useState("");
+  const [reset, setReset] = useState(0);
+
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
+
+  const handleSwitchChain = async (newChainId: number) => {
+    if (chainId === newChainId) return;
+
+    const success = await switchChain(newChainId);
+    if (!success) {
+      setSwitchChainName(config.chains[newChainId].name);
+      setSwitchChainModalOpen(true);
+    }
+  };
 
   return (
     <Container>
+      <Modal
+        open={switchChainModalOpen}
+        onClose={() => {
+          setSwitchChainModalOpen(false);
+          setReset(reset + 1);
+        }}
+      >
+        <Modal.Title>Change Network</Modal.Title>
+        <Modal.Content>
+          Please switch to {switchChainName} Network
+        </Modal.Content>
+        <Modal.Action
+          passive
+          onClick={() => {
+            setSwitchChainModalOpen(false);
+            setReset(reset + 1);
+          }}
+        >
+          OK
+        </Modal.Action>
+      </Modal>
       {blockNum && (
         <Tooltip
           text="This is the current block number. This page is updated with every new block."
@@ -130,7 +147,14 @@ export const DesktopNetworkIndicator: FC = () => {
           </BlockBox>
         </Tooltip>
       )}
-      <NetworkBox>{chainId ? config.chains[chainId].name : ""}</NetworkBox>
+      <Select
+        value={`${chainId || 1}`}
+        onChange={(id) => handleSwitchChain(+id)}
+        key={reset}
+      >
+        <Select.Option value="1">Ethereum</Select.Option>
+        <Select.Option value="137">Polygon</Select.Option>
+      </Select>
       <AddressBox
         href={`https://etherscan.io/address/${address}`}
         target="_blank"

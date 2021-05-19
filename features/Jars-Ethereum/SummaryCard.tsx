@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Card, Table, Tooltip } from "@geist-ui/react";
 import Link from "next/link";
 
-import { Jars } from "../../containers/Jars-Polygon";
+import { Jars } from "../../containers/Jars-Ethereum";
 
 export const SummaryCard: FC = () => {
   const { jars } = Jars.useContainer();

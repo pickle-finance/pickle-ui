@@ -64,7 +64,7 @@ export const PAIR_INFO: PairMap = {
 };
 
 function useSushiPairs() {
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used

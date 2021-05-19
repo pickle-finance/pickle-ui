@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts";
+import { Contracts } from "../../containers/Contracts-Ethereum";
 import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
 import { TokenSymbol } from "./useBalance";
 
@@ -59,7 +59,6 @@ export const useDeposit = (
     }
     if (!allowance.gte(amount) && isZap) {
       // ETH yveCRV zap
-      console.log("ZAP TIME", allowance.gte(amount));
       const tx = await token.approve(yveCrvZap.address, MaxUint256);
       await tx.wait();
     }

@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { Contract, ethers } from "ethers";
 
-import { Jars } from "./Jars-Polygon";
+import { Jars } from "./Jars-Ethereum";
 import { Farms } from "./Farms";
-import { Balances } from "./Balances";
-import { Contracts } from "./Contracts";
+import { Balances } from "./Balances-Ethereum";
+import { Contracts } from "./Contracts-Ethereum";
 import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
@@ -24,7 +24,11 @@ export interface UserFarmData {
 }
 
 const useUserFarms = (): { farmData: UserFarmData[] | null } => {
-  const { blockNum, address, multicallProvider } = Connection.useContainer();
+  const {
+    blockNum,
+    address,
+    ethMulticallProvider: multicallProvider,
+  } = Connection.useContainer();
   const { masterchef, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();
   const { farms } = Farms.useContainer();

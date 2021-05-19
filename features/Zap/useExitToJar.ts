@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts";
+import { Contracts } from "../../containers/Contracts-Ethereum";
 import { Farm, POOL_IDs } from "./farms";
 
 export const useExitToJar = (farm: Farm) => {

@@ -18,8 +18,8 @@ import {
 } from "../../containers/Gauges/gauges";
 import { UserGaugeData } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts";
-import { Jars } from "../../containers/Jars-Polygon";
+import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Jars } from "../../containers/Jars-Ethereum";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,

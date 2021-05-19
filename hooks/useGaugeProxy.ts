@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { useState } from "react";
-import { Contracts } from "../containers/Contracts";
+import { Contracts } from "../containers/Contracts-Ethereum";
 
 export enum TransactionStatus {
   Pending,

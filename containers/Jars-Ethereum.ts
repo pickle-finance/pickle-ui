@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createContainer } from "unstated-next";
 
-import { Balances } from "./Balances";
+import { Balances } from "./Balances-Ethereum";
 import { useFetchJars } from "./Jars-Ethereum/useFetchJars";
 import { useJarWithAPY } from "./Jars-Ethereum/useJarsWithAPY";
 import { useJarWithTVL } from "./Jars-Ethereum/useJarsWithTVL";

@@ -2,10 +2,10 @@ import { FC, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { Card, Grid, Button, Spacer } from "@geist-ui/react";
 
-import { Jars } from "../../containers/Jars-Polygon";
+import { Jars } from "../../containers/Jars-Ethereum";
 import { UserJars } from "../../containers/UserJars";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts";
+import { Contracts } from "../../containers/Contracts-Ethereum";
 
 import { parseEther } from "ethers/lib/utils";
 

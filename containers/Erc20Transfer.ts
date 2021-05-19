@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 
 import { Connection } from "./Connection";
-import { Contracts } from "./Contracts";
+import { Contracts } from "./Contracts-Ethereum";
 import { ethers } from "ethers";
 
 export enum Status {

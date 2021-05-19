@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS } from "./jars";
+import {
+  DEPOSIT_TOKENS_JAR_NAMES,
+  getPriceId,
+  JAR_DEPOSIT_TOKENS,
+} from "./jars";
 import { Prices } from "../Prices";
-import { Contracts, COMETH_USDC_WETH_REWARDS } from "../Contracts";
+import { Contracts, COMETH_USDC_WETH_REWARDS } from "../Contracts-Polygon";
 import { Jar } from "./useFetchJars";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { formatEther } from "ethers/lib/utils";
@@ -10,7 +14,11 @@ import { ComethPairs } from "../ComethPairs";
 
 import { Connection } from "../Connection";
 import { Contract } from "@ethersproject/contracts";
-
+import fetch from "node-fetch";
+import AaveStrategyAbi from "../ABIs/aave-strategy.json";
+import { ethers } from "ethers";
+import { useCurveRawStats } from "./useCurveRawStats";
+import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
 export interface JarApy {
   [k: string]: number;
 }
@@ -31,7 +39,9 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (jars: Input): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const {
+    polygonMulticallProvider: multicallProvider,
+  } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getComethPairData } = ComethPairs.useContainer();
@@ -40,6 +50,8 @@ export const useJarWithAPY = (jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
+  const { rawStats } = useCurveRawStats();
+  useCurveAm3MaticAPY();
 
   const calculateComethAPY = async (rewardsAddress: string) => {
     if (
@@ -85,10 +97,71 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateAaveAPY = async (
+    assetAddress: string,
+    strategyAddress: string,
+  ) => {
+    const pools = await fetch(
+      "https://aave-api-v2.aave.com/data/liquidity/v2?poolId=0xd05e3E715d945B59290df0ae8eF85c1BdB684744",
+    ).then((response) => response.json());
+    const pool = pools?.find(
+      (pool) =>
+        pool.underlyingAsset.toUpperCase() === assetAddress.toUpperCase(),
+    );
+
+    if (!pool || !prices?.matic || !multicallProvider) return [];
+
+    const aaveStrategy = new Contract(
+      strategyAddress,
+      AaveStrategyAbi,
+      multicallProvider,
+    );
+    const [supplied, borrowed, balance] = await Promise.all([
+      aaveStrategy.getSuppliedView().then(ethers.utils.formatEther),
+      aaveStrategy.getBorrowedView().then(ethers.utils.formatEther),
+      aaveStrategy.balanceOfPool().then(ethers.utils.formatEther),
+    ]);
+
+    const rawSupplyAPY = +pool["avg1DaysLiquidityRate"];
+    const rawBorrowAPY = +pool["avg1DaysVariableBorrowRate"];
+
+    const supplyMaticAPR =
+      (+pool.aEmissionPerSecond * 365 * 3600 * 24 * prices.matic) /
+      +pool["totalLiquidity"] /
+      +pool["referenceItem"]["priceInUsd"];
+    const borrowMaticAPR =
+      (+pool.vEmissionPerSecond * 365 * 3600 * 24 * prices.matic) /
+      +pool["totalDebt"] /
+      +pool["referenceItem"]["priceInUsd"];
+
+    const maticAPR =
+      (supplied * supplyMaticAPR + borrowed * borrowMaticAPR) / balance;
+
+    const rawAPY =
+      (rawSupplyAPY * supplied - rawBorrowAPY * borrowed) / balance;
+
+    return [
+      {
+        [getPriceId(assetAddress)]: rawAPY * 100,
+        matic: maticAPR * 0.8 * 100,
+        apr: maticAPR * 0.8 * 100,
+        rawAPY: rawAPY * 100,
+      },
+    ];
+  };
+
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
-      const [comethUsdcWethApy] = await Promise.all([
+      const aaveDaiStrategy = jars.find(
+        (jar) => jar.depositToken.address === JAR_DEPOSIT_TOKENS.DAI,
+      )?.strategy;
+
+      const [comethUsdcWethApy, aaveDaiAPY] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
+        calculateAaveAPY(
+          JAR_DEPOSIT_TOKENS.DAI,
+          aaveDaiStrategy?.address || "",
+        ),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -99,6 +172,10 @@ export const useJarWithAPY = (jars: Input): Output => {
             ...comethUsdcWethApy,
             ...getComethPairDayAPY(JAR_DEPOSIT_TOKENS.COMETH_USDC_WETH),
           ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AAVE_DAI) {
+          APYs = [...aaveDaiAPY];
         }
 
         let apr = 0;

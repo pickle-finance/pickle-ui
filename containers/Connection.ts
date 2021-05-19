@@ -6,19 +6,64 @@ import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 import { config } from "./config";
+import { Provider } from "@ethersproject/providers";
 
 type Network = ethers.providers.Network;
 
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
+  const [ethInfuraProvider] = useState<Provider>(
+    new ethers.providers.JsonRpcProvider(process.env.ethRPC) as any,
+  );
+  const [polygonInfuraProvider] = useState<Provider>(
+    new ethers.providers.JsonRpcProvider(process.env.polygonRPC) as any,
+  );
 
   const [
     multicallProvider,
     setMulticallProvider,
   ] = useState<providers.MulticallProvider | null>(null);
+  const [ethMulticallProvider] = useState(
+    new providers.MulticallProvider(ethInfuraProvider, {
+      timeWindow: 0,
+      batchSize: 100,
+    }),
+  );
+  const [polygonMulticallProvider] = useState(
+    new providers.MulticallProvider(polygonInfuraProvider, {
+      timeWindow: 0,
+      batchSize: 100,
+    }),
+  );
 
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
+
+  const switchChain = async (chainId: number) => {
+    if (chainId !== 137) return false;
+
+    try {
+      await library.provider.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x89",
+            chainName: "Polygon",
+            nativeCurrency: {
+              name: "MATIC",
+              symbol: "MATIC",
+              decimals: 18,
+            },
+            rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
+            blockExplorerUrls: ["https://explorer-mainnet.maticvigil.com/"],
+          },
+        ],
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   // create observable to stream new blocks
   useEffect(() => {
@@ -51,6 +96,8 @@ function useConnection() {
     }
   }, [library]);
 
+  const chainName = chainId && config.chains[chainId].name;
+
   return {
     multicallProvider,
     provider: library,
@@ -59,7 +106,16 @@ function useConnection() {
     blockNum,
     signer: library?.getSigner(),
     chainId,
-    chainName: chainId && config.chains[chainId].name,
+    chainName: chainName,
+    switchChain,
+    ethMulticallProvider:
+      chainName === "Ethereum"
+        ? multicallProvider || ethMulticallProvider
+        : ethMulticallProvider,
+    polygonMulticallProvider:
+      chainName === "Polygon"
+        ? multicallProvider || polygonMulticallProvider
+        : polygonMulticallProvider,
   };
 }
 

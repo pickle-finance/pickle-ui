@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import { Jar } from "./useFetchJars";
 
 import { Pool } from "../Contracts/Pool";
@@ -37,7 +37,7 @@ export const useCurveCrvAPY = (
 ): Output => {
   const { prices } = Prices.useContainer();
   const { gaugeController } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
 
   const [CRVAPY, setCRVAPY] = useState<number | null>(null);
 

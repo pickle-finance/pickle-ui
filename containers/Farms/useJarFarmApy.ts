@@ -2,13 +2,13 @@ import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import { Prices } from "../Prices";
 
 import { JAR_FARM_MAP } from "./farms";
 import { FarmWithApy } from "./useUniV2Apy";
 import { FarmWithReward } from "./useWithReward";
-import { Jars } from "../Jars-Polygon";
+import { Jars } from "../Jars-Ethereum";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
 
@@ -19,7 +19,7 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
 
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 

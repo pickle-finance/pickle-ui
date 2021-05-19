@@ -2,7 +2,7 @@ import { Contract, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
 
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import { Prices } from "../Prices";
 
 import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
@@ -62,7 +62,10 @@ const isUniPool = (jarName: string): boolean => {
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
-  const { multicallProvider, chainName } = Connection.useContainer();
+  const {
+    ethMulticallProvider: multicallProvider,
+    chainName,
+  } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const {
     uniswapv2Pair,
@@ -139,7 +142,9 @@ export const useJarWithTVL = (jars: Input): Output => {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 
-    const uniPair = uniswapv2Pair.attach(jar.depositToken.address);
+    const uniPair = uniswapv2Pair
+      .attach(jar.depositToken.address)
+      .connect(multicallProvider);
 
     const [
       supply,

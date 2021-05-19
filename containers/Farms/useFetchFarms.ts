@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { BigNumber, Contract } from "ethers";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 
 export interface RawFarm {
   lpToken: string;
@@ -13,7 +13,10 @@ export interface RawFarm {
 }
 
 export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
-  const { blockNum, multicallProvider } = Connection.useContainer();
+  const {
+    blockNum,
+    ethMulticallProvider: multicallProvider,
+  } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
 
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);

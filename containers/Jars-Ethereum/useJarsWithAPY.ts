@@ -25,7 +25,7 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
-} from "../Contracts";
+} from "../Contracts-Ethereum";
 import { Jar } from "./useFetchJars";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
@@ -80,7 +80,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (jars: Input): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
@@ -405,16 +405,18 @@ export const useJarWithAPY = (jars: Input): Output => {
         multicallProvider,
       );
 
+      const totalSupplyBN = await lpToken.balanceOf(sushiChef.address);
+
       const [
         sushiPerBlockBN,
         totalAllocPointBN,
         poolInfo,
-        totalSupplyBN,
+        // totalSupplyBN,
       ] = await Promise.all([
         multicallSushiChef.sushiPerBlock(),
         multicallSushiChef.totalAllocPoint(),
         multicallSushiChef.poolInfo(poolId),
-        lpToken.balanceOf(sushiChef.address),
+        // lpToken.balanceOf(sushiChef.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));

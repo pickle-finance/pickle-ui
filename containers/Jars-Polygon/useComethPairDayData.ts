@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Connection } from "../Connection";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
-import { PICKLE_ETH_FARM } from "../Farms/farms";
 
 export interface UniLPAPY {
   pairAddress: string;
@@ -13,8 +11,6 @@ export interface UniLPAPY {
 const COMETH_LP_TOKENS = [JAR_DEPOSIT_TOKENS.COMETH_USDC_WETH];
 
 export const useComethPairDayData = () => {
-  const { signer } = Connection.useContainer();
-
   const [uniPairDayData, setUniPairDayData] = useState<Array<UniLPAPY> | null>(
     null,
   );
@@ -65,7 +61,7 @@ export const useComethPairDayData = () => {
 
   useEffect(() => {
     queryTheGraph();
-  }, [signer]);
+  }, []);
 
   return {
     getComethPairDayAPY,

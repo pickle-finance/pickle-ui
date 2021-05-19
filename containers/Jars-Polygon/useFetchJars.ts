@@ -7,7 +7,7 @@ import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
 import { Erc20Factory } from "../Contracts/Erc20Factory";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Polygon";
 import {
   JAR_DEPOSIT_TOKENS,
   DEPOSIT_TOKENS_JAR_NAMES,
@@ -29,8 +29,7 @@ export type Jar = {
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const {
     blockNum,
-    provider,
-    multicallProvider,
+    polygonMulticallProvider: provider,
     chainName,
   } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
@@ -38,11 +37,11 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
-    if (controller && provider && strategy && multicallProvider && chainName) {
+    if (controller && strategy && provider && chainName) {
       const multicallController = new Contract(
         controller.address,
         controller.interface.fragments,
-        multicallProvider,
+        provider,
       );
 
       const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS).map(

@@ -2,7 +2,7 @@ import { createContainer } from "unstated-next";
 import { useEffect, useState } from "react";
 
 import { Connection } from "./Connection";
-import { Contracts } from "./Contracts";
+import { Contracts } from "./Contracts-Polygon";
 import { ethers, Contract } from "ethers";
 
 interface TokenBalances {
@@ -12,9 +12,8 @@ interface TokenBalances {
 function useBalances() {
   const {
     address,
-    provider,
     blockNum,
-    multicallProvider,
+    polygonMulticallProvider: multicallProvider,
   } = Connection.useContainer();
   const { erc20 } = Contracts.useContainer();
 
@@ -22,7 +21,7 @@ function useBalances() {
   const [tokenAddresses, setTokenAddresses] = useState<Array<string>>([]);
 
   const updateBalances = async () => {
-    if (erc20 && address && provider && multicallProvider) {
+    if (erc20 && address && multicallProvider) {
       const balances = await Promise.all(
         tokenAddresses.map((x) => {
           const c = new Contract(

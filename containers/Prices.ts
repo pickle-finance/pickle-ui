@@ -34,6 +34,8 @@ interface PriceObject {
   lusd: number;
   lqty: number;
   must: number;
+  matic: number;
+  am3CRV: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -76,6 +78,7 @@ function usePrices() {
         "liquity-usd",
         "liquity",
         "must",
+        "matic-network",
       ],
       vs_currencies: ["usd"],
     });
@@ -112,6 +115,7 @@ function usePrices() {
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
       must: response["must"].usd,
+      matic: response["matic-network"].usd,
     };
     setPrices(prices);
   };

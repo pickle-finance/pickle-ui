@@ -16,23 +16,26 @@ const tokenInfo = {
 export type TokenSymbol = keyof typeof tokenInfo;
 
 export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
-  const { provider, address, blockNum } = Connection.useContainer();
+  const { ethMulticallProvider, address, blockNum } = Connection.useContainer();
   const [balanceRaw, setBalance] = useState<BigNumber | null>(null);
   const [balanceStr, setBalanceStr] = useState<string | null>(null);
   const [decimals, setDecimals] = useState<number | null>(null);
 
   const getBalance = async () => {
-    if (symbol && provider && address) {
+    if (symbol && ethMulticallProvider && address) {
       let balance: BigNumber = 0;
       let balanceStr = "0";
       if (symbol == "ETH") {
-        balance = await provider.getBalance(address);
+        balance = await ethMulticallProvider.getBalance(address);
         balanceStr = ethers.utils.formatUnits(balance, decimals);
         setDecimals(18);
         setBalance(balance);
         setBalanceStr(balanceStr);
       } else {
-        const token = Erc20Factory.connect(tokenInfo[symbol], provider);
+        const token = Erc20Factory.connect(
+          tokenInfo[symbol],
+          ethMulticallProvider,
+        );
         const decimals = await token.decimals();
         balance = await token.balanceOf(address);
         balanceStr = ethers.utils.formatUnits(balance, decimals);
@@ -45,7 +48,7 @@ export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
 
   useEffect(() => {
     getBalance();
-  }, [symbol, provider, address, blockNum]);
+  }, [symbol, ethMulticallProvider, address, blockNum]);
 
   return { balanceRaw, balanceStr, decimals };
 };

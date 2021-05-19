@@ -1,7 +1,7 @@
 import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -15,7 +15,11 @@ export const useCompAPY = (
   underlyingPrice = 1,
 ): Output => {
   const { prices } = Prices.useContainer();
-  const { provider, blockNum, multicallProvider } = Connection.useContainer();
+  const {
+    provider,
+    blockNum,
+    ethMulticallProvider: multicallProvider,
+  } = Connection.useContainer();
   const { cToken, comptroller } = Contracts.useContainer();
 
   const [compSupplyAPY, setCompSupplyAPY] = useState<null | number>(null);

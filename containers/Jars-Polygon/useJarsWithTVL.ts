@@ -2,7 +2,7 @@ import { Contract, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
 
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Polygon";
 import { Prices } from "../Prices";
 
 import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
@@ -22,55 +22,21 @@ type Output = {
 };
 
 const isCurvePool = (jarName: string): boolean => {
-  return (
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"] ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV
-  );
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV;
 };
 
 // UniV2/SLP pools
 const isUniPool = (jarName: string): boolean => {
-  return (
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDC ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAS_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MIR_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MTSLA_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MAAPL_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MQQQ_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MSLV_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE
-  );
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH;
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
-  const { multicallProvider, chainName } = Connection.useContainer();
-  const { prices } = Prices.useContainer();
   const {
-    uniswapv2Pair,
-    susdPool,
-    renPool,
-    steCRVPool,
-    threePool,
-  } = Contracts.useContainer();
+    polygonMulticallProvider: multicallProvider,
+    chainName,
+  } = Connection.useContainer();
+  const { prices } = Prices.useContainer();
+  const { uniswapv2Pair } = Contracts.useContainer();
 
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
     null,
@@ -80,24 +46,8 @@ export const useJarWithTVL = (jars: Input): Output => {
     let pool;
     let pricePerUnderlying;
 
-    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV) {
-      pool = susdPool;
+    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV) {
       pricePerUnderlying = prices?.dai;
-    }
-
-    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"]) {
-      pool = threePool;
-      pricePerUnderlying = prices?.dai;
-    }
-
-    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV) {
-      pool = renPool;
-      pricePerUnderlying = prices?.wbtc;
-    }
-
-    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV) {
-      pool = steCRVPool;
-      pricePerUnderlying = prices?.eth;
     }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
@@ -238,16 +188,12 @@ export const useJarWithTVL = (jars: Input): Output => {
   };
 
   const measureTVL = async () => {
-    if (jars && susdPool) {
+    if (jars) {
       const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
         if (isCurvePool(jar.jarName)) {
           return measureCurveTVL(jar);
         } else if (isUniPool(jar.jarName)) {
           return measureUniJarTVL(jar);
-        }
-
-        if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
-          return measureCompoundTVL(jar);
         }
 
         return {

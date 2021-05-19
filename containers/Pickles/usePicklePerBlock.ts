@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 
 export const usePicklePerBlock = (): { picklePerBlock: number | null } => {
   const { address, blockNum } = Connection.useContainer();

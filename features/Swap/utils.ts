@@ -11,7 +11,7 @@ import {
   SUSDV2_DEPOSIT_ADDR,
   SUSDV2_CRV,
   SUSD_POOL_ADDR,
-} from "../../containers/Contracts";
+} from "../../containers/Contracts-Ethereum";
 
 export const isCurveJar = (address: string): boolean => {
   const l = address.toLowerCase();

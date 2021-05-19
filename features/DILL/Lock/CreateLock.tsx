@@ -3,7 +3,7 @@ import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
 import { parseEther, formatEther } from "ethers/lib/utils";
 
 import { useBalances } from "../../Balances/useBalances";
-import { Contracts } from "../../../containers/Contracts";
+import { Contracts } from "../../../containers/Contracts-Ethereum";
 import { Connection } from "../../../containers/Connection";
 
 import {

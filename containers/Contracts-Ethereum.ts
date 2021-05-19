@@ -127,9 +127,6 @@ export const MIRROR_MBABA_UST_STAKING_REWARDS =
 export const FEI_TRIBE_STAKING_REWARDS =
   "0x18305DaAe09Ea2F4D51fAa33318be5978D251aBd";
 
-export const COMETH_USDC_WETH_REWARDS =
-  "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
-
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
@@ -137,14 +134,20 @@ export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
 function useContracts() {
-  const { signer, chainId } = Connection.useContainer();
-  const addresses = chainId
-    ? config.addresses[config.chains[chainId].name]
-    : null;
+  const {
+    signer,
+    chainId,
+    ethMulticallProvider,
+    multicallProvider,
+  } = Connection.useContainer();
+  const addresses = config.addresses.Ethereum;
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
+
+  const providerOrSigner =
+    chainId === 1 ? signer || multicallProvider : ethMulticallProvider;
 
   const [
     gaugeController,
@@ -191,56 +194,90 @@ function useContracts() {
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
 
   const initContracts = async () => {
-    if (signer && addresses) {
-      setPickle(Erc20Factory.connect(addresses.pickle, signer));
-      setMasterchef(MasterchefFactory.connect(addresses.masterChef, signer));
-      setController(ControllerFactory.connect(addresses.controller, signer));
-      setGaugeController(
-        GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, signer),
+    if (providerOrSigner && addresses) {
+      setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
+      setMasterchef(
+        MasterchefFactory.connect(addresses.masterChef, providerOrSigner),
       );
-      setSUSDGauge(CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, signer));
-      setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, signer));
-      setSteCRVGauge(CurveGaugeFactory.connect(STETH_GAUGE_ADDR, signer));
-      setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, signer));
-      setRENGauge(CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, signer));
-      setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, signer));
-      setThreeGauge(CurveGaugeFactory.connect(THREE_GAUGE_ADDR, signer));
-      setThreePool(PoolFactory.connect(THREE_POOL_ADDR, signer));
+      setController(
+        ControllerFactory.connect(addresses.controller, providerOrSigner),
+      );
+      setGaugeController(
+        GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, providerOrSigner),
+      );
+      setSUSDGauge(
+        CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, providerOrSigner),
+      );
+      setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, providerOrSigner));
+      setSteCRVGauge(
+        CurveGaugeFactory.connect(STETH_GAUGE_ADDR, providerOrSigner),
+      );
+      setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, providerOrSigner));
+      setRENGauge(
+        CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, providerOrSigner),
+      );
+      setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, providerOrSigner));
+      setThreeGauge(
+        CurveGaugeFactory.connect(THREE_GAUGE_ADDR, providerOrSigner),
+      );
+      setThreePool(PoolFactory.connect(THREE_POOL_ADDR, providerOrSigner));
 
       setStakingRewards(
-        StakingRewardsFactory.connect(ethers.constants.AddressZero, signer),
+        StakingRewardsFactory.connect(
+          ethers.constants.AddressZero,
+          providerOrSigner,
+        ),
       );
       setBasisStaking(
-        BasisStakingFactory.connect(ethers.constants.AddressZero, signer),
+        BasisStakingFactory.connect(
+          ethers.constants.AddressZero,
+          providerOrSigner,
+        ),
       );
       setUniswapv2Pair(
-        Uniswapv2PairFactory.connect(ethers.constants.AddressZero, signer),
+        Uniswapv2PairFactory.connect(
+          ethers.constants.AddressZero,
+          providerOrSigner,
+        ),
       );
-      setERC20(Erc20Factory.connect(ethers.constants.AddressZero, signer));
-      setCToken(CtokenFactory.connect(ethers.constants.AddressZero, signer));
-      setComptroller(ComptrollerFactory.connect(COMPTROLLER_ADDR, signer));
+      setERC20(
+        Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setCToken(
+        CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setComptroller(
+        ComptrollerFactory.connect(COMPTROLLER_ADDR, providerOrSigner),
+      );
       setStrategy(
-        StrategyFactory.connect(ethers.constants.AddressZero, signer),
+        StrategyFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
       setCurveProxyLogic(
-        CurveProxyLogicFactory.connect(CURVE_PROXY_LOGIC, signer),
+        CurveProxyLogicFactory.connect(CURVE_PROXY_LOGIC, providerOrSigner),
       );
       setUniswapv2ProxyLogic(
-        Uniswapv2ProxyLogicFactory.connect(UNISWAPV2_PROXY_LOGIC, signer),
+        Uniswapv2ProxyLogicFactory.connect(
+          UNISWAPV2_PROXY_LOGIC,
+          providerOrSigner,
+        ),
       );
-      setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
-      setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
-      setDill(DillFactory.connect(DILL, signer));
-      setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
-      setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
-      setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
-      setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
+      setInstabrine(InstabrineFactory.connect(INSTABRINE, providerOrSigner));
+      setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, providerOrSigner));
+      setDill(DillFactory.connect(DILL, providerOrSigner));
+      setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, providerOrSigner));
+      setGauge(
+        GaugeFactory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setFeeDistributor(
+        FeeDistributorFactory.connect(FEE_DISTRIBUTOR, providerOrSigner),
+      );
+      setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, providerOrSigner));
     }
   };
 
   useEffect(() => {
-    if (signer) initContracts();
-  }, [signer]);
+    if (providerOrSigner) initContracts();
+  }, [providerOrSigner]);
 
   return {
     pickle,

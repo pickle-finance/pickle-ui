@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import { Prices } from "../Prices";
 
 import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";
@@ -28,7 +28,10 @@ type Output = { uniV2GaugesWithApy: GaugeWithApy[] | null };
 export const useUniV2Apy = (inputGauges: Input): Output => {
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 
-  const { multicallProvider, provider } = Connection.useContainer();
+  const {
+    ethMulticallProvider: multicallProvider,
+    provider,
+  } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairDataPrefill } = UniV2Pairs.useContainer();

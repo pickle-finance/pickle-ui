@@ -7,7 +7,7 @@ import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
 import { Erc20Factory } from "../Contracts/Erc20Factory";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import {
   JAR_DEPOSIT_TOKENS,
   DEPOSIT_TOKENS_JAR_NAMES,
@@ -29,8 +29,7 @@ export type Jar = {
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const {
     blockNum,
-    provider,
-    multicallProvider,
+    ethMulticallProvider: multicallProvider,
     chainName,
   } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
@@ -38,7 +37,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
-    if (controller && provider && strategy && multicallProvider && chainName) {
+    if (controller && strategy && multicallProvider && chainName) {
       const multicallController = new Contract(
         controller.address,
         controller.interface.fragments,
@@ -78,8 +77,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       //   }),
       // );
 
-      // console.log(strategyNames);
-
       const jarData = tokenKV
         .map((kv, idx) => {
           return {
@@ -99,7 +96,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         Object.entries(JAR_DEPOSIT_TOKENS).map(async ([k, tokenAddress]) => {
           const { jarAddress, strategyAddress, strategyName } = jarData[k];
           return {
-            depositToken: Erc20Factory.connect(tokenAddress, provider),
+            depositToken: Erc20Factory.connect(tokenAddress, multicallProvider),
             depositTokenName:
               DEPOSIT_TOKENS_NAME[k as keyof typeof DEPOSIT_TOKENS_NAME],
             strategy: strategy.attach(strategyAddress),
@@ -110,7 +107,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
               ],
             depositTokenLink:
               DEPOSIT_TOKENS_LINK[k as keyof typeof DEPOSIT_TOKENS_LINK],
-            contract: JarFactory.connect(jarAddress, provider),
+            contract: JarFactory.connect(jarAddress, multicallProvider),
           };
         }),
       );
@@ -120,7 +117,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   useEffect(() => {
     getJars();
-  }, [provider, controller, blockNum]);
+  }, [multicallProvider, controller, blockNum]);
 
   return { jars };
 };

@@ -20,7 +20,7 @@ import { Page } from "@geist-ui/react";
 import { TopBar } from "../features/TopBar/TopBar";
 import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
-import { Jars } from "../containers/Jars-Polygon";
+import { Jars } from "../containers/Jars-Ethereum";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
 import {
   backgroundColor,

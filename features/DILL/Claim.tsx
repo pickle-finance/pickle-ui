@@ -2,7 +2,7 @@ import { useState, FC, useEffect } from "react";
 import { Spacer, Grid, Card, Button } from "@geist-ui/react";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
-import { Contracts } from "../../containers/Contracts";
+import { Contracts } from "../../containers/Contracts-Ethereum";
 import { Connection } from "../../containers/Connection";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import {
@@ -74,7 +74,7 @@ export const Claim: FC<{
 
   const dillAPY =
     dillStats.weeklyDistribution && dillStats.lockedValue
-      ? dillStats.weeklyDistribution / dillStats.lockedValue * 52
+      ? (dillStats.weeklyDistribution / dillStats.lockedValue) * 52
       : 0;
 
   useEffect(() => {
@@ -111,7 +111,9 @@ export const Claim: FC<{
         <Grid xs={24} sm={24} md={24}>
           <Card>
             <h2>Claim</h2>
-            <div>Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}</div>
+            <div>
+              Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}
+            </div>
             &nbsp;
             <div>
               Weekly distribution (45% of revenue): $
@@ -120,9 +122,7 @@ export const Claim: FC<{
             &nbsp;
             <div>DILL holder APY: {formatPercent(dillAPY)}</div>
             &nbsp;
-            <div>
-              Next distribution: Thu Apr 29 2021
-            </div>
+            <div>Next distribution: Thu Apr 29 2021</div>
             {/* <div>
               Next distribution: {dillStats.nextDistribution?.toDateString()}
             </div> */}

@@ -40,77 +40,11 @@ const JarName = styled(Grid)({
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
-  "0xC25a3A3b969415c80451098fa907EC722572917F": "/sCRV.png",
-  "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11": "/dai.png",
-  "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc": "/usdc.png",
-  "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852": "/usdt.png",
-  "0x49849C98ae39Fff122806C06791Fa73784FB3675": "/rencrv.png",
-  "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490": "/3crv.png",
-  "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940": "/btc.png",
-  "0x6B175474E89094C44Da98b954EedeAC495271d0F": "/dai.png",
-  "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
-  ),
-  "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
-  ),
-  "0x06da0fd433C1A5d7a4faa01111c044910A184553": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
-  ),
-  "0xCEfF51756c56CeFFCA006cD410B03FFC46dd3a58": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/btc.png"} />
-  ),
-  "0x088ee5007C98a9677165D78dD2109AE4a3D04d0C": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
-  ),
-  "0xd4405F0704621DBe9d4dEA60E128E0C3b26bddbD": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
-  ),
-  "0x3E78F2E7daDe07ea685F8612F00477FD97162F1e": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.svg"} />
-  ),
-  "0x87dA823B6fC8EB8575a235A824690fda94674c88": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/mir.png"} />
-  ),
-  "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fei.png"} />
-  ),
-  "0x5233349957586A8207c52693A959483F9aeAA50C": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tesla.png"} />
-  ),
-  "0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/apple.png"} />
-  ),
-  "0x9E3B47B861B451879d43BBA404c35bdFb99F0a6c": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/qqq.png"} />
-  ),
-  "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/slv.png"} />
-  ),
-  "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/baba.png"} />
-  ),
-  "0xC9cB53B48A2f3A9e75982685644c1870F1405CCb": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
-  ),
-  "0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
-  ),
-  "0x06325440D014e39736583c165C2963BA99fAf14E": (
-    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
-  ),
-  "0x10B47177E92Ef9D5C6059055d92DdF6290848991": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
-  ),
-  "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/sushiswap.png"} />
-  ),
-  "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
-  ),
+  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
   "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
     <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
+  "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
 };
 
 const setButtonStatus = (

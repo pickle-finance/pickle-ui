@@ -2,13 +2,13 @@ import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
+import { Contracts } from "../Contracts-Ethereum";
 import { Prices } from "../Prices";
 
 import { JAR_GAUGE_MAP } from "./gauges";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
-import { Jars } from "../Jars-Polygon";
+import { Jars } from "../Jars-Ethereum";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
 
@@ -19,7 +19,7 @@ type Output = { jarGaugeWithApy: GaugeWithApy[] | null };
 export const useJarGaugeApy = (inputGauges: Input): Output => {
   let { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
 
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 

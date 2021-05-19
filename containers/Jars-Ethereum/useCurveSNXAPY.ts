@@ -32,23 +32,23 @@ export const useCurveSNXAPY = (
   pool: Pool | null,
   stakingRewards: StakingRewards | null,
 ): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [SNXAPY, setSNXAPY] = useState<number | null>(null);
 
   const getSNXAPY = async () => {
-    if (stakingRewards && pool && multicallProvider && prices?.snx) {
+    if (stakingRewards && pool && ethMulticallProvider && prices?.snx) {
       const mcPool = new Contract(
         pool.address,
         pool.interface.fragments,
-        multicallProvider,
+        ethMulticallProvider,
       );
 
       const mcStakingRewards = new Contract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
-        multicallProvider,
+        ethMulticallProvider,
       );
 
       const [rewardsDuration, rewardsRate, totalSupply, virtualPrice] = (

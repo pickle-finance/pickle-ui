@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 
 import { UserJarData } from "../../containers/UserJars";
 
-import { Jars } from "../../containers/Jars-Polygon";
-import { Balances } from "../../containers/Balances";
+import { Jars } from "../../containers/Jars-Ethereum";
+import { Balances } from "../../containers/Balances-Ethereum";
 import { Connection } from "../../containers/Connection";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 

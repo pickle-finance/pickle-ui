@@ -31,7 +31,9 @@ export const PAIR_INFO: PairMap = {
 };
 
 function useComethPairs() {
-  const { multicallProvider } = Connection.useContainer();
+  const {
+    polygonMulticallProvider: multicallProvider,
+  } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used

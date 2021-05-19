@@ -2,7 +2,7 @@ import { Contract } from "@ethersproject/contracts";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
-import { Contracts, GAUGE_PROXY } from "../Contracts";
+import { Contracts, GAUGE_PROXY } from "../Contracts-Ethereum";
 
 export interface RawGauge {
   token: string;
@@ -15,7 +15,11 @@ export interface RawGauge {
 }
 
 export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
-  const { blockNum, multicallProvider, chainName } = Connection.useContainer();
+  const {
+    blockNum,
+    ethMulticallProvider: multicallProvider,
+    chainName,
+  } = Connection.useContainer();
   const { gaugeProxy, gauge } = Contracts.useContainer();
 
   const [gauges, setGauges] = useState<Array<RawGauge> | null>(null);

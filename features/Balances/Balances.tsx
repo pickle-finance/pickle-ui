@@ -5,7 +5,7 @@ import { useBalances } from "./useBalances";
 import { Prices } from "../../containers/Prices";
 import { UniV2Pairs } from "../../containers/UniV2Pairs";
 import { Connection } from "../../containers/Connection";
-import { Jars } from "../../containers/Jars-Polygon";
+import { Jars } from "../../containers/Jars-Ethereum";
 import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";

@@ -94,19 +94,19 @@ export const PAIR_INFO: PairMap = {
 };
 
 function useUniV2Pairs() {
-  const { multicallProvider } = Connection.useContainer();
+  const { ethMulticallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used
-  if (!multicallProvider || !prices)
+  if (!ethMulticallProvider || !prices)
     return { getPairData: null, getPairDataPrefill: null };
 
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new Contract(a.address, erc20.abi, multicallProvider);
-    const tokenB = new Contract(b.address, erc20.abi, multicallProvider);
-    const pair = new Contract(pairAddress, erc20.abi, multicallProvider);
+    const tokenA = new Contract(a.address, erc20.abi, ethMulticallProvider);
+    const tokenB = new Contract(b.address, erc20.abi, ethMulticallProvider);
+    const pair = new Contract(pairAddress, erc20.abi, ethMulticallProvider);
 
     const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
       tokenA.balanceOf(pairAddress),

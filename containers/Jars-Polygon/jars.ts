@@ -2,35 +2,43 @@ import { PriceIds } from "../Prices";
 
 export const PICKLE_JARS = {
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
+  pAAVEDAI: "0x0519848e57Ba0469AA5275283ec0712c91e20D8E",
+  pAM3CRV: "0x1A602E5f4403ea0A5C06d3DbD22B75d3a2D299D5",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
   COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
+  DAI: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+  AM3CRV: "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171",
 };
 
 export const DEPOSIT_TOKENS_NAME = {
   COMETH_USDC_WETH: "COMETH USDC/WETH",
+  DAI: "DAI",
+  AM3CRV: "am3CRV",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
+  [DEPOSIT_TOKENS_NAME.DAI]: true,
+  [DEPOSIT_TOKENS_NAME.AM3CRV]: true,
 };
 
 export const DEPOSIT_TOKENS_LINK = {
   COMETH_USDC_WETH:
     "https://swap.cometh.io/#/add/0x2791bca1f2de4661ed88a30c99a7a9449aa84174/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+  DAI:
+    "https://explorer-mainnet.maticvigil.com/tokens/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+  AM3CRV: "https://polygon.curve.fi/aave/deposit",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
   COMETH_USDC_WETH: "pJar 0.99r",
+  AAVE_DAI: "pJar 0.99s",
+  AM3CRV: "pJar 0.99t",
 };
 
-export const STRATEGY_NAMES = {
-  DAI: {
-    COMPOUNDv1: "StrategyCompoundDaiV1",
-    COMPOUNDv2: "StrategyCmpdDaiV2",
-  },
-};
+export const STRATEGY_NAMES = {};
 
 const PRICE_IDS: Record<string, PriceIds> = {
   // Ethereum
@@ -61,6 +69,8 @@ const PRICE_IDS: Record<string, PriceIds> = {
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",
   "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619": "eth",
+  "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063": "dai",
+  "0xe7a24ef0c5e95ffb0f6684b813a78f2a3ad7d171": "am3CRV",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {
