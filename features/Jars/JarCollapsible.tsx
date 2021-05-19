@@ -189,11 +189,11 @@ export const JarCollapsible: FC<{
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 18 : 4,
+    maximumFractionDigits: balNum < 1 ? 12 : 2,
   });
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 12 : 2,
   });
   const depositedUnderlyingStr = (
     parseFloat(
@@ -201,7 +201,7 @@ export const JarCollapsible: FC<{
     ) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 12 : 2,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -269,6 +269,23 @@ export const JarCollapsible: FC<{
     lunaAPY = 0;
   }
 
+  const renderTooltip = () => {
+    if(isYearnJar){
+      return `This jar deposits into Yearn's ${
+        APYs[1].vault
+      }, The base rate of ${apr.toFixed(
+        2,
+      )}% is provided by the underlying Yearn strategy`
+    } else if(isAlusdJar) {
+      return `ALCX rewards are harvested and staked to accelerate your ALCX earnings. 
+      You will receive alUSD3CRV and ALCX tokens on withdrawal.`
+    } else {
+      return `This yield is calculated in real time from a base rate of ${apr.toFixed(
+        2,
+      )}% which we auto-compound regularly.`;
+    }
+  };
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -313,19 +330,7 @@ export const JarCollapsible: FC<{
               )}
             </Data>
             <Data>
-              <Tooltip
-                text={
-                  isYearnJar
-                    ? `This jar deposits into Yearn's ${
-                        APYs[1].vault
-                      }, The base rate of ${apr.toFixed(
-                        2,
-                      )}% is provided by the underlying Yearn strategy`
-                    : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                        2,
-                      )}% which we auto-compound regularly.`
-                }
-              >
+              <Tooltip text={renderTooltip()}>
                 <div style={{ display: "flex", marginTop: 5 }}>
                   <span>APY</span>
                   <img
@@ -348,7 +353,7 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={8} md={4} lg={4}>
             {isAlusdJar ? (
               <Tooltip
-                text={`Pending Alcx rewards: ${pendingAlcx?.toFixed(3)}`}
+                text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
               >
                 <Data isZero={usdPerPToken * depositedNum === 0}>
                   ${valueStr}

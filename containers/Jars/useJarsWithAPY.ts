@@ -485,7 +485,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       if (lpTokenAddress === JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX) {
         apy = { alcx: compoundingAPY };
       } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
-        apy = { baseAlcx: compoundingAPY };
+        apy = { "base ALCX": compoundingAPY };
       }
 
       return [{ ...apy, apr: alcxAPY * 0.8 * 100 }];
@@ -555,9 +555,9 @@ export const useJarWithAPY = (jars: Input): Output => {
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
       const alcxNakedAPY =
-        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].baseAlcx) / 100;
+        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].["base ALCX"]) / 100;
 
-      return [{ compoundingAlcx: alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
+      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
     }
 
     return [];
@@ -973,7 +973,7 @@ export const useJarWithAPY = (jars: Input): Output => {
           );
           jar = { ...jar, ...alcxPending };
           totalAPY =
-            alcxAlusd3crvApy[0]?.baseAlcx + alcxNakedApy[0]?.compoundingAlcx;
+            alcxAlusd3crvApy[0]?.["base ALCX"] + alcxNakedApy[0]?.["staked ALCX"];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {

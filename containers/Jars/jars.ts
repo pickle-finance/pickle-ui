@@ -37,8 +37,8 @@ export const PICKLE_JARS = {
 };
 
 export const JAR_DEPOSIT_TOKENS = {
-  SUSHI_ETH_ALCX: "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8",
   ALCX_ALUSD_3CRV: "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c",
+  SUSHI_ETH_ALCX: "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8",
   UNIV2_FEI_TRIBE: "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A",
   UNIV2_LUSD_ETH: "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469",
   UNIV2_MIR_UST: "0x87dA823B6fC8EB8575a235A824690fda94674c88",
@@ -102,7 +102,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH: "SLP SUSHI/ETH",
   SUSHI_ETH_YVBOOST: "SLP YVBOOST/ETH",
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
-  ALCX_ALUSD_3CRV: "ALCX ALUSD/3CRV",
+  ALCX_ALUSD_3CRV: "ALUSD/3CRV",
   DAI: "DAI",
   USDC: "USDC",
   lusdCRV: "lusdCRV",
@@ -205,7 +205,7 @@ export const DEPOSIT_TOKENS_LINK = {
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
   ALCX_ALUSD_3CRV:
-    "https://etherscan.io/address/0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c",
+    "https://crv.finance/liquidity",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
@@ -246,7 +246,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_YVBOOST: "pJar 0.99y",
   SUSHI_ETH: "pJar 0.99q",
   SUSHI_ETH_ALCX: "pJar 0.99x",
-  ALCX_ALUSD_3CRV: "pJar 0.99z",
+  ALCX_ALUSD_3CRV: "pJar 1.0a",
   USDC: "pJar Y-1",
   lusdCRV: "pJar Y-2",
 };
