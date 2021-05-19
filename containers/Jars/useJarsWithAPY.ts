@@ -570,7 +570,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       );
       if (vaultData) {
         const apr = vaultData.apy.data.netApy
-        if (apr !== null) {
+        if (apr !== null && vaultData.apy !== null ) {
           return [
             {
               yearn: apr * 100,
