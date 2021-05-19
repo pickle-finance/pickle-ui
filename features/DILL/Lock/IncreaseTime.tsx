@@ -204,7 +204,7 @@ export const IncreaseTime: FC<{
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             Extend lock by:{" "}
-            <span style={isInvalidLockDate ? { color: "red" } : null}>
+            <span style={isInvalidLockDate ? { color: "red" } : {}}>
               {displayLockExtend()}
             </span>
           </div>
@@ -221,7 +221,7 @@ export const IncreaseTime: FC<{
         </div>
         <div style={{ marginTop: 5 }}>
           Lock will expire in:{" "}
-          <span style={isInvalidLockDate ? { color: "red" } : null}>
+          <span style={isInvalidLockDate ? { color: "red" } : {}}>
             {displayTotalLock()}
           </span>
         </div>

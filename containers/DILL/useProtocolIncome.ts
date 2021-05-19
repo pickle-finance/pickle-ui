@@ -1,22 +1,25 @@
 import { useState, useEffect } from "react";
 import fetch from "node-fetch";
-import { ethers } from "ethers";
 import { getAssetPerformanceData } from "../../util/api.js";
-import { crvJars, uniJars, sushiJars } from "../../util/jars.js";
+
+type Jar = {
+  apy: number;
+  identifier: string;
+  liquidity_locked: number;
+};
 
 export function useProtocolIncome() {
   const [weeklyProfit, setWeeklyProfit] = useState<number | null>(null);
   const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(
     null,
   );
-  const jarList = [...crvJars, ...uniJars, ...sushiJars];
 
   const getWeeklyIncome = async () => {
     const jarList = await fetch(
-      `https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools`,
-    ).then((response) => response.json());
+      "https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools",
+    ).then<Jar[]>((response) => response.json());
 
-    const jarPerformance = await Promise.all(
+    const jarPerformance: Jar[] = await Promise.all(
       jarList.map(async (jar) => {
         const apy = await getAssetPerformanceData(jar.identifier);
         return {
@@ -26,9 +29,11 @@ export function useProtocolIncome() {
       }),
     );
 
-    const profit = jarPerformance.reduce((acc: number, currJar: any) => {
+    const profit = jarPerformance.reduce((acc, currJar) => {
       const jarTVL = currJar.liquidity_locked;
-      return +currJar.apy > 0 ? acc + (jarTVL * currJar.apy * 0.01 * 0.2) / 52 : acc;
+      return +currJar.apy > 0
+        ? acc + (jarTVL * currJar.apy * 0.01 * 0.2) / 52
+        : acc;
     }, 0);
 
     const weeklyDistribution = profit * 0.45;
