@@ -569,8 +569,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         (x) => x.address.toLowerCase() === vault.toLowerCase(),
       );
       if (vaultData) {
-        const apr = vaultData.apy.data.netApy
-        if (apr !== null && vaultData.apy !== null ) {
+        const apr = vaultData?.apy?.data?.netApy || 0
           return [
             {
               yearn: apr * 100,
@@ -578,7 +577,6 @@ export const useJarWithAPY = (jars: Input): Output => {
             },
             { vault: vaultData.name },
           ];
-        }
       }
     }
     return [];
