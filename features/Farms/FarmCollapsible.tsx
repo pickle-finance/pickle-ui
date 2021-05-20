@@ -266,8 +266,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
 
   const isDisabledFarm =
     depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBACDAI.toLowerCase() ||
-    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBASDAI.toLowerCase() ||
-    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIETHLUSD.toLowerCase();
+    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBASDAI;
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -378,7 +377,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             fontSize: "1rem",
           }}
         >
-          Please harvest your earned PICKLEs. This Farm is no longer operating.
+          Please harvest your earned PICKLEs. The Basis Cash Jars/Farms are no longer operating. <br/>
+          Claim your Uniswap LP tokens according to the instructions <a href="https://twitter.com/picklefinance/status/1386942926983372800">here</a>
         </div>
       </>
       )
