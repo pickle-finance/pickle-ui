@@ -30,12 +30,14 @@ export const PICKLE_JARS = {
   pUNIETHLUSD: "0x927e3bCBD329e89A8765B52950861482f0B227c4",
   pyvBOOSTETH: "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378",
   pDAI: "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87",
+  pALUSD3CRV: "0x260dc21Fe49Df133E3af02EeF50a8fB78a84d7B4",
   pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
   pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
   pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
+  ALCX_ALUSD_3CRV: "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c",
   SUSHI_ETH_ALCX: "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8",
   UNIV2_FEI_TRIBE: "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A",
   UNIV2_LUSD_ETH: "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469",
@@ -67,7 +69,7 @@ export const JAR_DEPOSIT_TOKENS = {
   UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
   DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA"
+  lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
 };
 
 export const DEPOSIT_TOKENS_NAME = {
@@ -100,9 +102,10 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH: "SLP SUSHI/ETH",
   SUSHI_ETH_YVBOOST: "SLP YVBOOST/ETH",
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
+  ALCX_ALUSD_3CRV: "ALUSD/3CRV",
   DAI: "DAI",
   USDC: "USDC",
-  lusdCRV: "lusdCRV"
+  lusdCRV: "lusdCRV",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -138,12 +141,13 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
   [DEPOSIT_TOKENS_NAME.DAI]: false,
+  [DEPOSIT_TOKENS_NAME.ALCX_ALUSD_3CRV]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
-}
+};
 
 export const DEPOSIT_TOKENS_LINK = {
   sCRV: "https://www.curve.fi/susdv2/deposit",
@@ -200,9 +204,11 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
+  ALCX_ALUSD_3CRV:
+    "https://crv.finance/liquidity",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  lusdCRV: "https://curve.fi/lusd/deposit"
+  lusdCRV: "https://curve.fi/lusd/deposit",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -240,8 +246,9 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_YVBOOST: "pJar 0.99y",
   SUSHI_ETH: "pJar 0.99q",
   SUSHI_ETH_ALCX: "pJar 0.99x",
+  ALCX_ALUSD_3CRV: "pJar 1.0a",
   USDC: "pJar Y-1",
-  lusdCRV: "pJar Y-2"
+  lusdCRV: "pJar Y-2",
 };
 
 export const STRATEGY_NAMES = {
@@ -321,5 +328,7 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
   if (l === "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a") return "yvboost";
 
   if (l === "0xdbdb4d16eda451d0503b854cf79d55697f90c8df") return "alcx";
+
+  if (l === "0xBC6DA0FE9aD5f3b0d58160288917AA56653660E9") return "alusd";
   throw new Error(`Unknown token address: ${tokenAddress}`);
 };

@@ -51,6 +51,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
+  "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c": (
+    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/alchemix.png"} />
+  ),
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -155,7 +158,10 @@ const setButtonStatus = (
   }
 };
 
-export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> = ({ jarData, isYearnJar = false }) => {
+export const JarCollapsible: FC<{
+  jarData: UserJarData;
+  isYearnJar?: boolean;
+}> = ({ jarData, isYearnJar = false }) => {
   const {
     name,
     jarContract,
@@ -169,28 +175,33 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
     totalAPY,
     depositTokenLink,
     apr,
+    pendingAlcx,
   } = jarData;
   const isUsdc =
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
-    
-  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+
+  const balNum = parseFloat(
+    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+  );
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 18 : 4,
+    maximumFractionDigits: balNum < 1 ? 12 : 2,
   });
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 12 : 2,
   });
   const depositedUnderlyingStr = (
-    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
+    parseFloat(
+      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+    ) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 12 : 2,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -230,8 +241,10 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
-    return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
-  }).filter(x=>x).join(" + ");
+    return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
+  })
+    .filter((x) => x)
+    .join(" + ");
 
   const isDisabledJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
@@ -245,6 +258,8 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
+  const isAlusdJar =
+    depositToken.address === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV;
 
   let lunaAPY;
   if (isMStonksJar && APYs[2]) {
@@ -254,6 +269,23 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   } else {
     lunaAPY = 0;
   }
+
+  const renderTooltip = () => {
+    if(isYearnJar){
+      return `This jar deposits into Yearn's ${
+        APYs[1].vault
+      }, The base rate of ${apr.toFixed(
+        2,
+      )}% is provided by the underlying Yearn strategy`
+    } else if(isAlusdJar) {
+      return `ALCX rewards are harvested and staked to accelerate your ALCX earnings. 
+      You will receive alUSD3CRV and ALCX tokens on withdrawal.`
+    } else {
+      return `This yield is calculated in real time from a base rate of ${apr.toFixed(
+        2,
+      )}% which we auto-compound regularly.`;
+    }
+  };
 
   return (
     <Collapse
@@ -299,11 +331,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
               )}
             </Data>
             <Data>
-              <Tooltip
-                text={isYearnJar ? `This jar deposits into Yearn's ${APYs[1].vault}, The base rate of ${apr.toFixed(2)}% is provided by the underlying Yearn strategy` : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                  2,
-                )}% which we auto-compound regularly.`}
-              >
+              <Tooltip text={renderTooltip()}>
                 <div style={{ display: "flex", marginTop: 5 }}>
                   <span>APY</span>
                   <img
@@ -324,8 +352,23 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
             <Label>Deposited</Label>
           </Grid>
           <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
-            <Label>Value</Label>
+            {isAlusdJar ? (
+              <Tooltip
+                text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
+              >
+                <Data isZero={usdPerPToken * depositedNum === 0}>
+                  ${valueStr}
+                </Data>
+                <Label>Value</Label>
+              </Tooltip>
+            ) : (
+              <>
+                <Data isZero={usdPerPToken * depositedNum === 0}>
+                  ${valueStr}
+                </Data>
+                <Label>Value</Label>
+              </>
+            )}
           </Grid>
         </Grid.Container>
       }
@@ -341,7 +384,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+                  formatEther(
+                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
+                  ),
                 );
               }}
             >
@@ -364,7 +409,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+                      .deposit(
+                        ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
+                      );
                   },
                 });
               }
@@ -387,7 +434,11 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                 text={`${
                   deposited && ratio
                     ? parseFloat(
-                        formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
                       ) * ratio
                     : 0
                 } ${depositTokenName}`}
@@ -401,7 +452,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
+                setWithdrawAmount(
+                  formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
+                );
               }}
             >
               Max
@@ -425,7 +478,12 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
+                      .withdraw(
+                        ethers.utils.parseUnits(
+                          withdrawAmount,
+                          isUsdc ? 6 : 18,
+                        ),
+                      );
                   },
                   approval: false
                 });
