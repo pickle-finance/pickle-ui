@@ -130,6 +130,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP yveCRV",
     poolName: "Back Scratcher",
   },
+  "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378": {
+    tokenName: "pSLP yvBOOST",
+    poolName: "Back Scratcher",
+  },
   "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": {
     tokenName: "pSLP SUSHI",
     poolName: "pSLP SUSHI",
@@ -161,6 +165,14 @@ export const FarmInfo: IFarmInfo = {
   "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9": {
     tokenName: "pSLP ALCX/ETH",
     poolName: "pSLP ALCX/ETH",
+  },
+  "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94": {
+    tokenName: "pYearnUSDCv2",
+    poolName: "Pickled Yearn USDC",
+  },
+  "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2": {
+    tokenName: "pYearnLusdCRV",
+    poolName: "Pickled Yearn LUSD",
   },
 };
 

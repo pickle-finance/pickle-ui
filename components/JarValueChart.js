@@ -167,7 +167,7 @@ export default function JarValueChart(props) {
               width={width}
               height={300}
               data={data}
-              margin={{ top: 15, right: 10, left: -15, bottom: 0 }}
+              margin={{ top: 15, right: 10, left: 0, bottom: 0 }}
             >
               <Area
                 type="monotone"
@@ -187,6 +187,7 @@ export default function JarValueChart(props) {
                 tickFormatter={formatDate}
                 type="number"
                 tick={{ fill: materialBlack }}
+                padding={{ left: 10, right: 10 }} 
               />
               <Tooltip
                 contentStyle={tooltipFormat}

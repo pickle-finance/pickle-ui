@@ -19,6 +19,7 @@ import { PickleStaking } from "../containers/PickleStaking";
 import { Farms } from "../containers/Farms";
 import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
+import { CurvePairs } from "../containers/CurvePairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { SushiPairs } from "../containers/SushiPairs";
@@ -43,21 +44,23 @@ const WithContainers: FC = ({ children }) => (
                 <PickleStaking.Provider>
                   <UniV2Pairs.Provider>
                     <Dill.Provider>
-                      <SushiPairs.Provider>
-                        <Jars.Provider>
-                          <Farms.Provider>
-                            <Gauges.Provider>
-                              <UserJars.Provider>
-                                <UserFarms.Provider>
-                                  <UserGauges.Provider>
-                                    {children}
-                                  </UserGauges.Provider>
-                                </UserFarms.Provider>
-                              </UserJars.Provider>
-                            </Gauges.Provider>
-                          </Farms.Provider>
-                        </Jars.Provider>
-                      </SushiPairs.Provider>
+                      <CurvePairs.Provider>
+                        <SushiPairs.Provider>
+                          <Jars.Provider>
+                            <Farms.Provider>
+                              <Gauges.Provider>
+                                <UserJars.Provider>
+                                  <UserFarms.Provider>
+                                    <UserGauges.Provider>
+                                      {children}
+                                    </UserGauges.Provider>
+                                  </UserFarms.Provider>
+                                </UserJars.Provider>
+                              </Gauges.Provider>
+                            </Farms.Provider>
+                          </Jars.Provider>
+                        </SushiPairs.Provider>
+                      </CurvePairs.Provider>
                     </Dill.Provider>
                   </UniV2Pairs.Provider>
                 </PickleStaking.Provider>
@@ -98,7 +101,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                     });
 
 
-                    >!function(w,d,i,s){function l(){if(!d.getElementById(i)){var f=d.getElementsByTagName(s)[0],e=d.createElement(s);e.type="text/javascript",e.async=!0,e.src="https://canny.io/sdk.js",f.parentNode.insertBefore(e,f)}}if("function"!=typeof w.Canny){var c=function(){c.q.push(arguments)};c.q=[],w.Canny=c,"complete"===d.readyState?l():w.attachEvent?w.attachEvent("onload",l):w.addEventListener("load",l,!1)}}(window,document,"canny-jssdk","script");
+                    !function(w,d,i,s){function l(){if(!d.getElementById(i)){var f=d.getElementsByTagName(s)[0],e=d.createElement(s);e.type="text/javascript",e.async=!0,e.src="https://canny.io/sdk.js",f.parentNode.insertBefore(e,f)}}if("function"!=typeof w.Canny){var c=function(){c.q.push(arguments)};c.q=[],w.Canny=c,"complete"===d.readyState?l():w.attachEvent?w.attachEvent("onload",l):w.addEventListener("load",l,!1)}}(window,document,"canny-jssdk","script");
 
                     Canny('identify', {
                       appID: '603cf06a10aac45a5b355b04',

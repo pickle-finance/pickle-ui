@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import ConnectorItem from "./ConnectorItem";
 import { FC } from "react";
-import {
-  injected,
-  walletconnect,
-  portis,
-  walletlink,
-  fortmatic,
-} from "./Connectors";
+import type { providers } from "ethers";
+import { injected, walletconnect, walletlink } from "./Connectors";
 import { Modal, Grid } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
+
 interface Web3ModalProps {
   setVisible: Function;
 }
@@ -42,7 +38,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     error,
     account,
     chainId,
-  } = useWeb3React();
+  } = useWeb3React<providers.Web3Provider>();
 
   useEffect(() => {
     if (chainId && chainId !== 1) {
@@ -66,7 +62,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
 
   useEffect(() => {
     if (activatingConnector && error) {
-      if (connector && connector.walletConnectProvider) {
+      if (connector?.walletConnectProvider) {
         connector.walletConnectProvider = undefined;
       }
       deactivate();
@@ -92,7 +88,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
           {itemList.map(({ icon, title, connector: web3connector }, index) => {
             const currentConnector = web3connector;
             const activating = currentConnector === activatingConnector;
-            const connected = currentConnector === connector;
+
             return (
               <Grid xs={12} key={index}>
                 <ConnectorItem

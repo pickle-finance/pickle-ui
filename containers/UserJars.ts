@@ -23,6 +23,7 @@ export interface UserJarData {
   usdPerPToken: number;
   APYs: JarApy[];
   totalAPY: number;
+  pendingAlcx?: number;
   depositTokenLink: string;
   tvlUSD: number;
 }
