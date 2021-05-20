@@ -97,6 +97,14 @@ export const GaugeList: FC = () => {
       PICKLE_JARS.pyLUSDCRV.toLowerCase(),
   );
   moveInArray(activeGauges, indexofLUSD, 1);
+
+  const indexofEURS = activeGauges.findIndex(
+    (x) =>
+      x.depositToken.address.toLowerCase() ===
+      PICKLE_JARS.pyEURSCRV.toLowerCase(),
+  );
+  moveInArray(activeGauges, indexofEURS, 1);
+
   const indexofUSDC = activeGauges.findIndex(
     (x) =>
       x.depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase(),

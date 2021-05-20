@@ -618,6 +618,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         alcxEthAlcxApy,
         usdcApy,
         crvLusdApy,
+        crvEursApy,
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
@@ -628,6 +629,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS.eursCRV),
       ]);
 
       const [
@@ -869,6 +871,11 @@ export const useJarWithAPY = (jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
           APYs = [...crvLusdApy];
           totalAPY = crvLusdApy[0].apr;
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.eursCRV) {
+          APYs = [...crvEursApy];
+          totalAPY = crvEursApy[0].apr;
         }
 
         // if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {

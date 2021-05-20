@@ -80,6 +80,7 @@ export const RENBTC_POOL_ADDR = "0x93054188d876f558f4a66B2EF1d97d16eDf0895B";
 export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
 export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
+export const EURS_POOL_ADDR = "0x98B058b2CBacF5E99bC7012DF757ea7CFEbd35BC";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 
@@ -201,6 +202,7 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
+  const [eursPool, setEursPool] = useState<Pool | null>(null);
 
   const [
     yvBoostMigrator,
@@ -261,6 +263,8 @@ function useContracts() {
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
+
+      setEursPool(PoolFactory.connect(EURS_POOL_ADDR, signer));
     }
   };
 
@@ -301,6 +305,7 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
+    eursPool,
   };
 }
 

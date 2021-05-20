@@ -120,6 +120,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+  "0x194eBd173F6cDacE046C53eACcE9B953F28411d1": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/eurs.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
