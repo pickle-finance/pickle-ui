@@ -248,7 +248,8 @@ export const JarCollapsible: FC<{
 
   const isDisabledJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI;
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_LUSD_ETH;
 
   const isMStonksJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST ||
@@ -484,6 +485,7 @@ export const JarCollapsible: FC<{
                         ),
                       );
                   },
+                  approval: false
                 });
               }
             }}

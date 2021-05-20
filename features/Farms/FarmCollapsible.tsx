@@ -25,7 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
@@ -265,8 +265,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   }).reduce((acc, x) => acc + x, 0);
 
   const isDisabledFarm =
-    depositToken.address === PICKLE_JARS.pUNIBACDAI ||
-    depositToken.address === PICKLE_JARS.pUNIBASDAI;
+    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBACDAI.toLowerCase() ||
+    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBASDAI;
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
