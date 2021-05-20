@@ -84,7 +84,7 @@ function usePrices() {
         // "yvboost",
         "alchemix",
         "terra-luna",
-        "statis-eurs",
+        "stasis-eurs",
       ],
       vs_currencies: ["usd"],
     });

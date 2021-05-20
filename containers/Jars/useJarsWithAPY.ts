@@ -561,22 +561,31 @@ export const useJarWithAPY = (jars: Input): Output => {
 
   const calculateYearnAPY = async (depositToken: string) => {
     if (yearnRegistry) {
-      const vault = await yearnRegistry.latestVault(depositToken, {
-        gasLimit: 1000000,
-      });
+      let vault: string;
+      // v1 vaults are not in registry
+      if (
+        depositToken.toLowerCase() === JAR_DEPOSIT_TOKENS.eursCRV.toLowerCase()
+      ) {
+        vault = "0x98B058b2CBacF5E99bC7012DF757ea7CFEbd35BC";
+      } else {
+        console.log("trying to get registry with ", depositToken)
+        vault = await yearnRegistry.latestVault(depositToken, {
+          gasLimit: 1000000,
+        });
+      }
       const yearnData = await fetchRes(YEARN_API);
       const vaultData = yearnData.find(
         (x) => x.address.toLowerCase() === vault.toLowerCase(),
       );
       if (vaultData) {
-        const apr = vaultData?.apy?.data?.netApy || 0
-          return [
-            {
-              yearn: apr * 100,
-              apr: apr * 100,
-            },
-            { vault: vaultData.name },
-          ];
+        const apr = vaultData?.apy?.data?.netApy || 0;
+        return [
+          {
+            yearn: apr * 100,
+            apr: apr * 100,
+          },
+          { vault: vaultData.name },
+        ];
       }
     }
     return [];
