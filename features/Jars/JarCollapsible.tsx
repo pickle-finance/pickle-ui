@@ -246,15 +246,6 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
 
-  let lunaAPY;
-  if (isMStonksJar && APYs[2]) {
-    lunaAPY = APYs[2].luna;
-  } else if (isMStonksJar && APYs[1]) {
-    lunaAPY = APYs[1].luna;
-  } else {
-    lunaAPY = 0;
-  }
-
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
