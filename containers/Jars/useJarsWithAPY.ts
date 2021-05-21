@@ -558,54 +558,6 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
-  const getLunaAPY = (tokenAddress: string) => {
-    const TOTAL_REWARD = 1084.43;
-    let reward, apy;
-    switch (tokenAddress) {
-      case JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST:
-        reward = TOTAL_REWARD * 25;
-        apy =
-          tvlData && tvlData["mir-ust"]
-            ? (((prices?.luna ?? 0) * reward) / tvlData["mir-ust"]) * 26
-            : 0;
-        break;
-      case JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST:
-        reward = TOTAL_REWARD * 15;
-        apy = tvlData["mtsla-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mtsla-ust"] * 2)) * 26
-          : 0;
-        break;
-      case JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST:
-        reward = TOTAL_REWARD * 15;
-        apy = tvlData["maapl-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["maapl-ust"] * 2)) * 26
-          : 0;
-        break;
-      case JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST:
-        reward = TOTAL_REWARD * 15;
-        apy = tvlData["mqqq-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mqqq-ust"] * 2)) * 26
-          : 0;
-        break;
-      case JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST:
-        reward = TOTAL_REWARD * 15;
-        apy = tvlData["mslv-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mslv-ust"] * 2)) * 26
-          : 0;
-        break;
-      case JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST:
-        reward = TOTAL_REWARD * 15;
-        apy = tvlData["mbaba-ust"]
-          ? (((prices?.luna ?? 0) * reward) / (tvlData["mbaba-ust"] * 2)) * 26
-          : 0;
-        break;
-      default:
-        return [];
-    }
-
-    return [{ luna: apy }];
-  };
-
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
@@ -823,7 +775,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMirUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST),
-            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST),
           ];
         }
 
@@ -831,7 +782,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMtslaUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST),
-            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST),
           ];
         }
 
@@ -839,7 +789,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMaaplUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST),
-            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST),
           ];
         }
 
@@ -847,7 +796,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMqqqUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST),
-            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST),
           ];
         }
 
@@ -855,7 +803,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMslvUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST),
-            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST),
           ];
         }
 
@@ -863,7 +810,6 @@ export const useJarWithAPY = (jars: Input): Output => {
           APYs = [
             ...mirrorMbabaUstApy,
             ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST),
-            ...getLunaAPY(JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST),
           ];
         }
 
