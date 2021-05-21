@@ -285,18 +285,6 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
               <Tooltip text={tooltipText}>
                 {totalAPY.toFixed(2) + "%" || "--"}
               </Tooltip>
-              {isMStonksJar && lunaAPY && (
-                <>
-                  <span>+{lunaAPY.toFixed(2)} %</span>
-                  <Tooltip text="LUNA rewards are additionally rewarded to depositors for 2 weeks. These rewards will be airdropped at the end of the 2 week period">
-                    <img
-                      src="./luna.webp"
-                      width="15px"
-                      style={{ marginLeft: 5 }}
-                    />
-                  </Tooltip>
-                </>
-              )}
             </Data>
             <Data>
               <Tooltip
