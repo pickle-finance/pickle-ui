@@ -14,6 +14,9 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { UserGaugeData } from "../../containers/UserGauges";
+import { GaugeCollapsible } from "../Gauges/GaugeCollapsible";
+import { useDill } from "../../containers/Dill";
 
 interface DataProps {
   isZero?: boolean;
@@ -36,6 +39,11 @@ interface ButtonStatus {
 const JarName = styled(Grid)({
   display: "flex",
 });
+
+const formatAPY = (apy: number) => {
+  if (apy === Number.POSITIVE_INFINITY) return "∞%";
+  return apy.toFixed(2) + "%";
+};
 
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
@@ -160,8 +168,9 @@ const setButtonStatus = (
 
 export const JarCollapsible: FC<{
   jarData: UserJarData;
+  gaugeData: UserGaugeData;
   isYearnJar?: boolean;
-}> = ({ jarData, isYearnJar = false }) => {
+}> = ({ jarData, gaugeData, isYearnJar = false }) => {
   const {
     name,
     jarContract,
@@ -177,6 +186,9 @@ export const JarCollapsible: FC<{
     apr,
     pendingAlcx,
   } = jarData;
+
+  const { balance: dillBalance, totalSupply: dillSupply } = useDill();
+
   const isUsdc =
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
@@ -191,6 +203,7 @@ export const JarCollapsible: FC<{
     minimumFractionDigits: 0,
     maximumFractionDigits: balNum < 1 ? 12 : 2,
   });
+
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 12 : 2,
@@ -208,12 +221,71 @@ export const JarCollapsible: FC<{
     maximumFractionDigits: 2,
   });
 
+  let apyRangeTooltipText, yourApyTooltipText;
+
+  let fullApy: any;
+  let staked: any;
+  let pickleAPYMin: any;
+  let pickleAPYMax: any;
+  let realAPY: any;
+  let harvestable: any;
+  let harvestableStr: any;
+
+  if (gaugeData) {
+    fullApy = gaugeData.fullApy;
+    staked = gaugeData.staked;
+    harvestable = gaugeData.harvestable;
+
+    harvestableStr = parseFloat(formatEther(harvestable || 0)).toLocaleString();
+
+    const stakedNum = parseFloat(
+      formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
+    );
+
+    pickleAPYMin = fullApy * 100 * 0.4;
+    pickleAPYMax = fullApy * 100;
+
+    const dillRatio = +(dillSupply?.toString() || 0)
+      ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
+      : 0;
+    const _balance = stakedNum;
+    const _derived = _balance * 0.4;
+    const _adjusted =
+      (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
+
+    const pickleAPY =
+      (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
+
+    realAPY = totalAPY + pickleAPY;
+    apyRangeTooltipText = [
+      `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = Object.values(x)[0];
+        return isNaN(v) ? null : `${k}: ${v ? 0 : v.toFixed(2)}%`;
+      }),
+    ]
+      .filter((x) => x)
+      .join(" + ");
+
+    yourApyTooltipText = [
+      `pickle: ${pickleAPY ? formatAPY(pickleAPY) : "0%"}`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = Object.values(x)[0];
+        return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
+      }),
+    ]
+      .filter((x) => x)
+      .join(" + ");
+  }
+
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Deposit",
+    text: "Add to Deposit",
   });
   const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
@@ -271,15 +343,15 @@ export const JarCollapsible: FC<{
   }
 
   const renderTooltip = () => {
-    if(isYearnJar){
+    if (isYearnJar) {
       return `This jar deposits into Yearn's ${
         APYs[1].vault
       }, The base rate of ${apr.toFixed(
         2,
-      )}% is provided by the underlying Yearn strategy`
-    } else if(isAlusdJar) {
+      )}% is provided by the underlying Yearn strategy`;
+    } else if (isAlusdJar) {
       return `ALCX rewards are harvested and staked to accelerate your ALCX earnings. 
-      You will receive alUSD3CRV and ALCX tokens on withdrawal.`
+      You will receive alUSD3CRV and ALCX tokens on withdrawal.`;
     } else {
       return `This yield is calculated in real time from a base rate of ${apr.toFixed(
         2,
@@ -293,7 +365,7 @@ export const JarCollapsible: FC<{
       shadow
       preview={
         <Grid.Container gap={1}>
-          <JarName xs={24} sm={12} md={5} lg={5}>
+          <JarName xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
@@ -312,46 +384,31 @@ export const JarCollapsible: FC<{
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={5} lg={5}>
-            <Data>
-              <Tooltip text={tooltipText}>
-                {totalAPY.toFixed(2) + "%" || "--"}
-              </Tooltip>
-              {isMStonksJar && lunaAPY && (
-                <>
-                  <span>+{lunaAPY.toFixed(2)} %</span>
-                  <Tooltip text="LUNA rewards are additionally rewarded to depositors for 2 weeks. These rewards will be airdropped at the end of the 2 week period">
-                    <img
-                      src="./luna.webp"
-                      width="15px"
-                      style={{ marginLeft: 5 }}
-                    />
-                  </Tooltip>
-                </>
-              )}
-            </Data>
-            <Data>
-              <Tooltip text={renderTooltip()}>
-                <div style={{ display: "flex", marginTop: 5 }}>
-                  <span>APY</span>
-                  <img
-                    src="./question.svg"
-                    width="15px"
-                    style={{ marginLeft: 5 }}
-                  />
-                </div>
-              </Tooltip>
-            </Data>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={5}>
-            <Data isZero={balNum === 0}>{balStr}</Data>
-            <Label>Balance</Label>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4}>
+          <Grid
+            xs={24}
+            sm={12}
+            md={gaugeData ? 4 : 6}
+            lg={gaugeData ? 4 : 6}
+            css={{ textAlign: "center" }}
+          >
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4}>
+          {gaugeData && (
+            <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+              <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+                {harvestableStr}
+              </Data>
+              <Label>Earned</Label>
+            </Grid>
+          )}
+          <Grid
+            xs={24}
+            sm={12}
+            md={gaugeData ? 4 : 6}
+            lg={gaugeData ? 4 : 6}
+            css={{ textAlign: "center" }}
+          >
             {isAlusdJar ? (
               <Tooltip
                 text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
@@ -370,6 +427,72 @@ export const JarCollapsible: FC<{
               </>
             )}
           </Grid>
+          <Grid xs={24} sm={24} md={6} lg={6} css={{ textAlign: "center" }}>
+            {!gaugeData ? (
+              <Data>
+                <Tooltip text={tooltipText}>
+                  {totalAPY.toFixed(2) + "%" || "--"}
+                </Tooltip>
+                {isMStonksJar && lunaAPY && (
+                  <>
+                    <span>+{lunaAPY.toFixed(2)} %</span>
+                    <Tooltip text="LUNA rewards are additionally rewarded to depositors for 2 weeks. These rewards will be airdropped at the end of the 2 week period">
+                      <img
+                        src="./luna.webp"
+                        width="15px"
+                        style={{ marginLeft: 5 }}
+                      />
+                    </Tooltip>
+                  </>
+                )}
+                <img
+                  src="./question.svg"
+                  width="15px"
+                  style={{ marginLeft: 5 }}
+                />
+                <div>
+                  <Tooltip text={renderTooltip()}>
+                    <span>APY</span>
+                  </Tooltip>
+                </div>
+              </Data>
+            ) : (
+              <div>
+                <div>
+                  <Tooltip
+                    text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
+                  >
+                    <div style={{ display: "flex", marginTop: 5 }}>
+                      <span>
+                        {totalAPY + fullApy === 0
+                          ? "--%"
+                          : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
+                              totalAPY + pickleAPYMax,
+                            )}`}
+                      </span>
+                      <img
+                        src="./question.svg"
+                        width="15px"
+                        style={{ marginLeft: 5 }}
+                      />
+                    </div>
+                    <Label>APY Range</Label>
+                  </Tooltip>
+                </div>
+                <div>
+                  <Tooltip
+                    text={realAPY === 0 ? "--" : yourApyTooltipText}
+                    style={{ marginTop: 5 }}
+                  >
+                    <div style={{ display: "flex" }}>
+                      <Label>Your APY: </Label>
+                      <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                    </div>
+                  </Tooltip>
+                </div>
+              </div>
+            )}
+          </Grid>
         </Grid.Container>
       }
     >
@@ -377,7 +500,9 @@ export const JarCollapsible: FC<{
       <Grid.Container gap={2}>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Balance: {balStr}</div>
+            <div>
+              Balance: {balStr} {depositTokenName}
+            </div>
             <Link
               color
               href="#"
@@ -485,7 +610,7 @@ export const JarCollapsible: FC<{
                         ),
                       );
                   },
-                  approval: false
+                  approval: false,
                 });
               }
             }}
@@ -493,18 +618,11 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              paddingTop: "4px",
-              fontFamily: "Source Sans Pro",
-            }}
-          >
-            There is no withdrawal fee
-          </div>
         </Grid>
       </Grid.Container>
+      {gaugeData && jarData && (
+        <GaugeCollapsible gaugeData={gaugeData} jarData={jarData} />
+      )}
     </Collapse>
   );
 };

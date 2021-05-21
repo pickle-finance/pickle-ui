@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
-import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
@@ -12,12 +11,10 @@ import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { useJarData } from "../Jars/useJarData";
+import { JarCollapsible } from "../Jars/JarCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
-
-const Container = styled.div`
-  padding-top: 1.5rem;
-`;
 
 interface Weights {
   [key: string]: number;
@@ -41,76 +38,35 @@ export const GaugeList: FC = () => {
   const { signer } = Connection.useContainer();
   const { gaugeData } = UserGauges.useContainer();
   const { jarData } = useJarData();
-  const [showInactive, setShowInactive] = useState<boolean>(false);
-  const [voteWeights, setVoteWeights] = useState<Weights>({});
-  const { status: voteTxStatus, vote } = useGaugeProxy();
-  const [showUserGauges, setShowUserGauges] = useState<boolean>(false);
-
-  let totalGaugeWeight = 0;
-  for (let i = 0; i < gaugeData?.length; i++) {
-    totalGaugeWeight += voteWeights[gaugeData[i].address] || 0;
-  }
+  const [showInactive, setShowInactive] = useState(false);
+  const [showUserJars, setShowUserJars] = useState<boolean>(false);
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!gaugeData) {
-    return <h2>Loading...</h2>;
-  }
+  if (!jarData || !gaugeData) return <h2>Loading...</h2>;
 
   const isDisabledFarm = (depositToken: string) =>
     depositToken === PICKLE_JARS.pUNIBACDAI ||
-    depositToken === PICKLE_JARS.pUNIBASDAI || 
+    depositToken === PICKLE_JARS.pUNIBASDAI ||
     depositToken === PICKLE_JARS.pUNIETHLUSD;
 
   const activeGauges = gaugeData.filter(
     (x) => !isDisabledFarm(x.depositToken.address),
   );
-  const inactiveGauges = gaugeData.filter((x) => false || isDisabledFarm(x.depositToken.address));
-  const userGauges = gaugeData.filter((gauge) =>
-    parseFloat(formatEther(gauge.staked)),
+
+  const activeJars = jarData.filter(
+    (jar) =>
+      JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
   );
 
-  const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
-    var item = arr.splice(from, 1);
-
-    if (!item.length) return;
-    arr.splice(to, 0, item[0]);
-  };
-
-  const indexofAlcx = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pSUSHIETHALCX.toLowerCase(),
+  const inactiveJars = jarData.filter(
+    (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
-  moveInArray(activeGauges, indexofAlcx, 1);
 
-  const indexofYvboost = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pyvBOOSTETH.toLowerCase(),
-  );
-  moveInArray(activeGauges, indexofYvboost, 1);
-
-  const indexofLUSD = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pyLUSDCRV.toLowerCase(),
-  );
-  moveInArray(activeGauges, indexofLUSD, 1);
-  const indexofUSDC = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase(),
-  );
-  moveInArray(activeGauges, indexofUSDC, 1);
-
-  const renderGauge = (gauge: UserGaugeData) => (
-    <Grid xs={24} key={gauge.address}>
-      <div css={{ display: "flex", alignItems: "center" }}>
-        <GaugeCollapsible gaugeData={gauge} />
-      </div>
-    </Grid>
+  const userJars = jarData.filter((jar) =>
+    parseFloat(formatEther(jar.deposited)),
   );
 
   return (
@@ -127,17 +83,18 @@ export const GaugeList: FC = () => {
         <Grid md={12} style={{ textAlign: "right" }}>
           <Checkbox
             checked={showInactive}
+            color="green"
             size="medium"
             onChange={(e) => setShowInactive(e.target.checked)}
           >
-            Show Inactive Farms
+            Show Inactive Jars
           </Checkbox>{" "}
           <GreenSwitch
             style={{ top: "-2px" }}
-            checked={showUserGauges}
-            onChange={() => setShowUserGauges(!showUserGauges)}
+            checked={showUserJars}
+            onChange={() => setShowUserJars(!showUserJars)}
           />
-          Show Your Farms
+          Show Your Jars
         </Grid>
       </Grid.Container>
       <h2>Current Weights</h2>
@@ -155,15 +112,39 @@ export const GaugeList: FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>Active Farms</h2>
+        <h2>Active Jars</h2>
       </div>
       <Grid.Container gap={1}>
-        {(showUserGauges ? userGauges : activeGauges).map(renderGauge)}
+        {(showUserJars ? userJars : activeJars).map((jar) => {
+          const gauge = gaugeData.find(
+            (x) =>
+              x.depositToken.address.toLowerCase() ===
+              jar.jarContract.address.toLowerCase(),
+          );
+
+          return (
+            <Grid xs={24} key={jar.name}>
+              <JarCollapsible jarData={jar} gaugeData={gauge} />
+            </Grid>
+          );
+        })}
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {showInactive && <h2>Inactive Farms</h2>}
-        {showInactive && inactiveGauges.map(renderGauge)}
+        {showInactive && <h2>Inactive</h2>}
+        {showInactive &&
+          inactiveJars.map((jar) => {
+            const gauge = gaugeData.find(
+              (x) =>
+                x.depositToken.address.toLowerCase() ===
+                jar.jarContract.address.toLowerCase(),
+            );
+            return (
+              <Grid xs={24} key={jar.name}>
+                <JarCollapsible jarData={jar} gaugeData={gauge} />
+              </Grid>
+            );
+          })}
       </Grid.Container>
     </>
   );

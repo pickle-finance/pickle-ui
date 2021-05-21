@@ -33,6 +33,7 @@ import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { UserJarData } from "../../containers/UserJars";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -86,9 +87,10 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
-export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
-  gaugeData,
-}) => {
+export const GaugeCollapsible: FC<{
+  gaugeData: UserGaugeData;
+  jarData: UserJarData;
+}> = ({ gaugeData, jarData }) => {
   const {
     poolName,
     depositToken,
@@ -98,7 +100,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     harvestable,
     usdPerToken,
     fullApy,
-    jar,
   } = gaugeData;
   const isUsdc =
     depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
@@ -110,13 +111,12 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
-  const {
-    deposit,
-    withdraw,
-    migrateYvboost,
-    depositYvboost,
-    withdrawGauge,
-  } = useMigrate(depositToken, 0, balance, staked);
+  const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
+    depositToken,
+    0,
+    balance,
+    staked,
+  );
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -173,8 +173,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
-  if (jar) {
-    APYs = jar?.APYs ? [...APYs, ...jar.APYs] : APYs;
+  if (jarData) {
+    APYs = jarData?.APYs ? [...APYs, ...jarData.APYs] : APYs;
   }
 
   const { getUniPairDayAPY } = useUniPairDayData();
@@ -191,7 +191,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
 
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
-  const _adjusted = (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
+  const _adjusted =
+    (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
   const realAPY = totalAPY + pickleAPY;
@@ -257,7 +258,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
       setButtonStatus(
         stakeStatus,
         "Staking...",
-        approved ? "Stake" : "Approve and Stake",
+        approved ? "Add to Stake" : "Approve and Stake",
         setStakeButton,
       );
       setButtonStatus(
@@ -298,70 +299,14 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   }, [blockNum, address, erc20]);
 
   return (
-    <Collapse
-      style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
-      shadow
-      preview={
-        <Grid.Container gap={1}>
-          <Grid xs={24} sm={12} md={6} lg={6}>
-            <TokenIcon
-              src={
-                GAUGE_LP_TO_ICON[
-                  depositToken.address as keyof typeof GAUGE_LP_TO_ICON
-                ]
-              }
-            />
-            <div style={{ width: "100%" }}>
-              <div style={{ fontSize: `1rem` }}>{poolName}</div>
-              <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
-            </div>
-          </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Tooltip
-              text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
-            >
-              <div>
-                {totalAPY + fullApy === 0
-                  ? "--%"
-                  : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                      totalAPY + pickleAPYMax,
-                    )}`}
-              </div>
-              <Label>APY Range</Label>
-            </Tooltip>
-          </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
-              <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
-              <Label>Your APY</Label>
-            </Tooltip>
-          </Grid>
-          <Grid xs={24} sm={6} md={2} lg={2} css={{ textAlign: "center" }}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
-            </Data>
-            <Label>Earned</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={2.5} lg={2.5} css={{ textAlign: "center" }}>
-            <Data isZero={bal === 0}>{balStr}</Data>
-            <Label>Balance</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={2.5} lg={2.5} css={{ textAlign: "center" }}>
-            <Data isZero={stakedNum === 0}>{stakedStr}</Data>
-            <Label>Staked</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
-            <Label>Value Staked</Label>
-          </Grid>
-        </Grid.Container>
-      }
-    >
+    <>
       <Spacer y={1} />
       <Grid.Container gap={2}>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Balance: {balStr}</div>
+            <div>
+              Balance: {balStr} {depositTokenName}
+            </div>
             <Link
               color
               href="#"
@@ -407,7 +352,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Staked: {stakedStr}</div>
+            <div>
+              Staked: {stakedStr} {depositTokenName}
+            </div>
             <Link
               color
               href="#"
@@ -453,7 +400,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
         <Spacer />
       </Grid.Container>
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={24}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
@@ -473,7 +420,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             {harvestButton.text}
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={24}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
@@ -494,8 +441,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Button>
         </Grid>
 
-        <Grid xs={24}>
-          {isyveCRVFarm ? (
+        {isyveCRVFarm && (
+          <Grid xs={24}>
             <>
               <Button
                 disabled={yvMigrateState !== null}
@@ -535,9 +482,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                 ) : null}
               </div>
             </>
-          ) : null}
-        </Grid>
+          </Grid>
+        )}
       </Grid.Container>
-    </Collapse>
+    </>
   );
 };

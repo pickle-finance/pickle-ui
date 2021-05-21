@@ -8,7 +8,6 @@ import { Balances } from "./Balances";
 import { Contracts } from "./Contracts";
 import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
-import { UserJarData } from "./UserJars";
 
 import { Erc20 as Erc20Contract } from "./Contracts/Erc20";
 
@@ -30,7 +29,6 @@ export interface UserGaugeData {
   userWeight: number;
   userCurrentWeights: number;
   totalSupply: number;
-  jar: UserJarData;
 }
 
 const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
@@ -75,32 +73,6 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           ];
         }),
       );
-      let newJarData = <Array<UserJarData>>[];
-
-      if (jars) {
-        const promises = jars?.map(async (jar) => {
-          const balance = await getBalance(jar.depositToken.address);
-          const deposited = await getBalance(jar.contract.address);
-
-          return {
-            name: jar.jarName,
-            jarContract: jar.contract,
-            depositToken: jar.depositToken,
-            depositTokenName: jar.depositTokenName,
-            ratio: jar.ratio || 0,
-            balance: balance || 0,
-            deposited: deposited || 0,
-            usdPerPToken: jar.usdPerPToken || 0,
-            APYs: jar.APYs,
-            totalAPY: jar.totalAPY,
-            tvlUSD: jar.tvlUSD,
-            apr: jar.apr,
-            depositTokenLink: jar.depositTokenLink,
-          };
-        });
-
-        newJarData = await Promise.all(promises);
-      }
 
       const newGaugeData = gauges.map((gauge, idx) => {
         const balance = balancesUserInfosHarvestables[idx * 5];
@@ -109,9 +81,6 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
         const userWeight = balancesUserInfosHarvestables[idx * 5 + 3];
         const userCurrentWeights = balancesUserInfosHarvestables[idx * 5 + 4];
 
-        const jar = newJarData.find(
-          (jar) => jar.jarContract.address === gauge.token,
-        );
         return {
           allocPoint: gauge.allocPoint,
           poolName: gauge.poolName,
@@ -128,7 +97,6 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           userWeight: +userWeight.toString(),
           userCurrentWeights: +userCurrentWeights.toString(),
           totalSupply: gauge.totalSupply,
-          jar: jar,
         };
       });
 
