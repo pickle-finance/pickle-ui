@@ -33,7 +33,8 @@ const isCurvePool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"] ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV
   );
 };
 
@@ -67,7 +68,7 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH 
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH
   );
 };
 
@@ -81,6 +82,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     steCRVPool,
     threePool,
     lusdPool,
+    alusdPool,
   } = Contracts.useContainer();
 
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
@@ -115,11 +117,15 @@ export const useJarWithTVL = (jars: Input): Output => {
       pool = lusdPool;
       pricePerUnderlying = prices?.dai;
     }
+    if (jar.jarName == DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV) {
+      pool = alusdPool;
+      pricePerUnderlying = 1;
+    }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
-    
+
     const multicallJarContract = new MulticallContract(
       jar.contract.address,
       jar.contract.interface.fragments,

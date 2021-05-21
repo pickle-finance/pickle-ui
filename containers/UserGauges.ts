@@ -37,12 +37,12 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   const { jars } = Jars.useContainer();
   const { gauges } = Gauges.useContainer();
   const { gaugeProxy } = Contracts.useContainer();
-  const { tokenBalances } = Balances.useContainer();
+  const { tokenBalances, getBalance } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
 
   const [gaugeData, setGaugeData] = useState<Array<UserGaugeData> | null>(null);
 
-  const updateGaugeData = async () => {
+  const updateJarAndGaugeData = async () => {
     if (
       gauges &&
       erc20 &&
@@ -105,7 +105,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   };
 
   useEffect(() => {
-    updateGaugeData();
+    updateJarAndGaugeData();
   }, [jars, blockNum, tokenBalances, transferStatus]);
 
   return { gaugeData };

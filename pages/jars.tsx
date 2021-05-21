@@ -12,7 +12,7 @@ const Jars: FC = () => {
       <Page>
         <Page.Content>
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-            Jars
+            Jars & Farms
           </h1>
           <JarList />
         </Page.Content>

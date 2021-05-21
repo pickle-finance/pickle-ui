@@ -15,14 +15,18 @@ const Gauges: FC = () => {
             Welcome to the new Farms. If you're looking for tokens you
             deposited, it may be in our old Farms
             <br />
-            <Link href="/old-farms" passHref style={{ color: "var(--link-color)" }}>
+            <Link
+              href="/old-farms"
+              passHref
+              style={{ color: "var(--link-color)" }}
+            >
               Click here to see the old Farms
             </Link>
             <br />
             The new Farms are live and earning $PICKLEs
           </Note>
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-            Farms
+            Jars & Farms
           </h1>
           <GaugeList />
         </Page.Content>
