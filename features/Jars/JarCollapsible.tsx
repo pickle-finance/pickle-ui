@@ -462,7 +462,7 @@ export const JarCollapsible: FC<{
                   <Tooltip
                     text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
                   >
-                    <div style={{ display: "flex", marginTop: 5 }}>
+                    <div style={{ display: "flex" }}>
                       <span>
                         {totalAPY + fullApy === 0
                           ? "--%"
