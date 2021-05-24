@@ -82,7 +82,7 @@ const setButtonStatus = (
 };
 
 const formatAPY = (apy: number) => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
+  if (apy > 1e6) return "∞%";
   return apy.toFixed(2) + "%";
 };
 
@@ -182,7 +182,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   }
 
   const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
+    return Object.values(x).reduce((acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y), 0);
   }).reduce((acc, x) => acc + x, 0);
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
@@ -200,7 +200,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6 ? null :`${k}: ${v.toFixed(2)}%`;
     }),
   ].filter(x=>x).join(" + ");
   const yourApyTooltipText = [
@@ -208,7 +208,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6  ? null :`${k}: ${v.toFixed(2)}%`;
     }),
   ].filter(x=>x).join(" + ");
 
