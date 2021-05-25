@@ -27,7 +27,7 @@ const useUserFarms = (): { farmData: UserFarmData[] | null } => {
   const {
     blockNum,
     address,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { masterchef, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();

@@ -33,7 +33,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   const {
     blockNum,
     address,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { gauge, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();

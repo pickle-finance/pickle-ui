@@ -29,7 +29,7 @@ export type Jar = {
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const {
     blockNum,
-    polygonMulticallProvider: provider,
+    provider,
     chainName,
   } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();

@@ -15,7 +15,7 @@ export interface RawFarm {
 export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
   const {
     blockNum,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
 

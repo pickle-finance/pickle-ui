@@ -32,7 +32,7 @@ const isUniPool = (jarName: string): boolean => {
 
 export const useJarWithTVL = (jars: Input): Output => {
   const {
-    polygonMulticallProvider: multicallProvider,
+    multicallProvider,
     chainName,
   } = Connection.useContainer();
   const { prices } = Prices.useContainer();

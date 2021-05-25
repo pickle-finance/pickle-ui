@@ -80,7 +80,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (jars: Input): Output => {
-  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();

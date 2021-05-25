@@ -27,7 +27,6 @@ function useContracts() {
     signer,
     chainId,
     chainName,
-    polygonMulticallProvider,
     multicallProvider,
   } = Connection.useContainer();
   const addresses = config.addresses.Polygon;
@@ -39,7 +38,7 @@ function useContracts() {
   const providerOrSigner =
     chainName === "Polygon"
       ? signer || multicallProvider
-      : polygonMulticallProvider;
+      : multicallProvider;
 
   const [cToken, setCToken] = useState<Ctoken | null>(null);
 

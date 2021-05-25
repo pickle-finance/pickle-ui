@@ -5,7 +5,7 @@ import { providers } from "@0xsequence/multicall";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
-import { config } from "./config";
+import { config, ChainName } from "./config";
 import { Provider } from "@ethersproject/providers";
 
 type Network = ethers.providers.Network;
@@ -98,8 +98,19 @@ function useConnection() {
 
   const chainName = chainId && config.chains[chainId].name;
 
+  const getMCProvider = (chainName) => {
+    switch (chainName) {
+      case "Ethereum":
+        return multicallProvider || ethMulticallProvider;
+      case "Polygon":
+        return multicallProvider || polygonMulticallProvider;
+      default:
+        return multicallProvider;
+    }
+  };
+
   return {
-    multicallProvider,
+    multicallProvider: getMCProvider(chainName),
     provider: library,
     address: account,
     network,
@@ -107,15 +118,7 @@ function useConnection() {
     signer: library?.getSigner(),
     chainId,
     chainName: chainName,
-    switchChain,
-    ethMulticallProvider:
-      chainName === "Ethereum"
-        ? multicallProvider || ethMulticallProvider
-        : ethMulticallProvider,
-    polygonMulticallProvider:
-      chainName === "Polygon"
-        ? multicallProvider || polygonMulticallProvider
-        : polygonMulticallProvider,
+    switchChain
   };
 }
 

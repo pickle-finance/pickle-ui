@@ -13,7 +13,7 @@ function useBalances() {
   const {
     address,
     blockNum,
-    polygonMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { erc20 } = Contracts.useContainer();
 

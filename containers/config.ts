@@ -6,7 +6,7 @@ interface Addresses {
   gaugeProxy?: string;
 }
 
-type ChainName = "Ethereum" | "Polygon";
+export type ChainName = "Ethereum" | "Polygon";
 
 interface Config {
   chains: Record<number, { name: ChainName }>;

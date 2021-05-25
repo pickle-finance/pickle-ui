@@ -40,7 +40,7 @@ const getCompoundingAPY = (apr: number) => {
 
 export const useJarWithAPY = (jars: Input): Output => {
   const {
-    polygonMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();

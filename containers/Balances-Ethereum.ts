@@ -13,7 +13,7 @@ function useBalances() {
   const {
     address,
     blockNum,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { erc20 } = Contracts.useContainer();
 

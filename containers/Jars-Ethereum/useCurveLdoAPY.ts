@@ -32,23 +32,23 @@ export const useCurveLdoAPY = (
   pool: Pool | null,
   stakingRewards: StakingRewards | null,
 ): Output => {
-  const { ethMulticallProvider } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [ldoAPY, setLdoAPY] = useState<number | null>(null);
 
   const getLdoAPY = async () => {
-    if (stakingRewards && pool && ethMulticallProvider && prices?.ldo) {
+    if (stakingRewards && pool && multicallProvider && prices?.ldo) {
       const mcPool = new Contract(
         pool.address,
         pool.interface.fragments,
-        ethMulticallProvider,
+        multicallProvider,
       );
 
       const mcStakingRewards = new Contract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
-        ethMulticallProvider,
+        multicallProvider,
       );
 
       const [, rewardsRate, totalSupply, virtualPrice] = (

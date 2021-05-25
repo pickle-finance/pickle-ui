@@ -137,7 +137,6 @@ function useContracts() {
   const {
     signer,
     chainId,
-    ethMulticallProvider,
     multicallProvider,
   } = Connection.useContainer();
   const addresses = config.addresses.Ethereum;
@@ -146,8 +145,7 @@ function useContracts() {
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
 
-  const providerOrSigner =
-    chainId === 1 ? signer || multicallProvider : ethMulticallProvider;
+  const providerOrSigner = signer || multicallProvider;
 
   const [
     gaugeController,

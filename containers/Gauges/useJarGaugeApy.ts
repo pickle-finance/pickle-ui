@@ -19,7 +19,7 @@ type Output = { jarGaugeWithApy: GaugeWithApy[] | null };
 export const useJarGaugeApy = (inputGauges: Input): Output => {
   let { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
 
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 

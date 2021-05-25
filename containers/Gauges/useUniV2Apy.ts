@@ -29,7 +29,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 
   const {
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
     provider,
   } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();

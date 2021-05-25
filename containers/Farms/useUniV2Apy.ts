@@ -28,7 +28,7 @@ type Output = { uniV2FarmsWithApy: FarmWithApy[] | null };
 export const useUniV2Apy = (inputFarms: Input): Output => {
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
-  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairDataPrefill } = UniV2Pairs.useContainer();

@@ -17,7 +17,7 @@ export interface RawGauge {
 export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
   const {
     blockNum,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
     chainName,
   } = Connection.useContainer();
   const { gaugeProxy, gauge } = Contracts.useContainer();

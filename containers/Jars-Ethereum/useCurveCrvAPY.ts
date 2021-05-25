@@ -37,7 +37,7 @@ export const useCurveCrvAPY = (
 ): Output => {
   const { prices } = Prices.useContainer();
   const { gaugeController } = Contracts.useContainer();
-  const { ethMulticallProvider: multicallProvider } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
 
   const [CRVAPY, setCRVAPY] = useState<number | null>(null);
 

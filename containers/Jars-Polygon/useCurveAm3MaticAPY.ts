@@ -57,7 +57,7 @@ const aaveContracts = {
 
 export const useCurveAm3MaticAPY = (): Output => {
   const {
-    polygonMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const { erc20 } = Contracts.useContainer();

@@ -18,7 +18,7 @@ export const useCompAPY = (
   const {
     provider,
     blockNum,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
   } = Connection.useContainer();
   const { cToken, comptroller } = Contracts.useContainer();
 
