@@ -5005,14 +5005,7 @@ ethereumjs-vm@^2.3.4:
     rustbn.js "~0.2.0"
     safe-buffer "^5.1.1"
 
-ethers-multicall@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/ethers-multicall/-/ethers-multicall-0.1.3.tgz"
-  integrity sha512-37P3UrZq96Z0mYCFHu/jX8X3dUJKvmf8oeiEIbVJ/YOEMzHpi0pncl/OPz7HbHuHjKfk+m+S6gjjMw318vTGjg==
-  dependencies:
-    ethers "^5.0.0"
-
-ethers@^5.0.0, ethers@^5.0.14, ethers@^5.0.2:
+ethers@^5.0.14, ethers@^5.0.2:
   version "5.0.14"
   resolved "https://registry.npmjs.org/ethers/-/ethers-5.0.14.tgz"
   integrity sha512-6WkoYwAURTr/4JiSZlrMJ9mm3pBv/bWrOu7sVXdLGw9QU4cp/GDZVrKKnh5GafMTzanuNBJoaEanPCjsbe4Mig==
