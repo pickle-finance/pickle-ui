@@ -23,13 +23,12 @@ export type Jar = {
   jarName: string;
   contract: JarContract;
   strategy: StrategyContract;
-  strategyName: string;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const {
     blockNum,
-    ethMulticallProvider: multicallProvider,
+    multicallProvider,
     chainName,
   } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
@@ -44,7 +43,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         multicallProvider,
       );
 
-      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS).map(
+      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(
         ([k, tokenAddress]) => {
           return {
             key: k,
@@ -65,18 +64,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         }),
       );
 
-      // const strategyNames = await Promise.all(
-      //   strategyAddresses.map((s) => {
-      //     const mutlicallStrategy = new Contract(
-      //       s,
-      //       strategy.interface.fragments,
-      //       multicallProvider,
-      //     );
-
-      //     return mutlicallStrategy.getName();
-      //   }),
-      // );
-
       const jarData = tokenKV
         .map((kv, idx) => {
           return {
@@ -84,7 +71,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
               tokenAddress: kv.value,
               jarAddress: jarAddresses[idx],
               strategyAddress: strategyAddresses[idx],
-              // strategyName: strategyNames[idx],
             },
           };
         })
@@ -93,14 +79,13 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         }, {});
 
       const newJars = await Promise.all(
-        Object.entries(JAR_DEPOSIT_TOKENS).map(async ([k, tokenAddress]) => {
-          const { jarAddress, strategyAddress, strategyName } = jarData[k];
+        Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(async ([k, tokenAddress]) => {
+          const { jarAddress, strategyAddress } = jarData[k];
           return {
             depositToken: Erc20Factory.connect(tokenAddress, multicallProvider),
             depositTokenName:
               DEPOSIT_TOKENS_NAME[k as keyof typeof DEPOSIT_TOKENS_NAME],
             strategy: strategy.attach(strategyAddress),
-            strategyName,
             jarName:
               DEPOSIT_TOKENS_JAR_NAMES[
                 k as keyof typeof DEPOSIT_TOKENS_JAR_NAMES

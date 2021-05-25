@@ -96,9 +96,9 @@ function useConnection() {
     }
   }, [library]);
 
-  const chainName = chainId && config.chains[chainId].name;
+  const chainName = chainId && config.chains[chainId].name || config.chains[1].name;
 
-  const getMCProvider = (chainName) => {
+  const getMCProvider = (chainName: ChainName) => {
     switch (chainName) {
       case "Ethereum":
         return multicallProvider || ethMulticallProvider;
@@ -117,7 +117,7 @@ function useConnection() {
     blockNum,
     signer: library?.getSigner(),
     chainId,
-    chainName: chainName,
+    chainName,
     switchChain
   };
 }

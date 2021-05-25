@@ -251,10 +251,6 @@ export const useJarWithTVL = (jars: Input): Output => {
           return measureUniJarTVL(jar);
         }
 
-        if (jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2) {
-          return measureCompoundTVL(jar);
-        }
-
         return {
           ...jar,
           tvlUSD: null,

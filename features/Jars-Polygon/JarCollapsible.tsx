@@ -151,10 +151,6 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     return `${k}: ${v.toFixed(2)}%`;
   }).join(" + ");
 
-  const isDisabledJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI;
-
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}

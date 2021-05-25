@@ -45,7 +45,7 @@ import { FeeDistributorFactory } from "./Contracts/FeeDistributorFactory";
 import { FeeDistributor } from "./Contracts/FeeDistributor";
 import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { YvecrvZapFactory } from "./Contracts/YvecrvZapFactory";
-import { config } from "./config";
+import { config, NETWORK_NAMES } from "./config";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -136,7 +136,7 @@ export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 function useContracts() {
   const {
     signer,
-    chainId,
+    chainName,
     multicallProvider,
   } = Connection.useContainer();
   const addresses = config.addresses.Ethereum;
@@ -192,7 +192,7 @@ function useContracts() {
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
 
   const initContracts = async () => {
-    if (providerOrSigner && addresses) {
+    if (providerOrSigner && addresses && chainName === NETWORK_NAMES.ETH) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
       setMasterchef(
         MasterchefFactory.connect(addresses.masterChef, providerOrSigner),

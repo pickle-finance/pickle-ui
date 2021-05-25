@@ -106,7 +106,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     ).then((response) => response.json());
     const pool = pools?.find(
       (pool) =>
-        pool.underlyingAsset.toUpperCase() === assetAddress.toUpperCase(),
+        pool.underlyingAsset.toUpperCase() === assetAddress?.toUpperCase(),
     );
 
     if (!pool || !prices?.matic || !multicallProvider) return [];

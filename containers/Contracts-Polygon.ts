@@ -17,7 +17,7 @@ import { StakingRewardsFactory } from "./Contracts/StakingRewardsFactory";
 import { ControllerFactory } from "./Contracts/ControllerFactory";
 import { Erc20Factory } from "./Contracts/Erc20Factory";
 import { Uniswapv2PairFactory } from "./Contracts/Uniswapv2PairFactory";
-import { config } from "./config";
+import { config, NETWORK_NAMES } from "./config";
 
 export const COMETH_USDC_WETH_REWARDS =
   "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
@@ -25,7 +25,6 @@ export const COMETH_USDC_WETH_REWARDS =
 function useContracts() {
   const {
     signer,
-    chainId,
     chainName,
     multicallProvider,
   } = Connection.useContainer();
@@ -52,7 +51,7 @@ function useContracts() {
   const [strategy, setStrategy] = useState<Strategy | null>(null);
 
   const initContracts = async () => {
-    if (providerOrSigner && addresses) {
+    if (providerOrSigner && addresses && chainName === NETWORK_NAMES.ETH) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
       setMasterchef(
         MasterchefFactory.connect(addresses.masterChef, providerOrSigner),

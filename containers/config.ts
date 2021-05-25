@@ -6,7 +6,12 @@ interface Addresses {
   gaugeProxy?: string;
 }
 
-export type ChainName = "Ethereum" | "Polygon";
+export enum NETWORK_NAMES { 
+  ETH = "Ethereum",
+  POLY = "Polygon"
+}
+
+export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY;
 
 interface Config {
   chains: Record<number, { name: ChainName }>;
@@ -16,10 +21,10 @@ interface Config {
 export const config: Config = {
   chains: {
     1: {
-      name: "Ethereum",
+      name: NETWORK_NAMES.ETH,
     },
     137: {
-      name: "Polygon",
+      name: NETWORK_NAMES.POLY,
     },
   },
   addresses: {
