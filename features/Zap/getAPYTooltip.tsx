@@ -1,5 +1,5 @@
 import { Tooltip } from "@geist-ui/react";
-import { JarApy } from "../../containers/Jars-Ethereum/useCurveCrvAPY";
+import { JarApy } from "../../containers/Jars/useCurveCrvAPY";
 
 const getTooltipText = (APYs: JarApy[]) =>
   APYs.map((x) => {

@@ -139,7 +139,7 @@ function useContracts() {
     chainName,
     multicallProvider,
   } = Connection.useContainer();
-  const addresses = config.addresses.Ethereum;
+  const addresses = chainName === NETWORK_NAMES.ETH ? config.addresses.Ethereum : config.addresses.Polygon;
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -192,7 +192,7 @@ function useContracts() {
   const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
 
   const initContracts = async () => {
-    if (providerOrSigner && addresses && chainName === NETWORK_NAMES.ETH) {
+    if (providerOrSigner && addresses) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
       setMasterchef(
         MasterchefFactory.connect(addresses.masterChef, providerOrSigner),

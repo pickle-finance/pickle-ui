@@ -8,7 +8,7 @@ import { Connection } from "../../containers/Connection";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
-import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;

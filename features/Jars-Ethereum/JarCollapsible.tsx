@@ -13,7 +13,7 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars-Ethereum/jars";
+import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config"
 
 interface DataProps {

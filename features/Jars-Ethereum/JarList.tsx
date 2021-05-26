@@ -5,7 +5,7 @@ import { Spacer, Grid, Checkbox } from "@geist-ui/react";
 import { JarCollapsible } from "./JarCollapsible";
 import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
-import { JAR_ACTIVE } from "../../containers/Jars-Ethereum/jars";
+import { JAR_ACTIVE } from "../../containers/Jars/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;

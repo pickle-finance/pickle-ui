@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { CurveProxyLogic } from "../../containers/Contracts/CurveProxyLogic";
-import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 import {
   THREE_CRV,
   THREE_POOL_ADDR,

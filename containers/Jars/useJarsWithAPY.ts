@@ -39,10 +39,7 @@ import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
 import { formatEther } from "ethers/lib/utils";
 import { ethers } from "ethers";
 import { UniV2Pairs } from "../UniV2Pairs";
-import { useCompAPY } from "./useCompAPY";
 import erc20 from "@studydefi/money-legos/erc20";
-
-import compound from "@studydefi/money-legos/compound";
 
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
@@ -85,7 +82,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input) =>
-  NETWORK_NAMES.ETH ? useJarWithAPYEth(jars) : useJarWithAPYPoly(jars);
+  network === NETWORK_NAMES.ETH ? useJarWithAPYEth(jars) : useJarWithAPYPoly(jars);
 
 const useJarWithAPYEth = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
@@ -143,8 +140,6 @@ const useJarWithAPYEth = (jars: Input): Output => {
     steCRVPool,
     stakingRewards ? stakingRewards.attach(STECRV_STAKING_REWARDS) : null,
   );
-
-  const { APYs: compDaiAPYs } = useCompAPY(compound.cDAI.address);
 
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,

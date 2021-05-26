@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts-Ethereum";
-import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { TokenSymbol } from "./useBalance";
 
 const { parseUnits } = ethers.utils;
