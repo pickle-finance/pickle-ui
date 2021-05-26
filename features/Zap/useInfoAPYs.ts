@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Connection } from "../../containers/Connection";
 import { Farms } from "../../containers/Farms";
 import { FarmWithApy } from "../../containers/Farms/useUniV2Apy";
-import { Jars } from "../../containers/Jars-Ethereum";
+import { Jars } from "../../containers/Jars";
 import { JarApy } from "../../containers/Jars-Ethereum/useCurveCrvAPY";
 import { JarWithTVL } from "../../containers/Jars-Ethereum/useJarsWithTVL";
 

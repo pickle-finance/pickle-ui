@@ -2,8 +2,8 @@ import { createContainer } from "unstated-next";
 import { useEffect, useState } from "react";
 
 import { Connection } from "./Connection";
-import { Contracts } from "./Contracts-Polygon";
 import { ethers, Contract } from "ethers";
+import erc20 from "@studydefi/money-legos/erc20";
 
 interface TokenBalances {
   [k: string]: ethers.BigNumber;
@@ -15,7 +15,11 @@ function useBalances() {
     blockNum,
     multicallProvider,
   } = Connection.useContainer();
-  const { erc20 } = Contracts.useContainer();
+  const erc20Contract = new Contract(
+    ethers.constants.AddressZero,
+    erc20.abi,
+    multicallProvider,
+  );
 
   const [tokenBalances, setTokenBalances] = useState<TokenBalances>({});
   const [tokenAddresses, setTokenAddresses] = useState<Array<string>>([]);
@@ -26,7 +30,7 @@ function useBalances() {
         tokenAddresses.map((x) => {
           const c = new Contract(
             x,
-            erc20.interface.fragments,
+            erc20Contract.interface.fragments,
             multicallProvider,
           );
           return c.balanceOf(address);

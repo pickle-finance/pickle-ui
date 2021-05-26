@@ -19,7 +19,7 @@ import {
 import { UserGaugeData } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts-Ethereum";
-import { Jars } from "../../containers/Jars-Ethereum";
+import { Jars } from "../../containers/Jars";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,

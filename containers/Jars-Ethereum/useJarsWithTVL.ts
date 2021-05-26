@@ -26,7 +26,8 @@ const isCurvePool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.sCRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"] ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV
   );
 };
 
@@ -57,7 +58,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH
   );
 };
 
@@ -102,6 +104,11 @@ export const useJarWithTVL = (jars: Input): Output => {
       pool = steCRVPool;
       pricePerUnderlying = prices?.eth;
     }
+
+    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV) {
+      pricePerUnderlying = prices?.dai;
+    }
+
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
@@ -243,7 +250,7 @@ export const useJarWithTVL = (jars: Input): Output => {
   };
 
   const measureTVL = async () => {
-    if (jars && susdPool) {
+    if (jars) {
       const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
         if (isCurvePool(jar.jarName)) {
           return measureCurveTVL(jar);

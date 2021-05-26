@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { NETWORK_NAMES } from "containers/config";
 
 import { JAR_DEPOSIT_TOKENS } from "./jars";
 
@@ -8,7 +9,7 @@ export interface UniLPAPY {
   dailyVolumeUSD: number;
 }
 
-const COMETH_LP_TOKENS = [JAR_DEPOSIT_TOKENS.COMETH_USDC_WETH];
+const COMETH_LP_TOKENS = [JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH];
 
 export const useComethPairDayData = () => {
   const [uniPairDayData, setUniPairDayData] = useState<Array<UniLPAPY> | null>(

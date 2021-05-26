@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS } from "./jars";
-import { NETWORK_NAMES } from "containers/config"
+import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS, getPriceId } from "./jars";
+import { NETWORK_NAMES } from "containers/config";
 import { Prices } from "../Prices";
 import {
   UNI_ETH_DAI_STAKING_REWARDS,
@@ -9,15 +9,10 @@ import {
   UNI_ETH_USDT_STAKING_REWARDS,
   UNI_ETH_WBTC_STAKING_REWARDS,
   SCRV_STAKING_REWARDS,
-  Contracts,
-  BASIS_BAC_DAI_STAKING_REWARDS,
+  Contracts as EthContracts,
   MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
   MITH_MIS_USDT_STAKING_REWARDS,
-  BASIS_BAS_DAI_PID,
-  BASIS_BAS_DAI_STAKING_REWARDS,
-  BASIS_BAC_DAI_PID,
-  BASIS_BAC_DAI_V1_STAKING_REWARDS,
   LQTY_LUSD_ETH_STAKING_REWARDS,
   MIRROR_MIR_UST_STAKING_REWARDS,
   MIRROR_MTSLA_UST_STAKING_REWARDS,
@@ -27,13 +22,22 @@ import {
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
 } from "../Contracts-Ethereum";
+import {
+  Contracts as PolyContracts,
+  COMETH_USDC_WETH_REWARDS,
+} from "../Contracts-Polygon";
+import { ComethPairs } from "../ComethPairs";
 import { Jar } from "./useFetchJars";
+import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
 import { useCurveSNXAPY } from "./useCurveSNXAPY";
 import { useUniPairDayData } from "./useUniPairDayData";
+import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
+import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
 import { formatEther } from "ethers/lib/utils";
+import { ethers } from "ethers";
 import { UniV2Pairs } from "../UniV2Pairs";
 import { useCompAPY } from "./useCompAPY";
 import erc20 from "@studydefi/money-legos/erc20";
@@ -80,9 +84,12 @@ const getCompoundingAPY = (apr: number) => {
   return 100 * (Math.pow(1 + apr / 365, 365) - 1);
 };
 
-export const useJarWithAPY = (jars: Input): Output => {
+export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input) =>
+  NETWORK_NAMES.ETH ? useJarWithAPYEth(jars) : useJarWithAPYPoly(jars);
+
+const useJarWithAPYEth = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
-  const { controller, strategy } = Contracts.useContainer();
+  const { controller, strategy } = EthContracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const { getPairData: getUniPairData } = UniV2Pairs.useContainer();
@@ -98,10 +105,10 @@ export const useJarWithAPY = (jars: Input): Output => {
     steCRVPool,
     steCRVGauge,
     basisStaking,
-  } = Contracts.useContainer();
+  } = EthContracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
-  const { rawStats: curveRawStats } = useCurveRawStats();
+  const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.ETH);
   const { APYs: susdCrvAPY } = useCurveCrvAPY(
     jars,
     prices?.usdc || null,
@@ -480,7 +487,9 @@ export const useJarWithAPY = (jars: Input): Output => {
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
-        calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV),
+        calculateSushiAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
+        ),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
       ]);
@@ -538,28 +547,36 @@ export const useJarWithAPY = (jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI) {
           APYs = [
             ...uniEthDaiApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_DAI),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_DAI,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC) {
           APYs = [
             ...uniEthUsdcApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_USDC),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_USDC,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT) {
           APYs = [
             ...uniEthUsdtApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_USDT),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_USDT,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC) {
           APYs = [
             ...uniEthWBtcApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_WBTC),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_ETH_WBTC,
+            ),
           ];
         }
 
@@ -580,120 +597,337 @@ export const useJarWithAPY = (jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MIR_UST) {
           APYs = [
             ...mirrorMirUstApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MIR_UST),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MIR_UST,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MTSLA_UST) {
           APYs = [
             ...mirrorMtslaUstApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MTSLA_UST),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MTSLA_UST,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MAAPL_UST) {
           APYs = [
             ...mirrorMaaplUstApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MAAPL_UST),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MAAPL_UST,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MQQQ_UST) {
           APYs = [
             ...mirrorMqqqUstApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MQQQ_UST),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MQQQ_UST,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MSLV_UST) {
           APYs = [
             ...mirrorMslvUstApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MSLV_UST),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MSLV_UST,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST) {
           APYs = [
             ...mirrorMbabaUstApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MBABA_UST),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MBABA_UST,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE) {
           APYs = [
             ...feiTribeApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_FEI_TRIBE),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_FEI_TRIBE,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH) {
           APYs = [
             ...lqtyEthLusdApy,
-            ...getUniPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_LUSD_ETH),
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_LUSD_ETH,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT) {
           APYs = [
             ...mithMicUsdtApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_MIC_USDT),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_MIC_USDT,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT) {
           APYs = [
             ...mithMisUsdtApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_MIS_USDT),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_MIS_USDT,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI) {
           APYs = [
             ...sushiEthDaiApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_DAI),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_DAI,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDC) {
           APYs = [
             ...sushiEthUsdcApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDC),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDC,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDT) {
           APYs = [
             ...sushiEthUsdtApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDT),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDT,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC) {
           APYs = [
             ...sushiEthWBtcApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_WBTC),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_WBTC,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI) {
           APYs = [
             ...sushiEthYfiApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YFI),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YFI,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV) {
           APYs = [
             ...sushiEthyveCRVApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH) {
           APYs = [
             ...sushiEthApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH),
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH,
+            ),
           ];
+        }
+
+        let apr = 0;
+        APYs.map((x) => {
+          if (x.apr) {
+            apr += x.apr;
+            delete x.apr;
+          }
+        });
+
+        let lp = 0;
+        APYs.map((x) => {
+          if (x.lp) {
+            lp += x.lp;
+          }
+        });
+
+        // const totalAPY = APYs.map((x) => {
+        //   return Object.values(x).reduce((acc, y) => acc + y, 0);
+        // }).reduce((acc, x) => acc + x, 0);
+        const totalAPY = getCompoundingAPY(apr / 100) + lp;
+
+        return {
+          ...jar,
+          APYs,
+          totalAPY,
+          apr,
+        };
+      });
+
+      const newJarsWithAPY = await Promise.all(promises);
+
+      setJarsWithAPY(newJarsWithAPY);
+    }
+  };
+
+  useEffect(() => {
+    calculateAPY();
+  }, [jars, prices]);
+
+  return { jarsWithAPY };
+};
+
+export const useJarWithAPYPoly = (jars: Input): Output => {
+  const { multicallProvider } = Connection.useContainer();
+  const { controller, strategy } = PolyContracts.useContainer();
+  const { prices } = Prices.useContainer();
+  const { getPairData: getComethPairData } = ComethPairs.useContainer();
+  const { stakingRewards } = PolyContracts.useContainer();
+  const { getComethPairDayAPY } = useComethPairDayData();
+  const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
+    null,
+  );
+  const { rawStats } = useCurveRawStats(NETWORK_NAMES.POLY);
+  useCurveAm3MaticAPY();
+
+  const calculateComethAPY = async (rewardsAddress: string) => {
+    if (
+      stakingRewards &&
+      prices?.must &&
+      getComethPairData &&
+      multicallProvider
+    ) {
+      const multicallStakingRewards = new Contract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+        multicallProvider,
+      );
+
+      const [
+        rewardsDurationBN,
+        rewardsForDurationBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await Promise.all([
+        multicallStakingRewards.rewardsDuration(),
+        multicallStakingRewards.getRewardForDuration(),
+        multicallStakingRewards.stakingToken(),
+        multicallStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rewardsDuration = rewardsDurationBN.toNumber(); //epoch
+      const rewardsForDuration = parseFloat(formatEther(rewardsForDurationBN));
+
+      const { pricePerToken } = await getComethPairData(stakingToken);
+
+      const rewardsPerYear =
+        rewardsForDuration * ((360 * 24 * 60 * 60) / rewardsDuration);
+      const valueRewardedPerYear = prices.must * rewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const apy = valueRewardedPerYear / totalValueStaked;
+
+      return [{ must: getCompoundingAPY(apy * 0.8), apr: apy * 0.8 * 100 }];
+    }
+
+    return [];
+  };
+
+  const calculateAaveAPY = async (
+    assetAddress: string,
+    strategyAddress: string,
+  ) => {
+    const pools = await fetch(
+      "https://aave-api-v2.aave.com/data/liquidity/v2?poolId=0xd05e3E715d945B59290df0ae8eF85c1BdB684744",
+    ).then((response) => response.json());
+    const pool = pools?.find(
+      (pool) =>
+        pool.underlyingAsset.toUpperCase() === assetAddress?.toUpperCase(),
+    );
+
+    if (!pool || !prices?.matic || !multicallProvider) return [];
+
+    const aaveStrategy = new Contract(
+      strategyAddress,
+      AaveStrategyAbi,
+      multicallProvider,
+    );
+    const [supplied, borrowed, balance] = await Promise.all([
+      aaveStrategy.getSuppliedView().then(ethers.utils.formatEther),
+      aaveStrategy.getBorrowedView().then(ethers.utils.formatEther),
+      aaveStrategy.balanceOfPool().then(ethers.utils.formatEther),
+    ]);
+
+    const rawSupplyAPY = +pool["avg1DaysLiquidityRate"];
+    const rawBorrowAPY = +pool["avg1DaysVariableBorrowRate"];
+
+    const supplyMaticAPR =
+      (+pool.aEmissionPerSecond * 365 * 3600 * 24 * prices.matic) /
+      +pool["totalLiquidity"] /
+      +pool["referenceItem"]["priceInUsd"];
+    const borrowMaticAPR =
+      (+pool.vEmissionPerSecond * 365 * 3600 * 24 * prices.matic) /
+      +pool["totalDebt"] /
+      +pool["referenceItem"]["priceInUsd"];
+
+    const maticAPR =
+      (supplied * supplyMaticAPR + borrowed * borrowMaticAPR) / balance;
+
+    const rawAPY =
+      (rawSupplyAPY * supplied - rawBorrowAPY * borrowed) / balance;
+
+    return [
+      {
+        [getPriceId(assetAddress)]: rawAPY * 100,
+        matic: maticAPR * 0.8 * 100,
+        apr: maticAPR * 0.8 * 100,
+        rawAPY: rawAPY * 100,
+      },
+    ];
+  };
+
+  const calculateAPY = async () => {
+    if (jars && controller && strategy) {
+      const aaveDaiStrategy = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
+      )?.strategy;
+
+      const [comethUsdcWethApy, aaveDaiAPY] = await Promise.all([
+        calculateComethAPY(COMETH_USDC_WETH_REWARDS),
+        calculateAaveAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
+          aaveDaiStrategy?.address || "",
+        ),
+      ]);
+
+      const promises = jars.map(async (jar) => {
+        let APYs: Array<JarApy> = [];
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH) {
+          APYs = [
+            ...comethUsdcWethApy,
+            ...getComethPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AAVE_DAI) {
+          APYs = [...aaveDaiAPY];
         }
 
         let apr = 0;

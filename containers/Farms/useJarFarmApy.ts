@@ -8,7 +8,7 @@ import { Prices } from "../Prices";
 import { JAR_FARM_MAP } from "./farms";
 import { FarmWithApy } from "./useUniV2Apy";
 import { FarmWithReward } from "./useWithReward";
-import { Jars } from "../Jars-Ethereum";
+import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
 

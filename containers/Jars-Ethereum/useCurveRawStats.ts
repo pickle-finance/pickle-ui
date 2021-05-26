@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 
 import { Prices } from "../Prices";
+import { NETWORK_NAMES } from "containers/config";
 
-const curveAPYsURL = "https://stats.curve.fi/raw-stats/apys.json";
+const curveAPYsURLEth = "https://stats.curve.fi/raw-stats/apys.json";
+const curveAPYsURLPoly = "https://stats.curve.fi/raw-stats-polygon/apys.json";
 
 export interface RawStatAPYs {
   compound: number;
@@ -20,15 +22,20 @@ export interface RawStatAPYs {
   usdn: number;
   usdk: number;
   steth: number;
+  aave: number;
 }
 
-export const useCurveRawStats = (): { rawStats: null | RawStatAPYs } => {
+export const useCurveRawStats = (
+  network: NETWORK_NAMES,
+): { rawStats: null | RawStatAPYs } => {
   const { prices } = Prices.useContainer();
 
   const [rawStats, setRawStats] = useState<RawStatAPYs | null>(null);
 
   const getLPAPY = async () => {
-    const res = await fetch(curveAPYsURL).then((x) => x.json());
+    const res = await fetch(
+      network === NETWORK_NAMES.ETH ? curveAPYsURLEth : curveAPYsURLPoly,
+    ).then((x) => x.json());
     const stats = res.apy.day;
 
     for (const k of Object.keys(stats)) {

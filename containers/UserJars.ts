@@ -4,9 +4,8 @@ import { ethers } from "ethers";
 
 import { JarApy } from "./Jars-Ethereum/useJarsWithAPY";
 
-import { Jars as EthereumJars } from "./Jars-Ethereum";
-import { Jars as PolygonJars } from "./Jars-Polygon";
-import { Balances } from "./Balances-Ethereum";
+import { Jars } from "./Jars";
+import { Balances } from "./Balances";
 import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
@@ -29,10 +28,7 @@ export interface UserJarData {
 
 const useUserJars = (): { jarData: UserJarData[] | null } => {
   const { blockNum, chainName } = Connection.useContainer();
-  const { jars } =
-    chainName === "Polygon"
-      ? PolygonJars.useContainer()
-      : EthereumJars.useContainer();
+  const { jars } = Jars.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
 

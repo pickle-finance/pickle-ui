@@ -1,14 +1,18 @@
 import { useEffect } from "react";
 import { createContainer } from "unstated-next";
 
-import { Balances } from "./Balances-Ethereum";
+import { Balances } from "./Balances";
+import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars-Ethereum/useFetchJars";
 import { useJarWithAPY } from "./Jars-Ethereum/useJarsWithAPY";
 import { useJarWithTVL } from "./Jars-Ethereum/useJarsWithTVL";
+import { jars } from "util/jars";
 
 function useJars() {
+  const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
-  const { jarsWithAPY } = useJarWithAPY(rawJars);
+  const { jarsWithAPY } = useJarWithAPY(chainName, rawJars);
+  console.log(jarsWithAPY)
   const { jarsWithTVL } = useJarWithTVL(jarsWithAPY);
 
   const { addTokens } = Balances.useContainer();

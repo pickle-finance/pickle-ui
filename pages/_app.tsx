@@ -9,7 +9,7 @@ import "../styles/global.scss";
 import "react-day-picker/lib/style.css";
 
 import { geistTheme } from "../styles/geistTheme";
-import { Balances } from "../containers/Balances-Ethereum";
+import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
 import { Connection } from "../containers/Connection";
 import { Contracts as EthereumContracts } from "../containers/Contracts-Ethereum";
@@ -18,8 +18,7 @@ import { Prices } from "../containers/Prices";
 import { Pickles } from "../containers/Pickles";
 import { PickleStaking } from "../containers/PickleStaking";
 import { Farms } from "../containers/Farms";
-import { Jars as EthereumJars } from "../containers/Jars-Ethereum";
-import { Jars as PolygonJars } from "../containers/Jars-Polygon";
+import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
@@ -49,21 +48,19 @@ const WithContainers: FC = ({ children }) => (
                       <ComethPairs.Provider>
                         <Dill.Provider>
                           <SushiPairs.Provider>
-                            <EthereumJars.Provider>
-                              <PolygonJars.Provider>
-                                <Farms.Provider>
-                                  <Gauges.Provider>
-                                    <UserJars.Provider>
-                                      <UserFarms.Provider>
-                                        <UserGauges.Provider>
-                                          {children}
-                                        </UserGauges.Provider>
-                                      </UserFarms.Provider>
-                                    </UserJars.Provider>
-                                  </Gauges.Provider>
-                                </Farms.Provider>
-                              </PolygonJars.Provider>
-                            </EthereumJars.Provider>
+                            <Jars.Provider>
+                              <Farms.Provider>
+                                <Gauges.Provider>
+                                  <UserJars.Provider>
+                                    <UserFarms.Provider>
+                                      <UserGauges.Provider>
+                                        {children}
+                                      </UserGauges.Provider>
+                                    </UserFarms.Provider>
+                                  </UserJars.Provider>
+                                </Gauges.Provider>
+                              </Farms.Provider>
+                            </Jars.Provider>
                           </SushiPairs.Provider>
                         </Dill.Provider>
                       </ComethPairs.Provider>

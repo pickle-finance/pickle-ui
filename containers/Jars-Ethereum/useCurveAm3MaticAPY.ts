@@ -7,6 +7,7 @@ import { Jar } from "./useFetchJars";
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts-Polygon";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface JarApy {
   [k: string]: number;
@@ -74,7 +75,7 @@ export const useCurveAm3MaticAPY = (): Output => {
       ).json();
 
       const lpToken = new Contract(
-        JAR_DEPOSIT_TOKENS.AM3CRV,
+        JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].AM3CRV,
         erc20.interface,
         multicallProvider,
       );

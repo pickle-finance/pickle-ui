@@ -16,7 +16,7 @@ import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts-Ethereum";
-import { Jars } from "../../containers/Jars-Ethereum";
+import { Jars } from "../../containers/Jars";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,
