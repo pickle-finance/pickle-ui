@@ -25,8 +25,8 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars-Ethereum/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars-Ethereum/useUniPairDayData";
+import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";

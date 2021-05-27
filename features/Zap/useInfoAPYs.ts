@@ -3,8 +3,8 @@ import { Connection } from "../../containers/Connection";
 import { Farms } from "../../containers/Farms";
 import { FarmWithApy } from "../../containers/Farms/useUniV2Apy";
 import { Jars } from "../../containers/Jars";
-import { JarApy } from "../../containers/Jars-Ethereum/useCurveCrvAPY";
-import { JarWithTVL } from "../../containers/Jars-Ethereum/useJarsWithTVL";
+import { JarApy } from "../../containers/Jars/useCurveCrvAPY";
+import { JarWithTVL } from "../../containers/Jars/useJarsWithTVL";
 
 const PTOKEN_ADDR = {
   prenCRV: "0x2E35392F4c36EBa7eCAFE4de34199b2373Af22ec",

@@ -22,10 +22,10 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars-Ethereum/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars-Ethereum/useUniPairDayData";
+import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars-Ethereum/jars";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {

@@ -17,9 +17,11 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
 
   const updateJarData = async () => {
     if (jars) {
+      console.log(jars)
       const promises = jars?.map(async (jar) => {
         const balance = await getBalance(jar.depositToken.address);
         const deposited = await getBalance(jar.contract.address);
+        console.log(jar, balance, deposited)
 
         return {
           name: jar.jarName,

@@ -3,7 +3,7 @@ import { Page } from "@geist-ui/react";
 
 import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
-import { JarList } from "../features/Jars-Ethereum/JarList";
+import { JarList } from "../features/Jars/JarList";
 import { Connection } from "../containers/Connection";
 
 const Jars: FC = () => {
