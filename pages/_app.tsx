@@ -12,7 +12,7 @@ import { geistTheme } from "../styles/geistTheme";
 import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
 import { Connection } from "../containers/Connection";
-import { Contracts as EthereumContracts } from "../containers/Contracts-Ethereum";
+import { Contracts as EthereumContracts } from "../containers/Contracts";
 import { Prices } from "../containers/Prices";
 import { Pickles } from "../containers/Pickles";
 import { PickleStaking } from "../containers/PickleStaking";

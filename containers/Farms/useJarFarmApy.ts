@@ -2,7 +2,7 @@ import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
 
 import { JAR_FARM_MAP } from "./farms";

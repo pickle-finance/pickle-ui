@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import { Jar } from "./useFetchJars";
 
 import { Pool } from "../Contracts/Pool";

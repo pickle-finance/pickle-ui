@@ -6,7 +6,7 @@ import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { Connection } from "../../containers/Connection";
 import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
@@ -22,7 +22,7 @@ import {
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { Jars } from "../../containers/Jars";
 
 interface Weights {

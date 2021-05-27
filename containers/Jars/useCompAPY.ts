@@ -1,7 +1,7 @@
 import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { formatEther, parseEther } from "ethers/lib/utils";

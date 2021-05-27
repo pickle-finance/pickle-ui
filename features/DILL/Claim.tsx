@@ -2,7 +2,7 @@ import { useState, FC, useEffect } from "react";
 import { Spacer, Grid, Card, Button } from "@geist-ui/react";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { Connection } from "../../containers/Connection";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import {

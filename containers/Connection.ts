@@ -96,7 +96,7 @@ function useConnection() {
     }
   }, [library]);
 
-  const chainName = chainId && config.chains[chainId].name || config.chains[1].name;
+  const chainName = chainId && config.chains[chainId].name || null;
 
   const getMCProvider = (chainName: ChainName) => {
     switch (chainName) {

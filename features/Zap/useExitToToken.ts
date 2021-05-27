@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 
 const { parseEther } = ethers.utils;

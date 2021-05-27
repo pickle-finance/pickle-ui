@@ -7,7 +7,7 @@ import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
 import { Erc20Factory } from "../Contracts/Erc20Factory";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import {
   JAR_DEPOSIT_TOKENS,
   DEPOSIT_TOKENS_JAR_NAMES,

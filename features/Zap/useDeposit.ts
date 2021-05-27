@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { TokenSymbol } from "./useBalance";
 

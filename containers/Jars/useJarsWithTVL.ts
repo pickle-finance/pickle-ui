@@ -2,11 +2,11 @@ import { Contract, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
 
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
 
 import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
-import { JarWithAPY } from "./useJarsWithAPY";
+import { JarWithAPY } from "./useJarsWithAPYEth";
 
 import { Connection } from "../Connection";
 
@@ -137,6 +137,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       ])
     ).map((x) => parseFloat(formatEther(x)));
 
+
     const tvlUSD = balance * virtualPrice * pricePerUnderlying;
 
     const usdPerPToken = tvlUSD / supply;
@@ -265,6 +266,7 @@ export const useJarWithTVL = (jars: Input): Output => {
           ratio: null,
         };
       });
+
       const jarsWithTVL = await Promise.all(promises);
       setJarsWithTVL(jarsWithTVL);
     }

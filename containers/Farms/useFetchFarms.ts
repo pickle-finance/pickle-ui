@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { BigNumber, Contract } from "ethers";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 
 export interface RawFarm {
   lpToken: string;

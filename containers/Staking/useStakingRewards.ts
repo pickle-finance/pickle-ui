@@ -3,7 +3,7 @@ import moment from "moment";
 
 import { StakingRewards } from "../Contracts/StakingRewards";
 
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { ethers } from "ethers";

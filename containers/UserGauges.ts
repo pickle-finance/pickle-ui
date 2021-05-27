@@ -5,7 +5,7 @@ import { Contract, ethers } from "ethers";
 import { Jars } from "./Jars";
 import { Gauges } from "./Gauges";
 import { Balances } from "./Balances";
-import { Contracts } from "./Contracts-Ethereum";
+import { Contracts } from "./Contracts";
 import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 

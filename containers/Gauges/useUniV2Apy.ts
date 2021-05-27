@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts-Ethereum";
+import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
 
 import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";

@@ -1,7 +1,7 @@
 import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
 
-import { Contracts } from "../../../containers/Contracts-Ethereum";
+import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
 
 import {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { usePendingPickles } from "./usePendingPickles";
 import { Pickles } from "../../containers/Pickles";
 

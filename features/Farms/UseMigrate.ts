@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
 import { Erc20 } from "../../containers/Contracts/Erc20";
 

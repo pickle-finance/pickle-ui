@@ -2,7 +2,7 @@ import { Contract } from "@ethersproject/contracts";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
-import { Contracts, GAUGE_PROXY } from "../Contracts-Ethereum";
+import { Contracts, GAUGE_PROXY } from "../Contracts";
 
 export interface RawGauge {
   token: string;

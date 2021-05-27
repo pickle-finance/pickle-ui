@@ -5,7 +5,7 @@ import {
   Contracts,
   PICKLE_STAKING_SCRV_REWARDS,
   PICKLE_STAKING_WETH_REWARDS,
-} from "./Contracts-Ethereum";
+} from "./Contracts";
 import { Connection } from "./Connection";
 import { Prices } from "./Prices";
 import { ethers } from "ethers";

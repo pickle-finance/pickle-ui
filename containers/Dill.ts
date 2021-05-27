@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
-import { Contracts, DILL, FEE_DISTRIBUTOR } from "./Contracts-Ethereum";
+import { Contracts, DILL, FEE_DISTRIBUTOR } from "./Contracts";
 import { Connection } from "./Connection";
 import { Prices } from "../containers/Prices";
 import { useProtocolIncome } from "./DILL/useProtocolIncome";

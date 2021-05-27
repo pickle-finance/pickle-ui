@@ -11,7 +11,7 @@ export enum NETWORK_NAMES {
   POLY = "Polygon"
 }
 
-export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY;
+export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY | null;
 
 interface Config {
   chains: Record<number, { name: ChainName }>;

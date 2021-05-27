@@ -3,7 +3,7 @@ import { Button, Link, Input, Grid, Spacer, Card } from "@geist-ui/react";
 import { parseEther, formatEther } from "ethers/lib/utils";
 
 import { useBalances } from "../Balances/useBalances";
-import { Contracts } from "../../containers/Contracts-Ethereum";
+import { Contracts } from "../../containers/Contracts";
 import { Connection } from "../../containers/Connection";
 import { UseStakingRewardsOutput } from "../../containers/Staking/useStakingRewards";
 
