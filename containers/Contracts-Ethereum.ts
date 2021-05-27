@@ -133,6 +133,10 @@ export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 
+// Polygon
+export const COMETH_USDC_WETH_REWARDS =
+  "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
+
 function useContracts() {
   const {
     signer,

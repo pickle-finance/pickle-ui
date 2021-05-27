@@ -13,7 +13,6 @@ import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
 import { Connection } from "../containers/Connection";
 import { Contracts as EthereumContracts } from "../containers/Contracts-Ethereum";
-import { Contracts as PolygonContracts } from "../containers/Contracts-Polygon";
 import { Prices } from "../containers/Prices";
 import { Pickles } from "../containers/Pickles";
 import { PickleStaking } from "../containers/PickleStaking";
@@ -37,41 +36,39 @@ const getLibrary = (provider: any) => {
 const WithContainers: FC = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <Connection.Provider>
-      <PolygonContracts.Provider>
-        <EthereumContracts.Provider>
-          <Balances.Provider>
-            <ERC20Transfer.Provider>
-              <Prices.Provider>
-                <Pickles.Provider>
-                  <PickleStaking.Provider>
-                    <UniV2Pairs.Provider>
-                      <ComethPairs.Provider>
-                        <Dill.Provider>
-                          <SushiPairs.Provider>
-                            <Jars.Provider>
-                              <Farms.Provider>
-                                <Gauges.Provider>
-                                  <UserJars.Provider>
-                                    <UserFarms.Provider>
-                                      <UserGauges.Provider>
-                                        {children}
-                                      </UserGauges.Provider>
-                                    </UserFarms.Provider>
-                                  </UserJars.Provider>
-                                </Gauges.Provider>
-                              </Farms.Provider>
-                            </Jars.Provider>
-                          </SushiPairs.Provider>
-                        </Dill.Provider>
-                      </ComethPairs.Provider>
-                    </UniV2Pairs.Provider>
-                  </PickleStaking.Provider>
-                </Pickles.Provider>
-              </Prices.Provider>
-            </ERC20Transfer.Provider>
-          </Balances.Provider>
-        </EthereumContracts.Provider>
-      </PolygonContracts.Provider>
+      <EthereumContracts.Provider>
+        <Balances.Provider>
+          <ERC20Transfer.Provider>
+            <Prices.Provider>
+              <Pickles.Provider>
+                <PickleStaking.Provider>
+                  <UniV2Pairs.Provider>
+                    <ComethPairs.Provider>
+                      <Dill.Provider>
+                        <SushiPairs.Provider>
+                          <Jars.Provider>
+                            <Farms.Provider>
+                              <Gauges.Provider>
+                                <UserJars.Provider>
+                                  <UserFarms.Provider>
+                                    <UserGauges.Provider>
+                                      {children}
+                                    </UserGauges.Provider>
+                                  </UserFarms.Provider>
+                                </UserJars.Provider>
+                              </Gauges.Provider>
+                            </Farms.Provider>
+                          </Jars.Provider>
+                        </SushiPairs.Provider>
+                      </Dill.Provider>
+                    </ComethPairs.Provider>
+                  </UniV2Pairs.Provider>
+                </PickleStaking.Provider>
+              </Pickles.Provider>
+            </Prices.Provider>
+          </ERC20Transfer.Provider>
+        </Balances.Provider>
+      </EthereumContracts.Provider>
     </Connection.Provider>
   </Web3ReactProvider>
 );

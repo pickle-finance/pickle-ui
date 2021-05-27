@@ -5,7 +5,7 @@ import { Prices } from "../Prices";
 import { Jar } from "./useFetchJars";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts-Polygon";
+import { Contracts } from "../Contracts-Ethereum";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
 import { NETWORK_NAMES } from "containers/config";
 

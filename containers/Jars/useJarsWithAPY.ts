@@ -9,7 +9,7 @@ import {
   UNI_ETH_USDT_STAKING_REWARDS,
   UNI_ETH_WBTC_STAKING_REWARDS,
   SCRV_STAKING_REWARDS,
-  Contracts as EthContracts,
+  Contracts,
   MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
   MITH_MIS_USDT_STAKING_REWARDS,
@@ -21,11 +21,8 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
+  COMETH_USDC_WETH_REWARDS
 } from "../Contracts-Ethereum";
-import {
-  Contracts as PolyContracts,
-  COMETH_USDC_WETH_REWARDS,
-} from "../Contracts-Polygon";
 import { ComethPairs } from "../ComethPairs";
 import { Jar } from "./useFetchJars";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
@@ -81,12 +78,13 @@ const getCompoundingAPY = (apr: number) => {
   return 100 * (Math.pow(1 + apr / 365, 365) - 1);
 };
 
-export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input) =>
-  network === NETWORK_NAMES.ETH ? useJarWithAPYEth(jars) : useJarWithAPYPoly(jars);
+export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input) =>{
+  return network === NETWORK_NAMES.ETH ? useJarWithAPYEth(jars) : useJarWithAPYPoly(jars);
+}
 
 const useJarWithAPYEth = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
-  const { controller, strategy } = EthContracts.useContainer();
+  const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const { getPairData: getUniPairData } = UniV2Pairs.useContainer();
@@ -102,7 +100,7 @@ const useJarWithAPYEth = (jars: Input): Output => {
     steCRVPool,
     steCRVGauge,
     basisStaking,
-  } = EthContracts.useContainer();
+  } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
   const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.ETH);
@@ -785,10 +783,10 @@ const useJarWithAPYEth = (jars: Input): Output => {
 
 export const useJarWithAPYPoly = (jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
-  const { controller, strategy } = PolyContracts.useContainer();
+  const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getComethPairData } = ComethPairs.useContainer();
-  const { stakingRewards } = PolyContracts.useContainer();
+  const { stakingRewards } = Contracts.useContainer();
   const { getComethPairDayAPY } = useComethPairDayData();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,

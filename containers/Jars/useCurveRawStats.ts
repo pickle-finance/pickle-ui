@@ -29,7 +29,6 @@ export const useCurveRawStats = (
   network: NETWORK_NAMES,
 ): { rawStats: null | RawStatAPYs } => {
   const { prices } = Prices.useContainer();
-
   const [rawStats, setRawStats] = useState<RawStatAPYs | null>(null);
 
   const getLPAPY = async () => {
