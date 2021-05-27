@@ -8,6 +8,7 @@ import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
 import { Connection } from "../Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface JarApy {
   [k: string]: number;
@@ -32,7 +33,7 @@ export const useCurveSNXAPY = (
   pool: Pool | null,
   stakingRewards: StakingRewards | null,
 ): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [SNXAPY, setSNXAPY] = useState<number | null>(null);
@@ -77,7 +78,7 @@ export const useCurveSNXAPY = (
   };
 
   useEffect(() => {
-    getSNXAPY();
+    if (chainName === NETWORK_NAMES.ETH) getSNXAPY();
   }, [jars, prices]);
 
   return {

@@ -8,6 +8,7 @@ import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
 import { NETWORK_NAMES } from "containers/config";
+import { formatEther } from "ethers/lib/utils";
 
 export interface JarApy {
   [k: string]: number;
@@ -57,13 +58,12 @@ const aaveContracts = {
 };
 
 export const useCurveAm3MaticAPY = (): Output => {
-  const {
-    multicallProvider,
-  } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const { erc20 } = Contracts.useContainer();
 
   const [maticAPY, setMaticAPY] = useState<number | null>(null);
+  const [aaveAPY, setAaveAPY] = useState<number | null>(null);
 
   const getMaticAPY = async () => {
     if (multicallProvider && erc20 && prices?.snx) {
@@ -99,7 +99,7 @@ export const useCurveAm3MaticAPY = (): Output => {
         balance1,
         balance2,
         lpSupply,
-        lpBalance,
+        lpBalance, // Balance staked in gauge
       ] = await Promise.all([
         swap.balances(0),
         swap.balances(1),
@@ -107,27 +107,24 @@ export const useCurveAm3MaticAPY = (): Output => {
         lpToken.totalSupply(),
         lpToken.balanceOf(aaveContracts.gauge_address),
       ]);
+      const scaledBalance0 = balance0 / aaveContracts.coin_precisions[0];
+      const scaledBalance1 = balance1 / aaveContracts.coin_precisions[1];
+      const scaledBalance2 = balance2 / aaveContracts.coin_precisions[2];
 
-      const totalBalance =
-        balance0 / aaveContracts.coin_precisions[0] +
-        balance1 / aaveContracts.coin_precisions[1] +
-        balance2 / aaveContracts.coin_precisions[2];
-      const totalSupply = lpSupply / 10 ** 18;
-      const stakedBalance = lpBalance / 10 ** 18;
-      const averageApy =
-        aaveApys[0] * (balance0 / aaveContracts.coin_precisions[0]) +
-        aaveApys[1] * (balance1 / aaveContracts.coin_precisions[1]) +
-        aaveApys[2] * (balance2 / aaveContracts.coin_precisions[2]);
-      const maticAPY =
-        (((averageApy * 100) / totalBalance) * totalSupply) / stakedBalance;
+      const totalBalance = scaledBalance0 + scaledBalance1 + scaledBalance2;
+      const aaveAPY =
+        aaveApys[0] * (scaledBalance0 / totalBalance) +
+        aaveApys[1] * (scaledBalance1 / totalBalance) +
+        aaveApys[2] * (scaledBalance2 / totalBalance);
 
       const timestampEndMaticRewards = 1624389721;
       const wmaticRewardsAmount =
-        timestampEndMaticRewards < now
-          ? 0
-          : ((prices.matic * 12020000 * 6) / stakedBalance) * 100;
+        timestampEndMaticRewards < now ? 0 : prices.matic * 15462394 * 6; // Multiplied by 6 to annualize the rewards
 
-      setMaticAPY(maticAPY + wmaticRewardsAmount);
+      const wmaticAPY = wmaticRewardsAmount / +formatEther(lpBalance);
+
+      setAaveAPY(aaveAPY);
+      setMaticAPY(wmaticAPY);
     }
   };
 
@@ -137,7 +134,13 @@ export const useCurveAm3MaticAPY = (): Output => {
 
   return {
     APYs: [
-      { matic: getCompoundingAPY((maticAPY || 0) / 100), apr: maticAPY || 0 },
+      {
+        lp: (aaveAPY || 0) * 100,
+      },
+      {
+        matic: getCompoundingAPY(maticAPY * 0.8 || 0),
+        apr: maticAPY * 100 * 0.8 || 0,
+      },
     ],
   };
 };

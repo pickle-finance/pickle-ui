@@ -27,6 +27,7 @@ export interface JarApy {
 export interface JarWithAPY extends Jar {
   totalAPY: number;
   apr: number;
+  lp: number;
   APYs: Array<JarApy>;
 }
 
@@ -49,8 +50,8 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  const { rawStats } = useCurveRawStats(NETWORK_NAMES.POLY);
-  useCurveAm3MaticAPY();
+  const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.POLY);
+  const { APYs: am3CrvAPY } = useCurveAm3MaticAPY();
 
   const calculateComethAPY = async (rewardsAddress: string) => {
     if (
@@ -152,14 +153,17 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
       const aaveDaiStrategy = jars.find(
-        (jar) => jar.depositToken.address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
       )?.strategy;
 
       const [comethUsdcWethApy, aaveDaiAPY] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateAaveAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
-          aaveDaiStrategy?.address || "0x0b198b5EE64aB29c98A094380c867079d5a1682e",
+          aaveDaiStrategy?.address ||
+            "0x0b198b5EE64aB29c98A094380c867079d5a1682e",
         ),
       ]);
 
@@ -169,12 +173,21 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH) {
           APYs = [
             ...comethUsdcWethApy,
-            ...getComethPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH),
+            ...getComethPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH,
+            ),
           ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AAVE_DAI) {
           APYs = [...aaveDaiAPY];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV) {
+          APYs = [
+            { lp: (curveRawStats?.aave || 0) + am3CrvAPY[0].lp },
+            ...[am3CrvAPY[1]],
+          ];
         }
 
         let apr = 0;
@@ -192,9 +205,6 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
           }
         });
 
-        // const totalAPY = APYs.map((x) => {
-        //   return Object.values(x).reduce((acc, y) => acc + y, 0);
-        // }).reduce((acc, x) => acc + x, 0);
         const totalAPY = getCompoundingAPY(apr / 100) + lp;
 
         return {
@@ -202,6 +212,7 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
           APYs,
           totalAPY,
           apr,
+          lp,
         };
       });
 

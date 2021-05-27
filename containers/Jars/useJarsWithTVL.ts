@@ -9,6 +9,7 @@ import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
 import { JarWithAPY } from "./useJarsWithAPYEth";
 
 import { Connection } from "../Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
@@ -130,7 +131,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       await Promise.all([
         multicallJarContract.totalSupply(),
         multicallJarContract.balance(),
-        chainName === "Ethereum"
+        chainName === NETWORK_NAMES.ETH
           ? multicallPoolContract.get_virtual_price()
           : 0,
         multicallJarContract.getRatio(),

@@ -10,6 +10,7 @@ import { Pool } from "../Contracts/Pool";
 import { Gauge } from "../Contracts/Gauge";
 
 import { CurveGauge } from "../Contracts/CurveGauge";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface JarApy {
   [k: string]: number;
@@ -37,7 +38,7 @@ export const useCurveCrvAPY = (
 ): Output => {
   const { prices } = Prices.useContainer();
   const { gaugeController } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
 
   const [CRVAPY, setCRVAPY] = useState<number | null>(null);
 
@@ -85,7 +86,7 @@ export const useCurveCrvAPY = (
   };
 
   useEffect(() => {
-    getCRVAPY();
+    if (chainName === NETWORK_NAMES.ETH) getCRVAPY();
   }, [jars, prices]);
 
   return {
