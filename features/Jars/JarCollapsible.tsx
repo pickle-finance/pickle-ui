@@ -14,7 +14,7 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "containers/config"
+import { NETWORK_NAMES } from "containers/config";
 
 interface DataProps {
   isZero?: boolean;
@@ -201,7 +201,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
     const dStatus = getTransferStatus(
@@ -221,8 +221,10 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
   }).join(" + ");
 
   const isDisabledJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAS_DAI;
+    depositToken.address ===
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAC_DAI ||
+    depositToken.address ===
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAS_DAI;
 
   return (
     <Collapse
@@ -317,18 +319,19 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                   token: depositToken.address,
                   recipient: jarContract.address,
                   transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .deposit(ethers.utils.parseEther(depositAmount));
+                    return jarContract.connect(signer).deposit(
+                      ethers.utils.parseEther(depositAmount),
+                      chainName === NETWORK_NAMES.POLY
+                        ? {
+                            gasLimit: 230000,
+                          }
+                        : undefined,
+                    );
                   },
                 });
               }
             }}
-            disabled={
-              depositButton.disabled ||
-              depositTokenName === "DAI" ||
-              isDisabledJar
-            }
+            disabled={depositButton.disabled || isDisabledJar}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -376,9 +379,14 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                   token: jarContract.address,
                   recipient: jarContract.address,
                   transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .withdraw(ethers.utils.parseEther(withdrawAmount));
+                    return jarContract.connect(signer).withdraw(
+                      ethers.utils.parseEther(withdrawAmount),
+                      chainName === NETWORK_NAMES.POLY
+                        ? {
+                            gasLimit: 230000,
+                          }
+                        : undefined,
+                    );
                   },
                 });
               }
