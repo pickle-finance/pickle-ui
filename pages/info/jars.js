@@ -74,12 +74,58 @@ export default function Dashboard() {
   }, []);
 
   const jars = dashboardData.sushiJars.concat(dashboardData.uniJars);
+  const allJars = dashboardData.sushiJars
+    .concat(dashboardData.crvJars)
+    .concat(dashboardData.uniJars);
+
+  const assets = allJars.map((d) => d.asset);
+  const blockData = {};
+  allJars.forEach((item) => {
+    item.data.forEach((d) => {
+      if (blockData[d.x] === undefined) {
+        blockData[d.x] = { x: d.x };
+      }
+      blockData[d.x][item.asset] = d.y;
+    });
+  });
+
+  const combinedData = [];
+  let y = 0;
+  for (const key of Object.keys(blockData).sort()) {
+    let point = { x: parseInt(key) };
+    const value = blockData[key];
+    for (const asset of assets) {
+      if (value[asset]) {
+        point = { ...point, y: (y += value[asset])/1000 };
+      }
+    }
+    combinedData.push(point);
+  }
+
+  const trimmedData = [];
+  for (let i = 0; i < combinedData.length; i++) {
+    if (i % 50 === 0) {
+      trimmedData.push(combinedData[i]);
+    }
+  }
+
+  const tvlJar = {
+    data: trimmedData.filter((x) => Object.values(x)[1]),
+    asset: "Pickle Finance",
+  };
+
   return (
     <>
       <TopBar />
       <Page>
         <InfoBar />
         <Grid container spacing={2}>
+          <h1>Total Value Locked</h1>
+
+          <Grid item xs={12}>
+            <JarValueChart jar={tvlJar} />
+          </Grid>
+
           <Grid
             item
             xs={12}

@@ -1,16 +1,18 @@
 import { BigNumber, ethers } from "ethers";
-import { useEffect, useState } from "react";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
-import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { Erc20 } from "../../containers/Contracts/Erc20";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { getStats } from "../../features/Zap/useZapper";
+import { Gauge } from "../../containers/Contracts/Gauge";
 
 export const FARM_LP_TO_GAUGE = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819":
     "0xfAA267C3Bb25a82CFDB604136a29895D30fd3fd8", // PICKLE/ETH
   "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48":
     "0xd3F6732D758008E59e740B2bc2C1b5E420b752c2", // pyveCRV/ETH
-  "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33":
+  "0xDA481b277dCe305B97F4091bD66595d57CF31634":
     "0xf5bD1A4894a6ac1D786c7820bC1f36b1535147F6", // p3CRV
   "0x55282dA27a3a02ffe599f6D11314D239dAC89135":
     "0x6092c7084821057060ce2030F9CC11B22605955F", // pSLPDAI
@@ -44,15 +46,21 @@ export const FARM_LP_TO_GAUGE = {
     "0xdaf08622Ce348fdEA09709F279B6F5673B1e0dad", // pSUSHIETH
   "0xC1513C1b0B359Bc5aCF7b772100061217838768B":
     "0xeA5b46877E2d131405DB7e5155CC15B8e55fbD27", // pUNIFEITRIBE
+  "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378":
+    "0xDA481b277dCe305B97F4091bD66595d57CF31634", // pSUSHIYVBOOST
 };
 
+const YVBOOST_GAUGE = "0xDA481b277dCe305B97F4091bD66595d57CF31634";
+const YVECRV_GAUGE = " 0xd3F6732D758008E59e740B2bc2C1b5E420b752c2";
+
 export const useMigrate = (
-  jarToken: Erc20,
+  jarToken: Erc20 | null,
   poolIndex: number,
-  balance: BigNumber,
+  balance: BigNumber | null,
+  staked: BigNumber | null,
 ) => {
   const { address, signer, blockNum } = Connection.useContainer();
-  const { masterchef } = Contracts.useContainer();
+  const { masterchef, yvBoostMigrator, erc20 } = Contracts.useContainer();
 
   const deposit = async () => {
     if (!jarToken || !address) return;
@@ -77,11 +85,81 @@ export const useMigrate = (
   };
 
   const withdraw = async () => {
-    if (!address || !masterchef || !parseInt(balance.toString())) return;
+    if (!address || !masterchef || !parseInt(staked.toString())) return;
 
-    const tx = await masterchef.withdraw(poolIndex, balance);
+    const tx = await masterchef.withdraw(poolIndex, staked);
     await tx.wait();
   };
 
-  return { deposit, withdraw };
+  const withdrawGauge = async (gauge: Gauge) => {
+    if (!address || !gauge || !parseInt(staked.toString())) return;
+
+    const tx = await gauge.exit();
+    await tx.wait();
+  };
+
+  const migrateYvboost = async () => {
+    if (!yvBoostMigrator || !signer || !address || !erc20) return;
+
+    const pYvcrvContract = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
+    const pYvcrvBalance = await pYvcrvContract.balanceOf(address);
+
+    const allowance = await pYvcrvContract.allowance(
+      address,
+      yvBoostMigrator.address,
+    );
+    if (pYvcrvBalance && !allowance.gte(pYvcrvBalance)) {
+      const tx1 = await jarToken.approve(
+        yvBoostMigrator.address,
+        ethers.constants.MaxUint256,
+      );
+      await tx1.wait();
+    }
+
+    const [yveCrvStats, yvboostStats] = await getStats([
+      "pSUSHI ETH / yveCRV-DAO",
+      "pSUSHI yveCRV Vault (v2) / ETH",
+    ]);
+
+    let minOut;
+    if (yveCrvStats && yvboostStats) {
+      const yveCrvPrice = yveCrvStats.pricePerToken;
+      const yvboostPrice = yvboostStats.pricePerToken;
+      minOut = pYvcrvBalance
+        .mul(ethers.utils.parseEther(yveCrvPrice.toString()))
+        .mul(97)
+        .div(100)
+        .div(ethers.utils.parseEther(yvboostPrice.toString()));
+    } else {
+      minOut = pYvcrvBalance.mul(3).div(4);
+    }
+
+    const tx2 = await yvBoostMigrator.Migrate(pYvcrvBalance, minOut, {
+      gasLimit: 1300000,
+    });
+    await tx2.wait();
+  };
+
+  const depositYvboost = async () => {
+    if (!erc20 || !address) return null;
+    const pYvboostContract = erc20.attach(PICKLE_JARS.pyvBOOSTETH);
+    const pYvboostBalance = await pYvboostContract.balanceOf(address);
+
+    const gauge = signer && GaugeFactory.connect(YVBOOST_GAUGE, signer);
+    const allowance = await pYvboostContract.allowance(address, YVBOOST_GAUGE);
+    if (pYvboostBalance && !allowance.gte(pYvboostBalance)) {
+      const tx1 = await pYvboostContract.approve(
+        YVBOOST_GAUGE,
+        ethers.constants.MaxUint256,
+      );
+      await tx1.wait();
+    }
+
+    if (gauge && pYvboostBalance) {
+      const tx2 = await gauge.deposit(pYvboostBalance);
+      await tx2.wait();
+    }
+  };
+
+  return { deposit, withdraw, migrateYvboost, depositYvboost, withdrawGauge };
 };

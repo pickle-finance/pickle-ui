@@ -25,7 +25,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 
 interface ButtonStatus {
@@ -92,6 +92,9 @@ export const FARM_LP_TO_ICON = {
   "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
   ),
+  "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvboost.png"} />
+  ),
   "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/sushiswap.png"} />
   ),
@@ -124,6 +127,15 @@ export const FARM_LP_TO_ICON = {
   ),
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
+  ),
+  "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
+  ),
+  "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
 };
 
@@ -175,6 +187,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     apy,
   } = farmData;
   const stakedNum = parseFloat(formatEther(staked));
+  const balanceNum = parseFloat(formatEther(balance));
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -199,7 +212,12 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   } = ERC20Transfer.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { signer, chainName } = Connection.useContainer();
-  const { deposit, withdraw } = useMigrate(depositToken, poolIndex, staked);
+  const { deposit, withdraw, migrateYvboost, depositYvboost } = useMigrate(
+    depositToken,
+    poolIndex,
+    balance,
+    staked,
+  );
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -218,6 +236,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   });
 
   const [migrateState, setMigrateState] = useState<string | null>(null);
+  const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
+  const [isSuccess, setSuccess] = useState<boolean>(false);
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
@@ -245,8 +265,12 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   }).reduce((acc, x) => acc + x, 0);
 
   const isDisabledFarm =
-    depositToken.address === PICKLE_JARS.pUNIBACDAI ||
-    depositToken.address === PICKLE_JARS.pUNIBASDAI;
+    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBACDAI.toLowerCase() ||
+    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBASDAI;
+
+  const isyveCRVFarm =
+    depositToken.address.toLowerCase() ===
+    PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
 
   const handleMigrate = async () => {
     if (stakedNum) {
@@ -264,6 +288,125 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       }
     }
   };
+
+  const handleYvboostMigrate = async () => {
+    if (stakedNum || balanceNum) {
+      try {
+        setYvMigrateState("Withdrawing from Farm...");
+        await withdraw();
+        setYvMigrateState("Migrating to yvBOOST pJar...");
+        await migrateYvboost();
+        setYvMigrateState("Migrated! Staking in Farm...");
+        await depositYvboost();
+        setYvMigrateState(null);
+        setSuccess(true);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setYvMigrateState(null);
+        return;
+      }
+    }
+  };
+
+  const renderButton = () => {
+    if(isyveCRVFarm) {
+      return (
+        <>
+          <Button
+            disabled={yvMigrateState !== null}
+            onClick={handleYvboostMigrate}
+            style={{ width: "100%", textTransform: "none" }}
+          >
+            {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+          </Button>
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "Source Sans Pro",
+              fontSize: "1rem",
+            }}
+          >
+            Your tokens will be unstaked and migrated to the yvBOOST pJar and
+            staked in the new{" "}
+            <Link color href="/farms">
+              Farms
+            </Link>
+            . <br />
+            This process will require a number of transactions.
+            <br/>
+            Learn more about yvBOOST <a target="_" href="https://twitter.com/iearnfinance/status/1376912409688956932">here</a>.
+            {isSuccess ? (
+              <p style={{fontWeight: "bold"}}>
+                Migration completed! See your deposits{" "}
+                <Link color href="/farms">
+                  here
+                </Link>
+              </p>
+            ) : null}
+          </div>
+        </>
+      )
+    } else if(isDisabledFarm) {
+      return (
+        <>
+        <Button
+          disabled={harvestButton.disabled}
+          onClick={() => {
+            if (masterchef && signer) {
+              transfer({
+                token: masterchef.address,
+                recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
+                approval: false,
+                transferCallback: async () => {
+                  return masterchef.connect(signer).withdraw(poolIndex, 0);
+                },
+              });
+            }
+          }}
+          style={{ width: "100%" }}
+        >
+          {harvestButton.text}
+        </Button>
+        <div
+          style={{
+            width: "100%",
+            textAlign: "center",
+            fontFamily: "Source Sans Pro",
+            fontSize: "1rem",
+          }}
+        >
+          Please harvest your earned PICKLEs. The Basis Cash Jars/Farms are no longer operating. <br/>
+          Claim your Uniswap LP tokens according to the instructions <a href="https://twitter.com/picklefinance/status/1386942926983372800">here</a>
+        </div>
+      </>
+      )
+    } else {
+      return (
+        <>
+        <Button
+          disabled={migrateState !== null || isDisabledFarm}
+          onClick={handleMigrate}
+          style={{ width: "100%" }}
+        >
+          {migrateState || "Migrate"}
+        </Button>
+        <div
+          style={{
+            width: "100%",
+            textAlign: "center",
+            fontFamily: "Source Sans Pro",
+            fontSize: "1rem",
+          }}
+        >
+          Your tokens will be unstaked and deposited in the new Farms. This
+          process requires a number of transactions.
+        </div>
+      </>
+      )
+    }
+  }
 
   useEffect(() => {
     if (masterchef) {
@@ -434,24 +577,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         </Grid>
       </Grid.Container>
       <Spacer />
-      <Button
-        disabled={migrateState !== null || isDisabledFarm}
-        onClick={handleMigrate}
-        style={{ width: "100%" }}
-      >
-        {migrateState || "Migrate"}
-      </Button>
-      <div
-        style={{
-          width: "100%",
-          textAlign: "center",
-          fontFamily: "Source Sans Pro",
-          fontSize: "0.8rem",
-        }}
-      >
-        Your tokens will be unstaked and deposited in the new Farms. This
-        process requires a number of transactions.
-      </div>
+      {renderButton()}
     </Collapse>
   );
 };

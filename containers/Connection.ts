@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
+<<<<<<< HEAD
 import { ethers } from "ethers";
 import { providers } from "@0xsequence/multicall";
+=======
+import type { providers } from "ethers";
+import { Provider as MulticallProvider } from "ethers-multicall";
+>>>>>>> master
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 import { config, ChainName } from "./config";
 import { Provider } from "@ethersproject/providers";
 
-type Network = ethers.providers.Network;
-
 function useConnection() {
+<<<<<<< HEAD
   const { account, library, chainId } = useWeb3React();
   const [ethInfuraProvider] = useState<Provider>(
     new ethers.providers.JsonRpcProvider(process.env.ethRPC) as any,
@@ -18,6 +22,9 @@ function useConnection() {
   const [polygonInfuraProvider] = useState<Provider>(
     new ethers.providers.JsonRpcProvider(process.env.polygonRPC) as any,
   );
+=======
+  const { account, library } = useWeb3React<providers.Web3Provider>();
+>>>>>>> master
 
   const [
     multicallProvider,
@@ -36,7 +43,7 @@ function useConnection() {
     }),
   );
 
-  const [network, setNetwork] = useState<Network | null>(null);
+  const [network, setNetwork] = useState<providers.Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
   const switchChain = async (chainId: number) => {
@@ -68,7 +75,7 @@ function useConnection() {
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
-      library.getNetwork().then((network: any) => setNetwork(network));
+      library.getNetwork().then((network) => setNetwork(network));
 
       setMulticallProvider(
         new providers.MulticallProvider(library, {

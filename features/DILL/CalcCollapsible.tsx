@@ -1,4 +1,5 @@
 import { formatEther, parseEther } from "ethers/lib/utils";
+import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select, Input } from "@geist-ui/react";
@@ -8,6 +9,7 @@ import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 
 export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
@@ -32,16 +34,21 @@ export const CalcCollapsible: FC<{
       (x) => x.depositTokenName === depositToken,
     );
 
+    const isUsdc =
+    selectedGauge.depositToken.address.toLowerCase() ===
+    PICKLE_JARS.pyUSDC.toLowerCase();
+
     if (selectedGauge) {
       const balance = +formatEther(
-        selectedGauge.balance.add(selectedGauge.staked),
+        selectedGauge.balance.add(selectedGauge.staked)
       );
-      const balanceUSD = (balance * selectedGauge.usdPerToken).toFixed(2);
+      const balanceUSD = (balance * selectedGauge.usdPerToken * (isUsdc ? 1e12 : 1)).toFixed(2);
+
       setBalance(balanceUSD);
       setTotalBalance(
         (
           (selectedGauge.totalSupply * selectedGauge.usdPerToken) /
-          10 ** 18
+          (isUsdc ? 1e6 : 1e18)
         ).toFixed(2),
       );
       setSelectedGauge(selectedGauge)

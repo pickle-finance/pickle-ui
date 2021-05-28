@@ -25,13 +25,13 @@ export const useBalances = (): IUseBalances => {
   const getData = async () => {
     if (address && pickle) {
       // get pickle balance
-      const balanceBN = (await pickle.balanceOf(address)) as BigNumber;
+      const balanceBN = await pickle.balanceOf(address);
       const balance = ethers.utils.formatUnits(balanceBN);
       setPickleBalance(Number(balance));
       setPickleBN(balanceBN);
 
       // get pickle total supply
-      const totalSupplyBN = (await pickle.totalSupply()) as BigNumber;
+      const totalSupplyBN = await pickle.totalSupply();
       const totalSupply = ethers.utils.formatUnits(totalSupplyBN);
       setTotalSupply(Number(totalSupply));
     }

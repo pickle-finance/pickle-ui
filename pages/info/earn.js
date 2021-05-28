@@ -32,6 +32,14 @@ import { Connection } from "../../containers/Connection";
 import { TopBar } from "../../features/TopBar/TopBar";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
+
+const isMStonksJar = (token) =>
+  token === PICKLE_JARS.pUNIMTSLAUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMBABAUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMSLVUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMQQQUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMAAPLUST.toLowerCase();
 
 const theme = createMuiTheme({
   palette: {
@@ -183,7 +191,11 @@ export default function Earn(props) {
           <EarnRow
             asset={jarInfo ? jarInfo.title : jar.asset}
             earned={getTokens(jar.balance)}
-            value={formatUsd(jar.balanceUsd)}
+            value={
+              isMStonksJar(jar.id)
+                ? formatUsd(jar.balanceUsd * 2)
+                : formatUsd(jar.balanceUsd)
+            }
             icon={`/assets/${jar.asset.toLowerCase()}.png`}
             key={i}
           />
@@ -201,7 +213,11 @@ export default function Earn(props) {
           <EarnRow
             asset={jarInfo ? jarInfo.title : jar.asset}
             earned={getTokens(jar.earned)}
-            value={formatUsd(jar.earnedUsd)}
+            value={
+              isMStonksJar(jar.id)
+                ? formatUsd(jar.earnedUsd * 2)
+                : formatUsd(jar.earnedUsd)
+            }
             icon={`/assets/${jar.asset.toLowerCase()}.png`}
             key={i}
           />
@@ -238,7 +254,16 @@ export default function Earn(props) {
                       title={"Deposited Balance"}
                       value={
                         accountData
-                          ? formatUsd(accountData.balance)
+                          ? formatUsd(
+                              accountData.jarData
+                                .filter((jar) => jar.balance > 0)
+                                .reduce((acc, jar) => {
+                                  const jarValue = isMStonksJar(jar.id)
+                                  ? jar.balanceUsd * 2
+                                  : jar.balanceUsd
+                                  return acc + jarValue;
+                                }, 0),
+                            )
                           : accountData
                       }
                       subtext="Current USD Value"

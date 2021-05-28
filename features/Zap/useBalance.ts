@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { Erc20Factory } from "../../containers/Contracts/Erc20Factory";
+import { Erc20__factory as Erc20Factory } from "../../containers/Contracts/factories/Erc20__factory";
 import { Connection } from "../../containers/Connection";
 
 const tokenInfo = {

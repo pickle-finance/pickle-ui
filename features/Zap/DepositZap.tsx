@@ -1,19 +1,28 @@
 import { FC, useState } from "react";
-import { Card, Select, Spacer, Input, Button, Link } from "@geist-ui/react";
+import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist-ui/react";
+import Link from "next/link";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
-import { useDeposit } from "./useDeposit";
-import { useDepositEth } from "./useDeposit";
+import { useZapIn } from "./useZapper";
 import { TokenIcon } from "../../components/TokenIcon";
+import { useMigrate } from "../../features/Farms/UseMigrate";
+
+import {
+  DEFAULT_SLIPPAGE,
+  YVECRVETH_JAR,
+  CRV_ADDRESS,
+  ETH_ADDRESS,
+} from "./constants";
 
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: parseFloat(numStr) < 1 ? 18 : 4,
+    maximumFractionDigits: parseFloat(numStr) < 1 ? 6 : 4,
   });
 
 export const DepositZap: FC = () => {
   const [inputToken, setInputToken] = useState<TokenSymbol>("ETH");
+  const [sellTokenAddress, setSellTokenAddress] = useState(ETH_ADDRESS);
   const [amount, setAmount] = useState<string>("0");
   const [txState, setTxState] = useState<string | null>(null);
 
@@ -23,27 +32,25 @@ export const DepositZap: FC = () => {
     balanceStr !== null && setAmount(balanceStr);
   };
 
-  const { approve, deposit } = useDeposit(inputToken, amount, decimals);
-  const { depositEth } = useDepositEth(amount);
+  const { zapIn } = useZapIn({
+    poolAddress: YVECRVETH_JAR,
+    sellTokenAddress,
+    rawAmount: amount,
+    slippagePercentage: DEFAULT_SLIPPAGE,
+  });
+
+  const {
+    depositYvboost,
+  } = useMigrate(null, 0, null, null);
+
   const handleDeposit = async () => {
     if (amount && decimals) {
-      if (inputToken == "ETH") {
+      {
         try {
           setTxState("Zapping...");
-          await depositEth();
-          setTxState(null);
-        } catch (error) {
-          console.error(error);
-          alert(error.message);
-          setTxState(null);
-          return;
-        }
-      } else {
-        try {
-          setTxState("Approving...");
-          await approve();
-          setTxState("Zapping...");
-          await deposit();
+          await zapIn();
+          setTxState("Depositing in Farm...");
+          await depositYvboost();
           setTxState(null);
         } catch (error) {
           console.error(error);
@@ -52,6 +59,15 @@ export const DepositZap: FC = () => {
           return;
         }
       }
+    }
+  };
+
+  const setInput = (inputToken: TokenSymbol) => {
+    setInputToken(inputToken);
+    if (inputToken === "ETH") {
+      setSellTokenAddress(ETH_ADDRESS);
+    } else {
+      setSellTokenAddress(CRV_ADDRESS);
     }
   };
 
@@ -70,12 +86,12 @@ export const DepositZap: FC = () => {
   return (
     <Card>
       <h2>
-        <TokenIcon src="/yvecrv.png" />
-        Zap to yveCRV
+        <TokenIcon src="/yvboost.png" />
+        Zap to yvBOOST
       </h2>
       <p>
-        Zap ETH or CRV into ETH/yveCRV SLP and auto-deposit to{" "}
-        <a href="/farms">Pickle Farm</a>.
+        Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to{" "}
+        <Link href="/farms" passHref>Pickle Farm</Link>.
       </p>
       <h3>Deposit Token</h3>
       <Select
@@ -83,7 +99,7 @@ export const DepositZap: FC = () => {
         width="100%"
         style={{ maxWidth: "100%" }}
         value={inputToken}
-        onChange={(e) => setInputToken(e.toString() as TokenSymbol)}
+        onChange={(e) => setInput(e.toString())}
       >
         {inputTokens.map((token) => (
           <Select.Option
@@ -106,9 +122,9 @@ export const DepositZap: FC = () => {
         }}
       >
         <div>Balance: {balanceStr !== null ? formatValue(balanceStr) : 0}</div>
-        <Link color href="#" onClick={setToMax}>
+        <DisplayLink color href="#" onClick={setToMax}>
           Max
-        </Link>
+        </DisplayLink>
       </div>
       <Input
         onChange={(e) => setAmount(e.target.value)}

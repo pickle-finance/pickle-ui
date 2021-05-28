@@ -19,7 +19,11 @@ export interface UseDillOutput {
   weeklyProfit: number | null;
   weeklyDistribution: number | null;
   nextDistribution: Date | null;
+  lastDistribution: number | null;
+  lastDistributionValue: number | null;
 }
+
+const WEEK = 7 * 86400;
 
 export function useDill(): UseDillOutput {
   const { blockNum, address, chainName } = Connection.useContainer();
@@ -35,6 +39,10 @@ export function useDill(): UseDillOutput {
   const [lockedValue, setLockedValue] = useState<number | null>(null);
   const [totalPickleValue, setTotalPickleValue] = useState<number | null>(null);
   const [nextDistribution, setNextDistribution] = useState<Date | null>(null);
+  const [lastDistribution, setLastDistribution] = useState<number | null>(null);
+  const [lastDistributionValue, setLastDistributionValue] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     if (
@@ -48,7 +56,6 @@ export function useDill(): UseDillOutput {
         const dillContract = dill.attach(DILL);
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
 
-        const epochTime = 604800;
         const [
           lockStats,
           balance,
@@ -67,15 +74,26 @@ export function useDill(): UseDillOutput {
           feeDistributorContract["time_cursor()"]({ gasLimit: 1000000 }),
         ]);
 
+        const lastDistribution = await feeDistributorContract.tokens_per_week(
+          timeCursor.sub(ethers.BigNumber.from(WEEK * 2)),
+          {
+            gasLimit: 1000000,
+          },
+        );
+
         const totalLockedValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
 
         const totalPickleValue =
           prices.pickle * parseFloat(ethers.utils.formatEther(totalLocked));
 
-        const nextDistribution = new Date(
-          timeCursor.add(epochTime).toNumber() * 1000,
+        const nextDistribution = new Date(timeCursor.toNumber() * 1000);
+
+        const lastDistributionPickles = parseFloat(
+          ethers.utils.formatEther(lastDistribution),
         );
+
+        const lastDistributionValue = prices.pickle * lastDistributionPickles;
 
         setLockedAmount(lockStats?.amount);
         setLockEndDate(lockStats?.end);
@@ -86,6 +104,8 @@ export function useDill(): UseDillOutput {
         setTotalPickleValue(totalPickleValue);
         setUserClaimable(userClaimable.toString() ? userClaimable : null);
         setNextDistribution(nextDistribution);
+        setLastDistribution(lastDistributionPickles);
+        setLastDistributionValue(lastDistributionValue);
       };
 
       f();
@@ -104,6 +124,8 @@ export function useDill(): UseDillOutput {
     weeklyProfit,
     weeklyDistribution,
     nextDistribution,
+    lastDistribution,
+    lastDistributionValue,
   };
 }
 

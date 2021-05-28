@@ -6,7 +6,7 @@ import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 
 interface IFarmInfo {
-  [key: string]: { tokenName: string; poolName: string };
+  [key: string]: { tokenName: string; poolName: string; };
 }
 
 export const FarmInfo: IFarmInfo = {
@@ -130,6 +130,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP yveCRV",
     poolName: "Back Scratcher",
   },
+  "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378": {
+    tokenName: "pSLP yvBOOST",
+    poolName: "Back Scratcher",
+  },
   "0xECb520217DccC712448338B0BB9b08Ce75AD61AE": {
     tokenName: "pSLP SUSHI",
     poolName: "pSLP SUSHI",
@@ -157,6 +161,18 @@ export const FarmInfo: IFarmInfo = {
   "0x927e3bCBD329e89A8765B52950861482f0B227c4": {
     tokenName: "pUNIV2 LUSD/ETH",
     poolName: "pUNIV2 LUSD/ETH",
+  },
+  "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9": {
+    tokenName: "pSLP ALCX/ETH",
+    poolName: "pSLP ALCX/ETH",
+  },
+  "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94": {
+    tokenName: "pYearnUSDCv2",
+    poolName: "Pickled Yearn USDC",
+  },
+  "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2": {
+    tokenName: "pYearnLusdCRV",
+    poolName: "Pickled Yearn LUSD",
   },
 };
 

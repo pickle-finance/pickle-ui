@@ -15,6 +15,7 @@ const Gauges: FC = () => {
       <TopBar />
       <Page>
         <Page.Content>
+<<<<<<< HEAD
           {chainName != NETWORK_NAMES.POLY && (
             <Note
               label={false}
@@ -34,6 +35,18 @@ const Gauges: FC = () => {
               The new Farms go live Thursday April 22, 12 AM GMT
             </Note>
           )}
+=======
+          <Note label={false} style={{ textAlign: "center", fontSize: "15px" }}>
+            Welcome to the new Farms. If you're looking for tokens you
+            deposited, it may be in our old Farms
+            <br />
+            <Link href="/old-farms" passHref style={{ color: "var(--link-color)" }}>
+              Click here to see the old Farms
+            </Link>
+            <br />
+            The new Farms are live and earning $PICKLEs
+          </Note>
+>>>>>>> master
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
             Farms
           </h1>

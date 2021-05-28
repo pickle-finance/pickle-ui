@@ -103,18 +103,35 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
   ),
+  "0x9461173740D27311b176476FA27e94C681b1Ea6b": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvboost.png"} />
+  ),
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/sushiswap.png"} />
   ),
   "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+<<<<<<< HEAD
   "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
     <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
   "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
   "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
+=======
+  "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
+  ),
+  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
+  ),
+>>>>>>> master
 };
+
+const USDC_SCALE = ethers.utils.parseUnits("1", 12);
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -147,7 +164,7 @@ const setButtonStatus = (
   }
 };
 
-export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
+export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> = ({ jarData, isYearnJar = false }) => {
   const {
     name,
     jarContract,
@@ -162,9 +179,14 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     depositTokenLink,
     apr,
   } = jarData;
-
-  const balNum = parseFloat(formatEther(balance));
-  const depositedNum = parseFloat(formatEther(deposited));
+  const isUsdc =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
+    
+  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+  const depositedNum = parseFloat(
+    formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+  );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: balNum < 1 ? 18 : 4,
@@ -174,7 +196,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
     maximumFractionDigits: depositedNum < 1 ? 18 : 4,
   });
   const depositedUnderlyingStr = (
-    parseFloat(formatEther(deposited)) * ratio
+    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 18 : 4,
@@ -217,14 +239,27 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
-    return `${k}: ${v.toFixed(2)}%`;
-  }).join(" + ");
+    return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
+  }).filter(x=>x).join(" + ");
 
   const isDisabledJar =
+<<<<<<< HEAD
     depositToken.address ===
       JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAC_DAI ||
     depositToken.address ===
       JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAS_DAI;
+=======
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI 
+
+  const isMStonksJar =
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
+    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
+>>>>>>> master
 
   return (
     <Collapse
@@ -251,7 +286,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={4} lg={4}>
+          <Grid xs={24} sm={12} md={5} lg={5}>
             <Data>
               <Tooltip text={tooltipText}>
                 {totalAPY.toFixed(2) + "%" || "--"}
@@ -259,7 +294,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
             </Data>
             <Data>
               <Tooltip
-                text={`This yield is calculated in real time from a base rate of ${apr.toFixed(
+                text={isYearnJar ? `This jar deposits into Yearn's ${APYs[1].vault}, The base rate of ${apr.toFixed(2)}% is provided by the underlying Yearn strategy` : `This yield is calculated in real time from a base rate of ${apr.toFixed(
                   2,
                 )}% which we auto-compound regularly.`}
               >
@@ -274,15 +309,15 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               </Tooltip>
             </Data>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={5}>
             <Data isZero={balNum === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>Value</Label>
           </Grid>
@@ -299,7 +334,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(formatEther(balance));
+                setDepositAmount(
+                  formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+                );
               }}
             >
               Max
@@ -319,6 +356,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                   token: depositToken.address,
                   recipient: jarContract.address,
                   transferCallback: async () => {
+<<<<<<< HEAD
                     return jarContract.connect(signer).deposit(
                       ethers.utils.parseEther(depositAmount),
                       chainName === NETWORK_NAMES.POLY
@@ -327,6 +365,11 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                           }
                         : undefined,
                     );
+=======
+                    return jarContract
+                      .connect(signer)
+                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+>>>>>>> master
                   },
                 });
               }
@@ -344,7 +387,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               <Tooltip
                 text={`${
                   deposited && ratio
-                    ? parseFloat(formatEther(deposited)) * ratio
+                    ? parseFloat(
+                        formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                      ) * ratio
                     : 0
                 } ${depositTokenName}`}
               >
@@ -357,7 +402,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setWithdrawAmount(formatEther(deposited));
+                setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
               }}
             >
               Max
@@ -379,6 +424,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                   token: jarContract.address,
                   recipient: jarContract.address,
                   transferCallback: async () => {
+<<<<<<< HEAD
                     return jarContract.connect(signer).withdraw(
                       ethers.utils.parseEther(withdrawAmount),
                       chainName === NETWORK_NAMES.POLY
@@ -387,7 +433,13 @@ export const JarCollapsible: FC<{ jarData: UserJarData }> = ({ jarData }) => {
                           }
                         : undefined,
                     );
+=======
+                    return jarContract
+                      .connect(signer)
+                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
+>>>>>>> master
                   },
+                  approval: false
                 });
               }
             }}

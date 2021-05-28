@@ -28,9 +28,11 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { GaugeFactory } from "../../containers/Contracts/GaugeFactory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
+import { useMigrate } from "../Farms/UseMigrate";
+import { PICKLE_JARS } from "../../containers/Jars/jars";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -52,6 +54,7 @@ const Label = styled.div`
 `;
 
 const GAUGE_LP_TO_ICON = FARM_LP_TO_ICON;
+const USDC_SCALE = ethers.utils.parseUnits("1", 12);
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -79,7 +82,7 @@ const setButtonStatus = (
 };
 
 const formatAPY = (apy: number) => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
+  if (apy > 1e6) return "∞%";
   return apy.toFixed(2) + "%";
 };
 
@@ -98,13 +101,25 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     usdPerToken,
     fullApy,
   } = gaugeData;
+  const isUsdc =
+    depositToken.address.toLowerCase() ===
+    PICKLE_JARS.pyUSDC.toLowerCase();
+
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
-  const stakedNum = parseFloat(formatEther(staked));
+  const stakedNum = parseFloat(formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked));
+  const balanceNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+  const {
+    deposit,
+    withdraw,
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+  } = useMigrate(depositToken, 0, balance, staked);
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const bal = parseFloat(formatEther(balance));
+  const bal = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: bal < 1 ? 18 : 4,
@@ -144,6 +159,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     text: "Harvest and Exit",
   });
 
+  const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
+  const [isSuccess, setSuccess] = useState<boolean>(false);
+
+  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
+
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [];
   const pickleAPYMin = fullApy * 100 * 0.4;
@@ -162,7 +182,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   }
 
   const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce((acc, y) => acc + y, 0);
+    return Object.values(x).reduce((acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y), 0);
   }).reduce((acc, x) => acc + x, 0);
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
@@ -170,7 +190,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
 
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
-  const _adjusted = (gaugeData.totalSupply / 10 ** 18) * dillRatio * 0.6;
+  const _adjusted = (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
   const realAPY = totalAPY + pickleAPY;
@@ -180,17 +200,41 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6 ? null :`${k}: ${v.toFixed(2)}%`;
     }),
-  ].join(" + ");
+  ].filter(x=>x).join(" + ");
   const yourApyTooltipText = [
     `pickle: ${formatAPY(pickleAPY)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6  ? null :`${k}: ${v.toFixed(2)}%`;
     }),
-  ].join(" + ");
+  ].filter(x=>x).join(" + ");
+
+  const isyveCRVFarm =
+    depositToken.address.toLowerCase() ===
+    PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
+
+  const handleYvboostMigrate = async () => {
+    if (stakedNum || balanceNum) {
+      try {
+        setYvMigrateState("Withdrawing from Farm...");
+        await withdrawGauge(gauge);
+        setYvMigrateState("Migrating to yvBOOST pJar...");
+        await migrateYvboost();
+        setYvMigrateState("Migrated! Staking in Farm...");
+        await depositYvboost();
+        setYvMigrateState(null);
+        setSuccess(true);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setYvMigrateState(null);
+        return;
+      }
+    }
+  };
 
   useEffect(() => {
     if (gaugeData) {
@@ -247,8 +291,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     };
     checkAllowance();
   }, [blockNum, address, erc20]);
-
-  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
   return (
     <Collapse
@@ -320,7 +362,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setStakeAmount(formatEther(balance));
+                setStakeAmount(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
               }}
             >
               Max
@@ -335,14 +377,14 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled}
+            disabled={stakeButton.disabled || isyveCRVFarm}
             onClick={() => {
               if (gauge && signer) {
                 transfer({
                   token: depositToken.address,
                   recipient: gauge.address,
                   transferCallback: async () => {
-                    return gauge.deposit(ethers.utils.parseEther(stakeAmount));
+                    return gauge.deposit(ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18));
                   },
                 });
               }
@@ -360,7 +402,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setUnstakeAmount(formatEther(staked));
+                setUnstakeAmount(formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked));
               }}
             >
               Max
@@ -384,7 +426,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                   approval: false,
                   transferCallback: async () => {
                     return gauge.withdraw(
-                      ethers.utils.parseEther(unstakeAmount),
+                      ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
                     );
                   },
                 });
@@ -438,6 +480,53 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             {exitButton.text}
           </Button>
         </Grid>
+<<<<<<< HEAD
+=======
+
+        <Grid xs={24}>
+          {isyveCRVFarm ? (
+            <>
+              <Button
+                disabled={yvMigrateState !== null}
+                onClick={handleYvboostMigrate}
+                style={{ width: "100%", textTransform: "none" }}
+              >
+                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+              </Button>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontFamily: "Source Sans Pro",
+                  fontSize: "1rem",
+                }}
+              >
+                Your tokens will be unstaked and migrated to the yvBOOST pJar
+                and staked in the Farm.
+                <br />
+                This process will require a number of transactions.
+                <br />
+                Learn more about yvBOOST{" "}
+                <a
+                  target="_"
+                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                >
+                  here
+                </a>
+                .
+                {isSuccess ? (
+                  <p style={{ fontWeight: "bold" }}>
+                    Migration completed! See your deposits{" "}
+                    <Link color href="/farms">
+                      here
+                    </Link>
+                  </p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+        </Grid>
+>>>>>>> master
       </Grid.Container>
     </Collapse>
   );

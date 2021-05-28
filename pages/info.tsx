@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
-import Typography from "@material-ui/core/Typography";
 import { Card } from "@geist-ui/react";
-import CardContent from "@material-ui/core/CardContent";
 import Tooltip from "@material-ui/core/Tooltip";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -22,13 +19,7 @@ import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
 import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
-import {
-  backgroundColor,
-  cardColor,
-  pickleGreen,
-  pickleWhite,
-  materialBlack,
-} from "../util/constants";
+import { cardColor, pickleGreen, materialBlack } from "../util/constants";
 import {
   getProtocolData,
   getStakingData,
@@ -174,6 +165,8 @@ const FarmRow = (props) => {
     item.tokenBalance = 0;
     item.valueBalance = 0;
   }
+
+  console.log(item)
 
   return (
     <TableRow key={farm}>
@@ -384,14 +377,14 @@ const FarmHeader = (props) => {
 };
 
 // helper functions
-const formatNumber = (value) => {
+const formatNumber = (value: number) => {
   if (value < 1) {
     return value.toFixed(8);
   } else {
     return value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 };
-const getUSD = (value) => {
+const getUSD = (value: number) => {
   return `$${formatNumber(value)}`;
 };
 

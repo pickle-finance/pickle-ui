@@ -55,6 +55,17 @@ const formatPercent = (decimal: number) =>
     maximumFractionDigits: 2,
   }) + "%";
 
+const PickleIcon = ({ size = "16px" }) => (
+  <img
+    src="/pickle.png"
+    alt="pickle"
+    style={{
+      width: size,
+      verticalAlign: `text-bottom`,
+    }}
+  />
+);
+
 export const Claim: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
@@ -104,7 +115,6 @@ export const Claim: FC<{
       setClaimable(claimable);
     }
   }, [blockNum, transferStatus, address, dillStats]);
-
   return (
     <>
       <Grid.Container gap={2}>
@@ -116,16 +126,21 @@ export const Claim: FC<{
             </div>
             &nbsp;
             <div>
-              Weekly distribution (45% of revenue): $
+              Projected weekly distribution (45% of revenue): $
               {formatNumber(dillStats?.weeklyDistribution)}
             </div>
             &nbsp;
             <div>DILL holder APY: {formatPercent(dillAPY)}</div>
             &nbsp;
-            <div>Next distribution: Thu Apr 29 2021</div>
-            {/* <div>
+            <div>
               Next distribution: {dillStats.nextDistribution?.toDateString()}
-            </div> */}
+            </div>
+            &nbsp;
+            <div>
+              Last week's distribution: $
+              {formatNumber(dillStats?.lastDistributionValue)} (
+              {formatNumber(dillStats?.lastDistribution)} <PickleIcon />)
+            </div>
             &nbsp;
             <Spacer />
             <Button
