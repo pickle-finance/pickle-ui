@@ -408,18 +408,19 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const calculateAlcxAPY = async (lpTokenAddress: string) => {
     if (stakingPools && prices?.alcx && getSushiPairData && multicallProvider) {
       const poolId = alchemixPoolIds[lpTokenAddress];
-      const multicallStakingPools = new MulticallContract(
+      const multicallStakingPools = new Contract(
         stakingPools.address,
         stakingPools.interface.fragments,
+        multicallProvider
       );
-      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+      const lpToken = new Contract(lpTokenAddress, erc20.abi, multicallProvider);
 
       const [
         rewardRateBN,
         totalAllocPointBN,
         poolRewardWeightBN,
         totalSupplyBN,
-      ] = await multicallProvider.all([
+      ] = await Promise.all([
         multicallStakingPools.rewardRate(),
         multicallStakingPools.totalRewardWeight(),
         multicallStakingPools.getPoolRewardWeight(poolId),

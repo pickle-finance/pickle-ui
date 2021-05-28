@@ -58,7 +58,7 @@ const aaveContracts = {
 };
 
 export const useCurveAm3MaticAPY = (): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const { erc20 } = Contracts.useContainer();
 
@@ -129,7 +129,7 @@ export const useCurveAm3MaticAPY = (): Output => {
   };
 
   useEffect(() => {
-    getMaticAPY();
+    if(chainName === NETWORK_NAMES.POLY) getMaticAPY();
   }, [prices]);
 
   return {

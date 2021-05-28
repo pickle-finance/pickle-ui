@@ -50,6 +50,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
+  
   const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.POLY);
   const { APYs: am3CrvAPY } = useCurveAm3MaticAPY();
 

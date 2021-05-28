@@ -10,6 +10,7 @@ import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { backgroundColor, pickleGreen } from "../../util/constants";
+import { NETWORK_NAMES } from "containers/config";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -30,7 +31,7 @@ const GreenSwitch = withStyles({
 })(Switch);
 
 export const JarList: FC = () => {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState(false);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
@@ -83,7 +84,7 @@ export const JarList: FC = () => {
           Show Your Jars
         </Grid>
         <Grid xs={24}></Grid>
-        Powered by Yearn ⚡
+        {chainName === NETWORK_NAMES.ETH && `Powered by Yearn ⚡`}
         {yearnJars.map((jar) => (
           <Grid xs={24} key={jar.name}>
             <JarCollapsible jarData={jar} isYearnJar={true}/>

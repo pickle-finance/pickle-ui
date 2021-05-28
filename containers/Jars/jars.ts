@@ -307,6 +307,9 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x956f47f50a910163d8bf957cf5846d573e7f87ca": "fei",
   "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b": "tribe",
   "0x5f98805a4e8be255a32880fdec7f6728c6568ba0": "lusd",
+  "0xdbdb4d16eda451d0503b854cf79d55697f90c8df": "alcx",
+  "0x92bf969865c80eda082fd5d8b4e28da4d58e1c3a": "luna",
+  "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a": "yvboost",
 
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",
