@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
-import { config } from "../../containers/config";
+import { config, NETWORK_NAMES } from "../../containers/config";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -92,7 +92,13 @@ const Circle = styled.div`
 `;
 
 export const DesktopNetworkIndicator: FC = () => {
-  const { address, blockNum, chainId, switchChain } = Connection.useContainer();
+  const {
+    address,
+    blockNum,
+    chainId,
+    switchChain,
+    chainName,
+  } = Connection.useContainer();
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
   const [reset, setReset] = useState(0);
@@ -138,7 +144,11 @@ export const DesktopNetworkIndicator: FC = () => {
           placement="left"
         >
           <BlockBox
-            href={`https://etherscan.io/block/${blockNum}`}
+            href={
+              chainName === NETWORK_NAMES.POLY
+                ? `https://explorer-mainnet.maticvigil.com/blocks/${blockNum}`
+                : `https://etherscan.io/block/${blockNum}`
+            }
             target="_blank"
             rel="noopener noreferrer"
           >
