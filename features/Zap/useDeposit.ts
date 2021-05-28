@@ -33,33 +33,24 @@ export const useDeposit = (
   decimals: number | null,
 ) => {
   const { address } = Connection.useContainer();
-  const { instabrine, erc20, masterchef, yveCrvZap } = Contracts.useContainer();
+  const { instabrine, erc20, masterchef } = Contracts.useContainer();
   const approve = async () => {
     if (
       !instabrine ||
-      !yveCrvZap ||
       !inputToken ||
       !decimals ||
       !erc20 ||
       !address
     )
       return;
-    const isZap = inputToken === "CRV";
     const amount = parseUnits(rawAmount, decimals);
     const token = erc20.attach(TOKEN[inputToken]);
     let allowance;
-    if (isZap) {
-      allowance = await token.allowance(address, yveCrvZap.address);
-    } else {
+
       allowance = await token.allowance(address, instabrine.address);
-    }
-    if (!allowance.gte(amount) && !isZap) {
+    
+    if (!allowance.gte(amount)) {
       const tx = await token.approve(instabrine.address, MaxUint256);
-      await tx.wait();
-    }
-    if (!allowance.gte(amount) && isZap) {
-      // ETH yveCRV zap
-      const tx = await token.approve(yveCrvZap.address, MaxUint256);
       await tx.wait();
     }
   };
@@ -162,59 +153,6 @@ export const useDeposit = (
       });
       await tx2.wait();
     }
-
-    if (inputToken === "CRV") {
-      // go into pYvecrv
-      const tx = await yveCrvZap.zapInCRV(amount);
-      await tx.wait();
-
-      // go into pYvecrv farm
-      const pYvecrv = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
-      const pTokenAmount = await pYvecrv.balanceOf(address);
-      const allowance = await pYvecrv.allowance(address, masterchef.address);
-
-      if (!allowance.gte(amount)) {
-        const tx = await pYvecrv.approve(masterchef.address, MaxUint256);
-        await tx.wait();
-      }
-
-      const tx2 = await masterchef.deposit(BigNumber.from(26), pTokenAmount, {
-        gasLimit: 200000,
-      });
-      await tx2.wait();
-    }
   };
   return { approve, deposit };
-};
-
-export const useDepositEth = (rawAmount: string) => {
-  const { address } = Connection.useContainer();
-  const { erc20, masterchef, yveCrvZap } = Contracts.useContainer();
-
-  const depositEth = async () => {
-    if (!address || !masterchef || !yveCrvZap) return;
-
-    const amount = parseUnits(rawAmount, 18);
-    const overrideOptions = {
-      value: amount,
-    };
-    const tx = await yveCrvZap.zapInETH(overrideOptions);
-    await tx.wait();
-
-    // go into pYvecrv farm
-    const pYvecrv = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
-    const pTokenAmount = await pYvecrv.balanceOf(address);
-    const allowance = await pYvecrv.allowance(address, masterchef.address);
-
-    if (!allowance.gte(amount)) {
-      const tx = await pYvecrv.approve(masterchef.address, MaxUint256);
-      await tx.wait();
-    }
-
-    const tx2 = await masterchef.deposit(BigNumber.from(26), pTokenAmount, {
-      gasLimit: 200000,
-    });
-    await tx2.wait();
-  };
-  return { depositEth };
 };

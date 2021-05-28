@@ -49,10 +49,7 @@ import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
 import { Uniswapv2ProxyLogic__factory as Uniswapv2ProxyLogicFactory } from "./Contracts/factories/Uniswapv2ProxyLogic__factory";
 import { YvboostMigrator } from "./Contracts/YvboostMigrator";
 import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/factories/YvboostMigrator__factory";
-import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { config, NETWORK_NAMES } from "./config";
-import { YvecrvZap__factory as YvecrvZapFactory } from "./Contracts/factories/YvecrvZap__factory";
-
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -206,7 +203,6 @@ function useContracts() {
 
   const [instabrine, setInstabrine] = useState<Instabrine | null>(null);
 
-  const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
   const [stakingPools, setStakingPools] = useState<StakingPools | null>(null);
   const [yearnRegistry, setYearnRegistry] = useState<YearnRegistry | null>(
     null,
@@ -302,7 +298,6 @@ function useContracts() {
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
-      setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
       setyvBoostMigrator(
         YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer),
       );
@@ -347,7 +342,6 @@ function useContracts() {
     gaugeProxy,
     gauge,
     feeDistributor,
-    yveCrvZap,
     yvBoostMigrator,
     stakingPools,
     yearnRegistry,
