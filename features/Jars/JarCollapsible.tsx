@@ -112,13 +112,11 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
   ),
-<<<<<<< HEAD
   "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
     <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
   "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
   "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
-=======
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
   ),
@@ -128,7 +126,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
->>>>>>> master
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -181,7 +178,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   } = jarData;
   const isUsdc =
     depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
     
   const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const depositedNum = parseFloat(
@@ -243,23 +240,8 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   }).filter(x=>x).join(" + ");
 
   const isDisabledJar =
-<<<<<<< HEAD
-    depositToken.address ===
-      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAC_DAI ||
-    depositToken.address ===
-      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAS_DAI;
-=======
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI 
-
-  const isMStonksJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
->>>>>>> master
+    depositToken.address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAC_DAI ||
+    depositToken.address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_BAS_DAI 
 
   return (
     <Collapse
@@ -356,20 +338,14 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                   token: depositToken.address,
                   recipient: jarContract.address,
                   transferCallback: async () => {
-<<<<<<< HEAD
                     return jarContract.connect(signer).deposit(
-                      ethers.utils.parseEther(depositAmount),
+                      ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
                       chainName === NETWORK_NAMES.POLY
                         ? {
                             gasLimit: 230000,
                           }
                         : undefined,
                     );
-=======
-                    return jarContract
-                      .connect(signer)
-                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
->>>>>>> master
                   },
                 });
               }
@@ -424,20 +400,13 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                   token: jarContract.address,
                   recipient: jarContract.address,
                   transferCallback: async () => {
-<<<<<<< HEAD
-                    return jarContract.connect(signer).withdraw(
-                      ethers.utils.parseEther(withdrawAmount),
+                    return jarContract.connect(signer).withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18),
                       chainName === NETWORK_NAMES.POLY
                         ? {
                             gasLimit: 230000,
                           }
                         : undefined,
                     );
-=======
-                    return jarContract
-                      .connect(signer)
-                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
->>>>>>> master
                   },
                   approval: false
                 });

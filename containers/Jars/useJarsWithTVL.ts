@@ -5,18 +5,8 @@ import { useEffect, useState } from "react";
 import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
 
-<<<<<<< HEAD
 import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
 import { JarWithAPY } from "./useJarsWithAPYEth";
-=======
-import {
-  STRATEGY_NAMES,
-  DEPOSIT_TOKENS_JAR_NAMES,
-  getPriceId,
-  DEPOSIT_TOKENS_NAME,
-} from "./jars";
-import { JarWithAPY } from "./useJarsWithAPY";
->>>>>>> master
 
 import { Connection } from "../Connection";
 import { NETWORK_NAMES } from "containers/config";
@@ -38,11 +28,8 @@ const isCurvePool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"] ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV ||
-<<<<<<< HEAD
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV
-=======
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV
->>>>>>> master
   );
 };
 
@@ -73,15 +60,12 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH ||
-<<<<<<< HEAD
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH
-=======
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH 
->>>>>>> master
   );
 };
 
@@ -129,25 +113,20 @@ export const useJarWithTVL = (jars: Input): Output => {
       pricePerUnderlying = prices?.eth;
     }
 
-<<<<<<< HEAD
     if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV) {
-=======
+      pricePerUnderlying = prices?.dai;
+    }
+
     if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
       pool = lusdPool;
->>>>>>> master
       pricePerUnderlying = prices?.dai;
     }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
-<<<<<<< HEAD
 
     const multicallJarContract = new Contract(
-=======
-    
-    const multicallJarContract = new MulticallContract(
->>>>>>> master
       jar.contract.address,
       jar.contract.interface.fragments,
       multicallProvider,
@@ -289,18 +268,8 @@ export const useJarWithTVL = (jars: Input): Output => {
           return measureCurveTVL(jar);
         } else if (isUniPool(jar.jarName)) {
           return measureUniJarTVL(jar);
-<<<<<<< HEAD
         } else if (isAavePool(jar.jarName)) {
           return measureAaveTVL(jar);
-=======
-        }
-
-        if (
-          jar.strategyName === STRATEGY_NAMES.DAI.COMPOUNDv2 ||
-          jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC
-        ) {
-          return measureCompoundTVL(jar);
->>>>>>> master
         }
 
         return {

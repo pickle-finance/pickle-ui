@@ -25,15 +25,11 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
-<<<<<<< HEAD:containers/Jars/useJarsWithAPYEth.ts
+  ALCHEMIX_ALCX_ETH_STAKING_POOLS,
   COMETH_USDC_WETH_REWARDS,
 } from "../Contracts";
 import { ComethPairs } from "../ComethPairs";
-=======
-  ALCHEMIX_ALCX_ETH_STAKING_POOLS,
-} from "../Contracts";
 import { getProtocolData } from "../../util/api";
->>>>>>> master:containers/Jars/useJarsWithAPY.ts
 import { Jar } from "./useFetchJars";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import { useCurveRawStats } from "./useCurveRawStats";
@@ -568,19 +564,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ] = await Promise.all([
         calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
-<<<<<<< HEAD:containers/Jars/useJarsWithAPYEth.ts
-        calculateSushiAPY(
-          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
-        ),
-=======
-        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
-        calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST),
->>>>>>> master:containers/Jars/useJarsWithAPY.ts
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV),
+        calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVBOOST),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
-        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
-        calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
+        calculateAlcxAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].lusdCRV),
       ]);
 
       const [
@@ -830,7 +820,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST) {
           APYs = [
             ...sushiEthyvboostApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST),
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVBOOST),
           ];
         }
 
@@ -843,12 +833,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           ];
         }
 
-<<<<<<< HEAD:containers/Jars/useJarsWithAPYEth.ts
-=======
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
           APYs = [
             ...alcxEthAlcxApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX),
           ];
         }
 
@@ -876,7 +864,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         //   APYs = [...compDaiAPYsWithLeverage];
         // }
 
->>>>>>> master:containers/Jars/useJarsWithAPY.ts
         let apr = 0;
         APYs.map((x) => {
           if (x.apr) {
@@ -912,14 +899,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   useEffect(() => {
-<<<<<<< HEAD:containers/Jars/useJarsWithAPYEth.ts
     if (network === NETWORK_NAMES.ETH) calculateAPY();
   }, [jars, prices, network]);
-=======
-    getProtocolData().then((tvlData) => setTVLData(tvlData));
-    calculateAPY();
-  }, [jars, prices]);
->>>>>>> master:containers/Jars/useJarsWithAPY.ts
 
   return { jarsWithAPY };
 };

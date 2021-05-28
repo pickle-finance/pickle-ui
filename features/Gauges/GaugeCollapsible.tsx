@@ -480,8 +480,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             {exitButton.text}
           </Button>
         </Grid>
-<<<<<<< HEAD
-=======
 
         <Grid xs={24}>
           {isyveCRVFarm ? (
@@ -526,7 +524,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             </>
           ) : null}
         </Grid>
->>>>>>> master
       </Grid.Container>
     </Collapse>
   );
