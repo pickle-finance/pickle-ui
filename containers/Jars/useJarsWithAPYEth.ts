@@ -5,7 +5,7 @@ import {
   JAR_DEPOSIT_TOKENS,
   getPriceId,
 } from "./jars";
-import { NETWORK_NAMES } from "containers/config";
+import { ChainName, NETWORK_NAMES } from "containers/config";
 import { Prices } from "../Prices";
 import {
   UNI_ETH_DAI_STAKING_REWARDS,
@@ -82,7 +82,7 @@ const getCompoundingAPY = (apr: number) => {
   return 100 * (Math.pow(1 + apr / 365, 365) - 1);
 };
 
-export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
+export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();

@@ -19,7 +19,7 @@ import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
-import { NETWORK_NAMES } from "containers/config";
+import { NETWORK_NAMES, ChainName } from "containers/config";
 export interface JarApy {
   [k: string]: number;
 }
@@ -40,7 +40,7 @@ const getCompoundingAPY = (apr: number) => {
   return 100 * (Math.pow(1 + apr / 365, 365) - 1);
 };
 
-export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
+export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
@@ -135,18 +135,15 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
       +pool["referenceItem"]["priceInUsd"];
 
     const maticAPR =
-      (supplied * supplyMaticAPR + borrowed * borrowMaticAPR) / balance;
+      (supplied * supplyMaticAPR + borrowed * borrowMaticAPR) /
+      (balance * 1e18);
 
     const rawAPY =
       (rawSupplyAPY * supplied - rawBorrowAPY * borrowed) / balance;
 
     return [
-      {
-        [getPriceId(assetAddress)]: rawAPY * 100,
-        matic: maticAPR * 0.8 * 100,
-        apr: maticAPR * 0.8 * 100,
-        rawAPY: rawAPY * 100,
-      },
+      { lp: rawAPY * 100 },
+      { matic: getCompoundingAPY(maticAPR * 0.8), apr: maticAPR * 0.8 * 100 },
     ];
   };
 
@@ -179,7 +176,7 @@ export const useJarWithAPY = (network: NETWORK_NAMES, jars: Input): Output => {
           ];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AAVE_DAI) {
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.DAI) {
           APYs = [...aaveDaiAPY];
         }
 

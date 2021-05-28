@@ -239,9 +239,9 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH: "pJar 0.99q",
   
   // Polygon Jars
-  COMETH_USDC_WETH: "pJar p1",
-  AAVE_DAI: "pJar p2",
-  AM3CRV: "pJar p3",
+  COMETH_USDC_WETH: "polyJar 01",
+  DAI: "polyJar 02",
+  AM3CRV: "polyJar 03",
 };
 
 export const STRATEGY_NAMES = {

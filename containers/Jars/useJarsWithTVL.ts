@@ -64,11 +64,12 @@ const isUniPool = (jarName: string): boolean => {
   );
 };
 
+const isAavePool = (jarName: string): boolean => {
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.DAI;
+};
+
 export const useJarWithTVL = (jars: Input): Output => {
-  const {
-    multicallProvider,
-    chainName,
-  } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const {
     uniswapv2Pair,
@@ -110,7 +111,6 @@ export const useJarWithTVL = (jars: Input): Output => {
       pricePerUnderlying = prices?.dai;
     }
 
-
     if (!pool || !pricePerUnderlying || !multicallProvider) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
@@ -137,7 +137,6 @@ export const useJarWithTVL = (jars: Input): Output => {
         multicallJarContract.getRatio(),
       ])
     ).map((x) => parseFloat(formatEther(x)));
-
 
     const tvlUSD = balance * virtualPrice * pricePerUnderlying;
 
@@ -224,7 +223,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     };
   };
 
-  const measureCompoundTVL = async (jar: JarWithAPY) => {
+  const measureAaveTVL = async (jar: JarWithAPY) => {
     if (!prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
@@ -258,6 +257,8 @@ export const useJarWithTVL = (jars: Input): Output => {
           return measureCurveTVL(jar);
         } else if (isUniPool(jar.jarName)) {
           return measureUniJarTVL(jar);
+        } else if (isAavePool(jar.jarName)) {
+          return measureAaveTVL(jar);
         }
 
         return {
