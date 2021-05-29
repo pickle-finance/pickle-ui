@@ -15,7 +15,10 @@ function useJars() {
   const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
   const { jarsWithAPY: jarsWithAPYEth } = useJarsWithAPYEth(chainName, rawJars);
-  const { jarsWithAPY: jarsWithAPYPoly } = useJarsWithAPYPoly(chainName, rawJars);
+  const { jarsWithAPY: jarsWithAPYPoly } = useJarsWithAPYPoly(
+    chainName,
+    rawJars,
+  );
   const { jarsWithTVL } = useJarWithTVL(jarsWithAPYEth || jarsWithAPYPoly);
 
   const { addTokens } = Balances.useContainer();

@@ -36,36 +36,22 @@ const isCurvePool = (jarName: string): boolean => {
 // UniV2/SLP pools
 const isUniPool = (jarName: string): boolean => {
   return (
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDC_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_USDT_OLD ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_WBTC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_DAI ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_WBTC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YFI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAC_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_BAS_DAI ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MIR_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MTSLA_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MAAPL_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MQQQ_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MSLV_UST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_MBABA_UST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVECRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH 
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH
   );
 };
 
@@ -195,7 +181,6 @@ export const useJarWithTVL = (jars: Input): Output => {
       Token0.decimals(),
       Token1.decimals(),
     ]);
-
     const dec18 = parseEther("1");
 
     const token0PerUni = token0InPool.mul(dec18).div(totalUNI);
@@ -279,7 +264,6 @@ export const useJarWithTVL = (jars: Input): Output => {
           ratio: null,
         };
       });
-
       const jarsWithTVL = await Promise.all(promises);
       setJarsWithTVL(jarsWithTVL);
     }
