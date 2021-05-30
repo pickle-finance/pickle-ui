@@ -62,7 +62,7 @@ export const Prices: FC = () => {
     <Card style={{ height: "169px" }}>
       <Card.Content>
         <TradeButton
-          href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5"
+          href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5&use=V2"
           target="_blank"
           rel="noopener noreferrer"
         >

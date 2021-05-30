@@ -34,7 +34,7 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://info.uniswap.org/pair/0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
+        href="https://v2.info.uniswap.org/pair/0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
       >
         PICKLE-ETH
       </NavItem>
