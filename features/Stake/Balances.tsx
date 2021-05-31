@@ -5,24 +5,13 @@ import { formatEther } from "ethers/lib/utils";
 
 import { UseStakingRewardsOutput } from "../../containers/Staking/useStakingRewards";
 import { useBalances } from "../Balances/useBalances";
+import PickleIcon from "../../components/PickleIcon";
 
 const DataPoint = styled.div`
   font-size: 24px;
   display: flex;
   align-items: center;
 `;
-
-const PickleIcon = ({ size = "24px", margin = "0 0 0 0.5rem" }) => (
-  <img
-    src="/pickle.png"
-    alt="pickle"
-    style={{
-      width: size,
-      margin,
-      verticalAlign: `text-bottom`,
-    }}
-  />
-);
 
 const CRVIcon = ({ size = "24px", margin = "0 0 0 0.5rem" }) => (
   <img
@@ -99,7 +88,7 @@ export const Balances: FC<{
                   })
                 : "--"}
             </span>
-            <PickleIcon />
+            <PickleIcon size={24} margin="0 0 0 0.5rem" />
           </DataPoint>
         </Card>
       </Grid>
