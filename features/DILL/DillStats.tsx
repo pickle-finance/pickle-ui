@@ -11,6 +11,7 @@ import PickleIcon from "../../components/PickleIcon";
 const DataPoint = styled.div`
   font-size: 22px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 `;
 
@@ -62,17 +63,24 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
         )}
       </h2>
       <DataPoint>
-        <span>{isFetchingData ? "--" : formatNumber(lockedAmountValue)}</span>
-        <PickleIcon size={24} margin="0 0 0 0.5rem" />
-        &nbsp;=&nbsp;
-        <Tooltip
-          placement="bottom"
-          style={{ cursor: "help" }}
-          text={`${formatPercent(ratio, 1, 5)} of total DILL`}
-        >
-          <span>{isFetchingData ? "--" : formatNumber(dillBalanceValue)}</span>
-          &nbsp;DILL
-        </Tooltip>
+        <div>
+          <span>{isFetchingData ? "--" : formatNumber(lockedAmountValue)}</span>
+          <PickleIcon size={24} margin="0 0 0 0.5rem" />
+          &nbsp;=&nbsp;
+        </div>
+        <div>
+          <Tooltip
+            placement="bottom"
+            style={{ cursor: "help" }}
+            text={`${formatPercent(ratio, 1, 5)} of total DILL`}
+          >
+            <span>
+              {isFetchingData ? "--" : formatNumber(dillBalanceValue)}
+            </span>
+            &nbsp;DILL
+            <img src="./question.svg" style={{ marginLeft: 8, width: 15 }} />
+          </Tooltip>
+        </div>
       </DataPoint>
     </Card>
   );
