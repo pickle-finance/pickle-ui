@@ -63,7 +63,7 @@ const ConnectorItem: FC<ConnectorItemProps> = ({
           <Loader type="TailSpin" color="#aaa" height={50} width={50} />
         </LoaderContainer>
       )}
-      <img src={`wallet/${icon}`} width="30px" alt="wallet" />
+      <img src={`/wallet/${icon}`} width="30px" alt="wallet" />
       {title}
     </StyledContainer>
   );
