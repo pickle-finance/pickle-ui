@@ -9,6 +9,7 @@ import { Jars } from "../../containers/Jars";
 import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
+import PickleIcon from "../../components/PickleIcon";
 
 const Container = styled(Grid.Container)`
   font-family: "Source Code Pro", sans-serif;
@@ -25,18 +26,6 @@ const HideOnMobile = styled.div`
     display: none;
   }
 `;
-
-const PickleIcon = ({ size = "24px", margin = "0 0 0 0.5rem" }) => (
-  <img
-    src="/pickle.png"
-    alt="pickle"
-    style={{
-      width: size,
-      margin,
-      verticalAlign: `text-bottom`,
-    }}
-  />
-);
 
 const formatPickles = (num: number) =>
   num.toLocaleString(undefined, {
@@ -108,7 +97,7 @@ export const Balances: FC = () => {
               <span>
                 {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
               </span>
-              <PickleIcon />
+              <PickleIcon size={24} margin="0 0 0 0.5rem" />
               {pickleBalance !== null && prices?.pickle && (
                 <HideOnMobile>
                   <span style={{ fontSize: `1rem` }}>
@@ -122,7 +111,7 @@ export const Balances: FC = () => {
               Pending:&nbsp;
               <span>
                 {pendingPickles !== null ? formatPickles(pendingPickles) : "--"}
-                <PickleIcon size="14px" />
+                <PickleIcon size={14} margin="0 0 0 0.5rem" />
               </span>
               {pendingPickles !== null && prices?.pickle && (
                 <HideOnMobile>
@@ -159,12 +148,12 @@ export const Balances: FC = () => {
                 >
                   Total Supply:{" "}
                   {totalSupply ? formatPickles(totalSupply) : "--"}
-                  <PickleIcon size="14px" />
+                  <PickleIcon size={14} margin="0 0 0 0.5rem" />
                 </Tooltip>
               ) : (
                 <span>
                   Total Supply: --
-                  <PickleIcon size="14px" />
+                  <PickleIcon size={14} margin="0 0 0 0.5rem" />
                 </span>
               )}
             </Card.Footer>
