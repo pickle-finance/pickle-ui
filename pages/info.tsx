@@ -166,8 +166,6 @@ const FarmRow = (props) => {
     item.valueBalance = 0;
   }
 
-  console.log(item)
-
   return (
     <TableRow key={farm}>
       <TableCell className={classes.farmTableCell}>
@@ -422,26 +420,11 @@ export default function Brining() {
       updateJars();
       updatePickleData();
     };
-    const getLiquidity = async () => {
-      if (getPairData) {
-        const { totalValueOfPair } = await getPairData(
-          "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819",
-        );
-        setLiquidity(totalValueOfPair);
-      }
-    };
-    getLiquidity();
+
     updateInfo();
     const interval = setInterval(() => updateInfo(), 600000);
     return () => clearInterval(interval);
   }, []);
-
-  let totalValueLocked = null;
-  if (pickleJars) {
-    totalValueLocked = pickleJars.reduce((acc, x) => {
-      return acc + (x?.tvlUSD || 0);
-    }, liquidity || 0);
-  }
 
   return (
     <>
@@ -454,13 +437,11 @@ export default function Brining() {
               <h2>Total Value Locked</h2>
               <DataPoint>
                 <span>
-                  {totalValueLocked ? getUSD(totalValueLocked) : "--"}
+                  {protocolInfo ? getUSD(protocolInfo.totalValue) : "--"}
                 </span>
               </DataPoint>
               <Card.Footer>
-                {totalValueLocked
-                  ? `Jar Value Locked: ${getUSD(totalValueLocked - liquidity)}`
-                  : "--"}
+                {protocolInfo ? `Jar Value Locked: ${getUSD(protocolInfo.jarValue)}` : "--"}
               </Card.Footer>
             </Card>
           </Grid>
