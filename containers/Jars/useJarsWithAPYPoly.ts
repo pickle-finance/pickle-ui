@@ -10,6 +10,7 @@ import {
   Contracts,
   COMETH_USDC_WETH_REWARDS,
   COMETH_PICKLE_MUST_REWARDS,
+  COMETH_MATIC_MUST_REWARDS
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useComethPairDayData } from "./useComethPairDayData";
@@ -163,10 +164,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const [
         comethUsdcWethApy,
         comethPickleMustApy,
+        comethMaticeMustApy,
         aaveDaiAPY,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
+        calculateComethAPY(COMETH_MATIC_MUST_REWARDS),
         calculateAaveAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
           aaveDaiStrategy?.address ||
@@ -191,6 +194,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...comethPickleMustApy,
             ...getComethPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_PICKLE_MUST,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_MATIC_MUST) {
+          APYs = [
+            ...comethMaticeMustApy,
+            ...getComethPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_MATIC_MUST,
             ),
           ];
         }
