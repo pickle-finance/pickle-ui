@@ -27,7 +27,7 @@ const Home: FC = () => {
               <Balances />
             </Grid>
             <Grid xs={24} sm={24} md={8}>
-              {chainName === NETWORK_NAMES.POLY ? null : <DepositZap />}
+              <DepositZap />
             </Grid>
             <Grid xs={24} sm={24} md={24}>
               {chainName === NETWORK_NAMES.POLY ? null : <Zap />}

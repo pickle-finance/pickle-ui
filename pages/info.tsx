@@ -395,11 +395,7 @@ export default function Brining() {
   const [stakingInfo, setStakingInfo] = useState(undefined);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [pickleData, setPickleData] = useState(undefined);
-  const [liquidity, setLiquidity] = useState<number | null>(null);
-
-  const { getPairData } = UniV2Pairs.useContainer();
-  const { jars: pickleJars } = Jars.useContainer();
-
+  
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
     const updateStaking = async () => setStakingInfo(await getStakingData());
