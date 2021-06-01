@@ -7,11 +7,13 @@ import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 import { config, ChainName } from "./config";
 import { Provider } from "@ethersproject/providers";
+import { useRouter } from "next/router";
 
 type Network = ethers.providers.Network;
 
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
+  const router = useRouter();
   const [ethInfuraProvider] = useState<Provider>(
     new ethers.providers.JsonRpcProvider(process.env.ethRPC) as any,
   );
@@ -77,6 +79,9 @@ function useConnection() {
         }),
       );
 
+      const { ethereum } = window;
+      ethereum?.on("chainChanged", () => router.reload());
+      
       const observable = new Observable<number>((subscriber) => {
         library.on("block", (blockNumber: number) =>
           subscriber.next(blockNumber),
@@ -96,7 +101,7 @@ function useConnection() {
     }
   }, [library]);
 
-  const chainName = chainId && config.chains[chainId].name || null;
+  const chainName = (chainId && config.chains[chainId].name) || null;
 
   const getMCProvider = (chainName: ChainName) => {
     switch (chainName) {
@@ -118,7 +123,7 @@ function useConnection() {
     signer: library?.getSigner(),
     chainId,
     chainName,
-    switchChain
+    switchChain,
   };
 }
 

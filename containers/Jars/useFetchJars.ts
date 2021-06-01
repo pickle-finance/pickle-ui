@@ -102,7 +102,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   useEffect(() => {
     getJars();
-  }, [multicallProvider, controller, blockNum]);
+  }, [chainName, multicallProvider, controller, blockNum]);
 
   return { jars };
 };

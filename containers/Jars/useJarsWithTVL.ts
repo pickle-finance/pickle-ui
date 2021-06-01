@@ -271,7 +271,7 @@ export const useJarWithTVL = (jars: Input): Output => {
 
   useEffect(() => {
     measureTVL();
-  }, [jars, prices]);
+  }, [chainName, jars, prices]);
 
   return {
     jarsWithTVL,
