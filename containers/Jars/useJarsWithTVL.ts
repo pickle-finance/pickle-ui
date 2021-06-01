@@ -51,7 +51,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FEI_TRIBE ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_YVBOOST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_PICKLE_MUST
   );
 };
 
@@ -159,7 +160,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       token1,
       ratio,
     ] = await Promise.all([
-      jar.contract.totalSupply(),
+      jar.contract.totalSupply().catch(() => ethers.BigNumber.from(0)),
       jar.contract.balance().catch(() => ethers.BigNumber.from(0)),
       uniPair.totalSupply(),
       uniPair.token0(),

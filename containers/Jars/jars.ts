@@ -39,6 +39,7 @@ export const PICKLE_JARS = {
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
   pAAVEDAI: "0x0519848e57Ba0469AA5275283ec0712c91e20D8E",
   pAM3CRV: "0x1A602E5f4403ea0A5C06d3DbD22B75d3a2D299D5",
+  pCOMETHPICKLEMUST: "0x80aB65b1525816Ffe4222607EDa73F86D211AC95",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -73,10 +74,11 @@ export const JAR_DEPOSIT_TOKENS = {
     UNIV2_ETH_USDT: "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852",
     UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA"
+    lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
   },
   [NETWORK_NAMES.POLY]: {
     COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
+    COMETH_PICKLE_MUST: "0xb0b5e3bd18eb1e316bcd0bba876570b3c1779c55",
     DAI: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
     AM3CRV: "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171",
   },
@@ -117,6 +119,7 @@ export const DEPOSIT_TOKENS_NAME = {
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
+  COMETH_PICKLE_MUST: "COMETH PICKLE/MUST",
   DAI: "DAI",
   AM3CRV: "am3CRV",
 };
@@ -156,6 +159,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
 
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
+  [DEPOSIT_TOKENS_NAME.COMETH_PICKLE_MUST]: true,
   [DEPOSIT_TOKENS_NAME.DAI]: true,
   [DEPOSIT_TOKENS_NAME.AM3CRV]: true,
 };
@@ -225,6 +229,8 @@ export const DEPOSIT_TOKENS_LINK = {
   // Polygon Jars
   COMETH_USDC_WETH:
     "https://swap.cometh.io/#/add/0x2791bca1f2de4661ed88a30c99a7a9449aa84174/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+  COMETH_PICKLE_MUST:
+    "https://swap.cometh.io/#/add/0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f/0x2b88ad57897a8b496595925f43048301c37615da",
   DAI:
     "https://explorer-mainnet.maticvigil.com/tokens/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
   AM3CRV: "https://polygon.curve.fi/aave/deposit",
@@ -268,9 +274,10 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   lusdCRV: "pJar Y-2",
 
   // Polygon Jars
-  COMETH_USDC_WETH: "polyJar 01",
-  DAI: "polyJar 02",
-  AM3CRV: "polyJar 03",
+  COMETH_USDC_WETH: "polyJar 1a",
+  COMETH_PICKLE_MUST: "polyJar 1b",
+  DAI: "polyJar 2a",
+  AM3CRV: "polyJar 3a",
 };
 
 export const STRATEGY_NAMES = {
@@ -309,11 +316,12 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xdbdb4d16eda451d0503b854cf79d55697f90c8df": "alcx",
   "0x92bf969865c80eda082fd5d8b4e28da4d58e1c3a": "luna",
   "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a": "yvboost",
-
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",
   "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619": "eth",
   "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063": "dai",
+  "0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f": "must",
+  "0x2b88ad57897a8b496595925f43048301c37615da": "pickle"
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

@@ -28,8 +28,6 @@ import {
   ALCHEMIX_ALCX_ETH_STAKING_POOLS,
   COMETH_USDC_WETH_REWARDS,
 } from "../Contracts";
-import { ComethPairs } from "../ComethPairs";
-import { getProtocolData } from "../../util/api";
 import { Jar } from "./useFetchJars";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import { useCurveRawStats } from "./useCurveRawStats";

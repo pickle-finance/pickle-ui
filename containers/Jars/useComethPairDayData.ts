@@ -9,7 +9,10 @@ export interface UniLPAPY {
   dailyVolumeUSD: number;
 }
 
-const COMETH_LP_TOKENS = [JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH];
+const COMETH_LP_TOKENS = [
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_PICKLE_MUST,
+];
 
 export const useComethPairDayData = () => {
   const [uniPairDayData, setUniPairDayData] = useState<Array<UniLPAPY> | null>(

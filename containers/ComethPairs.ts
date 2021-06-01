@@ -9,6 +9,7 @@ const addresses = {
   usdc: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
   weth: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
   must: "0x9C78EE466D6Cb57A4d01Fd887D2b5dFb2D46288f",
+  pickle: "0x2b88ad57897a8b496595925f43048301c37615da",
 };
 
 interface Token {
@@ -18,7 +19,8 @@ interface Token {
 }
 
 // prettier-ignore
-// const must: Token = { address: addresses.must, priceId: "pickle", decimals: 18 };
+const must: Token = { address: addresses.must, priceId: "must", decimals: 18 };
+const pickle: Token = { address: addresses.pickle, priceId: "pickle", decimals: 18 };
 const weth: Token = { address: addresses.weth, priceId: "eth", decimals: 18 };
 const usdc: Token = { address: addresses.usdc, priceId: "usdc", decimals: 6 };
 
@@ -28,6 +30,7 @@ interface PairMap {
 
 export const PAIR_INFO: PairMap = {
   "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": { a: usdc, b: weth },
+  "0xb0b5E3Bd18eb1E316bcD0bBa876570b3c1779C55": { a: pickle, b: must },
 };
 
 function useComethPairs() {
@@ -46,6 +49,7 @@ function useComethPairs() {
     const tokenA = new Contract(a.address, erc20.abi, multicallProvider);
     const tokenB = new Contract(b.address, erc20.abi, multicallProvider);
     const pair = new Contract(pairAddress, erc20.abi, multicallProvider);
+    
 
     const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
       tokenA.balanceOf(pairAddress),

@@ -6,7 +6,11 @@ import {
   JAR_DEPOSIT_TOKENS,
 } from "./jars";
 import { Prices } from "../Prices";
-import { Contracts, COMETH_USDC_WETH_REWARDS } from "../Contracts";
+import {
+  Contracts,
+  COMETH_USDC_WETH_REWARDS,
+  COMETH_PICKLE_MUST_REWARDS,
+} from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { formatEther } from "ethers/lib/utils";
@@ -50,7 +54,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  
+
   const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.POLY);
   const { APYs: am3CrvAPY } = useCurveAm3MaticAPY();
 
@@ -84,7 +88,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const rewardsForDuration = parseFloat(formatEther(rewardsForDurationBN));
 
       const { pricePerToken } = await getComethPairData(stakingToken);
-
+      
       const rewardsPerYear =
         rewardsForDuration * ((360 * 24 * 60 * 60) / rewardsDuration);
       const valueRewardedPerYear = prices.must * rewardsPerYear;
@@ -156,8 +160,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
       )?.strategy;
 
-      const [comethUsdcWethApy, aaveDaiAPY] = await Promise.all([
+      const [
+        comethUsdcWethApy,
+        comethPickleMustApy,
+        aaveDaiAPY,
+      ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
+        calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
         calculateAaveAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
           aaveDaiStrategy?.address ||
@@ -173,6 +182,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...comethUsdcWethApy,
             ...getComethPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_PICKLE_MUST) {
+          APYs = [
+            ...comethPickleMustApy,
+            ...getComethPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_PICKLE_MUST,
             ),
           ];
         }

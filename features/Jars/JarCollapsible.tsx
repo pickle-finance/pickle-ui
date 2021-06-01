@@ -112,11 +112,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/lusd.webp"} />
   ),
-  "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
-    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
-  ),
-  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
-  "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
   ),
@@ -126,6 +121,17 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+
+  // Polygon Jars
+
+  "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xb0b5e3bd18eb1e316bcd0bba876570b3c1779c55": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
+  "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

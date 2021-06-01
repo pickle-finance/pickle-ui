@@ -146,6 +146,7 @@ export const YEARN_REGISTRY = "0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804";
 // Polygon
 export const COMETH_USDC_WETH_REWARDS =
   "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
+export const COMETH_PICKLE_MUST_REWARDS = "0x52f68a09aee9503367bc0cda0748c4d81807ae9a"
 
 function useContracts() {
   const {
