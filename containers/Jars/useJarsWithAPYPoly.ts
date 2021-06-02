@@ -10,12 +10,15 @@ import {
   Contracts,
   COMETH_USDC_WETH_REWARDS,
   COMETH_PICKLE_MUST_REWARDS,
-  COMETH_MATIC_MUST_REWARDS
+  COMETH_MATIC_MUST_REWARDS,
+  MATIC_COMEPLX_REWARDER,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useComethPairDayData } from "./useComethPairDayData";
+import { useSushiPairDayData } from "./useSushiPairDayData";
 import { formatEther } from "ethers/lib/utils";
 import { ComethPairs } from "../ComethPairs";
+import { SushiPairs } from "../SushiPairs";
 
 import { Connection } from "../Connection";
 import { Contract } from "@ethersproject/contracts";
@@ -25,9 +28,20 @@ import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
 import { NETWORK_NAMES, ChainName } from "containers/config";
+import erc20 from "@studydefi/money-legos/erc20";
+
+const AVERAGE_BLOCK_TIME = 2;
 export interface JarApy {
   [k: string]: number;
 }
+
+interface SushiPoolId {
+  [key: string]: number;
+}
+
+const sushiPoolIds: SushiPoolId = {
+  "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": 2,
+};
 
 export interface JarWithAPY extends Jar {
   totalAPY: number;
@@ -47,11 +61,18 @@ const getCompoundingAPY = (apr: number) => {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
-  const { controller, strategy } = Contracts.useContainer();
+  const {
+    controller,
+    strategy,
+    miniChef,
+    sushiComplexRewarder,
+  } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getComethPairData } = ComethPairs.useContainer();
+  const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const { stakingRewards } = Contracts.useContainer();
   const { getComethPairDayAPY } = useComethPairDayData();
+  const { getSushiPairDayAPY } = useSushiPairDayData();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
@@ -89,7 +110,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const rewardsForDuration = parseFloat(formatEther(rewardsForDurationBN));
 
       const { pricePerToken } = await getComethPairData(stakingToken);
-      
+
       const rewardsPerYear =
         rewardsForDuration * ((360 * 24 * 60 * 60) / rewardsDuration);
       const valueRewardedPerYear = prices.must * rewardsPerYear;
@@ -153,6 +174,82 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     ];
   };
 
+  const calculateSushiAPY = async (lpTokenAddress: string) => {
+    if (
+      (miniChef && prices?.sushi && getSushiPairData && multicallProvider,
+      sushiComplexRewarder)
+    ) {
+      const poolId = sushiPoolIds[lpTokenAddress];
+      const multicallMiniChef = new Contract(
+        miniChef.address,
+        miniChef.interface.fragments,
+        multicallProvider,
+      );
+      const lpToken = new Contract(
+        lpTokenAddress,
+        erc20.abi,
+        multicallProvider,
+      );
+
+      const totalSupplyBN = await lpToken.balanceOf(miniChef.address);
+
+      const [
+        sushiPerSecondBN,
+        totalAllocPointBN,
+        poolInfo,
+      ] = await Promise.all([
+        multicallMiniChef.sushiPerSecond(),
+        multicallMiniChef.totalAllocPoint(),
+        multicallMiniChef.poolInfo(poolId),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const sushiRewardsPerSecond =
+        (parseFloat(formatEther(sushiPerSecondBN)) *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      const sushiRewardsPerYear = sushiRewardsPerSecond * (365 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.sushi * sushiRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const sushiAPY = valueRewardedPerYear / totalValueStaked;
+
+      // Getting MATIC rewards
+      const [
+        totalAllocPointCREncoded,
+        poolInfoCR,
+        maticPerSecondBN,
+      ] = await Promise.all([
+        multicallProvider.getStorageAt(MATIC_COMEPLX_REWARDER, 5),
+        sushiComplexRewarder.poolInfo(poolId),
+        sushiComplexRewarder.rewardPerSecond(),
+      ]);
+
+      const totalAllocPointCR = ethers.utils.defaultAbiCoder.decode(["uint256"], totalAllocPointCREncoded)
+
+      const maticRewardsPerSecond =
+        (parseFloat(formatEther(maticPerSecondBN)) *
+          poolInfoCR.allocPoint.toNumber()) /
+        totalAllocPointCR[0].toNumber();
+
+      const maticRewardsPerYear = maticRewardsPerSecond * (365 * 24 * 60 * 60);
+
+      const maticValueRewardedPerYear = prices.matic * maticRewardsPerYear;
+
+      const maticAPY = maticValueRewardedPerYear / totalValueStaked;
+
+      return [
+        { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
+        { matic: getCompoundingAPY(maticAPY * 0.8), apr: maticAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
       const aaveDaiStrategy = jars.find(
@@ -164,8 +261,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const [
         comethUsdcWethApy,
         comethPickleMustApy,
-        comethMaticeMustApy,
+        comethMaticMustApy,
         aaveDaiAPY,
+        sushiEthUsdtApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -174,6 +272,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
           aaveDaiStrategy?.address ||
             "0x0b198b5EE64aB29c98A094380c867079d5a1682e",
+        ),
+        calculateSushiAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_ETH_USDT,
         ),
       ]);
 
@@ -200,7 +301,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_MATIC_MUST) {
           APYs = [
-            ...comethMaticeMustApy,
+            ...comethMaticMustApy,
             ...getComethPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_MATIC_MUST,
             ),
@@ -215,6 +316,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           APYs = [
             { lp: (curveRawStats?.aave || 0) + am3CrvAPY[0].lp },
             ...[am3CrvAPY[1]],
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_ETH_USDT) {
+          APYs = [
+            ...sushiEthUsdtApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_ETH_USDT,
+            ),
           ];
         }
 

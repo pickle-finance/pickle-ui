@@ -53,7 +53,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_PICKLE_MUST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_MATIC_MUST
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_MATIC_MUST ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_ETH_USDT
   );
 };
 
@@ -183,6 +184,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       Token0.decimals(),
       Token1.decimals(),
     ]);
+
     const dec18 = parseEther("1");
 
     const token0PerUni = token0InPool.mul(dec18).div(totalUNI);

@@ -49,6 +49,13 @@ import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
 import { Uniswapv2ProxyLogic__factory as Uniswapv2ProxyLogicFactory } from "./Contracts/factories/Uniswapv2ProxyLogic__factory";
 import { YvboostMigrator } from "./Contracts/YvboostMigrator";
 import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/factories/YvboostMigrator__factory";
+
+import { Minichef } from "./Contracts/Minichef";
+import { Minichef__factory as MinichefFatory } from "./Contracts/factories/Minichef__factory";
+
+import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
+import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
+
 import { config, NETWORK_NAMES } from "./config";
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -146,16 +153,20 @@ export const YEARN_REGISTRY = "0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804";
 // Polygon
 export const COMETH_USDC_WETH_REWARDS =
   "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
-export const COMETH_PICKLE_MUST_REWARDS = "0x52f68a09aee9503367bc0cda0748c4d81807ae9a"
-export const COMETH_MATIC_MUST_REWARDS = "0x2328c83431a29613b1780706E0Af3679E3D04afd"
+export const COMETH_PICKLE_MUST_REWARDS =
+  "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
+export const COMETH_MATIC_MUST_REWARDS =
+  "0x2328c83431a29613b1780706E0Af3679E3D04afd";
+export const MINI_CHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
+export const MATIC_COMEPLX_REWARDER =
+  "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 
 function useContracts() {
-  const {
-    signer,
-    chainName,
-    multicallProvider,
-  } = Connection.useContainer();
-  const addresses = chainName === NETWORK_NAMES.ETH ? config.addresses.Ethereum : config.addresses.Polygon;
+  const { signer, chainName, multicallProvider } = Connection.useContainer();
+  const addresses =
+    chainName === NETWORK_NAMES.ETH
+      ? config.addresses.Ethereum
+      : config.addresses.Polygon;
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -210,6 +221,11 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
+  const [miniChef, setMiniChef] = useState<Minichef | null>(null);
+  const [
+    sushiComplexRewarder,
+    setSushiComplexRewarder,
+  ] = useState<SushiComplexRewarder | null>(null);
 
   const [
     yvBoostMigrator,
@@ -309,6 +325,11 @@ function useContracts() {
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
+
+      setMiniChef(MinichefFatory.connect(MINI_CHEF, signer));
+      setSushiComplexRewarder(
+        SushiComplexRewarderFactory.connect(MATIC_COMEPLX_REWARDER, signer),
+      );
     }
   };
 
@@ -348,6 +369,8 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
+    miniChef,
+    sushiComplexRewarder
   };
 }
 
