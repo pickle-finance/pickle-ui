@@ -42,6 +42,7 @@ export const PICKLE_JARS = {
   pAAVEDAI: "0x0519848e57Ba0469AA5275283ec0712c91e20D8E",
   pAM3CRV: "0x1A602E5f4403ea0A5C06d3DbD22B75d3a2D299D5",
   ppSUSHIETHUSDT: "0x80aB65b1525816Ffe4222607EDa73F86D211AC95",
+  ppSUSHIMATICETH: "0xd438Ba7217240a378238AcE3f44EFaaaF8aaC75A",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -85,6 +86,7 @@ export const JAR_DEPOSIT_TOKENS = {
     DAI: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
     AM3CRV: "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171",
     POLY_SUSHI_ETH_USDT: "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9",
+    POLY_SUSHI_MATIC_ETH: "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e",
   },
 };
 
@@ -128,6 +130,8 @@ export const DEPOSIT_TOKENS_NAME = {
   DAI: "DAI",
   AM3CRV: "am3CRV",
   POLY_SUSHI_ETH_USDT: "SLP USDT/ETH",
+  POLY_SUSHI_MATIC_ETH: "SLP MATIC/ETH",
+  
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -170,6 +174,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.DAI]: true,
   [DEPOSIT_TOKENS_NAME.AM3CRV]: true,
   [DEPOSIT_TOKENS_NAME.POLY_SUSHI_ETH_USDT]: true,
+  [DEPOSIT_TOKENS_NAME.POLY_SUSHI_MATIC_ETH]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -246,6 +251,8 @@ export const DEPOSIT_TOKENS_LINK = {
   AM3CRV: "https://polygon.curve.fi/aave/deposit",
   POLY_SUSHI_ETH_USDT:
     "https://app.sushi.com/#/add/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619/0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+  POLY_SUSHI_MATIC_ETH:
+      "https://app.sushi.com/add/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -291,7 +298,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   COMETH_MATIC_MUST: "polyJar 1c",
   DAI: "polyJar 2a",
   AM3CRV: "polyJar 3a",
-  POLY_SUSHI_ETH_USDT: "polyJar 4a"
+  POLY_SUSHI_ETH_USDT: "polyJar 4a",
+  POLY_SUSHI_MATIC_ETH: "polyJar 4b"
 };
 
 export const STRATEGY_NAMES = {

@@ -41,6 +41,7 @@ interface SushiPoolId {
 
 const sushiPoolIds: SushiPoolId = {
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": 2,
+  "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": 0,
 };
 
 export interface JarWithAPY extends Jar {
@@ -264,6 +265,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         comethMaticMustApy,
         aaveDaiAPY,
         sushiEthUsdtApy,
+        sushiMaticEthApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -275,6 +277,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_ETH_USDT,
+        ),
+        calculateSushiAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
         ),
       ]);
 
@@ -324,6 +329,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...sushiEthUsdtApy,
             ...getSushiPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_ETH_USDT,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_MATIC_ETH) {
+          APYs = [
+            ...sushiMaticEthApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
             ),
           ];
         }
