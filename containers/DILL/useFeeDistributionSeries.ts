@@ -15,7 +15,8 @@ const firstMeaningfulDistributionTimestamp = 1619049600;
 export type FeeDistributionDataPoint = {
   weeklyPickleAmount: number;
   totalPickleAmount: number;
-  dillAmount: number;
+  weeklyDillAmount: number;
+  totalDillAmount: number;
   pickleDillRatio: number;
   isProjected: boolean;
   picklePriceUsd: number;
@@ -74,6 +75,7 @@ export function useFeeDistributionSeries() {
       });
 
       let totalPickleAmount = 0;
+      let lastTotalDillAmount = 0;
 
       setFeeDistributionSeries(
         payoutTimes.map((time, index) => {
@@ -92,16 +94,21 @@ export function useFeeDistributionSeries() {
             ? historicalEntry[1]
             : prices.pickle;
 
-          const dillAmount = parseFloat(
+          const totalDillAmount = parseFloat(
             ethers.utils.formatEther(dillAmounts[index]),
           );
-          const pickleDillRatio = weeklyPickleAmount / dillAmount;
+          const pickleDillRatio = weeklyPickleAmount / totalDillAmount;
+
           totalPickleAmount += weeklyPickleAmount;
+
+          const weeklyDillAmount = totalDillAmount - lastTotalDillAmount;
+          lastTotalDillAmount = totalDillAmount;
 
           return {
             weeklyPickleAmount,
             totalPickleAmount,
-            dillAmount,
+            weeklyDillAmount,
+            totalDillAmount,
             pickleDillRatio,
             picklePriceUsd,
             isProjected,
