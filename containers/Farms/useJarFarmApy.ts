@@ -19,10 +19,9 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
-  const { masterchef: ethMasterchef, polyMasterchef } = Contracts.useContainer();
+  const { masterchef } = Contracts.useContainer();
   const { multicallProvider, chainName } = Connection.useContainer();
-  const masterchef = chainName === NETWORK_NAMES.POLY ? polyMasterchef : ethMasterchef
-
+  
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
   const { prices } = Prices.useContainer();

@@ -166,7 +166,11 @@ export const DesktopNetworkIndicator: FC = () => {
         <Select.Option value="137">Polygon</Select.Option>
       </Select>
       <AddressBox
-        href={`https://etherscan.io/address/${address}`}
+        href={
+          chainName === NETWORK_NAMES.POLY
+            ? `https://explorer-mainnet.maticvigil.com/address/${address}`
+            : `https://etherscan.io/address/${address}`
+        }
         target="_blank"
         rel="noopener noreferrer"
       >

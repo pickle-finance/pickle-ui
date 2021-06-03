@@ -37,7 +37,7 @@ export const config: Config = {
     },
     Polygon: {
       pickle: "0x6c551cAF1099b08993fFDB5247BE74bE39741B82",
-      masterChef: "0xCD276D529a2EE01a8299D4BF076F13D09d40dEa0",
+      masterChef: "0xAc7C044e1197dF73aE5F8ec2c1775419b0A248C5",
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
     },
   },

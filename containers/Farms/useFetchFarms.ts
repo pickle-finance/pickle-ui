@@ -19,9 +19,8 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
     multicallProvider,
     chainName
   } = Connection.useContainer();
-  const { masterchef: ethMasterchef, polyMasterchef } = Contracts.useContainer();
-  const masterchef = chainName === NETWORK_NAMES.POLY ? polyMasterchef : ethMasterchef
-
+  const { masterchef } = Contracts.useContainer();
+  
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 
   const getFarms = async () => {
