@@ -6,6 +6,7 @@ import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { NETWORK_NAMES } from "containers/config";
 
 
 const Container = styled.div`
@@ -13,9 +14,9 @@ const Container = styled.div`
 `;
 
 export const FarmList: FC = () => {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserFarms.useContainer();
-  const [showInactive, setShowInactive] = useState<boolean>(true);
+  const [showInactive, setShowInactive] = useState<boolean>(chainName === NETWORK_NAMES.POLY ? false : true);
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;

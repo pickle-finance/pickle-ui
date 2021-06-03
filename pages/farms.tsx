@@ -4,6 +4,7 @@ import Link from "next/link";
 import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
 import { GaugeList } from "../features/Gauges/GaugeList";
+import { FarmList } from "../features/Farms/FarmList";
 import { Connection } from "../containers/Connection";
 import { NETWORK_NAMES } from "containers/config";
 
@@ -38,7 +39,7 @@ const Gauges: FC = () => {
             Farms
           </h1>
           {chainName === "Polygon" ? (
-            "No farms are available on Polygon network yet."
+            <FarmList />
           ) : (
             <GaugeList />
           )}

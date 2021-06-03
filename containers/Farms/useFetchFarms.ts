@@ -3,6 +3,7 @@ import { BigNumber, Contract } from "ethers";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface RawFarm {
   lpToken: string;
@@ -16,8 +17,10 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
   const {
     blockNum,
     multicallProvider,
+    chainName
   } = Connection.useContainer();
-  const { masterchef } = Contracts.useContainer();
+  const { masterchef: ethMasterchef, polyMasterchef } = Contracts.useContainer();
+  const masterchef = chainName === NETWORK_NAMES.POLY ? polyMasterchef : ethMasterchef
 
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 

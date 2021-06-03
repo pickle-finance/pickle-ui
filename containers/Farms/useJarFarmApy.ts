@@ -11,6 +11,7 @@ import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
+import { NETWORK_NAMES } from "containers/config";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;
@@ -18,8 +19,9 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
-  const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { masterchef: ethMasterchef, polyMasterchef } = Contracts.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
+  const masterchef = chainName === NETWORK_NAMES.POLY ? polyMasterchef : ethMasterchef
 
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
@@ -53,9 +55,10 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         );
       });
 
+      
       const farmBalances = await Promise.all(
-        farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address)),
-      );
+        farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0))),
+        );
 
       const res = jarFarms.map((farm, idx) => {
         const { jarName } = JAR_FARM_MAP[
@@ -101,7 +104,6 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           numTokensInPool,
         };
       });
-
       setFarms(res);
     }
   };

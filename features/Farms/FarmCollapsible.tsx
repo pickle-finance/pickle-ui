@@ -137,6 +137,25 @@ export const FARM_LP_TO_ICON = {
   "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+
+  // Polygon,
+  "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x7512105DBb4C0E0432844070a45B7EA0D83a23fD": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x0519848e57Ba0469AA5275283ec0712c91e20D8E": "/dai.png",
+  "0x1A602E5f4403ea0A5C06d3DbD22B75d3a2D299D5": "/3crv.png",
+  "0x80aB65b1525816Ffe4222607EDa73F86D211AC95": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xd438Ba7217240a378238AcE3f44EFaaaF8aaC75A": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
 };
 
 const setButtonStatus = (

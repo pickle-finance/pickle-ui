@@ -8,8 +8,6 @@ import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
 
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
-import { jars } from "util/jars";
-import { NETWORK_NAMES } from "./config";
 
 function useJars() {
   const { chainName } = Connection.useContainer();

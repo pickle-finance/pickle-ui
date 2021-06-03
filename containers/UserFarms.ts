@@ -10,6 +10,7 @@ import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
+import { NETWORK_NAMES } from "./config";
 
 export interface UserFarmData {
   poolName: string;
@@ -28,14 +29,16 @@ const useUserFarms = (): { farmData: UserFarmData[] | null } => {
     blockNum,
     address,
     multicallProvider,
+    chainName
   } = Connection.useContainer();
-  const { masterchef, erc20 } = Contracts.useContainer();
+  const { masterchef: ethMasterchef, polyMasterchef, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();
   const { farms } = Farms.useContainer();
   const { tokenBalances } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
 
   const [farmData, setFarmData] = useState<Array<UserFarmData> | null>(null);
+  const masterchef = chainName === NETWORK_NAMES.POLY ? polyMasterchef : ethMasterchef
 
   const updateFarmData = async () => {
     if (farms && erc20 && masterchef && address && multicallProvider) {

@@ -161,6 +161,8 @@ export const MINI_CHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
 export const MATIC_COMEPLX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 
+export const POLY_MASTERCHEF = "0xAc7C044e1197dF73aE5F8ec2c1775419b0A248C5"
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
@@ -170,6 +172,7 @@ function useContracts() {
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
+  const [polyMasterchef, setPolyMasterchef] = useState<Masterchef | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
 
   const providerOrSigner = signer || multicallProvider;
@@ -330,6 +333,8 @@ function useContracts() {
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMEPLX_REWARDER, signer),
       );
+
+      setPolyMasterchef(MasterchefFactory.connect(POLY_MASTERCHEF, signer))
     }
   };
 
@@ -370,7 +375,8 @@ function useContracts() {
     yearnRegistry,
     lusdPool,
     miniChef,
-    sushiComplexRewarder
+    sushiComplexRewarder,
+    polyMasterchef
   };
 }
 
