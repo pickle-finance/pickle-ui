@@ -19,20 +19,10 @@ export function useProtocolIncome() {
       "https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/protocol/pools",
     ).then<Jar[]>((response) => response.json());
 
-    const jarPerformance: Jar[] = await Promise.all(
-      jarList.map(async (jar) => {
-        const apy = await getAssetPerformanceData(jar.identifier);
-        return {
-          ...jar,
-          apy: apy.threeDay,
-        };
-      }),
-    );
-
-    const profit = jarPerformance.reduce((acc, currJar) => {
+    const profit = jarList.reduce((acc, currJar) => {
       const jarTVL = currJar.liquidity_locked;
-      return +currJar.apy > 0
-        ? acc + (jarTVL * currJar.apy * 0.01 * 0.2) / 52
+      return +currJar.jarApy > 0
+        ? acc + (jarTVL * currJar.jarApy * 0.01 * 0.2) / 52
         : acc;
     }, 0);
 
