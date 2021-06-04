@@ -595,7 +595,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthWBtcApy,
         sushiEthYfiApy,
         sushiEthApy,
-        sushiEthAlcxApy,
+        // sushiEthAlcxApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
@@ -607,7 +607,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
-        calculateSushiV2APY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+        // calculateSushiV2APY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
       ]);
 
       const [
@@ -617,7 +617,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthyvboostApy,
         // basisBacDaiApy,
         // basisBasDaiApy,
-        alcxEthAlcxApy,
+        // alcxEthAlcxApy,
         usdcApy,
         crvLusdApy,
       ] = await Promise.all([
