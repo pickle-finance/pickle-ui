@@ -161,6 +161,8 @@ export const MINI_CHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
 export const MATIC_COMEPLX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 
+export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
@@ -227,6 +229,7 @@ function useContracts() {
     setSushiComplexRewarder,
   ] = useState<SushiComplexRewarder | null>(null);
 
+  const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
   const [
     yvBoostMigrator,
     setyvBoostMigrator,
@@ -330,6 +333,7 @@ function useContracts() {
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMEPLX_REWARDER, signer),
       );
+      setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer))
     }
   };
 
@@ -371,6 +375,7 @@ function useContracts() {
     lusdPool,
     miniChef,
     sushiComplexRewarder,
+    am3crvPool
   };
 }
 

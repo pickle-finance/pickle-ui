@@ -54,7 +54,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_USDC_WETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_PICKLE_MUST ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.COMETH_MATIC_MUST ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_ETH_USDT
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_ETH_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_MATIC_ETH
   );
 };
 
@@ -72,6 +73,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     steCRVPool,
     threePool,
     lusdPool,
+    am3crvPool,
   } = Contracts.useContainer();
 
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
@@ -103,6 +105,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     }
 
     if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.AM3CRV) {
+      pool = am3crvPool;
       pricePerUnderlying = prices?.dai;
     }
 
@@ -131,16 +134,14 @@ export const useJarWithTVL = (jars: Input): Output => {
       await Promise.all([
         multicallJarContract.totalSupply(),
         multicallJarContract.balance(),
-        chainName === NETWORK_NAMES.ETH
-          ? multicallPoolContract.get_virtual_price()
-          : 0,
+        multicallPoolContract.get_virtual_price(),
         multicallJarContract.getRatio(),
       ])
     ).map((x) => parseFloat(formatEther(x)));
 
     const tvlUSD = balance * virtualPrice * pricePerUnderlying;
 
-    const usdPerPToken = tvlUSD / supply;
+    const usdPerPToken = tvlUSD / supply;;
 
     return { ...jar, tvlUSD, usdPerPToken, ratio };
   };
