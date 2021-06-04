@@ -31,6 +31,8 @@ import { Instabrine } from "./Contracts/Instabrine";
 import { Instabrine__factory as InstabrineFactory } from "./Contracts/factories/Instabrine__factory";
 import { Masterchef } from "./Contracts/Masterchef";
 import { Masterchef__factory as MasterchefFactory } from "./Contracts/factories/Masterchef__factory";
+import { Masterchefv2 } from "./Contracts/Masterchefv2";
+import { Masterchefv2__factory as Masterchefv2Factory } from "./Contracts/factories/Masterchefv2__factory";
 import { Pool } from "./Contracts/Pool";
 import { Pool__factory as PoolFactory } from "./Contracts/factories/Pool__factory";
 import { StakingPools } from "./Contracts/StakingPools";
@@ -62,7 +64,11 @@ export const DILL = "0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf";
 export const COMPTROLLER_ADDR = "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B";
 
 export const PICKLE_TOKEN_ADDR = "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5";
+
 export const MASTERCHEF_ADDR = "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d";
+
+export const MASTERCHEFV2_ADDR = "0xef0881ec094552b2e128cf945ef17a6752b4ec5d";
+
 export const CONTROLLER_ADDR = "0x6847259b2B3A4c17e7c43C54409810aF48bA5210";
 
 export const UNISWAPV2_PROXY_LOGIC =
@@ -151,6 +157,7 @@ function useContracts() {
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
+  const [masterchefV2, setMasterchefV2] = useState<Masterchefv2 | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
 
   const [
@@ -211,6 +218,7 @@ function useContracts() {
     if (signer) {
       setPickle(Erc20Factory.connect(PICKLE_TOKEN_ADDR, signer));
       setMasterchef(MasterchefFactory.connect(MASTERCHEF_ADDR, signer));
+      setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
       setController(ControllerFactory.connect(CONTROLLER_ADDR, signer));
       setGaugeController(
         GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, signer),
@@ -271,6 +279,7 @@ function useContracts() {
   return {
     pickle,
     masterchef,
+    masterchefV2,
     controller,
     susdGauge,
     renGauge,
