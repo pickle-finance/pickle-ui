@@ -107,6 +107,9 @@ export const DesktopNetworkIndicator: FC = () => {
 
   const handleSwitchChain = async (newChainId: number) => {
     if (chainId === newChainId) return;
+    if (!window.ethereum?.selectedAddress) {
+      setSwitchChainModalOpen(true);
+    }
 
     const success = await switchChain(newChainId);
     if (!success) {
@@ -126,7 +129,9 @@ export const DesktopNetworkIndicator: FC = () => {
       >
         <Modal.Title>Change Network</Modal.Title>
         <Modal.Content>
-          Please switch to {switchChainName} Network
+          {!window.ethereum?.selectedAddress
+            ? `Please connect to MetaMask to use Pickle on Polygon`
+            : `Please switch to ${switchChainName} Network`}
         </Modal.Content>
         <Modal.Action
           passive
