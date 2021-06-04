@@ -850,13 +850,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
-          APYs = [
-            ...alcxEthAlcxApy,
-            ...sushiEthAlcxApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-          ];
-        }
+        // if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
+        //   APYs = [
+        //     ...alcxEthAlcxApy,
+        //     ...sushiEthAlcxApy,
+        //     ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+        //   ];
+        // }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
           APYs = [...usdcApy];
