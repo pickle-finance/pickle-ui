@@ -18,7 +18,7 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "@0xsequence/multicall": "^0.21.2",
+    "@0xsequence/multicall": "^0.22.0",
     "@ethersproject/abstract-provider": "^5.0.4",
     "@ethersproject/providers": "^5.1.0",
     "@geist-ui/react": "^2.0.2",

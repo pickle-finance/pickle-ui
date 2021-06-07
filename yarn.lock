@@ -2,35 +2,35 @@
 # yarn lockfile v1
 
 
-"@0xsequence/abi@^0.21.2":
-  version "0.21.2"
-  resolved "https://registry.npmjs.org/@0xsequence/abi/-/abi-0.21.2.tgz#07f01ad971b684b366b06c2611b0b139dd2fe7f2"
-  integrity sha512-hYVWlwL3IevSNGICuj4s1rlvRWaATIipz331ZVlWBVRGay9kMuXpYS8ZqY2yGNYjQdk6cGulwV82LlcJJlr8fQ==
+"@0xsequence/abi@^0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@0xsequence/abi/-/abi-0.22.0.tgz#6938774e62b42a199e912f8b3c7aae235ce164e5"
+  integrity sha512-MFN8BfrcCe1YaziwD2QVKkr68arxsczqSG/NRPdyjMiotD5Mwqc7chRzN10SP/6lU+xJ+EkIrtyZm7uhxeT6MQ==
 
-"@0xsequence/multicall@^0.21.2":
-  version "0.21.2"
-  resolved "https://registry.npmjs.org/@0xsequence/multicall/-/multicall-0.21.2.tgz#18f33dbd70dd881beb6ebadf02c7699264efcf41"
-  integrity sha512-jKqUydpKUWBf9Wj3pBMVCYLWEUgj1xH8NMsTMkaRA9ysCcJjW/nfiWsuPUmQCrMZPSxw7RtHdPvYP4wClSx2VQ==
+"@0xsequence/multicall@^0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@0xsequence/multicall/-/multicall-0.22.0.tgz#acd3c452ff76fe4c092302d12fc5439d3ae7c25c"
+  integrity sha512-G2pRZ+eNh2hfSKUITdVBaPG8yodoIm86D4ySkcBNBxqssBF4x2rZTG/p0Wv4aA3F2O9AQHhr98Dv6uobdekiIg==
   dependencies:
-    "@0xsequence/abi" "^0.21.2"
-    "@0xsequence/network" "^0.21.2"
-    "@0xsequence/utils" "^0.21.2"
+    "@0xsequence/abi" "^0.22.0"
+    "@0xsequence/network" "^0.22.0"
+    "@0xsequence/utils" "^0.22.0"
     "@ethersproject/providers" "^5.0.24"
     ethers "^5.0.32"
 
-"@0xsequence/network@^0.21.2":
-  version "0.21.2"
-  resolved "https://registry.npmjs.org/@0xsequence/network/-/network-0.21.2.tgz#dbbc315805d05423f0a65b391ab39e1b0e16b540"
-  integrity sha512-oHIKI1NdJxetp//fkiUfDb99bGFGcHsjer2Nqp3BwNcl1XwcUYGByCUUKDFfeesiTB3atGiGebFAglxtW6uACw==
+"@0xsequence/network@^0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@0xsequence/network/-/network-0.22.0.tgz#12ea357c69e5f3469dd45778a888a1ee8f162780"
+  integrity sha512-DclJzIDTr4GC0WTtmQLX0dgugj/7+rSaQPfhKisTSqRlJsu3tOgMg9XDIFvqycn/uISgGtRzjbCM//j9OH3QeQ==
   dependencies:
-    "@0xsequence/utils" "^0.21.2"
+    "@0xsequence/utils" "^0.22.0"
     "@ethersproject/providers" "^5.0.24"
     ethers "^5.0.32"
 
-"@0xsequence/utils@^0.21.2":
-  version "0.21.2"
-  resolved "https://registry.npmjs.org/@0xsequence/utils/-/utils-0.21.2.tgz#2165044a9ac8b98117f9d045e49e5cb44281ec3b"
-  integrity sha512-sLgUKNB0dfKxe3l9+8sNJMzBffGE3GJk3F07CRX58cD/j/NaWrXYfqHvc8RMjvHLJW7tnpxyl3HuHrbhZGPmnQ==
+"@0xsequence/utils@^0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@0xsequence/utils/-/utils-0.22.0.tgz#a147ddfb43f5c1303d1ef7fd0f10cda572763238"
+  integrity sha512-nd9fM1k9wVlzLUVbHCz0ZDoy6IuU/njMM6JBruXzRQSRCjp0MudEg0Mp11Dit7RHHM6fgHOv2UoDy3pfEViPvg==
   dependencies:
     "@ethersproject/abstract-signer" "5.0.14"
     "@ethersproject/properties" "^5.0.9"

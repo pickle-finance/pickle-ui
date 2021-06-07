@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
-import { providers } from "@0xsequence/multicall";
+import { providers } from '@0xsequence/multicall';
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";

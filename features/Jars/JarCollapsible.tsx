@@ -357,7 +357,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                       ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
                       chainName === NETWORK_NAMES.POLY
                         ? {
-                            gasLimit: 230000,
+                            gasLimit: 500000,
                           }
                         : undefined,
                     );
@@ -418,7 +418,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                     return jarContract.connect(signer).withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18),
                       chainName === NETWORK_NAMES.POLY
                         ? {
-                            gasLimit: 230000,
+                            gasLimit: 500000,
                           }
                         : undefined,
                     );
