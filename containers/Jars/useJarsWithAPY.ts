@@ -595,7 +595,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthWBtcApy,
         sushiEthYfiApy,
         sushiEthApy,
-        // sushiEthAlcxApy,
+        sushiEthAlcxApy,
       ] = await Promise.all([
         calculateUNIAPY(UNI_ETH_DAI_STAKING_REWARDS),
         calculateUNIAPY(UNI_ETH_USDC_STAKING_REWARDS),
@@ -607,7 +607,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_WBTC),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YFI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH),
-        // calculateSushiV2APY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+        calculateSushiV2APY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
       ]);
 
       const [
@@ -617,7 +617,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         sushiEthyvboostApy,
         // basisBacDaiApy,
         // basisBasDaiApy,
-        // alcxEthAlcxApy,
+        alcxEthAlcxApy,
         usdcApy,
         crvLusdApy,
       ] = await Promise.all([
@@ -627,7 +627,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST),
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
-        // calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);
@@ -850,13 +850,13 @@ export const useJarWithAPY = (jars: Input): Output => {
           ];
         }
 
-        // if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
-        //   APYs = [
-        //     ...alcxEthAlcxApy,
-        //     ...sushiEthAlcxApy,
-        //     ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        //   ];
-        // }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
+          APYs = [
+            ...alcxEthAlcxApy,
+            ...sushiEthAlcxApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
+          ];
+        }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
           APYs = [...usdcApy];
