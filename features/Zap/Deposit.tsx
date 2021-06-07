@@ -7,7 +7,7 @@ import { useDeposit } from "./useDeposit";
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: parseFloat(numStr) < 1 ? 18 : 4,
+    maximumFractionDigits: parseFloat(numStr) < 1 ? 6 : 4,
   });
 
 export const Deposit: FC = () => {

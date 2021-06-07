@@ -201,17 +201,17 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 18 : 4,
+    maximumFractionDigits: balNum < 1 ? 6 : 4,
   });
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 6 : 4,
   });
   const depositedUnderlyingStr = (
     parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 6 : 4,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,

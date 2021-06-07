@@ -215,11 +215,11 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const bal = parseFloat(formatEther(balance));
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: bal < 1 ? 18 : 4,
+    maximumFractionDigits: bal < 1 ? 6 : 4,
   });
   const stakedStr = stakedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 18 : 4,
+    maximumFractionDigits: stakedNum < 1 ? 6 : 4,
   });
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
