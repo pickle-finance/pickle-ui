@@ -388,12 +388,12 @@ export const JarGaugeCollapsible: FC<{
     }
     if (gaugeData) {
       const stakeStatus = getTransferStatus(
-        depositToken.address,
+        gaugeDepositToken.address,
         gaugeData.address,
       );
       const unstakeStatus = getTransferStatus(
         gaugeData.address,
-        depositToken.address,
+        gaugeDepositToken.address,
       );
       const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
       const exitStatus = getTransferStatus(gaugeData.address, "exit");
@@ -431,7 +431,7 @@ export const JarGaugeCollapsible: FC<{
   useEffect(() => {
     const checkAllowance = async () => {
       if (erc20 && address && signer) {
-        const Token = erc20.attach(depositToken.address).connect(signer);
+        const Token = erc20.attach(gaugeDepositToken.address).connect(signer);
         const allowance = await Token.allowance(address, gaugeData.address);
         if (allowance.gt(ethers.constants.Zero)) {
           setApproved(true);
@@ -789,7 +789,7 @@ export const JarGaugeCollapsible: FC<{
             onClick={() => {
               if (gauge && signer) {
                 transfer({
-                  token: depositToken.address,
+                  token: gaugeDepositToken.address,
                   recipient: gauge.address,
                   transferCallback: async () => {
                     return gauge.deposit(
@@ -836,7 +836,7 @@ export const JarGaugeCollapsible: FC<{
               if (gauge && signer) {
                 transfer({
                   token: gauge.address,
-                  recipient: depositToken.address,
+                  recipient: gaugeDepositToken.address,
                   approval: false,
                   transferCallback: async () => {
                     return gauge.withdraw(
