@@ -166,8 +166,6 @@ const FarmRow = (props) => {
     item.valueBalance = 0;
   }
 
-  console.log(item)
-
   return (
     <TableRow key={farm}>
       <TableCell className={classes.farmTableCell}>

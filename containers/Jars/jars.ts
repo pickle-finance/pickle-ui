@@ -108,6 +108,34 @@ export const DEPOSIT_TOKENS_NAME = {
   lusdCRV: "lusdCRV",
 };
 
+export const JAR_API_KEY: Record<string, string> = {
+  [DEPOSIT_TOKENS_NAME.sCRV]: "scrv",
+  [DEPOSIT_TOKENS_NAME.renCRV]: "renbtccrv",
+  [DEPOSIT_TOKENS_NAME["3CRV"]]: "3poolcrv",
+  [DEPOSIT_TOKENS_NAME.steCRV]: "stecrv",
+  [DEPOSIT_TOKENS_NAME.UNIV2_BAC_DAI]: "bac-dai",
+  [DEPOSIT_TOKENS_NAME.UNIV2_BAS_DAI]: "bas-dai",
+  [DEPOSIT_TOKENS_NAME.UNIV2_MTSLA_UST]: "mtsla-ust",
+  [DEPOSIT_TOKENS_NAME.UNIV2_MAAPL_UST]: "maaple-ust",
+  [DEPOSIT_TOKENS_NAME.UNIV2_MQQQ_UST]: "mqqq-ust",
+  [DEPOSIT_TOKENS_NAME.UNIV2_MSLV_UST]: "mslv-ust",
+  [DEPOSIT_TOKENS_NAME.UNIV2_MBABA_UST]: "mbaba-ust",
+  [DEPOSIT_TOKENS_NAME.UNIV2_MIR_UST]: "mir-ust",
+  [DEPOSIT_TOKENS_NAME.UNIV2_FEI_TRIBE]: "fei-tribe",
+  [DEPOSIT_TOKENS_NAME.UNIV2_LUSD_ETH]: "lusd-eth",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_DAI]: "slp-dai",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDC]: "slp-usdc",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_USDT]: "slp-usdt",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_WBTC]: "slp-wbtc",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YFI]: "slp-wfi",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YVECRV]: "yvecrv-eth",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YVBOOST]: "yvboost-eth",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH]: "sushi-eth",
+  [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: "alcx-eth",
+  [DEPOSIT_TOKENS_NAME.USDC]: "usdc",
+  [DEPOSIT_TOKENS_NAME.lusdCRV]: "lusdcrv",
+};
+
 export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.sCRV]: true,
   [DEPOSIT_TOKENS_NAME.renCRV]: true,
@@ -204,8 +232,7 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
-  ALCX_ALUSD_3CRV:
-    "https://crv.finance/liquidity",
+  ALCX_ALUSD_3CRV: "https://crv.finance/liquidity",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",

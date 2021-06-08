@@ -6,6 +6,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
+import { Contracts } from "../../containers/Contracts";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,
@@ -15,8 +16,9 @@ import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { UserGaugeData } from "../../containers/UserGauges";
-import { GaugeCollapsible } from "../Gauges/GaugeCollapsible";
 import { useDill } from "../../containers/Dill";
+import { useMigrate } from "../Farms/UseMigrate";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 
 interface DataProps {
   isZero?: boolean;
@@ -166,7 +168,7 @@ const setButtonStatus = (
   }
 };
 
-export const JarCollapsible: FC<{
+export const JarGaugeCollapsible: FC<{
   jarData: UserJarData;
   gaugeData: UserGaugeData;
   isYearnJar?: boolean;
@@ -221,64 +223,65 @@ export const JarCollapsible: FC<{
     maximumFractionDigits: 2,
   });
 
-  let apyRangeTooltipText, yourApyTooltipText;
+  const {
+    depositToken: gaugeDepositToken,
+    balance: gaugeBalance,
+    staked,
+    harvestable,
+    depositTokenName: gaugeDepositTokenName,
+    fullApy,
+  } = gaugeData;
 
-  let fullApy: any;
-  let staked: any;
-  let pickleAPYMin: any;
-  let pickleAPYMax: any;
-  let realAPY: any;
-  let harvestable: any;
-  let harvestableStr: any;
+  const gaugeBal = parseFloat(
+    formatEther(
+      isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : gaugeBalance,
+    ),
+  );
 
-  if (gaugeData) {
-    fullApy = gaugeData.fullApy;
-    staked = gaugeData.staked;
-    harvestable = gaugeData.harvestable;
+  const gaugeBalStr = gaugeBal.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: gaugeBal < 1 ? 18 : 4,
+  });
 
-    harvestableStr = parseFloat(formatEther(harvestable || 0)).toLocaleString();
+  const stakedNum = parseFloat(
+    formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
+  );
 
-    const stakedNum = parseFloat(
-      formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
-    );
+  const pickleAPYMin = fullApy * 100 * 0.4;
+  const pickleAPYMax = fullApy * 100;
 
-    pickleAPYMin = fullApy * 100 * 0.4;
-    pickleAPYMax = fullApy * 100;
+  const dillRatio = +(dillSupply?.toString() || 0)
+    ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
+    : 0;
 
-    const dillRatio = +(dillSupply?.toString() || 0)
-      ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
-      : 0;
-    const _balance = stakedNum;
-    const _derived = _balance * 0.4;
-    const _adjusted =
-      (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
+  const _balance = stakedNum;
+  const _derived = _balance * 0.4;
+  const _adjusted =
+    (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
 
-    const pickleAPY =
-      (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
+  const pickleAPY =
+    (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
 
-    realAPY = totalAPY + pickleAPY;
-    apyRangeTooltipText = [
-      `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
-      ...APYs.map((x) => {
-        const k = Object.keys(x)[0];
-        const v = Object.values(x)[0];
-        return isNaN(v) ? null : `${k}: ${v ? 0 : v.toFixed(2)}%`;
-      }),
-    ]
-      .filter((x) => x)
-      .join(" + ");
+  const realAPY = totalAPY + pickleAPY;
 
-    yourApyTooltipText = [
-      `pickle: ${pickleAPY ? formatAPY(pickleAPY) : "0%"}`,
-      ...APYs.map((x) => {
-        const k = Object.keys(x)[0];
-        const v = Object.values(x)[0];
-        return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
-      }),
-    ]
-      .filter((x) => x)
-      .join(" + ");
-  }
+  const apyRangeTooltipText = [
+    `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
+    ...APYs.map((x) => {
+      const k = Object.keys(x)[0];
+      const v = Object.values(x)[0];
+      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
+    }),
+  ]
+    .filter((x) => x)
+    .join(" + ");
+  const yourApyTooltipText = [
+    `pickle: ${formatAPY(pickleAPY)}`,
+    ...APYs.map((x) => {
+      const k = Object.keys(x)[0];
+      const v = Object.values(x)[0];
+      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
+    }),
+  ].filter((x) => x);
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -297,18 +300,146 @@ export const JarCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, address, blockNum } = Connection.useContainer();
+
+  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
+
+  const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
+    gaugeDepositToken,
+    0,
+    gaugeBalance,
+    staked,
+  );
+
+  const stakedStr = stakedNum.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: stakedNum < 1 ? 18 : 4,
+  });
+  const harvestableStr = parseFloat(
+    formatEther(harvestable || 0),
+  ).toLocaleString();
+
+  const [stakeAmount, setStakeAmount] = useState("");
+  const [unstakeAmount, setUnstakeAmount] = useState("");
+
+  const [stakeButton, setStakeButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Approve and Stake",
+  });
+  const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Unstake",
+  });
+  const [harvestButton, setHarvestButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Harvest",
+  });
+  const [exitButton, setExitButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: "Harvest and Exit",
+  });
+
+  const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
+  const [isSuccess, setSuccess] = useState<boolean>(false);
+
+  const balanceNum = parseFloat(
+    formatEther(
+      isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : balance,
+    ),
+  );
+
+  const isyveCRVFarm =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV.toLowerCase();
+
+  const handleYvboostMigrate = async () => {
+    if (stakedNum || balanceNum) {
+      try {
+        setYvMigrateState("Withdrawing from Farm...");
+        await withdrawGauge(gauge);
+        setYvMigrateState("Migrating to yvBOOST pJar...");
+        await migrateYvboost();
+        setYvMigrateState("Migrated! Staking in Farm...");
+        await depositYvboost();
+        setYvMigrateState(null);
+        setSuccess(true);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setYvMigrateState(null);
+        return;
+      }
+    }
+  };
 
   useEffect(() => {
-    const dStatus = getTransferStatus(
-      depositToken.address,
-      jarContract.address,
-    );
-    const wStatus = getTransferStatus(jarContract.address, jarContract.address);
+    if (jarData) {
+      const dStatus = getTransferStatus(
+        depositToken.address,
+        jarContract.address,
+      );
+      const wStatus = getTransferStatus(
+        jarContract.address,
+        jarContract.address,
+      );
 
-    setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
-    setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
+      setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
+      setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
+    }
+    if (gaugeData) {
+      const stakeStatus = getTransferStatus(
+        depositToken.address,
+        gaugeData.address,
+      );
+      const unstakeStatus = getTransferStatus(
+        gaugeData.address,
+        depositToken.address,
+      );
+      const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
+      const exitStatus = getTransferStatus(gaugeData.address, "exit");
+
+      setButtonStatus(
+        stakeStatus,
+        "Staking...",
+        approved ? "Stake" : "Approve and Stake",
+        setStakeButton,
+      );
+      setButtonStatus(
+        unstakeStatus,
+        "Unstaking...",
+        "Unstake",
+        setUnstakeButton,
+      );
+      setButtonStatus(
+        harvestStatus,
+        "Harvesting...",
+        "Harvest",
+        setHarvestButton,
+      );
+      setButtonStatus(
+        exitStatus,
+        "Exiting...",
+        "Harvest and Exit",
+        setExitButton,
+      );
+    }
   }, [erc20TransferStatuses]);
+
+  const { erc20 } = Contracts.useContainer();
+  const [approved, setApproved] = useState(false);
+
+  useEffect(() => {
+    const checkAllowance = async () => {
+      if (erc20 && address && signer) {
+        const Token = erc20.attach(depositToken.address).connect(signer);
+        const allowance = await Token.allowance(address, gaugeData.address);
+        if (allowance.gt(ethers.constants.Zero)) {
+          setApproved(true);
+        }
+      }
+    };
+    checkAllowance();
+  }, [blockNum, address, erc20]);
 
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
@@ -620,9 +751,191 @@ export const JarCollapsible: FC<{
           </Button>
         </Grid>
       </Grid.Container>
-      {gaugeData && jarData && (
-        <GaugeCollapsible gaugeData={gaugeData} jarData={jarData} />
-      )}
+
+      <Spacer y={1} />
+      <Grid.Container gap={2}>
+        <Grid xs={24} md={12}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
+              Balance: {gaugeBalStr} {gaugeDepositTokenName}
+            </div>
+            <Link
+              color
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setStakeAmount(
+                  formatEther(
+                    isUsdc && gaugeBalance
+                      ? gaugeBalance.mul(USDC_SCALE)
+                      : gaugeBalance,
+                  ),
+                );
+              }}
+            >
+              Max
+            </Link>
+          </div>
+          <Input
+            onChange={(e) => setStakeAmount(e.target.value)}
+            value={stakeAmount}
+            width="100%"
+            type="number"
+            size="large"
+          />
+          <Spacer y={0.5} />
+          <Button
+            disabled={stakeButton.disabled || isyveCRVFarm}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: depositToken.address,
+                  recipient: gauge.address,
+                  transferCallback: async () => {
+                    return gauge.deposit(
+                      ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18),
+                    );
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {stakeButton.text}
+          </Button>
+        </Grid>
+        <Grid xs={24} md={12}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
+              Staked: {stakedStr} {gaugeDepositTokenName}
+            </div>
+            <Link
+              color
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setUnstakeAmount(
+                  formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                );
+              }}
+            >
+              Max
+            </Link>
+          </div>
+          <Input
+            onChange={(e) => setUnstakeAmount(e.target.value)}
+            value={unstakeAmount}
+            width="100%"
+            type="number"
+            size="large"
+          />
+          <Spacer y={0.5} />
+          <Button
+            disabled={unstakeButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: depositToken.address,
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.withdraw(
+                      ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
+                    );
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {unstakeButton.text}
+          </Button>
+        </Grid>
+        <Spacer />
+      </Grid.Container>
+      <Grid.Container gap={2}>
+        <Grid xs={24} md={24}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.getReward();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {harvestButton.text}
+          </Button>
+        </Grid>
+        <Grid xs={24} md={24}>
+          <Button
+            disabled={harvestButton.disabled}
+            onClick={() => {
+              if (gauge && signer) {
+                transfer({
+                  token: gauge.address,
+                  recipient: gauge.address, // Doesn't matter since we don't need approval
+                  approval: false,
+                  transferCallback: async () => {
+                    return gauge.exit();
+                  },
+                });
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            {exitButton.text}
+          </Button>
+        </Grid>
+        {isyveCRVFarm && (
+          <Grid xs={24}>
+            <Button
+              disabled={yvMigrateState !== null}
+              onClick={handleYvboostMigrate}
+              style={{ width: "100%", textTransform: "none" }}
+            >
+              {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "Source Sans Pro",
+                fontSize: "1rem",
+              }}
+            >
+              Your tokens will be unstaked and migrated to the yvBOOST pJar and
+              staked in the Farm.
+              <br />
+              This process will require a number of transactions.
+              <br />
+              Learn more about yvBOOST{" "}
+              <a
+                target="_"
+                href="https://twitter.com/iearnfinance/status/1388131568481411077"
+              >
+                here
+              </a>
+              .
+              {isSuccess ? (
+                <p style={{ fontWeight: "bold" }}>
+                  Migration completed! See your deposits{" "}
+                  <Link color href="/farms">
+                    here
+                  </Link>
+                </p>
+              ) : null}
+            </div>
+          </Grid>
+        )}
+      </Grid.Container>
     </Collapse>
   );
 };

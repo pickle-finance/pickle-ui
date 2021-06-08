@@ -75,7 +75,9 @@ export const NavItems: FC = () => {
   return (
     <div>
       <Link href="/farms" passHref>
-        <NavItem active={router.pathname.endsWith("farms")}>jars&farms</NavItem>
+        <NavItem active={router.pathname.endsWith("farms")}>
+          jars & farms
+        </NavItem>
       </Link>
       <Link href="/dill" passHref>
         <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>

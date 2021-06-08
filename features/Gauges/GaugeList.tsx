@@ -4,7 +4,6 @@ import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
 import { PercentageInput } from "../../components/PercentageInput";
-import { GaugeCollapsible } from "./GaugeCollapsible";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
@@ -12,8 +11,10 @@ import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
-import { useJarData } from "../Jars/useJarData";
-import { JarCollapsible } from "../Jars/JarCollapsible";
+import { useJarData } from "./useJarData";
+import { JarCollapsible } from "./JarCollapsible";
+import { GaugeCollapsible } from "./GaugeCollapsible";
+import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
 
 interface Weights {
@@ -94,7 +95,7 @@ export const GaugeList: FC = () => {
             checked={showUserJars}
             onChange={() => setShowUserJars(!showUserJars)}
           />
-          Show Your Jars
+          Show My Jars
         </Grid>
       </Grid.Container>
       <h2>Current Weights</h2>
@@ -112,8 +113,13 @@ export const GaugeList: FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>Active Jars</h2>
+        <h2>Active Farms</h2>
       </div>
+      <Grid.Container gap={1}>
+        <Grid xs={24}>
+          <GaugeCollapsible gaugeData={gaugeData[0]} />
+        </Grid>
+      </Grid.Container>
       <Grid.Container gap={1}>
         {(showUserJars ? userJars : activeJars).map((jar) => {
           const gauge = gaugeData.find(
@@ -124,7 +130,11 @@ export const GaugeList: FC = () => {
 
           return (
             <Grid xs={24} key={jar.name}>
-              <JarCollapsible jarData={jar} gaugeData={gauge} />
+              {!gauge ? (
+                <JarCollapsible jarData={jar} />
+              ) : (
+                <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
+              )}
             </Grid>
           );
         })}
@@ -141,7 +151,11 @@ export const GaugeList: FC = () => {
             );
             return (
               <Grid xs={24} key={jar.name}>
-                <JarCollapsible jarData={jar} gaugeData={gauge} />
+                {!gauge ? (
+                  <JarCollapsible jarData={jar} />
+                ) : (
+                  <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
+                )}
               </Grid>
             );
           })}

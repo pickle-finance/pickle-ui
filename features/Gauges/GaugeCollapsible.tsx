@@ -33,7 +33,6 @@ import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
-import { UserJarData } from "../../containers/UserJars";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -83,14 +82,15 @@ const setButtonStatus = (
 };
 
 const formatAPY = (apy: number) => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
+  if (apy > 1e6) return "∞%";
   return apy.toFixed(2) + "%";
 };
 
-export const GaugeCollapsible: FC<{
-  gaugeData: UserGaugeData;
-  jarData: UserJarData;
-}> = ({ gaugeData, jarData }) => {
+export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
+  gaugeData,
+}) => {
+  const { jars } = Jars.useContainer();
+
   const {
     poolName,
     depositToken,
@@ -173,8 +173,11 @@ export const GaugeCollapsible: FC<{
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
-  if (jarData) {
-    APYs = jarData?.APYs ? [...APYs, ...jarData.APYs] : APYs;
+  const maybeJar =
+    JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
+  if (jars && maybeJar) {
+    const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
+    APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
   }
 
   const { getUniPairDayAPY } = useUniPairDayData();
@@ -183,7 +186,10 @@ export const GaugeCollapsible: FC<{
   }
 
   const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
+    return Object.values(x).reduce(
+      (acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y),
+      0,
+    );
   }).reduce((acc, x) => acc + x, 0);
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
@@ -202,7 +208,7 @@ export const GaugeCollapsible: FC<{
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
   ]
     .filter((x) => x)
@@ -212,7 +218,7 @@ export const GaugeCollapsible: FC<{
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
   ]
     .filter((x) => x)
@@ -258,7 +264,7 @@ export const GaugeCollapsible: FC<{
       setButtonStatus(
         stakeStatus,
         "Staking...",
-        approved ? "Add to Stake" : "Approve and Stake",
+        approved ? "Stake" : "Approve and Stake",
         setStakeButton,
       );
       setButtonStatus(
@@ -299,7 +305,66 @@ export const GaugeCollapsible: FC<{
   }, [blockNum, address, erc20]);
 
   return (
-    <>
+    <Collapse
+      style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
+      shadow
+      preview={
+        <Grid.Container gap={1}>
+          <Grid xs={24} sm={12} md={6} lg={6}>
+            <TokenIcon
+              src={
+                GAUGE_LP_TO_ICON[
+                  depositToken.address as keyof typeof GAUGE_LP_TO_ICON
+                ]
+              }
+            />
+            <div style={{ width: "100%" }}>
+              <div style={{ fontSize: `1rem` }}>{poolName}</div>
+              <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
+            </div>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+              {harvestableStr}
+            </Data>
+            <Label>Earned</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={bal === 0}>{balStr}</Data>
+            <Label>Balance</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={stakedNum === 0}>{stakedStr}</Data>
+            <Label>Staked</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
+            <Label>Value Staked</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={4} lg={6} css={{ textAlign: "center" }}>
+            <Tooltip
+              text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
+            >
+              <div>
+                {totalAPY + fullApy === 0
+                  ? "--%"
+                  : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
+                      totalAPY + pickleAPYMax,
+                    )}`}
+              </div>
+              <Label>APY Range</Label>
+            </Tooltip>
+
+            <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
+              <div style={{ display: "flex" }}>
+                <Label>Your APY: </Label>
+                <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+              </div>
+            </Tooltip>
+          </Grid>
+        </Grid.Container>
+      }
+    >
       <Spacer y={1} />
       <Grid.Container gap={2}>
         <Grid xs={24} md={12}>
@@ -400,7 +465,7 @@ export const GaugeCollapsible: FC<{
         <Spacer />
       </Grid.Container>
       <Grid.Container gap={2}>
-        <Grid xs={24} md={24}>
+        <Grid xs={24} md={12}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
@@ -420,7 +485,7 @@ export const GaugeCollapsible: FC<{
             {harvestButton.text}
           </Button>
         </Grid>
-        <Grid xs={24} md={24}>
+        <Grid xs={24} md={12}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
@@ -443,48 +508,46 @@ export const GaugeCollapsible: FC<{
 
         {isyveCRVFarm && (
           <Grid xs={24}>
-            <>
-              <Button
-                disabled={yvMigrateState !== null}
-                onClick={handleYvboostMigrate}
-                style={{ width: "100%", textTransform: "none" }}
+            <Button
+              disabled={yvMigrateState !== null}
+              onClick={handleYvboostMigrate}
+              style={{ width: "100%", textTransform: "none" }}
+            >
+              {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "Source Sans Pro",
+                fontSize: "1rem",
+              }}
+            >
+              Your tokens will be unstaked and migrated to the yvBOOST pJar and
+              staked in the Farm.
+              <br />
+              This process will require a number of transactions.
+              <br />
+              Learn more about yvBOOST{" "}
+              <a
+                target="_"
+                href="https://twitter.com/iearnfinance/status/1388131568481411077"
               >
-                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
-              </Button>
-              <div
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  fontFamily: "Source Sans Pro",
-                  fontSize: "1rem",
-                }}
-              >
-                Your tokens will be unstaked and migrated to the yvBOOST pJar
-                and staked in the Farm.
-                <br />
-                This process will require a number of transactions.
-                <br />
-                Learn more about yvBOOST{" "}
-                <a
-                  target="_"
-                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
-                >
-                  here
-                </a>
-                .
-                {isSuccess ? (
-                  <p style={{ fontWeight: "bold" }}>
-                    Migration completed! See your deposits{" "}
-                    <Link color href="/farms">
-                      here
-                    </Link>
-                  </p>
-                ) : null}
-              </div>
-            </>
+                here
+              </a>
+              .
+              {isSuccess ? (
+                <p style={{ fontWeight: "bold" }}>
+                  Migration completed! See your deposits{" "}
+                  <Link color href="/farms">
+                    here
+                  </Link>
+                </p>
+              ) : null}
+            </div>
           </Grid>
         )}
       </Grid.Container>
-    </>
+    </Collapse>
   );
 };
