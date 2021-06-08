@@ -378,7 +378,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={stakedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance: {balStr} {depositTokenName}
@@ -426,57 +426,59 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             {stakeButton.text}
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Staked: {stakedStr} {depositTokenName}
+        {stakedNum !== 0 && (
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Staked: {stakedStr} {depositTokenName}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setUnstakeAmount(
+                    formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                  );
+                }}
+              >
+                Max
+              </Link>
             </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setUnstakeAmount(
-                  formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
-                );
+            <Input
+              onChange={(e) => setUnstakeAmount(e.target.value)}
+              value={unstakeAmount}
+              width="100%"
+              type="number"
+              size="large"
+            />
+            <Spacer y={0.5} />
+            <Button
+              disabled={unstakeButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: depositToken.address,
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.withdraw(
+                        ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
+                      );
+                    },
+                  });
+                }
               }}
+              style={{ width: "100%" }}
             >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setUnstakeAmount(e.target.value)}
-            value={unstakeAmount}
-            width="100%"
-            type="number"
-            size="large"
-          />
-          <Spacer y={0.5} />
-          <Button
-            disabled={unstakeButton.disabled}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gauge.address,
-                  recipient: depositToken.address,
-                  approval: false,
-                  transferCallback: async () => {
-                    return gauge.withdraw(
-                      ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
-                    );
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {unstakeButton.text}
-          </Button>
-        </Grid>
+              {unstakeButton.text}
+            </Button>
+          </Grid>
+        )}
         <Spacer />
       </Grid.Container>
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={24}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
@@ -493,10 +495,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             }}
             style={{ width: "100%" }}
           >
-            {harvestButton.text}
+            {harvestButton.text} {harvestableStr} $PICKLES
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={24}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {

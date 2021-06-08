@@ -75,10 +75,11 @@ export const GaugeList: FC = () => {
       <Grid.Container>
         <Grid md={12}>
           <p>
-            Farms allow you to earn PICKLEs by staking tokens.
+            Jars auto-invest your deposit tokens and Farms earn you{" "}
+            <b>$PICKLEs</b>.
             <br />
-            Hover over the displayed APY to see where the returns are coming
-            from.
+            Deposit & Stake to get into both. Hover over the displayed APY to
+            see where the returns are coming from. Farms allow you to earn
           </p>
         </Grid>
         <Grid md={12} style={{ textAlign: "right" }}>

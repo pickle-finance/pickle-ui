@@ -203,6 +203,7 @@ export const JarGaugeCollapsible: FC<{
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
+
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: balNum < 1 ? 12 : 2,
@@ -318,6 +319,7 @@ export const JarGaugeCollapsible: FC<{
     minimumFractionDigits: 0,
     maximumFractionDigits: stakedNum < 1 ? 18 : 4,
   });
+
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
   ).toLocaleString();
@@ -634,7 +636,7 @@ export const JarGaugeCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance: {balStr} {depositTokenName}
@@ -687,260 +689,266 @@ export const JarGaugeCollapsible: FC<{
             {depositButton.text}
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Balance {depositedStr} (
-              <Tooltip
-                text={`${
-                  deposited && ratio
-                    ? parseFloat(
-                        formatEther(
-                          isUsdc && deposited
-                            ? deposited.mul(USDC_SCALE)
-                            : deposited,
-                        ),
-                      ) * ratio
-                    : 0
-                } ${depositTokenName}`}
+        {depositedNum !== 0 && (
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Balance {depositedStr} (
+                <Tooltip
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(
+                            isUsdc && deposited
+                              ? deposited.mul(USDC_SCALE)
+                              : deposited,
+                          ),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
+                >
+                  {depositedUnderlyingStr}
+                </Tooltip>{" "}
+                {depositTokenName}){" "}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setWithdrawAmount(
+                    formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
+                  );
+                }}
               >
-                {depositedUnderlyingStr}
-              </Tooltip>{" "}
-              {depositTokenName}){" "}
+                Max
+              </Link>
             </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setWithdrawAmount(
-                  formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
-                );
-              }}
-            >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setWithdrawAmount(e.target.value)}
-            value={withdrawAmount}
-            width="100%"
-          ></Input>
-          <Spacer y={0.5} />
-          <Button
-            disabled={withdrawButton.disabled || isDisabledJar}
-            onClick={() => {
-              if (signer && !isDisabledJar) {
-                // Allow pToken to burn its pToken
-                // and refund lpToken
-                transfer({
-                  token: jarContract.address,
-                  recipient: jarContract.address,
-                  transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .withdraw(
-                        ethers.utils.parseUnits(
-                          withdrawAmount,
-                          isUsdc ? 6 : 18,
-                        ),
-                      );
-                  },
-                  approval: false,
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {withdrawButton.text}
-          </Button>
-        </Grid>
-      </Grid.Container>
-
-      <Spacer y={1} />
-      <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Balance: {gaugeBalStr} {gaugeDepositTokenName}
-            </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setStakeAmount(
-                  formatEther(
-                    isUsdc && gaugeBalance
-                      ? gaugeBalance.mul(USDC_SCALE)
-                      : gaugeBalance,
-                  ),
-                );
-              }}
-            >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setStakeAmount(e.target.value)}
-            value={stakeAmount}
-            width="100%"
-            type="number"
-            size="large"
-          />
-          <Spacer y={0.5} />
-          <Button
-            disabled={stakeButton.disabled || isyveCRVFarm}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gaugeDepositToken.address,
-                  recipient: gauge.address,
-                  transferCallback: async () => {
-                    return gauge.deposit(
-                      ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18),
-                    );
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {stakeButton.text}
-          </Button>
-        </Grid>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Staked: {stakedStr} {gaugeDepositTokenName}
-            </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setUnstakeAmount(
-                  formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
-                );
-              }}
-            >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setUnstakeAmount(e.target.value)}
-            value={unstakeAmount}
-            width="100%"
-            type="number"
-            size="large"
-          />
-          <Spacer y={0.5} />
-          <Button
-            disabled={unstakeButton.disabled}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gauge.address,
-                  recipient: gaugeDepositToken.address,
-                  approval: false,
-                  transferCallback: async () => {
-                    return gauge.withdraw(
-                      ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
-                    );
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {unstakeButton.text}
-          </Button>
-        </Grid>
-        <Spacer />
-      </Grid.Container>
-      <Grid.Container gap={2}>
-        <Grid xs={24} md={24}>
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gauge.address,
-                  recipient: gauge.address, // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return gauge.getReward();
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {harvestButton.text}
-          </Button>
-        </Grid>
-        <Grid xs={24} md={24}>
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gauge.address,
-                  recipient: gauge.address, // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return gauge.exit();
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {exitButton.text}
-          </Button>
-        </Grid>
-        {isyveCRVFarm && (
-          <Grid xs={24}>
+            <Input
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              value={withdrawAmount}
+              width="100%"
+            ></Input>
+            <Spacer y={0.5} />
             <Button
-              disabled={yvMigrateState !== null}
-              onClick={handleYvboostMigrate}
-              style={{ width: "100%", textTransform: "none" }}
-            >
-              {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
-            </Button>
-            <div
-              style={{
-                width: "100%",
-                textAlign: "center",
-                fontFamily: "Source Sans Pro",
-                fontSize: "1rem",
+              disabled={withdrawButton.disabled || isDisabledJar}
+              onClick={() => {
+                if (signer && !isDisabledJar) {
+                  // Allow pToken to burn its pToken
+                  // and refund lpToken
+                  transfer({
+                    token: jarContract.address,
+                    recipient: jarContract.address,
+                    transferCallback: async () => {
+                      return jarContract
+                        .connect(signer)
+                        .withdraw(
+                          ethers.utils.parseUnits(
+                            withdrawAmount,
+                            isUsdc ? 6 : 18,
+                          ),
+                        );
+                    },
+                    approval: false,
+                  });
+                }
               }}
+              style={{ width: "100%" }}
             >
-              Your tokens will be unstaked and migrated to the yvBOOST pJar and
-              staked in the Farm.
-              <br />
-              This process will require a number of transactions.
-              <br />
-              Learn more about yvBOOST{" "}
-              <a
-                target="_"
-                href="https://twitter.com/iearnfinance/status/1388131568481411077"
-              >
-                here
-              </a>
-              .
-              {isSuccess ? (
-                <p style={{ fontWeight: "bold" }}>
-                  Migration completed! See your deposits{" "}
-                  <Link color href="/farms">
-                    here
-                  </Link>
-                </p>
-              ) : null}
-            </div>
+              {withdrawButton.text}
+            </Button>
           </Grid>
         )}
       </Grid.Container>
+
+      <Spacer y={1} />
+      {depositedNum !== 0 && (
+        <Grid.Container gap={2}>
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Balance: {gaugeBalStr} {gaugeDepositTokenName}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setStakeAmount(
+                    formatEther(
+                      isUsdc && gaugeBalance
+                        ? gaugeBalance.mul(USDC_SCALE)
+                        : gaugeBalance,
+                    ),
+                  );
+                }}
+              >
+                Max
+              </Link>
+            </div>
+            <Input
+              onChange={(e) => setStakeAmount(e.target.value)}
+              value={stakeAmount}
+              width="100%"
+              type="number"
+              size="large"
+            />
+            <Spacer y={0.5} />
+            <Button
+              disabled={stakeButton.disabled || isyveCRVFarm}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gaugeDepositToken.address,
+                    recipient: gauge.address,
+                    transferCallback: async () => {
+                      return gauge.deposit(
+                        ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18),
+                      );
+                    },
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {stakeButton.text}
+            </Button>
+          </Grid>
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Staked: {stakedStr} {gaugeDepositTokenName}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setUnstakeAmount(
+                    formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                  );
+                }}
+              >
+                Max
+              </Link>
+            </div>
+            <Input
+              onChange={(e) => setUnstakeAmount(e.target.value)}
+              value={unstakeAmount}
+              width="100%"
+              type="number"
+              size="large"
+            />
+            <Spacer y={0.5} />
+            <Button
+              disabled={unstakeButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: gaugeDepositToken.address,
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.withdraw(
+                        ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
+                      );
+                    },
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {unstakeButton.text}
+            </Button>
+          </Grid>
+          <Spacer />
+        </Grid.Container>
+      )}
+      {harvestableStr !== "0" && (
+        <Grid.Container gap={2}>
+          <Grid xs={24} md={24}>
+            <Button
+              disabled={harvestButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: gauge.address, // Doesn't matter since we don't need approval
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.getReward();
+                    },
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {harvestButton.text} {harvestableStr} $PICKLES
+            </Button>
+          </Grid>
+          <Grid xs={24} md={24}>
+            <Button
+              disabled={harvestButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: gauge.address, // Doesn't matter since we don't need approval
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.exit();
+                    },
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {exitButton.text}
+            </Button>
+          </Grid>
+          {isyveCRVFarm && (
+            <Grid xs={24}>
+              <Button
+                disabled={yvMigrateState !== null}
+                onClick={handleYvboostMigrate}
+                style={{ width: "100%", textTransform: "none" }}
+              >
+                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+              </Button>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontFamily: "Source Sans Pro",
+                  fontSize: "1rem",
+                }}
+              >
+                Your tokens will be unstaked and migrated to the yvBOOST pJar
+                and staked in the Farm.
+                <br />
+                This process will require a number of transactions.
+                <br />
+                Learn more about yvBOOST{" "}
+                <a
+                  target="_"
+                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                >
+                  here
+                </a>
+                .
+                {isSuccess ? (
+                  <p style={{ fontWeight: "bold" }}>
+                    Migration completed! See your deposits{" "}
+                    <Link color href="/farms">
+                      here
+                    </Link>
+                  </p>
+                ) : null}
+              </div>
+            </Grid>
+          )}
+        </Grid.Container>
+      )}
     </Collapse>
   );
 };

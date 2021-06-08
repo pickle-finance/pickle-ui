@@ -351,7 +351,7 @@ export const JarCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance: {balStr} {depositTokenName}
@@ -404,84 +404,86 @@ export const JarCollapsible: FC<{
             {depositButton.text}
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Balance {depositedStr} (
-              <Tooltip
-                text={`${
-                  deposited && ratio
-                    ? parseFloat(
-                        formatEther(
-                          isUsdc && deposited
-                            ? deposited.mul(USDC_SCALE)
-                            : deposited,
-                        ),
-                      ) * ratio
-                    : 0
-                } ${depositTokenName}`}
+        {depositedNum !== 0 && (
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Balance {depositedStr} (
+                <Tooltip
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(
+                            isUsdc && deposited
+                              ? deposited.mul(USDC_SCALE)
+                              : deposited,
+                          ),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
+                >
+                  {depositedUnderlyingStr}
+                </Tooltip>{" "}
+                {depositTokenName}){" "}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setWithdrawAmount(
+                    formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
+                  );
+                }}
               >
-                {depositedUnderlyingStr}
-              </Tooltip>{" "}
-              {depositTokenName}){" "}
+                Max
+              </Link>
             </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setWithdrawAmount(
-                  formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
-                );
+            <Input
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              value={withdrawAmount}
+              width="100%"
+            ></Input>
+            <Spacer y={0.5} />
+            <Button
+              disabled={withdrawButton.disabled || isDisabledJar}
+              onClick={() => {
+                if (signer && !isDisabledJar) {
+                  // Allow pToken to burn its pToken
+                  // and refund lpToken
+                  transfer({
+                    token: jarContract.address,
+                    recipient: jarContract.address,
+                    transferCallback: async () => {
+                      return jarContract
+                        .connect(signer)
+                        .withdraw(
+                          ethers.utils.parseUnits(
+                            withdrawAmount,
+                            isUsdc ? 6 : 18,
+                          ),
+                        );
+                    },
+                    approval: false,
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {withdrawButton.text}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
               }}
             >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setWithdrawAmount(e.target.value)}
-            value={withdrawAmount}
-            width="100%"
-          ></Input>
-          <Spacer y={0.5} />
-          <Button
-            disabled={withdrawButton.disabled || isDisabledJar}
-            onClick={() => {
-              if (signer && !isDisabledJar) {
-                // Allow pToken to burn its pToken
-                // and refund lpToken
-                transfer({
-                  token: jarContract.address,
-                  recipient: jarContract.address,
-                  transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .withdraw(
-                        ethers.utils.parseUnits(
-                          withdrawAmount,
-                          isUsdc ? 6 : 18,
-                        ),
-                      );
-                  },
-                  approval: false,
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {withdrawButton.text}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              paddingTop: "4px",
-              fontFamily: "Source Sans Pro",
-            }}
-          >
-            There is no withdrawal fee
-          </div>
-        </Grid>
+              There is no withdrawal fee
+            </div>
+          </Grid>
+        )}
       </Grid.Container>
     </Collapse>
   );
