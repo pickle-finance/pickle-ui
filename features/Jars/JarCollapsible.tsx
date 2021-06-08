@@ -201,17 +201,17 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 6 : 4,
+    maximumFractionDigits: balNum < 1 ? 8 : 4,
   });
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 6 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const depositedUnderlyingStr = (
     parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 6 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -357,7 +357,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                       ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
                       chainName === NETWORK_NAMES.POLY
                         ? {
-                            gasLimit: 500000,
+                            gasLimit: 1000000,
                           }
                         : undefined,
                     );
@@ -418,7 +418,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                     return jarContract.connect(signer).withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18),
                       chainName === NETWORK_NAMES.POLY
                         ? {
-                            gasLimit: 500000,
+                            gasLimit: 1000000,
                           }
                         : undefined,
                     );
