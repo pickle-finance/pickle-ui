@@ -114,7 +114,7 @@ export const GaugeList: FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>Active Farms</h2>
+        <h2>Active Jars & Farms</h2>
       </div>
       <Grid.Container gap={1}>
         <Grid xs={24}>
