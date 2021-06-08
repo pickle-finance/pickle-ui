@@ -156,7 +156,6 @@ export const useJarWithAPY = (jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  const [tvlData, setTVLData] = useState<Array<Object>>([]);
 
   const calculateUNIAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.uni && getUniPairData && multicallProvider) {
@@ -980,7 +979,6 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   useEffect(() => {
-    getProtocolData().then((tvlData) => setTVLData(tvlData));
     calculateAPY();
   }, [jars, prices]);
 

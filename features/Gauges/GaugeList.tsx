@@ -119,8 +119,6 @@ export const GaugeList: FC = () => {
         <Grid xs={24}>
           <GaugeCollapsible gaugeData={gaugeData[0]} />
         </Grid>
-      </Grid.Container>
-      <Grid.Container gap={1}>
         {(showUserJars ? userJars : activeJars).map((jar) => {
           const gauge = gaugeData.find(
             (x) =>

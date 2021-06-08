@@ -19,6 +19,8 @@ import { UserGaugeData } from "../../containers/UserGauges";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
+import { getProtocolData } from "../../util/api";
+import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 
 interface DataProps {
   isZero?: boolean;
@@ -285,6 +287,7 @@ export const JarGaugeCollapsible: FC<{
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [tvlData, setTVLData] = useState();
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -441,6 +444,10 @@ export const JarGaugeCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
+  useEffect(() => {
+    getProtocolData().then((info) => setTVLData(info));
+  }, []);
+
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
@@ -490,6 +497,14 @@ export const JarGaugeCollapsible: FC<{
     }
   };
 
+  const tvlNum =
+    tvlData &&
+    GAUGE_TVL_KEY[depositToken.address] &&
+    tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      : 0;
+  const tvlStr = getFormatString(tvlNum);
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -515,31 +530,17 @@ export const JarGaugeCollapsible: FC<{
               </a>
             </div>
           </JarName>
-          <Grid
-            xs={24}
-            sm={12}
-            md={gaugeData ? 4 : 6}
-            lg={gaugeData ? 4 : 6}
-            css={{ textAlign: "center" }}
-          >
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
           </Grid>
-          {gaugeData && (
-            <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-              <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-                {harvestableStr}
-              </Data>
-              <Label>Earned</Label>
-            </Grid>
-          )}
-          <Grid
-            xs={24}
-            sm={12}
-            md={gaugeData ? 4 : 6}
-            lg={gaugeData ? 4 : 6}
-            css={{ textAlign: "center" }}
-          >
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+              {harvestableStr}
+            </Data>
+            <Label>Earned</Label>
+          </Grid>
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             {isAlusdJar ? (
               <Tooltip
                 text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
@@ -558,7 +559,7 @@ export const JarGaugeCollapsible: FC<{
               </>
             )}
           </Grid>
-          <Grid xs={24} sm={24} md={6} lg={6} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
             {!gaugeData ? (
               <Data>
                 <Tooltip text={tooltipText}>
@@ -623,6 +624,10 @@ export const JarGaugeCollapsible: FC<{
                 </div>
               </div>
             )}
+          </Grid>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data isZero={tvlNum === 0}>${tvlStr}</Data>
+            <Label>TVL</Label>
           </Grid>
         </Grid.Container>
       }

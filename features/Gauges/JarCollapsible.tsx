@@ -13,7 +13,9 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { getProtocolData } from "../../util/api";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 
 interface DataProps {
   isZero?: boolean;
@@ -226,6 +228,12 @@ export const JarCollapsible: FC<{
   } = ERC20Transfer.useContainer();
   const { signer } = Connection.useContainer();
 
+  const [tvlData, setTVLData] = useState();
+
+  useEffect(() => {
+    getProtocolData().then((info) => setTVLData(info));
+  }, []);
+
   useEffect(() => {
     const dStatus = getTransferStatus(
       depositToken.address,
@@ -257,6 +265,14 @@ export const JarCollapsible: FC<{
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
 
+  const tvlNum =
+    tvlData &&
+    GAUGE_TVL_KEY[depositToken.address] &&
+    tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      : 0;
+  const tvlStr = getFormatString(tvlNum);
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -286,16 +302,16 @@ export const JarCollapsible: FC<{
             <Data isZero={balNum === 0}>{balStr}</Data>
             <Label>Balance</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
           </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>Value</Label>
           </Grid>
 
-          <Grid xs={24} sm={12} md={5} lg={6} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
             <Data>
               <Tooltip text={tooltipText}>
                 {totalAPY.toFixed(2) + "%" || "--"}
@@ -325,6 +341,10 @@ export const JarCollapsible: FC<{
                 </div>
               </Tooltip>
             </Data>
+          </Grid>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data isZero={tvlNum === 0}>${tvlStr}</Data>
+            <Label>TVL</Label>
           </Grid>
         </Grid.Container>
       }

@@ -25,6 +25,7 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
+import { getProtocolData } from "../../util/api";
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
@@ -33,6 +34,7 @@ import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -163,6 +165,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     text: "Harvest and Exit",
   });
 
+  const [tvlData, setTVLData] = useState();
+
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
 
@@ -249,6 +253,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   };
 
   useEffect(() => {
+    getProtocolData().then((info) => setTVLData(info));
+  }, []);
+
+  useEffect(() => {
     if (gaugeData) {
       const stakeStatus = getTransferStatus(
         depositToken.address,
@@ -304,6 +312,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     checkAllowance();
   }, [blockNum, address, erc20]);
 
+  const tvlNum = tvlData ? tvlData[PICKLE_POWER] : 0;
+  const tvlStr = getFormatString(tvlNum);
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
@@ -323,15 +334,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={6} md={3} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
             <Label>Earned</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Data isZero={bal === 0}>{balStr}</Data>
-            <Label>Balance</Label>
           </Grid>
           <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum === 0}>{stakedStr}</Data>
@@ -341,7 +348,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
             <Label>Value Staked</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={6} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Tooltip
               text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
             >
@@ -361,6 +368,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                 <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
               </div>
             </Tooltip>
+          </Grid>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data isZero={tvlNum === 0}>${tvlStr}</Data>
+            <Label>TVL</Label>
           </Grid>
         </Grid.Container>
       }
