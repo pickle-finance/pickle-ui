@@ -59,13 +59,13 @@ const tooltipFormatter = (
 
   switch (name) {
     case "weeklyPickleAmount":
-      return [formattedDollarValue, "Weekly PICKLEs"];
+      return [formattedDollarValue, "Weekly PICKLEs distributed"];
     case "totalPickleAmount":
-      return [formattedDollarValue, "Total PICKLEs"];
+      return [formattedDollarValue, "Total PICKLEs distributed"];
     case "weeklyDillAmount":
-      return [formattedNumber, "Weekly DILL amount"];
+      return [formattedNumber, "Weekly DILL 🔒"];
     case "totalDillAmount":
-      return [formattedNumber, "Total DILL amount"];
+      return [formattedNumber, "Total DILL 🔒"];
     case "pickleDillRatio":
       return [
         `${formattedNumber} (${formatDollarValue(amount, 2)})`,
