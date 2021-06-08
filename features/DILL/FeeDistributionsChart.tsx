@@ -59,11 +59,13 @@ const tooltipFormatter = (
 
   switch (name) {
     case "weeklyPickleAmount":
-      return [formattedDollarValue, "Weekly PICKLEs"];
+      return [formattedDollarValue, "Weekly PICKLEs distributed"];
     case "totalPickleAmount":
-      return [formattedDollarValue, "Total PICKLEs"];
-    case "dillAmount":
-      return [formattedNumber, "DILL amount"];
+      return [formattedDollarValue, "Total PICKLEs distributed"];
+    case "weeklyDillAmount":
+      return [formattedNumber, "Weekly DILL 🔒"];
+    case "totalDillAmount":
+      return [formattedNumber, "Total DILL 🔒"];
     case "pickleDillRatio":
       return [
         `${formattedNumber} (${formatDollarValue(amount, 2)})`,
@@ -79,8 +81,10 @@ const legendFormatter = (value: string): string => {
       return "Weekly PICKLEs";
     case "totalPickleAmount":
       return "Total PICKLEs";
-    case "dillAmount":
-      return "DILL amount";
+    case "weeklyDillAmount":
+      return "Weekly DILL amount";
+    case "totalDillAmount":
+      return "Total DILL amount";
     case "pickleDillRatio":
       return "Distributed PICKLEs per 1 DILL";
     default:
@@ -187,7 +191,14 @@ export const FeeDistributionsChart: FC = () => {
                   />
                 ))}
               </Bar>
-              <Bar dataKey="dillAmount" fill="#ebebeb">
+              <Bar
+                dataKey={
+                  chartMode === "weekly"
+                    ? "weeklyDillAmount"
+                    : "totalDillAmount"
+                }
+                fill="#ebebeb"
+              >
                 {dataSeries.map((point, index) => (
                   <Cell
                     fill="#ebebeb"
