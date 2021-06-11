@@ -23,7 +23,7 @@ const formatValue = (numStr: string) =>
 export const DepositZap: FC = () => {
   const [inputToken, setInputToken] = useState<TokenSymbol>("ETH");
   const [sellTokenAddress, setSellTokenAddress] = useState(ETH_ADDRESS);
-  const [amount, setAmount] = useState<string>("0");
+  const [amount, setAmount] = useState<string>("");
   const [txState, setTxState] = useState<string | null>(null);
 
   const { balanceStr, decimals } = useBalance(inputToken);
@@ -129,6 +129,7 @@ export const DepositZap: FC = () => {
         </DisplayLink>
       </div>
       <Input
+        placeholder="0"
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
         width="100%"
