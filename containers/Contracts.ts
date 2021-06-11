@@ -53,6 +53,8 @@ import { YvboostMigrator } from "./Contracts/YvboostMigrator";
 import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/factories/YvboostMigrator__factory";
 import { YvecrvZap } from "./Contracts/YvecrvZap";
 import { YvecrvZap__factory as YvecrvZapFactory } from "./Contracts/factories/YvecrvZap__factory";
+import { ConvexChef } from "./Contracts/ConvexChef";
+import { ConvexChef__factory as ConvexChefFactory } from "./Contracts/factories/ConvexChef__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -142,6 +144,8 @@ export const FEI_TRIBE_STAKING_REWARDS =
 export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
   "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
 
+export const CONVEX_MASTERCHEF = "0x5F465e9fcfFc217c5849906216581a657cd60605";
+
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
@@ -158,6 +162,9 @@ function useContracts() {
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [masterchefV2, setMasterchefV2] = useState<Masterchefv2 | null>(null);
+  const [convexChef, setConvexChef] = useState<ConvexChef | null>(
+    null,
+  );
   const [controller, setController] = useState<Controller | null>(null);
 
   const [
@@ -269,6 +276,7 @@ function useContracts() {
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
+      setConvexChef(ConvexChefFactory.connect(CONVEX_MASTERCHEF, signer))
     }
   };
 
@@ -310,6 +318,7 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
+    convexChef
   };
 }
 
