@@ -33,7 +33,8 @@ const isCurvePool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES["3CRV"] ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.eursCRV
   );
 };
 
@@ -81,6 +82,7 @@ export const useJarWithTVL = (jars: Input): Output => {
     steCRVPool,
     threePool,
     lusdPool,
+    eursPool,
   } = Contracts.useContainer();
 
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
@@ -114,6 +116,11 @@ export const useJarWithTVL = (jars: Input): Output => {
     if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
       pool = lusdPool;
       pricePerUnderlying = prices?.dai;
+    }
+
+    if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.eursCRV) {
+      pool = eursPool;
+      pricePerUnderlying = prices?.eurs;
     }
 
     if (!pool || !pricePerUnderlying || !multicallProvider) {

@@ -174,6 +174,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pYearnLusdCRV",
     poolName: "Pickled Yearn LUSD",
   },
+  "0x822Ba8e3b95A26264Cd726828Af47Ee150729afd": {
+    tokenName: "pYearnEursCRV",
+    poolName: "Pickled Yearn EURS",
+  },
 };
 
 function useFarms() {
