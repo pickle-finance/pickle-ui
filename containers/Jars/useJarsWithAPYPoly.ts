@@ -16,6 +16,7 @@ import {
 import { Jar } from "./useFetchJars";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
+import { useQuickPairDayData } from "./useQuickPairDayData";
 import { formatEther } from "ethers/lib/utils";
 import { ComethPairs } from "../ComethPairs";
 import { SushiPairs } from "../SushiPairs";
@@ -75,6 +76,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { stakingRewards } = Contracts.useContainer();
   const { getComethPairDayAPY } = useComethPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
+  const { getQuickPairDayAPY } = useQuickPairDayData();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
@@ -425,9 +427,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_MIMATIC_USDC) {
           APYs = [
             ...quickMimaticUsdcApy,
-            // ...getSushiPairDayAPY(
-            //   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
-            // ),
+            ...getQuickPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
+            ),
           ];
         }
         let apr = 0;
