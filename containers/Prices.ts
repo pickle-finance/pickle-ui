@@ -41,6 +41,10 @@ interface PriceObject {
   yvboost: number;
   alcx: number;
   luna: number;
+  mimatic: number;
+  iron: number;
+  titan: number;
+  qi: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -87,6 +91,10 @@ function usePrices() {
         // "yvboost",
         "alchemix",
         "terra-luna",
+        "iron-stablecoin",
+        "iron-titanium-token",
+        "mimatic",
+        "qi-dao"
       ],
       vs_currencies: ["usd"],
     });
@@ -127,6 +135,10 @@ function usePrices() {
       yvboost: 0, // to update once CG provides yvboost price
       alcx: response["alchemix"].usd,
       luna: response["terra-luna"].usd,
+      iron: response["iron-stablecoin"].usd,
+      titan: response["iron-titanium-token"].usd,
+      mimatic: response["mimatic"].usd,
+      qi: response["qi-dao"].usd
     };
     setPrices(prices);
   };

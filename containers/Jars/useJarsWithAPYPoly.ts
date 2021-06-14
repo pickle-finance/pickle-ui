@@ -24,6 +24,7 @@ import { Connection } from "../Connection";
 import { Contract } from "@ethersproject/contracts";
 import fetch from "node-fetch";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
+import MasterchefAbi from "../ABIs/masterchef.json"
 import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
@@ -247,9 +248,63 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         { matic: getCompoundingAPY(maticAPY * 0.8), apr: maticAPY * 0.8 * 100 },
       ];
     }
-
+    
     return [];
   };
+  
+  const calculateMasterChefAPY = async (jar: Jar | undefined) => {
+    if (prices && multicallProvider && jar) {
+      const masterchefAddress = await jar.strategy.masterChef()
+      const poolId = await jar.strategy.poolId()
+      const rewardTokenAddress = await jar.strategy.rewardToken()
+      const multicallMasterchef = new Contract(
+        masterchefAddress,
+        MasterchefAbi,
+        multicallProvider,
+      );
+      
+      const lpToken = new Contract( 
+        jar.depositToken.address,
+        erc20.abi,
+        multicallProvider,
+        );
+
+      const [
+        sushiPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN
+      ] = await Promise.all([
+        multicallMasterchef.rewardPerBlock(),
+        multicallMasterchef.totalAllocPoint(),
+        multicallMasterchef.poolInfo(poolId),
+        lpToken.balanceOf(masterchefAddress)
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rewardsPerBlock =
+        (parseFloat(formatEther(sushiPerBlockBN)) *
+        0.9 *
+          poolInfo.allocPoint.toNumber()) /
+          totalAllocPointBN.toNumber();
+          
+      const { pricePerToken } = await getSushiPairData(jar.depositToken.address);
+      
+      const rewardsPerYear =
+      rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+      const rewardToken = getPriceId(rewardTokenAddress)
+      const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const rewardAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { [rewardToken]: getCompoundingAPY(rewardAPY * 0.8), apr: rewardAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  }
 
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
@@ -259,6 +314,18 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
       )?.strategy;
 
+      const ironJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_IRON_USDC,
+      )
+
+      const mimaticJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
+      )
+
       const [
         comethUsdcWethApy,
         comethPickleMustApy,
@@ -266,6 +333,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         aaveDaiAPY,
         sushiEthUsdtApy,
         sushiMaticEthApy,
+        sushiIronUsdcApy,
+        quickMimaticUsdcApy
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -281,6 +350,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
         ),
+        calculateMasterChefAPY(ironJar),
+        calculateMasterChefAPY(mimaticJar)
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -342,6 +413,23 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           ];
         }
 
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_IRON_USDC) {
+          APYs = [
+            ...sushiIronUsdcApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_IRON_USDC,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_MIMATIC_USDC) {
+          APYs = [
+            ...quickMimaticUsdcApy,
+            // ...getSushiPairDayAPY(
+            //   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
+            // ),
+          ];
+        }
         let apr = 0;
         APYs.map((x) => {
           if (x.apr) {
