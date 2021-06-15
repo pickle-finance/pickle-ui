@@ -206,12 +206,12 @@ export const JarGaugeCollapsible: FC<{
 
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 12 : 2,
+    maximumFractionDigits: balNum < 1 ? 6 : 2,
   });
 
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 12 : 2,
+    maximumFractionDigits: depositedNum < 1 ? 6 : 2,
   });
   const depositedUnderlyingStr = (
     parseFloat(
@@ -219,7 +219,7 @@ export const JarGaugeCollapsible: FC<{
     ) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 12 : 2,
+    maximumFractionDigits: depositedNum < 1 ? 6 : 2,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -329,7 +329,7 @@ export const JarGaugeCollapsible: FC<{
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Approve and Stake",
+    text: `Stake Unstaked ${depositedStr} Tokens in Farm`,
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
     disabled: false,
@@ -406,7 +406,7 @@ export const JarGaugeCollapsible: FC<{
       setButtonStatus(
         stakeStatus,
         "Staking...",
-        approved ? "Stake" : "Approve and Stake",
+        `Stake Unstaked ${depositedStr} Tokens in Farm`,
         setStakeButton,
       );
       setButtonStatus(
@@ -760,39 +760,10 @@ export const JarGaugeCollapsible: FC<{
           </Grid>
         )}
       </Grid.Container>
-
       <Spacer y={1} />
-      {depositedNum !== 0 && (
+      {Boolean(depositedNum || stakedNum) && (
         <Grid.Container gap={2}>
-          <Grid xs={24} md={12}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div>
-                Balance: {gaugeBalStr} {gaugeDepositTokenName}
-              </div>
-              <Link
-                color
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setStakeAmount(
-                    formatEther(
-                      isUsdc && gaugeBalance
-                        ? gaugeBalance.mul(USDC_SCALE)
-                        : gaugeBalance,
-                    ),
-                  );
-                }}
-              >
-                Max
-              </Link>
-            </div>
-            <Input
-              onChange={(e) => setStakeAmount(e.target.value)}
-              value={stakeAmount}
-              width="100%"
-              type="number"
-              size="large"
-            />
+          <Grid xs={24} md={depositedNum && !stakedNum ? 24 : 12}>
             <Spacer y={0.5} />
             <Button
               disabled={stakeButton.disabled || isyveCRVFarm}
@@ -803,7 +774,9 @@ export const JarGaugeCollapsible: FC<{
                     recipient: gauge.address,
                     transferCallback: async () => {
                       return gauge.deposit(
-                        ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18),
+                        isUsdc && gaugeBalance
+                          ? gaugeBalance.mul(USDC_SCALE)
+                          : gaugeBalance,
                       );
                     },
                   });
@@ -814,53 +787,58 @@ export const JarGaugeCollapsible: FC<{
               {stakeButton.text}
             </Button>
           </Grid>
-          <Grid xs={24} md={12}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div>
-                Staked: {stakedStr} {gaugeDepositTokenName}
+          {Boolean(!depositedNum && stakedNum) && (
+            <Grid xs={24} md={!depositedNum && stakedNum ? 24 : 12}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  Staked: {stakedStr} {gaugeDepositTokenName}
+                </div>
+                <Link
+                  color
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setUnstakeAmount(
+                      formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                    );
+                  }}
+                >
+                  Max
+                </Link>
               </div>
-              <Link
-                color
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setUnstakeAmount(
-                    formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
-                  );
+              <Input
+                onChange={(e) => setUnstakeAmount(e.target.value)}
+                value={unstakeAmount}
+                width="100%"
+                type="number"
+                size="large"
+              />
+              <Spacer y={0.5} />
+              <Button
+                disabled={unstakeButton.disabled}
+                onClick={() => {
+                  if (gauge && signer) {
+                    transfer({
+                      token: gauge.address,
+                      recipient: gaugeDepositToken.address,
+                      approval: false,
+                      transferCallback: async () => {
+                        return gauge.withdraw(
+                          ethers.utils.parseUnits(
+                            unstakeAmount,
+                            isUsdc ? 6 : 18,
+                          ),
+                        );
+                      },
+                    });
+                  }
                 }}
+                style={{ width: "100%" }}
               >
-                Max
-              </Link>
-            </div>
-            <Input
-              onChange={(e) => setUnstakeAmount(e.target.value)}
-              value={unstakeAmount}
-              width="100%"
-              type="number"
-              size="large"
-            />
-            <Spacer y={0.5} />
-            <Button
-              disabled={unstakeButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gaugeDepositToken.address,
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.withdraw(
-                        ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
-                      );
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {unstakeButton.text}
-            </Button>
-          </Grid>
+                {unstakeButton.text}
+              </Button>
+            </Grid>
+          )}
           <Spacer />
         </Grid.Container>
       )}
