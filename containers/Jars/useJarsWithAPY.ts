@@ -48,6 +48,8 @@ import { CurvePairs } from "../CurvePairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 import { Jarsymbiotic } from "../Contracts/Jarsymbiotic";
 import { BigNumber } from "@ethersproject/bignumber";
+import BaseRewardPoolABI from "../ABIs/baserewardpool.json";
+import AlcxRewardPoolABI from "../ABIs/alcxrewardpool.json";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 const YEARN_API = "https://vaults.finance/all";
@@ -74,6 +76,9 @@ const alchemixPoolIds: SushiPoolId = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 2,
   "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c": 4,
 };
+
+const AlusdBaseRewardPool = "0x02E2151D4F351881017ABdF2DD2b51150841d5B3";
+const AlcxVirtualRewardPool = "0xd731495bb78a4250bC094686788F3fF890dEe0f4";
 
 const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
 
@@ -494,6 +499,59 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
+  const calculateAlusdAPY = async (lpTokenAddress: string) => {
+    if (
+      prices?.alcx &&
+      prices?.crv &&
+      getSushiPairData &&
+      getAlusd3CrvData &&
+      multicallProvider
+    ) {
+      const multicallBaseReward = new MulticallContract(AlusdBaseRewardPool, BaseRewardPoolABI);
+      const multicallAlcxBaseReward  = new MulticallContract(AlcxVirtualRewardPool, AlcxRewardPoolABI);
+
+      const [
+        rewardRateBN,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallBaseReward.rewardRate(),
+        multicallBaseReward.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+
+      const { pricePerToken } = await getAlusd3CrvData();
+
+      const crvRewardsPerYear =
+        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
+        AVERAGE_BLOCK_TIME;
+
+      const crvValueRewardedPerYear = prices.crv * crvRewardsPerYear;
+      
+      const [
+        alcxRewardRateBN,
+      ] = await multicallProvider.all([
+        multicallAlcxBaseReward.rewardRate(),
+      ]);
+
+      const alcxRewardsPerYear =
+        (parseFloat(formatEther(alcxRewardRateBN)) * (360 * 24 * 60 * 60)) /
+        AVERAGE_BLOCK_TIME;
+
+      const alcxValueRewardedPerYear = prices.alcx * alcxRewardsPerYear;         
+      
+      const totalValueStaked = totalSupply * pricePerToken;
+      
+      const alusdAPY = (crvValueRewardedPerYear + alcxValueRewardedPerYear) / totalValueStaked;
+
+      const compoundingAPY = getCompoundingAPY(alusdAPY * 0.8);
+
+      return [{ "base ALCX": compoundingAPY , apr: alusdAPY * 0.8 * 100 }];
+    }
+
+    return [];
+  };
+
   const calculatePendingAlcxRewards = async (
     jar: Jarsymbiotic,
     address: string,
@@ -727,7 +785,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV),
+        calculateAlusdAPY(JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);

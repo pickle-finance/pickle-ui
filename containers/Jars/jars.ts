@@ -30,7 +30,7 @@ export const PICKLE_JARS = {
   pUNIETHLUSD: "0x927e3bCBD329e89A8765B52950861482f0B227c4",
   pyvBOOSTETH: "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378",
   pDAI: "0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87",
-  pALUSD3CRV: "0x260dc21Fe49Df133E3af02EeF50a8fB78a84d7B4",
+  pALUSD3CRV: "0x9Da9F8f2765D5ea9ea6a5bE4F87E4Ae7A4F18Ed5",
   pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
   pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
   pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
@@ -204,8 +204,7 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
-  ALCX_ALUSD_3CRV:
-    "https://crv.finance/liquidity",
+  ALCX_ALUSD_3CRV: "https://crv.finance/liquidity",
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
