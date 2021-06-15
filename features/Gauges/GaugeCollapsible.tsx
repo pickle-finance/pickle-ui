@@ -11,11 +11,6 @@ import {
   Checkbox,
 } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
-
-import {
-  JAR_GAUGE_MAP,
-  PICKLE_ETH_GAUGE,
-} from "../../containers/Gauges/gauges";
 import { UserGaugeData } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -25,14 +20,13 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { UserGaugeDataWithAPY } from "./GaugeList";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -86,7 +80,7 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
-export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
+export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   gaugeData,
 }) => {
   const { jars } = Jars.useContainer();
@@ -102,12 +96,15 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     fullApy,
   } = gaugeData;
   const isUsdc =
-    depositToken.address.toLowerCase() ===
-    PICKLE_JARS.pyUSDC.toLowerCase();
+    depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
-  const stakedNum = parseFloat(formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked));
-  const balanceNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+  const stakedNum = parseFloat(
+    formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
+  );
+  const balanceNum = parseFloat(
+    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+  );
   const {
     deposit,
     withdraw,
@@ -119,7 +116,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const bal = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+  const bal = parseFloat(
+    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+  );
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: bal < 1 ? 18 : 4,
@@ -164,53 +163,41 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
-  // Get Jar APY (if its from a Jar)
-  let APYs: JarApy[] = [];
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
-  const maybeJar =
-    JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
-  if (jars && maybeJar) {
-    const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
-    APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
-  }
-
-  const { getUniPairDayAPY } = useUniPairDayData();
-  if (depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()) {
-    APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
-  }
-
-  const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce((acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y), 0);
-  }).reduce((acc, x) => acc + x, 0);
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
     : 0;
 
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
-  const _adjusted = (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
+  const _adjusted =
+    (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
-  const realAPY = totalAPY + pickleAPY;
+  const realAPY = gaugeData.totalAPY + pickleAPY;
 
   const apyRangeTooltipText = [
     `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
-    ...APYs.map((x) => {
+    ...gaugeData.APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return isNaN(v) || v > 1e6 ? null :`${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
-  ].filter(x=>x).join(" + ");
+  ]
+    .filter((x) => x)
+    .join(" + ");
   const yourApyTooltipText = [
     `pickle: ${formatAPY(pickleAPY)}`,
-    ...APYs.map((x) => {
+    ...gaugeData.APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return isNaN(v) || v > 1e6  ? null :`${k}: ${v.toFixed(2)}%`;
+      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
-  ].filter(x=>x).join(" + ");
+  ]
+    .filter((x) => x)
+    .join(" + ");
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -313,14 +300,16 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Tooltip
-              text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
+              text={
+                gaugeData.totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText
+              }
             >
               <div>
-                {totalAPY + fullApy === 0
+                {gaugeData.totalAPY + fullApy === 0
                   ? "--%"
-                  : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                      totalAPY + pickleAPYMax,
-                    )}`}
+                  : `${formatAPY(
+                      gaugeData.totalAPY + pickleAPYMin,
+                    )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
               </div>
               <Label>APY Range</Label>
             </Tooltip>
@@ -362,7 +351,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setStakeAmount(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+                setStakeAmount(
+                  formatEther(
+                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
+                  ),
+                );
               }}
             >
               Max
@@ -384,7 +377,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
                   token: depositToken.address,
                   recipient: gauge.address,
                   transferCallback: async () => {
-                    return gauge.deposit(ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18));
+                    return gauge.deposit(
+                      ethers.utils.parseUnits(stakeAmount, isUsdc ? 6 : 18),
+                    );
                   },
                 });
               }
@@ -402,7 +397,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setUnstakeAmount(formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked));
+                setUnstakeAmount(
+                  formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                );
               }}
             >
               Max
