@@ -223,10 +223,6 @@ export const JarGaugeCollapsible: FC<{
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 6 : 2,
   });
-  const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 
   const {
     depositToken: gaugeDepositToken,
@@ -252,6 +248,11 @@ export const JarGaugeCollapsible: FC<{
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
+  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
@@ -347,8 +348,8 @@ export const JarGaugeCollapsible: FC<{
 
   const [depositStakeButton, setDepositStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Deposit and Stake"
-  })
+    text: "Deposit and Stake",
+  });
   const [exitButton, setExitButton] = useState<string | null>(null);
 
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
@@ -397,7 +398,7 @@ export const JarGaugeCollapsible: FC<{
               .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
           },
         });
-        await setDepositStakeButton(stakeButton)
+        await setDepositStakeButton(stakeButton);
         await gauge.deposit(
           isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : gaugeBalance,
         );
@@ -414,9 +415,7 @@ export const JarGaugeCollapsible: FC<{
         setExitButton("Unstaking from Farm...");
         await gauge.exit();
         setExitButton("Withdrawing from Jar...");
-        await jarContract
-          .connect(signer)
-          .withdraw(balance);
+        await jarContract.connect(signer).withdraw(balance);
         setExitButton(null);
       } catch (error) {
         console.error(error);
@@ -591,14 +590,14 @@ export const JarGaugeCollapsible: FC<{
               <Tooltip
                 text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
               >
-                <Data isZero={usdPerPToken * depositedNum === 0}>
+                <Data isZero={+valueStr == 0}>
                   ${valueStr}
                 </Data>
                 <Label>Value</Label>
               </Tooltip>
             ) : (
               <>
-                <Data isZero={usdPerPToken * depositedNum === 0}>
+                <Data isZero={+valueStr == 0}>
                   ${valueStr}
                 </Data>
                 <Label>Value</Label>
@@ -657,17 +656,19 @@ export const JarGaugeCollapsible: FC<{
                     <Label>APY Range</Label>
                   </Tooltip>
                 </div>
-                <div>
-                  <Tooltip
-                    text={realAPY === 0 ? "--" : yourApyTooltipText}
-                    style={{ marginTop: 5 }}
-                  >
-                    <div style={{ display: "flex" }}>
-                      <Label>Your APY: </Label>
-                      <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
-                    </div>
-                  </Tooltip>
-                </div>
+                {Boolean(realAPY) && (
+                  <div>
+                    <Tooltip
+                      text={realAPY === 0 ? "--" : yourApyTooltipText}
+                      style={{ marginTop: 5 }}
+                    >
+                      <div style={{ display: "flex" }}>
+                        <Label>Your APY: </Label>
+                        <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                      </div>
+                    </Tooltip>
+                  </div>
+                )}
               </div>
             )}
           </Grid>

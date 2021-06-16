@@ -361,13 +361,19 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               </div>
               <Label>APY Range</Label>
             </Tooltip>
-
-            <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
-              <div style={{ display: "flex" }}>
-                <Label>Your APY: </Label>
-                <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+            {Boolean(realAPY) && (
+              <div>
+                <Tooltip
+                  text={realAPY === 0 ? "--" : yourApyTooltipText}
+                  style={{ marginTop: 5 }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <Label>Your APY: </Label>
+                    <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                  </div>
+                </Tooltip>
               </div>
-            </Tooltip>
+            )}
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
