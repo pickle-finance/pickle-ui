@@ -499,55 +499,61 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
-  const calculateAlusdAPY = async (lpTokenAddress: string) => {
-    if (
-      prices?.alcx &&
-      prices?.crv &&
-      getSushiPairData &&
-      getAlusd3CrvData &&
-      multicallProvider
-    ) {
-      const multicallBaseReward = new MulticallContract(AlusdBaseRewardPool, BaseRewardPoolABI);
-      const multicallAlcxBaseReward  = new MulticallContract(AlcxVirtualRewardPool, AlcxRewardPoolABI);
-
-      const [
-        rewardRateBN,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
-        multicallBaseReward.rewardRate(),
-        multicallBaseReward.totalSupply(),
-      ]);
-
-      const totalSupply = parseFloat(formatEther(totalSupplyBN));
-
-      const { pricePerToken } = await getAlusd3CrvData();
-
-      const crvRewardsPerYear =
-        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
-        AVERAGE_BLOCK_TIME;
-
-      const crvValueRewardedPerYear = prices.crv * crvRewardsPerYear;
-      
-      const [
-        alcxRewardRateBN,
-      ] = await multicallProvider.all([
-        multicallAlcxBaseReward.rewardRate(),
-      ]);
-
-      const alcxRewardsPerYear =
-        (parseFloat(formatEther(alcxRewardRateBN)) * (360 * 24 * 60 * 60)) /
-        AVERAGE_BLOCK_TIME;
-
-      const alcxValueRewardedPerYear = prices.alcx * alcxRewardsPerYear;         
-      
-      const totalValueStaked = totalSupply * pricePerToken;
-      
-      const alusdAPY = (crvValueRewardedPerYear + alcxValueRewardedPerYear) / totalValueStaked;
-
-      const compoundingAPY = getCompoundingAPY(alusdAPY * 0.8);
-
-      return [{ "base ALCX": compoundingAPY , apr: alusdAPY * 0.8 * 100 }];
+  const calculateAlusdAPY = async () => {
+    const curveAPY = await fetch("https://www.convexfinance.com/api/curve-apys",).then((response) => response.json());
+    if (curveAPY) {
+      const alusdAPY = curveAPY?.apys?.alusd?.baseApy + curveAPY?.apys?.alusd?.crvApy + curveAPY?.apys?.alusd?.additionalRewards?.apy;
+      return [{ "base ALCX": getCompoundingAPY(alusdAPY * 0.8) , apr: alusdAPY * 0.8 * 100 }];
     }
+    
+    // if (
+    //   prices?.alcx &&
+    //   prices?.crv &&
+    //   getSushiPairData &&
+    //   getAlusd3CrvData &&
+    //   multicallProvider
+    // ) {
+    //   const multicallBaseReward = new MulticallContract(AlusdBaseRewardPool, BaseRewardPoolABI);
+    //   const multicallAlcxBaseReward  = new MulticallContract(AlcxVirtualRewardPool, AlcxRewardPoolABI);
+
+    //   const [
+    //     rewardRateBN,
+    //     totalSupplyBN,
+    //   ] = await multicallProvider.all([
+    //     multicallBaseReward.rewardRate(),
+    //     multicallBaseReward.totalSupply(),
+    //   ]);
+
+    //   const totalSupply = parseFloat(formatEther(totalSupplyBN));
+
+    //   const { pricePerToken } = await getAlusd3CrvData();
+
+    //   const crvRewardsPerYear =
+    //     (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
+    //     AVERAGE_BLOCK_TIME;
+
+    //   const crvValueRewardedPerYear = prices.crv * crvRewardsPerYear;
+      
+    //   const [
+    //     alcxRewardRateBN,
+    //   ] = await multicallProvider.all([
+    //     multicallAlcxBaseReward.rewardRate(),
+    //   ]);
+
+    //   const alcxRewardsPerYear =
+    //     (parseFloat(formatEther(alcxRewardRateBN)) * (360 * 24 * 60 * 60)) /
+    //     AVERAGE_BLOCK_TIME;
+
+    //   const alcxValueRewardedPerYear = prices.alcx * alcxRewardsPerYear;         
+      
+    //   const totalValueStaked = totalSupply * pricePerToken;
+      
+    //   const alusdAPY = (crvValueRewardedPerYear + alcxValueRewardedPerYear) / totalValueStaked;
+
+    //   const compoundingAPY = getCompoundingAPY(alusdAPY * 0.8);
+
+    //   return [{ "base ALCX": compoundingAPY , apr: alusdAPY * 0.8 * 100 }];
+    // }
 
     return [];
   };
@@ -785,7 +791,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
         // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
         calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        calculateAlusdAPY(JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV),
+        calculateAlusdAPY(),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);
