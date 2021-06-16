@@ -21,6 +21,8 @@ import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
+import { worker } from "cluster";
+import { getRealShape } from "../Collapsible/useRealShape";
 
 interface DataProps {
   isZero?: boolean;
@@ -159,9 +161,8 @@ const setButtonStatus = (
     });
   }
   if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
+    status != ERC20TransferStatus.Approving &&
+    status != ERC20TransferStatus.Transfering
   ) {
     setButtonText({
       disabled: false,
@@ -213,6 +214,7 @@ export const JarGaugeCollapsible: FC<{
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 6 : 2,
   });
+
   const depositedUnderlyingStr = (
     parseFloat(
       formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
@@ -292,7 +294,7 @@ export const JarGaugeCollapsible: FC<{
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Add to Deposit",
+    text: "Deposit",
   });
   const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
@@ -322,7 +324,10 @@ export const JarGaugeCollapsible: FC<{
 
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
-  ).toLocaleString();
+  ).toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: depositedNum < 1 ? 6 : 2,
+  });
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -339,10 +344,12 @@ export const JarGaugeCollapsible: FC<{
     disabled: false,
     text: "Harvest",
   });
-  const [exitButton, setExitButton] = useState<ButtonStatus>({
+
+  const [depositStakeButton, setDepositStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Harvest and Exit",
-  });
+    text: "Deposit and Stake"
+  })
+  const [exitButton, setExitButton] = useState<string | null>(null);
 
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
@@ -372,6 +379,48 @@ export const JarGaugeCollapsible: FC<{
         console.error(error);
         alert(error.message);
         setYvMigrateState(null);
+        return;
+      }
+    }
+  };
+
+  const depositAndStake = async () => {
+    if (balNum) {
+      try {
+        await setDepositStakeButton(depositButton);
+        await transfer({
+          token: depositToken.address,
+          recipient: jarContract.address,
+          transferCallback: async () => {
+            return jarContract
+              .connect(signer)
+              .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+          },
+        });
+        await setDepositStakeButton(stakeButton)
+        await gauge.deposit(
+          isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : gaugeBalance,
+        );
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+    }
+  };
+
+  const exit = async () => {
+    if (stakedNum) {
+      try {
+        setExitButton("Unstaking from Farm...");
+        await gauge.exit();
+        setExitButton("Withdrawing from Jar...");
+        await jarContract
+          .connect(signer)
+          .withdraw(balance);
+        setExitButton(null);
+      } catch (error) {
+        console.error(error);
+        setExitButton(null);
         return;
       }
     }
@@ -421,14 +470,8 @@ export const JarGaugeCollapsible: FC<{
         "Harvest",
         setHarvestButton,
       );
-      setButtonStatus(
-        exitStatus,
-        "Exiting...",
-        "Harvest and Exit",
-        setExitButton,
-      );
     }
-  }, [erc20TransferStatuses]);
+  }, [erc20TransferStatuses, jarData]);
 
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
@@ -446,6 +489,7 @@ export const JarGaugeCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
+  const [json, setJson] = useState(null);
   useEffect(() => {
     getProtocolData().then((info) => setTVLData(info));
   }, []);
@@ -662,32 +706,48 @@ export const JarGaugeCollapsible: FC<{
             width="100%"
           ></Input>
           <Spacer y={0.5} />
-          <Button
-            onClick={() => {
-              if (signer && !isDisabledJar) {
-                // Allow Jar to get LP Token
-                transfer({
-                  token: depositToken.address,
-                  recipient: jarContract.address,
-                  transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .deposit(
-                        ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
-                      );
-                  },
-                });
-              }
-            }}
-            disabled={
-              depositButton.disabled ||
-              depositTokenName === "DAI" ||
-              isDisabledJar
-            }
-            style={{ width: "100%" }}
-          >
-            {depositButton.text}
-          </Button>
+          <Grid.Container gap={1}>
+            <Grid xs={24} md={12}>
+              <Button
+                onClick={() => {
+                  if (signer && !isDisabledJar) {
+                    // Allow Jar to get LP Token
+                    transfer({
+                      token: depositToken.address,
+                      recipient: jarContract.address,
+                      transferCallback: async () => {
+                        return jarContract
+                          .connect(signer)
+                          .deposit(
+                            ethers.utils.parseUnits(
+                              depositAmount,
+                              isUsdc ? 6 : 18,
+                            ),
+                          );
+                      },
+                    });
+                  }
+                }}
+                disabled={
+                  depositButton.disabled ||
+                  depositTokenName === "DAI" ||
+                  isDisabledJar
+                }
+                style={{ width: "100%" }}
+              >
+                {depositButton.text}
+              </Button>
+            </Grid>
+            <Grid xs={24} md={12}>
+              <Button
+                onClick={depositAndStake}
+                disabled={depositButton.disabled || isDisabledJar}
+                style={{ width: "100%" }}
+              >
+                {depositStakeButton.text || "Deposit and Stake"}
+              </Button>
+            </Grid>
+          </Grid.Container>
         </Grid>
         {depositedNum !== 0 && (
           <Grid xs={24} md={12}>
@@ -763,30 +823,33 @@ export const JarGaugeCollapsible: FC<{
       <Spacer y={1} />
       {Boolean(depositedNum || stakedNum) && (
         <Grid.Container gap={2}>
-          <Grid xs={24} md={depositedNum && !stakedNum ? 24 : 12}>
-            <Spacer y={0.5} />
-            <Button
-              disabled={stakeButton.disabled || isyveCRVFarm}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gaugeDepositToken.address,
-                    recipient: gauge.address,
-                    transferCallback: async () => {
-                      return gauge.deposit(
-                        isUsdc && gaugeBalance
-                          ? gaugeBalance.mul(USDC_SCALE)
-                          : gaugeBalance,
-                      );
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {stakeButton.text}
-            </Button>
-          </Grid>
+          {depositedNum && (
+            <Grid xs={24} md={depositedNum && !stakedNum ? 24 : 12}>
+              <Spacer y={0.5} />
+              <Button
+                disabled={stakeButton.disabled || isyveCRVFarm}
+                onClick={() => {
+                  if (gauge && signer) {
+                    transfer({
+                      token: gaugeDepositToken.address,
+                      recipient: gauge.address,
+                      transferCallback: async () => {
+                        return gauge.deposit(
+                          isUsdc && gaugeBalance
+                            ? gaugeBalance.mul(USDC_SCALE)
+                            : gaugeBalance,
+                        );
+                      },
+                    });
+                  }
+                }}
+                style={{ width: "100%" }}
+              >
+                {stakeButton.text}
+              </Button>
+            </Grid>
+          )}
+
           {Boolean(!depositedNum && stakedNum) && (
             <Grid xs={24} md={!depositedNum && stakedNum ? 24 : 12}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -813,7 +876,35 @@ export const JarGaugeCollapsible: FC<{
                 type="number"
                 size="large"
               />
-              <Spacer y={0.5} />
+            </Grid>
+          )}
+        </Grid.Container>
+      )}
+      {Boolean(stakedNum) && (
+        <>
+          <Spacer y={0.5} />
+          <Grid.Container gap={2}>
+            <Grid xs={24} md={12}>
+              <Button
+                disabled={harvestButton.disabled}
+                onClick={() => {
+                  if (gauge && signer) {
+                    transfer({
+                      token: gauge.address,
+                      recipient: gauge.address, // Doesn't matter since we don't need approval
+                      approval: false,
+                      transferCallback: async () => {
+                        return gauge.getReward();
+                      },
+                    });
+                  }
+                }}
+                style={{ width: "100%" }}
+              >
+                {harvestButton.text} {harvestableStr} $PICKLES
+              </Button>
+            </Grid>
+            <Grid xs={24} md={12}>
               <Button
                 disabled={unstakeButton.disabled}
                 onClick={() => {
@@ -838,94 +929,61 @@ export const JarGaugeCollapsible: FC<{
                 {unstakeButton.text}
               </Button>
             </Grid>
-          )}
-          <Spacer />
-        </Grid.Container>
-      )}
-      {harvestableStr !== "0" && (
-        <Grid.Container gap={2}>
-          <Grid xs={24} md={24}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.getReward();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {harvestButton.text} {harvestableStr} $PICKLES
-            </Button>
-          </Grid>
-          <Grid xs={24} md={24}>
-            <Button
-              disabled={harvestButton.disabled}
-              onClick={() => {
-                if (gauge && signer) {
-                  transfer({
-                    token: gauge.address,
-                    recipient: gauge.address, // Doesn't matter since we don't need approval
-                    approval: false,
-                    transferCallback: async () => {
-                      return gauge.exit();
-                    },
-                  });
-                }
-              }}
-              style={{ width: "100%" }}
-            >
-              {exitButton.text}
-            </Button>
-          </Grid>
-          {isyveCRVFarm && (
-            <Grid xs={24}>
+          </Grid.Container>
+          <Spacer y={0.5} />
+          <Grid.Container gap={2}>
+            <Grid xs={24} md={24}>
               <Button
-                disabled={yvMigrateState !== null}
-                onClick={handleYvboostMigrate}
-                style={{ width: "100%", textTransform: "none" }}
+                disabled={harvestButton.disabled}
+                onClick={exit}
+                style={{ width: "100%" }}
               >
-                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+                {exitButton || "Harvest and Exit"}
               </Button>
-              <div
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  fontFamily: "Source Sans Pro",
-                  fontSize: "1rem",
-                }}
-              >
-                Your tokens will be unstaked and migrated to the yvBOOST pJar
-                and staked in the Farm.
-                <br />
-                This process will require a number of transactions.
-                <br />
-                Learn more about yvBOOST{" "}
-                <a
-                  target="_"
-                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
-                >
-                  here
-                </a>
-                .
-                {isSuccess ? (
-                  <p style={{ fontWeight: "bold" }}>
-                    Migration completed! See your deposits{" "}
-                    <Link color href="/farms">
-                      here
-                    </Link>
-                  </p>
-                ) : null}
-              </div>
             </Grid>
-          )}
-        </Grid.Container>
+            {isyveCRVFarm && (
+              <Grid xs={24}>
+                <Button
+                  disabled={yvMigrateState !== null}
+                  onClick={handleYvboostMigrate}
+                  style={{ width: "100%", textTransform: "none" }}
+                >
+                  {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+                </Button>
+                <div
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    fontFamily: "Source Sans Pro",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Your tokens will be unstaked and migrated to the yvBOOST pJar
+                  and staked in the Farm.
+                  <br />
+                  This process will require a number of transactions.
+                  <br />
+                  Learn more about yvBOOST{" "}
+                  <a
+                    target="_"
+                    href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                  >
+                    here
+                  </a>
+                  .
+                  {isSuccess ? (
+                    <p style={{ fontWeight: "bold" }}>
+                      Migration completed! See your deposits{" "}
+                      <Link color href="/farms">
+                        here
+                      </Link>
+                    </p>
+                  ) : null}
+                </div>
+              </Grid>
+            )}
+          </Grid.Container>
+        </>
       )}
     </Collapse>
   );
