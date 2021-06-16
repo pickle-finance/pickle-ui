@@ -500,10 +500,20 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   const calculateAlusdAPY = async () => {
-    const curveAPY = await fetch("https://www.convexfinance.com/api/curve-apys",).then((response) => response.json());
+    const curveAPY = await fetch(
+      "https://cors.bridged.cc/https://www.convexfinance.com/api/curve-apys",
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/x-www-form-urlencoded",
+        }),
+      },
+    ).then((x) => x.json());
     if (curveAPY) {
-      const alusdAPY = curveAPY?.apys?.alusd?.baseApy + curveAPY?.apys?.alusd?.crvApy + curveAPY?.apys?.alusd?.additionalRewards?.apy;
-      return [{ "base ALCX": getCompoundingAPY(alusdAPY * 0.8) , apr: alusdAPY * 0.8 * 100 }];
+      const alusdAPY = parseFloat(curveAPY?.apys?.alusd?.baseApy) +
+        parseFloat(curveAPY?.apys?.alusd?.crvApy) +
+        parseFloat(curveAPY?.apys?.alusd?.additionalRewards[0].apy);
+      return [{ "base ALCX": alusdAPY * 0.8, apr: alusdAPY * 0.8 }];
     }
     
     // if (
