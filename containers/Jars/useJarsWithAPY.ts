@@ -628,21 +628,10 @@ export const useJarWithAPY = (jars: Input): Output => {
       const totalValueStaked = totalSupply * tokenPrice;
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
-      const alcxNakedAPY = () => {
-        let stakedALCX = 0;
-        
-        for (let i=1; i < 365; i++) {
-          let toStaked = totalValueStaked * alusdAPY[0].["base ALCX"] / 365;
-          stakedALCX += toStaked;
-          let stakingALCXYield = stakedALCX * alcxAPY / 365 * 0.8;
-          stakedALCX += stakingALCXYield;
-        }
-        const apy = stakedALCX / totalValueStaked;
+      const alcxNakedAPY =
+        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].["base ALCX"]) / 100;
 
-        return apy;
-      }
-
-      return [{ "staked ALCX": alcxNakedAPY(), apr: alcxNakedAPY() }];
+      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
     }
 
     return [];
