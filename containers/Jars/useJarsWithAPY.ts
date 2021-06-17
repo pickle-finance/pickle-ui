@@ -1040,14 +1040,8 @@ export const useJarWithAPY = (jars: Input): Output => {
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV) {
-          APYs = [...alcxAlusd3crvApy, ...alcxNakedApy];
-          const alcxPending = await calculatePendingAlcxRewards(
-            jar.contract as Jarsymbiotic,
-            address,
-          );
-          jar = { ...jar, ...alcxPending };
-          totalAPY =
-            alcxAlusd3crvApy[0]?.["base ALCX"] + alcxNakedApy[0]?.["staked ALCX"];
+          APYs = [...alcxNakedApy];
+          totalAPY = alcxNakedApy[0]?.["staked ALCX"];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
