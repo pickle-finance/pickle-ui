@@ -33,7 +33,8 @@ export const PICKLE_JARS = {
   pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
   pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
   pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
-  pSUSHICVXETH: "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F"
+  pSUSHICVXETH: "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F",
+  pLQTY: "0x65B2532474f717D5A8ba38078B78106D56118bbb"
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -67,7 +68,8 @@ export const JAR_DEPOSIT_TOKENS = {
   UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
   DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA"
+  lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+  LQTY: "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D",
 };
 
 export const DEPOSIT_TOKENS_NAME = {
@@ -101,7 +103,8 @@ export const DEPOSIT_TOKENS_NAME = {
   DAI: "DAI",
   USDC: "USDC",
   lusdCRV: "lusdCRV",
-  SUSHI_CVX_ETH: "SLP CVX/ETH"
+  SUSHI_CVX_ETH: "SLP CVX/ETH",
+  LQTY: "Liquity"
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -136,6 +139,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
   [DEPOSIT_TOKENS_NAME.DAI]: false,
   [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.LQTY]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -198,7 +202,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",  
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  lusdCRV: "https://curve.fi/lusd/deposit"
+  lusdCRV: "https://curve.fi/lusd/deposit",
+  LQTY: "https://etherscan.io/token/0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d"
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -236,7 +241,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_ALCX: "pJar 0.99x",
   SUSHI_CVX_ETH: "pJar 0.99z",
   USDC: "pJar Y-1",
-  lusdCRV: "pJar Y-2"
+  lusdCRV: "pJar Y-2",
+  LQTY: "pJar 0.98l"
 };
 
 export const STRATEGY_NAMES = {
@@ -317,5 +323,7 @@ export const getPriceId = (tokenAddress: string): PriceIds => {
   if (l === "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b") return "cvx";
 
   if (l === "0xdbdb4d16eda451d0503b854cf79d55697f90c8df") return "alcx";
+  
+  if (l === "0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d") return "lqty";
   throw new Error(`Unknown token address: ${tokenAddress}`);
 };
