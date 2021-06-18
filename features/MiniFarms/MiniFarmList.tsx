@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 
-import { FarmCollapsible } from "../Farms/FarmCollapsible";
+import { MiniFarmCollapsible } from "../MiniFarms/MiniFarmCollapsible";
 import { UserMiniFarms, UserFarmData } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
@@ -54,7 +54,7 @@ export const MiniFarmList: FC = () => {
         {farmData.map((farm) => (
           <>
             <Grid xs={24} key={farm.poolIndex}>
-              <FarmCollapsible farmData={farm} />
+              <MiniFarmCollapsible farmData={farm} />
             </Grid>
           </>
         ))}
@@ -65,7 +65,7 @@ export const MiniFarmList: FC = () => {
         {showInactive &&
           inactiveFarms.map((farm) => (
             <Grid xs={24} key={farm.poolIndex}>
-              <FarmCollapsible farmData={farm} />
+              <MiniFarmCollapsible farmData={farm} />
             </Grid>
           ))}
       </Grid.Container>
