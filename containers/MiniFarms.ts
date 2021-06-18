@@ -46,13 +46,14 @@ function useFarms() {
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward)
 
   const jarFarms = jarFarmWithApy?.map((farm) => {
+    if(!FarmInfo[farm.lpToken]) return null
     const { tokenName, poolName } = FarmInfo[farm.lpToken];
     return {
       ...farm,
       tokenName,
       poolName,
     };
-  });
+  }).filter(x=>x);
 
   return {
     farms: jarFarms,

@@ -20,14 +20,14 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider, chainName } = Connection.useContainer();
+  const { provider, chainName } = Connection.useContainer();
   
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
-    if (inputFarms && masterchef && jars && prices && multicallProvider) {
+    if (inputFarms && masterchef && jars && prices && provider) {
       const jarFarms = inputFarms?.filter(
         (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
       );
@@ -43,14 +43,14 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           return new Contract(
             mlErc20.dai.address,
             mlErc20.abi,
-            multicallProvider,
+            provider,
           );
         }
 
         return new Contract(
           farmingJar.contract.address,
           farmingJar.contract.interface.fragments,
-          multicallProvider,
+          provider,
         );
       });
 
@@ -109,7 +109,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
   useEffect(() => {
     calculateApy();
-  }, [inputFarms, prices, masterchef, jars, multicallProvider]);
+  }, [inputFarms, prices, masterchef, jars, provider]);
 
   return { jarFarmWithApy: farms };
 };
