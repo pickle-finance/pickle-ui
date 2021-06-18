@@ -33,7 +33,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   const {
     blockNum,
     address,
-    multicallProvider,
+    provider
   } = Connection.useContainer();
   const { gauge, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();
@@ -51,25 +51,25 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
       gauge &&
       address &&
       gaugeProxy &&
-      multicallProvider
+      provider
     ) {
       const balancesUserInfosHarvestables = await Promise.all(
         gauges.flatMap((x) => {
           const c = new Contract(
             x.token,
             erc20.interface.fragments,
-            multicallProvider,
+            provider,
           );
           const gaugeContract = new Contract(
             x.gaugeAddress,
             gauge.interface.fragments,
-            multicallProvider,
+            provider,
           );
 
           const gaugeProxyContract = new Contract(
             gaugeProxy.address,
             gaugeProxy.interface.fragments,
-            multicallProvider,
+            provider,
           );
 
           return [

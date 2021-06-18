@@ -19,6 +19,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
     blockNum,
     multicallProvider,
     chainName,
+    provider
   } = Connection.useContainer();
   const { gaugeProxy, gauge } = Contracts.useContainer();
 
@@ -28,22 +29,16 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
     if (gaugeProxy && multicallProvider && gauge && chainName === "Ethereum") {
       const tokens = await gaugeProxy.tokens();
       const totalWeight = await gaugeProxy.totalWeight();
-      
-      const mcGaugeProxy = new Contract(
-        gaugeProxy.address,
-        gaugeProxy.interface.fragments,
-        multicallProvider,
-      );
 
       const gaugeAddresses = await Promise.all(
         tokens.map((token) => {
-          return mcGaugeProxy.getGauge(token);
+          return gaugeProxy.getGauge(token);
         }),
       );
 
       const gaugeWeights = await Promise.all(
         tokens.map((token) => {
-          return mcGaugeProxy.weights(token);
+          return gaugeProxy.weights(token);
         }),
       );
 
@@ -52,7 +47,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           return new Contract(
             gaugeAddresses[index],
             gauge.interface.fragments,
-            multicallProvider,
+            provider,
           ).rewardRate();
         }),
       );
@@ -62,7 +57,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           return new Contract(
             gaugeAddresses[index],
             gauge.interface.fragments,
-            multicallProvider,
+            provider,
           ).derivedSupply();
         }),
       );
@@ -72,7 +67,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           return new Contract(
             gaugeAddresses[index],
             gauge.interface.fragments,
-            multicallProvider,
+            provider,
           ).totalSupply();
         }),
       );
