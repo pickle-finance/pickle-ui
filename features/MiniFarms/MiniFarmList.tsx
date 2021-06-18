@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 
-import { FarmCollapsible } from "./FarmCollapsible";
-import { UserFarms, UserFarmData } from "../../containers/UserFarms";
+import { FarmCollapsible } from "../Farms/FarmCollapsible";
+import { UserMiniFarms, UserFarmData } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
@@ -13,11 +13,11 @@ const Container = styled.div`
   padding-top: 1.5rem;
 `;
 
-export const FarmList: FC = () => {
+export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
-  const { farmData } = UserFarms.useContainer();
-  const [showInactive, setShowInactive] = useState<boolean>(chainName === NETWORK_NAMES.POLY ? false : true);
-  
+  const { farmData } = UserMiniFarms.useContainer();
+  const [showInactive, setShowInactive] = useState<boolean>(false);
+
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
@@ -26,19 +26,8 @@ export const FarmList: FC = () => {
     return <h2>Loading...</h2>;
   }
 
-  const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
-  const indexofYvecrv = inactiveFarms.findIndex(x=>x.depositToken.address.toLowerCase() === PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase())
-
-  const moveInArray = (arr: UserFarmData[], from: number, to: number) => {
-    var item = arr.splice(from, 1);
-  
-    if (!item.length) return;
-    arr.splice(to, 0, item[0]);
-  };
-
-  moveInArray(inactiveFarms, indexofYvecrv, 1)
   return (
     <Container>
       <Grid.Container gap={1}>
@@ -62,10 +51,10 @@ export const FarmList: FC = () => {
       </Grid.Container>
       <Spacer y={0.5} />
       <Grid.Container gap={1}>
-        {activeFarms.map((farmData) => (
+        {farmData.map((farm) => (
           <>
-            <Grid xs={24} key={farmData.poolIndex}>
-              <FarmCollapsible farmData={farmData} />
+            <Grid xs={24} key={farm.poolIndex}>
+              <FarmCollapsible farmData={farm} />
             </Grid>
           </>
         ))}
@@ -74,9 +63,9 @@ export const FarmList: FC = () => {
       <Grid.Container gap={1}>
         {showInactive && <h2>Inactive</h2>}
         {showInactive &&
-          inactiveFarms.map((farmData) => (
-            <Grid xs={24} key={farmData.poolIndex}>
-              <FarmCollapsible farmData={farmData} />
+          inactiveFarms.map((farm) => (
+            <Grid xs={24} key={farm.poolIndex}>
+              <FarmCollapsible farmData={farm} />
             </Grid>
           ))}
       </Grid.Container>

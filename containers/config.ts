@@ -4,6 +4,7 @@ interface Addresses {
   controller: string;
   dill?: string;
   gaugeProxy?: string;
+  minichef?: string;
 }
 
 export enum NETWORK_NAMES { 
@@ -37,8 +38,9 @@ export const config: Config = {
     },
     Polygon: {
       pickle: "0x6c551cAF1099b08993fFDB5247BE74bE39741B82",
-      masterChef: "0xAc7C044e1197dF73aE5F8ec2c1775419b0A248C5",
+      masterChef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
+      minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749"
     },
   },
 };

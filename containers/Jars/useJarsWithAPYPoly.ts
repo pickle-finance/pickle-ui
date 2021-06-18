@@ -67,7 +67,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const {
     controller,
     strategy,
-    miniChef,
+    sushiMinichef,
     sushiComplexRewarder,
   } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
@@ -180,13 +180,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (
-      (miniChef && prices?.sushi && getSushiPairData && multicallProvider,
+      (sushiMinichef && prices?.sushi && getSushiPairData && multicallProvider,
       sushiComplexRewarder)
     ) {
       const poolId = sushiPoolIds[lpTokenAddress];
-      const multicallMiniChef = new Contract(
-        miniChef.address,
-        miniChef.interface.fragments,
+      const multicallsushiMinichef = new Contract(
+        sushiMinichef.address,
+        sushiMinichef.interface.fragments,
         multicallProvider,
       );
       const lpToken = new Contract(
@@ -195,16 +195,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         multicallProvider,
       );
 
-      const totalSupplyBN = await lpToken.balanceOf(miniChef.address);
+      const totalSupplyBN = await lpToken.balanceOf(sushiMinichef.address);
 
       const [
         sushiPerSecondBN,
         totalAllocPointBN,
         poolInfo,
       ] = await Promise.all([
-        multicallMiniChef.sushiPerSecond(),
-        multicallMiniChef.totalAllocPoint(),
-        multicallMiniChef.poolInfo(poolId),
+        multicallsushiMinichef.sushiPerSecond(),
+        multicallsushiMinichef.totalAllocPoint(),
+        multicallsushiMinichef.poolInfo(poolId),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));

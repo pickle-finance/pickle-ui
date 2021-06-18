@@ -28,7 +28,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
     if (gaugeProxy && multicallProvider && gauge && chainName === "Ethereum") {
       const tokens = await gaugeProxy.tokens();
       const totalWeight = await gaugeProxy.totalWeight();
-
+      
       const mcGaugeProxy = new Contract(
         gaugeProxy.address,
         gaugeProxy.interface.fragments,

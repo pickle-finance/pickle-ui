@@ -428,7 +428,6 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
                   recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
                   approval: false,
                   transferCallback: async () => {
-                    console.log(masterchef, poolIndex)
                     return masterchef.connect(signer).withdraw(poolIndex, 0);
                   },
                 });

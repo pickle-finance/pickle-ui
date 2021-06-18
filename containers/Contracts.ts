@@ -52,6 +52,8 @@ import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/
 
 import { Minichef } from "./Contracts/Minichef";
 import { Minichef__factory as MinichefFatory } from "./Contracts/factories/Minichef__factory";
+import { SushiMinichef } from "./Contracts/SushiMinichef";
+import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/factories/SushiMinichef__factory";
 
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
@@ -157,7 +159,8 @@ export const COMETH_PICKLE_MUST_REWARDS =
   "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
 export const COMETH_MATIC_MUST_REWARDS =
   "0x2328c83431a29613b1780706E0Af3679E3D04afd";
-export const MINI_CHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
+export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
+export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
 export const MATIC_COMEPLX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 
@@ -223,7 +226,8 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
-  const [miniChef, setMiniChef] = useState<Minichef | null>(null);
+  const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(null);
+  const [minichef, setMinichef] = useState<Minichef | null>(null)
   const [
     sushiComplexRewarder,
     setSushiComplexRewarder,
@@ -329,11 +333,12 @@ function useContracts() {
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
 
-      setMiniChef(MinichefFatory.connect(MINI_CHEF, signer));
+      setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMEPLX_REWARDER, signer),
       );
-      setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer))
+      setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
+      setMinichef(MinichefFatory.connect(MINICHEF, signer))
     }
   };
 
@@ -373,9 +378,10 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
-    miniChef,
+    minichef,
+    sushiMinichef,
     sushiComplexRewarder,
-    am3crvPool
+    am3crvPool,
   };
 }
 
