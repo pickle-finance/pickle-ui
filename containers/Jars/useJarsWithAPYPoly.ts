@@ -316,12 +316,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].DAI,
       )?.strategy;
 
-      const ironJar = jars.find(
-        (jar) =>
-          jar.depositToken.address ===
-          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_IRON_USDC,
-      )
-
       const mimaticJar = jars.find(
         (jar) =>
           jar.depositToken.address ===
@@ -335,7 +329,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         aaveDaiAPY,
         sushiEthUsdtApy,
         sushiMaticEthApy,
-        sushiIronUsdcApy,
         quickMimaticUsdcApy
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
@@ -352,7 +345,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
         ),
-        calculateMasterChefAPY(ironJar),
         calculateMasterChefAPY(mimaticJar)
       ]);
 
@@ -411,15 +403,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...sushiMaticEthApy,
             ...getSushiPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
-            ),
-          ];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_IRON_USDC) {
-          APYs = [
-            ...sushiIronUsdcApy,
-            ...getSushiPairDayAPY(
-              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_IRON_USDC,
             ),
           ];
         }
