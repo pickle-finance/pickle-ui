@@ -4,6 +4,7 @@ import { useWithReward } from "./MiniFarms/useWithReward";
 import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 import { useFetchFarms } from "./Farms/useFetchFarms";
+import { useMaticJarApy } from "./MiniFarms/useMaticJarApy";
 
 interface IFarmInfo {
   [key: string]: { tokenName: string; poolName: string };
@@ -38,22 +39,29 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP ETH/MATIC",
     poolName: "pSLP ETH/MATIC",
   },
+  "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {
+    tokenName: "pQLP miMatic",
+    poolName: "pQLP miMatic",
+  },
 };
 
 function useFarms() {
   const { rawFarms } = useFetchFarms();
   const { farmsWithReward } = useWithReward(rawFarms);
-  const { jarFarmWithApy } = useJarFarmApy(farmsWithReward)
+  const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
+  const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
 
-  const jarFarms = jarFarmWithApy?.map((farm) => {
-    if(!FarmInfo[farm.lpToken]) return null
-    const { tokenName, poolName } = FarmInfo[farm.lpToken];
-    return {
-      ...farm,
-      tokenName,
-      poolName,
-    };
-  }).filter(x=>x);
+  const jarFarms = jarFarmWithMaticApy
+    ?.map((farm) => {
+      if (!FarmInfo[farm.lpToken]) return null;
+      const { tokenName, poolName } = FarmInfo[farm.lpToken];
+      return {
+        ...farm,
+        tokenName,
+        poolName,
+      };
+    })
+    .filter((x) => x);
 
   return {
     farms: jarFarms,

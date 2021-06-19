@@ -58,6 +58,12 @@ import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/fact
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
 
+import { PickleRewarder } from "./Contracts/PickleRewarder";
+import {
+  PickleRewarder__factory as PickleRewarderFactory,
+  PickleRewarder__factory,
+} from "./Contracts/factories/PickleRewarder__factory";
+
 import { config, NETWORK_NAMES } from "./config";
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -161,8 +167,9 @@ export const COMETH_MATIC_MUST_REWARDS =
   "0x2328c83431a29613b1780706E0Af3679E3D04afd";
 export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
 export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
-export const MATIC_COMEPLX_REWARDER =
+export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
+export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
 
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
@@ -226,12 +233,18 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
-  const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(null);
-  const [minichef, setMinichef] = useState<Minichef | null>(null)
+  const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
+    null,
+  );
+  const [minichef, setMinichef] = useState<Minichef | null>(null);
   const [
     sushiComplexRewarder,
     setSushiComplexRewarder,
   ] = useState<SushiComplexRewarder | null>(null);
+
+  const [pickleRewarder, setPickleRewarder] = useState<PickleRewarder | null>(
+    null,
+  );
 
   const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
   const [
@@ -335,10 +348,11 @@ function useContracts() {
 
       setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
       setSushiComplexRewarder(
-        SushiComplexRewarderFactory.connect(MATIC_COMEPLX_REWARDER, signer),
+        SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
       );
+      setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
-      setMinichef(MinichefFatory.connect(MINICHEF, signer))
+      setMinichef(MinichefFatory.connect(MINICHEF, signer));
     }
   };
 
@@ -382,6 +396,7 @@ function useContracts() {
     sushiMinichef,
     sushiComplexRewarder,
     am3crvPool,
+    pickleRewarder
   };
 }
 

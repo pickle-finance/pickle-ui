@@ -181,7 +181,7 @@ function useFarms() {
   const { farmsWithReward } = useWithReward(rawFarms);
   const { uniV2FarmsWithApy } = useUniV2Apy(farmsWithReward);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward)
-
+  
   const uniFarms = uniV2FarmsWithApy?.map((farm) => {
     const { tokenName, poolName } = FarmInfo[farm.lpToken];
     return {

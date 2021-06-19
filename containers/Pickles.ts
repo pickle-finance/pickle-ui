@@ -8,8 +8,8 @@ function usePickles() {
 }
 
 function useMiniPickles() {
-  const { picklePerSecond } = usePicklePerSecond();
-  return { picklePerSecond };
+  const { picklePerSecond, maticPerSecond } = usePicklePerSecond();
+  return { picklePerSecond, maticPerSecond };
 }
 
 export const Pickles = createContainer(usePickles);

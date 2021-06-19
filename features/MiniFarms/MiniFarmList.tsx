@@ -17,6 +17,7 @@ export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserMiniFarms.useContainer();
   const [showInactive, setShowInactive] = useState<boolean>(false);
+  console.log(farmData)
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;

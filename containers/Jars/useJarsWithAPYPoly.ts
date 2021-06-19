@@ -11,7 +11,7 @@ import {
   COMETH_USDC_WETH_REWARDS,
   COMETH_PICKLE_MUST_REWARDS,
   COMETH_MATIC_MUST_REWARDS,
-  MATIC_COMEPLX_REWARDER,
+  MATIC_COMPLEX_REWARDER,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { useComethPairDayData } from "./useComethPairDayData";
@@ -227,7 +227,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         poolInfoCR,
         maticPerSecondBN,
       ] = await Promise.all([
-        multicallProvider.getStorageAt(MATIC_COMEPLX_REWARDER, 5),
+        multicallProvider.getStorageAt(MATIC_COMPLEX_REWARDER, 5),
         sushiComplexRewarder.poolInfo(poolId),
         sushiComplexRewarder.rewardPerSecond(),
       ]);
