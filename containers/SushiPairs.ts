@@ -23,7 +23,6 @@ const addresses = {
   mweth: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
   musdt: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
   matic: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-  iron: "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a",
   mimatic: "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1",
   wusdc: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
 };
@@ -68,7 +67,6 @@ const mweth: Token = { address: addresses.mweth, priceId: "eth", decimals: 18 };
 const musdt: Token = { address: addresses.musdt, priceId: "usdt", decimals: 18 };
 const matic: Token = { address: addresses.matic, priceId: "matic", decimals: 18 };
 const mimatic: Token = { address: addresses.mimatic, priceId: "mimatic", decimals: 18 };
-const iron: Token = { address: addresses.iron, priceId: "iron", decimals: 18 };
 const wusdc: Token = { address: addresses.wusdc, priceId: "usdc", decimals: 6}
 
 interface PairMap {
@@ -89,7 +87,6 @@ export const PAIR_INFO: PairMap = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": { a: weth, b: alcx },
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": { a: mweth, b: musdt },
   "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": { a: mweth, b: matic },
-  "0x85de135ff062df790a5f20b79120f17d3da63b2d": { a: wusdc, b: iron },
   "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic }
 };
 

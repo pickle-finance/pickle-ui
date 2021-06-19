@@ -42,7 +42,6 @@ interface PriceObject {
   alcx: number;
   luna: number;
   mimatic: number;
-  iron: number;
   titan: number;
   qi: number;
 }
@@ -91,8 +90,6 @@ function usePrices() {
         // "yvboost",
         "alchemix",
         "terra-luna",
-        "iron-stablecoin",
-        "iron-titanium-token",
         "mimatic",
         "qi-dao"
       ],
@@ -135,8 +132,6 @@ function usePrices() {
       yvboost: 0, // to update once CG provides yvboost price
       alcx: response["alchemix"].usd,
       luna: response["terra-luna"].usd,
-      iron: response["iron-stablecoin"].usd,
-      titan: response["iron-titanium-token"].usd,
       mimatic: response["mimatic"].usd,
       qi: response["qi-dao"].usd
     };
