@@ -13,7 +13,7 @@ import {
 import { formatEther } from "ethers/lib/utils";
 
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
-import { UserFarmData } from "../../containers/UserFarms";
+import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
@@ -24,7 +24,7 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
 
@@ -67,8 +67,8 @@ export const FARM_LP_TO_ICON = {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/matic.png"} />
   ),
   "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": (
-    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"mimatic.png"}/>
-  )
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"mimatic.png"} />
+  ),
 };
 
 const setButtonStatus = (
@@ -102,7 +102,7 @@ const setButtonStatus = (
   }
 };
 
-export const MiniFarmCollapsible: FC<{ farmData: UserFarmData }> = ({
+export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
   farmData,
 }) => {
   const { jars } = Jars.useContainer();
@@ -117,6 +117,8 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     harvestable,
     usdPerToken,
     apy,
+    maticApy,
+    harvestableMatic,
   } = farmData;
   const stakedNum = parseFloat(formatEther(staked));
   const balanceNum = parseFloat(formatEther(balance));
@@ -135,6 +137,10 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   });
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
+  ).toLocaleString();
+
+  const harvestableMaticStr = parseFloat(
+    formatEther(harvestableMatic || 0),
   ).toLocaleString();
 
   const {
@@ -161,7 +167,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   });
 
   // Get Jar APY (if its from a Jar)
-  let APYs: JarApy[] = [{ pickle: apy * 100 }];
+  let APYs: JarApy[] = [{ pickle: apy * 100 }, { matic: maticApy * 100 }];
 
   const maybeJar =
     JAR_FARM_MAP[depositToken.address as keyof typeof JAR_FARM_MAP];
@@ -233,25 +239,31 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           <Grid xs={24} sm={12} md={3} lg={3}>
             <Tooltip text={apy === 0 ? "--" : tooltipText}>
               <div>{apy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
+              <br />
               <Label>Total APY</Label>
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
+              {harvestableStr} <MiniIcon source={"/pickle.png"} />
+              <br />
+              {harvestableMaticStr} <MiniIcon source={"/matic.png"} />
             </Data>
             <Label>Earned</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={bal === 0}>{balStr}</Data>
+            <br />
             <Label>Balance</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={stakedNum === 0}>{stakedStr}</Data>
+            <br />
             <Label>Staked</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
+            <br />
             <Label>Value Staked</Label>
           </Grid>
         </Grid.Container>
@@ -380,7 +392,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           fontSize: "0.8rem",
         }}
       >
-        PICKLEs are automatically harvested on staking and unstaking.
+        Rewards are automatically harvested on staking and unstaking.
       </div>
     </Collapse>
   );

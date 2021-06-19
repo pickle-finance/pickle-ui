@@ -70,7 +70,7 @@ export const useWithReward = (rawFarms: Input): Output => {
           rewarderPoolInfo[farm.poolIndex].allocPoint.toNumber() /
           totalRewarderAP;
         const maticRewardedPerSecond = maticFraction * maticPerSecond;
-        const maticValuePerSecond = maticRewardedPerSecond & prices.matic;
+        const maticValuePerSecond = maticRewardedPerSecond * prices.matic;
 
         return {
           ...farm,

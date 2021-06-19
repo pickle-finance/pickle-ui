@@ -18,6 +18,7 @@ import { FarmInfo } from "./Farms";
 
 export interface UserFarmDataMatic extends UserFarmData {
   harvestableMatic: ethers.BigNumber;
+  maticApy: number;
 }
 
 const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
@@ -48,6 +49,7 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
       const newFarms = farmData.map((farm, idx) => {
         return {
           ...farm,
+          maticApy: farms[idx].maticApy,
           harvestableMatic: userHarvestableMatic[idx],
         };
       });

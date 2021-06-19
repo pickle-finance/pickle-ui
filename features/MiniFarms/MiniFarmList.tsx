@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 
 import { MiniFarmCollapsible } from "../MiniFarms/MiniFarmCollapsible";
-import { UserMiniFarms, UserFarmData } from "../../containers/UserMiniFarms";
+import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
+import { MiniIcon } from "../../components/TokenIcon";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
-
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -17,7 +17,6 @@ export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserMiniFarms.useContainer();
   const [showInactive, setShowInactive] = useState<boolean>(false);
-  console.log(farmData)
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
@@ -32,15 +31,16 @@ export const MiniFarmList: FC = () => {
   return (
     <Container>
       <Grid.Container gap={1}>
-        <Grid md={12}>
+        <Grid md={16}>
           <p>
-            Farms allow you to earn PICKLEs by staking tokens.
+            Farms allow you to earn dual PICKLE <MiniIcon source="/pickle.png" />{" "}
+            and MATIC <MiniIcon source={"/matic.png"} /> rewards by staking tokens.
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.
           </p>
         </Grid>
-        <Grid md={12} style={{ textAlign: "right" }}>
+        <Grid md={8} style={{ textAlign: "right" }}>
           <Checkbox
             checked={showInactive}
             size="medium"
