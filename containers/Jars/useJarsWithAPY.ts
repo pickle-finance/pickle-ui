@@ -631,7 +631,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const alcxNakedAPY =
         (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].["base ALCX"]) / 100;
 
-      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
+      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 100 }];
     }
 
     return [];
