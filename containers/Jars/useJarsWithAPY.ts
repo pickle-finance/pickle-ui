@@ -513,7 +513,7 @@ export const useJarWithAPY = (jars: Input): Output => {
       const alusdAPY = parseFloat(curveAPY?.apys?.alusd?.baseApy) +
         parseFloat(curveAPY?.apys?.alusd?.crvApy) +
         parseFloat(curveAPY?.apys?.alusd?.additionalRewards[0].apy);
-      return [{ "base ALCX": alusdAPY * 0.8, apr: alusdAPY * 0.8 }];
+      return [{ "base ALCX": alusdAPY, apr: alusdAPY }];
     }
     
     // if (
