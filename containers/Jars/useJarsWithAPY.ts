@@ -493,7 +493,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         apy = { "base ALCX": compoundingAPY };
       }
 
-      return [{ ...apy, apr: alcxAPY * 0.8 * 100 }];
+      return [{ ...apy, apr: alcxAPY * 100 }];
     }
 
     return [];
