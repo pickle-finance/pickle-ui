@@ -104,7 +104,7 @@ export const DEPOSIT_TOKENS_NAME = {
   USDC: "USDC",
   lusdCRV: "lusdCRV",
   SUSHI_CVX_ETH: "SLP CVX/ETH",
-  LQTY: "Liquity"
+  LQTY: "LQTY"
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -203,7 +203,7 @@ export const DEPOSIT_TOKENS_LINK = {
   DAI: "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
-  LQTY: "https://etherscan.io/token/0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d"
+  LQTY: "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d"
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {

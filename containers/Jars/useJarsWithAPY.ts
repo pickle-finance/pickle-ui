@@ -320,7 +320,7 @@ export const useJarWithAPY = (jars: Input): Output => {
     const lqtyApy =
       ((rewardUsd / stakedUsd) * yearTime) / (now - initialTimestamp);
     return [
-      { lqty: getCompoundingAPY(lqtyApy * 0.8), apr: lqtyApy * 0.8 * 100 },
+      { "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8), apr: lqtyApy * 0.8 * 100 },
     ];
   };
 
