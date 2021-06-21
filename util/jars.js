@@ -21,7 +21,8 @@ export const sushiJars = [
   "yvBOOST-ETH",
   "SUSHI-ETH",
   "ALCX-ETH",
-  "CVX-ETH"
+  "CVX-ETH",
+  "LQTY"
 ];
 
 export const powerPool = "PICKLE-ETH";
