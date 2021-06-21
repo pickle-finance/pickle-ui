@@ -401,13 +401,21 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 onClick={() => {
                   const { tokens, weights } = handleBoost();
                   if (gaugeProxy) {
+			let newWeights = [];
+			let newTokens = [];
+			for( var it = 0; it < weights.length; it++ ) {
+				if( weights[it] !== 0 ) {
+					newWeights.push(weights[it]);
+					newTokens.push(tokens[it]);
+				}
+			}
                     transfer({
                       token: "vote",
                       recipient: gaugeProxy.address,
                       transferCallback: async () => {
                         return gaugeProxy.connect(signer).vote(
-                          tokens,
-                          weights.map((weight) =>
+                          newTokens,
+                          newWeights.map((weight) =>
                             ethers.BigNumber.from((weight * 100).toFixed(0)),
                           ),
                         );
