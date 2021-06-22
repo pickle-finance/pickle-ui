@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS } from "./jars";
+import {
+  DEPOSIT_TOKENS_JAR_NAMES,
+  DEPOSIT_TOKENS_NAME,
+  JAR_DEPOSIT_TOKENS,
+} from "./jars";
 import { Prices, PriceIds } from "../Prices";
 import {
   UNI_ETH_DAI_STAKING_REWARDS,
@@ -42,6 +46,10 @@ import { SushiPairs } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 
 import RewarderABI from "../ABIs/rewarder.json";
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
+import gql from "graphql-tag";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 const YEARN_API = "https://vaults.finance/all";
@@ -268,6 +276,52 @@ export const useJarWithAPY = (jars: Input): Output => {
     }
 
     return [];
+  };
+
+  const calculateLqtyStakingAPY = async () => {
+    const client = new ApolloClient({
+      link: new HttpLink({
+        uri: "https://api.thegraph.com/subgraphs/name/liquity/liquity",
+      }),
+      cache: new InMemoryCache(),
+      shouldBatch: true,
+    });
+    const query = gql`
+      {
+        global(id: "only") {
+          totalLQTYTokensStaked
+          totalBorrowingFeesPaid
+          totalRedemptionFeesPaid
+        }
+      }
+    `;
+    const res = await client.query({
+      query: query,
+      variables: null,
+    });
+    const totalLQTYTokensStaked = parseFloat(
+      res.data.global.totalLQTYTokensStaked,
+    );
+    const totalBorrowingFeesPaid = parseFloat(
+      res.data.global.totalBorrowingFeesPaid,
+    );
+    const totalRedemptionFeesPaid = parseFloat(
+      res.data.global.totalRedemptionFeesPaid,
+    );
+
+    const stakedUsd = totalLQTYTokensStaked * prices?.lqty;
+    const rewardUsd =
+      totalBorrowingFeesPaid * prices?.lusd +
+      totalRedemptionFeesPaid * prices?.eth;
+
+    const initialTimestamp = 1617636681;
+    const now = Math.floor(Date.now() / 1000);
+    const yearTime = 60 * 60 * 24 * 365;
+    const lqtyApy =
+      ((rewardUsd / stakedUsd) * yearTime) / (now - initialTimestamp);
+    return [
+      { "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8), apr: lqtyApy * 0.8 * 100 },
+    ];
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
@@ -578,6 +632,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         mirrorMbabaUstApy,
         feiTribeApy,
         lqtyEthLusdApy,
+        lqtyApy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
@@ -587,6 +642,7 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
         calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
+        calculateLqtyStakingAPY(),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -798,6 +854,10 @@ export const useJarWithAPY = (jars: Input): Output => {
             ...sushiCvxEthApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_CVX_ETH),
           ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY) {
+          APYs = [...lqtyApy];
         }
 
         let apr = 0;
