@@ -304,7 +304,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           />
           <div style={{ width: "100%" }}>
             <div style={{ fontSize: `1rem` }}>{poolName}</div>
-            <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
+            <Label style={{ fontSize: `0.85rem` }}>{depositTokenName}</Label>
           </div>
         </Grid>
         <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
