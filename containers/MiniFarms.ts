@@ -27,7 +27,7 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pAaveDAI",
     poolName: "pAaveDAI",
   },
-  "0x1A602E5f4403ea0A5C06d3DbD22B75d3a2D299D5": {
+  "0x261b5619d85B710f1c2570b65ee945975E2cC221": {
     tokenName: "p3CRV",
     poolName: "p3CRV",
   },

@@ -57,7 +57,7 @@ function useConnection() {
               decimals: 18,
             },
             rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
-            blockExplorerUrls: ["https://explorer-mainnet.maticvigil.com/"],
+            blockExplorerUrls: ["https://polygonscan.com/"],
           },
         ],
       });

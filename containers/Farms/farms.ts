@@ -134,5 +134,5 @@ export const JAR_FARM_MAP = {
   },
   "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.QUICK_MIMATIC_USDC
-  }
+  },
 };

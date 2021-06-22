@@ -25,7 +25,7 @@ export const MiniFarmList: FC = () => {
   if (!farmData) {
     return <h2>Loading...</h2>;
   }
-
+  const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
   return (
@@ -52,7 +52,7 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={0.5} />
       <Grid.Container gap={1}>
-        {farmData.map((farm) => (
+        {activeFarms.map((farm) => (
           <>
             <Grid xs={24} key={farm.poolIndex}>
               <MiniFarmCollapsible farmData={farm} />
