@@ -207,12 +207,12 @@ export const JarGaugeCollapsible: FC<{
 
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 6 : 2,
+    maximumFractionDigits: balNum < 1 ? 8 : 2,
   });
 
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 6 : 2,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 2,
   });
 
   const depositedUnderlyingStr = (
@@ -221,7 +221,7 @@ export const JarGaugeCollapsible: FC<{
     ) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 6 : 2,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 2,
   });
 
   const {
@@ -241,7 +241,7 @@ export const JarGaugeCollapsible: FC<{
 
   const gaugeBalStr = gaugeBal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: gaugeBal < 1 ? 18 : 4,
+    maximumFractionDigits: gaugeBal < 1 ? 6 : 4,
   });
 
   const stakedNum = parseFloat(
@@ -292,6 +292,9 @@ export const JarGaugeCollapsible: FC<{
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [tvlData, setTVLData] = useState();
+  const [isExitBatch, setIsExitBatch] = useState<Boolean>(false)
+  const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false)
+
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -320,14 +323,25 @@ export const JarGaugeCollapsible: FC<{
 
   const stakedStr = stakedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 18 : 4,
+    maximumFractionDigits: stakedNum < 1 ? 8 : 4,
   });
 
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 6 : 2,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 2,
+  });
+  
+  const balanceNum = parseFloat(
+    formatEther(
+      isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
+    ),
+  );
+
+  const balanceStr = balanceNum.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: balanceNum < 1 ? 6 : 4,
   });
 
   const [stakeAmount, setStakeAmount] = useState("");
@@ -355,11 +369,6 @@ export const JarGaugeCollapsible: FC<{
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
 
-  const balanceNum = parseFloat(
-    formatEther(
-      isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : balance,
-    ),
-  );
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -388,6 +397,7 @@ export const JarGaugeCollapsible: FC<{
   const depositAndStake = async () => {
     if (balNum) {
       try {
+        setIsEntryBatch(true)
         await setDepositStakeButton(depositButton);
         await transfer({
           token: depositToken.address,
@@ -402,8 +412,10 @@ export const JarGaugeCollapsible: FC<{
         await gauge.deposit(
           isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : gaugeBalance,
         );
+        setIsEntryBatch(false)
       } catch (error) {
         console.error(error);
+        setIsEntryBatch(false)
         return;
       }
     }
@@ -412,21 +424,26 @@ export const JarGaugeCollapsible: FC<{
   const exit = async () => {
     if (stakedNum) {
       try {
+        setIsExitBatch(true)
         setExitButton("Unstaking from Farm...");
-        await gauge.exit();
+        const exitTx = await gauge.exit();
+        await exitTx.wait();
         setExitButton("Withdrawing from Jar...");
-        await jarContract.connect(signer).withdraw(balance);
+        const withdrawTx = await jarContract.connect(signer).withdrawAll()
+        await withdrawTx.wait();
         setExitButton(null);
+        setIsExitBatch(false)
       } catch (error) {
         console.error(error);
         setExitButton(null);
+        setIsExitBatch(false)
         return;
       }
     }
   };
 
   useEffect(() => {
-    if (jarData) {
+    if (jarData && !isExitBatch) {
       const dStatus = getTransferStatus(
         depositToken.address,
         jarContract.address,
@@ -439,7 +456,7 @@ export const JarGaugeCollapsible: FC<{
       setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
       setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
     }
-    if (gaugeData) {
+    if (gaugeData && !isExitBatch) {
       const stakeStatus = getTransferStatus(
         gaugeDepositToken.address,
         gaugeData.address,
@@ -488,7 +505,6 @@ export const JarGaugeCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  const [json, setJson] = useState(null);
   useEffect(() => {
     getProtocolData().then((info) => setTVLData(info));
   }, []);
@@ -575,9 +591,9 @@ export const JarGaugeCollapsible: FC<{
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
-            <Label>Deposited</Label>
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={balanceNum === 0}>{balanceStr}</Data>
+            <Label>Wallet Balance</Label>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
@@ -585,7 +601,7 @@ export const JarGaugeCollapsible: FC<{
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             {isAlusdJar ? (
               <Tooltip
                 text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
@@ -600,7 +616,7 @@ export const JarGaugeCollapsible: FC<{
                 <Data isZero={+valueStr == 0}>
                   ${valueStr}
                 </Data>
-                <Label>Value</Label>
+                <Label>Deposit Value</Label>
               </>
             )}
           </Grid>
@@ -824,7 +840,7 @@ export const JarGaugeCollapsible: FC<{
       <Spacer y={1} />
       {Boolean(depositedNum || stakedNum) && (
         <Grid.Container gap={2}>
-          {depositedNum && (
+          {(depositedNum && !isExitBatch && !isEntryBatch) && (
             <Grid xs={24} md={depositedNum && !stakedNum ? 24 : 12}>
               <Spacer y={0.5} />
               <Button
@@ -881,7 +897,7 @@ export const JarGaugeCollapsible: FC<{
           )}
         </Grid.Container>
       )}
-      {Boolean(stakedNum) && (
+      {Boolean(stakedNum || isExitBatch) && (
         <>
           <Spacer y={0.5} />
           <Grid.Container gap={2}>
@@ -935,7 +951,7 @@ export const JarGaugeCollapsible: FC<{
           <Grid.Container gap={2}>
             <Grid xs={24} md={24}>
               <Button
-                disabled={harvestButton.disabled}
+                disabled={exitButton || isExitBatch}
                 onClick={exit}
                 style={{ width: "100%" }}
               >
