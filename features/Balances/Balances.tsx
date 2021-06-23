@@ -86,6 +86,7 @@ export const Balances: FC = () => {
     const updateInfo = async () => {
       setProtocolInfo(await getProtocolData())
       const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true").then(x=>x.json())
+      console.log(res)
       setMarketCap(res["pickle-finance"].usd_market_cap)
     };
     updateInfo();
