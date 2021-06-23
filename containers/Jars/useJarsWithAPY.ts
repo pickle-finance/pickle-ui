@@ -92,7 +92,7 @@ type Output = {
 };
 
 const getCompoundingAPY = (apr: number) => {
-  return 100 * (Math.pow(1 + apr / 365, 365) - 1);
+  return 100 * (Math.pow(1 + (apr / 365), 365) - 1);
 };
 
 export const useJarWithAPY = (jars: Input): Output => {
@@ -279,46 +279,66 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   const calculateLqtyStakingAPY = async () => {
-    const client = new ApolloClient({
-      link: new HttpLink({
-        uri: "https://api.thegraph.com/subgraphs/name/liquity/liquity",
-      }),
-      cache: new InMemoryCache(),
-      shouldBatch: true,
-    });
-    const query = gql`
+    // const client = new ApolloClient({
+    //   link: new HttpLink({
+    //     uri: "https://api.thegraph.com/subgraphs/name/liquity/liquity",
+    //   }),
+    //   cache: new InMemoryCache(),
+    //   shouldBatch: true,
+    // });
+    // const query = gql`
+    //   {
+    //     global(id: "only") {
+    //       totalLQTYTokensStaked
+    //       totalBorrowingFeesPaid
+    //       totalRedemptionFeesPaid
+    //     }
+    //   }
+    // `;
+    // const res = await client.query({
+    //   query: query,
+    //   variables: null,
+    // });
+    // const totalLQTYTokensStaked = parseFloat(
+    //   res.data.global.totalLQTYTokensStaked,
+    // );
+    // const totalBorrowingFeesPaid = parseFloat(
+    //   res.data.global.totalBorrowingFeesPaid,
+    // );
+    // const totalRedemptionFeesPaid = parseFloat(
+    //   res.data.global.totalRedemptionFeesPaid,
+    // );
+
+    // const stakedUsd = totalLQTYTokensStaked * prices?.lqty;
+    // const rewardUsd =
+    //   totalBorrowingFeesPaid * prices?.lusd +
+    //   totalRedemptionFeesPaid * prices?.eth;
+
+    // const initialTimestamp = 1617636681;
+    // const now = Math.floor(Date.now() / 1000);
+    // const yearTime = 60 * 60 * 24 * 365;
+    // const lqtyApy =
+    //   ((rewardUsd / stakedUsd) * yearTime) / (now - initialTimestamp);
+
+    const body = {
+      operationName: "FindResultDataByResult",
+      query: "query FindResultDataByResult($result_id: uuid!) {\n  query_results(where: {id: {_eq: $result_id}}) {\n    id\n    job_id\n    error\n    runtime\n    generated_at\n    columns\n    __typename\n  }\n  get_result_by_result_id(args: {want_result_id: $result_id}) {\n    data\n    __typename\n  }\n}\n",
+      variables: { result_id: "90b9cec0-c576-4f87-b5e3-770ceaa99e45" }
+    };
+    const res = await fetch(
+      "https://core-hsr.duneanalytics.com/v1/graphql",
       {
-        global(id: "only") {
-          totalLQTYTokensStaked
-          totalBorrowingFeesPaid
-          totalRedemptionFeesPaid
-        }
-      }
-    `;
-    const res = await client.query({
-      query: query,
-      variables: null,
-    });
-    const totalLQTYTokensStaked = parseFloat(
-      res.data.global.totalLQTYTokensStaked,
-    );
-    const totalBorrowingFeesPaid = parseFloat(
-      res.data.global.totalBorrowingFeesPaid,
-    );
-    const totalRedemptionFeesPaid = parseFloat(
-      res.data.global.totalRedemptionFeesPaid,
-    );
+        body: JSON.stringify(body),
+        method: "POST",
+        mode: "cors",
+      },
+    ).then((x) => x.json());
 
-    const stakedUsd = totalLQTYTokensStaked * prices?.lqty;
-    const rewardUsd =
-      totalBorrowingFeesPaid * prices?.lusd +
-      totalRedemptionFeesPaid * prices?.eth;
+    let lqtyApy = 0;
+    if (res) {
+      lqtyApy = (res?.data?.get_result_by_result_id[0].data?.apr) / 100;
+    }
 
-    const initialTimestamp = 1617636681;
-    const now = Math.floor(Date.now() / 1000);
-    const yearTime = 60 * 60 * 24 * 365;
-    const lqtyApy =
-      ((rewardUsd / stakedUsd) * yearTime) / (now - initialTimestamp);
     return [
       { "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8), apr: lqtyApy * 0.8 * 100 },
     ];
