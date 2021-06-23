@@ -28,8 +28,8 @@ export const FarmInfo: IFarmInfo = {
     poolName: "pAaveDAI",
   },
   "0x261b5619d85B710f1c2570b65ee945975E2cC221": {
-    tokenName: "p3CRV",
-    poolName: "p3CRV",
+    tokenName: "am3CRV",
+    poolName: "am3CRV",
   },
   "0x80aB65b1525816Ffe4222607EDa73F86D211AC95": {
     tokenName: "pSLP ETH/USDT",
