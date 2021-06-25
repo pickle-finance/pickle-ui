@@ -34,7 +34,6 @@ interface PriceObject {
   lqty: number;
   yvboost: number;
   alcx: number;
-  alusd: number;
   luna: number;
 }
 
@@ -117,7 +116,6 @@ function usePrices() {
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
       alcx: response["alchemix"].usd,
-      alusd: response["alchemix-usd"].usd,
       yvboost: 0, // to update once CG provides yvboost price
       luna: response["terra-luna"].usd,
     };

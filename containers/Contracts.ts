@@ -7,8 +7,6 @@ import { BasisStaking } from "./Contracts/BasisStaking";
 import { BasisStaking__factory as BasisStakingFactory } from "./Contracts/factories/BasisStaking__factory";
 import { Comptroller } from "./Contracts/Comptroller";
 import { Comptroller__factory as ComptrollerFactory } from "./Contracts/factories/Comptroller__factory";
-import { Controllerv5 } from "./Contracts/Controllerv5";
-import { Controllerv5__factory as ControllerV5Factory } from "./Contracts/factories/Controllerv5__factory";
 import { Controller } from "./Contracts/Controller";
 import { Controller__factory as ControllerFactory } from "./Contracts/factories/Controller__factory";
 import { Ctoken } from "./Contracts/Ctoken";
@@ -66,7 +64,6 @@ export const COMPTROLLER_ADDR = "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B";
 export const PICKLE_TOKEN_ADDR = "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5";
 export const MASTERCHEF_ADDR = "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d";
 export const CONTROLLER_ADDR = "0x6847259b2B3A4c17e7c43C54409810aF48bA5210";
-export const CONTROLLERV5_ADDR = "0x7B5916C61bCEeaa2646cf49D9541ac6F5DCe3637";
 
 export const UNISWAPV2_PROXY_LOGIC =
   "0x0a536ca30B9E20a3D89c91c22Ef77E1AeBBd6944";
@@ -90,7 +87,6 @@ export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 export const SUSDV2_CRV = "0xC25a3A3b969415c80451098fa907EC722572917F";
 export const THREE_CRV = "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490";
 export const RENBTC_CRV = "0x49849C98ae39Fff122806C06791Fa73784FB3675";
-export const ALUSD3CRV = "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c";
 
 export const SCRV_STAKING_REWARDS =
   "0xDCB6A51eA3CA5d3Fd898Fd6564757c7aAeC3ca92";
@@ -157,7 +153,6 @@ function useContracts() {
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
-  const [controllerv5, setControllerV5] = useState<Controllerv5 | null>(null);
 
   const [
     gaugeController,
@@ -207,7 +202,6 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
-  const [alusdPool, setAlusdPool] = useState<Pool | null>(null);
 
   const [
     yvBoostMigrator,
@@ -219,7 +213,6 @@ function useContracts() {
       setPickle(Erc20Factory.connect(PICKLE_TOKEN_ADDR, signer));
       setMasterchef(MasterchefFactory.connect(MASTERCHEF_ADDR, signer));
       setController(ControllerFactory.connect(CONTROLLER_ADDR, signer));
-      setControllerV5(ControllerV5Factory.connect(CONTROLLERV5_ADDR, signer));
       setGaugeController(
         GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, signer),
       );
@@ -269,7 +262,6 @@ function useContracts() {
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
-      setAlusdPool(PoolFactory.connect(ALUSD3CRV, signer));
     }
   };
 
@@ -281,7 +273,6 @@ function useContracts() {
     pickle,
     masterchef,
     controller,
-    controllerv5,
     susdGauge,
     renGauge,
     threeGauge,
@@ -311,7 +302,6 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
-    alusdPool,
   };
 }
 

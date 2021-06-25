@@ -34,9 +34,6 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
           totalAPY: jar.totalAPY,
           apr: jar.apr,
           depositTokenLink: jar.depositTokenLink,
-          ...(jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV
-            ? { pendingAlcx: jar.pendingAlcx }
-            : {}),
         };
       });
 

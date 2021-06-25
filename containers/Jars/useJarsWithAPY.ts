@@ -39,7 +39,6 @@ import compound from "@studydefi/money-legos/compound";
 import { Contract as MulticallContract } from "ethers-multicall";
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
-import { CurvePairs } from "../CurvePairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 import { Jarsymbiotic } from "../Contracts/Jarsymbiotic";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -93,10 +92,9 @@ const getCompoundingAPY = (apr: number) => {
 
 export const useJarWithAPY = (jars: Input): Output => {
   const { multicallProvider, address } = Connection.useContainer();
-  const { controller, controllerv5, strategy } = Contracts.useContainer();
+  const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
-  const { getAlusd3CrvData } = CurvePairs.useContainer();
   const { getPairData: getUniPairData } = UniV2Pairs.useContainer();
   const {
     stakingRewards,
@@ -423,140 +421,6 @@ export const useJarWithAPY = (jars: Input): Output => {
     return [];
   };
 
-  const calculateAlcxAPY = async (lpTokenAddress: string) => {
-    if (
-      stakingPools &&
-      prices?.alcx &&
-      getSushiPairData &&
-      getAlusd3CrvData &&
-      multicallProvider
-    ) {
-      const poolId = alchemixPoolIds[lpTokenAddress];
-      const multicallStakingPools = new MulticallContract(
-        stakingPools.address,
-        stakingPools.interface.fragments,
-      );
-      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
-
-      const [
-        rewardRateBN,
-        totalAllocPointBN,
-        poolRewardWeightBN,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
-        multicallStakingPools.rewardRate(),
-        multicallStakingPools.totalRewardWeight(),
-        multicallStakingPools.getPoolRewardWeight(poolId),
-        lpToken.balanceOf(stakingPools.address),
-      ]);
-
-      const totalSupply = parseFloat(formatEther(totalSupplyBN));
-
-      let tokenPrice: number;
-      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX) {
-        const { pricePerToken } = await getSushiPairData(lpTokenAddress);
-        tokenPrice = pricePerToken;
-      } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
-        const { pricePerToken } = await getAlusd3CrvData();
-        tokenPrice = pricePerToken;
-      }
-
-      const alcxRewardsPerYear =
-        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
-        AVERAGE_BLOCK_TIME;
-      const poolRewardsPerYear =
-        (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
-        totalAllocPointBN.toString();
-
-      const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
-
-      const totalValueStaked = totalSupply * tokenPrice;
-      const alcxAPY = valueRewardedPerYear / totalValueStaked;
-
-      let apy;
-      const compoundingAPY = getCompoundingAPY(alcxAPY * 0.8);
-
-      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX) {
-        apy = { alcx: compoundingAPY };
-      } else if (lpTokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV) {
-        apy = { "base ALCX": compoundingAPY };
-      }
-
-      return [{ ...apy, apr: alcxAPY * 0.8 * 100 }];
-    }
-
-    return [];
-  };
-
-  const calculatePendingAlcxRewards = async (
-    jar: Jarsymbiotic,
-    address: string,
-  ) => {
-    if (multicallProvider) {
-      const multicallSymbiotic = new MulticallContract(
-        jar.address,
-        jar.interface.fragments,
-      );
-
-      const [pendingReward] = await multicallProvider.all([
-        multicallSymbiotic.pendingRewardOfUser(address),
-      ]);
-
-      const pendingAlcx = parseFloat(formatEther(pendingReward));
-      return { pendingAlcx: pendingAlcx };
-    }
-    return {};
-  };
-
-  const calculateAlcxNakedAPY = async (
-    alusdAPY: number,
-    lpTokenAddress: string,
-  ) => {
-    if (stakingPools && prices?.alcx && getAlusd3CrvData && multicallProvider) {
-      const poolId = alchemixPoolIds[lpTokenAddress];
-      const multicallStakingPools = new MulticallContract(
-        stakingPools.address,
-        stakingPools.interface.fragments,
-      );
-      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
-
-      const [
-        rewardRateBN,
-        totalAllocPointBN,
-        poolRewardWeightBN,
-        totalSupplyBN,
-      ] = await multicallProvider.all([
-        multicallStakingPools.rewardRate(),
-        multicallStakingPools.totalRewardWeight(),
-        multicallStakingPools.getPoolRewardWeight(poolId),
-        lpToken.balanceOf(stakingPools.address),
-      ]);
-
-      const totalSupply = parseFloat(formatEther(totalSupplyBN));
-
-      let tokenPrice: number = prices.alcx;
-
-      const alcxRewardsPerYear =
-        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
-        AVERAGE_BLOCK_TIME;
-      const poolRewardsPerYear =
-        (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
-        totalAllocPointBN.toString();
-
-      const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
-
-      const totalValueStaked = totalSupply * tokenPrice;
-      const alcxAPY = valueRewardedPerYear / totalValueStaked;
-
-      const alcxNakedAPY =
-        (getCompoundingAPY(alcxAPY * 0.8) * alusdAPY[0].["base ALCX"]) / 100;
-
-      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
-    }
-
-    return [];
-  };
-
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
@@ -627,7 +491,7 @@ export const useJarWithAPY = (jars: Input): Output => {
   };
 
   const calculateAPY = async () => {
-    if (jars && controller && controllerv5 && strategy) {
+    if (jars && controller && strategy) {
       const [
         uniEthDaiApy,
         uniEthUsdcApy,
@@ -657,10 +521,6 @@ export const useJarWithAPY = (jars: Input): Output => {
         mithMisUsdtApy,
         sushiEthyveCRVApy,
         sushiEthyvboostApy,
-        // basisBacDaiApy,
-        // basisBasDaiApy,
-        alcxEthAlcxApy,
-        alcxAlusd3crvApy,
         usdcApy,
         crvLusdApy,
       ] = await Promise.all([
@@ -668,15 +528,9 @@ export const useJarWithAPY = (jars: Input): Output => {
         calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVBOOST),
-        // calculateBasisV2APY(BASIS_BAC_DAI_STAKING_REWARDS, BASIS_BAC_DAI_PID),
-        // calculateBasisV2APY(BASIS_BAS_DAI_STAKING_REWARDS, BASIS_BAS_DAI_PID),
-        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-        calculateAlcxAPY(JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS.lusdCRV),
       ]);
-
-      const alcxNakedApy = await calculateAlcxNakedAPY(alcxAlusd3crvApy, ALCX);
 
       const [
         mirrorMirUstApy,
@@ -898,25 +752,6 @@ export const useJarWithAPY = (jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
           APYs = [
-            ...alcxEthAlcxApy,
-            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
-          ];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALCX_ALUSD_3CRV) {
-          APYs = [...alcxAlusd3crvApy, ...alcxNakedApy];
-          const alcxPending = await calculatePendingAlcxRewards(
-            jar.contract as Jarsymbiotic,
-            address,
-          );
-          jar = { ...jar, ...alcxPending };
-          totalAPY =
-            alcxAlusd3crvApy[0]?.["base ALCX"] + alcxNakedApy[0]?.["staked ALCX"];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_ETH_ALCX) {
-          APYs = [
-            ...alcxEthAlcxApy,
             ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.SUSHI_ETH_ALCX),
           ];
         }

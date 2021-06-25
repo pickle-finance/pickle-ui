@@ -30,20 +30,15 @@ export type Jar = {
   strategyName: string;
 };
 
-const IsV5Jars = (address: string): boolean => {
-  return address === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV;
-};
-
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const { blockNum, provider, multicallProvider } = Connection.useContainer();
-  const { controller, controllerv5, strategy } = Contracts.useContainer();
+  const { controller, strategy } = Contracts.useContainer();
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
     if (
       controller &&
-      controllerv5 &&
       provider &&
       strategy &&
       multicallProvider
@@ -53,13 +48,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         controller.interface.fragments,
       );
 
-      const multicallControllerv5 = new MulticallContract(
-        controllerv5.address,
-        controllerv5.interface.fragments,
-      );
-
       const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS)
-        .filter(([key, address]) => !IsV5Jars(address))
         .map(([k, tokenAddress]) => {
           return {
             key: k,
@@ -67,41 +56,17 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           };
         });
 
-      const tokenKVV5 = Object.entries(JAR_DEPOSIT_TOKENS)
-        .filter(([key, address]) => IsV5Jars(address))
-        .map(([k, tokenAddress]) => {
-          return {
-            key: k,
-            value: tokenAddress,
-          };
-        });
-
-      let jarAddresses = await multicallProvider.all(
+      const jarAddresses = await multicallProvider.all(
         tokenKV.map((t) => {
           return multicallController.jars(t.value);
         }),
       );
 
-      const jarAddressesv5 = await multicallProvider.all(
-        tokenKVV5.map((t) => {
-          return multicallControllerv5.jars(t.value);
-        }),
-      );
-
-      jarAddresses = [...jarAddresses, ...jarAddressesv5];
-
-      let strategyAddresses = await multicallProvider.all(
+      const strategyAddresses = await multicallProvider.all(
         tokenKV.map((t) => {
           return multicallController.strategies(t.value);
         }),
       );
-
-      const strategyAddressesV5 = await multicallProvider.all(
-        tokenKVV5.map((t) => {
-          return multicallControllerv5.strategies(t.value);
-        }),
-      );
-      strategyAddresses = [...strategyAddresses, ...strategyAddressesV5];
 
       const strategyNames = await multicallProvider.all(
         strategyAddresses.map((s) => {
@@ -115,7 +80,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       );
 
       const jarData = tokenKV
-        .concat(tokenKVV5)
         .map((kv, idx) => {
           return {
             [kv.key]: {
@@ -133,10 +97,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       const newJars = await Promise.all(
         Object.entries(JAR_DEPOSIT_TOKENS).map(async ([k, tokenAddress]) => {
           const { jarAddress, strategyAddress, strategyName } = jarData[k];
-          let contract;
-          if (tokenAddress === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV)
-            contract = JarsymbioticFactory.connect(jarAddress, provider);
-          else contract = JarFactory.connect(jarAddress, provider);
+          const contract = JarFactory.connect(jarAddress, provider);
           return {
             depositToken: Erc20Factory.connect(tokenAddress, provider),
             depositTokenName:

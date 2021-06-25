@@ -529,8 +529,6 @@ export const JarGaugeCollapsible: FC<{
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
-  const isAlusdJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.ALCX_ALUSD_3CRV;
 
   let lunaAPY;
   if (isMStonksJar && APYs[2]) {
@@ -548,9 +546,6 @@ export const JarGaugeCollapsible: FC<{
       }, The base rate of ${apr.toFixed(
         2,
       )}% is provided by the underlying Yearn strategy`;
-    } else if (isAlusdJar) {
-      return `ALCX rewards are harvested and staked to accelerate your ALCX earnings. 
-      You will receive alUSD3CRV and ALCX tokens on withdrawal.`;
     } else {
       return `This yield is calculated in real time from a base rate of ${apr.toFixed(
         2,
@@ -602,23 +597,12 @@ export const JarGaugeCollapsible: FC<{
             <Label>Earned</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-            {isAlusdJar ? (
-              <Tooltip
-                text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
-              >
-                <Data isZero={+valueStr == 0}>
-                  ${valueStr}
-                </Data>
-                <Label>Value</Label>
-              </Tooltip>
-            ) : (
               <>
                 <Data isZero={+valueStr == 0}>
                   ${valueStr}
                 </Data>
                 <Label>Deposit Value</Label>
               </>
-            )}
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
             {!gaugeData ? (
