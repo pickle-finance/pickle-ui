@@ -386,6 +386,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           APYs = [
             { lp: (curveRawStats?.aave || 0) + am3CrvAPY[0].lp },
             ...[am3CrvAPY[1]],
+            ...[am3CrvAPY[2]]
           ];
         }
 

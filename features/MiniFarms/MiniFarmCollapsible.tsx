@@ -175,7 +175,6 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
   }
-
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];

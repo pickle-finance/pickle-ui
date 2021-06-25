@@ -40,7 +40,7 @@ const aaveContracts = {
   is_plain: [false, false, false],
   swap_address: "0x445FE580eF8d70FF569aB36e80c647af338db351",
   token_address: "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171",
-  gauge_address: "0xe381C25de995d62b453aF8B931aAc84fcCaa7A62",
+  gauge_address: "0x19793B454D3AfC7b454F206Ffe95aDE26cA6912c",
   underlying_coins: [
     "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
     "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
@@ -64,6 +64,7 @@ export const useCurveAm3MaticAPY = (): Output => {
 
   const [maticAPY, setMaticAPY] = useState<number | null>(null);
   const [aaveAPY, setAaveAPY] = useState<number | null>(null);
+  const [crvAPY, setCrvAPY] = useState<number| null>(null);
 
   const getMaticAPY = async () => {
     if (multicallProvider && erc20 && prices?.snx) {
@@ -117,14 +118,14 @@ export const useCurveAm3MaticAPY = (): Output => {
         aaveApys[1] * (scaledBalance1 / totalBalance) +
         aaveApys[2] * (scaledBalance2 / totalBalance);
 
-      const timestampEndMaticRewards = 1624389721;
-      const wmaticRewardsAmount =
-        timestampEndMaticRewards < now ? 0 : prices.matic * 15462394 * 6; // Multiplied by 6 to annualize the rewards
-
+      const wmaticRewardsAmount = prices.matic * 1042784 * 6; // Multiplied by 6 to annualize the rewards
+      const crvRewardsAmount = prices.crv * 796812 * 6
+      
       const wmaticAPY = wmaticRewardsAmount / +formatEther(lpBalance);
-
+      const crvAPY = crvRewardsAmount / +formatEther(lpBalance)
       setAaveAPY(aaveAPY);
       setMaticAPY(wmaticAPY);
+      setCrvAPY(crvAPY)
     }
   };
 
@@ -140,6 +141,10 @@ export const useCurveAm3MaticAPY = (): Output => {
       {
         matic: getCompoundingAPY(maticAPY * 0.8 || 0),
         apr: maticAPY * 100 * 0.8 || 0,
+      },
+      {
+        crv: getCompoundingAPY(crvAPY * 0.8 || 0),
+        apr: crvAPY * 100 * 0.8 || 0,
       },
     ],
   };

@@ -36,7 +36,6 @@ import { useCurveSNXAPY } from "./useCurveSNXAPY";
 import { useUniPairDayData } from "./useUniPairDayData";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
-import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
 import { formatEther } from "ethers/lib/utils";
 import { ethers } from "ethers";
 import { UniV2Pairs } from "../UniV2Pairs";
