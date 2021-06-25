@@ -85,24 +85,28 @@ export default function Dashboard() {
 
   const assets = allJars.map((d) => d.asset);
   const blockData = {};
+  const mostRecent = {};
   allJars.forEach((item) => {
     item.data.forEach((d) => {
       if (blockData[d.x] === undefined) {
         blockData[d.x] = { x: d.x };
       }
       blockData[d.x][item.asset] = d.y;
+      mostRecent[item.asset] = 0;
     });
   });
 
   const combinedData = [];
-  let y = 0;
-  for (const key of Object.keys(blockData).sort()) {
-    let point = { x: parseInt(key) };
-    const value = blockData[key];
+  for (const timestampid of Object.keys(blockData).sort()) {
+    let point = { x: parseInt(timestampid) };
+    const value = blockData[timestampid];
+    let y = 0;
     for (const asset of assets) {
       if (value[asset]) {
-        point = { ...point, y: (y += value[asset]) / 1000 };
+        mostRecent[asset] = value[asset];
       }
+      y += mostRecent[asset];
+      point = { ...point, y: y };
     }
     combinedData.push(point);
   }

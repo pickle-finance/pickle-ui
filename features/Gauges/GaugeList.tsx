@@ -13,10 +13,22 @@ import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { backgroundColor, pickleGreen } from "../../util/constants";
+import {
+  JAR_GAUGE_MAP,
+  PICKLE_ETH_GAUGE,
+} from "../../containers/Gauges/gauges";
+import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { Jars } from "../../containers/Jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;
 `;
+
+export interface UserGaugeDataWithAPY extends UserGaugeData {
+  APYs: Array<JarApy>;
+  totalAPY: number;
+}
 
 interface Weights {
   [key: string]: number;
@@ -43,6 +55,8 @@ export const GaugeList: FC = () => {
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const { status: voteTxStatus, vote } = useGaugeProxy();
   const [showUserGauges, setShowUserGauges] = useState<boolean>(false);
+  const { getUniPairDayAPY } = useUniPairDayData();
+  const { jars } = Jars.useContainer();
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gaugeData?.length; i++) {
@@ -57,17 +71,47 @@ export const GaugeList: FC = () => {
     return <h2>Loading...</h2>;
   }
 
+  const gaugesWithAPY = gaugeData.map((gauge) => {
+    // Get Jar APY (if its from a Jar)
+    let APYs: JarApy[] = [];
+    const maybeJar =
+      JAR_GAUGE_MAP[gauge.depositToken.address as keyof typeof JAR_GAUGE_MAP];
+    if (jars && maybeJar) {
+      const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
+      APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
+    }
+
+    if (
+      gauge.depositToken.address.toLowerCase() ===
+      PICKLE_ETH_GAUGE.toLowerCase()
+    ) {
+      APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
+    }
+
+    const totalAPY = APYs.map((x) => {
+      return Object.values(x).reduce(
+        (acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y),
+        0,
+      );
+    }).reduce((acc, x) => acc + x, 0);
+
+    return {
+      ...gauge,
+      APYs,
+      totalAPY,
+    };
+  });
+
   const isDisabledFarm = (depositToken: string) =>
     depositToken === PICKLE_JARS.pUNIBACDAI ||
-    depositToken === PICKLE_JARS.pUNIBASDAI || 
+    depositToken === PICKLE_JARS.pUNIBASDAI ||
     depositToken === PICKLE_JARS.pUNIETHLUSD;
 
-  const activeGauges = gaugeData.filter(
-    (x) => !isDisabledFarm(x.depositToken.address),
-  );
-  const inactiveGauges = gaugeData.filter((x) => false || isDisabledFarm(x.depositToken.address));
-  const userGauges = gaugeData.filter((gauge) =>
-    parseFloat(formatEther(gauge.staked)),
+  const activeGauges = gaugesWithAPY
+    .filter((x) => !isDisabledFarm(x.depositToken.address))
+    .sort((a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy));
+  const inactiveGauges = gaugesWithAPY.filter(
+    (x) => false || isDisabledFarm(x.depositToken.address),
   );
 
   const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
@@ -76,34 +120,19 @@ export const GaugeList: FC = () => {
     if (!item.length) return;
     arr.splice(to, 0, item[0]);
   };
-  
-  const indexofAlcx = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pSUSHIETHALCX.toLowerCase(),
-  );
-  moveInArray(activeGauges, indexofAlcx, 1);
-  
-  const indexofYvboost = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pyvBOOSTETH.toLowerCase(),
-  );
-  moveInArray(activeGauges, indexofYvboost, 1);
 
-  const indexofLUSD = activeGauges.findIndex(
+  const indexofPickleEth = activeGauges.findIndex(
     (x) =>
       x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pyLUSDCRV.toLowerCase(),
+      PICKLE_ETH_GAUGE,
   );
-  moveInArray(activeGauges, indexofLUSD, 1);
-  const indexofUSDC = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase(),
-  );
-  moveInArray(activeGauges, indexofUSDC, 1);
+  moveInArray(activeGauges, indexofPickleEth, 0);
 
-  const renderGauge = (gauge: UserGaugeData) => (
+  const userGauges = gaugesWithAPY.filter((gauge) =>
+    parseFloat(formatEther(gauge.staked)),
+  );
+
+  const renderGauge = (gauge: UserGaugeDataWithAPY) => (
     <Grid xs={24} key={gauge.address}>
       <div css={{ display: "flex", alignItems: "center" }}>
         <GaugeCollapsible gaugeData={gauge} />
@@ -155,7 +184,9 @@ export const GaugeList: FC = () => {
       >
         <h2>Active Farms</h2>
       </div>
-      <Grid.Container gap={1}>{(showUserGauges ? userGauges : activeGauges).map(renderGauge)}</Grid.Container>
+      <Grid.Container gap={1}>
+        {(showUserGauges ? userGauges : activeGauges).map(renderGauge)}
+      </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
         {showInactive && <h2>Inactive Farms</h2>}

@@ -10,6 +10,7 @@ import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
 import { getProtocolData } from "util/api";
+import PickleIcon from "../../components/PickleIcon";
 
 const Container = styled(Grid.Container)`
   font-family: "Source Code Pro", sans-serif;
@@ -26,18 +27,6 @@ const HideOnMobile = styled.div`
     display: none;
   }
 `;
-
-const PickleIcon = ({ size = "24px", margin = "0 0 0 0.5rem" }) => (
-  <img
-    src="/pickle.png"
-    alt="pickle"
-    style={{
-      width: size,
-      margin,
-      verticalAlign: `text-bottom`,
-    }}
-  />
-);
 
 const formatPickles = (num: number) =>
   num?.toLocaleString(undefined, {
@@ -86,7 +75,6 @@ export const Balances: FC = () => {
     const updateInfo = async () => {
       setProtocolInfo(await getProtocolData())
       const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true").then(x=>x.json())
-      console.log(res)
       setMarketCap(res["pickle-finance"].usd_market_cap)
     };
     updateInfo();
@@ -101,7 +89,7 @@ export const Balances: FC = () => {
               <span>
                 {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
               </span>
-              <PickleIcon />
+              <PickleIcon size={24} margin="0 0 0 0.5rem" />
               {pickleBalance !== null && prices?.pickle && (
                 <HideOnMobile>
                   <span style={{ fontSize: `1rem` }}>
@@ -115,7 +103,7 @@ export const Balances: FC = () => {
               Pending:&nbsp;
               <span>
                 {pendingPickles !== null ? formatPickles(pendingPickles) : "--"}
-                <PickleIcon size="14px" />
+                <PickleIcon size={14} margin="0 0 0 0.5rem" />
               </span>
               {pendingPickles !== null && prices?.pickle && (
                 <HideOnMobile>
@@ -134,13 +122,13 @@ export const Balances: FC = () => {
             <h2>Market Cap</h2>
             <DataPoint>
               <span>
-                {prices?.pickle && totalSupply
+                {prices?.pickle && totalSupply && marketCap
                   ? formatDollars(marketCap)
                   : "--"}
               </span>
             </DataPoint>
             <Card.Footer>
-              {totalSupply && picklePerBlock ? (
+              {totalSupply && picklePerBlock && marketCap ? (
                 <Tooltip
                   placement="bottom"
                   style={{ cursor: `help` }}
@@ -152,12 +140,12 @@ export const Balances: FC = () => {
                 >
                   Total Supply:{" "}
                   {totalSupply ? formatPickles(marketCap / prices?.pickle) : "--"}
-                  <PickleIcon size="14px" />
+                  <PickleIcon size={14} />
                 </Tooltip>
               ) : (
                 <span>
                   Total Supply: --
-                  <PickleIcon size="14px" />
+                  <PickleIcon size={14} margin="0 0 0 0.5rem" />
                 </span>
               )}
             </Card.Footer>

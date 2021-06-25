@@ -43,7 +43,7 @@ export const useZapIn = ({
 }: ZapperData) => {
   const { address, signer } = Connection.useContainer();
   const isSellTokenEth = isEth(sellTokenAddress);
-  const sellAmount = parseUnits(rawAmount, 18).toString();
+  const sellAmount = rawAmount ? parseUnits(rawAmount, 18).toString() : '0';
 
   const zapIn = async () => {
     try {

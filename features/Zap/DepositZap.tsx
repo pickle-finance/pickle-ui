@@ -87,7 +87,9 @@ export const DepositZap: FC = () => {
     if (txState !== null) return true;
     if (amount === "0") return true;
     if (amount === "") return true;
-    if (balanceStr && parseFloat(amount) > parseFloat(balanceStr)) return true;
+    const parsedAmount = parseFloat(amount);
+    if (balanceStr && parsedAmount > parseFloat(balanceStr)) return true;
+    if (parsedAmount < 0) return true;
     return false;
   };
 
@@ -142,6 +144,7 @@ export const DepositZap: FC = () => {
         </DisplayLink>
       </div>
       <Input
+        placeholder="0"
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
         width="100%"

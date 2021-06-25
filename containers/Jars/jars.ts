@@ -19,9 +19,9 @@ export const PICKLE_JARS = {
   pUNIETHUSDC: "0x53Bf2E62fA20e2b4522f05de3597890Ec1b352C6",
   pUNIETHUSDT: "0x09FC573c502037B149ba87782ACC81cF093EC6ef",
   pUNIETHWBTC: "0xc80090AA05374d336875907372EE4ee636CBC562",
+  pUNIMIRUST: "0x3bcd97dca7b1ced292687c97702725f37af01cac",
   pUNIBACDAI: "0x2350fc7268F3f5a6cC31f26c38f706E41547505d",
   pUNIBASDAI: "0x748712686a78737DA0b7643DF78Fdf2778dC5944",
-  pUNIMIRUST: "0x3bcd97dca7b1ced292687c97702725f37af01cac",
   pUNIMTSLAUST: "0xaFB2FE266c215B5aAe9c4a9DaDC325cC7a497230",
   pUNIMAAPLUST: "0xF303B35D5bCb4d9ED20fB122F5E268211dEc0EBd",
   pUNIMQQQUST: "0x7C8de3eE2244207A54b57f45286c9eE1465fee9f",
@@ -34,6 +34,7 @@ export const PICKLE_JARS = {
   pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
   pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
   pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
+  pSUSHICVXETH: "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F",
 
   // Polygon Jars
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
@@ -79,6 +80,7 @@ export const JAR_DEPOSIT_TOKENS = {
     UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+    SUSHI_CVX_ETH: "0x05767d9EF41dC40689678fFca0608878fb3dE906",
   },
   [NETWORK_NAMES.POLY]: {
     COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
@@ -101,8 +103,6 @@ export const DEPOSIT_TOKENS_NAME = {
   UNIV2_ETH_USDC: "UNI USDC/ETH",
   UNIV2_ETH_USDT: "UNI USDT/ETH",
   UNIV2_ETH_WBTC: "UNI WBTC/ETH",
-  UNIV2_BAC_DAI: "UNI BAC/DAI",
-  UNIV2_BAS_DAI: "UNI BAS/DAI",
   UNIV2_MIR_UST: "UNI MIR/UST",
   UNIV2_MTSLA_UST: "UNI MTSLA/UST",
   UNIV2_MAAPL_UST: "UNI MAAPL/UST",
@@ -124,6 +124,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
   USDC: "USDC",
   lusdCRV: "lusdCRV",
+  SUSHI_CVX_ETH: "SLP CVX/ETH",
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
@@ -140,13 +141,10 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.sCRV]: true,
   [DEPOSIT_TOKENS_NAME.renCRV]: true,
   [DEPOSIT_TOKENS_NAME["3CRV"]]: true,
-  [DEPOSIT_TOKENS_NAME.steCRV]: true,
-  [DEPOSIT_TOKENS_NAME.UNIV2_ETH_DAI]: false,
+  [DEPOSIT_TOKENS_NAME.steCRV]: true,  [DEPOSIT_TOKENS_NAME.UNIV2_ETH_DAI]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDC]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_USDT]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_ETH_WBTC]: false,
-  [DEPOSIT_TOKENS_NAME.UNIV2_BAC_DAI]: false,
-  [DEPOSIT_TOKENS_NAME.UNIV2_BAS_DAI]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_MTSLA_UST]: true,
   [DEPOSIT_TOKENS_NAME.UNIV2_MAAPL_UST]: true,
   [DEPOSIT_TOKENS_NAME.UNIV2_MQQQ_UST]: true,
@@ -168,6 +166,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: true,
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
 
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
@@ -191,33 +190,29 @@ export const DEPOSIT_TOKENS_LINK = {
   "3CRV": "https://www.curve.fi/3pool/deposit",
   steCRV: "https://www.curve.fi/steth/deposit",
   UNIV2_ETH_DAI:
-    "https://app.uniswap.org/#/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
+    "https://app.uniswap.org/#/add/v2/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
   UNIV2_ETH_USDC:
-    "https://app.uniswap.org/#/add/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/ETH",
+    "https://app.uniswap.org/#/add/v2/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/ETH",
   UNIV2_ETH_USDT:
-    "https://app.uniswap.org/#/add/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "https://app.uniswap.org/#/add/v2/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
   UNIV2_ETH_WBTC:
-    "https://app.uniswap.org/#/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
-  UNIV2_BAC_DAI:
-    "https://app.uniswap.org/#/add/0x3449FC1Cd036255BA1EB19d65fF4BA2b8903A69a/0x6B175474E89094C44Da98b954EedeAC495271d0F",
-  UNIV2_BAS_DAI:
-    "https://app.uniswap.org/#/add/0x106538cc16f938776c7c180186975bca23875287/0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "https://app.uniswap.org/#/add/v2/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
   UNIV2_MIR_UST:
-    "https://app.uniswap.org/#/add/0x09a3ecafa817268f77be1283176b946c4ff2e608/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+    "https://app.uniswap.org/#/add/v2/0x09a3ecafa817268f77be1283176b946c4ff2e608/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
   UNIV2_MTSLA_UST:
-    "https://app.uniswap.org/#/add/0x21cA39943E91d704678F5D00b6616650F066fD63/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+    "https://app.uniswap.org/#/add/v2/0x21cA39943E91d704678F5D00b6616650F066fD63/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
   UNIV2_MAAPL_UST:
-    "https://app.uniswap.org/#/add/0xd36932143F6eBDEDD872D5Fb0651f4B72Fd15a84/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+    "https://app.uniswap.org/#/add/v2/0xd36932143F6eBDEDD872D5Fb0651f4B72Fd15a84/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
   UNIV2_MQQQ_UST:
-    "https://app.uniswap.org/#/add/0x13B02c8dE71680e71F0820c996E4bE43c2F57d15/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+    "https://app.uniswap.org/#/add/v2/0x13B02c8dE71680e71F0820c996E4bE43c2F57d15/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
   UNIV2_MSLV_UST:
-    "https://app.uniswap.org/#/add/0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+    "https://app.uniswap.org/#/add/v2/0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
   UNIV2_MBABA_UST:
-    "https://app.uniswap.org/#/add/0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
+    "https://app.uniswap.org/#/add/v2/0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72/0xa47c8bf37f92aBed4A126BDA807A7b7498661acD",
   UNIV2_FEI_TRIBE:
-    "https://app.uniswap.org/#/add/0x956f47f50a910163d8bf957cf5846d573e7f87ca/0xc7283b66eb1eb5fb86327f08e1b5816b0720212b",
+    "https://app.uniswap.org/#/add/v2/0x956f47f50a910163d8bf957cf5846d573e7f87ca/0xc7283b66eb1eb5fb86327f08e1b5816b0720212b",
   UNIV2_LUSD_ETH:
-    "https://app.uniswap.org/#/add/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/ETH",
+    "https://app.uniswap.org/#/add/v2/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/ETH",
   SUSHI_MIC_USDT:
     "https://exchange.sushiswapclassic.org/#/add/0x368B3a58B5f49392e5C9E4C998cb0bB966752E51/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   SUSHI_MIS_USDT:
@@ -240,6 +235,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
+  SUSHI_CVX_ETH: 
+    "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",  
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
   // Polygon Jars
@@ -269,8 +266,6 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   UNIV2_ETH_USDC: "pJar 0.69b",
   UNIV2_ETH_USDT: "pJar 0.69c",
   UNIV2_ETH_WBTC: "pJar 0.69d",
-  UNIV2_BAC_DAI: "pJar 0.99f",
-  UNIV2_BAS_DAI: "pJar 0.99j",
   SUSHI_MIC_USDT: "pJar 0.99g",
   SUSHI_MIS_USDT: "pJar 0.99h",
   UNIV2_MIR_UST: "pJar 0.99k",
@@ -294,6 +289,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_ETH_YVBOOST: "pJar 0.99y",
   SUSHI_ETH: "pJar 0.99q",
   SUSHI_ETH_ALCX: "pJar 0.99x",
+  SUSHI_CVX_ETH: "pJar 0.99z",
   USDC: "pJar Y-1",
   lusdCRV: "pJar Y-2",
 
@@ -344,6 +340,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xdbdb4d16eda451d0503b854cf79d55697f90c8df": "alcx",
   "0x92bf969865c80eda082fd5d8b4e28da4d58e1c3a": "luna",
   "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a": "yvboost",
+  "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b": "cvx",
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",
   "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619": "eth",
@@ -355,7 +352,6 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xc2132d05d31c914a87c6611c10748aeb04b58e8f": "usdt",
   "0xa3fa99a148fa48d14ed51d610c367c61876997f1": "mimatic",
   "0x580a84c73811e1839f75d86d75d88cca0c241ff4": "qi",
-  "0xaaa5b9e6c589642f98a1cda99b9d024b8407285a": "titan",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

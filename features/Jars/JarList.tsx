@@ -44,7 +44,8 @@ export const JarList: FC = () => {
   const activeJars = jarData.filter(
     (jar) =>
       JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
-  );
+  ).sort((a,b) => b.totalAPY - a.totalAPY);
+  
   const yearnJars = jarData.filter(
     (jar) =>
       JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],

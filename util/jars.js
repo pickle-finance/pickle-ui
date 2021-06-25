@@ -21,6 +21,7 @@ export const sushiJars = [
   "yvBOOST-ETH",
   "SUSHI-ETH",
   "ALCX-ETH",
+  "CVX-ETH"
 ];
 
 export const polyJars = [

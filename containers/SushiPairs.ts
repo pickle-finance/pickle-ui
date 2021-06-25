@@ -24,7 +24,8 @@ const addresses = {
   musdt: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
   matic: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
   mimatic: "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1",
-  wusdc: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
+  wusdc: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+  cvx: "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B"
 };
 
 interface Token {
@@ -68,6 +69,11 @@ const musdt: Token = { address: addresses.musdt, priceId: "usdt", decimals: 18 }
 const matic: Token = { address: addresses.matic, priceId: "matic", decimals: 18 };
 const mimatic: Token = { address: addresses.mimatic, priceId: "mimatic", decimals: 18 };
 const wusdc: Token = { address: addresses.wusdc, priceId: "usdc", decimals: 6}
+const cvx: Token = {
+  address: addresses.cvx,
+  priceId: "cvx",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -87,7 +93,8 @@ export const PAIR_INFO: PairMap = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": { a: weth, b: alcx },
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": { a: mweth, b: musdt },
   "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": { a: mweth, b: matic },
-  "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic }
+  "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic },
+  "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth}
 };
 
 function useSushiPairs() {
