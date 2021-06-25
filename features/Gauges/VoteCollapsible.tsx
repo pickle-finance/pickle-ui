@@ -304,7 +304,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           />
           <div style={{ width: "100%" }}>
             <div style={{ fontSize: `1rem` }}>{poolName}</div>
-            <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
+            <Label style={{ fontSize: `0.85rem` }}>{depositTokenName}</Label>
           </div>
         </Grid>
         <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
@@ -401,13 +401,21 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 onClick={() => {
                   const { tokens, weights } = handleBoost();
                   if (gaugeProxy) {
+			let newWeights = [];
+			let newTokens = [];
+			for( var it = 0; it < weights.length; it++ ) {
+				if( weights[it] !== 0 ) {
+					newWeights.push(weights[it]);
+					newTokens.push(tokens[it]);
+				}
+			}
                     transfer({
                       token: "vote",
                       recipient: gaugeProxy.address,
                       transferCallback: async () => {
                         return gaugeProxy.connect(signer).vote(
-                          tokens,
-                          weights.map((weight) =>
+                          newTokens,
+                          newWeights.map((weight) =>
                             ethers.BigNumber.from((weight * 100).toFixed(0)),
                           ),
                         );

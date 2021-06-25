@@ -178,6 +178,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSUSHICVXETH",
     poolName: "pSUSHICVXETH",
   },
+  "0x65B2532474f717D5A8ba38078B78106D56118bbb": {
+    tokenName: "pLQTY",
+    poolName: "Pickled LQTY"
+  }
 };
 
 function useFarms() {

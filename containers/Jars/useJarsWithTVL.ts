@@ -58,13 +58,16 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_MATIC_ETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_MIMATIC_USDC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_LUSD_ETH ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_CVX_ETH 
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_CVX_ETH
   );
 };
 
 const isAavePool = (jarName: string): boolean => {
   return jarName === DEPOSIT_TOKENS_JAR_NAMES.DAI;
 };
+const isLqtyPool = (jarName: string): boolean => {
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY
+}
 
 export const useJarWithTVL = (jars: Input): Output => {
   const { multicallProvider, chainName } = Connection.useContainer();
@@ -147,6 +150,23 @@ export const useJarWithTVL = (jars: Input): Output => {
     const usdPerPToken = tvlUSD / supply;;
 
     return { ...jar, tvlUSD, usdPerPToken, ratio };
+  };
+
+  const measureLqtyJarTVL = async (jar: JarWithAPY) => {
+    if (!prices)  return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };;
+
+    const [supply, balance, ratio] = (
+      await Promise.all([
+        jar.contract.totalSupply(),
+        jar.contract.balance().catch(() => ethers.BigNumber.from(0)),
+        jar.contract.getRatio().catch(() => ethers.utils.parseEther("1")),
+      ])
+    ).map((x) => parseFloat(formatEther(x)));
+
+    const tvlUSD = balance * prices.lqty;
+    const usdPerPToken = tvlUSD / supply;
+
+    return { ...jar, tvlUSD, usdPerPToken, ratio};
   };
 
   const measureUniJarTVL = async (jar: JarWithAPY) => {
@@ -263,6 +283,8 @@ export const useJarWithTVL = (jars: Input): Output => {
           return measureUniJarTVL(jar);
         } else if (isAavePool(jar.jarName)) {
           return measureAaveTVL(jar);
+        } else if (isLqtyPool(jar.jarName)){
+          return measureLqtyJarTVL(jar)
         }
 
         return {

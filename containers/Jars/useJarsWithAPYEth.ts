@@ -89,7 +89,7 @@ type Output = {
 };
 
 const getCompoundingAPY = (apr: number) => {
-  return 100 * (Math.pow(1 + apr / 365, 365) - 1);
+  return 100 * (Math.pow(1 + (apr / 365), 365) - 1);
 };
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
@@ -224,6 +224,31 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     }
 
     return [];
+  };
+
+  const calculateLqtyStakingAPY = async () => {
+    const body = {
+      operationName: "FindResultDataByResult",
+      query: "query FindResultDataByResult($result_id: uuid!) {\n  query_results(where: {id: {_eq: $result_id}}) {\n    id\n    job_id\n    error\n    runtime\n    generated_at\n    columns\n    __typename\n  }\n  get_result_by_result_id(args: {want_result_id: $result_id}) {\n    data\n    __typename\n  }\n}\n",
+      variables: { result_id: "90b9cec0-c576-4f87-b5e3-770ceaa99e45" }
+    };
+    const res = await fetch(
+      "https://core-hsr.duneanalytics.com/v1/graphql",
+      {
+        body: JSON.stringify(body),
+        method: "POST",
+        mode: "cors",
+      },
+    ).then((x) => x.json());
+
+    let lqtyApy = 0;
+    if (res) {
+      lqtyApy = (res?.data?.get_result_by_result_id[0].data?.apr) / 100;
+    }
+
+    return [
+      { "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8), apr: lqtyApy * 0.8 * 100 },
+    ];
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
@@ -545,6 +570,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         mirrorMbabaUstApy,
         feiTribeApy,
         lqtyEthLusdApy,
+        lqtyApy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
@@ -554,6 +580,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
         calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
+        calculateLqtyStakingAPY(),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -777,6 +804,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
             ),
           ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY) {
+          APYs = [...lqtyApy];
         }
 
         let apr = 0;

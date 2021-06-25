@@ -124,6 +124,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
+  "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D": "/liquity.png",
 
   // Polygon Jars
 
@@ -147,7 +148,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x160532d2536175d65c03b97b0630a9802c274dad": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
   )
-  
+   
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
