@@ -113,6 +113,12 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
+
+  const balanceStr = balanceNum.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: balanceNum < 1 ? 8 : 2,
+  });
+
   const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
     depositToken,
     0,
@@ -128,11 +134,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   );
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: bal < 1 ? 18 : 4,
+    maximumFractionDigits: bal < 1 ? 8 : 2,
   });
   const stakedStr = stakedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 18 : 4,
+    maximumFractionDigits: stakedNum < 1 ? 8 : 2,
   });
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
@@ -334,19 +340,19 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
               <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
-          <Grid xs={24} sm={6} md={3} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={balanceNum === 0}>{balanceStr}</Data>
+            <Label>Wallet Balance</Label>
+          </Grid>
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Data isZero={stakedNum === 0}>{stakedStr}</Data>
-            <Label>Staked</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
-            <Label>Value Staked</Label>
+            <Label>Deposit Value</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Tooltip

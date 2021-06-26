@@ -248,11 +248,14 @@ export const JarGaugeCollapsible: FC<{
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  
+  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
+    undefined,
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
+  );
+
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
@@ -292,9 +295,8 @@ export const JarGaugeCollapsible: FC<{
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [tvlData, setTVLData] = useState();
-  const [isExitBatch, setIsExitBatch] = useState<Boolean>(false)
-  const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false)
-
+  const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
+  const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -323,7 +325,7 @@ export const JarGaugeCollapsible: FC<{
 
   const stakedStr = stakedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 8 : 4,
+    maximumFractionDigits: stakedNum < 1 ? 8 : 2,
   });
 
   const harvestableStr = parseFloat(
@@ -332,16 +334,14 @@ export const JarGaugeCollapsible: FC<{
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 8 : 2,
   });
-  
+
   const balanceNum = parseFloat(
-    formatEther(
-      isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
-    ),
+    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
 
   const balanceStr = balanceNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balanceNum < 1 ? 6 : 4,
+    maximumFractionDigits: balanceNum < 1 ? 8 : 2,
   });
 
   const [stakeAmount, setStakeAmount] = useState("");
@@ -360,15 +360,13 @@ export const JarGaugeCollapsible: FC<{
     text: "Harvest",
   });
 
-  const [depositStakeButton, setDepositStakeButton] = useState<ButtonStatus>({
-    disabled: false,
-    text: "Deposit and Stake",
-  });
+  const [depositStakeButton, setDepositStakeButton] = useState<string | null>(
+    null,
+  );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
-
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -397,8 +395,8 @@ export const JarGaugeCollapsible: FC<{
   const depositAndStake = async () => {
     if (balNum) {
       try {
-        setIsEntryBatch(true)
-        await setDepositStakeButton(depositButton);
+        setIsEntryBatch(true);
+        setDepositStakeButton("Depositing...");
         await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
@@ -408,14 +406,23 @@ export const JarGaugeCollapsible: FC<{
               .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
           },
         });
-        await setDepositStakeButton(stakeButton);
-        await gauge.deposit(
-          isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : gaugeBalance,
-        );
-        setIsEntryBatch(false)
+        if(!approved) {
+          setDepositStakeButton("Approving...");
+          const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
+          const tx = await Token.approve(
+            gaugeData.address,
+            ethers.constants.MaxUint256,
+          );
+          await tx.wait();
+        }
+        setDepositStakeButton("Staking...");
+        const gaugeTx = await gauge.depositAll();
+        await gaugeTx.wait();
+        setDepositStakeButton(null);
+        setIsEntryBatch(false);
       } catch (error) {
         console.error(error);
-        setIsEntryBatch(false)
+        setIsEntryBatch(false);
         return;
       }
     }
@@ -424,19 +431,19 @@ export const JarGaugeCollapsible: FC<{
   const exit = async () => {
     if (stakedNum) {
       try {
-        setIsExitBatch(true)
+        setIsExitBatch(true);
         setExitButton("Unstaking from Farm...");
         const exitTx = await gauge.exit();
         await exitTx.wait();
         setExitButton("Withdrawing from Jar...");
-        const withdrawTx = await jarContract.connect(signer).withdrawAll()
+        const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
         setExitButton(null);
-        setIsExitBatch(false)
+        setIsExitBatch(false);
       } catch (error) {
         console.error(error);
         setExitButton(null);
-        setIsExitBatch(false)
+        setIsExitBatch(false);
         return;
       }
     }
@@ -597,12 +604,10 @@ export const JarGaugeCollapsible: FC<{
             <Label>Earned</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-              <>
-                <Data isZero={+valueStr == 0}>
-                  ${valueStr}
-                </Data>
-                <Label>Deposit Value</Label>
-              </>
+            <>
+              <Data isZero={+valueStr == 0}>${valueStr}</Data>
+              <Label>Deposit Value</Label>
+            </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
             {!gaugeData ? (
@@ -681,7 +686,7 @@ export const JarGaugeCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={depositedNum ? 12 : 24}>
+        <Grid xs={24} md={depositedNum && !isEntryBatch ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance: {balStr} {depositTokenName}
@@ -742,15 +747,15 @@ export const JarGaugeCollapsible: FC<{
             <Grid xs={24} md={12}>
               <Button
                 onClick={depositAndStake}
-                disabled={depositButton.disabled || isDisabledJar}
+                disabled={Boolean(depositStakeButton) || isDisabledJar}
                 style={{ width: "100%" }}
               >
-                {depositStakeButton.text || "Deposit and Stake"}
+                {depositStakeButton || "Deposit and Stake"}
               </Button>
             </Grid>
           </Grid.Container>
         </Grid>
-        {depositedNum !== 0 && (
+        {depositedNum !== 0 && !isEntryBatch && (
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
@@ -824,9 +829,12 @@ export const JarGaugeCollapsible: FC<{
       <Spacer y={1} />
       {Boolean(depositedNum || stakedNum) && (
         <Grid.Container gap={2}>
-          {(depositedNum && !isExitBatch && !isEntryBatch) && (
-            <Grid xs={24} md={depositedNum && !stakedNum ? 24 : 12}>
-              <Spacer y={0.5} />
+          {depositedNum && !isExitBatch && !isEntryBatch && (
+            <Grid
+              xs={24}
+              md={(depositedNum && !stakedNum) || isEntryBatch ? 24 : 12}
+            >
+              <Spacer y={1.2} />
               <Button
                 disabled={stakeButton.disabled || isyveCRVFarm}
                 onClick={() => {
@@ -850,8 +858,7 @@ export const JarGaugeCollapsible: FC<{
               </Button>
             </Grid>
           )}
-
-          {Boolean(!depositedNum && stakedNum) && (
+          {Boolean(stakedNum) && (
             <Grid xs={24} md={!depositedNum && stakedNum ? 24 : 12}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
@@ -881,7 +888,7 @@ export const JarGaugeCollapsible: FC<{
           )}
         </Grid.Container>
       )}
-      {Boolean(stakedNum || isExitBatch) && (
+      {Boolean(stakedNum) && (
         <>
           <Spacer y={0.5} />
           <Grid.Container gap={2}>
@@ -931,8 +938,12 @@ export const JarGaugeCollapsible: FC<{
               </Button>
             </Grid>
           </Grid.Container>
-          <Spacer y={0.5} />
-          <Grid.Container gap={2}>
+        </>
+      )}
+      <Spacer y={0.5} />
+      <Grid.Container gap={2}>
+        {Boolean(stakedNum || isExitBatch) && (
+          <>
             <Grid xs={24} md={24}>
               <Button
                 disabled={exitButton || isExitBatch}
@@ -942,50 +953,50 @@ export const JarGaugeCollapsible: FC<{
                 {exitButton || "Harvest and Exit"}
               </Button>
             </Grid>
-            {isyveCRVFarm && (
-              <Grid xs={24}>
-                <Button
-                  disabled={yvMigrateState !== null}
-                  onClick={handleYvboostMigrate}
-                  style={{ width: "100%", textTransform: "none" }}
-                >
-                  {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
-                </Button>
-                <div
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    fontFamily: "Source Sans Pro",
-                    fontSize: "1rem",
-                  }}
-                >
-                  Your tokens will be unstaked and migrated to the yvBOOST pJar
-                  and staked in the Farm.
-                  <br />
-                  This process will require a number of transactions.
-                  <br />
-                  Learn more about yvBOOST{" "}
-                  <a
-                    target="_"
-                    href="https://twitter.com/iearnfinance/status/1388131568481411077"
-                  >
+          </>
+        )}
+        {isyveCRVFarm && (
+          <Grid xs={24}>
+            <Button
+              disabled={yvMigrateState !== null}
+              onClick={handleYvboostMigrate}
+              style={{ width: "100%", textTransform: "none" }}
+            >
+              {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "Source Sans Pro",
+                fontSize: "1rem",
+              }}
+            >
+              Your tokens will be unstaked and migrated to the yvBOOST pJar and
+              staked in the Farm.
+              <br />
+              This process will require a number of transactions.
+              <br />
+              Learn more about yvBOOST{" "}
+              <a
+                target="_"
+                href="https://twitter.com/iearnfinance/status/1388131568481411077"
+              >
+                here
+              </a>
+              .
+              {isSuccess ? (
+                <p style={{ fontWeight: "bold" }}>
+                  Migration completed! See your deposits{" "}
+                  <Link color href="/farms">
                     here
-                  </a>
-                  .
-                  {isSuccess ? (
-                    <p style={{ fontWeight: "bold" }}>
-                      Migration completed! See your deposits{" "}
-                      <Link color href="/farms">
-                        here
-                      </Link>
-                    </p>
-                  ) : null}
-                </div>
-              </Grid>
-            )}
-          </Grid.Container>
-        </>
-      )}
+                  </Link>
+                </p>
+              ) : null}
+            </div>
+          </Grid>
+        )}
+      </Grid.Container>
     </Collapse>
   );
 };
