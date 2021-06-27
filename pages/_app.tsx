@@ -12,7 +12,7 @@ import { geistTheme } from "../styles/geistTheme";
 import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
 import { Connection } from "../containers/Connection";
-import { Contracts as EthereumContracts } from "../containers/Contracts";
+import { Contracts } from "../containers/Contracts";
 import { Prices } from "../containers/Prices";
 import { Pickles, MiniPickles } from "../containers/Pickles";
 import { PickleStaking } from "../containers/PickleStaking";
@@ -38,7 +38,7 @@ const getLibrary = (provider: any) => {
 const WithContainers: FC = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <Connection.Provider>
-      <EthereumContracts.Provider>
+      <Contracts.Provider>
         <Balances.Provider>
           <ERC20Transfer.Provider>
             <Prices.Provider>
@@ -76,7 +76,7 @@ const WithContainers: FC = ({ children }) => (
             </Prices.Provider>
           </ERC20Transfer.Provider>
         </Balances.Provider>
-      </EthereumContracts.Provider>
+      </Contracts.Provider>
     </Connection.Provider>
   </Web3ReactProvider>
 );

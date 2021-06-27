@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Connection } from "./Connection";
 import { ethers, Contract } from "ethers";
+import { Contracts } from "./Contracts";
 import erc20 from "@studydefi/money-legos/erc20";
 
 interface TokenBalances {
@@ -15,11 +16,7 @@ function useBalances() {
     blockNum,
     multicallProvider,
   } = Connection.useContainer();
-  const erc20Contract = new Contract(
-    ethers.constants.AddressZero,
-    erc20.abi,
-    multicallProvider,
-  );
+  const {erc20} = Contracts.useContainer();
 
   const [tokenBalances, setTokenBalances] = useState<TokenBalances>({});
   const [tokenAddresses, setTokenAddresses] = useState<Array<string>>([]);
@@ -28,11 +25,7 @@ function useBalances() {
     if (erc20 && address && multicallProvider) {
       const balances = await Promise.all(
         tokenAddresses.map((x) => {
-          const c = new Contract(
-            x,
-            erc20Contract.interface.fragments,
-            multicallProvider,
-          );
+          const c = erc20.attach(x)
           return c.balanceOf(address);
         }),
       );
