@@ -31,6 +31,8 @@ import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
 import { NETWORK_NAMES, ChainName } from "containers/config";
 import erc20 from "@studydefi/money-legos/erc20";
+import { Controller } from "containers/Contracts/Controller";
+import { Strategy } from "containers/Contracts/Strategy";
 
 const AVERAGE_BLOCK_TIME = 2;
 export interface JarApy {
@@ -255,10 +257,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
   
   const calculateMasterChefAPY = async (jar: Jar | undefined) => {
-    if (prices && multicallProvider && jar) {
-      const masterchefAddress = await jar.strategy.masterChef()
-      const poolId = await jar.strategy.poolId()
-      const rewardTokenAddress = await jar.strategy.rewardToken()
+    if (prices && multicallProvider && jar && controller && strategy) {
+      const jarStrategy = await controller.strategies(jar.depositToken.address)
+      const strategyContract = await strategy.attach(jarStrategy)
+      const masterchefAddress = await strategyContract.masterChef()
+      const poolId = await strategyContract.poolId()
+      const rewardTokenAddress = await strategyContract.rewardToken()
       const multicallMasterchef = new Contract(
         masterchefAddress,
         MasterchefAbi,
