@@ -147,12 +147,12 @@ export const useJarWithTVL = (jars: Input): Output => {
 
     const tvlUSD = balance * virtualPrice * pricePerUnderlying;
 
-    const usdPerPToken = tvlUSD / supply;;
+    const usdPerPToken = tvlUSD / supply;
     return { ...jar, tvlUSD, usdPerPToken, ratio };
   };
 
   const measureLqtyJarTVL = async (jar: JarWithAPY) => {
-    if (!prices)  return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };;
+    if (!prices)  return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
 
     const [supply, balance, ratio] = (
       await Promise.all([
@@ -174,7 +174,6 @@ export const useJarWithTVL = (jars: Input): Output => {
 
     const uniPair = uniswapv2Pair
       .attach(jar.depositToken.address)
-      .connect(multicallProvider);
 
     const [
       supply,
