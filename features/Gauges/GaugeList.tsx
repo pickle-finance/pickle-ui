@@ -103,8 +103,6 @@ export const GaugeList: FC = () => {
   });
 
   const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS.pUNIBACDAI ||
-    depositToken === PICKLE_JARS.pUNIBASDAI ||
     depositToken === PICKLE_JARS.pUNIETHLUSD;
 
   const activeGauges = gaugesWithAPY

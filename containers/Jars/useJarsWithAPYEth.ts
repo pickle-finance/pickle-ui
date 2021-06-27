@@ -14,9 +14,7 @@ import {
   UNI_ETH_WBTC_STAKING_REWARDS,
   SCRV_STAKING_REWARDS,
   Contracts,
-  MITH_MIC_USDT_STAKING_REWARDS,
   STECRV_STAKING_REWARDS,
-  MITH_MIS_USDT_STAKING_REWARDS,
   LQTY_LUSD_ETH_STAKING_REWARDS,
   MIRROR_MIR_UST_STAKING_REWARDS,
   MIRROR_MTSLA_UST_STAKING_REWARDS,
@@ -154,44 +152,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     null,
   );
   const [tvlData, setTVLData] = useState<Array<Object>>([]);
-
-  const calculateMithAPY = async (rewardsAddress: string) => {
-    if (
-      stakingRewards &&
-      prices?.mis &&
-      getSushiPairData &&
-      multicallProvider
-    ) {
-      const multicallUniStakingRewards = new Contract(
-        rewardsAddress,
-        stakingRewards.interface.fragments,
-        multicallProvider,
-      );
-
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
-        multicallUniStakingRewards.rewardRate(),
-        multicallUniStakingRewards.lpt(),
-        multicallUniStakingRewards.totalSupply(),
-      ]);
-
-      const totalSupply = parseFloat(formatEther(totalSupplyBN));
-      const misRewardRate = parseFloat(formatEther(rewardRateBN));
-
-      const { pricePerToken } = await getSushiPairData(stakingToken);
-
-      const misRewardsPerYear = misRewardRate * (360 * 24 * 60 * 60);
-      const valueRewardedPerYear = prices.mis * misRewardsPerYear;
-
-      const totalValueStaked = totalSupply * pricePerToken;
-      const misAPY = valueRewardedPerYear / totalValueStaked;
-
-      return [
-        { mis: getCompoundingAPY(misAPY * 0.8), apr: misAPY * 0.8 * 100 },
-      ];
-    }
-
-    return [];
-  };
 
   const calculateMirAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
@@ -528,8 +488,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ]);
 
       const [
-        mithMicUsdtApy,
-        mithMisUsdtApy,
         sushiEthyveCRVApy,
         sushiEthyvboostApy,
         alcxEthAlcxApy,
@@ -538,8 +496,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         cvxEthApy,
         sushiCvxEthApy,
       ] = await Promise.all([
-        calculateMithAPY(MITH_MIC_USDT_STAKING_REWARDS),
-        calculateMithAPY(MITH_MIS_USDT_STAKING_REWARDS),
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
         ),
@@ -682,24 +638,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...lqtyEthLusdApy,
             ...getUniPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_LUSD_ETH,
-            ),
-          ];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIC_USDT) {
-          APYs = [
-            ...mithMicUsdtApy,
-            ...getSushiPairDayAPY(
-              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_MIC_USDT,
-            ),
-          ];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIS_USDT) {
-          APYs = [
-            ...mithMisUsdtApy,
-            ...getSushiPairDayAPY(
-              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_MIS_USDT,
             ),
           ];
         }

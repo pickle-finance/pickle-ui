@@ -57,20 +57,13 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           return multicallController.jars(t.value);
         }),
       );
-
-      const strategyAddresses = await Promise.all(
-        tokenKV.map((t) => {
-          return multicallController.strategies(t.value);
-        }),
-      );
-
+      
       const jarData = tokenKV
         .map((kv, idx) => {
           return {
             [kv.key]: {
               tokenAddress: kv.value,
               jarAddress: jarAddresses[idx],
-              strategyAddress: strategyAddresses[idx],
             },
           };
         })
@@ -80,12 +73,11 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
       const newJars = await Promise.all(
         Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(async ([k, tokenAddress]) => {
-          const { jarAddress, strategyAddress } = jarData[k];
+          const { jarAddress } = jarData[k];
           return {
             depositToken: Erc20Factory.connect(tokenAddress, multicallProvider),
             depositTokenName:
               DEPOSIT_TOKENS_NAME[k as keyof typeof DEPOSIT_TOKENS_NAME],
-            strategy: strategy.attach(strategyAddress),
             jarName:
               DEPOSIT_TOKENS_JAR_NAMES[
                 k as keyof typeof DEPOSIT_TOKENS_JAR_NAMES

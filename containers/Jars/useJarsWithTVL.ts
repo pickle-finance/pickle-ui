@@ -148,7 +148,6 @@ export const useJarWithTVL = (jars: Input): Output => {
     const tvlUSD = balance * virtualPrice * pricePerUnderlying;
 
     const usdPerPToken = tvlUSD / supply;;
-
     return { ...jar, tvlUSD, usdPerPToken, ratio };
   };
 
@@ -165,7 +164,6 @@ export const useJarWithTVL = (jars: Input): Output => {
 
     const tvlUSD = balance * prices.lqty;
     const usdPerPToken = tvlUSD / supply;
-
     return { ...jar, tvlUSD, usdPerPToken, ratio};
   };
 
@@ -238,7 +236,6 @@ export const useJarWithTVL = (jars: Input): Output => {
     }
 
     const usdPerPToken = tvlUSD / parseFloat(formatEther(supply));
-
     return {
       ...jar,
       tvlUSD,

@@ -3,8 +3,6 @@ import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 import { Connection } from "./Connection";
 
-import { BasisStaking } from "./Contracts/BasisStaking";
-import { BasisStaking__factory as BasisStakingFactory } from "./Contracts/factories/BasisStaking__factory";
 import { Comptroller } from "./Contracts/Comptroller";
 import { Comptroller__factory as ComptrollerFactory } from "./Contracts/factories/Comptroller__factory";
 import { Controller } from "./Contracts/Controller";
@@ -122,19 +120,6 @@ export const UNI_ETH_USDT_STAKING_REWARDS =
   "0x6c3e4cb2e96b01f4b866965a91ed4437839a121a";
 export const UNI_ETH_WBTC_STAKING_REWARDS =
   "0xCA35e32e7926b96A9988f61d510E038108d8068e";
-export const MITH_MIC_USDT_STAKING_REWARDS =
-  "0x9D9418803F042CCd7647209b0fFd617981D5c619";
-export const MITH_MIS_USDT_STAKING_REWARDS =
-  "0x14E33e1D6Cc4D83D7476492C0A52b3d4F869d892";
-export const BASIS_BAC_DAI_V1_STAKING_REWARDS =
-  "0x067d4D3CE63450E74F880F86b5b52ea3edF9Db0f";
-export const BASIS_BAC_DAI_STAKING_REWARDS =
-  "0x7E7aE8923876955d6Dcb7285c04065A1B9d6ED8c";
-export const BASIS_BAS_DAI_STAKING_REWARDS =
-  "0x5859Adb05988946B9d08dcE2E12ae29af58120C0";
-export const BASIS_BAC_DAI_PID = 0;
-export const BASIS_BAS_DAI_PID = 1;
-
 export const MIRROR_MIR_UST_STAKING_REWARDS =
   "0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF";
 
@@ -218,7 +203,6 @@ function useContracts() {
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
   );
-  const [basisStaking, setBasisStaking] = useState<BasisStaking | null>(null);
   const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
     null,
   );
@@ -291,12 +275,6 @@ function useContracts() {
 
       setStakingRewards(
         StakingRewardsFactory.connect(
-          ethers.constants.AddressZero,
-          providerOrSigner,
-        ),
-      );
-      setBasisStaking(
-        BasisStakingFactory.connect(
           ethers.constants.AddressZero,
           providerOrSigner,
         ),
@@ -392,7 +370,6 @@ function useContracts() {
     curveProxyLogic,
     instabrine,
     sushiChef,
-    basisStaking,
     dill,
     gaugeProxy,
     gauge,

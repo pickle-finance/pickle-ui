@@ -114,18 +114,6 @@ export const FARM_LP_TO_ICON = {
   "0x3261D9408604CC8607b687980D40135aFA26FfED": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
   ),
-  "0x2350fc7268F3f5a6cC31f26c38f706E41547505d": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bac.png"} />
-  ),
-  "0x748712686a78737DA0b7643DF78Fdf2778dC5944": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/bas.svg"} />
-  ),
-  "0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mic.png"} />
-  ),
-  "0x0FAA189afE8aE97dE1d2F01E471297678842146d": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
-  ),
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
   ),
@@ -269,10 +257,6 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
 
-  const isDisabledFarm =
-    depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pUNIBACDAI.toLowerCase() ||
-    depositToken.address.toLowerCase() === PICKLE_JARS.pUNIBASDAI;
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -362,52 +346,13 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           </div>
         </>
       );
-      // Basis Cash claim
-    } else if (isDisabledFarm) {
-      return (
-        <>
-          <Button
-            disabled={harvestButton.disabled}
-            onClick={() => {
-              if (masterchef && signer) {
-                transfer({
-                  token: masterchef.address,
-                  recipient: masterchef.address + poolIndex.toString(), // Doesn't matter since we don't need approval
-                  approval: false,
-                  transferCallback: async () => {
-                    return masterchef.connect(signer).withdraw(poolIndex, 0);
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {harvestButton.text}
-          </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              fontFamily: "Source Sans Pro",
-              fontSize: "1rem",
-            }}
-          >
-            Please harvest your earned PICKLEs. The Basis Cash Jars/Farms are no
-            longer operating. <br />
-            Claim your Uniswap LP tokens according to the instructions{" "}
-            <a href="https://twitter.com/picklefinance/status/1386942926983372800">
-              here
-            </a>
-          </div>
-        </>
-      );
     }
     // Migration to Gauges for Mainnet
     else {
       return (
         <>
           <Button
-            disabled={migrateState !== null || isDisabledFarm}
+            disabled={migrateState !== null}
             onClick={handleMigrate}
             style={{ width: "100%" }}
           >
@@ -531,7 +476,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled || isDisabledFarm}
+            disabled={stakeButton.disabled}
             onClick={() => {
               if (masterchef && signer) {
                 transfer({
@@ -573,7 +518,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={unstakeButton.disabled || isDisabledFarm}
+            disabled={unstakeButton.disabled}
             onClick={() => {
               if (masterchef && signer) {
                 transfer({

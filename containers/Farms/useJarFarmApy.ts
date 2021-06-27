@@ -47,11 +47,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           );
         }
 
-        return new Contract(
-          farmingJar.contract.address,
-          farmingJar.contract.interface.fragments,
-          provider,
-        );
+        return farmingJar.contract
       });
 
       
