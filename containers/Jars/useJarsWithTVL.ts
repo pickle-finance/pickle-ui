@@ -32,7 +32,7 @@ export const useJarWithTVL = (jars: Input): Output => {
         return {
           ...jar,
           tvlUSD: poolInfo[0]?.liquidity_locked,
-          usdPerPToken: poolInfo[0]?.liquidity_locked / poolInfo[0]?.tokens,
+          usdPerPToken: (poolInfo[0]?.liquidity_locked * poolInfo[0]?.ratio)/ poolInfo[0]?.tokens,
           ratio: poolInfo[0]?.ratio,
         };
       });
