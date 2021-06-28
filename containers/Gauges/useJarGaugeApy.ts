@@ -10,10 +10,7 @@ import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
-import retry from "async-retry";
-
-import mlErc20 from "@studydefi/money-legos/erc20";
-import { retryOptions, timeout } from "util/api";
+import { getFarmData } from "../../util/api"
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;
@@ -25,35 +22,16 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
-  const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
-  const [calculating, setCalculating] = useState(false);
+  const [farmData, setFarmData] = useState<any | null>(null);
 
-  console.log({ calculating });
+  const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
+
   const calculateApy = async (): Promise<void> => {
-    if (!inputGauges || !masterchef || !prices || !multicallProvider || !jars || calculating) {
+    if (!inputGauges || !masterchef || !prices || !multicallProvider || !jars || !farmData ) {
       return;
     }
-    setCalculating(true);
     const jarGauges = inputGauges.filter((gauge) => JAR_GAUGE_MAP[gauge.token]);
-    const contracts = jarGauges.map((gauge) => {
-      const { jarName } = JAR_GAUGE_MAP[gauge.token];
-      const gaugeingJar = jars.filter((x) => x.jarName === jarName)[0];
-      if (!gaugeingJar) {
-        return new Contract(
-          mlErc20.dai.address,
-          mlErc20.abi,
-          multicallProvider,
-        );
-      }
-      return new Contract(
-        gaugeingJar.contract.address,
-        gaugeingJar.contract.interface.fragments,
-        multicallProvider,
-      );
-    });
 
-    const remain = new Set(contracts.map(contract => contract.address));
-    const gaugeBalances: BigNumber[] = await Promise.all(contracts.map(async (contract) => retry(async () => timeout(() => contract.totalSupply(), 3000))));
     const res = jarGauges.map((gauge, idx) => {
       const { jarName } = JAR_GAUGE_MAP[gauge.token];
       const gaugeingJar = jars.filter((x) => x.jarName === jarName)[0];
@@ -69,16 +47,11 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         };
       }
 
-      const gaugeBalance = gaugeBalances[idx];
-      const numTokensInPool = parseFloat(
-        ethers.utils.formatEther(gaugeBalance),
-      );
-
+      const farmInfo = Object.values(farmData).filter(farm => farm.address === gauge.token)
       // calculate APY
       const isUsdc =
         gauge.token.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
-      const valueStakedInGauge =
-        (gaugeingJar.usdPerPToken || 0) * numTokensInPool;
+      const valueStakedInGauge = farmInfo.valueBalance
       const fullApy = gaugeingJar.usdPerPToken
         ? (gauge.rewardRatePerYear * prices.pickle) / (gaugeingJar.usdPerPToken  * (isUsdc ? 1e12 : 1))
         : 0;
@@ -88,15 +61,16 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         usdPerToken: gaugeingJar.usdPerPToken || 0,
         totalValue: gaugeingJar.tvlUSD || 0,
         valueStakedInGauge,
-        numTokensInPool,
+        numTokensInPool: farmInfo.tokenBalance,
       };
     });
 
     setGauges(res);
-    setCalculating(false);
   };
 
   useEffect(() => {
+    const fetchFarmData = async () => setFarmData(await getFarmData())
+    if(!farmData) fetchFarmData() 
     calculateApy();
   }, [inputGauges]);
 

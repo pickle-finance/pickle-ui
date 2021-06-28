@@ -26,6 +26,8 @@ function useGauges() {
     };
   });
 
+  if(rawGauges && jarGaugeWithApy && gaugesWithReward) console.log(`Farms successfully (re)loaded, Farm count: ${jarGaugeWithApy.length + 1}`)
+ 
   const jarGauges = jarGaugeWithApy?.map((gauge) => {
     const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {
