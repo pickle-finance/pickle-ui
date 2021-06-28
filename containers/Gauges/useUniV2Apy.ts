@@ -90,7 +90,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
         const valueStakedInGauge = pricePerToken * numTokensInPool;
         const fullApy =
           (gauge.rewardRatePerYear * prices.pickle) / pricePerToken;
-
+       
         return {
           ...gauge,
           fullApy,

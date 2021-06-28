@@ -87,6 +87,12 @@ export const getUserEarnings = async (userId) => {
   );
 };
 
+export const getPoolData = async () => {
+  return await fetch(`${pickleApi}/protocol/pools`).then((response) =>
+    response.json(),
+  );
+};
+
 export const getProtocolData = async () => {
   return await fetch(
     `${pickleApi}/protocol/value?tokens=true`,
