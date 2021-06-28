@@ -2,7 +2,12 @@ import { DEPOSIT_TOKENS_JAR_NAMES } from "../Jars/jars";
 
 export const PICKLE_ETH_FARM = "0xdc98556ce24f007a5ef6dc1ce96322d65832a819";
 
-export const JAR_FARM_MAP = {
+export interface FarmMap {
+  [contract: string]: {
+    jarName: string;
+  };
+}
+export const JAR_FARM_MAP: FarmMap  = {
   "0xf79Ae82DCcb71ca3042485c85588a3E0C395D55b": {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI_OLD,
   },

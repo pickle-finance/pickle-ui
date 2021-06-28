@@ -121,6 +121,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
     <Select.Option
+      key={gauge.address}
       style={{ color: pickleWhite }}
       value={gauge.depositTokenName}
     >
