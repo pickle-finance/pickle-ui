@@ -1,11 +1,9 @@
 import { createContainer } from "unstated-next";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
-
-import { Contract as MulticallContract } from "ethers-multicall";
 
 const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
@@ -22,6 +20,11 @@ const addresses = {
   sushi: "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
   yvboost: "0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a",
   alcx: "0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
+  mweth: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+  musdt: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+  matic: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+  mimatic: "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1",
+  wusdc: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
   cvx: "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B"
 };
 
@@ -61,6 +64,11 @@ const alcx: Token = {
   priceId: "alcx",
   decimals: 18,
 };
+const mweth: Token = { address: addresses.mweth, priceId: "eth", decimals: 18 };
+const musdt: Token = { address: addresses.musdt, priceId: "usdt", decimals: 18 };
+const matic: Token = { address: addresses.matic, priceId: "matic", decimals: 18 };
+const mimatic: Token = { address: addresses.mimatic, priceId: "mimatic", decimals: 18 };
+const wusdc: Token = { address: addresses.wusdc, priceId: "usdc", decimals: 6}
 const cvx: Token = {
   address: addresses.cvx,
   priceId: "cvx",
@@ -83,6 +91,9 @@ export const PAIR_INFO: PairMap = {
   "0x795065dCc9f64b5614C407a6EFDC400DA6221FB0": { a: sushi, b: weth },
   "0x9461173740D27311b176476FA27e94C681b1Ea6b": { a: weth, b: yvboost },
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": { a: weth, b: alcx },
+  "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": { a: mweth, b: musdt },
+  "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": { a: mweth, b: matic },
+  "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic },
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth}
 };
 
@@ -97,15 +108,11 @@ function useSushiPairs() {
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new MulticallContract(a.address, erc20.abi);
-    const tokenB = new MulticallContract(b.address, erc20.abi);
-    const pair = new MulticallContract(pairAddress, erc20.abi);
+    const tokenA = new Contract(a.address, erc20.abi, multicallProvider);
+    const tokenB = new Contract(b.address, erc20.abi, multicallProvider);
+    const pair = new Contract(pairAddress, erc20.abi, multicallProvider);
 
-    const [
-      numAInPairBN,
-      numBInPairBN,
-      totalSupplyBN,
-    ] = await multicallProvider?.all([
+    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
       tokenA.balanceOf(pairAddress),
       tokenB.balanceOf(pairAddress),
       pair.totalSupply(),

@@ -2,15 +2,24 @@ import { useEffect } from "react";
 import { createContainer } from "unstated-next";
 
 import { Balances } from "./Balances";
+import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
-import { useJarWithAPY } from "./Jars/useJarsWithAPY";
+import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
+import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
+
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 
 function useJars() {
+  const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
-  const { jarsWithAPY } = useJarWithAPY(rawJars);
-  const { jarsWithTVL } = useJarWithTVL(jarsWithAPY);
+  const { jarsWithAPY: jarsWithAPYEth } = useJarsWithAPYEth(chainName, rawJars);
+  const { jarsWithAPY: jarsWithAPYPoly } = useJarsWithAPYPoly(
+    chainName,
+    rawJars,
+  );
+  const { jarsWithTVL } = useJarWithTVL(jarsWithAPYEth || jarsWithAPYPoly);
 
+  if(jarsWithTVL) console.log(`Jars successfully (re)loaded, Jar count: ${jarsWithTVL.length}`)
   const { addTokens } = Balances.useContainer();
 
   // Automatically update balance here

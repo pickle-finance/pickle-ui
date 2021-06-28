@@ -2,6 +2,8 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Card, Grid } from "@geist-ui/react";
 import { Prices as PricesContainer } from "../../containers/Prices";
+import { NETWORK_NAMES } from "containers/config";
+import { Connection } from "containers/Connection";
 
 const DataPoint = styled.div`
   font-size: 24px;
@@ -58,11 +60,12 @@ const CoinIcon = ({ src }: { src: string }) => (
 
 export const Prices: FC = () => {
   const { prices } = PricesContainer.useContainer();
+  const { chainName} = Connection.useContainer()
   return (
     <Card style={{ height: "169px" }}>
       <Card.Content>
         <TradeButton
-          href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5&use=V2"
+          href={chainName === NETWORK_NAMES.POLY ? "https://swap.cometh.io/#/swap?inputCurrency=0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f&outputCurrency=0x2b88ad57897a8b496595925f43048301c37615da" : "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5"}
           target="_blank"
           rel="noopener noreferrer"
         >

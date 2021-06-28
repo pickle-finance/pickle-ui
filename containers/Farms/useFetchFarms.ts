@@ -1,22 +1,27 @@
 import { useState, useEffect } from "react";
-import { BigNumber } from "ethers";
+import { BigNumber, Contract } from "ethers";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
-
-import { Contract as MulticallContract } from "ethers-multicall";
+import { NETWORK_NAMES } from "containers/config";
+import { X } from "@geist-ui/react-icons";
 
 export interface RawFarm {
   lpToken: string;
   poolIndex: number;
   allocPoint: BigNumber;
-  lastRewardBlock: BigNumber;
+  lastRewardTime: BigNumber;
   accPicklePerShare: BigNumber;
 }
 
 export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
-  const { blockNum, multicallProvider } = Connection.useContainer();
-  const { masterchef } = Contracts.useContainer();
+  const { blockNum, multicallProvider, chainName } = Connection.useContainer();
+  const {
+    masterchef: masterchefContract,
+    minichef: minichefContract,
+  } = Contracts.useContainer();
+  const masterchef =
+    chainName === NETWORK_NAMES.POLY ? minichefContract : masterchefContract;
 
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 
@@ -25,12 +30,13 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
       const poolLengthBN = (await masterchef.poolLength()) as BigNumber;
       const poolLength = parseInt(poolLengthBN.toString());
 
-      const mcMasterchef = new MulticallContract(
+      const mcMasterchef = new Contract(
         masterchef.address,
         masterchef.interface.fragments,
+        multicallProvider,
       );
 
-      const farmInfo = await multicallProvider.all(
+      let farmInfo = await Promise.all(
         Array(parseInt(poolLength.toString()))
           .fill(0)
           .map((_, poolIndex) => {
@@ -38,6 +44,17 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
           }),
       );
 
+      if (!farmInfo[0].lpToken) {
+        farmInfo = await Promise.all(
+          farmInfo.map(async (x, idx) => {
+            const lpToken = await mcMasterchef.lpToken(idx);
+            return {
+              ...x,
+              lpToken,
+            };
+          }),
+        );
+      }
       // extract response and convert to something we can use
       const farms = farmInfo.map((x, idx) => {
         return {

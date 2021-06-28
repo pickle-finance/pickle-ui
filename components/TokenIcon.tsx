@@ -26,6 +26,18 @@ export const LpIcon = ({
   );
 };
 
+export const MiniIcon = ({size = "16px", source}) => (
+  <img
+    src={source}
+    alt="pickle"
+    style={{
+      width: size,
+      verticalAlign: `text-bottom`,
+    }}
+  />
+);
+
+
 export const TokenIcon = ({ src }: { src: string | ReactNode }) => (
   <div
     style={{

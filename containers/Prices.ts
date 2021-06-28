@@ -36,9 +36,13 @@ interface PriceObject {
   tribe: number;
   lusd: number;
   lqty: number;
+  must: number;
+  matic: number;
   yvboost: number;
   alcx: number;
   luna: number;
+  mimatic: number;
+  qi: number;
   cvx: number;
 }
 
@@ -81,9 +85,13 @@ function usePrices() {
         "tribe-2",
         "liquity-usd",
         "liquity",
+        "must",
+        "matic-network",
         // "yvboost",
         "alchemix",
         "terra-luna",
+        "mimatic",
+        "qi-dao",
         "convex-finance"
       ],
       vs_currencies: ["usd"],
@@ -120,9 +128,13 @@ function usePrices() {
       tribe: response["tribe-2"].usd,
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
+      must: response["must"].usd,
+      matic: response["matic-network"].usd,
       yvboost: 0, // to update once CG provides yvboost price
       alcx: response["alchemix"].usd,
       luna: response["terra-luna"].usd,
+      mimatic: response["mimatic"].usd,
+      qi: response["qi-dao"].usd,
       cvx: response["convex-finance"].usd
     };
     setPrices(prices);

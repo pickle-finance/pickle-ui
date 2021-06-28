@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Prices } from "../Prices";
@@ -7,8 +7,8 @@ import { Jar } from "./useFetchJars";
 import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
-import { Contract as MulticallContract } from "ethers-multicall";
 import { Connection } from "../Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface JarApy {
   [k: string]: number;
@@ -33,25 +33,27 @@ export const useCurveLdoAPY = (
   pool: Pool | null,
   stakingRewards: StakingRewards | null,
 ): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [ldoAPY, setLdoAPY] = useState<number | null>(null);
 
   const getLdoAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.ldo) {
-      const mcPool = new MulticallContract(
+      const mcPool = new Contract(
         pool.address,
         pool.interface.fragments,
+        multicallProvider,
       );
 
-      const mcStakingRewards = new MulticallContract(
+      const mcStakingRewards = new Contract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
       const [, rewardsRate, totalSupply, virtualPrice] = (
-        await multicallProvider.all([
+        await Promise.all([
           mcStakingRewards.rewardsDuration(),
           mcStakingRewards.rewardRate(),
           mcStakingRewards.totalSupply(),
@@ -73,7 +75,7 @@ export const useCurveLdoAPY = (
   };
 
   useEffect(() => {
-    getLdoAPY();
+    if (chainName === NETWORK_NAMES.ETH) getLdoAPY();
   }, [jars, prices]);
 
   return {

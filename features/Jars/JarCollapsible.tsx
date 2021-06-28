@@ -14,6 +14,7 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { NETWORK_NAMES } from "containers/config";
 
 interface DataProps {
   isZero?: boolean;
@@ -123,7 +124,30 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
-  "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D": "/liquity.png"  
+  "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D": "/liquity.png",
+
+  // Polygon Jars
+
+  "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xb0b5e3bd18eb1e316bcd0bba876570b3c1779c55": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x80676b414a905de269d0ac593322af821b683b92": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
+  "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
+  "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x160532d2536175d65c03b97b0630a9802c274dad": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -159,7 +183,10 @@ const setButtonStatus = (
   }
 };
 
-export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> = ({ jarData, isYearnJar = false }) => {
+export const JarCollapsible: FC<{
+  jarData: UserJarData;
+  isYearnJar?: boolean;
+}> = ({ jarData, isYearnJar = false }) => {
   const {
     name,
     jarContract,
@@ -176,25 +203,29 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   } = jarData;
   const isUsdc =
     depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
-    
-  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
+
+  const balNum = parseFloat(
+    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+  );
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 18 : 4,
+    maximumFractionDigits: balNum < 1 ? 8 : 4,
   });
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const depositedUnderlyingStr = (
-    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
+    parseFloat(
+      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+    ) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -218,7 +249,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
     const dStatus = getTransferStatus(
@@ -234,20 +265,10 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
-    return isNaN(v) ? null :`${k}: ${v.toFixed(2)}%`;
-  }).filter(x=>x).join(" + ");
-
-  const isDisabledJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI 
-
-  const isMStonksJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
+    return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
+  })
+    .filter((x) => x)
+    .join(" + ");
 
   return (
     <Collapse
@@ -282,9 +303,17 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
             </Data>
             <Data>
               <Tooltip
-                text={isYearnJar ? `This jar deposits into Yearn's ${APYs[1].vault}, The base rate of ${apr.toFixed(2)}% is provided by the underlying Yearn strategy` : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                  2,
-                )}% which we auto-compound regularly.`}
+                text={
+                  isYearnJar
+                    ? `This jar deposits into Yearn's ${
+                        APYs[1].vault
+                      }, The base rate of ${apr.toFixed(
+                        2,
+                      )}% is provided by the underlying Yearn strategy`
+                    : `This yield is calculated in real time from a base rate of ${apr.toFixed(
+                        2,
+                      )}% which we auto-compound regularly.`
+                }
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
                   <span>APY</span>
@@ -323,7 +352,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+                  formatEther(
+                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
+                  ),
                 );
               }}
             >
@@ -338,7 +369,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer && !isDisabledJar) {
+              if (signer) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -351,11 +382,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                 });
               }
             }}
-            disabled={
-              depositButton.disabled ||
-              depositTokenName === "DAI" ||
-              isDisabledJar
-            }
+            disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -369,7 +396,11 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                 text={`${
                   deposited && ratio
                     ? parseFloat(
-                        formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
                       ) * ratio
                     : 0
                 } ${depositTokenName}`}
@@ -383,7 +414,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
+                setWithdrawAmount(
+                  formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
+                );
               }}
             >
               Max
@@ -396,9 +429,9 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled || isDisabledJar}
+            disabled={withdrawButton.disabled}
             onClick={() => {
-              if (signer && !isDisabledJar) {
+              if (signer) {
                 // Allow pToken to burn its pToken
                 // and refund lpToken
                 transfer({
@@ -409,7 +442,7 @@ export const JarCollapsible: FC<{ jarData: UserJarData, isYearnJar?: boolean }> 
                       .connect(signer)
                       .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
                   },
-                  approval: false
+                  approval: false,
                 });
               }
             }}

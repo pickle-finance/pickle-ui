@@ -84,14 +84,6 @@ export const NavItems: FC = () => {
       <Link href="/dill" passHref>
         <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>
       </Link>
-      <a
-        href="https://docs.pickle.finance/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: "none" }}
-      >
-        <NavItem>FAQ</NavItem>
-      </a>
       <Popover content={infoItems(router)} trigger="hover">
         <Link href="/info" passHref>
           <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>

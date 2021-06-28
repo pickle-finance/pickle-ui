@@ -20,6 +20,8 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
@@ -121,11 +123,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   );
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: bal < 1 ? 18 : 4,
+    maximumFractionDigits: bal < 1 ? 8 : 4,
   });
   const stakedStr = stakedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 18 : 4,
+    maximumFractionDigits: stakedNum < 1 ? 8 : 4,
   });
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),

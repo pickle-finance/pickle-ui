@@ -1,9 +1,8 @@
+import { Contract } from "@ethersproject/contracts";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
 import { Contracts, GAUGE_PROXY } from "../Contracts";
-
-import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface RawGauge {
   token: string;
@@ -16,56 +15,59 @@ export interface RawGauge {
 }
 
 export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
-  const { blockNum, multicallProvider } = Connection.useContainer();
+  const {
+    blockNum,
+    multicallProvider,
+    chainName,
+    provider
+  } = Connection.useContainer();
   const { gaugeProxy, gauge } = Contracts.useContainer();
 
   const [gauges, setGauges] = useState<Array<RawGauge> | null>(null);
 
   const getGauges = async () => {
-    if (gaugeProxy && multicallProvider && gauge) {
+    if (gaugeProxy && multicallProvider && gauge && chainName === "Ethereum") {
       const tokens = await gaugeProxy.tokens();
       const totalWeight = await gaugeProxy.totalWeight();
 
-      const mcGaugeProxy = new MulticallContract(
-        gaugeProxy.address,
-        gaugeProxy.interface.fragments,
-      );
-
-      const gaugeAddresses = await multicallProvider.all(
+      const gaugeAddresses = await Promise.all(
         tokens.map((token) => {
-          return mcGaugeProxy.getGauge(token);
+          return gaugeProxy.getGauge(token);
         }),
       );
 
-      const gaugeWeights = await multicallProvider.all(
+      const gaugeWeights = await Promise.all(
         tokens.map((token) => {
-          return mcGaugeProxy.weights(token);
+          return gaugeProxy.weights(token);
         }),
       );
 
-      const gaugeRewardRates = await multicallProvider.all(
+      const gaugeRewardRates = await Promise.all(
         tokens.map((token, index) => {
-          return new MulticallContract(
+          return new Contract(
             gaugeAddresses[index],
             gauge.interface.fragments,
+            provider,
           ).rewardRate();
         }),
       );
 
-      const derivedSupplies = await multicallProvider.all(
+      const derivedSupplies = await Promise.all(
         tokens.map((token, index) => {
-          return new MulticallContract(
+          return new Contract(
             gaugeAddresses[index],
             gauge.interface.fragments,
+            provider,
           ).derivedSupply();
         }),
       );
 
-      const totalSupplies = await multicallProvider.all(
+      const totalSupplies = await Promise.all(
         tokens.map((token, index) => {
-          return new MulticallContract(
+          return new Contract(
             gaugeAddresses[index],
             gauge.interface.fragments,
+            provider,
           ).totalSupply();
         }),
       );

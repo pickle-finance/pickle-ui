@@ -6,7 +6,7 @@ import { UserJarData } from "../../containers/UserJars";
 const formatValue = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: num < 1 ? 18 : 4,
+    maximumFractionDigits: num < 1 ? 8 : 4,
   });
 
 const formatDollar = (num: number) =>

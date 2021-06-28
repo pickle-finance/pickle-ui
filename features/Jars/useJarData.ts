@@ -37,7 +37,7 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
         };
       });
 
-      const newJarData = await Promise.all(promises);
+      const newJarData: Array<UserJarData> = await Promise.all(promises);
 
       setJarData(newJarData);
     }

@@ -74,8 +74,7 @@ export const GaugeList: FC = () => {
   const gaugesWithAPY = gaugeData.map((gauge) => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
-    const maybeJar =
-      JAR_GAUGE_MAP[gauge.depositToken.address as keyof typeof JAR_GAUGE_MAP];
+    const maybeJar = JAR_GAUGE_MAP[gauge.depositToken.address];
     if (jars && maybeJar) {
       const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
@@ -103,8 +102,6 @@ export const GaugeList: FC = () => {
   });
 
   const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS.pUNIBACDAI ||
-    depositToken === PICKLE_JARS.pUNIBASDAI ||
     depositToken === PICKLE_JARS.pUNIETHLUSD;
 
   const activeGauges = gaugesWithAPY

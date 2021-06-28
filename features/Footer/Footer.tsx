@@ -48,7 +48,7 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://signal.pickle.finance"
+        href="https://snapshot.org/#/pickle.eth"
       >
         Signal
       </NavItem>
@@ -76,16 +76,9 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://t.me/picklefinance"
+        href="https://docs.pickle.finance"
       >
-        Telegram
-      </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://t.me/picklefinancechinese"
-      >
-        中文tg
+        DOCS
       </NavItem>
     </Container>
   );

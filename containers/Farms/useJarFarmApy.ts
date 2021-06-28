@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
@@ -11,7 +11,7 @@ import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
-import { Contract as MulticallContract } from "ethers-multicall";
+import { NETWORK_NAMES } from "containers/config";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;
@@ -20,14 +20,14 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
-
+  const { provider, chainName } = Connection.useContainer();
+  
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
-    if (inputFarms && masterchef && jars && prices && multicallProvider) {
+    if (inputFarms && masterchef && jars && prices && provider) {
       const jarFarms = inputFarms?.filter(
         (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
       );
@@ -40,18 +40,20 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
         if (!farmingJar) {
-          return new MulticallContract(mlErc20.dai.address, mlErc20.abi);
+          return new Contract(
+            mlErc20.dai.address,
+            mlErc20.abi,
+            provider,
+          );
         }
 
-        return new MulticallContract(
-          farmingJar.contract.address,
-          farmingJar.contract.interface.fragments,
-        );
+        return farmingJar.contract
       });
 
-      const farmBalances = await multicallProvider?.all(
-        farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address)),
-      );
+      
+      const farmBalances = await Promise.all(
+        farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0))),
+        );
 
       const res = jarFarms.map((farm, idx) => {
         const { jarName } = JAR_FARM_MAP[
@@ -97,14 +99,13 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           numTokensInPool,
         };
       });
-
       setFarms(res);
     }
   };
 
   useEffect(() => {
     calculateApy();
-  }, [inputFarms, prices, masterchef, jars, multicallProvider]);
+  }, [inputFarms, prices, masterchef, jars, provider]);
 
   return { jarFarmWithApy: farms };
 };

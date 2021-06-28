@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { ethers, BigNumber } from "ethers";
-import { Contract as MulticallContract } from "ethers-multicall";
+import { ethers, BigNumber, Contract } from "ethers";
 import moment from "moment";
 
 import { Connection } from "../Connection";
@@ -39,9 +38,10 @@ export function useFeeDistributionSeries() {
       prices &&
       weeklyDistributionUsd
     ) {
-      const contract = new MulticallContract(
+      const contract = new Contract(
         feeDistributor.address,
         feeDistributor.interface.fragments,
+        multicallProvider
       );
 
       // Ignore initial negligible distributions that distort
@@ -49,7 +49,7 @@ export function useFeeDistributionSeries() {
       const startTime = ethers.BigNumber.from(
         firstMeaningfulDistributionTimestamp,
       );
-      const [endTime] = await multicallProvider.all<BigNumber[]>([
+      const [endTime] = await Promise.all<BigNumber[]>([
         contract.time_cursor(),
       ]);
 
@@ -62,11 +62,11 @@ export function useFeeDistributionSeries() {
         payoutTimes.push(time);
       }
 
-      const payouts = await multicallProvider.all<BigNumber[]>(
+      const payouts = await Promise.all<BigNumber[]>(
         payoutTimes.map((time) => contract.tokens_per_week(time)),
       );
 
-      const dillAmounts = await multicallProvider.all<BigNumber[]>(
+      const dillAmounts = await Promise.all<BigNumber[]>(
         payoutTimes.map((time) => contract.ve_supply(time)),
       );
 

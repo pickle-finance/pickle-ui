@@ -14,8 +14,7 @@ import {
   DEPOSIT_TOKENS_NAME,
   DEPOSIT_TOKENS_LINK,
 } from "./jars";
-
-import { Contract as MulticallContract } from "ethers-multicall";
+import { Contract } from "@ethersproject/contracts";
 
 export type Jar = {
   depositToken: Erc20Contract;
@@ -24,23 +23,27 @@ export type Jar = {
   jarName: string;
   contract: JarContract;
   strategy: StrategyContract;
-  strategyName: string;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
-  const { blockNum, provider, multicallProvider } = Connection.useContainer();
+  const {
+    blockNum,
+    multicallProvider,
+    chainName,
+  } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
-    if (controller && provider && strategy && multicallProvider) {
-      const multicallController = new MulticallContract(
+    if (controller && strategy && multicallProvider && chainName) {
+      const multicallController = new Contract(
         controller.address,
         controller.interface.fragments,
+        multicallProvider,
       );
 
-      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS).map(
+      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(
         ([k, tokenAddress]) => {
           return {
             key: k,
@@ -49,37 +52,18 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         },
       );
 
-      const jarAddresses = await multicallProvider.all(
+      const jarAddresses = await Promise.all(
         tokenKV.map((t) => {
           return multicallController.jars(t.value);
         }),
       );
-
-      const strategyAddresses = await multicallProvider.all(
-        tokenKV.map((t) => {
-          return multicallController.strategies(t.value);
-        }),
-      );
-
-      const strategyNames = await multicallProvider.all(
-        strategyAddresses.map((s) => {
-          const mutlicallStrategy = new MulticallContract(
-            s,
-            strategy.interface.fragments,
-          );
-
-          return mutlicallStrategy.getName();
-        }),
-      );
-
+      
       const jarData = tokenKV
         .map((kv, idx) => {
           return {
             [kv.key]: {
               tokenAddress: kv.value,
               jarAddress: jarAddresses[idx],
-              strategyAddress: strategyAddresses[idx],
-              strategyName: strategyNames[idx],
             },
           };
         })
@@ -88,21 +72,19 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         }, {});
 
       const newJars = await Promise.all(
-        Object.entries(JAR_DEPOSIT_TOKENS).map(async ([k, tokenAddress]) => {
-          const { jarAddress, strategyAddress, strategyName } = jarData[k];
+        Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(async ([k, tokenAddress]) => {
+          const { jarAddress } = jarData[k];
           return {
-            depositToken: Erc20Factory.connect(tokenAddress, provider),
+            depositToken: Erc20Factory.connect(tokenAddress, multicallProvider),
             depositTokenName:
               DEPOSIT_TOKENS_NAME[k as keyof typeof DEPOSIT_TOKENS_NAME],
-            strategy: strategy.attach(strategyAddress),
-            strategyName,
             jarName:
               DEPOSIT_TOKENS_JAR_NAMES[
                 k as keyof typeof DEPOSIT_TOKENS_JAR_NAMES
               ],
             depositTokenLink:
               DEPOSIT_TOKENS_LINK[k as keyof typeof DEPOSIT_TOKENS_LINK],
-            contract: JarFactory.connect(jarAddress, provider),
+            contract: JarFactory.connect(jarAddress, multicallProvider),
           };
         }),
       );
@@ -112,7 +94,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   useEffect(() => {
     getJars();
-  }, [provider, controller, blockNum]);
+  }, [chainName, multicallProvider, controller, blockNum]);
 
   return { jars };
 };

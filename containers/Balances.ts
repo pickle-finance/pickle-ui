@@ -2,10 +2,9 @@ import { createContainer } from "unstated-next";
 import { useEffect, useState } from "react";
 
 import { Connection } from "./Connection";
+import { ethers, Contract } from "ethers";
 import { Contracts } from "./Contracts";
-import { ethers } from "ethers";
-
-import { Contract as MulticallContract } from "ethers-multicall";
+import erc20 from "@studydefi/money-legos/erc20";
 
 interface TokenBalances {
   [k: string]: ethers.BigNumber;
@@ -14,20 +13,19 @@ interface TokenBalances {
 function useBalances() {
   const {
     address,
-    provider,
     blockNum,
     multicallProvider,
   } = Connection.useContainer();
-  const { erc20 } = Contracts.useContainer();
+  const {erc20} = Contracts.useContainer();
 
   const [tokenBalances, setTokenBalances] = useState<TokenBalances>({});
   const [tokenAddresses, setTokenAddresses] = useState<Array<string>>([]);
 
   const updateBalances = async () => {
-    if (erc20 && address && provider && multicallProvider) {
-      const balances = await multicallProvider.all(
+    if (erc20 && address && multicallProvider) {
+      const balances = await Promise.all(
         tokenAddresses.map((x) => {
-          const c = new MulticallContract(x, erc20.interface.fragments);
+          const c = erc20.attach(x)
           return c.balanceOf(address);
         }),
       );

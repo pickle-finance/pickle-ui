@@ -3,8 +3,6 @@ import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 import { Connection } from "./Connection";
 
-import { BasisStaking } from "./Contracts/BasisStaking";
-import { BasisStaking__factory as BasisStakingFactory } from "./Contracts/factories/BasisStaking__factory";
 import { Comptroller } from "./Contracts/Comptroller";
 import { Comptroller__factory as ComptrollerFactory } from "./Contracts/factories/Comptroller__factory";
 import { Controller } from "./Contracts/Controller";
@@ -51,9 +49,22 @@ import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
 import { Uniswapv2ProxyLogic__factory as Uniswapv2ProxyLogicFactory } from "./Contracts/factories/Uniswapv2ProxyLogic__factory";
 import { YvboostMigrator } from "./Contracts/YvboostMigrator";
 import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/factories/YvboostMigrator__factory";
-import { YvecrvZap } from "./Contracts/YvecrvZap";
-import { YvecrvZap__factory as YvecrvZapFactory } from "./Contracts/factories/YvecrvZap__factory";
 
+import { Minichef } from "./Contracts/Minichef";
+import { Minichef__factory as MinichefFatory } from "./Contracts/factories/Minichef__factory";
+import { SushiMinichef } from "./Contracts/SushiMinichef";
+import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/factories/SushiMinichef__factory";
+
+import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
+import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
+
+import { PickleRewarder } from "./Contracts/PickleRewarder";
+import {
+  PickleRewarder__factory as PickleRewarderFactory,
+  PickleRewarder__factory,
+} from "./Contracts/factories/PickleRewarder__factory";
+
+import { config, NETWORK_NAMES } from "./config";
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -109,19 +120,6 @@ export const UNI_ETH_USDT_STAKING_REWARDS =
   "0x6c3e4cb2e96b01f4b866965a91ed4437839a121a";
 export const UNI_ETH_WBTC_STAKING_REWARDS =
   "0xCA35e32e7926b96A9988f61d510E038108d8068e";
-export const MITH_MIC_USDT_STAKING_REWARDS =
-  "0x9D9418803F042CCd7647209b0fFd617981D5c619";
-export const MITH_MIS_USDT_STAKING_REWARDS =
-  "0x14E33e1D6Cc4D83D7476492C0A52b3d4F869d892";
-export const BASIS_BAC_DAI_V1_STAKING_REWARDS =
-  "0x067d4D3CE63450E74F880F86b5b52ea3edF9Db0f";
-export const BASIS_BAC_DAI_STAKING_REWARDS =
-  "0x7E7aE8923876955d6Dcb7285c04065A1B9d6ED8c";
-export const BASIS_BAS_DAI_STAKING_REWARDS =
-  "0x5859Adb05988946B9d08dcE2E12ae29af58120C0";
-export const BASIS_BAC_DAI_PID = 0;
-export const BASIS_BAS_DAI_PID = 1;
-
 export const MIRROR_MIR_UST_STAKING_REWARDS =
   "0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF";
 
@@ -147,18 +145,38 @@ export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
-
 export const YVBOOST_MIGRATOR = "0x61Dde5da89fB3a099035bd9b3f94d1105A22F3d9";
 
 export const YEARN_REGISTRY = "0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804";
 
+// Polygon
+export const COMETH_USDC_WETH_REWARDS =
+  "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
+export const COMETH_PICKLE_MUST_REWARDS =
+  "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
+export const COMETH_MATIC_MUST_REWARDS =
+  "0x2328c83431a29613b1780706E0Af3679E3D04afd";
+export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
+export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
+export const MATIC_COMPLEX_REWARDER =
+  "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
+export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
+
+export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
+
 function useContracts() {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName, multicallProvider } = Connection.useContainer();
+  const addresses =
+    chainName === NETWORK_NAMES.ETH
+      ? config.addresses.Ethereum
+      : config.addresses.Polygon;
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [masterchefV2, setMasterchefV2] = useState<Masterchefv2 | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
+
+  const providerOrSigner = signer || multicallProvider;
 
   const [
     gaugeController,
@@ -185,7 +203,6 @@ function useContracts() {
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
   );
-  const [basisStaking, setBasisStaking] = useState<BasisStaking | null>(null);
   const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
     null,
   );
@@ -202,56 +219,102 @@ function useContracts() {
 
   const [instabrine, setInstabrine] = useState<Instabrine | null>(null);
 
-  const [yveCrvZap, setYveCrvZap] = useState<YvecrvZap | null>(null);
   const [stakingPools, setStakingPools] = useState<StakingPools | null>(null);
   const [yearnRegistry, setYearnRegistry] = useState<YearnRegistry | null>(
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
+  const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
+    null,
+  );
+  const [minichef, setMinichef] = useState<Minichef | null>(null);
+  const [
+    sushiComplexRewarder,
+    setSushiComplexRewarder,
+  ] = useState<SushiComplexRewarder | null>(null);
 
+  const [pickleRewarder, setPickleRewarder] = useState<PickleRewarder | null>(
+    null,
+  );
+
+  const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
   const [
     yvBoostMigrator,
     setyvBoostMigrator,
   ] = useState<YvboostMigrator | null>(null);
 
   const initContracts = async () => {
-    if (signer) {
-      setPickle(Erc20Factory.connect(PICKLE_TOKEN_ADDR, signer));
-      setMasterchef(MasterchefFactory.connect(MASTERCHEF_ADDR, signer));
-      setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
-      setController(ControllerFactory.connect(CONTROLLER_ADDR, signer));
-      setGaugeController(
-        GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, signer),
+    if (providerOrSigner && addresses) {
+      setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
+      setMasterchef(
+        MasterchefFactory.connect(addresses.masterChef, providerOrSigner),
       );
-      setSUSDGauge(CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, signer));
-      setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, signer));
-      setSteCRVGauge(CurveGaugeFactory.connect(STETH_GAUGE_ADDR, signer));
-      setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, signer));
-      setRENGauge(CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, signer));
-      setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, signer));
-      setThreeGauge(CurveGaugeFactory.connect(THREE_GAUGE_ADDR, signer));
-      setThreePool(PoolFactory.connect(THREE_POOL_ADDR, signer));
+      setController(
+        ControllerFactory.connect(addresses.controller, providerOrSigner),
+      );
+      setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
+      setGaugeController(
+        GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, providerOrSigner),
+      );
+      setSUSDGauge(
+        CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, providerOrSigner),
+      );
+      setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, providerOrSigner));
+      setSteCRVGauge(
+        CurveGaugeFactory.connect(STETH_GAUGE_ADDR, providerOrSigner),
+      );
+      setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, providerOrSigner));
+      setRENGauge(
+        CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, providerOrSigner),
+      );
+      setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, providerOrSigner));
+      setThreeGauge(
+        CurveGaugeFactory.connect(THREE_GAUGE_ADDR, providerOrSigner),
+      );
+      setThreePool(PoolFactory.connect(THREE_POOL_ADDR, providerOrSigner));
 
       setStakingRewards(
-        StakingRewardsFactory.connect(ethers.constants.AddressZero, signer),
-      );
-      setBasisStaking(
-        BasisStakingFactory.connect(ethers.constants.AddressZero, signer),
+        StakingRewardsFactory.connect(
+          ethers.constants.AddressZero,
+          providerOrSigner,
+        ),
       );
       setUniswapv2Pair(
-        Uniswapv2PairFactory.connect(ethers.constants.AddressZero, signer),
+        Uniswapv2PairFactory.connect(
+          ethers.constants.AddressZero,
+          providerOrSigner,
+        ),
       );
-      setERC20(Erc20Factory.connect(ethers.constants.AddressZero, signer));
-      setCToken(CtokenFactory.connect(ethers.constants.AddressZero, signer));
-      setComptroller(ComptrollerFactory.connect(COMPTROLLER_ADDR, signer));
+      setERC20(
+        Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setCToken(
+        CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setComptroller(
+        ComptrollerFactory.connect(COMPTROLLER_ADDR, providerOrSigner),
+      );
       setStrategy(
-        StrategyFactory.connect(ethers.constants.AddressZero, signer),
+        StrategyFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
       setCurveProxyLogic(
-        CurveProxyLogicFactory.connect(CURVE_PROXY_LOGIC, signer),
+        CurveProxyLogicFactory.connect(CURVE_PROXY_LOGIC, providerOrSigner),
       );
       setUniswapv2ProxyLogic(
-        Uniswapv2ProxyLogicFactory.connect(UNISWAPV2_PROXY_LOGIC, signer),
+        Uniswapv2ProxyLogicFactory.connect(
+          UNISWAPV2_PROXY_LOGIC,
+          providerOrSigner,
+        ),
+      );
+      setInstabrine(InstabrineFactory.connect(INSTABRINE, providerOrSigner));
+      setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, providerOrSigner));
+      setDill(DillFactory.connect(DILL, providerOrSigner));
+      setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, providerOrSigner));
+      setGauge(
+        GaugeFactory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setFeeDistributor(
+        FeeDistributorFactory.connect(FEE_DISTRIBUTOR, providerOrSigner),
       );
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
@@ -259,7 +322,6 @@ function useContracts() {
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
-      setYveCrvZap(YvecrvZapFactory.connect(YVECRV_ZAP, signer));
       setyvBoostMigrator(
         YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer),
       );
@@ -269,12 +331,20 @@ function useContracts() {
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
+
+      setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
+      setSushiComplexRewarder(
+        SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
+      );
+      setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
+      setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
+      setMinichef(MinichefFatory.connect(MINICHEF, signer));
     }
   };
 
   useEffect(() => {
-    if (signer) initContracts();
-  }, [signer]);
+    if (providerOrSigner) initContracts();
+  }, [providerOrSigner]);
 
   return {
     pickle,
@@ -300,16 +370,19 @@ function useContracts() {
     curveProxyLogic,
     instabrine,
     sushiChef,
-    basisStaking,
     dill,
     gaugeProxy,
     gauge,
     feeDistributor,
-    yveCrvZap,
     yvBoostMigrator,
     stakingPools,
     yearnRegistry,
     lusdPool,
+    minichef,
+    sushiMinichef,
+    sushiComplexRewarder,
+    am3crvPool,
+    pickleRewarder
   };
 }
 

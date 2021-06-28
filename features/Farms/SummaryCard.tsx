@@ -5,7 +5,7 @@ import { Card, Table, Tooltip } from "@geist-ui/react";
 import { Farms } from "../../containers/Farms";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { Jars } from "../../containers/Jars";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 
 export const SummaryCard: FC = () => {

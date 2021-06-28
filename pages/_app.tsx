@@ -14,19 +14,22 @@ import { ERC20Transfer } from "../containers/Erc20Transfer";
 import { Connection } from "../containers/Connection";
 import { Contracts } from "../containers/Contracts";
 import { Prices } from "../containers/Prices";
-import { Pickles } from "../containers/Pickles";
+import { Pickles, MiniPickles } from "../containers/Pickles";
 import { PickleStaking } from "../containers/PickleStaking";
 import { Farms } from "../containers/Farms";
 import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
+import { UserMiniFarms } from "../containers/UserMiniFarms";
 import { SushiPairs } from "../containers/SushiPairs";
 import { Dill } from "../containers/Dill";
 import { Gauges } from "../containers/Gauges";
+import { MiniFarms } from "../containers/MiniFarms";
 import { UserGauges } from "../containers/UserGauges";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ComethPairs } from "../containers/ComethPairs";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -40,27 +43,35 @@ const WithContainers: FC = ({ children }) => (
           <ERC20Transfer.Provider>
             <Prices.Provider>
               <Pickles.Provider>
-                <PickleStaking.Provider>
-                  <UniV2Pairs.Provider>
-                    <Dill.Provider>
-                      <SushiPairs.Provider>
-                        <Jars.Provider>
-                          <Farms.Provider>
-                            <Gauges.Provider>
-                              <UserJars.Provider>
-                                <UserFarms.Provider>
-                                  <UserGauges.Provider>
-                                    {children}
-                                  </UserGauges.Provider>
-                                </UserFarms.Provider>
-                              </UserJars.Provider>
-                            </Gauges.Provider>
-                          </Farms.Provider>
-                        </Jars.Provider>
-                      </SushiPairs.Provider>
-                    </Dill.Provider>
-                  </UniV2Pairs.Provider>
-                </PickleStaking.Provider>
+                <MiniPickles.Provider>
+                  <PickleStaking.Provider>
+                    <UniV2Pairs.Provider>
+                      <ComethPairs.Provider>
+                        <Dill.Provider>
+                          <SushiPairs.Provider>
+                            <Jars.Provider>
+                              <Farms.Provider>
+                                <Gauges.Provider>
+                                  <MiniFarms.Provider>
+                                    <UserJars.Provider>
+                                      <UserFarms.Provider>
+                                        <UserGauges.Provider>
+                                          <UserMiniFarms.Provider>
+                                            {children}
+                                          </UserMiniFarms.Provider>
+                                        </UserGauges.Provider>
+                                      </UserFarms.Provider>
+                                    </UserJars.Provider>
+                                  </MiniFarms.Provider>
+                                </Gauges.Provider>
+                              </Farms.Provider>
+                            </Jars.Provider>
+                          </SushiPairs.Provider>
+                        </Dill.Provider>
+                      </ComethPairs.Provider>
+                    </UniV2Pairs.Provider>
+                  </PickleStaking.Provider>
+                </MiniPickles.Provider>
               </Pickles.Provider>
             </Prices.Provider>
           </ERC20Transfer.Provider>

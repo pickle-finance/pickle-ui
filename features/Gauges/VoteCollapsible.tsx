@@ -22,7 +22,7 @@ import {
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { Jars } from "../../containers/Jars";
 
 interface Weights {
@@ -121,6 +121,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 
   const renderSelectOptions = (gauge: UserGaugeData) => (
     <Select.Option
+      key={gauge.address}
       style={{ color: pickleWhite }}
       value={gauge.depositTokenName}
     >

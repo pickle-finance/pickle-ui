@@ -8,8 +8,12 @@ import { Prices } from "../features/Prices/Prices";
 import { Footer } from "../features/Footer/Footer";
 import { Zap } from "../features/Zap/Zap";
 import { DepositZap } from "../features/Zap/DepositZap";
+import { Connection } from "containers/Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 const Home: FC = () => {
+  const { chainName } = Connection.useContainer();
+
   return (
     <>
       <TopBar />
@@ -26,14 +30,8 @@ const Home: FC = () => {
               <DepositZap />
             </Grid>
             <Grid xs={24} sm={24} md={24}>
-              <Zap />
+              {chainName === NETWORK_NAMES.POLY ? null : <Zap />}
             </Grid>
-            {/* <Grid xs={24} sm={24} md={12}>
-              <Jars />
-            </Grid>
-            <Grid xs={24} sm={24} md={12}>
-              <Farms />
-            </Grid> */}
           </Grid.Container>
         </Page.Content>
         <Footer />

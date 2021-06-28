@@ -3,6 +3,7 @@ import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { UserGauges } from "../../containers/UserGauges";
+import { Provider } from "@ethersproject/providers";
 
 export const usePendingPickles = (): { pendingPickles: number | null } => {
   const { address, blockNum } = Connection.useContainer();
@@ -31,10 +32,10 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
         0,
       );
 
+      setPendingPickles(totalMasterchefPickles);
+
       const totalPendingPickles = gaugeData.reduce(
-        (a, b) => a + parseFloat(
-          ethers.utils.formatEther(b.harvestable || 0),
-        ),
+        (a, b) => a + parseFloat(ethers.utils.formatEther(b.harvestable || 0)),
         totalMasterchefPickles,
       );
 

@@ -6,7 +6,7 @@ import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 
 interface IFarmInfo {
-  [key: string]: { tokenName: string; poolName: string; };
+  [key: string]: { tokenName: string; poolName: string };
 }
 
 export const FarmInfo: IFarmInfo = {
@@ -180,36 +180,38 @@ export const FarmInfo: IFarmInfo = {
   },
   "0x65B2532474f717D5A8ba38078B78106D56118bbb": {
     tokenName: "pLQTY",
-    poolName: "Pickled LQTY"
-  }
+    poolName: "Pickled LQTY",
+  },
 };
 
 function useFarms() {
   const { rawFarms } = useFetchFarms();
   const { farmsWithReward } = useWithReward(rawFarms);
-  const { uniV2FarmsWithApy } = useUniV2Apy(farmsWithReward);
-  const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
+  // const { uniV2FarmsWithApy } = useUniV2Apy(farmsWithReward);
+  // const { jarFarmWithApy } = useJarFarmApy(farmsWithReward)
 
-  const uniFarms = uniV2FarmsWithApy?.map((farm) => {
-    const { tokenName, poolName } = FarmInfo[farm.lpToken];
-    return {
-      ...farm,
-      tokenName,
-      poolName,
-    };
-  });
-
-  const jarFarms = jarFarmWithApy?.map((farm) => {
-    const { tokenName, poolName } = FarmInfo[farm.lpToken];
-    return {
-      ...farm,
-      tokenName,
-      poolName,
-    };
-  });
+  const farms = farmsWithReward
+    ?.filter(
+      (x) =>
+        x.lpToken != "0x73feA839bEad0E4100B6e5f59Fb6E896Ad69910f" &&
+        x.lpToken != "0x45F7fa97BD0e0C212A844BAea35876C7560F465B",
+    )
+    .map((farm) => {
+      const { tokenName, poolName } = FarmInfo[farm.lpToken];
+      return {
+        ...farm,
+        tokenName,
+        poolName,
+        apy: 0,
+        usdPerToken: 0,
+        totalValue: 0,
+        valueStakedInFarm: 0,
+        numTokensInPool: 0,
+      };
+    });
 
   return {
-    farms: uniFarms && jarFarms ? [...uniFarms, ...jarFarms] : null,
+    farms,
   };
 }
 

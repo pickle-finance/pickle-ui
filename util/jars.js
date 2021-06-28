@@ -25,5 +25,16 @@ export const sushiJars = [
   "LQTY"
 ];
 
+export const polyJars = [
+  "COMETH-USDC",
+  "COMETH-PICKLE",
+  "COMETH-MATIC",
+  "DAI",
+  "am3CRV",
+  "PSLP-USDT",
+  "PSLP-MATIC",
+  "QLP-MIMATIC"
+]
+
 export const powerPool = "PICKLE-ETH";
 export const jars = crvJars.concat(uniJars, sushiJars);

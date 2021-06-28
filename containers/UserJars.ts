@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 
-import { JarApy } from "./Jars/useJarsWithAPY";
+import { JarApy } from "./Jars/useJarsWithAPYEth";
 
 import { Jars } from "./Jars";
 import { Balances } from "./Balances";
@@ -27,7 +27,7 @@ export interface UserJarData {
 }
 
 const useUserJars = (): { jarData: UserJarData[] | null } => {
-  const { blockNum } = Connection.useContainer();
+  const { blockNum, chainName } = Connection.useContainer();
   const { jars } = Jars.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
@@ -63,7 +63,7 @@ const useUserJars = (): { jarData: UserJarData[] | null } => {
 
   useEffect(() => {
     updateJarData();
-  }, [jars, blockNum, tokenBalances, transferStatus]);
+  }, [chainName, jars, blockNum, tokenBalances, transferStatus]);
 
   return { jarData };
 };

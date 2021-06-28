@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 
 import { Jars } from "./Jars";
 import { Farms } from "./Farms";
@@ -10,8 +10,6 @@ import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
-
-import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface UserFarmData {
   poolName: string;
@@ -25,8 +23,67 @@ export interface UserFarmData {
   apy: number;
 }
 
+export const updateFarmData = async (
+  farms: any[] | null,
+  erc20: Erc20Contract | null,
+  masterchef: any,
+  address: string | null | undefined,
+  multicallProvider: any,
+  setFarmData: any,
+) => {
+  if (farms && erc20 && masterchef && address && multicallProvider) {
+    const mcMasterchef = new Contract(
+      masterchef.address,
+      masterchef.interface.fragments,
+      multicallProvider,
+    );
+      
+    const balancesUserInfosHarvestables = await Promise.all(
+      farms
+        .map((x) => {
+          const c = new Contract(
+            x.lpToken,
+            erc20.interface.fragments,
+            multicallProvider,
+          );
+          return [
+            c.balanceOf(address),
+            mcMasterchef.userInfo(x.poolIndex, address),
+            mcMasterchef.pendingPickle(x.poolIndex, address),
+          ];
+        })
+        .reduce((a, b) => [...a, ...b], []),
+    );
+
+    const newFarmData = farms.map((farm, idx) => {
+      const balance = balancesUserInfosHarvestables[idx * 3];
+      const userInfo = balancesUserInfosHarvestables[idx * 3 + 1];
+      const harvestable = balancesUserInfosHarvestables[idx * 3 + 2];
+
+      return {
+        poolName: farm.poolName,
+        poolIndex: farm.poolIndex,
+        depositToken: erc20.attach(farm.lpToken),
+        depositTokenName: farm.tokenName,
+        balance,
+        staked: userInfo[0],
+        usdPerToken: farm.usdPerToken,
+        harvestable,
+        apy: farm.apy,
+      };
+    });
+
+    setFarmData(newFarmData);
+  }
+};
+
 const useUserFarms = (): { farmData: UserFarmData[] | null } => {
-  const { blockNum, address, multicallProvider } = Connection.useContainer();
+  const {
+    blockNum,
+    address,
+    multicallProvider,
+    chainName,
+  } = Connection.useContainer();
   const { masterchef, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();
   const { farms } = Farms.useContainer();
@@ -35,54 +92,15 @@ const useUserFarms = (): { farmData: UserFarmData[] | null } => {
 
   const [farmData, setFarmData] = useState<Array<UserFarmData> | null>(null);
 
-  const updateFarmData = async () => {
-    if (farms && erc20 && masterchef && address && multicallProvider) {
-      const mcMasterchef = new MulticallContract(
-        masterchef.address,
-        masterchef.interface.fragments,
-      );
-
-      const balancesUserInfosHarvestables = await multicallProvider.all(
-        farms
-          .map((x) => {
-            const c = new MulticallContract(
-              x.lpToken,
-              erc20.interface.fragments,
-            );
-
-            return [
-              c.balanceOf(address),
-              mcMasterchef.userInfo(x.poolIndex, address),
-              mcMasterchef.pendingPickle(x.poolIndex, address),
-            ];
-          })
-          .reduce((a, b) => [...a, ...b], []),
-      );
-
-      const newFarmData = farms.map((farm, idx) => {
-        const balance = balancesUserInfosHarvestables[idx * 3];
-        const userInfo = balancesUserInfosHarvestables[idx * 3 + 1];
-        const harvestable = balancesUserInfosHarvestables[idx * 3 + 2];
-
-        return {
-          poolName: farm.poolName,
-          poolIndex: farm.poolIndex,
-          depositToken: erc20.attach(farm.lpToken),
-          depositTokenName: farm.tokenName,
-          balance,
-          staked: userInfo[0],
-          usdPerToken: farm.usdPerToken,
-          harvestable,
-          apy: farm.apy,
-        };
-      });
-
-      setFarmData(newFarmData);
-    }
-  };
-
   useEffect(() => {
-    updateFarmData();
+    updateFarmData(
+      farms,
+      erc20,
+      masterchef,
+      address,
+      multicallProvider,
+      setFarmData,
+    );
   }, [jars, blockNum, tokenBalances, transferStatus]);
 
   return { farmData };

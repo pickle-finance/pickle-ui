@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Prices } from "../Prices";
@@ -7,8 +7,8 @@ import { Jar } from "./useFetchJars";
 import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
-import { Contract as MulticallContract } from "ethers-multicall";
 import { Connection } from "../Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 export interface JarApy {
   [k: string]: number;
@@ -33,25 +33,27 @@ export const useCurveSNXAPY = (
   pool: Pool | null,
   stakingRewards: StakingRewards | null,
 ): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [SNXAPY, setSNXAPY] = useState<number | null>(null);
 
   const getSNXAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.snx) {
-      const mcPool = new MulticallContract(
+      const mcPool = new Contract(
         pool.address,
         pool.interface.fragments,
+        multicallProvider,
       );
 
-      const mcStakingRewards = new MulticallContract(
+      const mcStakingRewards = new Contract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
+        multicallProvider,
       );
 
       const [rewardsDuration, rewardsRate, totalSupply, virtualPrice] = (
-        await multicallProvider.all([
+        await Promise.all([
           mcStakingRewards.DURATION(),
           mcStakingRewards.rewardRate(),
           mcStakingRewards.totalSupply(),
@@ -76,7 +78,7 @@ export const useCurveSNXAPY = (
   };
 
   useEffect(() => {
-    getSNXAPY();
+    if (chainName === NETWORK_NAMES.ETH) getSNXAPY();
   }, [jars, prices]);
 
   return {

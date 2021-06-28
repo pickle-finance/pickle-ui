@@ -9,6 +9,7 @@ import { Jars } from "../../containers/Jars";
 import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
+import { getProtocolData } from "util/api";
 import PickleIcon from "../../components/PickleIcon";
 
 const Container = styled(Grid.Container)`
@@ -28,13 +29,13 @@ const HideOnMobile = styled.div`
 `;
 
 const formatPickles = (num: number) =>
-  num.toLocaleString(undefined, {
+  num?.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
 const formatDollars = (num: number) =>
   "$" +
-  num.toLocaleString(undefined, {
+  num?.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -67,26 +68,17 @@ export const Balances: FC = () => {
   const { jars } = Jars.useContainer();
 
   const [liquidity, setLiquidity] = useState<number | null>(null);
+  const [protocolInfo, setProtocolInfo] = useState(undefined);
+  const [marketCap, setMarketCap] = useState<number | null>(null)
 
   useEffect(() => {
-    const getLiquidity = async () => {
-      if (getPairData) {
-        const { totalValueOfPair } = await getPairData(
-          "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819",
-        );
-        setLiquidity(totalValueOfPair);
-      }
+    const updateInfo = async () => {
+      setProtocolInfo(await getProtocolData())
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true").then(x=>x.json())
+      setMarketCap(res["pickle-finance"].usd_market_cap)
     };
-    getLiquidity();
-  }, [getPairData, blockNum]);
-
-  let totalValueLocked = null;
-  if (jars) {
-    totalValueLocked = jars.reduce((acc, x) => {
-      return acc + (x?.tvlUSD || 0);
-    }, liquidity || 0);
-  }
-
+    updateInfo();
+  }, [blockNum]);
   return (
     <>
       <Container gap={2}>
@@ -130,13 +122,13 @@ export const Balances: FC = () => {
             <h2>Market Cap</h2>
             <DataPoint>
               <span>
-                {prices?.pickle && totalSupply
-                  ? formatDollars(prices.pickle * totalSupply)
+                {prices?.pickle && totalSupply && marketCap
+                  ? formatDollars(marketCap)
                   : "--"}
               </span>
             </DataPoint>
             <Card.Footer>
-              {totalSupply && picklePerBlock ? (
+              {totalSupply && picklePerBlock && marketCap ? (
                 <Tooltip
                   placement="bottom"
                   style={{ cursor: `help` }}
@@ -147,8 +139,8 @@ export const Balances: FC = () => {
                   }
                 >
                   Total Supply:{" "}
-                  {totalSupply ? formatPickles(totalSupply) : "--"}
-                  <PickleIcon size={14} margin="0 0 0 0.5rem" />
+                  {totalSupply ? formatPickles(marketCap / prices?.pickle) : "--"}
+                  <PickleIcon size={14} />
                 </Tooltip>
               ) : (
                 <span>
@@ -164,7 +156,7 @@ export const Balances: FC = () => {
             <h2>Total Value Locked</h2>
             <DataPoint>
               <span>
-                {totalValueLocked ? formatDollars(totalValueLocked) : "--"}
+                {protocolInfo ? formatDollars(protocolInfo.totalValue) : "--"}
               </span>
             </DataPoint>
             <Card.Footer>
@@ -173,7 +165,7 @@ export const Balances: FC = () => {
                 text="Total ETH/PICKLE pool value on Uniswap."
                 style={{ cursor: `help` }}
               >
-                Pool size: {liquidity ? formatDollars(liquidity) : "--"}
+                Pool size: {protocolInfo ? formatDollars(protocolInfo.totalValue - protocolInfo.jarValue) : "--"}
               </Tooltip>
             </Card.Footer>
           </Card>
