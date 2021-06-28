@@ -270,19 +270,6 @@ export const JarCollapsible: FC<{
     .filter((x) => x)
     .join(" + ");
 
-  const txArgs = (amount: string) => {
-    if (chainName === NETWORK_NAMES.POLY)
-      return (
-        ethers.utils.parseUnits(amount, isUsdc ? 6 : 18),
-        {
-          gasLimit: 1000000,
-        }
-      );
-    else {
-      return ethers.utils.parseUnits(amount, isUsdc ? 6 : 18);
-    }
-  };
-
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -390,7 +377,7 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(txArgs(depositAmount));
+                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
                   },
                 });
               }
@@ -453,7 +440,7 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .withdraw(txArgs(withdrawAmount));
+                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
                   },
                   approval: false,
                 });
