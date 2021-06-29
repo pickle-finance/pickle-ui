@@ -206,7 +206,7 @@ export default function Earn(props) {
   let earnRows;
   if (accountData) {
     earnRows = accountData.jarData
-      .filter((jar) => jar.earnedUsd > 0)
+      .filter((jar) => jar.earnedUsd > 0 && jar.balance > 0)
       .map((jar, i) => {
         const jarInfo = jars.find((s) => s.asset === jar.asset.toLowerCase());
         return (
