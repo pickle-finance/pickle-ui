@@ -37,7 +37,7 @@ export const config: Config = {
       gaugeProxy: "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f",
     },
     Polygon: {
-      pickle: "0x6c551cAF1099b08993fFDB5247BE74bE39741B82",
+      pickle: "0x2b88ad57897a8b496595925f43048301c37615da",
       masterChef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
       minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749"

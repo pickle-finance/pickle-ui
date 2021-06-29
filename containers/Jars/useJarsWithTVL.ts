@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
 import { getPoolData } from "../../util/api.js";
+import {PICKLE_JARS} from "./jars"
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
@@ -13,6 +14,14 @@ type Input = Array<JarWithAPY> | null;
 type Output = {
   jarsWithTVL: Array<JarWithTVL> | null;
 };
+
+const isMStonksJar = (token) =>
+  token === PICKLE_JARS.pUNIMTSLAUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMBABAUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMSLVUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMQQQUST.toLowerCase() ||
+  token === PICKLE_JARS.pUNIMAAPLUST.toLowerCase();
+
 
 export const useJarWithTVL = (jars: Input): Output => {
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
@@ -29,10 +38,11 @@ export const useJarWithTVL = (jars: Input): Output => {
             pool.tokenAddress.toLowerCase() ===
             jar.depositToken.address.toLowerCase(),
         ); 
+        const tvlUSD = poolInfo[0]?.liquidity_locked * (isMStonksJar(jar.contract.address.toLowerCase()) ? 2 : 1)
         return {
           ...jar,
-          tvlUSD: poolInfo[0]?.liquidity_locked,
-          usdPerPToken: (poolInfo[0]?.liquidity_locked * poolInfo[0]?.ratio)/ poolInfo[0]?.tokens,
+          tvlUSD, 
+          usdPerPToken: (tvlUSD * poolInfo[0]?.ratio)/ poolInfo[0]?.tokens,
           ratio: poolInfo[0]?.ratio,
         };
       });
