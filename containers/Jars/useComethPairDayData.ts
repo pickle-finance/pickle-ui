@@ -65,7 +65,7 @@ export const useComethPairDayData = () => {
   };
 
   useEffect(() => {
-    queryTheGraph();
+    if(!uniPairDayData) queryTheGraph();
   }, []);
 
   return {

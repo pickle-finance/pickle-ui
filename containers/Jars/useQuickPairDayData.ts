@@ -63,7 +63,7 @@ export const useQuickPairDayData = () => {
   };
 
   useEffect(() => {
-    queryTheGraph();
+    if(!uniPairDayData) queryTheGraph();
   }, []);
 
   return {
