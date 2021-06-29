@@ -76,6 +76,13 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
+        href="https://picklefinance.medium.com/"
+      >
+        Medium
+      </NavItem>
+      <NavItem
+        target="_blank"
+        rel="noopener noreferrer"
         href="https://docs.pickle.finance"
       >
         DOCS
