@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { JarWithAPY } from "./useJarsWithAPYEth";
 import { getPoolData } from "../../util/api.js";
 import {PICKLE_JARS} from "./jars"
+import {usePoolData} from "./usePoolData"
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
@@ -24,10 +25,10 @@ const isMStonksJar = (token) =>
 
 
 export const useJarWithTVL = (jars: Input): Output => {
+  const { poolData } = usePoolData();
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
     null,
   );
-  const [poolData, setPoolData] = useState<any | null>(null);
 
   const measureTVL = async () => {
     if (jars && poolData) {
@@ -51,8 +52,6 @@ export const useJarWithTVL = (jars: Input): Output => {
   };
 
   useEffect(() => {
-    const fetchPoolData = async () => setPoolData(await getPoolData());
-    if (!poolData) fetchPoolData();
     measureTVL();
   }, [jars]);
 
