@@ -20,6 +20,7 @@ import {
 import { JarApy } from "../../containers/Jars/useJarsWithAPY";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
+import { NETWORK_NAMES } from "../../containers/config";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -49,7 +50,7 @@ const GreenSwitch = withStyles({
 })(Switch);
 
 export const GaugeList: FC = () => {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { gaugeData } = UserGauges.useContainer();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const [voteWeights, setVoteWeights] = useState<Weights>({});
@@ -67,8 +68,10 @@ export const GaugeList: FC = () => {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!gaugeData) {
+  if (!gaugeData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
+  } else if (!gaugeData && chainName === NETWORK_NAMES.POLY) {
+    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
   }
 
   const gaugesWithAPY = gaugeData.map((gauge) => {

@@ -7,6 +7,7 @@ import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
+import { getFarmData } from "util/api";
 
 
 const Container = styled.div`
@@ -22,8 +23,10 @@ export const FarmList: FC = () => {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!farmData) {
+  if (!farmData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
+  } else if (!farmData && chainName === NETWORK_NAMES.POLY) {
+    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
   }
 
   const activeFarms = farmData.filter((x) => x.apy !== 0);
