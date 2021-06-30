@@ -9,6 +9,7 @@ import { Contracts } from "../Contracts";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
 import { NETWORK_NAMES } from "containers/config";
 import { formatEther } from "ethers/lib/utils";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface JarApy {
   [k: string]: number;
@@ -67,7 +68,7 @@ export const useCurveAm3MaticAPY = (): Output => {
   const [crvAPY, setCrvAPY] = useState<number| null>(null);
 
   const getMaticAPY = async () => {
-    if (multicallProvider && erc20 && prices?.snx) {
+    if (multicallProvider && erc20 && prices) {
       const now = Date.now() / 1000;
       const statsAave = await (
         await fetch(
@@ -75,15 +76,13 @@ export const useCurveAm3MaticAPY = (): Output => {
         )
       ).json();
 
-      const lpToken = new Contract(
+      const lpToken = new MulticallContract(
         JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].AM3CRV,
-        erc20.interface,
-        multicallProvider,
+        erc20.interface.fragments,
       );
-      const swap = new Contract(
+      const swap = new MulticallContract(
         aaveContracts.swap_address,
         aaveContracts.swap_abi,
-        multicallProvider,
       );
 
       const aaveApys: number[] = [];
@@ -101,7 +100,7 @@ export const useCurveAm3MaticAPY = (): Output => {
         balance2,
         lpSupply,
         lpBalance, // Balance staked in gauge
-      ] = await Promise.all([
+      ] = await multicallProvider.all([
         swap.balances(0),
         swap.balances(1),
         swap.balances(2),

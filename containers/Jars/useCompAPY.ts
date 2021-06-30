@@ -1,10 +1,12 @@
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { formatEther, parseEther } from "ethers/lib/utils";
+
+import { Contract as MulticallContract } from "ethers-multicall";
 
 type Output = {
   APYs: Array<{ [key: string]: number }>;
@@ -15,11 +17,7 @@ export const useCompAPY = (
   underlyingPrice = 1,
 ): Output => {
   const { prices } = Prices.useContainer();
-  const {
-    provider,
-    blockNum,
-    multicallProvider,
-  } = Connection.useContainer();
+  const { provider, blockNum, multicallProvider } = Connection.useContainer();
   const { cToken, comptroller } = Contracts.useContainer();
 
   const [compSupplyAPY, setCompSupplyAPY] = useState<null | number>(null);
@@ -38,16 +36,14 @@ export const useCompAPY = (
     ) {
       const CToken = cToken.attach(ctokenAddress);
 
-      const multicallCToken = new Contract(
+      const multicallCToken = new MulticallContract(
         CToken.address,
         CToken.interface.fragments,
-        multicallProvider,
       );
 
-      const mutlicallComptroller = new Contract(
+      const mutlicallComptroller = new MulticallContract(
         comptroller.address,
         comptroller.interface.fragments,
-        multicallProvider,
       );
 
       const [
@@ -69,7 +65,7 @@ export const useCompAPY = (
         supplyTokens,
         borrowState,
         borrowSpeed,
-      ] = await Promise.all([
+      ] = await multicallProvider.all([
         mutlicallComptroller.compSupplyState(ctokenAddress),
         mutlicallComptroller.compSpeeds(ctokenAddress),
         multicallCToken.exchangeRateStored(),

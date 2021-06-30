@@ -27,7 +27,7 @@ export interface UserJarData {
 }
 
 const useUserJars = (): { jarData: UserJarData[] | null } => {
-  const { blockNum, chainName } = Connection.useContainer();
+  const { blockNum, chainName, multicallProvider } = Connection.useContainer();
   const { jars } = Jars.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();

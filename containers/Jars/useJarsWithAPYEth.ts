@@ -35,6 +35,7 @@ import { useUniPairDayData } from "./useUniPairDayData";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
 import { useYearnData } from "./useYearnData";
+import { useDuneData } from "./useDuneData";
 import { ethers } from "ethers";
 import { formatEther, getJsonWalletAddress } from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
@@ -44,11 +45,11 @@ import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 import { Contract } from "@ethersproject/contracts";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 import RewarderABI from "../ABIs/rewarder.json";
 
 const AVERAGE_BLOCK_TIME = 13.22;
-const YEARN_API = "https://vaults.finance/all";
 
 interface SushiPoolId {
   [key: string]: number;
@@ -92,7 +93,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, provider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
@@ -114,6 +115,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
   const { yearnData } = useYearnData();
+  const { duneData } = useDuneData();
   const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.ETH);
   const { APYs: susdCrvAPY } = useCurveCrvAPY(
     jars,
@@ -157,13 +159,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateMirAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
-      const multicallUniStakingRewards = new Contract(
+      const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
-        multicallProvider,
       );
 
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.lpt(),
         multicallUniStakingRewards.totalSupply(),
@@ -189,39 +190,28 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateLqtyStakingAPY = async () => {
-    const body = {
-      operationName: "FindResultDataByResult",
-      query:
-        "query FindResultDataByResult($result_id: uuid!) {\n  query_results(where: {id: {_eq: $result_id}}) {\n    id\n    job_id\n    error\n    runtime\n    generated_at\n    columns\n    __typename\n  }\n  get_result_by_result_id(args: {want_result_id: $result_id}) {\n    data\n    __typename\n  }\n}\n",
-      variables: { result_id: "90b9cec0-c576-4f87-b5e3-770ceaa99e45" },
-    };
-    const res = await fetch("https://core-hsr.duneanalytics.com/v1/graphql", {
-      body: JSON.stringify(body),
-      method: "POST",
-      mode: "cors",
-    }).then((x) => x.json());
+    if (duneData) {
+      let lqtyApy = 0;
 
-    let lqtyApy = 0;
-    if (res) {
-      lqtyApy = res?.data?.get_result_by_result_id[0].data?.apr / 100;
+      lqtyApy = duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
+      return [
+        {
+          "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8),
+          apr: lqtyApy * 0.8 * 100,
+        },
+      ];
+
     }
 
-    return [
-      {
-        "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8),
-        apr: lqtyApy * 0.8 * 100,
-      },
-    ];
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
-      const multicallUniStakingRewards = new Contract(
+      const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
-        multicallProvider,
       );
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.uniToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -253,13 +243,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       getUniPairData &&
       multicallProvider
     ) {
-      const multicallUniStakingRewards = new Contract(
+      const multicallUniStakingRewards = new MulticallContract(
         rewardsAddress,
         stakingRewards.interface.fragments,
-        multicallProvider,
       );
 
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await Promise.all([
+      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.stakingToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -288,7 +277,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     lpTokenAddress: string,
     rewardToken: PriceIds,
   ) => {
-    if (masterchefV2 && prices && getSushiPairData && multicallProvider) {
+    if (masterchefV2 && prices && getSushiPairData && provider) {
       const poolId = sushiPoolV2Ids[lpTokenAddress];
 
       const rewarder_addr = await masterchefV2.rewarder(poolId);
@@ -296,12 +285,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const rewarder = new Contract(
         rewarder_addr,
         RewarderABI,
-        multicallProvider,
+        provider
       );
       const lpToken = new Contract(
         lpTokenAddress,
         erc20.abi,
-        multicallProvider,
+        provider,
       );
       const totalSupplyBN = await lpToken.balanceOf(masterchefV2.address);
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
@@ -339,29 +328,25 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (sushiChef && prices?.sushi && getSushiPairData && multicallProvider) {
       const poolId = sushiPoolIds[lpTokenAddress];
-      const multicallSushiChef = new Contract(
+      const multicallSushiChef = new MulticallContract(
         sushiChef.address,
         sushiChef.interface.fragments,
-        multicallProvider,
       );
-      const lpToken = new Contract(
+      const lpToken = new MulticallContract(
         lpTokenAddress,
         erc20.abi,
-        multicallProvider,
       );
-
-      const totalSupplyBN = await lpToken.balanceOf(sushiChef.address);
 
       const [
         sushiPerBlockBN,
         totalAllocPointBN,
         poolInfo,
-        // totalSupplyBN,
-      ] = await Promise.all([
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallSushiChef.sushiPerBlock(),
         multicallSushiChef.totalAllocPoint(),
         multicallSushiChef.poolInfo(poolId),
-        // lpToken.balanceOf(sushiChef.address),
+        lpToken.balanceOf(sushiChef.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
@@ -397,15 +382,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       multicallProvider
     ) {
       const poolId = sushiPoolV2Ids[lpTokenAddress];
-      const multicallMasterChefV2 = new Contract(
+      const multicallMasterChefV2 = new MulticallContract(
         masterchefV2.address,
         masterchefV2.interface.fragments,
-        multicallProvider,
       );
-      const lpToken = new Contract(
+      const lpToken = new MulticallContract(
         lpTokenAddress,
         erc20.abi,
-        multicallProvider,
       );
 
       const [
@@ -413,7 +396,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         totalAllocPointBN,
         poolInfo,
         totalSupplyBN,
-      ] = await Promise.all([
+      ] = await multicallProvider.all([
         multicallMasterChefV2.sushiPerBlock(),
         multicallMasterChefV2.totalAllocPoint(),
         multicallMasterChefV2.poolInfo(poolId),
@@ -489,12 +472,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
       ]);
 
+
       const [
         sushiEthyveCRVApy,
         sushiEthyvboostApy,
-        alcxEthAlcxApy,
         usdcApy,
         crvLusdApy,
+        alcxEthAlcxApy,
         cvxEthApy,
         sushiCvxEthApy,
       ] = await Promise.all([
@@ -504,12 +488,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVBOOST,
         ),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].lusdCRV),
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
           "alcx",
         ),
-        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC),
-        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].lusdCRV),
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
           "cvx",
@@ -728,12 +712,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
           APYs = [...usdcApy];
-          totalAPY = usdcApy[0].apr;
+          totalAPY = usdcApy[0]?.apr || 0;
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
           APYs = [...crvLusdApy];
-          totalAPY = crvLusdApy[0].apr;
+          totalAPY = crvLusdApy[0]?.apr || 0;
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_CVX_ETH) {

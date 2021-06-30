@@ -5,6 +5,7 @@ import { Connection } from "./Connection";
 import { ethers, Contract } from "ethers";
 import { Contracts } from "./Contracts";
 import erc20 from "@studydefi/money-legos/erc20";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 interface TokenBalances {
   [k: string]: ethers.BigNumber;
@@ -23,9 +24,9 @@ function useBalances() {
 
   const updateBalances = async () => {
     if (erc20 && address && multicallProvider) {
-      const balances = await Promise.all(
+      const balances = await multicallProvider.all(
         tokenAddresses.map((x) => {
-          const c = erc20.attach(x)
+          const c = new MulticallContract(x, erc20.interface.fragments);
           return c.balanceOf(address);
         }),
       );

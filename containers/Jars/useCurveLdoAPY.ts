@@ -9,6 +9,7 @@ import { Pool } from "../Contracts/Pool";
 
 import { Connection } from "../Connection";
 import { NETWORK_NAMES } from "containers/config";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface JarApy {
   [k: string]: number;
@@ -40,20 +41,18 @@ export const useCurveLdoAPY = (
 
   const getLdoAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.ldo) {
-      const mcPool = new Contract(
+      const mcPool = new MulticallContract(
         pool.address,
         pool.interface.fragments,
-        multicallProvider,
       );
 
-      const mcStakingRewards = new Contract(
+      const mcStakingRewards = new MulticallContract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
-        multicallProvider,
       );
 
       const [, rewardsRate, totalSupply, virtualPrice] = (
-        await Promise.all([
+        await multicallProvider.all([
           mcStakingRewards.rewardsDuration(),
           mcStakingRewards.rewardRate(),
           mcStakingRewards.totalSupply(),

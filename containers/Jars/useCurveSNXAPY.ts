@@ -9,6 +9,7 @@ import { Pool } from "../Contracts/Pool";
 
 import { Connection } from "../Connection";
 import { NETWORK_NAMES } from "containers/config";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface JarApy {
   [k: string]: number;
@@ -40,20 +41,18 @@ export const useCurveSNXAPY = (
 
   const getSNXAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.snx) {
-      const mcPool = new Contract(
+      const mcPool = new MulticallContract(
         pool.address,
         pool.interface.fragments,
-        multicallProvider,
       );
 
-      const mcStakingRewards = new Contract(
+      const mcStakingRewards = new MulticallContract(
         stakingRewards.address,
         stakingRewards.interface.fragments,
-        multicallProvider,
       );
 
       const [rewardsDuration, rewardsRate, totalSupply, virtualPrice] = (
-        await Promise.all([
+        await multicallProvider.all([
           mcStakingRewards.DURATION(),
           mcStakingRewards.rewardRate(),
           mcStakingRewards.totalSupply(),
