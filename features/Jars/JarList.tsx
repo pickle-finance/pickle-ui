@@ -9,7 +9,7 @@ import { JarCollapsible } from "./JarCollapsible";
 import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
-import { backgroundColor, pickleGreen } from "../../util/constants";
+import { backgroundColor, pickleGreen, pickleWhite } from "../../util/constants";
 import { NETWORK_NAMES } from "containers/config";
 
 const Container = styled.div`
@@ -43,14 +43,14 @@ export const JarList: FC = () => {
   if (!jarData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   } else if (!jarData && chainName === NETWORK_NAMES.POLY) {
-    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
+    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
   }
 
   const activeJars = jarData.filter(
     (jar) =>
       JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
-  ).sort((a,b) => b.totalAPY - a.totalAPY);
-  
+  ).sort((a, b) => b.totalAPY - a.totalAPY);
+
   const yearnJars = jarData.filter(
     (jar) =>
       JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],
@@ -93,7 +93,7 @@ export const JarList: FC = () => {
         {chainName === NETWORK_NAMES.ETH && `Powered by Yearn ⚡`}
         {yearnJars.map((jar) => (
           <Grid xs={24} key={jar.name}>
-            <JarCollapsible jarData={jar} isYearnJar={true}/>
+            <JarCollapsible jarData={jar} isYearnJar={true} />
           </Grid>
         ))}
       </Grid.Container>

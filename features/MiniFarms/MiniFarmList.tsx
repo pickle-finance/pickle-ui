@@ -7,6 +7,7 @@ import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { MiniIcon } from "../../components/TokenIcon";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { pickleWhite } from "../../util/constants";
 import { NETWORK_NAMES } from "containers/config";
 
 const Container = styled.div`
@@ -25,7 +26,7 @@ export const MiniFarmList: FC = () => {
   if (!farmData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   } else if (!farmData && chainName === NETWORK_NAMES.POLY) {
-    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
+    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
   }
   
   const activeFarms = farmData.filter((x) => x.apy !== 0);

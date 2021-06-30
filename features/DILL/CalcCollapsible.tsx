@@ -90,10 +90,7 @@ export const CalcCollapsible: FC<{
 
   if (!gaugeData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
-  } else if (!gaugeData && chainName === NETWORK_NAMES.POLY) {
-    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
-  }
-
+  } 
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
