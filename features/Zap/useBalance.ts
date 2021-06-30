@@ -17,12 +17,7 @@ const tokenInfo = {
 export type TokenSymbol = keyof typeof tokenInfo;
 
 export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
-  const {
-    multicallProvider,
-    address,
-    blockNum,
-    chainName,
-  } = Connection.useContainer();
+  const { provider, address, blockNum, chainName } = Connection.useContainer();
   const [balanceRaw, setBalance] = useState<BigNumber | null>(null);
   const [balanceStr, setBalanceStr] = useState<string | null>(null);
   const [decimals, setDecimals] = useState<number | null>(null);
@@ -34,20 +29,17 @@ export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
         balanceStr: null,
         decimals: 0,
       };
-    if (symbol && multicallProvider && address) {
-      let balance: BigNumber = 0;
+    if (symbol && provider && address) {
+      let balance = BigNumber.from(0);
       let balanceStr = "0";
       if (symbol == "ETH") {
-        balance = await multicallProvider.getBalance(address);
+        balance = await provider.getBalance(address);
         balanceStr = ethers.utils.formatUnits(balance, decimals);
         setDecimals(18);
         setBalance(balance);
         setBalanceStr(balanceStr);
       } else {
-        const token = Erc20Factory.connect(
-          tokenInfo[symbol],
-          multicallProvider,
-        );
+        const token = Erc20Factory.connect(tokenInfo[symbol], provider);
         const decimals = await token.decimals();
         balance = await token.balanceOf(address);
         balanceStr = ethers.utils.formatUnits(balance, decimals);
@@ -60,7 +52,7 @@ export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
 
   useEffect(() => {
     getBalance();
-  }, [symbol, multicallProvider, address, blockNum]);
+  }, [symbol, provider, address, blockNum]);
 
   return { balanceRaw, balanceStr, decimals };
 };
