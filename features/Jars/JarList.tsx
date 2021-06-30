@@ -40,7 +40,12 @@ export const JarList: FC = () => {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!jarData) return <h2>Loading...</h2>;
+  if (!jarData && chainName !== NETWORK_NAMES.POLY) {
+    return <h2>Loading...</h2>;
+  } else if (!jarData && chainName === NETWORK_NAMES.POLY) {
+    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
+  }
+
   const activeJars = jarData.filter(
     (jar) =>
       JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],

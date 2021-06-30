@@ -10,12 +10,13 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { NETWORK_NAMES } from "../../containers/config";
 
 export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { gaugeData } = UserGauges.useContainer();
-  const { address, signer } = Connection.useContainer();
+  const { address, signer, chainName } = Connection.useContainer();
   const [balance, setBalance] = useState("0");
   const [totalBalance, setTotalBalance] = useState("0");
   const [userChanged, setUserChanged] = useState(false);
@@ -87,8 +88,10 @@ export const CalcCollapsible: FC<{
       setDillBalance(formatEther(dillStats.balance.toString() || 0));
   }, [dillStats]);
 
-  if (!gaugeData) {
+  if (!gaugeData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
+  } else if (!gaugeData && chainName === NETWORK_NAMES.POLY) {
+    return <h2>Loading...(if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com')</h2>;
   }
 
   return (
