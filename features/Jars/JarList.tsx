@@ -10,7 +10,7 @@ import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { backgroundColor, pickleGreen } from "../../util/constants";
-import { NETWORK_NAMES } from "../../containers/config";
+import { NETWORK_NAMES } from "containers/config";
 
 const Container = styled.div`
   padding-top: 1.5rem;
