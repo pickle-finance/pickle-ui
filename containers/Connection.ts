@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
-import { providers } from '@0xsequence/multicall';
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
-import { config, ChainName } from "./config";
-import { Provider } from "@ethersproject/providers";
+import { config } from "./config";
+import { Provider as MulticallProvider } from "ethers-multicall";
 import { useRouter } from "next/router";
 
 type Network = ethers.providers.Network;
@@ -14,29 +13,11 @@ type Network = ethers.providers.Network;
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
   const router = useRouter();
-  const [ethInfuraProvider] = useState<Provider>(
-    new ethers.providers.JsonRpcProvider(process.env.ethRPC) as any,
-  );
-  const [polygonInfuraProvider] = useState<Provider>(
-    new ethers.providers.JsonRpcProvider(process.env.polygonRPC) as any,
-  );
 
   const [
     multicallProvider,
     setMulticallProvider,
-  ] = useState<providers.MulticallProvider | null>(null);
-  const [ethMulticallProvider] = useState(
-    new providers.MulticallProvider(ethInfuraProvider, {
-      timeWindow: 0,
-      batchSize: 100,
-    }),
-  );
-  const [polygonMulticallProvider] = useState(
-    new providers.MulticallProvider(polygonInfuraProvider, {
-      timeWindow: 0,
-      batchSize: 100,
-    }),
-  );
+  ] = useState<MulticallProvider | null>(null);
 
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
@@ -72,16 +53,14 @@ function useConnection() {
     if (library) {
       library.getNetwork().then((network: any) => setNetwork(network));
 
-      setMulticallProvider(
-        new providers.MulticallProvider(library, {
-          timeWindow: 0,
-          batchSize: 100,
-        }),
-      );
+      const _multicallProvider = new MulticallProvider(library);
+      _multicallProvider
+        .init()
+        .then(() => setMulticallProvider(_multicallProvider));
 
       const { ethereum } = window;
       ethereum?.on("chainChanged", () => router.reload());
-      
+
       const observable = new Observable<number>((subscriber) => {
         library.on("block", (blockNumber: number) =>
           subscriber.next(blockNumber),
@@ -103,19 +82,8 @@ function useConnection() {
 
   const chainName = (chainId && config.chains[chainId].name) || null;
 
-  const getMCProvider = (chainName: ChainName) => {
-    switch (chainName) {
-      case "Ethereum":
-        return multicallProvider || ethMulticallProvider;
-      case "Polygon":
-        return multicallProvider || polygonMulticallProvider;
-      default:
-        return multicallProvider;
-    }
-  };
-
   return {
-    multicallProvider: getMCProvider(chainName),
+    multicallProvider,
     provider: library,
     address: account,
     network,
