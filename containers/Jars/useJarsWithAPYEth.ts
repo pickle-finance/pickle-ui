@@ -35,6 +35,7 @@ import { useUniPairDayData } from "./useUniPairDayData";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
 import { useYearnData } from "./useYearnData";
+import { useDuneData } from "./useDuneData";
 import { ethers } from "ethers";
 import { formatEther, getJsonWalletAddress } from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
@@ -49,7 +50,6 @@ import { Contract as MulticallContract } from "ethers-multicall";
 import RewarderABI from "../ABIs/rewarder.json";
 
 const AVERAGE_BLOCK_TIME = 13.22;
-const YEARN_API = "https://vaults.finance/all";
 
 interface SushiPoolId {
   [key: string]: number;
@@ -93,7 +93,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
-  const { multicallProvider, provider} = Connection.useContainer();
+  const { multicallProvider, provider } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
@@ -115,6 +115,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
   const { yearnData } = useYearnData();
+  const { duneData } = useDuneData();
   const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.ETH);
   const { APYs: susdCrvAPY } = useCurveCrvAPY(
     jars,
@@ -189,29 +190,19 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateLqtyStakingAPY = async () => {
-    const body = {
-      operationName: "FindResultDataByResult",
-      query:
-        "query FindResultDataByResult($result_id: uuid!) {\n  query_results(where: {id: {_eq: $result_id}}) {\n    id\n    job_id\n    error\n    runtime\n    generated_at\n    columns\n    __typename\n  }\n  get_result_by_result_id(args: {want_result_id: $result_id}) {\n    data\n    __typename\n  }\n}\n",
-      variables: { result_id: "90b9cec0-c576-4f87-b5e3-770ceaa99e45" },
-    };
-    const res = await fetch("https://core-hsr.duneanalytics.com/v1/graphql", {
-      body: JSON.stringify(body),
-      method: "POST",
-      mode: "cors",
-    }).then((x) => x.json());
+    if (duneData) {
+      let lqtyApy = 0;
 
-    let lqtyApy = 0;
-    if (res) {
-      lqtyApy = res?.data?.get_result_by_result_id[0].data?.apr / 100;
+      lqtyApy = duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
+      return [
+        {
+          "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8),
+          apr: lqtyApy * 0.8 * 100,
+        },
+      ];
+
     }
 
-    return [
-      {
-        "auto-compounded ETH and LUSD fees": getCompoundingAPY(lqtyApy * 0.8),
-        apr: lqtyApy * 0.8 * 100,
-      },
-    ];
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
