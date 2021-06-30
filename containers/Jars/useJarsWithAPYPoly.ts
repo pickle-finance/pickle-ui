@@ -150,7 +150,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       aaveStrategy.getSuppliedView(),
       aaveStrategy.getBorrowedView(),
       aaveStrategy.balanceOfPool(),
-    ])).map(x => ethers.utils.formatEther);
+    ])).map(x => ethers.utils.formatEther(x));
 
     const rawSupplyAPY = +pool["avg1DaysLiquidityRate"];
     const rawBorrowAPY = +pool["avg1DaysVariableBorrowRate"];
