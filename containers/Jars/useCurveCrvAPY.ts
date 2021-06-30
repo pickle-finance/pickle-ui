@@ -11,6 +11,7 @@ import { Gauge } from "../Contracts/Gauge";
 
 import { CurveGauge } from "../Contracts/CurveGauge";
 import { NETWORK_NAMES } from "containers/config";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface JarApy {
   [k: string]: number;
@@ -51,16 +52,14 @@ export const useCurveCrvAPY = (
       prices?.crv &&
       multicallProvider
     ) {
-      const mcGauge = new Contract(
+      const mcGauge = new MulticallContract(
         gauge.address,
         gauge.interface.fragments,
-        multicallProvider,
       );
 
-      const mcPool = new Contract(
+      const mcPool = new MulticallContract(
         pool.address,
         pool.interface.fragments,
-        multicallProvider,
       );
 
       const weight = await gaugeController["gauge_relative_weight(address)"](
@@ -68,7 +67,7 @@ export const useCurveCrvAPY = (
       ).then((x) => parseFloat(ethers.utils.formatUnits(x)));
 
       const [workingSupply, gaugeRate, virtualPrice] = (
-        await Promise.all([
+        await multicallProvider.all([
           mcGauge.working_supply(),
           mcGauge.inflation_rate(),
           mcPool.get_virtual_price(),

@@ -23,7 +23,7 @@ export type FeeDistributionDataPoint = {
 };
 
 export function useFeeDistributionSeries() {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, provider } = Connection.useContainer();
   const { feeDistributor } = Contracts.useContainer();
   const [feeDistributionSeries, setFeeDistributionSeries] = useState<
     FeeDistributionDataPoint[]
@@ -41,7 +41,7 @@ export function useFeeDistributionSeries() {
       const contract = new Contract(
         feeDistributor.address,
         feeDistributor.interface.fragments,
-        multicallProvider
+        provider
       );
 
       // Ignore initial negligible distributions that distort

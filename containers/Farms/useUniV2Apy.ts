@@ -8,6 +8,7 @@ import { Prices } from "../Prices";
 import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";
 import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { FarmWithReward } from "./useWithReward";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 import { Contract, ethers } from "ethers";
 
@@ -50,9 +51,9 @@ export const useUniV2Apy = (inputFarms: Input): Output => {
       const prefilledDatas = uniV2Farms
         .map((farm) => {
           const { a, b } = PAIR_INFO[farm.lpToken];
-          const tokenA = new Contract(a.address, erc20.abi, multicallProvider);
-          const tokenB = new Contract(b.address, erc20.abi, multicallProvider);
-          const pair = new Contract(farm.lpToken, erc20.abi, multicallProvider);
+          const tokenA = new MulticallContract(a.address, erc20.abi);
+          const tokenB = new MulticallContract(b.address, erc20.abi);
+          const pair = new MulticallContract(farm.lpToken, erc20.abi);
           return [
             tokenA.balanceOf(farm.lpToken),
             tokenB.balanceOf(farm.lpToken),
@@ -64,7 +65,7 @@ export const useUniV2Apy = (inputFarms: Input): Output => {
           return [...acc, ...x];
         }, []);
 
-      const datas = await Promise.all(prefilledDatas);
+      const datas = await multicallProvider.all(prefilledDatas);
 
       const promises = uniV2Farms.map((farm, idx) => {
         const numAInPairBN = datas[idx * 4];

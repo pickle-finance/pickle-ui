@@ -8,6 +8,7 @@ import { Balances } from "./Balances";
 import { Contracts } from "./Contracts";
 import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
 
@@ -32,19 +33,17 @@ export const updateFarmData = async (
   setFarmData: any,
 ) => {
   if (farms && erc20 && masterchef && address && multicallProvider) {
-    const mcMasterchef = new Contract(
+    const mcMasterchef = new MulticallContract(
       masterchef.address,
       masterchef.interface.fragments,
-      multicallProvider,
     );
       
-    const balancesUserInfosHarvestables = await Promise.all(
+    const balancesUserInfosHarvestables = await multicallProvider.all(
       farms
         .map((x) => {
-          const c = new Contract(
+          const c = new MulticallContract(
             x.lpToken,
             erc20.interface.fragments,
-            multicallProvider,
           );
           return [
             c.balanceOf(address),

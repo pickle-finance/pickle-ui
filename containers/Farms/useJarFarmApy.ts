@@ -12,6 +12,7 @@ import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
 import { NETWORK_NAMES } from "containers/config";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;
@@ -20,14 +21,14 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { provider, chainName } = Connection.useContainer();
-  
+  const { multicallProvider, chainName } = Connection.useContainer();
+
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
-    if (inputFarms && masterchef && jars && prices && provider) {
+    if (inputFarms && masterchef && jars && prices && multicallProvider) {
       const jarFarms = inputFarms?.filter(
         (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
       );
@@ -40,20 +41,19 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
         if (!farmingJar) {
-          return new Contract(
+          return new MulticallContract(
             mlErc20.dai.address,
             mlErc20.abi,
-            provider,
           );
         }
 
         return farmingJar.contract
       });
 
-      
+
       const farmBalances = await Promise.all(
         farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0))),
-        );
+      );
 
       const res = jarFarms.map((farm, idx) => {
         const { jarName } = JAR_FARM_MAP[
@@ -105,7 +105,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
   useEffect(() => {
     calculateApy();
-  }, [inputFarms, prices, masterchef, jars, provider]);
+  }, [inputFarms, prices, masterchef, jars]);
 
   return { jarFarmWithApy: farms };
 };

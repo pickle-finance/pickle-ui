@@ -4,6 +4,7 @@ import erc20 from "@studydefi/money-legos/erc20";
 
 import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
@@ -108,11 +109,11 @@ function useSushiPairs() {
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new Contract(a.address, erc20.abi, multicallProvider);
-    const tokenB = new Contract(b.address, erc20.abi, multicallProvider);
-    const pair = new Contract(pairAddress, erc20.abi, multicallProvider);
+    const tokenA = new MulticallContract(a.address, erc20.abi);
+    const tokenB = new MulticallContract(b.address, erc20.abi);
+    const pair = new MulticallContract(pairAddress, erc20.abi);
 
-    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
+    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await multicallProvider.all([
       tokenA.balanceOf(pairAddress),
       tokenB.balanceOf(pairAddress),
       pair.totalSupply(),

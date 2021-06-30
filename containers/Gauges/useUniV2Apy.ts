@@ -10,6 +10,7 @@ import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { GaugeWithReward } from "./useWithReward";
 
 import { Contract, ethers } from "ethers";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 const { formatEther } = ethers.utils;
 
@@ -54,9 +55,9 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
       const prefilledDatas = uniV2Gauges
         .map((gauge) => {
           const { a, b } = PAIR_INFO[gauge.token];
-          const tokenA = new Contract(a.address, erc20.abi, multicallProvider);
-          const tokenB = new Contract(b.address, erc20.abi, multicallProvider);
-          const pair = new Contract(gauge.token, erc20.abi, multicallProvider);
+          const tokenA = new MulticallContract(a.address, erc20.abi);
+          const tokenB = new MulticallContract(b.address, erc20.abi);
+          const pair = new MulticallContract(gauge.token, erc20.abi);
           return [
             tokenA.balanceOf(gauge.token),
             tokenB.balanceOf(gauge.token),
@@ -68,7 +69,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
           return [...acc, ...x];
         }, []);
 
-      const datas = await Promise.all(prefilledDatas);
+      const datas = await multicallProvider.all(prefilledDatas);
 
       const promises = uniV2Gauges.map((gauge, idx) => {
         const numAInPairBN = datas[idx * 4];

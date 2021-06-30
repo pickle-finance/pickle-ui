@@ -5,6 +5,7 @@ import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { NETWORK_NAMES } from "containers/config";
 import { X } from "@geist-ui/react-icons";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface RawFarm {
   lpToken: string;
@@ -30,13 +31,12 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
       const poolLengthBN = (await masterchef.poolLength()) as BigNumber;
       const poolLength = parseInt(poolLengthBN.toString());
 
-      const mcMasterchef = new Contract(
+      const mcMasterchef = new MulticallContract(
         masterchef.address,
         masterchef.interface.fragments,
-        multicallProvider,
       );
 
-      let farmInfo = await Promise.all(
+      let farmInfo = await multicallProvider.all(
         Array(parseInt(poolLength.toString()))
           .fill(0)
           .map((_, poolIndex) => {
@@ -47,7 +47,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
       if (!farmInfo[0].lpToken) {
         farmInfo = await Promise.all(
           farmInfo.map(async (x, idx) => {
-            const lpToken = await mcMasterchef.lpToken(idx);
+            const lpToken = await masterchef.lpToken(idx);
             return {
               ...x,
               lpToken,
@@ -55,6 +55,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
           }),
         );
       }
+
       // extract response and convert to something we can use
       const farms = farmInfo.map((x, idx) => {
         return {
