@@ -30,6 +30,7 @@ import { UserGauges } from "../containers/UserGauges";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
+import { PoolData } from "../containers/Jars/usePoolData";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -38,45 +39,47 @@ const getLibrary = (provider: any) => {
 const WithContainers: FC = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <Connection.Provider>
-      <Contracts.Provider>
-        <Balances.Provider>
-          <ERC20Transfer.Provider>
-            <Prices.Provider>
-              <Pickles.Provider>
-                <MiniPickles.Provider>
-                  <PickleStaking.Provider>
-                    <UniV2Pairs.Provider>
-                      <ComethPairs.Provider>
-                        <Dill.Provider>
-                          <SushiPairs.Provider>
-                            <Jars.Provider>
-                              <Farms.Provider>
-                                <Gauges.Provider>
-                                  <MiniFarms.Provider>
-                                    <UserJars.Provider>
-                                      <UserFarms.Provider>
-                                        <UserGauges.Provider>
-                                          <UserMiniFarms.Provider>
-                                            {children}
-                                          </UserMiniFarms.Provider>
-                                        </UserGauges.Provider>
-                                      </UserFarms.Provider>
-                                    </UserJars.Provider>
-                                  </MiniFarms.Provider>
-                                </Gauges.Provider>
-                              </Farms.Provider>
-                            </Jars.Provider>
-                          </SushiPairs.Provider>
-                        </Dill.Provider>
-                      </ComethPairs.Provider>
-                    </UniV2Pairs.Provider>
-                  </PickleStaking.Provider>
-                </MiniPickles.Provider>
-              </Pickles.Provider>
-            </Prices.Provider>
-          </ERC20Transfer.Provider>
-        </Balances.Provider>
-      </Contracts.Provider>
+      <PoolData.Provider>
+        <Contracts.Provider>
+          <Balances.Provider>
+            <ERC20Transfer.Provider>
+              <Prices.Provider>
+                <Pickles.Provider>
+                  <MiniPickles.Provider>
+                    <PickleStaking.Provider>
+                      <UniV2Pairs.Provider>
+                        <ComethPairs.Provider>
+                          <Dill.Provider>
+                            <SushiPairs.Provider>
+                              <Jars.Provider>
+                                <Farms.Provider>
+                                  <Gauges.Provider>
+                                    <MiniFarms.Provider>
+                                      <UserJars.Provider>
+                                        <UserFarms.Provider>
+                                          <UserGauges.Provider>
+                                            <UserMiniFarms.Provider>
+                                              {children}
+                                            </UserMiniFarms.Provider>
+                                          </UserGauges.Provider>
+                                        </UserFarms.Provider>
+                                      </UserJars.Provider>
+                                    </MiniFarms.Provider>
+                                  </Gauges.Provider>
+                                </Farms.Provider>
+                              </Jars.Provider>
+                            </SushiPairs.Provider>
+                          </Dill.Provider>
+                        </ComethPairs.Provider>
+                      </UniV2Pairs.Provider>
+                    </PickleStaking.Provider>
+                  </MiniPickles.Provider>
+                </Pickles.Provider>
+              </Prices.Provider>
+            </ERC20Transfer.Provider>
+          </Balances.Provider>
+        </Contracts.Provider>
+      </PoolData.Provider>
     </Connection.Provider>
   </Web3ReactProvider>
 );

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
 import {PICKLE_JARS} from "./jars"
-import {usePoolData} from "./usePoolData"
+import { PoolData } from "./usePoolData"
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
@@ -24,7 +24,7 @@ const isMStonksJar = (token) =>
 
 
 export const useJarWithTVL = (jars: Input): Output => {
-  const { poolData } = usePoolData();
+  const { poolData } = PoolData.useContainer();
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
     null,
   );

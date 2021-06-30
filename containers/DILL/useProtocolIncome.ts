@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import fetch from "node-fetch";
-import { usePoolData } from "../Jars/usePoolData";
-import { getAssetPerformanceData } from "../../util/api.js";
+import { PoolData } from "../Jars/usePoolData";
 
 type Jar = {
   jarApy: number;
@@ -14,7 +13,7 @@ export function useProtocolIncome() {
   const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(
     null,
   );
-  const { poolData } : {poolData: Jar[] | null} = usePoolData();
+  const { poolData } = PoolData.useContainer();
 
   const getWeeklyIncome = async () => {
     if (poolData) {
@@ -34,7 +33,7 @@ export function useProtocolIncome() {
 
   useEffect(() => {
     getWeeklyIncome();
-  }, []);
+  }, [poolData]);
 
   return {
     weeklyProfit,
