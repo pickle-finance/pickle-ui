@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
-import { getPoolData } from "../../util/api.js";
 import {PICKLE_JARS} from "./jars"
 import {usePoolData} from "./usePoolData"
 

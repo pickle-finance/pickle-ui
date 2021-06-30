@@ -205,6 +205,9 @@ export const JarCollapsible: FC<{
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
 
+  const isMaiJar =
+    depositToken.address.toLowerCase() === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase()
+
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
@@ -280,7 +283,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -305,14 +308,13 @@ export const JarCollapsible: FC<{
               <Tooltip
                 text={
                   isYearnJar
-                    ? `This jar deposits into Yearn's ${
-                        APYs[1].vault
-                      }, The base rate of ${apr.toFixed(
-                        2,
-                      )}% is provided by the underlying Yearn strategy`
+                    ? `This jar deposits into Yearn's ${APYs[1].vault
+                    }, The base rate of ${apr.toFixed(
+                      2,
+                    )}% is provided by the underlying Yearn strategy`
                     : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                        2,
-                      )}% which we auto-compound regularly.`
+                      2,
+                    )}% which we auto-compound regularly.`
                 }
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
@@ -387,23 +389,33 @@ export const JarCollapsible: FC<{
           >
             {depositButton.text}
           </Button>
+          {isMaiJar ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
+              }}
+            >
+              A 0.5% fee is charged by Mai Finance upon depositing
+            </div>) : null}
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance {depositedStr} (
               <Tooltip
-                text={`${
-                  deposited && ratio
-                    ? parseFloat(
-                        formatEther(
-                          isUsdc && deposited
-                            ? deposited.mul(USDC_SCALE)
-                            : deposited,
-                        ),
-                      ) * ratio
-                    : 0
-                } ${depositTokenName}`}
+                text={`${deposited && ratio
+                  ? parseFloat(
+                    formatEther(
+                      isUsdc && deposited
+                        ? deposited.mul(USDC_SCALE)
+                        : deposited,
+                    ),
+                  ) * ratio
+                  : 0
+                  } ${depositTokenName}`}
               >
                 {depositedUnderlyingStr}
               </Tooltip>{" "}
@@ -450,16 +462,6 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              paddingTop: "4px",
-              fontFamily: "Source Sans Pro",
-            }}
-          >
-            There is no withdrawal fee
-          </div>
         </Grid>
       </Grid.Container>
     </Collapse>
