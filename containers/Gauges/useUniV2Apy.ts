@@ -9,7 +9,7 @@ import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";
 import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { GaugeWithReward } from "./useWithReward";
 
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 const { formatEther } = ethers.utils;
@@ -29,10 +29,7 @@ type Output = { uniV2GaugesWithApy: GaugeWithApy[] | null };
 export const useUniV2Apy = (inputGauges: Input): Output => {
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 
-  const {
-    multicallProvider,
-    provider,
-  } = Connection.useContainer();
+  const { multicallProvider, provider } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairDataPrefill } = UniV2Pairs.useContainer();
@@ -91,7 +88,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
         const valueStakedInGauge = pricePerToken * numTokensInPool;
         const fullApy =
           (gauge.rewardRatePerYear * prices.pickle) / pricePerToken;
-       
+
         return {
           ...gauge,
           fullApy,
