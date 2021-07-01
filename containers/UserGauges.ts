@@ -31,11 +31,7 @@ export interface UserGaugeData {
 }
 
 const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
-  const {
-    blockNum,
-    address,
-    multicallProvider
-  } = Connection.useContainer();
+  const { blockNum, address, multicallProvider } = Connection.useContainer();
   const { gauge, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();
   const { gauges } = Gauges.useContainer();
@@ -56,10 +52,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
     ) {
       const balancesUserInfosHarvestables = await multicallProvider.all(
         gauges.flatMap((x) => {
-          const c = new MulticallContract(
-            x.token,
-            erc20.interface.fragments,
-          );
+          const c = new MulticallContract(x.token, erc20.interface.fragments);
           const gaugeContract = new MulticallContract(
             x.gaugeAddress,
             gauge.interface.fragments,
@@ -112,7 +105,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
 
   useEffect(() => {
     updateGaugeData();
-  }, [jars, blockNum, tokenBalances, transferStatus]);
+  }, [jars?.length, gauges?.length, blockNum, transferStatus]);
 
   return { gaugeData };
 };

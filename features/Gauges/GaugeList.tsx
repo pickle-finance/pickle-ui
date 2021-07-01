@@ -1,14 +1,12 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
-import styled from "styled-components";
-import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
-import { PercentageInput } from "../../components/PercentageInput";
 import { GaugeCollapsible } from "./GaugeCollapsible";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
-import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
+import { useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
@@ -17,13 +15,9 @@ import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
+import type { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
-
-const Container = styled.div`
-  padding-top: 1.5rem;
-`;
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -119,9 +113,7 @@ export const GaugeList: FC = () => {
   };
 
   const indexofPickleEth = activeGauges.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_ETH_GAUGE,
+    (x) => x.depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE,
   );
   moveInArray(activeGauges, indexofPickleEth, 0);
 
