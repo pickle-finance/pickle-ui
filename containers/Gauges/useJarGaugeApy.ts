@@ -1,16 +1,12 @@
-import { BigNumber, Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
-import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
-
 import { JAR_GAUGE_MAP } from "./gauges";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
-import { getFarmData } from "../../util/api"
+import { getFarmData } from "../../util/api";
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;
@@ -18,8 +14,6 @@ type Output = { jarGaugeWithApy: GaugeWithApy[] | null };
 
 export const useJarGaugeApy = (inputGauges: Input): Output => {
   const { jars } = Jars.useContainer();
-  const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [farmData, setFarmData] = useState<any | null>(null);
@@ -27,7 +21,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 
   const calculateApy = async (): Promise<void> => {
-    if (!inputGauges || !masterchef || !prices || !multicallProvider || !jars || !farmData ) {
+    if (!inputGauges || !prices || !jars || !farmData) {
       return;
     }
     const jarGauges = inputGauges.filter((gauge) => JAR_GAUGE_MAP[gauge.token]);
@@ -47,13 +41,16 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         };
       }
 
-      const farmInfo = Object.values(farmData).filter(farm => farm.address === gauge.token)
+      const farmInfo = Object.values(farmData).filter(
+        (farm) => farm.address === gauge.token,
+      );
       // calculate APY
       const isUsdc =
         gauge.token.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
-      const valueStakedInGauge = farmInfo.valueBalance
+      const valueStakedInGauge = farmInfo.valueBalance;
       const fullApy = gaugeingJar.usdPerPToken
-        ? (gauge.rewardRatePerYear * prices.pickle) / (gaugeingJar.usdPerPToken  * (isUsdc ? 1e12 : 1))
+        ? (gauge.rewardRatePerYear * prices.pickle) /
+          (gaugeingJar.usdPerPToken * (isUsdc ? 1e12 : 1))
         : 0;
       return {
         ...gauge,
@@ -69,8 +66,8 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
   };
 
   useEffect(() => {
-    const fetchFarmData = async () => setFarmData(await getFarmData())
-    if(!farmData) fetchFarmData() 
+    const fetchFarmData = async () => setFarmData(await getFarmData());
+    if (!farmData) fetchFarmData();
     calculateApy();
   }, [inputGauges]);
 
