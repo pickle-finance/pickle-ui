@@ -97,6 +97,7 @@ export const RENBTC_POOL_ADDR = "0x93054188d876f558f4a66B2EF1d97d16eDf0895B";
 export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
 export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
+export const FRAX_POOL_ADDR = "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 
@@ -224,6 +225,7 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
+  const [fraxPool, setFraxPool] = useState<Pool | null>(null);
   const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
     null,
   );
@@ -332,6 +334,8 @@ function useContracts() {
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
 
+      setFraxPool(PoolFactory.connect(FRAX_POOL_ADDR, signer));
+
       setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
@@ -378,6 +382,7 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
+    fraxPool,
     minichef,
     sushiMinichef,
     sushiComplexRewarder,

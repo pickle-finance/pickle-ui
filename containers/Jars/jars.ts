@@ -31,6 +31,7 @@ export const PICKLE_JARS = {
   pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
   pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
   pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
+  pyFRAXCRV: "0x729C6248f9B1Ce62B3d5e31D4eE7EE95cAB32dfD",
   pSUSHICVXETH: "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F",
   pLQTY: "0x65B2532474f717D5A8ba38078B78106D56118bbb",
 
@@ -75,6 +76,7 @@ export const JAR_DEPOSIT_TOKENS = {
     UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+    fraxCRV: "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B",
     SUSHI_CVX_ETH: "0x05767d9EF41dC40689678fFca0608878fb3dE906",
     LQTY: "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D",
   },
@@ -118,6 +120,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
   USDC: "USDC",
   lusdCRV: "lusdCRV",
+  fraxCRV: "fraxCRV",
   SUSHI_CVX_ETH: "SLP CVX/ETH",
   LQTY: "LQTY",
 
@@ -159,6 +162,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: true,
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+  [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
 
   // Polygon Jars
@@ -176,6 +180,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
 export const JAR_YEARN: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+  [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
 };
 
 export const DEPOSIT_TOKENS_LINK = {
@@ -233,6 +238,7 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",  
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
+  fraxCRV: "https://curve.fi/frax/deposit",
   LQTY: "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
   // Polygon Jars
   COMETH_USDC_WETH:
@@ -287,6 +293,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_CVX_ETH: "pJar 0.99z",
   USDC: "pJar Y-1",
   lusdCRV: "pJar Y-2",
+  fraxCRV: "pJar Y-3",
   LQTY: "pJar 0.98l",
 
   // Polygon Jars
@@ -333,6 +340,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x956f47f50a910163d8bf957cf5846d573e7f87ca": "fei",
   "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b": "tribe",
   "0x5f98805a4e8be255a32880fdec7f6728c6568ba0": "lusd",
+  "0x853d955acef822db058eb8505911ed77f175b99e": "frax",
   "0xdbdb4d16eda451d0503b854cf79d55697f90c8df": "alcx",
   "0x92bf969865c80eda082fd5d8b4e28da4d58e1c3a": "luna",
   "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a": "yvboost",
