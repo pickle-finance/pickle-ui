@@ -121,6 +121,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+  "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/frax.webp"} />
+  ),
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
