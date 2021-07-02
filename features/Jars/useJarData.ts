@@ -6,6 +6,7 @@ import { Jars } from "../../containers/Jars";
 import { Balances } from "../../containers/Balances";
 import { Connection } from "../../containers/Connection";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
+import { DEPOSIT_TOKENS_JAR_NAMES } from "../../containers/Jars/jars";
 
 export const useJarData = (): { jarData: UserJarData[] | null } => {
   const { blockNum } = Connection.useContainer();
@@ -34,6 +35,9 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
           totalAPY: jar.totalAPY,
           apr: jar.apr,
           depositTokenLink: jar.depositTokenLink,
+          ...(jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALETH
+            ? { pendingAlcx: jar.pendingAlcx }
+            : {}),
         };
       });
 

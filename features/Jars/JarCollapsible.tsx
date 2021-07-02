@@ -52,6 +52,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
+  "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368": "/aleth.webp",
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -200,13 +201,15 @@ export const JarCollapsible: FC<{
     totalAPY,
     depositTokenLink,
     apr,
+    pendingAlcx,
   } = jarData;
   const isUsdc =
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
 
   const isMaiJar =
-    depositToken.address.toLowerCase() === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase()
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase();
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -234,6 +237,7 @@ export const JarCollapsible: FC<{
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+  const isAlethJar = depositToken.address === JAR_DEPOSIT_TOKENS.Ethereum.ALETH;
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -283,7 +287,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -308,13 +312,14 @@ export const JarCollapsible: FC<{
               <Tooltip
                 text={
                   isYearnJar
-                    ? `This jar deposits into Yearn's ${APYs[1].vault
-                    }, The base rate of ${apr.toFixed(
-                      2,
-                    )}% is provided by the underlying Yearn strategy`
+                    ? `This jar deposits into Yearn's ${
+                        APYs[1].vault
+                      }, The base rate of ${apr.toFixed(
+                        2,
+                      )}% is provided by the underlying Yearn strategy`
                     : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                      2,
-                    )}% which we auto-compound regularly.`
+                        2,
+                      )}% which we auto-compound regularly.`
                 }
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
@@ -335,10 +340,25 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
             <Label>Deposited</Label>
-          </Grid>
+          </Grid>{" "}
           <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
-            <Label>Value</Label>
+            {isAlethJar ? (
+              <Tooltip
+                text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
+              >
+                <Data isZero={usdPerPToken * depositedNum === 0}>
+                  ${valueStr}
+                </Data>
+                <Label>Value</Label>
+              </Tooltip>
+            ) : (
+              <>
+                <Data isZero={usdPerPToken * depositedNum === 0}>
+                  ${valueStr}
+                </Data>
+                <Label>Value</Label>
+              </>
+            )}
           </Grid>
         </Grid.Container>
       }
@@ -379,7 +399,9 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+                      .deposit(
+                        ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
+                      );
                   },
                 });
               }
@@ -399,23 +421,25 @@ export const JarCollapsible: FC<{
               }}
             >
               A 0.5% fee is charged by Mai Finance upon depositing
-            </div>) : null}
+            </div>
+          ) : null}
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance {depositedStr} (
               <Tooltip
-                text={`${deposited && ratio
-                  ? parseFloat(
-                    formatEther(
-                      isUsdc && deposited
-                        ? deposited.mul(USDC_SCALE)
-                        : deposited,
-                    ),
-                  ) * ratio
-                  : 0
-                  } ${depositTokenName}`}
+                text={`${
+                  deposited && ratio
+                    ? parseFloat(
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
+                      ) * ratio
+                    : 0
+                } ${depositTokenName}`}
               >
                 {depositedUnderlyingStr}
               </Tooltip>{" "}
@@ -452,7 +476,12 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
+                      .withdraw(
+                        ethers.utils.parseUnits(
+                          withdrawAmount,
+                          isUsdc ? 6 : 18,
+                        ),
+                      );
                   },
                   approval: false,
                 });
