@@ -384,7 +384,7 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={depositButton.disabled}
+            disabled={depositButton.disabled || isMaiJar}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -441,7 +441,7 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled}
+            disabled={withdrawButton.disabled || isMaiJar}
             onClick={() => {
               if (signer) {
                 // Allow pToken to burn its pToken
