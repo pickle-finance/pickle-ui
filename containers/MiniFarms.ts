@@ -39,6 +39,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP ETH/MATIC",
     poolName: "pSLP ETH/MATIC",
   },
+  "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {
+    tokenName: "pQLP MAI (old)",
+    poolName: "pQLP MAI (old)",
+  },
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": {
     tokenName: "pQLP MAI",
     poolName: "pQLP MAI",
