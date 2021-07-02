@@ -20,7 +20,7 @@ export const useQuickPairDayData = () => {
 
   const queryTheGraph = async () => {
     const res = await fetch(
-      "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap",
+      "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap07",
       {
         credentials: "omit",
         headers: {
@@ -63,7 +63,7 @@ export const useQuickPairDayData = () => {
   };
 
   useEffect(() => {
-    if(!uniPairDayData) queryTheGraph();
+    queryTheGraph();
   }, []);
 
   return {
