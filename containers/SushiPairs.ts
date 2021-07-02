@@ -95,6 +95,7 @@ export const PAIR_INFO: PairMap = {
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": { a: mweth, b: musdt },
   "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": { a: mweth, b: matic },
   "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic },
+  "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": { a: wusdc, b: mimatic },
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth}
 };
 

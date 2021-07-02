@@ -148,6 +148,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x160532d2536175d65c03b97b0630a9802c274dad": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
   ),
+  "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -384,7 +387,7 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={depositButton.disabled || isMaiJar}
+            disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -441,7 +444,7 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled || isMaiJar}
+            disabled={withdrawButton.disabled}
             onClick={() => {
               if (signer) {
                 // Allow pToken to burn its pToken

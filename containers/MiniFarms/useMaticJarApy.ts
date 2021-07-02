@@ -12,6 +12,7 @@ type Input = FarmWithApyMatic[] | null;
 type Output = { jarFarmWithMaticApy: FarmWithApyMatic[] | null };
 
 export const useMaticJarApy = (inputFarms: Input): Output => {
+
   const [ farms, setFarms] = useState<FarmWithApyMatic[] | null>(null)
   const calculateApy = async () => {
     if (inputFarms) {
@@ -25,6 +26,7 @@ export const useMaticJarApy = (inputFarms: Input): Output => {
       setFarms(farmsWithMatic)
     }
   };
+
 
   useEffect(() => {
     calculateApy();
