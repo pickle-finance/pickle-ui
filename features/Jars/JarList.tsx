@@ -43,7 +43,7 @@ export const JarList: FC = () => {
   if (!jarData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   } else if (!jarData && chainName === NETWORK_NAMES.POLY) {
-    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
+    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>If you have been waiting more than a few seconds, you may be rate-limited. Consider changing to a different Polygon RPC such as 'https://matic-mainnet.chainstacklabs.com/' or 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
   }
 
   const activeJars = jarData.filter(

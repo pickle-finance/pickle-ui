@@ -26,7 +26,7 @@ export const MiniFarmList: FC = () => {
   if (!farmData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   } else if (!farmData && chainName === NETWORK_NAMES.POLY) {
-    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>if you have been waiting more than a few seconds, you may be rate-limited, consider changing to a different Polygon RPC such as 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
+    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>If you have been waiting more than a few seconds, you may be rate-limited. Consider changing to a different Polygon RPC such as 'https://matic-mainnet.chainstacklabs.com/' or 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
   }
   
   const activeFarms = farmData.filter((x) => x.apy !== 0);
