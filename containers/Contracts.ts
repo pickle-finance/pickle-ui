@@ -49,6 +49,8 @@ import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
 import { Uniswapv2ProxyLogic__factory as Uniswapv2ProxyLogicFactory } from "./Contracts/factories/Uniswapv2ProxyLogic__factory";
 import { YvboostMigrator } from "./Contracts/YvboostMigrator";
 import { YvboostMigrator__factory as YvboostMigratorFactory } from "./Contracts/factories/YvboostMigrator__factory";
+import { Controllerv5 } from "./Contracts/Controllerv5";
+import { Controllerv5__factory as ControllerV5Factory } from "./Contracts/factories/Controllerv5__factory";
 
 import { Minichef } from "./Contracts/Minichef";
 import { Minichef__factory as MinichefFatory } from "./Contracts/factories/Minichef__factory";
@@ -81,6 +83,7 @@ export const MASTERCHEF_ADDR = "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d";
 export const MASTERCHEFV2_ADDR = "0xef0881ec094552b2e128cf945ef17a6752b4ec5d";
 
 export const CONTROLLER_ADDR = "0x6847259b2B3A4c17e7c43C54409810aF48bA5210";
+export const CONTROLLERV5_ADDR = "0x7B5916C61bCEeaa2646cf49D9541ac6F5DCe3637";
 
 export const UNISWAPV2_PROXY_LOGIC =
   "0x0a536ca30B9E20a3D89c91c22Ef77E1AeBBd6944";
@@ -161,7 +164,6 @@ export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
 export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
-
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
 function useContracts() {
@@ -175,6 +177,7 @@ function useContracts() {
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [masterchefV2, setMasterchefV2] = useState<Masterchefv2 | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
+  const [controllerv5, setControllerV5] = useState<Controllerv5 | null>(null);
 
   const providerOrSigner = signer || multicallProvider;
 
@@ -252,6 +255,7 @@ function useContracts() {
       setController(
         ControllerFactory.connect(addresses.controller, providerOrSigner),
       );
+      setControllerV5(ControllerV5Factory.connect(CONTROLLERV5_ADDR, signer));
       setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
       setGaugeController(
         GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, providerOrSigner),
@@ -351,6 +355,7 @@ function useContracts() {
     masterchef,
     masterchefV2,
     controller,
+    controllerv5,
     susdGauge,
     renGauge,
     threeGauge,
@@ -382,7 +387,7 @@ function useContracts() {
     sushiMinichef,
     sushiComplexRewarder,
     am3crvPool,
-    pickleRewarder
+    pickleRewarder,
   };
 }
 

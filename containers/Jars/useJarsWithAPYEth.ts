@@ -41,6 +41,8 @@ import { formatEther, getJsonWalletAddress } from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
 import erc20 from "@studydefi/money-legos/erc20";
 
+import { Jarsymbiotic } from "../Contracts/Jarsymbiotic";
+
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
@@ -71,6 +73,16 @@ const sushiPoolV2Ids: SushiPoolId = {
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": 1,
 };
 
+const ALCX = "0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF";
+const ALETH = "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368";
+
+const alchemixPoolIds: SushiPoolId = {
+  "0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF": 1,
+  "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 2,
+  "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c": 4,
+  "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368": 6,
+};
+
 const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
 
 export interface JarApy {
@@ -93,7 +105,7 @@ const getCompoundingAPY = (apr: number) => {
 };
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
-  const { multicallProvider, provider } = Connection.useContainer();
+  const { multicallProvider, provider, address } = Connection.useContainer();
   const { controller, strategy } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
@@ -110,6 +122,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     steCRVPool,
     steCRVGauge,
     masterchefV2,
+    stakingPools,
     yearnRegistry,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
@@ -164,7 +177,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         stakingRewards.interface.fragments,
       );
 
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.lpt(),
         multicallUniStakingRewards.totalSupply(),
@@ -200,9 +217,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           apr: lqtyApy * 0.8 * 100,
         },
       ];
-
     }
-
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
@@ -211,7 +226,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         rewardsAddress,
         stakingRewards.interface.fragments,
       );
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.uniToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -248,7 +267,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         stakingRewards.interface.fragments,
       );
 
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.stakingToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -282,16 +305,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const rewarder_addr = await masterchefV2.rewarder(poolId);
 
-      const rewarder = new Contract(
-        rewarder_addr,
-        RewarderABI,
-        provider
-      );
-      const lpToken = new Contract(
-        lpTokenAddress,
-        erc20.abi,
-        provider,
-      );
+      const rewarder = new Contract(rewarder_addr, RewarderABI, provider);
+      const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
       const totalSupplyBN = await lpToken.balanceOf(masterchefV2.address);
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
@@ -332,10 +347,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiChef.address,
         sushiChef.interface.fragments,
       );
-      const lpToken = new MulticallContract(
-        lpTokenAddress,
-        erc20.abi,
-      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [
         sushiPerBlockBN,
@@ -386,10 +398,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         masterchefV2.address,
         masterchefV2.interface.fragments,
       );
-      const lpToken = new MulticallContract(
-        lpTokenAddress,
-        erc20.abi,
-      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [
         sushiPerBlockBN,
@@ -423,6 +432,112 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       return [
         { sushi: getCompoundingAPY(sushiAPY * 0.8), apr: sushiAPY * 0.8 * 100 },
       ];
+    }
+
+    return [];
+  };
+
+  const calculatePendingAlcxRewards = async (
+    jar: Jarsymbiotic,
+    address: string,
+  ) => {
+    if (multicallProvider) {
+      const multicallSymbiotic = new MulticallContract(
+        jar.address,
+        jar.interface.fragments,
+      );
+
+      const [pendingReward] = await multicallProvider.all([
+        multicallSymbiotic.pendingRewardOfUser(address),
+      ]);
+
+      const pendingAlcx = parseFloat(formatEther(pendingReward));
+      return { pendingAlcx: pendingAlcx };
+    }
+    return {};
+  };
+
+  const calculateAlethApy = async (lpTokenAddress: string) => {
+    if (stakingPools && prices?.alcx && getSushiPairData && multicallProvider) {
+      const poolId = alchemixPoolIds[lpTokenAddress];
+      const multicallStakingPools = new MulticallContract(
+        stakingPools.address,
+        stakingPools.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+      const [
+        rewardRateBN,
+        totalAllocPointBN,
+        poolRewardWeightBN,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallStakingPools.rewardRate(),
+        multicallStakingPools.totalRewardWeight(),
+        multicallStakingPools.getPoolRewardWeight(poolId),
+        lpToken.balanceOf(stakingPools.address),
+      ]);
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      let tokenPrice = prices.eth;
+
+      const alcxRewardsPerYear =
+        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
+        AVERAGE_BLOCK_TIME;
+      const poolRewardsPerYear =
+        (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
+        totalAllocPointBN.toString();
+      const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
+      const totalValueStaked = totalSupply * tokenPrice;
+      const alcxAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          baseAlcx: getCompoundingAPY(alcxAPY * 0.8),
+          apr: alcxAPY * 0.8 * 100,
+        },
+      ];
+    }
+
+    return [];
+  };
+
+  const calculateAlcxNakedAPY = async (
+    alethApy: any,
+    lpTokenAddress: string,
+  ) => {
+    if (stakingPools && prices?.alcx && multicallProvider) {
+      const poolId = alchemixPoolIds[lpTokenAddress];
+      const multicallStakingPools = new MulticallContract(
+        stakingPools.address,
+        stakingPools.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+      const [
+        rewardRateBN,
+        totalAllocPointBN,
+        poolRewardWeightBN,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallStakingPools.rewardRate(),
+        multicallStakingPools.totalRewardWeight(),
+        multicallStakingPools.getPoolRewardWeight(poolId),
+        lpToken.balanceOf(stakingPools.address),
+      ]);
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      let tokenPrice: number = prices.alcx;
+      const alcxRewardsPerYear =
+        (parseFloat(formatEther(rewardRateBN)) * (360 * 24 * 60 * 60)) /
+        AVERAGE_BLOCK_TIME;
+      const poolRewardsPerYear =
+        (alcxRewardsPerYear * poolRewardWeightBN.toString()) /
+        totalAllocPointBN.toString();
+      const valueRewardedPerYear = prices.alcx * poolRewardsPerYear;
+      const totalValueStaked = totalSupply * tokenPrice;
+      const alcxAPY = valueRewardedPerYear / totalValueStaked;
+
+      const alcxNakedAPY =
+        (getCompoundingAPY(alcxAPY * 0.8) * alethApy[0].baseAlcx) / 100;
+
+      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
     }
 
     return [];
@@ -472,7 +587,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
       ]);
 
-
       const [
         sushiEthyveCRVApy,
         sushiEthyvboostApy,
@@ -513,6 +627,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         feiTribeApy,
         lqtyEthLusdApy,
         lqtyApy,
+        alethApy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
@@ -523,7 +638,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
         calculateLqtyStakingAPY(),
+        calculateAlethApy(ALETH),
       ]);
+      const alcxNakedApy = await calculateAlcxNakedAPY(alethApy, ALCX);
 
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -708,6 +825,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
             ),
           ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALETH) {
+          APYs = [...alcxNakedApy];
+          const alcxPending = await calculatePendingAlcxRewards(
+            jar.contract as Jarsymbiotic,
+            address,
+          );
+          jar = { ...jar, ...alcxPending };
+          totalAPY = alcxNakedApy[0]?.["staked ALCX"];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
