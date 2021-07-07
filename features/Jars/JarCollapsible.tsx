@@ -151,6 +151,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
   ),
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -209,7 +212,8 @@ export const JarCollapsible: FC<{
     JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
 
   const isMaiJar =
-    depositToken.address.toLowerCase() === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase()
+    depositToken.address.toLowerCase() === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase() ||
+    depositToken.address.toLowerCase() === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI.toLowerCase();
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),

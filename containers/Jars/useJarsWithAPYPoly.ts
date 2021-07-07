@@ -316,10 +316,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
-      const mimaticJar = jars.find(
+      const usdcMimaticJar = jars.find(
         (jar) =>
           jar.depositToken.address ===
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
+      );
+
+      const qiMimaticJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
       );
 
       const [
@@ -330,6 +336,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiEthUsdtApy,
         sushiMaticEthApy,
         quickMimaticUsdcApy,
+        quickMimaticQiApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -344,7 +351,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
         ),
-        calculateMasterChefAPY(mimaticJar),
+        calculateMasterChefAPY(usdcMimaticJar),
+        calculateMasterChefAPY(qiMimaticJar),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -415,6 +423,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ),
           ];
         }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_MIMATIC_QI) {
+          APYs = [
+            ...quickMimaticQiApy,
+            ...getQuickPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
+            ),
+          ];
+        }
+
         let apr = 0;
         APYs.map((x) => {
           if (x.apr) {
