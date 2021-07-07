@@ -209,7 +209,8 @@ export const JarCollapsible: FC<{
     JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
 
   const isMaiJar =
-    depositToken.address.toLowerCase() === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase()
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase();
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -286,7 +287,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -311,13 +312,14 @@ export const JarCollapsible: FC<{
               <Tooltip
                 text={
                   isYearnJar
-                    ? `This jar deposits into Yearn's ${APYs[1].vault
-                    }, The base rate of ${apr.toFixed(
-                      2,
-                    )}% is provided by the underlying Yearn strategy`
+                    ? `This jar deposits into Yearn's ${
+                        APYs[1]?.vault
+                      }, The base rate of ${apr.toFixed(
+                        2,
+                      )}% is provided by the underlying Yearn strategy`
                     : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                      2,
-                    )}% which we auto-compound regularly.`
+                        2,
+                      )}% which we auto-compound regularly.`
                 }
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
@@ -382,7 +384,9 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+                      .deposit(
+                        ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
+                      );
                   },
                 });
               }
@@ -402,23 +406,25 @@ export const JarCollapsible: FC<{
               }}
             >
               A 0.5% fee is charged by Mai Finance upon depositing
-            </div>) : null}
+            </div>
+          ) : null}
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance {depositedStr} (
               <Tooltip
-                text={`${deposited && ratio
-                  ? parseFloat(
-                    formatEther(
-                      isUsdc && deposited
-                        ? deposited.mul(USDC_SCALE)
-                        : deposited,
-                    ),
-                  ) * ratio
-                  : 0
-                  } ${depositTokenName}`}
+                text={`${
+                  deposited && ratio
+                    ? parseFloat(
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
+                      ) * ratio
+                    : 0
+                } ${depositTokenName}`}
               >
                 {depositedUnderlyingStr}
               </Tooltip>{" "}
@@ -455,7 +461,12 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
+                      .withdraw(
+                        ethers.utils.parseUnits(
+                          withdrawAmount,
+                          isUsdc ? 6 : 18,
+                        ),
+                      );
                   },
                   approval: false,
                 });
