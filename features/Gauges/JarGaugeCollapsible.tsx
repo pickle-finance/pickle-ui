@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -23,6 +23,7 @@ import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 import { worker } from "cluster";
 import { getRealShape } from "../Collapsible/useRealShape";
+import { getTokenLabel } from "../Zap/tokens";
 
 interface DataProps {
   isZero?: boolean;
@@ -406,7 +407,7 @@ export const JarGaugeCollapsible: FC<{
               .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
           },
         });
-        if(!approved) {
+        if (!approved) {
           setDepositStakeButton("Approving...");
           const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
           const tx = await Token.approve(
@@ -524,6 +525,12 @@ export const JarGaugeCollapsible: FC<{
     .filter((x) => x)
     .join(" + ");
 
+  const inputTokens = [
+    { symbol: depositTokenName, label: depositTokenName },
+    { symbol: "ETH", label: getTokenLabel("ETH") },
+    { symbol: "CRV", label: getTokenLabel("CRV") },
+  ];
+
   const isDisabledJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI ||
@@ -548,11 +555,10 @@ export const JarGaugeCollapsible: FC<{
 
   const renderTooltip = () => {
     if (isYearnJar) {
-      return `This jar deposits into Yearn's ${
-        APYs[1].vault
-      }, The base rate of ${apr.toFixed(
-        2,
-      )}% is provided by the underlying Yearn strategy`;
+      return `This jar deposits into Yearn's ${APYs[1].vault
+        }, The base rate of ${apr.toFixed(
+          2,
+        )}% is provided by the underlying Yearn strategy`;
     } else {
       return `This yield is calculated in real time from a base rate of ${apr.toFixed(
         2,
@@ -562,8 +568,8 @@ export const JarGaugeCollapsible: FC<{
 
   const tvlNum =
     tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      GAUGE_TVL_KEY[depositToken.address] &&
+      tvlData[GAUGE_TVL_KEY[depositToken.address]]
       ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
       : 0;
   const tvlStr = getFormatString(tvlNum);
@@ -578,7 +584,7 @@ export const JarGaugeCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -649,8 +655,8 @@ export const JarGaugeCollapsible: FC<{
                         {totalAPY + fullApy === 0
                           ? "--%"
                           : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                              totalAPY + pickleAPYMax,
-                            )}`}
+                            totalAPY + pickleAPYMax,
+                          )}`}
                       </span>
                       <img
                         src="./question.svg"
@@ -687,6 +693,7 @@ export const JarGaugeCollapsible: FC<{
       <Spacer y={1} />
       <Grid.Container gap={2}>
         <Grid xs={24} md={depositedNum && !isEntryBatch ? 12 : 24}>
+
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance: {balStr} {depositTokenName}
@@ -706,11 +713,36 @@ export const JarGaugeCollapsible: FC<{
               Max
             </Link>
           </div>
-          <Input
-            onChange={(e) => setDepositAmount(e.target.value)}
-            value={depositAmount}
-            width="100%"
-          ></Input>
+          <Grid.Container gap={1}>
+            <Grid md={8}>
+              <Select
+                size="medium"
+                width="100%"
+                style={{ maxWidth: "100%" }}
+                // value={inputToken}
+                // onChange={(e) => setInput(e.toString())}
+              >
+                {inputTokens.map((token) => (
+                  <Select.Option
+                    style={{ fontSize: "1rem" }}
+                    value={token.symbol}
+                    key={token.symbol}
+                  >
+                    <div style={{ display: `flex`, alignItems: `center` }}>
+                      {token.label}
+                    </div>
+                  </Select.Option>
+                ))}
+              </Select>
+            </Grid>
+            <Grid md={16}>
+              <Input
+                onChange={(e) => setDepositAmount(e.target.value)}
+                value={depositAmount}
+                width="100%"
+              ></Input>
+            </Grid>
+          </Grid.Container>
           <Spacer y={0.5} />
           <Grid.Container gap={1}>
             <Grid xs={24} md={12}>
@@ -761,17 +793,16 @@ export const JarGaugeCollapsible: FC<{
               <div>
                 Balance {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(
+                        isUsdc && deposited
+                          ? deposited.mul(USDC_SCALE)
+                          : deposited,
+                      ),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
