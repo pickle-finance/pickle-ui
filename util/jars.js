@@ -1,4 +1,4 @@
-export const crvJars = ["3poolCRV", "renBTCCRV", "steCRV", "lusdCRV", "USDC"];
+export const crvJars = ["3poolCRV", "renBTCCRV", "steCRV", "lusdCRV", "fraxCRV", "USDC"];
 
 export const uniJars = [
   "MIR-UST",
