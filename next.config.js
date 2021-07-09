@@ -4,7 +4,10 @@ module.exports = {
     ignoreBuildErrors: true,
   },
   env: {
-    infura: "https://mainnet.infura.io/v3/f7fd6784e0604b7ea588ba7b0f9843fa",
+    infura: "https://cloudflare-eth.com/",
+    ethRPC: "https://cloudflare-eth.com/",
+    polygonRPC:
+      "https://speedy-nodes-nyc.moralis.io/a98d7a0d24a7ad8012eb933f/polygon/mainnet",
     Fortmatic: "pk_live_3754096A894BEFE4",
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
   },

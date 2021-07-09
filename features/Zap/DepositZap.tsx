@@ -1,11 +1,20 @@
 import { FC, useState } from "react";
-import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist-ui/react";
+import {
+  Card,
+  Select,
+  Spacer,
+  Input,
+  Button,
+  Link as DisplayLink,
+} from "@geist-ui/react";
 import Link from "next/link";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useZapIn } from "./useZapper";
 import { TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "../../features/Farms/UseMigrate";
+import { Connection } from "containers/Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 import {
   DEFAULT_SLIPPAGE,
@@ -19,10 +28,12 @@ const formatValue = (numStr: string) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: parseFloat(numStr) < 1 ? 6 : 4,
   });
+  
 
 export const DepositZap: FC = () => {
   const [inputToken, setInputToken] = useState<TokenSymbol>("ETH");
   const [sellTokenAddress, setSellTokenAddress] = useState(ETH_ADDRESS);
+  const { chainName } = Connection.useContainer();
   const [amount, setAmount] = useState<string>("0");
   const [txState, setTxState] = useState<string | null>(null);
 
@@ -39,9 +50,7 @@ export const DepositZap: FC = () => {
     slippagePercentage: DEFAULT_SLIPPAGE,
   });
 
-  const {
-    depositYvboost,
-  } = useMigrate(null, 0, null, null);
+  const { depositYvboost } = useMigrate(null, 0, null, null);
 
   const handleDeposit = async () => {
     if (amount && decimals) {
@@ -71,11 +80,16 @@ export const DepositZap: FC = () => {
     }
   };
 
+  const isPoly = chainName === NETWORK_NAMES.POLY;
+
   const disableZap = () => {
+    if (isPoly) return true;
     if (txState !== null) return true;
     if (amount === "0") return true;
     if (amount === "") return true;
-    if (balanceStr && parseFloat(amount) > parseFloat(balanceStr)) return true;
+    const parsedAmount = parseFloat(amount);
+    if (balanceStr && parsedAmount > parseFloat(balanceStr)) return true;
+    if (parsedAmount < 0) return true;
     return false;
   };
 
@@ -91,7 +105,10 @@ export const DepositZap: FC = () => {
       </h2>
       <p>
         Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to{" "}
-        <Link href="/farms" passHref>Pickle Farm</Link>.
+        <Link href="/farms" passHref>
+          Pickle Farm
+        </Link>
+        .
       </p>
       <h3>Deposit Token</h3>
       <Select
@@ -127,6 +144,7 @@ export const DepositZap: FC = () => {
         </DisplayLink>
       </div>
       <Input
+        placeholder="0"
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
         width="100%"
@@ -139,7 +157,7 @@ export const DepositZap: FC = () => {
         onClick={handleDeposit}
         disabled={disableZap()}
       >
-        {txState || "Zap"}
+        {txState || isPoly ? "Zapping available on mainnet" : "Zap"}
       </Button>
     </Card>
   );

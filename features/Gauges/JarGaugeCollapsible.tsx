@@ -21,9 +21,8 @@ import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
-import { worker } from "cluster";
-import { getRealShape } from "../Collapsible/useRealShape";
-import { getTokenLabel } from "../Zap/tokens";
+import { zapDefaultTokens } from "../Zap/tokens";
+import { TokenSymbol, useBalance } from "../Zap/useBalance";
 
 interface DataProps {
   isZero?: boolean;
@@ -51,6 +50,12 @@ const formatAPY = (apy: number) => {
   if (apy === Number.POSITIVE_INFINITY) return "∞%";
   return apy.toFixed(2) + "%";
 };
+
+const formatValue = (num: number) =>
+  num.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: num < 1 ? 8 : 4,
+  });
 
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
@@ -206,25 +211,15 @@ export const JarGaugeCollapsible: FC<{
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
 
-  const balStr = balNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 8 : 2,
-  });
+  const balStr = formatValue(balNum);
 
-  const depositedStr = depositedNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 8 : 2,
-  });
+  const depositedStr = formatValue(depositedNum)
 
-  const depositedUnderlyingStr = (
+  const depositedUnderlyingStr = formatValue(
     parseFloat(
       formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
     ) * ratio
-  ).toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 8 : 2,
-  });
-
+  )
   const {
     depositToken: gaugeDepositToken,
     balance: gaugeBalance,
@@ -233,17 +228,6 @@ export const JarGaugeCollapsible: FC<{
     depositTokenName: gaugeDepositTokenName,
     fullApy,
   } = gaugeData;
-
-  const gaugeBal = parseFloat(
-    formatEther(
-      isUsdc && gaugeBalance ? gaugeBalance.mul(USDC_SCALE) : gaugeBalance,
-    ),
-  );
-
-  const gaugeBalStr = gaugeBal.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: gaugeBal < 1 ? 6 : 4,
-  });
 
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
@@ -324,26 +308,19 @@ export const JarGaugeCollapsible: FC<{
     staked,
   );
 
-  const stakedStr = stakedNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 8 : 2,
-  });
 
-  const harvestableStr = parseFloat(
+
+  const stakedStr = formatValue(stakedNum)
+
+  const harvestableStr = formatValue(parseFloat(
     formatEther(harvestable || 0),
-  ).toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 8 : 2,
-  });
+  ));
 
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
 
-  const balanceStr = balanceNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: balanceNum < 1 ? 8 : 2,
-  });
+  const balanceStr = formatValue(balanceNum)
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -368,6 +345,15 @@ export const JarGaugeCollapsible: FC<{
 
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
+  const zapInputTokens =
+    [
+      { symbol: depositTokenName, label: depositTokenName },
+      ...zapDefaultTokens
+    ]
+  const [inputToken, setInputToken] = useState(zapInputTokens[0].symbol)
+  const { balanceStr: zapBalanceStr, balanceRaw } = useBalance(inputToken);
+
+  const depositBalance = zapBalanceStr ? balanceRaw : isUsdc && balance ? balance.mul(USDC_SCALE) : balance
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
@@ -524,12 +510,6 @@ export const JarGaugeCollapsible: FC<{
   })
     .filter((x) => x)
     .join(" + ");
-
-  const inputTokens = [
-    { symbol: depositTokenName, label: depositTokenName },
-    { symbol: "ETH", label: getTokenLabel("ETH") },
-    { symbol: "CRV", label: getTokenLabel("CRV") },
-  ];
 
   const isDisabledJar =
     depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
@@ -696,7 +676,7 @@ export const JarGaugeCollapsible: FC<{
 
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              Balance: {balStr} {depositTokenName}
+              Balance: {inputToken === zapInputTokens[0].symbol ? `${balStr} ${depositTokenName}` : `${zapBalanceStr !== null ? formatValue(parseFloat(zapBalanceStr)) : 0} ${inputToken}`}
             </div>
             <Link
               color
@@ -704,9 +684,7 @@ export const JarGaugeCollapsible: FC<{
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatEther(
-                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
-                  ),
+                  formatEther(depositBalance),
                 );
               }}
             >
@@ -719,10 +697,10 @@ export const JarGaugeCollapsible: FC<{
                 size="medium"
                 width="100%"
                 style={{ maxWidth: "100%" }}
-                // value={inputToken}
-                // onChange={(e) => setInput(e.toString())}
+                value={inputToken}
+                onChange={(e) => setInputToken(e.toString())}
               >
-                {inputTokens.map((token) => (
+                {zapInputTokens.map((token) => (
                   <Select.Option
                     style={{ fontSize: "1rem" }}
                     value={token.symbol}

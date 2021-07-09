@@ -10,6 +10,9 @@ const tokenInfo = {
   USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
   CRV: "0xD533a949740bb3306d119CC777fa900bA034cd52",
+  YFI: "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e",
+  SUSHI: "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
+  FEI: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
   ETH: "",
 };
 
@@ -23,22 +26,26 @@ export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
 
   const getBalance = async () => {
     if (symbol && provider && address) {
-      let balance: BigNumber = 0;
+      let balance: BigNumber;
       let balanceStr = "0";
       if (symbol == "ETH") {
         balance = await provider.getBalance(address);
-        balanceStr = ethers.utils.formatUnits(balance, decimals);
+        balanceStr = ethers.utils.formatUnits(balance, 18);
         setDecimals(18);
         setBalance(balance);
         setBalanceStr(balanceStr);
-      } else {
+      } else if (tokenInfo[symbol]) {
         const token = Erc20Factory.connect(tokenInfo[symbol], provider);
         const decimals = await token.decimals();
         balance = await token.balanceOf(address);
-        balanceStr = ethers.utils.formatUnits(balance, decimals);
         setDecimals(decimals);
+        balanceStr = ethers.utils.formatUnits(balance, decimals);
         setBalance(balance);
         setBalanceStr(balanceStr);
+      } else {
+        setBalance(null);
+        setBalanceStr(null);
+        setDecimals(null);
       }
     }
   };
