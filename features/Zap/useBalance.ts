@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Erc20__factory as Erc20Factory } from "../../containers/Contracts/factories/Erc20__factory";
 import { Connection } from "../../containers/Connection";
 
-const tokenInfo = {
+export const tokenInfo = {
   renBTC: "0xeb4c2781e4eba804ce9a9803c67d0893436bb27d",
   wBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
   DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -13,7 +13,7 @@ const tokenInfo = {
   YFI: "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e",
   SUSHI: "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2",
   FEI: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
-  ETH: "",
+  ETH: "0x0000000000000000000000000000000000000000",
 };
 
 export type TokenSymbol = keyof typeof tokenInfo;

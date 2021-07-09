@@ -89,6 +89,7 @@ export const useZapIn = ({
       );
       const zapTx = await signer.sendTransaction({ from, to, data, value });
       await zapTx.wait();
+      return true;
     } catch (error) {
       console.log("Zap Failed", error);
     }

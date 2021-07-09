@@ -2,7 +2,15 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import {
+  Button,
+  Link,
+  Input,
+  Grid,
+  Spacer,
+  Tooltip,
+  Select,
+} from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -22,7 +30,9 @@ import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/facto
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 import { zapDefaultTokens } from "../Zap/tokens";
-import { TokenSymbol, useBalance } from "../Zap/useBalance";
+import { tokenInfo, useBalance } from "../Zap/useBalance";
+import { DEFAULT_SLIPPAGE } from "../Zap/constants";
+import { useZapIn } from "../Zap/useZapper";
 
 interface DataProps {
   isZero?: boolean;
@@ -213,13 +223,13 @@ export const JarGaugeCollapsible: FC<{
 
   const balStr = formatValue(balNum);
 
-  const depositedStr = formatValue(depositedNum)
+  const depositedStr = formatValue(depositedNum);
 
   const depositedUnderlyingStr = formatValue(
     parseFloat(
       formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-    ) * ratio
-  )
+    ) * ratio,
+  );
   const {
     depositToken: gaugeDepositToken,
     balance: gaugeBalance,
@@ -292,6 +302,9 @@ export const JarGaugeCollapsible: FC<{
     text: "Withdraw",
   });
 
+  const [zapStakeButton, setZapStakeButton] = useState<string | null>(null);
+  const [zapOnlyButton, setZapOnlyButton] = useState<string | null>(null);
+
   const {
     status: erc20TransferStatuses,
     transfer,
@@ -308,19 +321,15 @@ export const JarGaugeCollapsible: FC<{
     staked,
   );
 
+  const stakedStr = formatValue(stakedNum);
 
-
-  const stakedStr = formatValue(stakedNum)
-
-  const harvestableStr = formatValue(parseFloat(
-    formatEther(harvestable || 0),
-  ));
+  const harvestableStr = formatValue(parseFloat(formatEther(harvestable || 0)));
 
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
 
-  const balanceStr = formatValue(balanceNum)
+  const balanceStr = formatValue(balanceNum);
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -345,19 +354,46 @@ export const JarGaugeCollapsible: FC<{
 
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
-  const zapInputTokens =
-    [
-      { symbol: depositTokenName, label: depositTokenName },
-      ...zapDefaultTokens
-    ]
-  const [inputToken, setInputToken] = useState(zapInputTokens[0].symbol)
+  const zapInputTokens = [
+    { symbol: depositTokenName, label: depositTokenName },
+    ...zapDefaultTokens,
+  ];
+  const [inputToken, setInputToken] = useState(zapInputTokens[0].symbol);
   const { balanceStr: zapBalanceStr, balanceRaw } = useBalance(inputToken);
+  const { zapIn } = useZapIn({
+    poolAddress: jarContract.address,
+    sellTokenAddress: tokenInfo[inputToken as keyof typeof tokenInfo],
+    rawAmount: depositAmount || "0",
+    slippagePercentage: DEFAULT_SLIPPAGE,
+  });
 
-  const depositBalance = zapBalanceStr ? balanceRaw : isUsdc && balance ? balance.mul(USDC_SCALE) : balance
+  const depositBalance = zapBalanceStr
+    ? balanceRaw
+    : isUsdc && balance
+    ? balance.mul(USDC_SCALE)
+    : balance;
+
+  const isZap = inputToken != zapInputTokens[0].symbol;
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS.SUSHI_ETH_YVECRV.toLowerCase();
+
+  const depositGauge = async () => {
+    if (!approved) {
+      setDepositStakeButton("Approving...");
+      const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
+      const tx = await Token.approve(
+        gaugeData.address,
+        ethers.constants.MaxUint256,
+      );
+      await tx.wait();
+    }
+    setDepositStakeButton("Staking...");
+    const gaugeTx = await gauge.depositAll();
+    await gaugeTx.wait();
+    setDepositStakeButton(null);
+  };
 
   const handleYvboostMigrate = async () => {
     if (stakedNum || balanceNum) {
@@ -380,6 +416,10 @@ export const JarGaugeCollapsible: FC<{
   };
 
   const depositAndStake = async () => {
+    if (isZap) {
+      handleZap(true);
+      return;
+    }
     if (balNum) {
       try {
         setIsEntryBatch(true);
@@ -393,19 +433,8 @@ export const JarGaugeCollapsible: FC<{
               .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
           },
         });
-        if (!approved) {
-          setDepositStakeButton("Approving...");
-          const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
-          const tx = await Token.approve(
-            gaugeData.address,
-            ethers.constants.MaxUint256,
-          );
-          await tx.wait();
-        }
-        setDepositStakeButton("Staking...");
-        const gaugeTx = await gauge.depositAll();
-        await gaugeTx.wait();
-        setDepositStakeButton(null);
+
+        await depositGauge();
         setIsEntryBatch(false);
       } catch (error) {
         console.error(error);
@@ -432,6 +461,30 @@ export const JarGaugeCollapsible: FC<{
         setExitButton(null);
         setIsExitBatch(false);
         return;
+      }
+    }
+  };
+
+  const handleZap = async (toFarm = false) => {
+    if (depositAmount) {
+      {
+        try {
+          setZapOnlyButton("Zapping...");
+          setZapStakeButton("Zapping...");
+          const zapSuccess = await zapIn();
+          if (toFarm && zapSuccess) {
+            setZapStakeButton("Staking...");
+            await depositGauge();
+          }
+          setZapOnlyButton(null);
+          setZapStakeButton(null);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+          setZapOnlyButton(null);
+          setZapStakeButton(null);
+          return;
+        }
       }
     }
   };
@@ -535,10 +588,11 @@ export const JarGaugeCollapsible: FC<{
 
   const renderTooltip = () => {
     if (isYearnJar) {
-      return `This jar deposits into Yearn's ${APYs[1].vault
-        }, The base rate of ${apr.toFixed(
-          2,
-        )}% is provided by the underlying Yearn strategy`;
+      return `This jar deposits into Yearn's ${
+        APYs[1].vault
+      }, The base rate of ${apr.toFixed(
+        2,
+      )}% is provided by the underlying Yearn strategy`;
     } else {
       return `This yield is calculated in real time from a base rate of ${apr.toFixed(
         2,
@@ -548,8 +602,8 @@ export const JarGaugeCollapsible: FC<{
 
   const tvlNum =
     tvlData &&
-      GAUGE_TVL_KEY[depositToken.address] &&
-      tvlData[GAUGE_TVL_KEY[depositToken.address]]
+    GAUGE_TVL_KEY[depositToken.address] &&
+    tvlData[GAUGE_TVL_KEY[depositToken.address]]
       ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
       : 0;
   const tvlStr = getFormatString(tvlNum);
@@ -564,7 +618,7 @@ export const JarGaugeCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -635,8 +689,8 @@ export const JarGaugeCollapsible: FC<{
                         {totalAPY + fullApy === 0
                           ? "--%"
                           : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                            totalAPY + pickleAPYMax,
-                          )}`}
+                              totalAPY + pickleAPYMax,
+                            )}`}
                       </span>
                       <img
                         src="./question.svg"
@@ -673,30 +727,33 @@ export const JarGaugeCollapsible: FC<{
       <Spacer y={1} />
       <Grid.Container gap={2}>
         <Grid xs={24} md={depositedNum && !isEntryBatch ? 12 : 24}>
-
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              Balance: {inputToken === zapInputTokens[0].symbol ? `${balStr} ${depositTokenName}` : `${zapBalanceStr !== null ? formatValue(parseFloat(zapBalanceStr)) : 0} ${inputToken}`}
+              Balance:{" "}
+              {inputToken === zapInputTokens[0].symbol
+                ? `${balStr} ${depositTokenName}`
+                : `${
+                    zapBalanceStr !== null
+                      ? formatValue(parseFloat(zapBalanceStr))
+                      : 0
+                  } ${inputToken}`}
             </div>
             <Link
               color
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(
-                  formatEther(depositBalance),
-                );
+                setDepositAmount(formatEther(depositBalance));
               }}
             >
               Max
             </Link>
           </div>
-          <Grid.Container gap={1}>
+          <Grid.Container gap={3}>
             <Grid md={8}>
               <Select
                 size="medium"
                 width="100%"
-                style={{ maxWidth: "100%" }}
                 value={inputToken}
                 onChange={(e) => setInputToken(e.toString())}
               >
@@ -726,7 +783,7 @@ export const JarGaugeCollapsible: FC<{
             <Grid xs={24} md={12}>
               <Button
                 onClick={() => {
-                  if (signer && !isDisabledJar) {
+                  if (signer && !isZap) {
                     // Allow Jar to get LP Token
                     transfer({
                       token: depositToken.address,
@@ -743,24 +800,29 @@ export const JarGaugeCollapsible: FC<{
                       },
                     });
                   }
+                  if (signer && isZap) {
+                    handleZap();
+                  }
                 }}
                 disabled={
-                  depositButton.disabled ||
-                  depositTokenName === "DAI" ||
-                  isDisabledJar
+                  depositButton.disabled || zapOnlyButton || isDisabledJar
                 }
                 style={{ width: "100%" }}
               >
-                {depositButton.text}
+                {zapOnlyButton || depositButton.text}
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
               <Button
                 onClick={depositAndStake}
-                disabled={Boolean(depositStakeButton) || isDisabledJar}
+                disabled={
+                  Boolean(depositStakeButton) ||
+                  Boolean(zapStakeButton) ||
+                  isDisabledJar
+                }
                 style={{ width: "100%" }}
               >
-                {depositStakeButton || "Deposit and Stake"}
+                {depositStakeButton || zapStakeButton || "Deposit and Stake"}
               </Button>
             </Grid>
           </Grid.Container>
@@ -771,16 +833,17 @@ export const JarGaugeCollapsible: FC<{
               <div>
                 Balance {depositedStr} (
                 <Tooltip
-                  text={`${deposited && ratio
-                    ? parseFloat(
-                      formatEther(
-                        isUsdc && deposited
-                          ? deposited.mul(USDC_SCALE)
-                          : deposited,
-                      ),
-                    ) * ratio
-                    : 0
-                    } ${depositTokenName}`}
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(
+                            isUsdc && deposited
+                              ? deposited.mul(USDC_SCALE)
+                              : deposited,
+                          ),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
