@@ -164,6 +164,8 @@ export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
 
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
+export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
@@ -175,6 +177,7 @@ function useContracts() {
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
   const [masterchefV2, setMasterchefV2] = useState<Masterchefv2 | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
+  const [controllerMai, setControllerMai] = useState<Controller | null>(null);
 
   const providerOrSigner = signer || multicallProvider;
 
@@ -251,6 +254,9 @@ function useContracts() {
       );
       setController(
         ControllerFactory.connect(addresses.controller, providerOrSigner),
+      );
+      setControllerMai(
+        ControllerFactory.connect(CONTROLLER_MAI, providerOrSigner),
       );
       setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
       setGaugeController(
@@ -382,7 +388,8 @@ function useContracts() {
     sushiMinichef,
     sushiComplexRewarder,
     am3crvPool,
-    pickleRewarder
+    pickleRewarder,
+    controllerMai
   };
 }
 
