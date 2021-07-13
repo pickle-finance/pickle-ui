@@ -123,6 +123,7 @@ export const DEPOSIT_TOKENS_NAME = {
   fraxCRV: "fraxCRV",
   SUSHI_CVX_ETH: "SLP CVX/ETH",
   LQTY: "LQTY",
+  LUSD: "LUSD",
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
@@ -164,6 +165,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
   [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.LUSD]: true,
 
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
@@ -345,7 +347,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x92bf969865c80eda082fd5d8b4e28da4d58e1c3a": "luna",
   "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a": "yvboost",
   "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b": "cvx",
-  "0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d":  "lqty",
+  "0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d": "lqty",
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",
   "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619": "eth",
