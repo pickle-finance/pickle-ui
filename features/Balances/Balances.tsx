@@ -46,6 +46,7 @@ export const Balances: FC = () => {
     pendingPickles,
     totalSupply,
     picklePerBlock,
+    picklePerSecond
   } = useBalances();
 
   const { WETHRewards } = PickleStaking.useContainer();
@@ -70,12 +71,15 @@ export const Balances: FC = () => {
   const [liquidity, setLiquidity] = useState<number | null>(null);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [marketCap, setMarketCap] = useState<number | null>(null)
+  const [tooltipText, setTooltipText] = useState<string | null>("");
 
   useEffect(() => {
     const updateInfo = async () => {
       setProtocolInfo(await getProtocolData())
-      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true").then(x=>x.json())
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true").then(x => x.json())
       setMarketCap(res["pickle-finance"].usd_market_cap)
+      if (picklePerBlock) setTooltipText(`${picklePerBlock} PICKLEs are printed every block.`)
+      if (picklePerSecond) setTooltipText(`${picklePerSecond} PICKLEs are printed every second.`)
     };
     updateInfo();
   }, [blockNum]);
@@ -128,15 +132,11 @@ export const Balances: FC = () => {
               </span>
             </DataPoint>
             <Card.Footer>
-              {totalSupply && picklePerBlock && marketCap ? (
+              {totalSupply && tooltipText && marketCap ? (
                 <Tooltip
                   placement="bottom"
                   style={{ cursor: `help` }}
-                  text={
-                    picklePerBlock
-                      ? `${picklePerBlock} PICKLEs are printed every block.`
-                      : ""
-                  }
+                  text={tooltipText}
                 >
                   Total Supply:{" "}
                   {totalSupply ? formatPickles(marketCap / prices?.pickle) : "--"}

@@ -3,13 +3,14 @@ import { BigNumber, ethers } from "ethers";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { usePendingPickles } from "./usePendingPickles";
-import { Pickles } from "../../containers/Pickles";
+import { MiniPickles, Pickles } from "../../containers/Pickles";
 
 interface IUseBalances {
   pickleBalance: number | null;
   totalSupply: number | null;
   pendingPickles: number | null;
   picklePerBlock: number | null;
+  picklePerSecond: number | null;
   pickleBN: ethers.BigNumber | null;
 }
 
@@ -17,6 +18,7 @@ export const useBalances = (): IUseBalances => {
   const { address, blockNum } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
   const { picklePerBlock } = Pickles.useContainer();
+  const { picklePerSecond } = MiniPickles.useContainer();
 
   const [pickleBalance, setPickleBalance] = useState<number | null>(null);
   const [pickleBN, setPickleBN] = useState<ethers.BigNumber | null>(null);
@@ -48,5 +50,6 @@ export const useBalances = (): IUseBalances => {
     totalSupply,
     pendingPickles,
     picklePerBlock,
+    picklePerSecond
   };
 };

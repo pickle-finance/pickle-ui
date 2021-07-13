@@ -121,6 +121,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+  "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/frax.webp"} />
+  ),
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
@@ -290,7 +293,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -315,13 +318,14 @@ export const JarCollapsible: FC<{
               <Tooltip
                 text={
                   isYearnJar
-                    ? `This jar deposits into Yearn's ${APYs[1].vault
-                    }, The base rate of ${apr.toFixed(
-                      2,
-                    )}% is provided by the underlying Yearn strategy`
+                    ? `This jar deposits into Yearn's ${
+                        APYs[1]?.vault
+                      }, The base rate of ${apr.toFixed(
+                        2,
+                      )}% is provided by the underlying Yearn strategy`
                     : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                      2,
-                    )}% which we auto-compound regularly.`
+                        2,
+                      )}% which we auto-compound regularly.`
                 }
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
@@ -386,7 +390,9 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+                      .deposit(
+                        ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
+                      );
                   },
                 });
               }
@@ -406,23 +412,25 @@ export const JarCollapsible: FC<{
               }}
             >
               A 0.5% fee is charged by Mai Finance upon depositing
-            </div>) : null}
+            </div>
+          ) : null}
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance {depositedStr} (
               <Tooltip
-                text={`${deposited && ratio
-                  ? parseFloat(
-                    formatEther(
-                      isUsdc && deposited
-                        ? deposited.mul(USDC_SCALE)
-                        : deposited,
-                    ),
-                  ) * ratio
-                  : 0
-                  } ${depositTokenName}`}
+                text={`${
+                  deposited && ratio
+                    ? parseFloat(
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
+                      ) * ratio
+                    : 0
+                } ${depositTokenName}`}
               >
                 {depositedUnderlyingStr}
               </Tooltip>{" "}
@@ -459,7 +467,12 @@ export const JarCollapsible: FC<{
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
+                      .withdraw(
+                        ethers.utils.parseUnits(
+                          withdrawAmount,
+                          isUsdc ? 6 : 18,
+                        ),
+                      );
                   },
                   approval: false,
                 });
