@@ -47,6 +47,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP MAI",
     poolName: "pQLP MAI",
   },
+  "0xd06a56c864C80e4cC76A2eF778183104BF0c848d": {
+    tokenName: "pQLP QI",
+    poolName: "pQLP QI",
+  },
 };
 
 function useFarms() {
