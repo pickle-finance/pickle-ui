@@ -44,3 +44,8 @@ export const config: Config = {
     },
   },
 };
+
+export const BPAddresses = {
+  LUSD: "0x5f98805a4e8be255a32880fdec7f6728c6568ba0",
+  pBAMM: "0x54bC9113f1f55cdBDf221daf798dc73614f6D972"
+}

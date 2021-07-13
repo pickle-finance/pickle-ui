@@ -6,8 +6,8 @@ import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
-
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
+import { BPAddresses } from "./config";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
@@ -29,7 +29,7 @@ function useJars() {
     if (jarsWithTVL) {
       const wants = jarsWithTVL.map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
-      addTokens([...wants, ...pTokens]);
+      addTokens([...wants, ...pTokens, BPAddresses.LUSD, BPAddresses.pBAMM]);
     }
   }, [jarsWithTVL]);
 
