@@ -167,6 +167,8 @@ export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
 export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 
+export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
