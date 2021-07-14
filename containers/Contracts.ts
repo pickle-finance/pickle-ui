@@ -58,6 +58,9 @@ import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/fact
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
 
+import { Ironchef } from "./Contracts/Ironchef";
+import { Ironchef__factory as IronchefFactory} from "./Contracts/factories/Ironchef__factory";
+
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
   PickleRewarder__factory as PickleRewarderFactory,
@@ -167,6 +170,8 @@ export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
 export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 
+export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
@@ -247,6 +252,8 @@ function useContracts() {
     yvBoostMigrator,
     setyvBoostMigrator,
   ] = useState<YvboostMigrator | null>(null);
+
+  const [ironchef, setIronchef] = useState<Ironchef | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -349,6 +356,8 @@ function useContracts() {
       setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
+
+      setIronchef(IronchefFactory.connect(IRON_CHEF, signer))
     }
   };
 
@@ -394,7 +403,8 @@ function useContracts() {
     sushiComplexRewarder,
     am3crvPool,
     pickleRewarder,
-    controllerMai
+    controllerMai,
+    ironchef
   };
 }
 
