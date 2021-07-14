@@ -269,7 +269,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     ) {
       const jarStrategy = await controller.strategies(jar.depositToken.address);
       const strategyContract = await strategy.attach(jarStrategy);
-      console.log({jarStrategy, strategyContract})
       const ironchefAddress = await strategyContract.ironchef();
       const poolId = await strategyContract.poolId();
       const ice = "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef";
