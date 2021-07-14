@@ -45,6 +45,7 @@ interface PriceObject {
   mimatic: number;
   qi: number;
   cvx: number;
+  ice: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -94,7 +95,8 @@ function usePrices() {
         "terra-luna",
         "mimatic",
         "qi-dao",
-        "convex-finance"
+        "convex-finance",
+        "iron-finance"
       ],
       vs_currencies: ["usd"],
     });
@@ -138,7 +140,8 @@ function usePrices() {
       luna: response["terra-luna"].usd,
       mimatic: response["mimatic"].usd,
       qi: response["qi-dao"].usd,
-      cvx: response["convex-finance"].usd
+      cvx: response["convex-finance"].usd,
+      ice: response["iron-finance"].usd
     };
     setPrices(prices);
   };

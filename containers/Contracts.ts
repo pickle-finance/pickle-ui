@@ -58,6 +58,9 @@ import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/fact
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
 
+import { Ironchef } from "./Contracts/Ironchef";
+import { Ironchef__factory as IronchefFactory} from "./Contracts/factories/Ironchef__factory";
+
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
   PickleRewarder__factory as PickleRewarderFactory,
@@ -250,6 +253,8 @@ function useContracts() {
     setyvBoostMigrator,
   ] = useState<YvboostMigrator | null>(null);
 
+  const [ironchef, setIronchef] = useState<Ironchef | null>(null);
+
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
@@ -351,6 +356,8 @@ function useContracts() {
       setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
+
+      setIronchef(IronchefFactory.connect(IRON_CHEF, signer))
     }
   };
 
@@ -396,7 +403,8 @@ function useContracts() {
     sushiComplexRewarder,
     am3crvPool,
     pickleRewarder,
-    controllerMai
+    controllerMai,
+    ironchef
   };
 }
 

@@ -266,7 +266,7 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://quickswap.exchange/#/add/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
   QUICK_MIMATIC_QI:
     "https://quickswap.exchange/#/add/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1/0x580A84C73811E1839F75d86d75d88cCa0c241fF4",
-  IS3USD:
+  IRON_3USD:
     "https://app.iron.finance/swap/pools/is3usd/deposit",
 };
 
@@ -371,6 +371,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xc2132d05d31c914a87c6611c10748aeb04b58e8f": "usdt",
   "0xa3fa99a148fa48d14ed51d610c367c61876997f1": "mimatic",
   "0x580a84c73811e1839f75d86d75d88cca0c241ff4": "qi",
+  "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef": "ice"
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

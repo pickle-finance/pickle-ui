@@ -4,6 +4,7 @@ import {
   DEPOSIT_TOKENS_JAR_NAMES,
   getPriceId,
   JAR_DEPOSIT_TOKENS,
+  PICKLE_JARS
 } from "./jars";
 import { Prices } from "../Prices";
 import {
@@ -25,6 +26,7 @@ import { Connection } from "../Connection";
 import fetch from "node-fetch";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import MasterchefAbi from "../ABIs/masterchef.json";
+import IronchefAbi from "../ABIs/ironchef.json";
 import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
@@ -69,6 +71,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     strategy,
     sushiMinichef,
     sushiComplexRewarder,
+    ironchef,
   } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getComethPairData } = ComethPairs.useContainer();
@@ -255,6 +258,64 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateIronChefAPY = async (jar: Jar | undefined) => {
+    if (
+      prices &&
+      multicallProvider &&
+      ironchef &&
+      controller &&
+      strategy && 
+      jar
+    ) {
+      const jarStrategy = await controller.strategies(jar.depositToken.address);
+      const strategyContract = await strategy.attach(jarStrategy);
+      console.log({jarStrategy, strategyContract})
+      const ironchefAddress = await strategyContract.ironchef();
+      const poolId = await strategyContract.poolId();
+      const ice = "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef";
+      const pricePerToken = 1;
+
+      const multicallIronchef = new MulticallContract(
+        ironchefAddress,
+        IronchefAbi,
+      );
+
+      const lpToken = new MulticallContract(
+        jar.depositToken.address,
+        erc20.abi,
+      );
+
+      const [
+        icePerSecondBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallIronchef.rewardPerSecond(),
+        multicallIronchef.totalAllocPoint(),
+        multicallIronchef.poolInfo(poolId),
+        lpToken.balanceOf(ironchefAddress),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const icePerSecond =
+        (parseFloat(formatEther(icePerSecondBN)) *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const iceRewardsPerYear = icePerSecond * (365 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.ice * iceRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const iceAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { ice: getCompoundingAPY(iceAPY * 0.8), apr: iceAPY * 0.8 * 100 },
+      ];
+    }
+    return [];
+  };
+
   const calculateMasterChefAPY = async (jar: Jar | undefined) => {
     if (prices && multicallProvider && jar && controller && strategy) {
       const jarStrategy = await controller.strategies(jar.depositToken.address);
@@ -328,6 +389,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
       );
 
+      const iron3usdJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].IRON_3USD,
+      );
+
       const [
         comethUsdcWethApy,
         comethPickleMustApy,
@@ -337,6 +404,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiMaticEthApy,
         quickMimaticUsdcApy,
         quickMimaticQiApy,
+        iron3usdApy
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -353,6 +421,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
         calculateMasterChefAPY(usdcMimaticJar),
         calculateMasterChefAPY(qiMimaticJar),
+        calculateIronChefAPY(iron3usdJar)
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -432,6 +501,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ),
           ];
         }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.IRON_3USD) {
+          APYs = [
+            ...iron3usdApy,
+          ];
+        }
+
 
         let apr = 0;
         APYs.map((x) => {
