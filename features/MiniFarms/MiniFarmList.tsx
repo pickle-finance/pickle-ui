@@ -38,7 +38,7 @@ export const MiniFarmList: FC = () => {
         <Grid md={16}>
           <p>
             Farms allow you to earn dual PICKLE <MiniIcon source="/pickle.png" />{" "}
-            and MATIC <MiniIcon source={"/matic.png"} /> rewards by staking tokens.
+            and MATIC <MiniIcon source={"/matic.png"} /> rewards by staking tokens. (Note: MATIC rewards end August 23)
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.
