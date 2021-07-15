@@ -293,7 +293,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return [
         {
-          "saddle d4 apy": getCompoundingAPY(saddled4Apy * 0.8),
+          "LQTY+FXS+FEI+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
           apr: saddled4Apy * 0.8 * 100,
         },
       ];

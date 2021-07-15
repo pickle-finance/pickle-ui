@@ -313,7 +313,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   lusdCRV: "pJar Y-2",
   fraxCRV: "pJar Y-3",
   LQTY: "pJar 0.98l",
-  SADDLE_D4: "pJar 0.99s4",
+  SADDLE_D4: "pJar 0.99s",
 
   // Polygon Jars
   COMETH_USDC_WETH: "polyJar 1a",
