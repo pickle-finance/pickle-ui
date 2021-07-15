@@ -25,9 +25,11 @@ import {
   FEI_TRIBE_STAKING_REWARDS,
   ALCHEMIX_ALCX_ETH_STAKING_POOLS,
   COMETH_USDC_WETH_REWARDS,
+  COMMUNAL_FARM,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
+import SwapFlashLoanABI from "../ABIs/swapflashloan.json";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
 import { useCurveSNXAPY } from "./useCurveSNXAPY";
@@ -103,6 +105,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     susdPool,
     susdGauge,
     renGauge,
+    communalFarm,
     renPool,
     threeGauge,
     threePool,
@@ -164,7 +167,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         stakingRewards.interface.fragments,
       );
 
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.lpt(),
         multicallUniStakingRewards.totalSupply(),
@@ -200,9 +207,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           apr: lqtyApy * 0.8 * 100,
         },
       ];
-
     }
-
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
@@ -211,7 +216,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         rewardsAddress,
         stakingRewards.interface.fragments,
       );
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.uniToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -236,6 +245,62 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateSaddleD4APY = async () => {
+    const swapFlashLoanAddress = "0xC69DDcd4DFeF25D8a793241834d4cc4b3668EAD6";
+    if (communalFarm && multicallProvider && prices) {
+      const multicallCommunalFarm = new MulticallContract(
+        COMMUNAL_FARM,
+        communalFarm.interface.fragments,
+      );
+
+      const [
+        fxsRateBN,
+        feiRateBN,
+        alcxRateBN,
+        lqtyRateBN,
+        totalValueLockedBN,
+      ] = await multicallProvider.all([
+        multicallCommunalFarm.rewardRates(0),
+        multicallCommunalFarm.rewardRates(1),
+        multicallCommunalFarm.rewardRates(2),
+        multicallCommunalFarm.rewardRates(3),
+        multicallCommunalFarm.totalLiquidityLocked(),
+      ]);
+
+      const valueRewardedPerYear =
+        prices.fxs * parseFloat(formatEther(fxsRateBN)) * (360 * 24 * 60 * 60) +
+        prices.fei * parseFloat(formatEther(feiRateBN)) * (360 * 24 * 60 * 60) +
+        prices.alcx *
+          parseFloat(formatEther(alcxRateBN)) *
+          (360 * 24 * 60 * 60) +
+        prices.lqty *
+          parseFloat(formatEther(lqtyRateBN)) *
+          (360 * 24 * 60 * 60);
+
+      const multicallSwapFlashLoan = new MulticallContract(
+        swapFlashLoanAddress,
+        SwapFlashLoanABI,
+      );
+
+      const [virtualPrice] = await multicallProvider.all([
+        multicallSwapFlashLoan.getVirtualPrice(),
+      ]);
+      const priceOfSaddle = parseFloat(formatEther(virtualPrice));
+      const totalValueStaked =
+        parseFloat(formatEther(totalValueLockedBN)) * priceOfSaddle;
+
+      const saddled4Apy = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          "saddle d4 apy": getCompoundingAPY(saddled4Apy * 0.8),
+          apr: saddled4Apy * 0.8 * 100,
+        },
+      ];
+    }
+    return [];
+  };
+
   const calculateFeiAPY = async (rewardsAddress: string) => {
     if (
       stakingRewards &&
@@ -248,7 +313,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         stakingRewards.interface.fragments,
       );
 
-      const [rewardRateBN, stakingToken, totalSupplyBN] = await multicallProvider.all([
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
         multicallUniStakingRewards.rewardRate(),
         multicallUniStakingRewards.stakingToken(),
         multicallUniStakingRewards.totalSupply(),
@@ -282,16 +351,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const rewarder_addr = await masterchefV2.rewarder(poolId);
 
-      const rewarder = new Contract(
-        rewarder_addr,
-        RewarderABI,
-        provider
-      );
-      const lpToken = new Contract(
-        lpTokenAddress,
-        erc20.abi,
-        provider,
-      );
+      const rewarder = new Contract(rewarder_addr, RewarderABI, provider);
+      const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
       const totalSupplyBN = await lpToken.balanceOf(masterchefV2.address);
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
@@ -332,10 +393,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiChef.address,
         sushiChef.interface.fragments,
       );
-      const lpToken = new MulticallContract(
-        lpTokenAddress,
-        erc20.abi,
-      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [
         sushiPerBlockBN,
@@ -386,10 +444,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         masterchefV2.address,
         masterchefV2.interface.fragments,
       );
-      const lpToken = new MulticallContract(
-        lpTokenAddress,
-        erc20.abi,
-      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [
         sushiPerBlockBN,
@@ -472,7 +527,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
       ]);
 
-
       const [
         sushiEthyveCRVApy,
         sushiEthyvboostApy,
@@ -515,6 +569,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         feiTribeApy,
         lqtyEthLusdApy,
         lqtyApy,
+        saddled4Apy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MTSLA_UST_STAKING_REWARDS),
@@ -525,6 +580,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
         calculateLqtyStakingAPY(),
+        calculateSaddleD4APY(),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -710,6 +766,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
             ),
           ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SADDLE_D4) {
+          APYs = [...saddled4Apy];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
