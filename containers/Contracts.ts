@@ -39,6 +39,8 @@ import { YearnRegistry__factory as YearnRegistryFactory } from "./Contracts/fact
 import { StakingPools__factory as StakingPoolsFactory } from "./Contracts/factories/StakingPools__factory";
 import { StakingRewards } from "./Contracts/StakingRewards";
 import { StakingRewards__factory as StakingRewardsFactory } from "./Contracts/factories/StakingRewards__factory";
+import { CommunalFarm } from "./Contracts/CommunalFarm";
+import { CommunalFarm__factory as CommunalFarmFactory } from "./Contracts/factories/CommunalFarm__factory";
 import { Strategy } from "./Contracts/Strategy";
 import { Strategy__factory as StrategyFactory } from "./Contracts/factories/Strategy__factory";
 import { SushiChef } from "./Contracts/SushiChef";
@@ -59,7 +61,7 @@ import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
 
 import { Ironchef } from "./Contracts/Ironchef";
-import { Ironchef__factory as IronchefFactory} from "./Contracts/factories/Ironchef__factory";
+import { Ironchef__factory as IronchefFactory } from "./Contracts/factories/Ironchef__factory";
 
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
@@ -144,6 +146,7 @@ export const FEI_TRIBE_STAKING_REWARDS =
 export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
   "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
 
+export const COMMUNAL_FARM = "0x0639076265e9f88542C91DCdEda65127974A5CA5";
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
@@ -205,6 +208,7 @@ function useContracts() {
   const [dill, setDill] = useState<Dill | null>(null);
   const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
   const [gauge, setGauge] = useState<Gauge | null>(null);
+  const [communalFarm, setCommunalFarm] = useState<CommunalFarm | null>(null);
   const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(
     null,
   );
@@ -294,6 +298,9 @@ function useContracts() {
           providerOrSigner,
         ),
       );
+      setCommunalFarm(
+        CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
+      );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(
           ethers.constants.AddressZero,
@@ -357,7 +364,7 @@ function useContracts() {
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
 
-      setIronchef(IronchefFactory.connect(IRON_CHEF, signer))
+      setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
     }
   };
 
@@ -379,6 +386,7 @@ function useContracts() {
     renPool,
     threePool,
     steCRVPool,
+    communalFarm,
     stakingRewards,
     uniswapv2Pair,
     erc20,
@@ -404,7 +412,7 @@ function useContracts() {
     am3crvPool,
     pickleRewarder,
     controllerMai,
-    ironchef
+    ironchef,
   };
 }
 
