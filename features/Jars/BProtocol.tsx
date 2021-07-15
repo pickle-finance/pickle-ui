@@ -9,12 +9,12 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import { Connection } from "../../containers/Connection";
-import { Balances } from "../../containers/Balances";
+import { usePBAMM } from "../../containers/Jars/usePBAMM";
+import { Contracts } from "../../containers/Contracts";
+import { BPAddresses } from "containers/config";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
-import { BPAddresses } from "containers/config";
-import { Jar__factory as JarFactory } from "../../containers/Contracts/factories/Jar__factory";
-import { Jar as JarContract } from "../../containers/Contracts/Jar";
 
 const JarName = styled(Grid)({
   display: "flex",
@@ -58,17 +58,12 @@ const setButtonStatus = (
       text: "Approving...",
     });
   }
-  if (status === ERC20TransferStatus.Transfering) {
+  else if (status === ERC20TransferStatus.Transfering) {
     setButtonText({
       disabled: true,
       text: transfering,
     });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
+  } else {
     setButtonText({
       disabled: false,
       text: idle,
@@ -77,16 +72,26 @@ const setButtonStatus = (
 };
 
 export const BProtocol: FC = () => {
-  const { tokenBalances, getBalance } = Balances.useContainer();
-  const [lusdBalance, setLusdBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
-  const [pbammBalance, setPbammBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
-  const [contract, setContract] = useState<JarContract>();
+  const {
+    status: erc20TransferStatuses,
+    transfer,
+    getTransferStatus,
+  } = ERC20Transfer.useContainer();
+  const { pBAMM: pBAMMContract } = Contracts.useContainer();
+  const { signer, provider } = Connection.useContainer();
+  const { pbammBalance, lusdBalance, plqtyBalance, userValue } = usePBAMM();
+
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
+
+  const gauge = signer && GaugeFactory.connect(BPAddresses.LQTY_GAUGE, signer);
+
+  const balNum = parseFloat(formatEther(lusdBalance));
+  const balStr = formatString(balNum);
+  const depositedNum = parseFloat(formatEther(pbammBalance));
+  const depositedStr = formatString(depositedNum);
+  const valueStr = formatString(userValue);
+  const plqtyStr = formatString(+formatEther(plqtyBalance));
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -96,40 +101,30 @@ export const BProtocol: FC = () => {
     disabled: false,
     text: "Withdraw",
   });
-  const {
-    status: erc20TransferStatuses,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
-  const { signer, provider } = Connection.useContainer();
-
-  const updateBalance = async () => {
-    const _lusd = await getBalance(BPAddresses.LUSD);
-    const _pbamm = await getBalance(BPAddresses.pBAMM);
-    if (_lusd) setLusdBalance(_lusd);
-    if (_pbamm) setPbammBalance(_pbamm);
-    setContract(JarFactory.connect(BPAddresses.pBAMM, provider));
-  };
-
-  const balNum = parseFloat(formatEther(lusdBalance));
-  const balStr = formatString(balNum);
-  const depositedNum = parseFloat(formatEther(pbammBalance));
-  const depositedStr = formatString(depositedNum);
-  const valueNum = 0;
-  const valueStr = "0";
-
-  useEffect(() => {
-    updateBalance();
-  }, [tokenBalances]);
+  const [stakeButton, setStakeButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: `Stake Unstaked ${plqtyStr} Tokens in Farm`,
+  });
 
   useEffect(() => {
     const dStatus = getTransferStatus(BPAddresses.LUSD, BPAddresses.pBAMM);
     const wStatus = getTransferStatus(BPAddresses.pBAMM, BPAddresses.pBAMM);
+    const stakeStatus = getTransferStatus(
+      BPAddresses.pLQTY,
+      BPAddresses.LQTY_GAUGE,
+    );
 
     setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
     setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
-  }, [erc20TransferStatuses]);
+    setButtonStatus(
+      stakeStatus,
+      "Staking...",
+      `Stake Unstaked ${plqtyStr} pLQTY Tokens in Farm`,
+      setStakeButton,
+    );
+  }, [erc20TransferStatuses, plqtyBalance]);
 
+  if (!pBAMMContract) return <> </>;
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -212,7 +207,7 @@ export const BProtocol: FC = () => {
                   token: BPAddresses.LUSD,
                   recipient: BPAddresses.pBAMM,
                   transferCallback: async () => {
-                    return contract
+                    return pBAMMContract
                       .connect(signer)
                       .deposit(ethers.utils.parseEther(depositAmount));
                   },
@@ -227,19 +222,7 @@ export const BProtocol: FC = () => {
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Balance {depositedStr} (
-              <Tooltip
-                text={`${
-                  depositedNum
-                    ? parseFloat(formatEther(pbammBalance)) // TODO: GET FULL VALUE
-                    : 0
-                } LUSD`}
-              >
-                PBAMM
-              </Tooltip>
-              LUSD
-            </div>
+            <div>{`Balance ${depositedStr} PBAMM`}</div>
             <Link
               color
               href="#"
@@ -264,13 +247,16 @@ export const BProtocol: FC = () => {
                 // Allow pToken to burn its pToken
                 // and refund lpToken
                 transfer({
-                  token: BPAddresses.LUSD,
+                  token: BPAddresses.pBAMM,
                   recipient: BPAddresses.pBAMM,
                   transferCallback: async () => {
-                    return contract
+                    return pBAMMContract
                       .connect(signer)
-                      .withdraw(ethers.utils.parseEther(withdrawAmount));
+                      .withdraw(ethers.utils.parseEther(withdrawAmount), {
+                        gasLimit: 600000,
+                      });
                   },
+                  approval: false,
                 });
               }
             }}
@@ -285,11 +271,29 @@ export const BProtocol: FC = () => {
               paddingTop: "4px",
               fontFamily: "Source Sans Pro",
             }}
-          >
-            There is no withdrawal fee
-          </div>
+          ></div>
         </Grid>
       </Grid.Container>
+      <Spacer y={0.5} />
+      {Boolean(+plqtyStr) && (
+        <Button
+          disabled={stakeButton.disabled}
+          onClick={() => {
+            if (gauge && signer) {
+              transfer({
+                token: BPAddresses.pLQTY,
+                recipient: BPAddresses.LQTY_GAUGE,
+                transferCallback: async () => {
+                  return gauge.depositAll();
+                },
+              });
+            }
+          }}
+          style={{ width: "100%" }}
+        >
+          {stakeButton.text}
+        </Button>
+      )}
     </Collapse>
   );
 };

@@ -110,12 +110,14 @@ export const JarList: FC = () => {
           Show Your Jars
         </Grid>
         <Grid xs={24}></Grid>
-        {chainName === NETWORK_NAMES.ETH && `Powered by Yearn ⚡`}
         {chainName === NETWORK_NAMES.ETH && (
           <Grid xs={24}>
             <BProtocol />
+            <Spacer y={1} />
           </Grid>
         )}
+
+        {chainName === NETWORK_NAMES.ETH && `Powered by Yearn ⚡`}
         {yearnJars.map((jar) => (
           <Grid xs={24} key={jar.name}>
             <JarCollapsible jarData={jar} isYearnJar={true} />
