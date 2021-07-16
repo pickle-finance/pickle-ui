@@ -52,7 +52,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
-  "0xd48cF4D7FB0824CC8bAe055dF3092584d0a1726A": "/saddle.svg",
+  "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a": "/saddle.svg",
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -223,6 +223,10 @@ export const JarCollapsible: FC<{
       JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase() ||
     depositToken.address.toLowerCase() ===
       JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI.toLowerCase();
+
+  const isSaddleJar =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SADDLE_D4;
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -462,7 +466,7 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled}
+            disabled={withdrawButton.disabled || isSaddleJar}
             onClick={() => {
               if (signer) {
                 // Allow pToken to burn its pToken
@@ -488,6 +492,20 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
+          {isSaddleJar ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
+              }}
+            >
+              Withdrawals are restricted for 24 hours following your most recent
+              deposit, as this miniumum locking period is imposed when staking
+              on Frax Finance
+            </div>
+          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>
