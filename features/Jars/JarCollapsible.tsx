@@ -466,7 +466,7 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled || isSaddleJar}
+            disabled={withdrawButton.disabled}
             onClick={() => {
               if (signer) {
                 // Allow pToken to burn its pToken
