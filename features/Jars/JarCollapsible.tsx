@@ -502,7 +502,7 @@ export const JarCollapsible: FC<{
               }}
             >
               Withdrawals are restricted for 24 hours following your most recent
-              deposit, as this miniumum locking period is imposed when staking
+              deposit, as this minimum locking period is imposed when staking
               on Frax Finance
             </div>
           ) : null}
