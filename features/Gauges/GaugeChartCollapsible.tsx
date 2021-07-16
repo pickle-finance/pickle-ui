@@ -39,6 +39,9 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     })
     .sort((a, b) => b.allocPoint - a.allocPoint);
 
+  const dataForChart = gaugeChartData.filter(x => x.allocPoint > 0.02);
+  const dataForTable = gaugeChartData.filter(x => !dataForChart.includes(x));
+
   const colors = ["#26ff91", "#48c148"];
 
   return (
@@ -58,7 +61,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           <ResponsiveContainer>
             <PieChart>
               <Pie
-                data={gaugeChartData}
+                data={dataForChart}
                 dataKey="allocPoint"
                 nameKey="depositTokenName"
                 outerRadius={150}
@@ -66,7 +69,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 label={(x) => x.depositTokenName}
                 labelLine={false}
               >
-                {gaugeChartData.map((entry, index) => (
+                {dataForChart.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={shadeColor(colors[index % colors.length], -index * 3)}
@@ -75,6 +78,18 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               </Pie>
               <Tooltip formatter={(val) => (val * 100).toFixed(2) + "%"} />
             </PieChart>
+            <table>
+              <tr>
+                <th>Token</th>
+                <th>Weight</th>
+              </tr>
+              {dataForTable.map((farm) => (
+                <tr>
+                  <td>{farm.depositTokenName}</td>
+                  <td>{farm.allocPoint}</td>
+                </tr>
+              ))}
+            </table>
           </ResponsiveContainer>
         </div>
       ) : (
