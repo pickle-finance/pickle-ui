@@ -130,6 +130,7 @@ export const BProtocol: FC = () => {
       style={{ borderWidth: "1px", boxShadow: "none" }}
       shadow
       preview={
+        // @dev `Powered by B.Protocol ⚡`
         <Grid.Container gap={1}>
           <JarName xs={24} sm={12} md={5} lg={5}>
             <TokenIcon src={"/bprotocol.png"} />
@@ -140,7 +141,7 @@ export const BProtocol: FC = () => {
                 target="_"
                 style={{ fontSize: `1rem` }}
               >
-                B.Protocol LUSD Staking
+                LUSD
               </a>
             </div>
           </JarName>
@@ -150,7 +151,8 @@ export const BProtocol: FC = () => {
             </Data>
             <Data>
               <Tooltip
-                text={`This jar deposits into B.Protocol's Stability Vault...`}
+                text={`This jar deposits into B.Protocol's Backstop AMM. The base rate of ${//@dev B.AMM APR
+                }% is provided by the underlying B.AMM vault`}
               >
                 <div style={{ display: "flex", marginTop: 5 }}>
                   <span>APY</span>
