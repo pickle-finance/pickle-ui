@@ -11,6 +11,7 @@ import {
 import { Connection } from "../../containers/Connection";
 import { usePBAMM } from "../../containers/Jars/usePBAMM";
 import { Contracts } from "../../containers/Contracts";
+import { Prices } from "../../containers/Prices";
 import { BPAddresses } from "containers/config";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
@@ -57,8 +58,7 @@ const setButtonStatus = (
       disabled: true,
       text: "Approving...",
     });
-  }
-  else if (status === ERC20TransferStatus.Transfering) {
+  } else if (status === ERC20TransferStatus.Transfering) {
     setButtonText({
       disabled: true,
       text: transfering,
@@ -79,7 +79,15 @@ export const BProtocol: FC = () => {
   } = ERC20Transfer.useContainer();
   const { pBAMM: pBAMMContract } = Contracts.useContainer();
   const { signer, provider } = Connection.useContainer();
-  const { pbammBalance, lusdBalance, plqtyBalance, userValue } = usePBAMM();
+  const { prices } = Prices.useContainer();
+  const {
+    pbammBalance,
+    lusdBalance,
+    plqtyBalance,
+    userValue,
+    lqtyApr,
+    userPendingLqty,
+  } = usePBAMM();
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -92,6 +100,8 @@ export const BProtocol: FC = () => {
   const depositedStr = formatString(depositedNum);
   const valueStr = formatString(userValue);
   const plqtyStr = formatString(+formatEther(plqtyBalance));
+  const pendingLqtyNum = +formatEther(userPendingLqty)
+  const pendingLqtyStr = formatString(pendingLqtyNum);
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -130,7 +140,6 @@ export const BProtocol: FC = () => {
       style={{ borderWidth: "1px", boxShadow: "none" }}
       shadow
       preview={
-        // @dev `Powered by B.Protocol ⚡`
         <Grid.Container gap={1}>
           <JarName xs={24} sm={12} md={5} lg={5}>
             <TokenIcon src={"/bprotocol.png"} />
@@ -147,22 +156,19 @@ export const BProtocol: FC = () => {
           </JarName>
           <Grid xs={24} sm={12} md={5} lg={5}>
             <Data>
-              <Tooltip text="tooltip text">--</Tooltip>
+              {lqtyApr.toFixed(2)}% +
+              <a
+                href="https://docs.liquity.org/faq/stability-pool-and-liquidations"
+                target="_"
+              >
+                {" "}
+                liquidations
+              </a>
             </Data>
             <Data>
-              <Tooltip
-                text={`This jar deposits into B.Protocol's Backstop AMM. The base rate of ${//@dev B.AMM APR
-                }% is provided by the underlying B.AMM vault`}
-              >
-                <div style={{ display: "flex", marginTop: 5 }}>
-                  <span>APY</span>
-                  <img
-                    src="./question.svg"
-                    width="15px"
-                    style={{ marginLeft: 5 }}
-                  />
-                </div>
-              </Tooltip>
+              <div style={{ display: "flex", marginTop: 5 }}>
+                <span>APY</span>
+              </div>
             </Data>
           </Grid>
           <Grid xs={24} sm={8} md={4} lg={5}>
@@ -174,8 +180,19 @@ export const BProtocol: FC = () => {
             <Label>Deposited</Label>
           </Grid>
           <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={depositedNum === 0}>${valueStr}</Data>
-            <Label>Value</Label>
+            <Data isZero={depositedNum === 0}>
+              <Tooltip text={`${valueStr} LUSD + ${pendingLqtyStr} pLQTY`}>${formatString(userValue + pendingLqtyNum * prices?.lqty)}</Tooltip>
+            </Data>
+            <Data>
+              <div style={{ display: "flex", marginTop: 5 }}>
+                <span>Value</span>
+                <img
+                  src="./question.svg"
+                  width="15px"
+                  style={{ marginLeft: 5 }}
+                />
+              </div>
+            </Data>
           </Grid>
         </Grid.Container>
       }
@@ -296,6 +313,11 @@ export const BProtocol: FC = () => {
           {stakeButton.text}
         </Button>
       )}
+      <Spacer y={1} />
+      This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are
+      automatically sold back into users' LUSD positions and all LQTY rewards
+      are staked in the Pickle Jar, which compounds ETH and LUSD rewards. Users
+      will receive pLQTY and LUSD upon withdrawing.
     </Collapse>
   );
 };
