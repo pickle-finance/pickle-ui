@@ -100,7 +100,7 @@ export const BProtocol: FC = () => {
   const depositedStr = formatString(depositedNum);
   const valueStr = formatString(userValue);
   const plqtyStr = formatString(+formatEther(plqtyBalance));
-  const pendingLqtyNum = +formatEther(userPendingLqty)
+  const pendingLqtyNum = +formatEther(userPendingLqty);
   const pendingLqtyStr = formatString(pendingLqtyNum);
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
@@ -142,7 +142,9 @@ export const BProtocol: FC = () => {
       preview={
         <Grid.Container gap={1}>
           <JarName xs={24} sm={12} md={5} lg={5}>
+            <a href="https://app.bprotocol.org/app" target="_">
             <TokenIcon src={"/bprotocol.png"} />
+            </a>
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>B.Protocol</div>
               <a
@@ -181,18 +183,16 @@ export const BProtocol: FC = () => {
           </Grid>
           <Grid xs={24} sm={8} md={4} lg={4}>
             <Data isZero={depositedNum === 0}>
-              <Tooltip text={`${valueStr} LUSD + ${pendingLqtyStr} pLQTY`}>${formatString(userValue + pendingLqtyNum * prices?.lqty)}</Tooltip>
-            </Data>
-            <Data>
-              <div style={{ display: "flex", marginTop: 5 }}>
-                <span>Value</span>
+              <Tooltip text={`${valueStr} LUSD + ${pendingLqtyStr} pLQTY`}>
+                ${formatString(userValue + pendingLqtyNum * prices?.lqty)}
                 <img
                   src="./question.svg"
                   width="15px"
                   style={{ marginLeft: 5 }}
                 />
-              </div>
+              </Tooltip>
             </Data>
+            <Label>Value</Label>
           </Grid>
         </Grid.Container>
       }
@@ -241,7 +241,7 @@ export const BProtocol: FC = () => {
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>{`Balance ${depositedStr} PBAMM`}</div>
+            <div>{`Balance ${depositedStr} PBAMM (${valueStr} LUSD)`}</div>
             <Link
               color
               href="#"
@@ -316,8 +316,7 @@ export const BProtocol: FC = () => {
       <Spacer y={1} />
       This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are
       automatically sold back into users' LUSD positions and all LQTY rewards
-      are staked in the Pickle Jar, which compounds ETH and LUSD rewards. Users
-      will receive pLQTY and LUSD upon withdrawing.
+      are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing.
     </Collapse>
   );
 };

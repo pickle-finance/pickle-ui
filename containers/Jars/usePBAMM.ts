@@ -53,15 +53,17 @@ export const usePBAMM = () => {
       const lusdNum = await stabilityPool.getCompoundedLUSDDeposit(
         BPAddresses.pBAMM,
       );
+
+      const ethNum = await provider.getBalance(BPAddresses.pBAMM)
       const totalShares = await pBAMM.totalSupply();
       const ppt =
-        (+formatEther(lusdNum) * prices.lusd) / +formatEther(totalShares);
+        (+formatEther(lusdNum) * prices.lusd + +formatEther(ethNum) * prices.eth) / +formatEther(totalShares);
 
       setPricePerToken(ppt);
       setUserValue(ppt * +formatEther(_pbamm || 0));
 
       // LQTY APR calc
-      const remainingLQTY = 13358309;
+      const remainingLQTY = 13344950;
       const lusdInSP = await lusdToken.balanceOf(BPAddresses.STABILITY_POOL);
       const lqtyApr =
         (remainingLQTY * prices.lqty) / (+formatEther(lusdInSP) * prices.lusd);
