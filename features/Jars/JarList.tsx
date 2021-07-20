@@ -113,6 +113,21 @@ export const JarList: FC = () => {
         {chainName === NETWORK_NAMES.ETH && (
           <>
             Powered by&nbsp;
+            <a href="https://yearn.finance/" target="_">
+              Yearn
+            </a>
+            ⚡
+            {yearnJars.map((jar) => (
+              <Grid xs={24} key={jar.name}>
+                <JarCollapsible jarData={jar} isYearnJar={true} />
+              </Grid>
+            ))}
+            <Spacer y={1} />
+          </>
+        )}
+        {chainName === NETWORK_NAMES.ETH && (
+          <>
+            Powered by&nbsp;
             <a href="https://bprotocol.org/" target="_">
               B.Protocol
             </a>
@@ -123,22 +138,7 @@ export const JarList: FC = () => {
             </Grid>
           </>
         )}
-        {chainName === NETWORK_NAMES.ETH && (
-          <>
-            Powered by&nbsp;
-            <a href="https://yearn.finance/" target="_">
-              Yearn
-            </a>
-            ⚡
-            {yearnJars.map((jar) => (
-              <Grid xs={24} key={jar.name}>
-                <JarCollapsible jarData={jar} isYearnJar={true} />
-              </Grid>
-            ))}
-          </>
-        )}
       </Grid.Container>
-      <Spacer y={2} />
       <Grid.Container gap={1}>
         {(showUserJars ? userJars : activeJars).map((jar) => (
           <Grid xs={24} key={jar.name}>
