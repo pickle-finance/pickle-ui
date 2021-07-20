@@ -109,20 +109,19 @@ export const JarList: FC = () => {
           />
           Show Your Jars
         </Grid>
-        <Grid xs={24}></Grid>
         {chainName === NETWORK_NAMES.ETH && (
           <>
             Powered by&nbsp;
             <a href="https://yearn.finance/" target="_">
               Yearn
             </a>
-            ⚡
-            {yearnJars.map((jar) => (
+            &nbsp;⚡
+            {yearnJars.map((jar, idx) => (
               <Grid xs={24} key={jar.name}>
                 <JarCollapsible jarData={jar} isYearnJar={true} />
+                {idx === yearnJars.length - 1 && <Spacer y={1} />}
               </Grid>
             ))}
-            <Spacer y={1} />
           </>
         )}
         {chainName === NETWORK_NAMES.ETH && (
@@ -131,7 +130,7 @@ export const JarList: FC = () => {
             <a href="https://bprotocol.org/" target="_">
               B.Protocol
             </a>
-            ⚡
+            &nbsp;⚡
             <Grid xs={24}>
               <BProtocol />
               <Spacer y={1} />
