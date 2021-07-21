@@ -277,6 +277,21 @@ export const JarCollapsible: FC<{
     .filter((x) => x)
     .join(" + ");
 
+  const renderToolTip = () => {
+    if (isYearnJar)
+      return `This jar deposits into Yearn's ${
+        APYs[1].vault
+      }, The base rate of ${apr.toFixed(
+        2,
+      )}% is provided by the underlying Yearn strategy`;
+    else if (isAlethJar) {
+      return `ALCX rewards are harvested and staked to accelerate your ALCX earnings. 
+      You will receive Saddle WETH/alETH/sETH and ALCX tokens on withdrawal.`;
+    } else
+      return `This yield is calculated in real time from a base rate of ${apr.toFixed(
+        2,
+      )}% which we auto-compound regularly.`;
+  };
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -309,19 +324,7 @@ export const JarCollapsible: FC<{
               </Tooltip>
             </Data>
             <Data>
-              <Tooltip
-                text={
-                  isYearnJar
-                    ? `This jar deposits into Yearn's ${
-                        APYs[1].vault
-                      }, The base rate of ${apr.toFixed(
-                        2,
-                      )}% is provided by the underlying Yearn strategy`
-                    : `This yield is calculated in real time from a base rate of ${apr.toFixed(
-                        2,
-                      )}% which we auto-compound regularly.`
-                }
-              >
+              <Tooltip text={renderToolTip()}>
                 <div style={{ display: "flex", marginTop: 5 }}>
                   <span>APY</span>
                   <img

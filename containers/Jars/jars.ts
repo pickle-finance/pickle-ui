@@ -239,7 +239,7 @@ export const DEPOSIT_TOKENS_LINK = {
   lusdCRV: "https://curve.fi/lusd/deposit",
   LQTY:
     "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
-  ALETH: "https://app.alchemix.fi/transmute",
+  ALETH: "https://saddle.exchange/#/pools/aleth/deposit",
   // Polygon Jars
   COMETH_USDC_WETH:
     "https://swap.cometh.io/#/add/0x2791bca1f2de4661ed88a30c99a7a9449aa84174/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
