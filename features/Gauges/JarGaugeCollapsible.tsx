@@ -21,7 +21,7 @@ import {
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { LpIcon, TokenIcon, ZapperIcon } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { UserGaugeData } from "../../containers/UserGauges";
 import { useDill } from "../../containers/Dill";
@@ -809,7 +809,8 @@ export const JarGaugeCollapsible: FC<{
                 }
                 style={{ width: "100%" }}
               >
-                {zapOnlyButton || depositButton.text}
+                {isZap ? (zapOnlyButton || "Zap into Jar") : depositButton.text}
+                {isZap && ZapperIcon}
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
@@ -822,7 +823,8 @@ export const JarGaugeCollapsible: FC<{
                 }
                 style={{ width: "100%" }}
               >
-                {depositStakeButton || zapStakeButton || "Deposit and Stake"}
+                {depositStakeButton || zapStakeButton || (isZap ? "Zap and Stake" : "Deposit and Stake")}
+                {isZap && ZapperIcon}
               </Button>
             </Grid>
           </Grid.Container>
