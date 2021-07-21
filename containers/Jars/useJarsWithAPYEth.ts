@@ -828,13 +828,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ALETH) {
-          APYs = [...alcxNakedApy];
+          APYs = [...alethApy, ...alcxNakedApy];
           const alcxPending = await calculatePendingAlcxRewards(
             jar.contract as Jarsymbiotic,
             address,
           );
           jar = { ...jar, ...alcxPending };
-          totalAPY = alcxNakedApy[0]?.["staked ALCX"];
+          totalAPY = alethApy[0]?.baseAlcx + alcxNakedApy[0]?.["staked ALCX"];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
