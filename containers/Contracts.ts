@@ -68,8 +68,10 @@ import { Ironchef__factory as IronchefFactory } from "./Contracts/factories/Iron
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
   PickleRewarder__factory as PickleRewarderFactory,
-  PickleRewarder__factory,
 } from "./Contracts/factories/PickleRewarder__factory";
+
+import { SushiMigrator } from "./Contracts/SushiMigrator";
+import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
 
 import { config, NETWORK_NAMES } from "./config";
 export const PICKLE_STAKING_SCRV_REWARDS =
@@ -178,6 +180,7 @@ export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 
 export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
+export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b"
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -265,6 +268,7 @@ function useContracts() {
   ] = useState<YvboostMigrator | null>(null);
 
   const [ironchef, setIronchef] = useState<Ironchef | null>(null);
+  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(null)
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -375,6 +379,7 @@ function useContracts() {
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
 
       setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
+      setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer))
     }
   };
 
@@ -424,6 +429,7 @@ function useContracts() {
     pickleRewarder,
     controllerMai,
     ironchef,
+    sushiMigrator
   };
 }
 

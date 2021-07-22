@@ -11,7 +11,6 @@ import {
   Checkbox,
 } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
-import { UserGaugeData } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
@@ -20,8 +19,6 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
@@ -29,6 +26,7 @@ import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { UserGaugeDataWithAPY } from "./GaugeList";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -113,6 +111,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     migrateYvboost,
     depositYvboost,
     withdrawGauge,
+    migratePickleEth,
+    depositPickleEth,
   } = useMigrate(depositToken, 0, balance, staked);
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -163,6 +163,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
 
+  const [pickleMigrateState, setPickleMigrateState] = useState<string | null>(
+    null,
+  );
+
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
   const pickleAPYMin = fullApy * 100 * 0.4;
@@ -205,6 +209,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     depositToken.address.toLowerCase() ===
     PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
 
+  const isPickleFarm = depositToken.address.toLowerCase() === PICKLE_ETH_FARM;
+
   const handleYvboostMigrate = async () => {
     if (stakedNum || balanceNum) {
       try {
@@ -220,6 +226,26 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
         console.error(error);
         alert(error.message);
         setYvMigrateState(null);
+        return;
+      }
+    }
+  };
+
+  const handlePickleEthMigrate = async () => {
+    if (stakedNum || balanceNum) {
+      try {
+        setPickleMigrateState("Withdrawing from Farm...");
+        await withdrawGauge(gauge);
+        setPickleMigrateState("Migrating to Sushi LP...");
+        await migratePickleEth();
+        setPickleMigrateState("Migrated! Staking in Sushi MasterChef v2...");
+        await depositPickleEth();
+        setPickleMigrateState(null);
+        setSuccess(true);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setPickleMigrateState(null);
         return;
       }
     }
@@ -518,6 +544,33 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                       here
                     </Link>
                   </p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+          {isPickleFarm ? (
+            <>
+              <Button
+                disabled={pickleMigrateState !== null}
+                onClick={handlePickleEthMigrate}
+                style={{ width: "100%", textTransform: "none" }}
+              >
+                {pickleMigrateState ||
+                  "Migrate PICKLE-ETH to Sushi for dual 🥒 and 🍣"}
+              </Button>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontFamily: "Source Sans Pro",
+                  fontSize: "1rem",
+                }}
+              >
+                Your PICKLE/ETH LP tokens will be unstaked and migrated from
+                Uniswap LP tokens to Sushi LP tokens
+                <br /> and then staked in Sushi's MasterChef v2. This process will require a number of transactions.
+                {isSuccess ? (
+                  <p style={{ fontWeight: "bold" }}>Migration completed!</p>
                 ) : null}
               </div>
             </>

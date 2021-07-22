@@ -1,4 +1,5 @@
 import { BigNumber, ethers } from "ethers";
+import { signERC2612Permit } from "eth-permit";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
@@ -6,6 +7,9 @@ import { Erc20 } from "../../containers/Contracts/Erc20";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { getStats } from "../../features/Zap/useZapper";
 import { Gauge } from "../../containers/Contracts/Gauge";
+import { PICKLE_ETH_FARM, PICKLE_ETH_SLP } from "../../containers/Farms/farms";
+import { addresses } from "../../containers/SushiPairs";
+import { Masterchefv2 } from "containers/Contracts/Masterchefv2";
 
 export const FARM_LP_TO_GAUGE = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819":
@@ -59,8 +63,14 @@ export const useMigrate = (
   balance: BigNumber | null,
   staked: BigNumber | null,
 ) => {
-  const { address, signer, blockNum } = Connection.useContainer();
-  const { masterchef, yvBoostMigrator, erc20 } = Contracts.useContainer();
+  const { address, provider, signer, blockNum } = Connection.useContainer();
+  const {
+    masterchef,
+    yvBoostMigrator,
+    erc20,
+    sushiMigrator,
+    masterchefV2,
+  } = Contracts.useContainer();
 
   const deposit = async () => {
     if (!jarToken || !address) return;
@@ -161,5 +171,62 @@ export const useMigrate = (
     }
   };
 
-  return { deposit, withdraw, migrateYvboost, depositYvboost, withdrawGauge };
+  const migratePickleEth = async () => {
+    if (!sushiMigrator || !masterchefV2 || !provider || !address || !erc20) return;
+
+    const pickleEthContract = erc20.attach(PICKLE_ETH_FARM);
+    const pickleEthBalance = await pickleEthContract.balanceOf(address);
+
+    if (pickleEthBalance) {
+      const permRes = await signERC2612Permit(
+        provider,
+        pickleEthContract.address,
+        address,
+        sushiMigrator.address,
+        pickleEthBalance.toString(),
+      );
+      console.log(permRes);
+      const tx = await sushiMigrator.migrateWithPermit(
+        addresses.pickle,
+        addresses.weth,
+        pickleEthBalance,
+        1,
+        1,
+        permRes.deadline,
+        permRes.v,
+        permRes.r,
+        permRes.s,
+      );
+      await tx.wait()
+    }
+  };
+
+  const depositPickleEth = async () => {
+    if (!erc20 || !address || !masterchefV2) return null;
+    const pickleEthSLP = erc20.attach(PICKLE_ETH_SLP);
+    const pickleEthSLPBalance = await pickleEthSLP.balanceOf(address);
+
+    const allowance = await pickleEthSLP.allowance(address, masterchefV2.address);
+    if (pickleEthSLPBalance && !allowance.gte(pickleEthSLPBalance)) {
+      const tx1 = await pickleEthSLP.approve(
+        masterchefV2.address,
+        ethers.constants.MaxUint256,
+      );
+      await tx1.wait();
+
+      // TODO - CHANGE PID WHEN POOL IS LIVE
+      const tx2 = await masterchefV2.deposit(3, pickleEthSLPBalance, address); 
+      await tx2.wait();
+    }
+  };
+
+  return {
+    deposit,
+    withdraw,
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+    migratePickleEth,
+    depositPickleEth,
+  };
 };

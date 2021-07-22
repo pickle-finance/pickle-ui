@@ -6,7 +6,7 @@ import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
 import { Contract as MulticallContract } from "ethers-multicall";
 
-const addresses = {
+export const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
   weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
