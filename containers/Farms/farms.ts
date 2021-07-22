@@ -1,6 +1,7 @@
 import { DEPOSIT_TOKENS_JAR_NAMES, DEPOSIT_TOKENS_NAME } from "../Jars/jars";
 
 export const PICKLE_ETH_FARM = "0xdc98556ce24f007a5ef6dc1ce96322d65832a819";
+export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
 
 export interface FarmMap {
   [contract: string]: {
