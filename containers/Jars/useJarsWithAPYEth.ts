@@ -33,6 +33,7 @@ import SwapFlashLoanABI from "../ABIs/swapflashloan.json";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
 import { useCurveSNXAPY } from "./useCurveSNXAPY";
+import { CurvePairs } from "../CurvePairs";
 import { useUniPairDayData } from "./useUniPairDayData";
 import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
@@ -53,11 +54,11 @@ import RewarderABI from "../ABIs/rewarder.json";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 
-interface SushiPoolId {
+interface PoolId {
   [key: string]: number;
 }
 
-const sushiPoolIds: SushiPoolId = {
+const sushiPoolIds: PoolId = {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": 2,
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": 1,
   "0x06da0fd433C1A5d7a4faa01111c044910A184553": 0,
@@ -68,9 +69,15 @@ const sushiPoolIds: SushiPoolId = {
   "0x9461173740D27311b176476FA27e94C681b1Ea6b": 230,
 };
 
-const sushiPoolV2Ids: SushiPoolId = {
+const sushiPoolV2Ids: PoolId = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 0,
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": 1,
+};
+
+const abracadabraIds: PoolId = {
+  "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": 0,
+  "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": 1,
+  "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": 2,
 };
 
 const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
@@ -100,8 +107,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const { getPairData: getUniPairData } = UniV2Pairs.useContainer();
+  const { getCurveLpPriceData } = CurvePairs.useContainer();
   const {
     stakingRewards,
+    sorbettiereFarm,
     susdPool,
     susdGauge,
     renGauge,
@@ -239,6 +248,62 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return [
         { lqty: getCompoundingAPY(lqtyAPY * 0.8), apr: lqtyAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
+  const calculateAbradabraApy = async (lpTokenAddress: string) => {
+    if (
+      sorbettiereFarm &&
+      prices?.mim &&
+      prices?.spell &&
+      getCurveLpPriceData &&
+      getSushiPairData &&
+      multicallProvider
+    ) {
+      const poolId = abracadabraIds[lpTokenAddress];
+
+      const multicallSorbettiereFarm = new MulticallContract(
+        sorbettiereFarm.address,
+        sorbettiereFarm.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        icePerSecondBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallSorbettiereFarm.icePerSecond(),
+        multicallSorbettiereFarm.totalAllocPoint(),
+        multicallSorbettiereFarm.poolInfo(poolId),
+        lpToken.balanceOf(multicallSorbettiereFarm.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const icePerSecond =
+        (parseFloat(formatEther(icePerSecondBN)) * 0.9 * poolInfo.allocPoint) /
+        totalAllocPointBN.toNumber();
+      let tokenPrice: any;
+      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV) {
+        tokenPrice = await getCurveLpPriceData(lpTokenAddress);
+      } else {
+        const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+        tokenPrice = pricePerToken;
+      }
+
+      const iceRewardsPerYear = icePerSecond * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.spell * iceRewardsPerYear;
+
+      const totalValueStaked = totalSupply * tokenPrice;
+      const spellAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [
+        { spell: getCompoundingAPY(spellAPY * 0.8), apr: spellAPY * 0.8 * 100 },
       ];
     }
 
@@ -583,6 +648,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSaddleD4APY(),
       ]);
 
+      const [mim3crvApy, mimEthApy, spellEthApy] = await Promise.all([
+        calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
+        calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH),
+        calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
+      ]);
+
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
         let totalAPY = 0;
@@ -780,6 +851,26 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
           APYs = [...crvLusdApy];
           totalAPY = crvLusdApy[0]?.apr || 0;
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_3CRV) {
+          APYs = [...mim3crvApy];
+        }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_ETH) {
+          APYs = [
+            ...mimEthApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].MIM_ETH,
+            ),
+          ];
+        }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SPELL_ETH) {
+          APYs = [
+            ...spellEthApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SPELL_ETH,
+            ),
+          ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.fraxCRV) {

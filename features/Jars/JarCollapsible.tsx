@@ -161,6 +161,15 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17": (
     <LpIcon swapIconSrc={"/ironswap.png"} tokenIconSrc={"/3usd.png"} />
   ),
+  "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": (
+    <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/3crv.png"} />
+  ),
+  "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": (
+    <LpIcon swapIconSrc={"/abracadabra.ico"} tokenIconSrc={"/spell.webp"} />
+  ),
+  "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": (
+    <LpIcon swapIconSrc={"/abracadabra.ico"} tokenIconSrc={"/mim.webp"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -502,8 +511,8 @@ export const JarCollapsible: FC<{
               }}
             >
               Withdrawals are restricted for 24 hours following your most recent
-              deposit, as this minimum locking period is imposed when staking
-              on Frax Finance
+              deposit, as this minimum locking period is imposed when staking on
+              Frax Finance
             </div>
           ) : null}
         </Grid>

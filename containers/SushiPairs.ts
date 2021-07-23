@@ -28,6 +28,8 @@ const addresses = {
   wusdc: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
   cvx: "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
   qi: "0x580a84c73811e1839f75d86d75d88cca0c241ff4",
+  spell: "0x090185f2135308bad17527004364ebcc2d37e5f6",
+  mim: "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
 };
 
 interface Token {
@@ -46,6 +48,12 @@ const yfi: Token = { address: addresses.yfi, priceId: "yfi", decimals: 18 };
 const wbtc: Token = { address: addresses.wbtc, priceId: "wbtc", decimals: 8 };
 const mic: Token = { address: addresses.mic, priceId: "mic", decimals: 18 };
 const mis: Token = { address: addresses.mis, priceId: "mis", decimals: 18 };
+const spell: Token = {
+  address: addresses.spell,
+  priceId: "spell",
+  decimals: 18,
+};
+const mim: Token = { address: addresses.mim, priceId: "mim", decimals: 18 };
 const yvecrv: Token = {
   address: addresses.yvecrv,
   priceId: "yvecrv",
@@ -67,10 +75,22 @@ const alcx: Token = {
   decimals: 18,
 };
 const mweth: Token = { address: addresses.mweth, priceId: "eth", decimals: 18 };
-const musdt: Token = { address: addresses.musdt, priceId: "usdt", decimals: 18 };
-const matic: Token = { address: addresses.matic, priceId: "matic", decimals: 18 };
-const mimatic: Token = { address: addresses.mimatic, priceId: "mimatic", decimals: 18 };
-const wusdc: Token = { address: addresses.wusdc, priceId: "usdc", decimals: 6}
+const musdt: Token = {
+  address: addresses.musdt,
+  priceId: "usdt",
+  decimals: 18,
+};
+const matic: Token = {
+  address: addresses.matic,
+  priceId: "matic",
+  decimals: 18,
+};
+const mimatic: Token = {
+  address: addresses.mimatic,
+  priceId: "mimatic",
+  decimals: 18,
+};
+const wusdc: Token = { address: addresses.wusdc, priceId: "usdc", decimals: 6 };
 const cvx: Token = {
   address: addresses.cvx,
   priceId: "cvx",
@@ -80,7 +100,7 @@ const qi: Token = {
   address: addresses.qi,
   priceId: "qi",
   decimals: 18,
-}
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -101,10 +121,12 @@ export const PAIR_INFO: PairMap = {
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": { a: mweth, b: musdt },
   "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": { a: mweth, b: matic },
   "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic },
-  "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {a: wusdc, b: mimatic },
+  "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": { a: wusdc, b: mimatic },
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": { a: wusdc, b: mimatic },
-  "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth},
-  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic}
+  "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth },
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic },
+  "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": { a: spell, b: weth },
+  "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": { a: mim, b: weth },
 };
 
 function useSushiPairs() {
@@ -122,7 +144,11 @@ function useSushiPairs() {
     const tokenB = new MulticallContract(b.address, erc20.abi);
     const pair = new MulticallContract(pairAddress, erc20.abi);
 
-    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await multicallProvider.all([
+    const [
+      numAInPairBN,
+      numBInPairBN,
+      totalSupplyBN,
+    ] = await multicallProvider.all([
       tokenA.balanceOf(pairAddress),
       tokenB.balanceOf(pairAddress),
       pair.totalSupply(),
@@ -171,7 +197,6 @@ function useSushiPairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-
     let totalValueOfPair;
     // In case price one token is not listed on coingecko
     if (priceA) {
@@ -179,7 +204,7 @@ function useSushiPairs() {
     } else {
       totalValueOfPair = 2 * priceB * numBInPair;
     }
-    
+
     const totalSupply = parseFloat(ethers.utils.formatEther(totalSupplyBN)); // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 

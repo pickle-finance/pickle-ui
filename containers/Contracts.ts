@@ -45,6 +45,8 @@ import { Strategy } from "./Contracts/Strategy";
 import { Strategy__factory as StrategyFactory } from "./Contracts/factories/Strategy__factory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChef__factory as SushiChefFactory } from "./Contracts/factories/SushiChef__factory";
+import { Sorbettiere } from "./Contracts/Sorbettiere";
+import { Sorbettiere__factory as SorbettiereFactory } from "./Contracts/factories/Sorbettiere__factory";
 import { Uniswapv2Pair } from "./Contracts/Uniswapv2Pair";
 import { Uniswapv2Pair__factory as Uniswapv2PairFactory } from "./Contracts/factories/Uniswapv2Pair__factory";
 import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
@@ -109,6 +111,8 @@ export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 export const SUSDV2_CRV = "0xC25a3A3b969415c80451098fa907EC722572917F";
 export const THREE_CRV = "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490";
 export const RENBTC_CRV = "0x49849C98ae39Fff122806C06791Fa73784FB3675";
+
+export const SORBETTIERE_REWARDS = "0xF43480afE9863da4AcBD4419A47D9Cc7d25A647F";
 
 export const SCRV_STAKING_REWARDS =
   "0xDCB6A51eA3CA5d3Fd898Fd6564757c7aAeC3ca92";
@@ -216,6 +220,9 @@ function useContracts() {
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
   );
+  const [sorbettiereFarm, setSorbettiereFarm] = useState<Sorbettiere | null>(
+    null,
+  );
   const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
     null,
   );
@@ -300,6 +307,9 @@ function useContracts() {
       );
       setCommunalFarm(
         CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
+      );
+      setSorbettiereFarm(
+        SorbettiereFactory.connect(SORBETTIERE_REWARDS, providerOrSigner),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(
@@ -397,6 +407,7 @@ function useContracts() {
     curveProxyLogic,
     instabrine,
     sushiChef,
+    sorbettiereFarm,
     dill,
     gaugeProxy,
     gauge,
