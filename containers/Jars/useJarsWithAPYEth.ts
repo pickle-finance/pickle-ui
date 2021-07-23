@@ -285,7 +285,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const icePerSecond =
-        (parseFloat(formatEther(icePerSecondBN)) * 0.9 * poolInfo.allocPoint) /
+        (parseFloat(formatEther(icePerSecondBN)) * poolInfo.allocPoint) /
         totalAllocPointBN.toNumber();
       let tokenPrice: any;
       if (lpTokenAddress === JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV) {
