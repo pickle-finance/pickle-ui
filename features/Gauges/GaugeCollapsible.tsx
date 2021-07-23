@@ -327,20 +327,26 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
             </div>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Tooltip
-              text={
-                gaugeData.totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText
-              }
-            >
-              <div>
-                {gaugeData.totalAPY + fullApy === 0
-                  ? "--%"
-                  : `${formatAPY(
-                      gaugeData.totalAPY + pickleAPYMin,
-                    )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
-              </div>
-              <Label>APY Range</Label>
-            </Tooltip>
+            {isPickleFarm ? (
+              "Migrating to Sushi"
+            ) : (
+              <Tooltip
+                text={
+                  gaugeData.totalAPY + fullApy === 0
+                    ? "--"
+                    : apyRangeTooltipText
+                }
+              >
+                <div>
+                  {gaugeData.totalAPY + fullApy === 0
+                    ? "--%"
+                    : `${formatAPY(
+                        gaugeData.totalAPY + pickleAPYMin,
+                      )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
+                </div>
+                <Label>APY Range</Label>
+              </Tooltip>
+            )}
           </Grid>
           <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
             <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
@@ -398,7 +404,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled || isyveCRVFarm}
+            disabled={stakeButton.disabled || isyveCRVFarm || isPickleFarm}
             onClick={() => {
               if (gauge && signer) {
                 transfer({
@@ -568,7 +574,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
               >
                 Your PICKLE/ETH LP tokens will be unstaked and migrated from
                 Uniswap LP tokens to Sushi LP tokens
-                <br /> and then staked in Sushi's MasterChef v2. This process will require a number of transactions.
+                <br /> and then staked in Sushi's MasterChef v2. This process
+                will require a number of transactions.
                 {isSuccess ? (
                   <p style={{ fontWeight: "bold" }}>Migration completed!</p>
                 ) : null}
