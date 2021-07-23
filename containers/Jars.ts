@@ -6,6 +6,7 @@ import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
+import { PICKLE_ETH_SLP } from "./Contracts";
 
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 
@@ -29,7 +30,7 @@ function useJars() {
     if (jarsWithTVL) {
       const wants = jarsWithTVL.map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
-      addTokens([...wants, ...pTokens]);
+      addTokens([...wants, ...pTokens, PICKLE_ETH_SLP]);
     }
   }, [jarsWithTVL]);
 
