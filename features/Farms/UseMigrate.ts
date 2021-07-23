@@ -172,7 +172,8 @@ export const useMigrate = (
   };
 
   const migratePickleEth = async () => {
-    if (!sushiMigrator || !masterchefV2 || !provider || !address || !erc20) return;
+    if (!sushiMigrator || !masterchefV2 || !provider || !address || !erc20)
+      return;
 
     const pickleEthContract = erc20.attach(PICKLE_ETH_FARM);
     const pickleEthBalance = await pickleEthContract.balanceOf(address);
@@ -197,7 +198,7 @@ export const useMigrate = (
         permRes.r,
         permRes.s,
       );
-      await tx.wait()
+      await tx.wait();
     }
   };
 
@@ -205,19 +206,21 @@ export const useMigrate = (
     if (!erc20 || !address || !masterchefV2) return null;
     const pickleEthSLP = erc20.attach(PICKLE_ETH_SLP);
     const pickleEthSLPBalance = await pickleEthSLP.balanceOf(address);
+    console.log("here", pickleEthSLPBalance);
 
-    const allowance = await pickleEthSLP.allowance(address, masterchefV2.address);
+    const allowance = await pickleEthSLP.allowance(
+      address,
+      masterchefV2.address,
+    );
     if (pickleEthSLPBalance && !allowance.gte(pickleEthSLPBalance)) {
       const tx1 = await pickleEthSLP.approve(
         masterchefV2.address,
         ethers.constants.MaxUint256,
       );
       await tx1.wait();
-
-      // TODO - CHANGE PID WHEN POOL IS LIVE
-      const tx2 = await masterchefV2.deposit(3, pickleEthSLPBalance, address); 
-      await tx2.wait();
     }
+    const tx2 = await masterchefV2.deposit(3, pickleEthSLPBalance, address);
+    await tx2.wait();
   };
 
   return {

@@ -10,8 +10,7 @@ import erc20 from "@studydefi/money-legos/erc20";
 import { addresses } from "../SushiPairs";
 import { Contract as MulticallContract } from "ethers-multicall";
 
-const PID = 4; // TODO - CHANGE PID
-const REWARDER_PID = 0; // TODO
+const PID = 3; 
 const AVERAGE_BLOCK_TIME = 13.22;
 
 export interface MC2Apy {
@@ -41,7 +40,7 @@ export const useMC2 = () => {
   const [pendingSushi, setPendingSushi] = useState<ethers.BigNumber>(
     ethers.BigNumber.from(0),
   );
-  const [stakedSlp, setStakedSlp] = useState<ethers.BigNumber>(
+  const [slpStaked, setSlpStaked] = useState<ethers.BigNumber>(
     ethers.BigNumber.from(0),
   );
 
@@ -60,7 +59,7 @@ export const useMC2 = () => {
       const _slp = await getBalance(PICKLE_ETH_SLP);
       const [_stakedSlp] = await masterchefV2.userInfo(PID, address);
       if (_slp) setSlpBalance(_slp);
-      if (_stakedSlp) setStakedSlp(_stakedSlp);
+      if (_stakedSlp) setSlpStaked(_stakedSlp);
 
       // Value calculations
       const pickleToken = new MulticallContract(addresses.pickle, erc20.abi);
@@ -68,7 +67,7 @@ export const useMC2 = () => {
       const slpToken = new MulticallContract(PICKLE_ETH_SLP, erc20.abi);
 
       const { pricePerToken } = await getPairData(PICKLE_ETH_SLP);
-
+      setUserValue(pricePerToken * +formatEther(_stakedSlp || 0));
       setPricePerToken(pricePerToken);
 
       // APY calc - SUSHI
@@ -120,7 +119,7 @@ export const useMC2 = () => {
 
       // Pending Rewards
       const harvestablePickle = await pickleSushiRewarder.pendingToken(
-        REWARDER_PID,
+        PID,
         address,
       );
       const harvestableSushi = await masterchefV2.pendingSushi(PID, address);
@@ -134,9 +133,9 @@ export const useMC2 = () => {
   }, [tokenBalances]);
 
   return {
-    stakedSlp,
+    slpStaked,
     slpBalance,
-    pricePerToken,
+    userValue,
     apy,
     pendingPickle,
     pendingSushi

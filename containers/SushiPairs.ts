@@ -105,7 +105,7 @@ export const PAIR_INFO: PairMap = {
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": { a: wusdc, b: mimatic },
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth},
   "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic},
-  "0x269Db91Fc3c7fCC275C2E6f22e5552504512811c": { a: pickle, b: weth}
+  "0x269db91fc3c7fcc275c2e6f22e5552504512811c": { a: pickle, b: weth}
 };
 
 function useSushiPairs() {
