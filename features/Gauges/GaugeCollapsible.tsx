@@ -328,7 +328,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             {isPickleFarm ? (
-              "Migrating to Sushi"
+              "Migrate to Sushi ⬇️"
             ) : (
               <Tooltip
                 text={

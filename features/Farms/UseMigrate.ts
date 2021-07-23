@@ -1,13 +1,13 @@
 import { BigNumber, ethers } from "ethers";
 import { signERC2612Permit } from "eth-permit";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts";
+import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { Erc20 } from "../../containers/Contracts/Erc20";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { getStats } from "../../features/Zap/useZapper";
 import { Gauge } from "../../containers/Contracts/Gauge";
-import { PICKLE_ETH_FARM, PICKLE_ETH_SLP } from "../../containers/Farms/farms";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { addresses } from "../../containers/SushiPairs";
 import { Masterchefv2 } from "containers/Contracts/Masterchefv2";
 
