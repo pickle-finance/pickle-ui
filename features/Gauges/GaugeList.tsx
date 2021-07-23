@@ -11,6 +11,7 @@ import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { backgroundColor, pickleGreen } from "../../util/constants";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
@@ -161,7 +162,8 @@ export const GaugeList: FC = () => {
       <h2>Vote</h2>
       <VoteCollapsible
         gauges={activeGauges.filter(
-          (x) => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV,
+          (x) => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV &&
+          x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM,
         )}
       />
       <div
