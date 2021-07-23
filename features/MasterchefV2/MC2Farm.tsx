@@ -7,7 +7,7 @@ import { formatEther } from "ethers/lib/utils";
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
-import { Contracts } from "../../containers/Contracts";
+import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import {
@@ -15,8 +15,11 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { useSushiPairDayData } from "../../containers/Jars/useSushiPairDayData";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
+import { useMC2 } from "../../containers/Gauges/useMC2";
+
+const PICKLE_PID = 3;
 
 interface ButtonStatus {
   disabled: boolean;
@@ -36,6 +39,12 @@ const Data = styled.div<DataProps>`
 const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
+
+const formatString = (num: number) =>
+  num.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: num < 1 ? 8 : 4,
+  });
 
 const setButtonStatus = (
   status: ERC20TransferStatus,
@@ -68,39 +77,25 @@ const setButtonStatus = (
   }
 };
 
-export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
-  farmData,
-}) => {
-  const { jars } = Jars.useContainer();
-
+export const MC2Farm: FC = () => {
   const {
-    poolName,
-    poolIndex,
-    depositToken,
-    depositTokenName,
-    balance,
-    staked,
-    harvestable,
-    usdPerToken,
+    slpStaked,
+    slpBalance,
+    userValue,
     apy,
-  } = farmData;
-  const stakedNum = parseFloat(formatEther(staked));
-  const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  const bal = parseFloat(formatEther(balance));
-  const balStr = bal.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: bal < 1 ? 18 : 4,
-  });
-  const stakedStr = stakedNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 18 : 4,
-  });
-  const harvestableStr = parseFloat(
-    formatEther(harvestable || 0),
-  ).toLocaleString();
+    pendingPickle,
+    pendingSushi,
+  } = useMC2();
+
+  const balNum = parseFloat(formatEther(slpBalance));
+  const balStr = formatString(balNum);
+  const depositedNum = parseFloat(formatEther(slpStaked));
+  const depositedStr = formatString(depositedNum);
+  const valueStr = formatString(userValue);
+  const pendingPickleNum = +formatEther(pendingPickle);
+  const pendingPickleStr = formatString(pendingPickleNum);
+  const pendingSushiNum = +formatEther(pendingSushi);
+  const pendingSushiStr = formatString(pendingSushiNum);
 
   const {
     status: erc20TransferStatuses,
@@ -127,12 +122,14 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   });
 
   // Get Jar APY (if its from a Jar)
-  let APYs: JarApy[] = [{ pickle: apy * 100 }];
+  let APYs: JarApy[] = [
+    { pickle: apy?.pickle * 100 },
+    { sushi: apy?.sushi * 100 },
+  ];
 
-  const { getUniPairDayAPY } = useUniPairDayData();
-  if (depositToken.address.toLowerCase() === PICKLE_ETH_FARM.toLowerCase()) {
-    APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_FARM)];
-  }
+  const { getSushiPairDayAPY } = useSushiPairDayData();
+
+  APYs = [...APYs, ...getSushiPairDayAPY(PICKLE_ETH_SLP)];
 
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
@@ -147,16 +144,16 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   useEffect(() => {
     if (masterchefV2) {
       const stakeStatus = getTransferStatus(
-        depositToken.address,
+        PICKLE_ETH_SLP,
         masterchefV2.address,
       );
       const unstakeStatus = getTransferStatus(
         masterchefV2.address,
-        depositToken.address,
+        PICKLE_ETH_SLP,
       );
       const harvestStatus = getTransferStatus(
         masterchefV2.address,
-        poolIndex.toString(),
+        PICKLE_PID.toString(),
       );
 
       setButtonStatus(stakeStatus, "Staking...", "Stake", setStakeButton);
@@ -181,39 +178,48 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
       shadow
       preview={
         <Grid.Container gap={1}>
-          <Grid xs={24} sm={12} md={5} lg={5}>
+          <Grid xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
               src={
-                <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
+                <LpIcon
+                  swapIconSrc={"/sushiswap.png"}
+                  tokenIconSrc={"/pickle.png"}
+                />
               }
             />
             <div style={{ width: "100%" }}>
-              <div style={{ fontSize: `1rem` }}>{poolName}</div>
-              <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
+              <div style={{ fontSize: `1rem` }}>SushiSwap MasterChefv2</div>
+              <Label style={{ fontSize: `1rem` }}>PICKLE/ETH SLP</Label>
             </div>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3}>
-            <Tooltip text={apy === 0 ? "--" : tooltipText}>
-              <div>{apy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
+            <Tooltip text={apy?.pickle === 0 ? "--" : tooltipText}>
+              <div>{apy?.pickle === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
+              <br />
               <Label>Total APY</Label>
             </Tooltip>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
+          <Grid xs={24} sm={6} md={3} lg={3}>
+            <Data isZero={pendingPickleNum === 0}>
+              {pendingPickleStr} <MiniIcon source={"/pickle.png"} />
+              <br />
+              {pendingSushiStr} <MiniIcon source={"/sushiswap.png"} />
             </Data>
             <Label>Earned</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={bal === 0}>{balStr}</Data>
+            <Data isZero={balNum === 0}>{balStr}</Data>
+              <br />
             <Label>Balance</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={stakedNum === 0}>{stakedStr}</Data>
+            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
+              <br />
             <Label>Staked</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
+            <Data isZero={userValue === 0}>${valueStr}</Data>
+              <br />
             <Label>Value Staked</Label>
           </Grid>
         </Grid.Container>
@@ -229,7 +235,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setStakeAmount(formatEther(balance));
+                setStakeAmount(formatEther(slpBalance));
               }}
             >
               Max
@@ -248,12 +254,16 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             onClick={() => {
               if (masterchefV2 && signer && address) {
                 transfer({
-                  token: depositToken.address,
+                  token: PICKLE_ETH_SLP,
                   recipient: masterchefV2.address,
                   transferCallback: async () => {
                     return masterchefV2
                       .connect(signer)
-                      .deposit(poolIndex, ethers.utils.parseEther(stakeAmount), address);
+                      .deposit(
+                        PICKLE_PID,
+                        ethers.utils.parseEther(stakeAmount),
+                        address,
+                      );
                   },
                 });
               }
@@ -265,13 +275,13 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Staked: {stakedStr}</div>
+            <div>Staked: {depositedStr}</div>
             <Link
               color
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setUnstakeAmount(formatEther(staked));
+                setUnstakeAmount(formatEther(depositedNum));
               }}
             >
               Max
@@ -291,15 +301,15 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
               if (masterchefV2 && signer && address) {
                 transfer({
                   token: masterchefV2.address,
-                  recipient: depositToken.address,
+                  recipient: PICKLE_ETH_SLP,
                   approval: false,
                   transferCallback: async () => {
                     return masterchefV2
                       .connect(signer)
                       .withdraw(
-                        poolIndex,
+                        PICKLE_PID,
                         ethers.utils.parseEther(unstakeAmount),
-                        address
+                        address,
                       );
                   },
                 });
@@ -322,7 +332,9 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
                   recipient: masterchefV2.address,
                   approval: false,
                   transferCallback: async () => {
-                    return masterchefV2.connect(signer).harvest(poolIndex, address);
+                    return masterchefV2
+                      .connect(signer)
+                      .harvest(PICKLE_PID, address);
                   },
                 });
               }

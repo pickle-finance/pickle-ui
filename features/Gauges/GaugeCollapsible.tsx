@@ -19,7 +19,7 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
@@ -561,8 +561,13 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 onClick={handlePickleEthMigrate}
                 style={{ width: "100%", textTransform: "none" }}
               >
-                {pickleMigrateState ||
-                  "Migrate PICKLE-ETH to Sushi for dual 🥒 and 🍣"}
+                {pickleMigrateState || (
+                  <>
+                    Migrate PICKLE-ETH to Sushi for dual&nbsp;
+                    <MiniIcon source={"/pickle.png"} /> &nbsp;and&nbsp;
+                    <MiniIcon source={"/sushiswap.png"} /> &nbsp;rewards&nbsp;
+                  </>
+                )}
               </Button>
               <div
                 style={{
