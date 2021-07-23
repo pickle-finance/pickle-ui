@@ -491,8 +491,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return [
         {
-          baseAlcx: getCompoundingAPY(alcxAPY * 0.8),
-          apr: alcxAPY * 0.8 * 100,
+          "base ALCX": getCompoundingAPY(alcxAPY * 0.9),
+          apr: alcxAPY * 0.9 * 100,
         },
       ];
     }
@@ -535,9 +535,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const alcxAPY = valueRewardedPerYear / totalValueStaked;
 
       const alcxNakedAPY =
-        (getCompoundingAPY(alcxAPY * 0.8) * alethApy[0].baseAlcx) / 100;
+        (getCompoundingAPY(alcxAPY * 0.9) * alethApy[0].["base ALCX"]) / 100;
 
-      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.8 * 100 }];
+      return [{ "staked ALCX": alcxNakedAPY, apr: alcxNakedAPY * 0.9 * 100 }];
     }
 
     return [];
@@ -834,7 +834,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             address,
           );
           jar = { ...jar, ...alcxPending };
-          totalAPY = alethApy[0]?.baseAlcx + alcxNakedApy[0]?.["staked ALCX"];
+          totalAPY = alethApy[0]?.["base ALCX"] + alcxNakedApy[0]?.["staked ALCX"];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {

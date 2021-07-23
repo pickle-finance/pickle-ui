@@ -286,7 +286,7 @@ export const JarCollapsible: FC<{
       )}% is provided by the underlying Yearn strategy`;
     else if (isAlethJar) {
       return `ALCX rewards are harvested and staked to accelerate your ALCX earnings. 
-      You will receive Saddle WETH/alETH/sETH and ALCX tokens on withdrawal.`;
+      You will receive Saddle alETH and ALCX tokens on withdrawal. The base ALCX rewards are realized immediately. The staked returns are realized by compounding ALCX rewards over a year`;
     } else
       return `This yield is calculated in real time from a base rate of ${apr.toFixed(
         2,

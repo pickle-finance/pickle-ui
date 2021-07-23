@@ -121,7 +121,7 @@ export const DEPOSIT_TOKENS_NAME = {
   lusdCRV: "lusdCRV",
   SUSHI_CVX_ETH: "SLP CVX/ETH",
   LQTY: "LQTY",
-  ALETH: "Saddle WETH/alETH/sETH",
+  ALETH: "Saddle alETH",
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
