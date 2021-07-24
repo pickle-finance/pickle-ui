@@ -36,6 +36,7 @@
     "apollo-link-http": "^1.5.17",
     "clsx": "^1.1.1",
     "coingecko-api": "^1.0.10",
+    "eth-permit": "^0.1.10",
     "ethers": "^5.0.14",
     "ethers-multicall": "^0.2.1",
     "fontsource-roboto": "^4.0.0",

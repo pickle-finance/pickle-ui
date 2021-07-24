@@ -6,7 +6,7 @@ import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
 import { Contract as MulticallContract } from "ethers-multicall";
 
-const addresses = {
+export const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
   weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -37,7 +37,7 @@ interface Token {
 }
 
 // prettier-ignore
-// const pickle: Token = { address: addresses.pickle, priceId: "pickle", decimals: 18 };
+const pickle: Token = { address: addresses.pickle, priceId: "pickle", decimals: 18 };
 const weth: Token = { address: addresses.weth, priceId: "eth", decimals: 18 };
 const dai: Token = { address: addresses.dai, priceId: "dai", decimals: 18 };
 const usdc: Token = { address: addresses.usdc, priceId: "usdc", decimals: 6 };
@@ -104,7 +104,8 @@ export const PAIR_INFO: PairMap = {
   "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {a: wusdc, b: mimatic },
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": { a: wusdc, b: mimatic },
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth},
-  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic}
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic},
+  "0x269db91fc3c7fcc275c2e6f22e5552504512811c": { a: pickle, b: weth}
 };
 
 function useSushiPairs() {

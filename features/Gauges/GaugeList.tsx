@@ -9,8 +9,10 @@ import { Connection } from "../../containers/Connection";
 import { useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
+import { MC2Farm} from "../MasterchefV2/MC2Farm"
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { backgroundColor, pickleGreen } from "../../util/constants";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
@@ -131,6 +133,9 @@ export const GaugeList: FC = () => {
 
   return (
     <>
+      <h2>Pickle Power</h2>
+      <MC2Farm />
+      <Spacer y={1} />
       <Grid.Container>
         <Grid md={12}>
           <p>
@@ -161,7 +166,8 @@ export const GaugeList: FC = () => {
       <h2>Vote</h2>
       <VoteCollapsible
         gauges={activeGauges.filter(
-          (x) => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV,
+          (x) => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV &&
+          x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM,
         )}
       />
       <div

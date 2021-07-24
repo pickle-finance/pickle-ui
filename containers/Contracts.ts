@@ -66,8 +66,10 @@ import { Ironchef__factory as IronchefFactory } from "./Contracts/factories/Iron
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
   PickleRewarder__factory as PickleRewarderFactory,
-  PickleRewarder__factory,
 } from "./Contracts/factories/PickleRewarder__factory";
+
+import { SushiMigrator } from "./Contracts/SushiMigrator";
+import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
 
 import { config, NETWORK_NAMES } from "./config";
 export const PICKLE_STAKING_SCRV_REWARDS =
@@ -174,6 +176,9 @@ export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 
 export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
+export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b"
+export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
+export const PICKLE_SUSHI_REWARDER = "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd"
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -251,6 +256,11 @@ function useContracts() {
     null,
   );
 
+  const [pickleSushiRewarder, setPickleSushiRewarder] = useState<PickleRewarder | null>(
+    null,
+  );
+
+
   const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
   const [
     yvBoostMigrator,
@@ -258,6 +268,7 @@ function useContracts() {
   ] = useState<YvboostMigrator | null>(null);
 
   const [ironchef, setIronchef] = useState<Ironchef | null>(null);
+  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(null)
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -365,6 +376,8 @@ function useContracts() {
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
 
       setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
+      setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer))
+      setPickleSushiRewarder(PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer))
     }
   };
 
@@ -413,6 +426,8 @@ function useContracts() {
     pickleRewarder,
     controllerMai,
     ironchef,
+    sushiMigrator,
+    pickleSushiRewarder
   };
 }
 
