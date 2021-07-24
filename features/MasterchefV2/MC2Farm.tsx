@@ -189,7 +189,15 @@ export const MC2Farm: FC = () => {
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>SushiSwap MasterChefv2</div>
-              <Label style={{ fontSize: `1rem` }}>PICKLE/ETH SLP</Label>
+              <Label style={{ fontSize: `1rem` }}>
+                <a
+                  href="https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"
+                  target="_"
+                >
+                  {" "}
+                  PICKLE/ETH SLP
+                </a>
+              </Label>
             </div>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3}>
@@ -209,17 +217,17 @@ export const MC2Farm: FC = () => {
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={balNum === 0}>{balStr}</Data>
-              <br />
+            <br />
             <Label>Balance</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={depositedNum === 0}>{depositedStr}</Data>
-              <br />
+            <br />
             <Label>Staked</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={userValue === 0}>${valueStr}</Data>
-              <br />
+            <br />
             <Label>Value Staked</Label>
           </Grid>
         </Grid.Container>
@@ -281,7 +289,7 @@ export const MC2Farm: FC = () => {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setUnstakeAmount(formatEther(depositedNum));
+                setUnstakeAmount(formatEther(slpStaked));
               }}
             >
               Max
@@ -306,7 +314,7 @@ export const MC2Farm: FC = () => {
                   transferCallback: async () => {
                     return masterchefV2
                       .connect(signer)
-                      .withdraw(
+                      .withdrawAndHarvest(
                         PICKLE_PID,
                         ethers.utils.parseEther(unstakeAmount),
                         address,
