@@ -53,6 +53,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
   "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368": "/aleth.webp",
+  "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a": "/saddle.svg",
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -122,6 +123,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+  "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/frax.webp"} />
+  ),
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
@@ -148,6 +152,15 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0x160532d2536175d65c03b97b0630a9802c274dad": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17": (
+    <LpIcon swapIconSrc={"/ironswap.png"} tokenIconSrc={"/3usd.png"} />
   ),
 };
 
@@ -209,7 +222,13 @@ export const JarCollapsible: FC<{
 
   const isMaiJar =
     depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase();
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase() ||
+    depositToken.address.toLowerCase() ===
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI.toLowerCase();
+
+  const isSaddleJar =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SADDLE_D4;
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -494,6 +513,20 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
+          {isSaddleJar ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
+              }}
+            >
+              Withdrawals are restricted for 24 hours following your most recent
+              deposit, as this minimum locking period is imposed when staking
+              on Frax Finance
+            </div>
+          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>

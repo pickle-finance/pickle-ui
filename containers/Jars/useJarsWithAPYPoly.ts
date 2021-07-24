@@ -4,6 +4,7 @@ import {
   DEPOSIT_TOKENS_JAR_NAMES,
   getPriceId,
   JAR_DEPOSIT_TOKENS,
+  PICKLE_JARS
 } from "./jars";
 import { Prices } from "../Prices";
 import {
@@ -22,10 +23,10 @@ import { ComethPairs } from "../ComethPairs";
 import { SushiPairs } from "../SushiPairs";
 
 import { Connection } from "../Connection";
-import { Contract } from "@ethersproject/contracts";
 import fetch from "node-fetch";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
-import MasterchefAbi from "../ABIs/masterchef.json"
+import MasterchefAbi from "../ABIs/masterchef.json";
+import IronchefAbi from "../ABIs/ironchef.json";
 import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
@@ -70,6 +71,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     strategy,
     sushiMinichef,
     sushiComplexRewarder,
+    ironchef,
   } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getComethPairData } = ComethPairs.useContainer();
@@ -146,11 +148,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       strategyAddress,
       AaveStrategyAbi,
     );
-    const [supplied, borrowed, balance] = (await multicallProvider.all([
-      aaveStrategy.getSuppliedView(),
-      aaveStrategy.getBorrowedView(),
-      aaveStrategy.balanceOfPool(),
-    ])).map(x => ethers.utils.formatEther(x));
+    const [supplied, borrowed, balance] = (
+      await multicallProvider.all([
+        aaveStrategy.getSuppliedView(),
+        aaveStrategy.getBorrowedView(),
+        aaveStrategy.balanceOfPool(),
+      ])
+    ).map((x) => ethers.utils.formatEther(x));
 
     const rawSupplyAPY = +pool["avg1DaysLiquidityRate"];
     const rawBorrowAPY = +pool["avg1DaysVariableBorrowRate"];
@@ -179,29 +183,29 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateSushiAPY = async (lpTokenAddress: string) => {
     if (
-      (sushiMinichef && prices?.sushi && getSushiPairData && multicallProvider,
-        sushiComplexRewarder)
+      sushiMinichef &&
+      prices?.sushi &&
+      getSushiPairData &&
+      multicallProvider &&
+      sushiComplexRewarder
     ) {
       const poolId = sushiPoolIds[lpTokenAddress];
       const multicallsushiMinichef = new MulticallContract(
         sushiMinichef.address,
-        sushiMinichef.interface.fragments
+        sushiMinichef.interface.fragments,
       );
-      const lpToken = new MulticallContract(
-        lpTokenAddress,
-        erc20.abi,
-      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [
         sushiPerSecondBN,
         totalAllocPointBN,
         poolInfo,
-        totalSupplyBN
+        totalSupplyBN,
       ] = await multicallProvider.all([
         multicallsushiMinichef.sushiPerSecond(),
         multicallsushiMinichef.totalAllocPoint(),
         multicallsushiMinichef.poolInfo(poolId),
-        lpToken.balanceOf(sushiMinichef.address)
+        lpToken.balanceOf(sushiMinichef.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
@@ -229,7 +233,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiComplexRewarder.rewardPerSecond(),
       ]);
 
-      const totalAllocPointCR = ethers.utils.defaultAbiCoder.decode(["uint256"], totalAllocPointCREncoded)
+      const totalAllocPointCR = ethers.utils.defaultAbiCoder.decode(
+        ["uint256"],
+        totalAllocPointCREncoded,
+      );
 
       const maticRewardsPerSecond =
         (parseFloat(formatEther(maticPerSecondBN)) *
@@ -251,13 +258,70 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateIronChefAPY = async (jar: Jar | undefined) => {
+    if (
+      prices &&
+      multicallProvider &&
+      ironchef &&
+      controller &&
+      strategy && 
+      jar
+    ) {
+      const jarStrategy = await controller.strategies(jar.depositToken.address);
+      const strategyContract = await strategy.attach(jarStrategy);
+      const ironchefAddress = await strategyContract.ironchef();
+      const poolId = await strategyContract.poolId();
+      const ice = "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef";
+      const pricePerToken = 1;
+
+      const multicallIronchef = new MulticallContract(
+        ironchefAddress,
+        IronchefAbi,
+      );
+
+      const lpToken = new MulticallContract(
+        jar.depositToken.address,
+        erc20.abi,
+      );
+
+      const [
+        icePerSecondBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallIronchef.rewardPerSecond(),
+        multicallIronchef.totalAllocPoint(),
+        multicallIronchef.poolInfo(poolId),
+        lpToken.balanceOf(ironchefAddress),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const icePerSecond =
+        (parseFloat(formatEther(icePerSecondBN)) *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const iceRewardsPerYear = icePerSecond * (365 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.ice * iceRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const iceAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { ice: getCompoundingAPY(iceAPY * 0.8), apr: iceAPY * 0.8 * 100 },
+      ];
+    }
+    return [];
+  };
+
   const calculateMasterChefAPY = async (jar: Jar | undefined) => {
     if (prices && multicallProvider && jar && controller && strategy) {
-      const jarStrategy = await controller.strategies(jar.depositToken.address)
-      const strategyContract = await strategy.attach(jarStrategy)
-      const masterchefAddress = await strategyContract.masterChef()
-      const poolId = await strategyContract.poolId()
-      const rewardTokenAddress = await strategyContract.rewardToken()
+      const jarStrategy = await controller.strategies(jar.depositToken.address);
+      const strategyContract = await strategy.attach(jarStrategy);
+      const masterchefAddress = await strategyContract.masterChef();
+      const poolId = await strategyContract.poolId();
+      const rewardTokenAddress = await strategyContract.rewardToken();
       const multicallMasterchef = new MulticallContract(
         masterchefAddress,
         MasterchefAbi,
@@ -272,12 +336,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiPerBlockBN,
         totalAllocPointBN,
         poolInfo,
-        totalSupplyBN
+        totalSupplyBN,
       ] = await multicallProvider.all([
         multicallMasterchef.rewardPerBlock(),
         multicallMasterchef.totalAllocPoint(),
         multicallMasterchef.poolInfo(poolId),
-        lpToken.balanceOf(masterchefAddress)
+        lpToken.balanceOf(masterchefAddress),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
@@ -287,33 +351,48 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           poolInfo.allocPoint.toNumber()) /
         totalAllocPointBN.toNumber();
 
-      const { pricePerToken } = await getSushiPairData(jar.depositToken.address);
+      const { pricePerToken } = await getSushiPairData(
+        jar.depositToken.address,
+      );
 
       const rewardsPerYear =
         rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
-      const rewardToken = getPriceId(rewardTokenAddress)
+      const rewardToken = getPriceId(rewardTokenAddress);
       const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
       const rewardAPY = valueRewardedPerYear / totalValueStaked;
 
       return [
-        { [rewardToken]: getCompoundingAPY(rewardAPY * 0.8), apr: rewardAPY * 0.8 * 100 },
+        {
+          [rewardToken]: getCompoundingAPY(rewardAPY * 0.8),
+          apr: rewardAPY * 0.8 * 100,
+        },
       ];
     }
 
     return [];
-  }
+  };
 
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
-
-
-      const mimaticJar = jars.find(
+      const usdcMimaticJar = jars.find(
         (jar) =>
           jar.depositToken.address ===
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
-      )
+      );
+
+      const qiMimaticJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
+      );
+
+      const iron3usdJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].IRON_3USD,
+      );
 
       const [
         comethUsdcWethApy,
@@ -322,7 +401,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         aaveDaiAPY,
         sushiEthUsdtApy,
         sushiMaticEthApy,
-        quickMimaticUsdcApy
+        quickMimaticUsdcApy,
+        quickMimaticQiApy,
+        iron3usdApy
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -337,7 +418,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
         ),
-        calculateMasterChefAPY(mimaticJar)
+        calculateMasterChefAPY(usdcMimaticJar),
+        calculateMasterChefAPY(qiMimaticJar),
+        calculateIronChefAPY(iron3usdJar)
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -378,7 +461,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           APYs = [
             { lp: (curveRawStats?.aave || 0) + am3CrvAPY[0].lp },
             ...[am3CrvAPY[1]],
-            ...[am3CrvAPY[2]]
+            ...[am3CrvAPY[2]],
           ];
         }
 
@@ -408,6 +491,23 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ),
           ];
         }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_MIMATIC_QI) {
+          APYs = [
+            ...quickMimaticQiApy,
+            ...getQuickPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.IRON_3USD) {
+          APYs = [
+            ...iron3usdApy,
+          ];
+        }
+
+
         let apr = 0;
         APYs.map((x) => {
           if (x.apr) {
@@ -442,7 +542,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   useEffect(() => {
     if (network === NETWORK_NAMES.POLY) calculateAPY();
-  }, [jars, prices, network]);
+  }, [jars?.length, prices, network]);
 
   return { jarsWithAPY };
 };

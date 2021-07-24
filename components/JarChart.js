@@ -8,7 +8,7 @@ import { pickleGreen, backgroundColor, cardColor } from "../util/constants";
 import JarValueChart from "./JarValueChart";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-const jarApi = "https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/jar";
+const jarApi = "https://d38jrn41whs0ud.cloudfront.net/prod/jar";
 const useStyles = makeStyles(() => ({
   paper: {
     backgroundColor: cardColor,

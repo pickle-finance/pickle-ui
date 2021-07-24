@@ -21,6 +21,8 @@ import {
 } from "./jars";
 
 import { Contract } from "@ethersproject/contracts";
+import { networkInterfaces } from "os";
+import { NETWORK_NAMES } from "containers/config";
 
 export type Jar = {
   depositToken: Erc20Contract;
@@ -34,6 +36,10 @@ const IsV5Token = (address: string): boolean => {
   return address === JAR_DEPOSIT_TOKENS["Ethereum"].ALETH;
 };
 
+const IsMaiToken = (address: string): boolean => {
+  return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI;
+};
+
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const {
     blockNum,
@@ -41,7 +47,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
     multicallProvider,
     chainName,
   } = Connection.useContainer();
-  const { controller, controllerv5, strategy } = Contracts.useContainer();
+  const { controller, controllerv5, strategy, controllerMai } = Contracts.useContainer();
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
@@ -51,7 +57,8 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       controllerv5 &&
       strategy &&
       multicallProvider &&
-      chainName
+      chainName &&
+      controllerMai
     ) {
       const multicallController = new MulticallContract(
         controller.address,
@@ -63,8 +70,12 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         controllerv5.interface.fragments,
       );
 
-      const tokenKV = Object.entries(JAR_DEPOSIT_TOKENS[chainName])
-        .filter(([key, address]) => !IsV5Token(address))
+      const multicallControllerMai = new MulticallContract(
+        controllerMai.address,
+        controllerMai.interface.fragments,
+      );
+
+      const tokenKVUnfiltered = Object.entries(JAR_DEPOSIT_TOKENS[chainName])
         .map(([k, tokenAddress]) => {
           return {
             key: k,
@@ -81,6 +92,10 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           };
         });
 
+
+      const tokenKV = tokenKVUnfiltered.filter(({key, value}) => !IsMaiToken(value) &&!IsV5Token(value))
+      const tokenKVMai = tokenKVUnfiltered.filter(({key, value}) => IsMaiToken(value))  
+
       let jarAddresses = await multicallProvider.all(
         tokenKV.map((t) => {
           return multicallController.jars(t.value);
@@ -93,10 +108,17 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         }),
       );
 
-      jarAddresses = [...jarAddresses, ...jarAddressesv5];
+      const maiJarAddresses = await multicallProvider.all(
+        tokenKVMai.map((t) => {
+          return multicallControllerMai.jars(t.value);
+        }),
+      );
 
+      jarAddresses = [...jarAddresses, ...jarAddressesv5, ...maiJarAddresses];
+    
       const jarData = tokenKV
         .concat(tokenKVV5)
+        .concat(tokenKVMai)
         .map((kv, idx) => {
           return {
             [kv.key]: {

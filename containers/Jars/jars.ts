@@ -31,9 +31,11 @@ export const PICKLE_JARS = {
   pySTETHCRV: "0x72e0317134a9a6fF0675938733343da96d3354e7",
   pyUSDC: "0xEB801AB73E9A2A482aA48CaCA13B1954028F4c94",
   pyLUSDCRV: "0x4fFe73Cf2EEf5E8C8E0E10160bCe440a029166D2",
+  pyFRAXCRV: "0x729C6248f9B1Ce62B3d5e31D4eE7EE95cAB32dfD",
   pSUSHICVXETH: "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F",
   pLQTY: "0x65B2532474f717D5A8ba38078B78106D56118bbb",
   pALETH: "0xCbA1FE4Fdbd90531EFD929F1A1831F38e91cff1e",
+  pSADDLED4: "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
 
   // Polygon Jars
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
@@ -43,7 +45,10 @@ export const PICKLE_JARS = {
   pAM3CRV: "0x261b5619d85B710f1c2570b65ee945975E2cC221",
   ppSUSHIETHUSDT: "0x80aB65b1525816Ffe4222607EDa73F86D211AC95",
   ppSUSHIMATICETH: "0xd438Ba7217240a378238AcE3f44EFaaaF8aaC75A",
-  pQUICKmiMATICUSDC: "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83",
+  pQUICKmiMATICUSDC_old: "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83",
+  pQUICKmiMATICUSDC: "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce",
+  pQUICKmiMATICQI: "0xd06a56c864C80e4cC76A2eF778183104BF0c848d",
+  pIRON3USD: "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -75,9 +80,11 @@ export const JAR_DEPOSIT_TOKENS = {
     UNIV2_ETH_WBTC: "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940",
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     lusdCRV: "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA",
+    fraxCRV: "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B",
     SUSHI_CVX_ETH: "0x05767d9EF41dC40689678fFca0608878fb3dE906",
     LQTY: "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D",
     ALETH: "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368",
+    SADDLE_D4: "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a",
   },
   [NETWORK_NAMES.POLY]: {
     COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
@@ -88,6 +95,8 @@ export const JAR_DEPOSIT_TOKENS = {
     POLY_SUSHI_ETH_USDT: "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9",
     POLY_SUSHI_MATIC_ETH: "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e",
     QUICK_MIMATIC_USDC: "0x160532d2536175d65c03b97b0630a9802c274dad",
+    QUICK_MIMATIC_QI: "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397",
+    IRON_3USD: "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17",
   },
 };
 
@@ -119,9 +128,11 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
   USDC: "USDC",
   lusdCRV: "lusdCRV",
+  fraxCRV: "fraxCRV",
   SUSHI_CVX_ETH: "SLP CVX/ETH",
   LQTY: "LQTY",
   ALETH: "Saddle alETH",
+  SADDLE_D4: "SADDLE D4",
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
@@ -132,6 +143,8 @@ export const DEPOSIT_TOKENS_NAME = {
   POLY_SUSHI_ETH_USDT: "SLP USDT/ETH",
   POLY_SUSHI_MATIC_ETH: "SLP MATIC/ETH",
   QUICK_MIMATIC_USDC: "QUICK MAI/USDC",
+  QUICK_MIMATIC_QI: "QUICK MAI/QI",
+  IRON_3USD: "IS3USD",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -162,8 +175,11 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: true,
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+  [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
   [DEPOSIT_TOKENS_NAME.ALETH]: true,
+  [DEPOSIT_TOKENS_NAME.LQTY]: true,
+  [DEPOSIT_TOKENS_NAME.SADDLE_D4]: true,
 
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
@@ -174,12 +190,14 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.POLY_SUSHI_ETH_USDT]: true,
   [DEPOSIT_TOKENS_NAME.POLY_SUSHI_MATIC_ETH]: true,
   [DEPOSIT_TOKENS_NAME.QUICK_MIMATIC_USDC]: true,
-  [DEPOSIT_TOKENS_NAME.LQTY]: true,
+  [DEPOSIT_TOKENS_NAME.QUICK_MIMATIC_QI]: true,
+  [DEPOSIT_TOKENS_NAME.IRON_3USD]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
+  [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
 };
 
 export const DEPOSIT_TOKENS_LINK = {
@@ -237,8 +255,10 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
+  fraxCRV: "https://curve.fi/frax/deposit",
   LQTY:
     "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
+  SADDLE_D4: "https://saddle.exchange/#/pools/d4/deposit",
   ALETH: "https://saddle.exchange/#/pools/aleth/deposit",
   // Polygon Jars
   COMETH_USDC_WETH:
@@ -256,6 +276,9 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
   QUICK_MIMATIC_USDC:
     "https://quickswap.exchange/#/add/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  QUICK_MIMATIC_QI:
+    "https://quickswap.exchange/#/add/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1/0x580A84C73811E1839F75d86d75d88cCa0c241fF4",
+  IRON_3USD: "https://app.iron.finance/swap/pools/is3usd/deposit",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -293,8 +316,10 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_CVX_ETH: "pJar 0.99z",
   USDC: "pJar Y-1",
   lusdCRV: "pJar Y-2",
+  fraxCRV: "pJar Y-3",
   LQTY: "pJar 0.98l",
   ALETH: "pJar 0.99al",
+  SADDLE_D4: "pJar 0.99s",
 
   // Polygon Jars
   COMETH_USDC_WETH: "polyJar 1a",
@@ -305,6 +330,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   POLY_SUSHI_ETH_USDT: "polyJar 4a",
   POLY_SUSHI_MATIC_ETH: "polyJar 4b",
   QUICK_MIMATIC_USDC: "polyJar 5a",
+  QUICK_MIMATIC_QI: "polyJar 5b",
+  IRON_3USD: "polyJar 6a",
 };
 
 export const STRATEGY_NAMES = {
@@ -340,6 +367,8 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x956f47f50a910163d8bf957cf5846d573e7f87ca": "fei",
   "0xc7283b66eb1eb5fb86327f08e1b5816b0720212b": "tribe",
   "0x5f98805a4e8be255a32880fdec7f6728c6568ba0": "lusd",
+  "0x853d955acef822db058eb8505911ed77f175b99e": "frax",
+  "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0": "fxs",
   "0xdbdb4d16eda451d0503b854cf79d55697f90c8df": "alcx",
   "0x92bf969865c80eda082fd5d8b4e28da4d58e1c3a": "luna",
   "0x9d409a0a012cfba9b15f6d4b36ac57a46966ab9a": "yvboost",
@@ -358,6 +387,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xc2132d05d31c914a87c6611c10748aeb04b58e8f": "usdt",
   "0xa3fa99a148fa48d14ed51d610c367c61876997f1": "mimatic",
   "0x580a84c73811e1839f75d86d75d88cca0c241ff4": "qi",
+  "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef": "ice",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

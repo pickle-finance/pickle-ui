@@ -174,6 +174,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pYearnLusdCRV",
     poolName: "Pickled Yearn LUSD",
   },
+  "0x729C6248f9B1Ce62B3d5e31D4eE7EE95cAB32dfD": {
+    tokenName: "pYearnFraxCRV",
+    poolName: "Pickled Yearn FRAX",
+  },
   "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F": {
     tokenName: "pSUSHICVXETH",
     poolName: "pSUSHICVXETH",
@@ -181,6 +185,10 @@ export const FarmInfo: IFarmInfo = {
   "0x65B2532474f717D5A8ba38078B78106D56118bbb": {
     tokenName: "pLQTY",
     poolName: "Pickled LQTY",
+  },
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": {
+    tokenName: "pSADDLED4",
+    poolName: "Saddle D4",
   },
 };
 

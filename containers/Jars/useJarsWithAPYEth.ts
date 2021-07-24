@@ -25,9 +25,11 @@ import {
   FEI_TRIBE_STAKING_REWARDS,
   ALCHEMIX_ALCX_ETH_STAKING_POOLS,
   COMETH_USDC_WETH_REWARDS,
+  COMMUNAL_FARM,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
+import SwapFlashLoanABI from "../ABIs/swapflashloan.json";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
 import { useCurveSNXAPY } from "./useCurveSNXAPY";
@@ -115,6 +117,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     susdPool,
     susdGauge,
     renGauge,
+    communalFarm,
     renPool,
     threeGauge,
     threePool,
@@ -252,6 +255,62 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ];
     }
 
+    return [];
+  };
+
+  const calculateSaddleD4APY = async () => {
+    const swapFlashLoanAddress = "0xC69DDcd4DFeF25D8a793241834d4cc4b3668EAD6";
+    if (communalFarm && multicallProvider && prices) {
+      const multicallCommunalFarm = new MulticallContract(
+        COMMUNAL_FARM,
+        communalFarm.interface.fragments,
+      );
+
+      const [
+        fxsRateBN,
+        feiRateBN,
+        alcxRateBN,
+        lqtyRateBN,
+        totalValueLockedBN,
+      ] = await multicallProvider.all([
+        multicallCommunalFarm.rewardRates(0),
+        multicallCommunalFarm.rewardRates(1),
+        multicallCommunalFarm.rewardRates(2),
+        multicallCommunalFarm.rewardRates(3),
+        multicallCommunalFarm.totalLiquidityLocked(),
+      ]);
+
+      const valueRewardedPerYear =
+        prices.fxs * parseFloat(formatEther(fxsRateBN)) * (360 * 24 * 60 * 60) +
+        prices.fei * parseFloat(formatEther(feiRateBN)) * (360 * 24 * 60 * 60) +
+        prices.alcx *
+          parseFloat(formatEther(alcxRateBN)) *
+          (360 * 24 * 60 * 60) +
+        prices.lqty *
+          parseFloat(formatEther(lqtyRateBN)) *
+          (360 * 24 * 60 * 60);
+
+      const multicallSwapFlashLoan = new MulticallContract(
+        swapFlashLoanAddress,
+        SwapFlashLoanABI,
+      );
+
+      const [virtualPrice] = await multicallProvider.all([
+        multicallSwapFlashLoan.getVirtualPrice(),
+      ]);
+      const priceOfSaddle = parseFloat(formatEther(virtualPrice));
+      const totalValueStaked =
+        parseFloat(formatEther(totalValueLockedBN)) * priceOfSaddle;
+
+      const saddled4Apy = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          "LQTY+FXS+FEI+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
+          apr: saddled4Apy * 0.8 * 100,
+        },
+      ];
+    }
     return [];
   };
 
@@ -592,9 +651,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiEthyvboostApy,
         usdcApy,
         crvLusdApy,
+        crvFraxApy,
         alcxEthAlcxApy,
         cvxEthApy,
         sushiCvxEthApy,
+        saddled4Apy,
       ] = await Promise.all([
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
@@ -604,6 +665,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].lusdCRV),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].fraxCRV),
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
           "alcx",
@@ -615,6 +677,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
         ),
+        calculateSaddleD4APY(),
       ]);
 
       const [
@@ -836,6 +899,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           jar = { ...jar, ...alcxPending };
           totalAPY = alethApy[0]?.["base ALCX"] + alcxNakedApy[0]?.["staked ALCX"];
         }
+        
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SADDLE_D4) {
+          APYs = [...saddled4Apy];
+        }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.USDC) {
           APYs = [...usdcApy];
@@ -845,6 +912,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.lusdCRV) {
           APYs = [...crvLusdApy];
           totalAPY = crvLusdApy[0]?.apr || 0;
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.fraxCRV) {
+          APYs = [...crvFraxApy];
+          totalAPY = crvFraxApy[0]?.apr || 0;
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_CVX_ETH) {

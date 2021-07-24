@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, NextRouter } from "next/router";
 import { Popover } from "@geist-ui/react";
 
 interface NavItemProps {
@@ -44,7 +44,7 @@ export const NavItem = styled.a<NavItemProps>`
   }
 `;
 
-const infoItems = (router) => (
+const infoItems = (router: NextRouter) => (
   <div style={{ padding: "0 10px" }}>
     <p>
       <Link href="/info/earn" passHref>
@@ -89,14 +89,11 @@ export const NavItems: FC = () => {
           <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
         </Link>
       </Popover>
-      <a
-        href="https://feedback.pickle.finance/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: "none" }}
-      >
-        <NavItem>feedback</NavItem>
-      </a>
+      <Link href="https://feedback.pickle.finance/" passHref>
+        <NavItem target="_blank" rel="noopener noreferrer">
+          Feedback
+        </NavItem>
+      </Link>
     </div>
   );
 };

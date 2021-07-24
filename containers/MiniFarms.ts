@@ -40,9 +40,21 @@ export const FarmInfo: IFarmInfo = {
     poolName: "pSLP ETH/MATIC",
   },
   "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {
+    tokenName: "pQLP MAI (old)",
+    poolName: "pQLP MAI (old)",
+  },
+  "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": {
     tokenName: "pQLP MAI",
     poolName: "pQLP MAI",
   },
+  "0xd06a56c864C80e4cC76A2eF778183104BF0c848d": {
+    tokenName: "pQLP QI",
+    poolName: "pQLP QI",
+  },
+  "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9": {
+    tokenName: "IS3USD",
+    poolName: "IS3USD",
+  }
 };
 
 function useFarms() {
@@ -50,7 +62,6 @@ function useFarms() {
   const { farmsWithReward } = useWithReward(rawFarms);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
-
   const jarFarms = jarFarmWithMaticApy
     ?.map((farm) => {
       if (!FarmInfo[farm.lpToken]) return null;

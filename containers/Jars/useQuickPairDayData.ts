@@ -10,7 +10,8 @@ export interface UniLPAPY {
 }
 
 const QUICK_LP_TOKENS = [
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI
 ];
 
 export const useQuickPairDayData = () => {
@@ -20,7 +21,7 @@ export const useQuickPairDayData = () => {
 
   const queryTheGraph = async () => {
     const res = await fetch(
-      "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap",
+      "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap07",
       {
         credentials: "omit",
         headers: {
@@ -63,7 +64,7 @@ export const useQuickPairDayData = () => {
   };
 
   useEffect(() => {
-    if(!uniPairDayData) queryTheGraph();
+    queryTheGraph();
   }, []);
 
   return {

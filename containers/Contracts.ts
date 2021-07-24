@@ -39,6 +39,8 @@ import { YearnRegistry__factory as YearnRegistryFactory } from "./Contracts/fact
 import { StakingPools__factory as StakingPoolsFactory } from "./Contracts/factories/StakingPools__factory";
 import { StakingRewards } from "./Contracts/StakingRewards";
 import { StakingRewards__factory as StakingRewardsFactory } from "./Contracts/factories/StakingRewards__factory";
+import { CommunalFarm } from "./Contracts/CommunalFarm";
+import { CommunalFarm__factory as CommunalFarmFactory } from "./Contracts/factories/CommunalFarm__factory";
 import { Strategy } from "./Contracts/Strategy";
 import { Strategy__factory as StrategyFactory } from "./Contracts/factories/Strategy__factory";
 import { SushiChef } from "./Contracts/SushiChef";
@@ -59,6 +61,9 @@ import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/fact
 
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
+
+import { Ironchef } from "./Contracts/Ironchef";
+import { Ironchef__factory as IronchefFactory } from "./Contracts/factories/Ironchef__factory";
 
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
@@ -100,6 +105,7 @@ export const RENBTC_POOL_ADDR = "0x93054188d876f558f4a66B2EF1d97d16eDf0895B";
 export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
 export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
+export const FRAX_POOL_ADDR = "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 
@@ -143,6 +149,7 @@ export const FEI_TRIBE_STAKING_REWARDS =
 export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
   "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
 
+export const COMMUNAL_FARM = "0x0639076265e9f88542C91DCdEda65127974A5CA5";
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
@@ -166,6 +173,10 @@ export const MATIC_COMPLEX_REWARDER =
 export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
+export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
+
+export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
@@ -178,6 +189,7 @@ function useContracts() {
   const [masterchefV2, setMasterchefV2] = useState<Masterchefv2 | null>(null);
   const [controller, setController] = useState<Controller | null>(null);
   const [controllerv5, setControllerV5] = useState<Controllerv5 | null>(null);
+  const [controllerMai, setControllerMai] = useState<Controller | null>(null);
 
   const providerOrSigner = signer || multicallProvider;
 
@@ -199,6 +211,7 @@ function useContracts() {
   const [dill, setDill] = useState<Dill | null>(null);
   const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
   const [gauge, setGauge] = useState<Gauge | null>(null);
+  const [communalFarm, setCommunalFarm] = useState<CommunalFarm | null>(null);
   const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(
     null,
   );
@@ -227,6 +240,7 @@ function useContracts() {
     null,
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
+  const [fraxPool, setFraxPool] = useState<Pool | null>(null);
   const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
     null,
   );
@@ -246,6 +260,8 @@ function useContracts() {
     setyvBoostMigrator,
   ] = useState<YvboostMigrator | null>(null);
 
+  const [ironchef, setIronchef] = useState<Ironchef | null>(null);
+
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
@@ -256,6 +272,9 @@ function useContracts() {
         ControllerFactory.connect(addresses.controller, providerOrSigner),
       );
       setControllerV5(ControllerV5Factory.connect(CONTROLLERV5_ADDR, signer));
+      setControllerMai(
+        ControllerFactory.connect(CONTROLLER_MAI, providerOrSigner),
+      );
       setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
       setGaugeController(
         GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, providerOrSigner),
@@ -282,6 +301,9 @@ function useContracts() {
           ethers.constants.AddressZero,
           providerOrSigner,
         ),
+      );
+      setCommunalFarm(
+        CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(
@@ -336,6 +358,8 @@ function useContracts() {
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
 
+      setFraxPool(PoolFactory.connect(FRAX_POOL_ADDR, signer));
+
       setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
@@ -343,6 +367,8 @@ function useContracts() {
       setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
+
+      setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
     }
   };
 
@@ -365,6 +391,7 @@ function useContracts() {
     renPool,
     threePool,
     steCRVPool,
+    communalFarm,
     stakingRewards,
     uniswapv2Pair,
     erc20,
@@ -383,11 +410,14 @@ function useContracts() {
     stakingPools,
     yearnRegistry,
     lusdPool,
+    fraxPool,
     minichef,
     sushiMinichef,
     sushiComplexRewarder,
     am3crvPool,
     pickleRewarder,
+    controllerMai,
+    ironchef,
   };
 }
 

@@ -20,7 +20,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
 
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 
-  const calculateApy = async (): Promise<void> => {
+  const calculateApy = () => {
     if (!inputGauges || !prices || !jars || !farmData) {
       return;
     }
@@ -69,7 +69,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
     const fetchFarmData = async () => setFarmData(await getFarmData());
     if (!farmData) fetchFarmData();
     calculateApy();
-  }, [inputGauges]);
+  }, [inputGauges, jars?.length]);
 
   return { jarGaugeWithApy: gauges };
 };
