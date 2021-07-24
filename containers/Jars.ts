@@ -9,6 +9,7 @@ import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
 import { PICKLE_ETH_SLP } from "./Contracts";
 
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
+import { NETWORK_NAMES } from "./config";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
@@ -30,7 +31,9 @@ function useJars() {
     if (jarsWithTVL) {
       const wants = jarsWithTVL.map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
-      addTokens([...wants, ...pTokens, PICKLE_ETH_SLP]);
+      const addedTokens = [...wants, ...pTokens]
+      if (chainName === NETWORK_NAMES.ETH) addedTokens.push(PICKLE_ETH_SLP) 
+      addTokens(addedTokens);
     }
   }, [jarsWithTVL]);
 
