@@ -43,7 +43,7 @@ const Label = styled.div`
 const formatString = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: num < 1 ? 8 : 4,
+    maximumFractionDigits: num < 1 ? 5 : 2,
   });
 
 const setButtonStatus = (
