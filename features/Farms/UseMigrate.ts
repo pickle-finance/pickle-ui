@@ -196,6 +196,7 @@ export const useMigrate = (
         permRes.v,
         permRes.r,
         permRes.s,
+        {gasLimit: 400000}
       );
       await tx.wait();
     }
