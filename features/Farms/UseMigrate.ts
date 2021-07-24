@@ -186,7 +186,6 @@ export const useMigrate = (
         sushiMigrator.address,
         pickleEthBalance.toString(),
       );
-      console.log(permRes);
       const tx = await sushiMigrator.migrateWithPermit(
         addresses.pickle,
         addresses.weth,
@@ -206,7 +205,6 @@ export const useMigrate = (
     if (!erc20 || !address || !masterchefV2) return null;
     const pickleEthSLP = erc20.attach(PICKLE_ETH_SLP);
     const pickleEthSLPBalance = await pickleEthSLP.balanceOf(address);
-    console.log("here", pickleEthSLPBalance);
 
     const allowance = await pickleEthSLP.allowance(
       address,
