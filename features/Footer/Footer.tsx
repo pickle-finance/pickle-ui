@@ -34,7 +34,7 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://v2.info.uniswap.org/pair/0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
+        href="https://app.sushi.com/swap#/swap?inputCurrency=0x429881672b9ae42b8eba0e26cd9c73711b891ca5&outputCurrency=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
       >
         PICKLE-ETH
       </NavItem>
