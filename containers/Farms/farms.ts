@@ -7,7 +7,7 @@ export interface FarmMap {
     jarName: string;
   };
 }
-export const JAR_FARM_MAP: FarmMap  = {
+export const JAR_FARM_MAP: FarmMap = {
   "0xf79Ae82DCcb71ca3042485c85588a3E0C395D55b": {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.UNIV2_ETH_DAI_OLD,
   },
@@ -154,5 +154,14 @@ export const JAR_FARM_MAP: FarmMap  = {
   },
   "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.SADDLE_D4,
+  },
+  "0x1Bf62aCb8603Ef7F3A0DFAF79b25202fe1FAEE06": {
+    jarName: DEPOSIT_TOKENS_JAR_NAMES.MIM_3CRV,
+  },
+  "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE": {
+    jarName: DEPOSIT_TOKENS_JAR_NAMES.SPELL_ETH,
+  },
+  "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C": {
+    jarName: DEPOSIT_TOKENS_JAR_NAMES.MIM_ETH,
   },
 };
