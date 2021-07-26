@@ -246,7 +246,7 @@ export const DEPOSIT_TOKENS_LINK = {
   SUSHI_ETH:
     "https://app.sushi.com/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
-    "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
+    "https://app.sushi.com/add/ETH/0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF",
   SUSHI_CVX_ETH:
     "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
