@@ -269,9 +269,9 @@ export const DEPOSIT_TOKENS_LINK = {
   SADDLE_D4: "https://saddle.exchange/#/pools/d4/deposit",
   MIM_3CRV: "https://curve.fi/mim",
   SPELL_ETH:
-    "https://app.sushi.com/swap?inputCurrency=&outputCurrency=0x090185f2135308BaD17527004364eBcC2D37e5F6",
+    "https://app.sushi.com/add/ETH/0x090185f2135308BaD17527004364eBcC2D37e5F6",
   MIM_ETH:
-    "https://app.sushi.com/swap?inputCurrency=&outputCurrency=0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
+    "https://app.sushi.com/add/ETH/0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
 
   // Polygon Jars
   COMETH_USDC_WETH:

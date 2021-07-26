@@ -138,10 +138,10 @@ export const FARM_LP_TO_ICON = {
     <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/3crv.png"} />
   ),
   "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE": (
-    <LpIcon swapIconSrc={"/abracadabra.ico"} tokenIconSrc={"/spell.webp"} />
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
   ),
   "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C": (
-    <LpIcon swapIconSrc={"/abracadabra.ico"} tokenIconSrc={"/mim.webp"} />
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
   ),
 };
 
