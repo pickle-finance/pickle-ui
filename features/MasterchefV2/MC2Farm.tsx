@@ -191,7 +191,7 @@ export const MC2Farm: FC = () => {
               <div style={{ fontSize: `1rem` }}>SushiSwap MasterChefv2</div>
               <Label style={{ fontSize: `1rem` }}>
                 <a
-                  href="https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"
+                  href="https://app.sushi.com/add/ETH/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
                   target="_"
                 >
                   {" "}
