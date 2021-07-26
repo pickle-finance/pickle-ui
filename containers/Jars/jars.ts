@@ -226,25 +226,25 @@ export const DEPOSIT_TOKENS_LINK = {
   UNIV2_LUSD_ETH:
     "https://app.uniswap.org/#/add/v2/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/ETH",
   SUSHI_MIC_USDT:
-    "https://exchange.sushiswapclassic.org/#/add/0x368B3a58B5f49392e5C9E4C998cb0bB966752E51/0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "https://app.sushi.com/add/0x368B3a58B5f49392e5C9E4C998cb0bB966752E51/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   SUSHI_MIS_USDT:
-    "https://exchange.sushiswapclassic.org/#/add/0x4b4D2e899658FB59b1D518b68fe836B100ee8958/0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "https://app.sushi.com/add/0x4b4D2e899658FB59b1D518b68fe836B100ee8958/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   SUSHI_ETH_DAI:
-    "https://exchange.sushiswapclassic.org/#/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
+    "https://app.sushi.com/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
   SUSHI_ETH_USDC:
-    "https://exchange.sushiswapclassic.org/#/add/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/ETH",
+    "https://app.sushi.com/add/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/ETH",
   SUSHI_ETH_USDT:
-    "https://exchange.sushiswapclassic.org/#/add/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "https://app.sushi.com/add/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
   SUSHI_ETH_WBTC:
-    "https://exchange.sushiswapclassic.org/#/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
+    "https://app.sushi.com/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
   SUSHI_ETH_YFI:
-    "https://exchange.sushiswapclassic.org/#/add/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/ETH",
+    "https://app.sushi.com/add/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/ETH",
   SUSHI_ETH_YVECRV:
-    "https://exchange.sushiswapclassic.org/#/add/0xc5bddf9843308380375a611c18b50fb9341f502a/ETH",
+    "https://app.sushi.com/add/0xc5bddf9843308380375a611c18b50fb9341f502a/ETH",
   SUSHI_ETH_YVBOOST:
-    "https://exchange.sushiswapclassic.org/#/add/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/ETH",
+    "https://app.sushi.com/add/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/ETH",
   SUSHI_ETH:
-    "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
+    "https://app.sushi.com/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
     "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
   SUSHI_CVX_ETH:
