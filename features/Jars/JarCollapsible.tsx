@@ -392,7 +392,7 @@ export const JarCollapsible: FC<{
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer && !isSaddleJar) {
+              if (signer) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -407,7 +407,7 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={depositButton.disabled || isSaddleJar}
+            disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -501,7 +501,7 @@ export const JarCollapsible: FC<{
                 fontFamily: "Source Sans Pro",
               }}
             >
-              We are currently undergoing a migration for the Saddle D4 Pickle Jar. Deposits and withdrawals have been temporarily paused. We expect to complete the migration within 24 hours. 
+              The migration for the Saddle D4 Pickle Jar has completed. Withdrawals will resume in 24 hours due to the minimum lock period from Frax Finance. 
             </div>
           ) : null}
         </Grid>
