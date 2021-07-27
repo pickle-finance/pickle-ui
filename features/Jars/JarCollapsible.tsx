@@ -392,7 +392,7 @@ export const JarCollapsible: FC<{
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer) {
+              if (signer && !isSaddleJar) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -407,7 +407,7 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={depositButton.disabled}
+            disabled={depositButton.disabled || isSaddleJar}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -466,9 +466,9 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled}
+            disabled={withdrawButton.disabled || isSaddleJar}
             onClick={() => {
-              if (signer) {
+              if (signer && !isSaddleJar) {
                 // Allow pToken to burn its pToken
                 // and refund lpToken
                 transfer({
@@ -501,9 +501,7 @@ export const JarCollapsible: FC<{
                 fontFamily: "Source Sans Pro",
               }}
             >
-              Withdrawals are restricted for 24 hours following your most recent
-              deposit, as this minimum locking period is imposed when staking
-              on Frax Finance
+              We are currently undergoing a migration for the Saddle D4 Pickle Jar. Deposits and withdrawals have been temporarily paused. We expect to complete the migration within 24 hours. 
             </div>
           ) : null}
         </Grid>
