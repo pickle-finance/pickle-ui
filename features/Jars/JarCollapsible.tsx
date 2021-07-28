@@ -466,9 +466,9 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled || isSaddleJar}
+            disabled={withdrawButton.disabled}
             onClick={() => {
-              if (signer && !isSaddleJar) {
+              if (signer) {
                 // Allow pToken to burn its pToken
                 // and refund lpToken
                 transfer({
@@ -492,18 +492,6 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
-          {isSaddleJar ? (
-            <div
-              style={{
-                width: "100%",
-                textAlign: "center",
-                paddingTop: "4px",
-                fontFamily: "Source Sans Pro",
-              }}
-            >
-              The migration for the Saddle D4 Pickle Jar has completed. Withdrawals will resume in 24 hours due to the minimum lock period from Frax Finance. 
-            </div>
-          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>
