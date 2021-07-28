@@ -16,6 +16,7 @@ import { BPAddresses } from "containers/config";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import { useDuneData } from "../../containers/Jars/useDuneData";
 
 const JarName = styled(Grid)({
   display: "flex",
@@ -88,6 +89,7 @@ export const BProtocol: FC = () => {
     lqtyApr,
     userPendingLqty,
   } = usePBAMM();
+  const { duneData } = useDuneData();
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -102,6 +104,7 @@ export const BProtocol: FC = () => {
   const plqtyStr = formatString(+formatEther(plqtyBalance));
   const pendingLqtyNum = +formatEther(userPendingLqty);
   const pendingLqtyStr = formatString(pendingLqtyNum);
+  const liquidationApy = duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -148,7 +151,7 @@ export const BProtocol: FC = () => {
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>B.Protocol</div>
               <a
-                href={"https://app.bprotocol.org/app"}
+                href={"https://www.liquity.org/"}
                 target="_"
                 style={{ fontSize: `1rem` }}
               >
@@ -158,7 +161,7 @@ export const BProtocol: FC = () => {
           </JarName>
           <Grid xs={24} sm={12} md={5} lg={5}>
             <Data>
-              {lqtyApr.toFixed(2)}% +
+              {lqtyApr.toFixed(2)}% lqty + {(liquidationApy * 0.8 * lqtyApr / 2).toFixed(2)}%
               <a
                 href="https://docs.liquity.org/faq/stability-pool-and-liquidations"
                 target="_"
