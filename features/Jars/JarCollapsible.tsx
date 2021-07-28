@@ -392,7 +392,7 @@ export const JarCollapsible: FC<{
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer && !isSaddleJar) {
+              if (signer) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -407,7 +407,7 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={depositButton.disabled || isSaddleJar}
+            disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -466,9 +466,9 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled || isSaddleJar}
+            disabled={withdrawButton.disabled}
             onClick={() => {
-              if (signer && !isSaddleJar) {
+              if (signer) {
                 // Allow pToken to burn its pToken
                 // and refund lpToken
                 transfer({
@@ -492,18 +492,6 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
-          {isSaddleJar ? (
-            <div
-              style={{
-                width: "100%",
-                textAlign: "center",
-                paddingTop: "4px",
-                fontFamily: "Source Sans Pro",
-              }}
-            >
-              We are currently undergoing a migration for the Saddle D4 Pickle Jar. Deposits and withdrawals have been temporarily paused. We expect to complete the migration within 24 hours. 
-            </div>
-          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>
