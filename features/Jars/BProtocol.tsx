@@ -104,7 +104,8 @@ export const BProtocol: FC = () => {
   const plqtyStr = formatString(+formatEther(plqtyBalance));
   const pendingLqtyNum = +formatEther(userPendingLqty);
   const pendingLqtyStr = formatString(pendingLqtyNum);
-  const liquidationApy = duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
+  const liquidationApy =
+    duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -146,7 +147,7 @@ export const BProtocol: FC = () => {
         <Grid.Container gap={1}>
           <JarName xs={24} sm={12} md={5} lg={5}>
             <a href="https://app.bprotocol.org/app" target="_">
-            <TokenIcon src={"/bprotocol.png"} />
+              <TokenIcon src={"/bprotocol.png"} />
             </a>
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>B.Protocol</div>
@@ -161,13 +162,13 @@ export const BProtocol: FC = () => {
           </JarName>
           <Grid xs={24} sm={12} md={5} lg={5}>
             <Data>
-              {lqtyApr.toFixed(2)}% lqty + {(liquidationApy * 0.8 * lqtyApr / 2).toFixed(2)}%
+              {lqtyApr.toFixed(2)}% lqty +{" "}
+              {((liquidationApy * 0.8 * lqtyApr) / 2).toFixed(2)}%{" "}
               <a
                 href="https://docs.liquity.org/faq/stability-pool-and-liquidations"
                 target="_"
               >
-                {" "}
-                liquidations
+                liquidation
               </a>
             </Data>
             <Data>
@@ -319,7 +320,8 @@ export const BProtocol: FC = () => {
       <Spacer y={1} />
       This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are
       automatically sold back into users' LUSD positions and all LQTY rewards
-      are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing.
+      are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY
+      is automatically harvested upon withdrawing or depositing.
     </Collapse>
   );
 };
