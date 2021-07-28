@@ -128,7 +128,7 @@ export const FeeDistributionsChart: FC = () => {
         <Radio value="total">Total</Radio>
       </Radio.Group>
       <Spacer y={1} />
-      <div style={{ height: 300 }}>
+      <div style={{ height: 360 }}>
         {dataSeries.length > 0 ? (
           <ResponsiveContainer>
             {/* Passing in a new array object every time ensures transitions work correctly. */}
@@ -136,8 +136,10 @@ export const FeeDistributionsChart: FC = () => {
               <XAxis
                 dataKey="distributionTime"
                 tickFormatter={dateFormatter}
-                height={40}
-                padding={{ left: 20, right: 20 }}
+                height={75}
+                angle={300}
+                interval={0}
+                tickMargin={26}
               />
               <YAxis width={90} padding={{ top: 20 }}>
                 <Label

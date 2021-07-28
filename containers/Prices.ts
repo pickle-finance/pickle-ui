@@ -41,10 +41,12 @@ interface PriceObject {
   matic: number;
   yvboost: number;
   alcx: number;
+  fxs: number;
   luna: number;
   mimatic: number;
   qi: number;
   cvx: number;
+  ice: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -87,6 +89,7 @@ function usePrices() {
         "liquity-usd",
         "liquity",
         "frax",
+        "frax-share",
         "must",
         "matic-network",
         // "yvboost",
@@ -94,7 +97,8 @@ function usePrices() {
         "terra-luna",
         "mimatic",
         "qi-dao",
-        "convex-finance"
+        "convex-finance",
+        "iron-finance",
       ],
       vs_currencies: ["usd"],
     });
@@ -131,6 +135,7 @@ function usePrices() {
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
       frax: response["frax"].usd,
+      fxs: response["frax-share"].usd,
       must: response["must"].usd,
       matic: response["matic-network"].usd,
       yvboost: 0, // to update once CG provides yvboost price
@@ -138,7 +143,8 @@ function usePrices() {
       luna: response["terra-luna"].usd,
       mimatic: response["mimatic"].usd,
       qi: response["qi-dao"].usd,
-      cvx: response["convex-finance"].usd
+      cvx: response["convex-finance"].usd,
+      ice: response["iron-finance"].usd,
     };
     setPrices(prices);
   };

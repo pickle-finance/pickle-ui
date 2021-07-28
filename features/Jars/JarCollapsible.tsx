@@ -52,6 +52,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
+  "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a": "/saddle.svg",
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -154,6 +155,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
   ),
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17": (
+    <LpIcon swapIconSrc={"/ironswap.png"} tokenIconSrc={"/3usd.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -213,7 +220,13 @@ export const JarCollapsible: FC<{
 
   const isMaiJar =
     depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase();
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase() ||
+    depositToken.address.toLowerCase() ===
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI.toLowerCase();
+
+  const isSaddleJar =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SADDLE_D4;
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -379,7 +392,7 @@ export const JarCollapsible: FC<{
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer) {
+              if (signer && !isSaddleJar) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -394,7 +407,7 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={depositButton.disabled}
+            disabled={depositButton.disabled || isSaddleJar}
             style={{ width: "100%" }}
           >
             {depositButton.text}
@@ -453,9 +466,9 @@ export const JarCollapsible: FC<{
           ></Input>
           <Spacer y={0.5} />
           <Button
-            disabled={withdrawButton.disabled}
+            disabled={withdrawButton.disabled || isSaddleJar}
             onClick={() => {
-              if (signer) {
+              if (signer && !isSaddleJar) {
                 // Allow pToken to burn its pToken
                 // and refund lpToken
                 transfer({
@@ -479,6 +492,18 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
+          {isSaddleJar ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
+              }}
+            >
+              We are currently undergoing a migration for the Saddle D4 Pickle Jar. Deposits and withdrawals have been temporarily paused. We expect to complete the migration within 24 hours. 
+            </div>
+          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>

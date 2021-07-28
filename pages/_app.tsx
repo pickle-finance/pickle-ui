@@ -122,12 +122,12 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           }}
         />
 
-        <meta property="og:title" content="Farm PICKLE tokens" />
+        <meta property="og:title" content="Optimize your yield" />
         <meta
           property="og:description"
           content="The future of finance is green"
         />
-        <meta property="og:image" content="https://i.imgur.com/N23Hjh0.png" />
+        <meta property="og:image" content="https://i.imgur.com/avQP3n2.jpg" />
         <meta property="og:url" content="https://app.pickle.finance" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>

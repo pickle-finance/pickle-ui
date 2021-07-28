@@ -6,7 +6,7 @@ import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
 import { Contract as MulticallContract } from "ethers-multicall";
 
-const addresses = {
+export const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
   weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -26,7 +26,8 @@ const addresses = {
   matic: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
   mimatic: "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1",
   wusdc: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-  cvx: "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B"
+  cvx: "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+  qi: "0x580a84c73811e1839f75d86d75d88cca0c241ff4",
 };
 
 interface Token {
@@ -36,7 +37,7 @@ interface Token {
 }
 
 // prettier-ignore
-// const pickle: Token = { address: addresses.pickle, priceId: "pickle", decimals: 18 };
+const pickle: Token = { address: addresses.pickle, priceId: "pickle", decimals: 18 };
 const weth: Token = { address: addresses.weth, priceId: "eth", decimals: 18 };
 const dai: Token = { address: addresses.dai, priceId: "dai", decimals: 18 };
 const usdc: Token = { address: addresses.usdc, priceId: "usdc", decimals: 6 };
@@ -75,6 +76,11 @@ const cvx: Token = {
   priceId: "cvx",
   decimals: 18,
 };
+const qi: Token = {
+  address: addresses.qi,
+  priceId: "qi",
+  decimals: 18,
+}
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -97,7 +103,9 @@ export const PAIR_INFO: PairMap = {
   "0x160532d2536175d65c03b97b0630a9802c274dad": { a: wusdc, b: mimatic },
   "0xf12BB9dcD40201b5A110e11E38DcddF4d11E6f83": {a: wusdc, b: mimatic },
   "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": { a: wusdc, b: mimatic },
-  "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth}
+  "0x05767d9EF41dC40689678fFca0608878fb3dE906": { a: cvx, b: weth},
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic},
+  "0x269db91fc3c7fcc275c2e6f22e5552504512811c": { a: pickle, b: weth}
 };
 
 function useSushiPairs() {

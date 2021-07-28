@@ -132,7 +132,8 @@ export const FARM_LP_TO_ICON = {
   "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
-  "0x65B2532474f717D5A8ba38078B78106D56118bbb": "/liquity.png"
+  "0x65B2532474f717D5A8ba38078B78106D56118bbb": "/liquity.png",
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": "/saddle.svg"
 };
 
 const setButtonStatus = (

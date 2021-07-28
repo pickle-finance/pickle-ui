@@ -16,16 +16,10 @@ interface TextLogoProps {
   active?: boolean;
 }
 
-const TextLogo = styled.h1<TextLogoProps>`
-  font-family: "Source Sans Pro", sans-serif;
-  font-size: 1.2rem;
-  text-shadow: ${(props) =>
-    props.active ? "var(--link-hover-glow)" : "unset"};
-  text-transform: uppercase;
-  letter-spacing: 6px;
-  margin: 0;
+const ImageLogo = styled.img<TextLogoProps>`
 
   position: relative;
+  width: 8rem;
 
   &::after {
     content: "";
@@ -45,11 +39,6 @@ const TextLogo = styled.h1<TextLogoProps>`
   &:hover {
     text-shadow: var(--link-glow);
   }
-
-  @media screen and (max-width: 600px) {
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
 `;
 
 export const Logo: FC = () => {
@@ -57,7 +46,10 @@ export const Logo: FC = () => {
   return (
     <Link href="/" passHref>
       <LogoLink>
-        <TextLogo active={router.pathname === "/"}>Pickle</TextLogo>
+        <ImageLogo
+          active={router.pathname === "/"}
+          src="/pickle-logo.png"
+        />
       </LogoLink>
     </Link>
   );
