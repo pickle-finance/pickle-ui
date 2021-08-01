@@ -55,7 +55,7 @@
     "inputs": [],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 820723
+    "gas": "820723"
   },
   {
     "name": "ve_for_at",
@@ -66,7 +66,7 @@
     ],
     "stateMutability": "view",
     "type": "function",
-    "gas": 249417
+    "gas": "249417"
   },
   {
     "name": "checkpoint_total_supply",
@@ -74,7 +74,7 @@
     "inputs": [],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 10592405
+    "gas": "10592405"
   },
   {
     "name": "claim",
@@ -96,7 +96,7 @@
     "inputs": [{ "type": "address[20]", "name": "_receivers" }],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 26281905
+    "gas": "26281905"
   },
   {
     "name": "burn",
@@ -104,7 +104,7 @@
     "inputs": [{ "type": "address", "name": "_coin" }],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 823450
+    "gas": "823450"
   },
   {
     "name": "commit_admin",
@@ -112,7 +112,7 @@
     "inputs": [{ "type": "address", "name": "_addr" }],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 37898
+    "gas": "37898"
   },
   {
     "name": "apply_admin",
@@ -120,7 +120,7 @@
     "inputs": [],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 39534
+    "gas": "39534"
   },
   {
     "name": "toggle_allow_checkpoint_token",
@@ -128,7 +128,7 @@
     "inputs": [],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 38673
+    "gas": "38673"
   },
   {
     "name": "kill_me",
@@ -136,7 +136,7 @@
     "inputs": [],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 39587
+    "gas": "39587"
   },
   {
     "name": "recover_balance",
@@ -144,7 +144,7 @@
     "inputs": [{ "type": "address", "name": "_coin" }],
     "stateMutability": "nonpayable",
     "type": "function",
-    "gas": 7778
+    "gas": "7778"
   },
   {
     "name": "start_time",
@@ -152,7 +152,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1541
+    "gas": "1541"
   },
   {
     "name": "time_cursor",
@@ -160,7 +160,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1571
+    "gas": "1571"
   },
   {
     "name": "time_cursor_of",
@@ -168,7 +168,7 @@
     "inputs": [{ "type": "address", "name": "arg0" }],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1816
+    "gas": "1816"
   },
   {
     "name": "user_epoch_of",
@@ -176,7 +176,7 @@
     "inputs": [{ "type": "address", "name": "arg0" }],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1846
+    "gas": "1846"
   },
   {
     "name": "last_token_time",
@@ -184,7 +184,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1661
+    "gas": "1661"
   },
   {
     "name": "tokens_per_week",
@@ -192,7 +192,7 @@
     "inputs": [{ "type": "uint256", "name": "arg0" }],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1800
+    "gas": "1800"
   },
   {
     "name": "voting_escrow",
@@ -200,7 +200,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1721
+    "gas": "1721"
   },
   {
     "name": "token",
@@ -208,7 +208,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1751
+    "gas": "1751"
   },
   {
     "name": "total_received",
@@ -216,7 +216,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1781
+    "gas": "1781"
   },
   {
     "name": "token_last_balance",
@@ -224,7 +224,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1811
+    "gas": "1811"
   },
   {
     "name": "ve_supply",
@@ -232,7 +232,7 @@
     "inputs": [{ "type": "uint256", "name": "arg0" }],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1950
+    "gas": "1950"
   },
   {
     "name": "admin",
@@ -240,7 +240,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1871
+    "gas": "1871"
   },
   {
     "name": "future_admin",
@@ -248,7 +248,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1901
+    "gas": "1901"
   },
   {
     "name": "can_checkpoint_token",
@@ -256,7 +256,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1931
+    "gas": "1931"
   },
   {
     "name": "emergency_return",
@@ -264,7 +264,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1961
+    "gas": "1961"
   },
   {
     "name": "is_killed",
@@ -272,6 +272,6 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 1991
+    "gas": "1991"
   }
 ]
