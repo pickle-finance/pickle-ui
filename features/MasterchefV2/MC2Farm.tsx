@@ -123,8 +123,8 @@ export const MC2Farm: FC = () => {
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [
-    { pickle: apy?.pickle * 100 },
-    { sushi: apy?.sushi * 100 },
+    { pickle: (apy?.pickle || 0) * 100 },
+    { sushi: (apy?.sushi || 0) * 100 },
   ];
 
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -201,8 +201,10 @@ export const MC2Farm: FC = () => {
             </div>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3}>
-            <Tooltip text={apy?.pickle === 0 ? "--" : tooltipText}>
-              <div>{apy?.pickle === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
+            <Tooltip text={typeof apy === "undefined" ? "--" : tooltipText}>
+              <div>
+                {typeof apy === "undefined" ? "--%" : totalAPY.toFixed(2) + "%"}
+              </div>
               <br />
               <Label>Total APY</Label>
             </Tooltip>
