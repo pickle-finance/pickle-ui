@@ -1,19 +1,18 @@
-import styled from "styled-components";
-import dynamic from "next/dynamic";
-import { useState, FC, useEffect } from "react";
-import { Button, Grid, Spacer, Select, Checkbox } from "@geist-ui/react";
-import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
+import { FC } from "react";
+import { Spacer, Table } from "@geist-ui/react";
+import { UserGaugeData } from "../../containers/UserGauges";
 import Collapse from "../Collapsible/Collapse";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import styled from "styled-components";
 
-const shadeColor = (color, percent) => {
-  var R = parseInt(color.substring(1, 3), 16);
-  var G = parseInt(color.substring(3, 5), 16);
-  var B = parseInt(color.substring(5, 7), 16);
+const shadeColor = (color: string, percent: number) => {
+  let R = parseInt(color.substring(1, 3), 16);
+  let G = parseInt(color.substring(3, 5), 16);
+  let B = parseInt(color.substring(5, 7), 16);
 
-  R = parseInt((R * (100 + percent)) / 100);
-  G = parseInt((G * (100 + percent)) / 100);
-  B = parseInt((B * (100 + percent)) / 100);
+  R = Math.round((R * (100 + percent)) / 100);
+  G = Math.round((G * (100 + percent)) / 100);
+  B = Math.round((B * (100 + percent)) / 100);
 
   R = R < 255 ? R : 255;
   G = G < 255 ? G : 255;
@@ -25,6 +24,13 @@ const shadeColor = (color, percent) => {
 
   return "#" + RR + GG + BB;
 };
+
+const formatter = (val: number) => (val * 100).toFixed(2) + "%";
+
+const TableContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
@@ -39,11 +45,14 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     })
     .sort((a, b) => b.allocPoint - a.allocPoint);
 
-  const dataForChart = gaugeChartData.filter(x => x.allocPoint > 0.02);
-  const dataForTable = gaugeChartData.filter(x => !dataForChart.includes(x));
+  const dataForChart = gaugeChartData.filter((x) => x.allocPoint > 0.02);
+  const dataForTable = gaugeChartData.filter((x) => !dataForChart.includes(x));
 
   const smallFarmsData = dataForTable.reduce((acc, cur) => {
-    return { allocPoint: (acc.allocPoint + cur.allocPoint), depositTokenName: 'other' } 
+    return {
+      allocPoint: acc.allocPoint + cur.allocPoint,
+      depositTokenName: "other",
+    };
   });
 
   dataForChart.push(smallFarmsData);
@@ -63,42 +72,47 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     >
       <Spacer y={1} />
       {gauges?.length ? (
-        <div style={{ width: "100%", height: 400 }}>
-          <ResponsiveContainer>
-            <PieChart>
-              <Pie
-                data={dataForChart}
-                dataKey="allocPoint"
-                nameKey="depositTokenName"
-                outerRadius={150}
-                isAnimationActive={false}
-                label={(x) => x.depositTokenName}
-                labelLine={false}
+        <>
+          <div style={{ width: "100%", height: 500 }}>
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={dataForChart}
+                  dataKey="allocPoint"
+                  nameKey="depositTokenName"
+                  outerRadius={150}
+                  isAnimationActive={false}
+                  label={(x) => x.depositTokenName}
+                  labelLine={false}
+                >
+                  {dataForChart.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={shadeColor(
+                        colors[index % colors.length],
+                        -index * 3,
+                      )}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip formatter={formatter} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <TableContainer>
+            <div style={{ width: "70%" }}>
+              <Table
+                data={dataForTable.map((entry) => ({
+                  ...entry,
+                  allocPoint: formatter(entry.allocPoint),
+                }))}
               >
-                {dataForChart.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={shadeColor(colors[index % colors.length], -index * 3)}
-                  />
-                ))}
-              </Pie>
-              <Tooltip formatter={(val) => (val * 100).toFixed(2) + "%"} />
-            </PieChart>
-            {// @dev the below seems problematic, likely because </ResponsiveContainer> won't accept naked HTML elements as children.
-            /* <table>
-              <tr>
-                <th>Token</th>
-                <th>Weight</th>
-              </tr>
-              {dataForTable.map((farm) => (
-                <tr>
-                  <td>{farm.depositTokenName}</td>
-                  <td>{farm.allocPoint}</td>
-                </tr>
-              ))}
-            </table> */}
-          </ResponsiveContainer>
-        </div>
+                <Table.Column prop="depositTokenName" label="Token" />
+                <Table.Column prop="allocPoint" label="Weight" />
+              </Table>
+            </div>
+          </TableContainer>
+        </>
       ) : (
         "There are no active Farms"
       )}
