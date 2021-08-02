@@ -133,7 +133,16 @@ export const FARM_LP_TO_ICON = {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
   "0x65B2532474f717D5A8ba38078B78106D56118bbb": "/liquity.png",
-  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": "/saddle.svg"
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": "/saddle.svg",
+  "0x1Bf62aCb8603Ef7F3A0DFAF79b25202fe1FAEE06": (
+    <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/3crv.png"} />
+  ),
+  "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
+  ),
+  "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
+  ),
 };
 
 const setButtonStatus = (
@@ -260,7 +269,6 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const totalAPY = APYs.map((x) => {
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
-
 
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===

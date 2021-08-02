@@ -44,6 +44,8 @@ interface PriceObject {
   qi: number;
   cvx: number;
   ice: number;
+  mim: number;
+  spell: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -89,6 +91,8 @@ function usePrices() {
         "frax-share",
         "must",
         "matic-network",
+        "magic-internet-money",
+        "spell-token",
         // "yvboost",
         "alchemix",
         "terra-luna",
@@ -142,6 +146,8 @@ function usePrices() {
       qi: response["qi-dao"].usd,
       cvx: response["convex-finance"].usd,
       ice: response["iron-finance"].usd,
+      spell: response["spell-token"].usd,
+      mim: response["magic-internet-money"].usd,
     };
     setPrices(prices);
   };
