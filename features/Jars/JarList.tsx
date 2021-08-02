@@ -6,10 +6,14 @@ import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
 
 import { JarCollapsible } from "./JarCollapsible";
-import { useJarData } from "./useJarData";
 import { Connection } from "../../containers/Connection";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
-import { backgroundColor, pickleGreen, pickleWhite } from "../../util/constants";
+import { UserJars } from "../../containers/UserJars";
+import {
+  backgroundColor,
+  pickleGreen,
+  pickleWhite,
+} from "../../util/constants";
 import { NETWORK_NAMES } from "containers/config";
 
 const Container = styled.div`
@@ -32,7 +36,7 @@ const GreenSwitch = withStyles({
 
 export const JarList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
-  const { jarData } = useJarData();
+  const { jarData } = UserJars.useContainer();
   const [showInactive, setShowInactive] = useState(false);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
 
@@ -40,16 +44,31 @@ export const JarList: FC = () => {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!jarData && chainName !== NETWORK_NAMES.POLY) {
-    return <h2>Loading...</h2>;
-  } else if (!jarData && chainName === NETWORK_NAMES.POLY) {
-    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>If you have been waiting more than a few seconds, you may be rate-limited. Consider changing to a different Polygon RPC such as 'https://matic-mainnet.chainstacklabs.com/' or 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
+  if (jarData === null) {
+    if (chainName === NETWORK_NAMES.POLY) {
+      return (
+        <>
+          <h2>Loading...</h2>
+          <span style={{ color: pickleWhite }}>
+            If you have been waiting more than a few seconds, you may be
+            rate-limited. Consider changing to a different Polygon RPC such as
+            'https://matic-mainnet.chainstacklabs.com/' or
+            'https://rpc-mainnet.matic.network' or
+            'https://rpc-mainnet.maticvigil.com'
+          </span>
+        </>
+      );
+    } else {
+      return <h2>Loading...</h2>;
+    }
   }
 
-  const activeJars = jarData.filter(
-    (jar) =>
-      JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
-  ).sort((a, b) => b.totalAPY - a.totalAPY);
+  const activeJars = jarData
+    .filter(
+      (jar) =>
+        JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
+    )
+    .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const yearnJars = jarData.filter(
     (jar) =>
@@ -80,8 +99,7 @@ export const JarList: FC = () => {
             onChange={(e) => setShowInactive(e.target.checked)}
           >
             Show Inactive Jars
-          </Checkbox>
-          {" "}
+          </Checkbox>{" "}
           <GreenSwitch
             style={{ top: "-2px" }}
             checked={showUserJars}

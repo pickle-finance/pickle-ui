@@ -2,7 +2,6 @@ import { FC } from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { GeistProvider } from "@geist-ui/react";
-import * as types from "styled-components/cssprop";
 
 import "../styles/reset.css";
 import "../styles/global.scss";
