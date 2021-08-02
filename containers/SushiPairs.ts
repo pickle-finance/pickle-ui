@@ -127,7 +127,7 @@ export const PAIR_INFO: PairMap = {
   "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": { a: qi, b: mimatic },
   "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": { a: spell, b: weth },
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": { a: mim, b: weth },
-  "0x269Db91Fc3c7fCC275C2E6f22e5552504512811c": { a: pickle, b: weth },
+  "0x269db91fc3c7fcc275c2e6f22e5552504512811c": { a: pickle, b: weth },
 };
 
 function useSushiPairs() {
