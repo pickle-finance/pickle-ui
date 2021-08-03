@@ -58,6 +58,8 @@ import { Minichef } from "./Contracts/Minichef";
 import { Minichef__factory as MinichefFatory } from "./Contracts/factories/Minichef__factory";
 import { SushiMinichef } from "./Contracts/SushiMinichef";
 import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/factories/SushiMinichef__factory";
+import { Jar } from "./Contracts/Jar";
+import { Jar__factory as JarFactory } from "./Contracts/factories/Jar__factory";
 
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
@@ -70,10 +72,13 @@ import {
   PickleRewarder__factory as PickleRewarderFactory,
 } from "./Contracts/factories/PickleRewarder__factory";
 
+import { StabilityPool } from "./Contracts/StabilityPool";
+import { StabilityPool__factory as StabilityPoolFactory } from "./Contracts/factories/StabilityPool__factory";
+
+import { config, NETWORK_NAMES, BPAddresses } from "./config";
 import { SushiMigrator } from "./Contracts/SushiMigrator";
 import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
 
-import { config, NETWORK_NAMES } from "./config";
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -273,6 +278,10 @@ function useContracts() {
     yvBoostMigrator,
     setyvBoostMigrator,
   ] = useState<YvboostMigrator | null>(null);
+  const [pBAMM, setPBAMM] = useState<Jar | null>(null);
+  const [stabilityPool, setStabilityPool] = useState<StabilityPool | null>(
+    null,
+  );
 
   const [ironchef, setIronchef] = useState<Ironchef | null>(null);
   const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(null)
@@ -384,6 +393,10 @@ function useContracts() {
       setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
+      setPBAMM(JarFactory.connect(BPAddresses.pBAMM, signer));
+      setStabilityPool(
+        StabilityPoolFactory.connect(BPAddresses.STABILITY_POOL, signer),
+      );
 
       setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
       setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer))
@@ -435,6 +448,8 @@ function useContracts() {
     sushiComplexRewarder,
     am3crvPool,
     pickleRewarder,
+    pBAMM,
+    stabilityPool,
     controllerMai,
     ironchef,
     sushiMigrator,

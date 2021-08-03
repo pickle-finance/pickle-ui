@@ -6,8 +6,12 @@ import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
 
 import { JarCollapsible } from "./JarCollapsible";
+import { BProtocol } from "./BProtocol";
+import {
+  JAR_ACTIVE,
+  JAR_YEARN,
+} from "../../containers/Jars/jars";
 import { Connection } from "../../containers/Connection";
-import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { UserJars } from "../../containers/UserJars";
 import {
   backgroundColor,
@@ -81,7 +85,6 @@ export const JarList: FC = () => {
   const userJars = jarData.filter((jar) =>
     parseFloat(formatEther(jar.deposited)),
   );
-
   return (
     <Container>
       <Grid.Container gap={1}>
@@ -107,15 +110,35 @@ export const JarList: FC = () => {
           />
           Show Your Jars
         </Grid>
-        <Grid xs={24}></Grid>
-        {chainName === NETWORK_NAMES.ETH && `Powered by Yearn ⚡`}
-        {yearnJars.map((jar) => (
-          <Grid xs={24} key={jar.name}>
-            <JarCollapsible jarData={jar} isYearnJar={true} />
-          </Grid>
-        ))}
+        {chainName === NETWORK_NAMES.ETH && (
+          <>
+            Powered by&nbsp;
+            <a href="https://yearn.finance/" target="_">
+              Yearn
+            </a>
+            &nbsp;⚡
+            {yearnJars.map((jar, idx) => (
+              <Grid xs={24} key={jar.name}>
+                <JarCollapsible jarData={jar} isYearnJar={true} />
+                {idx === yearnJars.length - 1 && <Spacer y={1} />}
+              </Grid>
+            ))}
+          </>
+        )}
+        {chainName === NETWORK_NAMES.ETH && (
+          <>
+            Powered by&nbsp;
+            <a href="https://bprotocol.org/" target="_">
+              B.Protocol
+            </a>
+            &nbsp;⚡
+            <Grid xs={24}>
+              <BProtocol />
+              <Spacer y={1} />
+            </Grid>
+          </>
+        )}
       </Grid.Container>
-      <Spacer y={2} />
       <Grid.Container gap={1}>
         {(showUserJars ? userJars : activeJars).map((jar) => (
           <Grid xs={24} key={jar.name}>
