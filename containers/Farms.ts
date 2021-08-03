@@ -190,6 +190,18 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSADDLED4",
     poolName: "Saddle D4",
   },
+  "0x1Bf62aCb8603Ef7F3A0DFAF79b25202fe1FAEE06": {
+    tokenName: "pMIM3CRV",
+    poolName: "Abracadabra Mim3Crv",
+  },
+  "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE": {
+    tokenName: "pSPELLETH",
+    poolName: "Abracadabra SPELLETH",
+  },
+  "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C": {
+    tokenName: "pMIMETH",
+    poolName: "Abracadabra MIMETH",
+  },
 };
 
 function useFarms() {

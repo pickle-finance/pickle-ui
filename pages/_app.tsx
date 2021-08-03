@@ -2,7 +2,6 @@ import { FC } from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { GeistProvider } from "@geist-ui/react";
-import * as types from "styled-components/cssprop";
 
 import "../styles/reset.css";
 import "../styles/global.scss";
@@ -19,6 +18,7 @@ import { PickleStaking } from "../containers/PickleStaking";
 import { Farms } from "../containers/Farms";
 import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
+import { CurvePairs } from "../containers/CurvePairs";
 import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { UserMiniFarms } from "../containers/UserMiniFarms";
@@ -47,31 +47,33 @@ const WithContainers: FC = ({ children }) => (
                 <Pickles.Provider>
                   <MiniPickles.Provider>
                     <PickleStaking.Provider>
-                      <UniV2Pairs.Provider>
-                        <ComethPairs.Provider>
-                          <Dill.Provider>
-                            <SushiPairs.Provider>
-                              <Jars.Provider>
-                                <Farms.Provider>
-                                  <Gauges.Provider>
-                                    <MiniFarms.Provider>
-                                      <UserJars.Provider>
-                                        <UserFarms.Provider>
-                                          <UserGauges.Provider>
-                                            <UserMiniFarms.Provider>
-                                              {children}
-                                            </UserMiniFarms.Provider>
-                                          </UserGauges.Provider>
-                                        </UserFarms.Provider>
-                                      </UserJars.Provider>
-                                    </MiniFarms.Provider>
-                                  </Gauges.Provider>
-                                </Farms.Provider>
-                              </Jars.Provider>
-                            </SushiPairs.Provider>
-                          </Dill.Provider>
-                        </ComethPairs.Provider>
-                      </UniV2Pairs.Provider>
+                      <CurvePairs.Provider>
+                        <UniV2Pairs.Provider>
+                          <ComethPairs.Provider>
+                            <Dill.Provider>
+                              <SushiPairs.Provider>
+                                <Jars.Provider>
+                                  <Farms.Provider>
+                                    <Gauges.Provider>
+                                      <MiniFarms.Provider>
+                                        <UserJars.Provider>
+                                          <UserFarms.Provider>
+                                            <UserGauges.Provider>
+                                              <UserMiniFarms.Provider>
+                                                {children}
+                                              </UserMiniFarms.Provider>
+                                            </UserGauges.Provider>
+                                          </UserFarms.Provider>
+                                        </UserJars.Provider>
+                                      </MiniFarms.Provider>
+                                    </Gauges.Provider>
+                                  </Farms.Provider>
+                                </Jars.Provider>
+                              </SushiPairs.Provider>
+                            </Dill.Provider>
+                          </ComethPairs.Provider>
+                        </UniV2Pairs.Provider>
+                      </CurvePairs.Provider>
                     </PickleStaking.Provider>
                   </MiniPickles.Provider>
                 </Pickles.Provider>
