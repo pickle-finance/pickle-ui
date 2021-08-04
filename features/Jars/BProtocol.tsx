@@ -232,7 +232,9 @@ export const BProtocol: FC = () => {
                   transferCallback: async () => {
                     return pBAMMContract
                       .connect(signer)
-                      .deposit(ethers.utils.parseEther(depositAmount));
+                      .deposit(ethers.utils.parseEther(depositAmount), {
+                        gasLimit: 500000,
+                      });
                   },
                 });
               }
