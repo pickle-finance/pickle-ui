@@ -68,9 +68,7 @@ import { Ironchef } from "./Contracts/Ironchef";
 import { Ironchef__factory as IronchefFactory } from "./Contracts/factories/Ironchef__factory";
 
 import { PickleRewarder } from "./Contracts/PickleRewarder";
-import {
-  PickleRewarder__factory as PickleRewarderFactory,
-} from "./Contracts/factories/PickleRewarder__factory";
+import { PickleRewarder__factory as PickleRewarderFactory } from "./Contracts/factories/PickleRewarder__factory";
 
 import { StabilityPool } from "./Contracts/StabilityPool";
 import { StabilityPool__factory as StabilityPoolFactory } from "./Contracts/factories/StabilityPool__factory";
@@ -154,6 +152,9 @@ export const MIRROR_MBABA_UST_STAKING_REWARDS =
 export const FEI_TRIBE_STAKING_REWARDS =
   "0x18305DaAe09Ea2F4D51fAa33318be5978D251aBd";
 
+export const FOX_ETH_STAKING_REWARDS =
+  "0xdd80e21669a664bce83e3ad9a0d74f8dad5d9e72";
+
 export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
   "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
 
@@ -185,9 +186,10 @@ export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 
 export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
-export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b"
+export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b";
 export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
-export const PICKLE_SUSHI_REWARDER = "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd"
+export const PICKLE_SUSHI_REWARDER =
+  "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -268,10 +270,10 @@ function useContracts() {
     null,
   );
 
-  const [pickleSushiRewarder, setPickleSushiRewarder] = useState<PickleRewarder | null>(
-    null,
-  );
-
+  const [
+    pickleSushiRewarder,
+    setPickleSushiRewarder,
+  ] = useState<PickleRewarder | null>(null);
 
   const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
   const [
@@ -284,7 +286,9 @@ function useContracts() {
   );
 
   const [ironchef, setIronchef] = useState<Ironchef | null>(null);
-  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(null)
+  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(
+    null,
+  );
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -399,8 +403,10 @@ function useContracts() {
       );
 
       setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
-      setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer))
-      setPickleSushiRewarder(PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer))
+      setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer));
+      setPickleSushiRewarder(
+        PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer),
+      );
     }
   };
 
@@ -453,7 +459,7 @@ function useContracts() {
     controllerMai,
     ironchef,
     sushiMigrator,
-    pickleSushiRewarder
+    pickleSushiRewarder,
   };
 }
 

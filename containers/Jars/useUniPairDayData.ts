@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Connection } from "../Connection";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
 import { PICKLE_ETH_FARM } from "../Farms/farms";
-import { NETWORK_NAMES } from "containers/config"
+import { NETWORK_NAMES } from "containers/config";
 
 export interface UniLPAPY {
   pairAddress: string;
@@ -25,6 +25,7 @@ const UNI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_MBABA_UST,
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_FEI_TRIBE,
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_LUSD_ETH,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_FOX_ETH,
 ];
 
 export const useUniPairDayData = () => {
@@ -79,7 +80,7 @@ export const useUniPairDayData = () => {
   };
 
   useEffect(() => {
-    if(!uniPairDayData) queryTheGraph();
+    if (!uniPairDayData) queryTheGraph();
   }, []);
 
   return {
