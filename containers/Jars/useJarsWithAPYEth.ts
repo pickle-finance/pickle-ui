@@ -431,7 +431,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const { pricePerToken } = await getUniPairData(stakingToken);
 
       const foxRewardsPerYear = foxRewardRate * (360 * 24 * 60 * 60);
-      const valueRewardedPerYear = prices.tribe * foxRewardsPerYear;
+      const valueRewardedPerYear = prices.fox * foxRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
       const foxAPY = valueRewardedPerYear / totalValueStaked;
