@@ -35,7 +35,9 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
   const { status: transferStatus } = ERC20Transfer.useContainer();
 
   const [farmData, setFarmData] = useState<Array<UserFarmData> | null>(null);
-  const [farmDataMatic, setFarmDataMatic] = useState<Array<UserFarmDataMatic> | null>(null);
+  const [farmDataMatic, setFarmDataMatic] = useState<Array<
+    UserFarmDataMatic
+  > | null>(null);
 
   const updateMaticFarmData = async () => {
     if (pickleRewarder && farmData && address) {

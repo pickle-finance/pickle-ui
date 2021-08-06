@@ -27,7 +27,7 @@ import fetch from "node-fetch";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import MasterchefAbi from "../ABIs/masterchef.json";
 import IronchefAbi from "../ABIs/ironchef.json";
-import DinoswapMasterchefAbi from "../ABIs/dinoswap-masterchef.json";
+import FossilFarmsAbi from "../ABIs/fossil-farms.json";
 import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
@@ -55,6 +55,7 @@ interface DinoPoolId {
 
 const dinoPoolIds: DinoPoolId = {
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": 10,
+  "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": 11,
 };
 
 export interface JarWithAPY extends Jar {
@@ -383,16 +384,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
-  const calculateDinoSwapMasterChefAPY = async (jar: Jar | undefined) => {
+  const calculateFossilFarmsAPY = async (jar: Jar | undefined) => {
     if (prices && multicallProvider && jar && controller && strategy) {
       const jarStrategy = await controller.strategies(jar.depositToken.address);
       const strategyContract = await strategy.attach(jarStrategy);
-      const dinoswapMasterchefAddress = await strategyContract.masterChef();
+      const fossilFarmsAddress = await strategyContract.masterChef();
       const poolId = await strategyContract.poolId();
       const rewardTokenAddress = await strategyContract.rewardToken();
-      const multicallDinoswapMasterchef = new MulticallContract(
-        dinoswapMasterchefAddress,
-        DinoswapMasterchefAbi,
+      const multicallFossilFarms = new MulticallContract(
+        fossilFarmsAddress,
+        FossilFarmsAbi,
       );
 
       const lpToken = new MulticallContract(
@@ -406,10 +407,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         poolInfo,
         totalSupplyBN,
       ] = await multicallProvider.all([
-        multicallDinoswapMasterchef.dinoPerBlock(),
-        multicallDinoswapMasterchef.totalAllocPoint(),
-        multicallDinoswapMasterchef.poolInfo(poolId),
-        lpToken.balanceOf(dinoswapMasterchefAddress),
+        multicallFossilFarms.dinoPerBlock(),
+        multicallFossilFarms.totalAllocPoint(),
+        multicallFossilFarms.poolInfo(poolId),
+        lpToken.balanceOf(fossilFarmsAddress),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
@@ -468,6 +469,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC,
       );
 
+      const dinoWethJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_DINO_WETH,
+      );
+
       const [
         comethUsdcWethApy,
         comethPickleMustApy,
@@ -479,6 +486,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         quickMimaticQiApy,
         iron3usdApy,
         dinoUsdcApy,
+        dinoWethApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -496,7 +504,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateMasterChefAPY(usdcMimaticJar),
         calculateMasterChefAPY(qiMimaticJar),
         calculateIronChefAPY(iron3usdJar),
-        calculateDinoSwapMasterChefAPY(dinoUsdcJar),
+        calculateFossilFarmsAPY(dinoUsdcJar),
+        calculateFossilFarmsAPY(dinoWethJar),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -586,6 +595,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...dinoUsdcApy,
             ...getSushiPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_DINO_WETH) {
+          APYs = [
+            ...dinoWethApy,
+            ...getQuickPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_DINO_WETH,
             ),
           ];
         }

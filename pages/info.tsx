@@ -395,7 +395,7 @@ export default function Brining() {
   const [stakingInfo, setStakingInfo] = useState(undefined);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [pickleData, setPickleData] = useState(undefined);
-  
+
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
     const updateStaking = async () => setStakingInfo(await getStakingData());
@@ -437,7 +437,9 @@ export default function Brining() {
                 </span>
               </DataPoint>
               <Card.Footer>
-                {protocolInfo ? `Jar Value Locked: ${getUSD(protocolInfo.jarValue)}` : "--"}
+                {protocolInfo
+                  ? `Jar Value Locked: ${getUSD(protocolInfo.jarValue)}`
+                  : "--"}
               </Card.Footer>
             </Card>
           </Grid>

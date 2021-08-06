@@ -26,9 +26,20 @@ export const MiniFarmList: FC = () => {
   if (!farmData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   } else if (!farmData && chainName === NETWORK_NAMES.POLY) {
-    return <><h2>Loading...</h2><span style={{ color: pickleWhite }}>If you have been waiting more than a few seconds, you may be rate-limited. Consider changing to a different Polygon RPC such as 'https://matic-mainnet.chainstacklabs.com/' or 'https://rpc-mainnet.matic.network' or 'https://rpc-mainnet.maticvigil.com'</span></>;
+    return (
+      <>
+        <h2>Loading...</h2>
+        <span style={{ color: pickleWhite }}>
+          If you have been waiting more than a few seconds, you may be
+          rate-limited. Consider changing to a different Polygon RPC such as
+          'https://matic-mainnet.chainstacklabs.com/' or
+          'https://rpc-mainnet.matic.network' or
+          'https://rpc-mainnet.maticvigil.com'
+        </span>
+      </>
+    );
   }
-  
+
   const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
@@ -37,8 +48,10 @@ export const MiniFarmList: FC = () => {
       <Grid.Container gap={1}>
         <Grid md={16}>
           <p>
-            Farms allow you to earn dual PICKLE <MiniIcon source="/pickle.png" />{" "}
-            and MATIC <MiniIcon source={"/matic.png"} /> rewards by staking tokens. (Note: MATIC rewards end August 23)
+            Farms allow you to earn dual PICKLE{" "}
+            <MiniIcon source="/pickle.png" /> and MATIC{" "}
+            <MiniIcon source={"/matic.png"} /> rewards by staking tokens. (Note:
+            MATIC rewards end August 23)
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.

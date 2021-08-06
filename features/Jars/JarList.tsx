@@ -7,10 +7,7 @@ import Switch from "@material-ui/core/Switch";
 
 import { JarCollapsible } from "./JarCollapsible";
 import { BProtocol } from "./BProtocol";
-import {
-  JAR_ACTIVE,
-  JAR_YEARN,
-} from "../../containers/Jars/jars";
+import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { Connection } from "../../containers/Connection";
 import { UserJars } from "../../containers/UserJars";
 import {

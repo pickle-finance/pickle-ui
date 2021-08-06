@@ -26,7 +26,7 @@ export const LpIcon = ({
   );
 };
 
-export const MiniIcon = ({size = "16px", source}) => (
+export const MiniIcon = ({ size = "16px", source }) => (
   <img
     src={source}
     alt="pickle"
@@ -36,7 +36,6 @@ export const MiniIcon = ({size = "16px", source}) => (
     }}
   />
 );
-
 
 export const TokenIcon = ({ src }: { src: string | ReactNode }) => (
   <div

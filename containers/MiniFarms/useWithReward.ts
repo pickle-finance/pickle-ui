@@ -53,7 +53,7 @@ export const useWithReward = (rawFarms: Input): Output => {
       const rewarderPoolInfo: PoolInfo[] = await Promise.all(
         rawFarms?.map((farm) => {
           return pickleRewarder.poolInfo(farm.poolIndex);
-        })
+        }),
       );
 
       const totalRewarderAP = rewarderPoolInfo.reduce((acc, curr) => {

@@ -37,14 +37,11 @@ export const updateFarmData = async (
       masterchef.address,
       masterchef.interface.fragments,
     );
-      
+
     const balancesUserInfosHarvestables = await multicallProvider.all(
       farms
         .map((x) => {
-          const c = new MulticallContract(
-            x.lpToken,
-            erc20.interface.fragments,
-          );
+          const c = new MulticallContract(x.lpToken, erc20.interface.fragments);
           return [
             c.balanceOf(address),
             mcMasterchef.userInfo(x.poolIndex, address),

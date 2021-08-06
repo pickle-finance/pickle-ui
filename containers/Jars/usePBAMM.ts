@@ -54,10 +54,12 @@ export const usePBAMM = () => {
         BPAddresses.pBAMM,
       );
 
-      const ethNum = await provider.getBalance(BPAddresses.pBAMM)
+      const ethNum = await provider.getBalance(BPAddresses.pBAMM);
       const totalShares = await pBAMM.totalSupply();
       const ppt =
-        (+formatEther(lusdNum) * prices.lusd + +formatEther(ethNum) * prices.eth) / +formatEther(totalShares);
+        (+formatEther(lusdNum) * prices.lusd +
+          +formatEther(ethNum) * prices.eth) /
+        +formatEther(totalShares);
 
       setPricePerToken(ppt);
       setUserValue(ppt * +formatEther(_pbamm || 0));
@@ -90,6 +92,6 @@ export const usePBAMM = () => {
     pricePerToken,
     userValue,
     lqtyApr,
-		userPendingLqty
+    userPendingLqty,
   };
 };

@@ -7,7 +7,7 @@ import { useJarGaugeApy } from "./Gauges/useJarGaugeApy";
 import { FarmInfo } from "./Farms";
 
 interface IGaugeInfo {
-  [key: string]: { tokenName: string; poolName: string; };
+  [key: string]: { tokenName: string; poolName: string };
 }
 
 export const GaugeInfo = FarmInfo;
@@ -26,8 +26,13 @@ function useGauges() {
     };
   });
 
-  if(rawGauges && jarGaugeWithApy && gaugesWithReward) console.log(`Farms successfully (re)loaded, Farm count: ${jarGaugeWithApy.length + 1}`)
- 
+  if (rawGauges && jarGaugeWithApy && gaugesWithReward)
+    console.log(
+      `Farms successfully (re)loaded, Farm count: ${
+        jarGaugeWithApy.length + 1
+      }`,
+    );
+
   const jarGauges = jarGaugeWithApy?.map((gauge) => {
     const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {

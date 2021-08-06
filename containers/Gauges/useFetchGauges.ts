@@ -20,7 +20,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
     blockNum,
     multicallProvider,
     chainName,
-    provider
+    provider,
   } = Connection.useContainer();
   const { gaugeProxy, gauge } = Contracts.useContainer();
 
@@ -56,7 +56,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           ).rewardRate();
         }),
       );
-      
+
       const derivedSupplies = await multicallProvider.all(
         tokens.map((token, index) => {
           return new MulticallContract(

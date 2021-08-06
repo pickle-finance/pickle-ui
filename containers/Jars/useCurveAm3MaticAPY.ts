@@ -65,7 +65,7 @@ export const useCurveAm3MaticAPY = (): Output => {
 
   const [maticAPY, setMaticAPY] = useState<number | null>(null);
   const [aaveAPY, setAaveAPY] = useState<number | null>(null);
-  const [crvAPY, setCrvAPY] = useState<number| null>(null);
+  const [crvAPY, setCrvAPY] = useState<number | null>(null);
 
   const getMaticAPY = async () => {
     if (multicallProvider && erc20 && prices) {
@@ -118,18 +118,18 @@ export const useCurveAm3MaticAPY = (): Output => {
         aaveApys[2] * (scaledBalance2 / totalBalance);
 
       const wmaticRewardsAmount = prices.matic * 1042784 * 6; // Multiplied by 6 to annualize the rewards
-      const crvRewardsAmount = prices.crv * 796812 * 6
-      
+      const crvRewardsAmount = prices.crv * 796812 * 6;
+
       const wmaticAPY = wmaticRewardsAmount / +formatEther(lpBalance);
-      const crvAPY = crvRewardsAmount / +formatEther(lpBalance)
+      const crvAPY = crvRewardsAmount / +formatEther(lpBalance);
       setAaveAPY(aaveAPY);
       setMaticAPY(wmaticAPY);
-      setCrvAPY(crvAPY)
+      setCrvAPY(crvAPY);
     }
   };
 
   useEffect(() => {
-    if(chainName === NETWORK_NAMES.POLY) getMaticAPY();
+    if (chainName === NETWORK_NAMES.POLY) getMaticAPY();
   }, [prices]);
 
   return {

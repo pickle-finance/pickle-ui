@@ -7,9 +7,9 @@ interface Addresses {
   minichef?: string;
 }
 
-export enum NETWORK_NAMES { 
+export enum NETWORK_NAMES {
   ETH = "Ethereum",
-  POLY = "Polygon"
+  POLY = "Polygon",
 }
 
 export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY | null;
@@ -40,7 +40,7 @@ export const config: Config = {
       pickle: "0x2b88ad57897a8b496595925f43048301c37615da",
       masterChef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
-      minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749"
+      minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
     },
   },
 };
@@ -50,5 +50,5 @@ export const BPAddresses = {
   pBAMM: "0x54bC9113f1f55cdBDf221daf798dc73614f6D972",
   STABILITY_POOL: "0x66017D22b0f8556afDd19FC67041899Eb65a21bb",
   pLQTY: "0x65B2532474f717D5A8ba38078B78106D56118bbb",
-  LQTY_GAUGE: "0xA7BC844a76e727Ec5250f3849148c21F4b43CeEA"
-}
+  LQTY_GAUGE: "0xA7BC844a76e727Ec5250f3849148c21F4b43CeEA",
+};

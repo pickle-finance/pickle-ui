@@ -10,7 +10,7 @@ import erc20 from "@studydefi/money-legos/erc20";
 import { addresses } from "../SushiPairs";
 import { Contract as MulticallContract } from "ethers-multicall";
 
-const PID = 3; 
+const PID = 3;
 const AVERAGE_BLOCK_TIME = 13.22;
 
 export interface MC2Apy {
@@ -138,6 +138,6 @@ export const useMC2 = () => {
     userValue,
     apy,
     pendingPickle,
-    pendingSushi
+    pendingSushi,
   };
 };
