@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import { crvJars, sushiJars, uniJars, polyJars } from "../../util/jars";
-import { getJarChart, getStakingChart, getProtocolData } from "../../util/api";
+import { getJarChart, getProtocolData } from "../../util/api";
 import { materialBlack } from "../../util/constants";
 import JarValueChart from "../../components/JarValueChart";
 import Grid from "@material-ui/core/Grid";
