@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 
-const pickleApi = "https://d38jrn41whs0ud.cloudfront.net/prod";
+const pickleApi = process.env.apiHost;
 
 export const getJarChart = async (assets) => {
   const jarData = assets.map(async (asset) => {
