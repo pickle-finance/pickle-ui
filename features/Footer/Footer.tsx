@@ -50,7 +50,7 @@ export const Footer: FC = () => {
         rel="noopener noreferrer"
         href="https://snapshot.org/#/pickle.eth"
       >
-        Signal
+        Vote
       </NavItem>
       <NavItem
         target="_blank"
