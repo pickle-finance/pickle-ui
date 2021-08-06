@@ -52,8 +52,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
-  "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368": "/aleth.webp",
-  "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a": "/saddle.svg",
+  "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368": (
+    <LpIcon swapIconSrc={"/saddle.svg"} tokenIconSrc={"/alchemix.png"} />
+  ),
+  "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a": "/saddled4.png",
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -130,6 +132,15 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),
   "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D": "/liquity.png",
+  "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": (
+    <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/3crv.png"} />
+  ),
+  "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
+  ),
+  "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
+  ),
 
   // Polygon Jars
 
@@ -513,20 +524,6 @@ export const JarCollapsible: FC<{
           >
             {withdrawButton.text}
           </Button>
-          {isSaddleJar ? (
-            <div
-              style={{
-                width: "100%",
-                textAlign: "center",
-                paddingTop: "4px",
-                fontFamily: "Source Sans Pro",
-              }}
-            >
-              Withdrawals are restricted for 24 hours following your most recent
-              deposit, as this minimum locking period is imposed when staking
-              on Frax Finance
-            </div>
-          ) : null}
         </Grid>
       </Grid.Container>
     </Collapse>

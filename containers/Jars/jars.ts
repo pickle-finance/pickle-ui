@@ -36,6 +36,9 @@ export const PICKLE_JARS = {
   pLQTY: "0x65B2532474f717D5A8ba38078B78106D56118bbb",
   pALETH: "0xCbA1FE4Fdbd90531EFD929F1A1831F38e91cff1e",
   pSADDLED4: "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484",
+  pMIM3CRV: "0x1Bf62aCb8603Ef7F3A0DFAF79b25202fe1FAEE06",
+  pSPELLETH: "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE",
+  pMIMETH: "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C",
 
   // Polygon Jars
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
@@ -85,6 +88,9 @@ export const JAR_DEPOSIT_TOKENS = {
     LQTY: "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D",
     ALETH: "0xc9da65931ABf0Ed1b74Ce5ad8c041C4220940368",
     SADDLE_D4: "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a",
+    MIM_3CRV: "0x5a6A4D54456819380173272A5E8E9B9904BdF41B",
+    SPELL_ETH: "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E",
+    MIM_ETH: "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4",
   },
   [NETWORK_NAMES.POLY]: {
     COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
@@ -132,7 +138,11 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_CVX_ETH: "SLP CVX/ETH",
   LQTY: "LQTY",
   ALETH: "Saddle alETH",
+  LUSD: "LUSD",
   SADDLE_D4: "SADDLE D4",
+  MIM_3CRV: "Abracadabra MIM3CRV",
+  SPELL_ETH: "Abracadabra SPELL/ETH",
+  MIM_ETH: "Abracadabra MIM/ETH",
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
@@ -178,8 +188,12 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
   [DEPOSIT_TOKENS_NAME.ALETH]: true,
+  [DEPOSIT_TOKENS_NAME.LUSD]: true,
   [DEPOSIT_TOKENS_NAME.LQTY]: true,
   [DEPOSIT_TOKENS_NAME.SADDLE_D4]: true,
+  [DEPOSIT_TOKENS_NAME.MIM_3CRV]: true,
+  [DEPOSIT_TOKENS_NAME.SPELL_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.MIM_ETH]: true,
 
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
@@ -230,27 +244,27 @@ export const DEPOSIT_TOKENS_LINK = {
   UNIV2_LUSD_ETH:
     "https://app.uniswap.org/#/add/v2/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/ETH",
   SUSHI_MIC_USDT:
-    "https://exchange.sushiswapclassic.org/#/add/0x368B3a58B5f49392e5C9E4C998cb0bB966752E51/0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "https://app.sushi.com/add/0x368B3a58B5f49392e5C9E4C998cb0bB966752E51/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   SUSHI_MIS_USDT:
-    "https://exchange.sushiswapclassic.org/#/add/0x4b4D2e899658FB59b1D518b68fe836B100ee8958/0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "https://app.sushi.com/add/0x4b4D2e899658FB59b1D518b68fe836B100ee8958/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   SUSHI_ETH_DAI:
-    "https://exchange.sushiswapclassic.org/#/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
+    "https://app.sushi.com/add/0x6b175474e89094c44da98b954eedeac495271d0f/ETH",
   SUSHI_ETH_USDC:
-    "https://exchange.sushiswapclassic.org/#/add/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/ETH",
+    "https://app.sushi.com/add/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/ETH",
   SUSHI_ETH_USDT:
-    "https://exchange.sushiswapclassic.org/#/add/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "https://app.sushi.com/add/ETH/0xdac17f958d2ee523a2206206994597c13d831ec7",
   SUSHI_ETH_WBTC:
-    "https://exchange.sushiswapclassic.org/#/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
+    "https://app.sushi.com/add/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/ETH",
   SUSHI_ETH_YFI:
-    "https://exchange.sushiswapclassic.org/#/add/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/ETH",
+    "https://app.sushi.com/add/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/ETH",
   SUSHI_ETH_YVECRV:
-    "https://exchange.sushiswapclassic.org/#/add/0xc5bddf9843308380375a611c18b50fb9341f502a/ETH",
+    "https://app.sushi.com/add/0xc5bddf9843308380375a611c18b50fb9341f502a/ETH",
   SUSHI_ETH_YVBOOST:
-    "https://exchange.sushiswapclassic.org/#/add/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/ETH",
+    "https://app.sushi.com/add/0x9d409a0A012CFbA9B15F6D4B36Ac57A46966Ab9a/ETH",
   SUSHI_ETH:
-    "https://exchange.sushiswapclassic.org/#/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
+    "https://app.sushi.com/add/0x6b3595068778dd592e39a122f4f5a5cf09c90fe2/ETH",
   SUSHI_ETH_ALCX:
-    "https://app.sushi.com/add/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
+    "https://app.sushi.com/add/ETH/0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF",
   SUSHI_CVX_ETH:
     "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -260,6 +274,12 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
   SADDLE_D4: "https://saddle.exchange/#/pools/d4/deposit",
   ALETH: "https://saddle.exchange/#/pools/aleth/deposit",
+  MIM_3CRV: "https://curve.fi/mim",
+  SPELL_ETH:
+    "https://app.sushi.com/add/ETH/0x090185f2135308BaD17527004364eBcC2D37e5F6",
+  MIM_ETH:
+    "https://app.sushi.com/add/ETH/0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
+
   // Polygon Jars
   COMETH_USDC_WETH:
     "https://swap.cometh.io/#/add/0x2791bca1f2de4661ed88a30c99a7a9449aa84174/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
@@ -320,6 +340,9 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   LQTY: "pJar 0.98l",
   ALETH: "pJar 0.99al",
   SADDLE_D4: "pJar 0.99s",
+  MIM_3CRV: "pJar 0.99m1",
+  SPELL_ETH: "pJar 0.99m2",
+  MIM_ETH: "pJar 0.99m3",
 
   // Polygon Jars
   COMETH_USDC_WETH: "polyJar 1a",
@@ -375,6 +398,8 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b": "cvx",
   "0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d": "lqty",
   "0x0100546f2cd4c9d97f798ffc9755e47865ff7ee6": "aleth",
+  "0x090185f2135308bad17527004364ebcc2d37e5f6": "spell",
+  "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3": "mim",
 
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",

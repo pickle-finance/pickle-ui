@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import CoinGecko from "coingecko-api";
 
-const requestURL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance%2Cethereum%2Cdai%2Cusd-coin%2Ccompound-governance-token%2Ccurve-dao-token%2Ctether%2Cuniswap%2Chavven%2Cnusd%2Cwrapped-bitcoin%2Csushi%2Cyearn-finance%2Cbasis-share%2Cbasis-cash%2Cmithril-share%2Cmith-cash%2Clido-dao%2Cmirror-protocol%2Cterrausd%2Cmirrored-tesla%2Cmirrored-apple%2Cmirrored-invesco-qqq-trust%2Cmirrored-ishares-silver-trust%2Cmirrored-alibaba%2Cvecrv-dao-yvault%2Cfei-protocol%2Ctribe-2%2Cliquity-usd%2Cfrax%2Cliquity%2Calchemix%2Cconvex-finance&vs_currencies=usd";
-
 interface PriceObject {
   dai: number;
   comp: number;
@@ -48,6 +45,8 @@ interface PriceObject {
   cvx: number;
   aleth: number;
   ice: number;
+  mim: number;
+  spell: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -93,6 +92,8 @@ function usePrices() {
         "frax-share",
         "must",
         "matic-network",
+        "magic-internet-money",
+        "spell-token",
         // "yvboost",
         "alchemix",
         "terra-luna",
@@ -148,6 +149,8 @@ function usePrices() {
       cvx: response["convex-finance"].usd,
       aleth: response["alchemix-eth"].usd,
       ice: response["iron-finance"].usd,
+      spell: response["spell-token"].usd,
+      mim: response["magic-internet-money"].usd,
     };
     setPrices(prices);
   };

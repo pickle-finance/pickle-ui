@@ -41,7 +41,6 @@ function useERC20Transfer() {
       if (approval) {
         const Token = erc20.attach(token).connect(signer);
         const allowance = await Token.allowance(address, recipient);
-
         if (allowance.lte(ethers.constants.Zero)) {
           setTransferStatus(token, recipient, Status.Approving);
 

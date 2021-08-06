@@ -45,6 +45,8 @@ import { Strategy } from "./Contracts/Strategy";
 import { Strategy__factory as StrategyFactory } from "./Contracts/factories/Strategy__factory";
 import { SushiChef } from "./Contracts/SushiChef";
 import { SushiChef__factory as SushiChefFactory } from "./Contracts/factories/SushiChef__factory";
+import { Sorbettiere } from "./Contracts/Sorbettiere";
+import { Sorbettiere__factory as SorbettiereFactory } from "./Contracts/factories/Sorbettiere__factory";
 import { Uniswapv2Pair } from "./Contracts/Uniswapv2Pair";
 import { Uniswapv2Pair__factory as Uniswapv2PairFactory } from "./Contracts/factories/Uniswapv2Pair__factory";
 import { Uniswapv2ProxyLogic } from "./Contracts/Uniswapv2ProxyLogic";
@@ -58,6 +60,8 @@ import { Minichef } from "./Contracts/Minichef";
 import { Minichef__factory as MinichefFatory } from "./Contracts/factories/Minichef__factory";
 import { SushiMinichef } from "./Contracts/SushiMinichef";
 import { SushiMinichef__factory as SushiMinichefFactory } from "./Contracts/factories/SushiMinichef__factory";
+import { Jar } from "./Contracts/Jar";
+import { Jar__factory as JarFactory } from "./Contracts/factories/Jar__factory";
 
 import { SushiComplexRewarder } from "./Contracts/SushiComplexRewarder";
 import { SushiComplexRewarder__factory as SushiComplexRewarderFactory } from "./Contracts/factories/SushiComplexRewarder__factory";
@@ -68,10 +72,15 @@ import { Ironchef__factory as IronchefFactory } from "./Contracts/factories/Iron
 import { PickleRewarder } from "./Contracts/PickleRewarder";
 import {
   PickleRewarder__factory as PickleRewarderFactory,
-  PickleRewarder__factory,
 } from "./Contracts/factories/PickleRewarder__factory";
 
-import { config, NETWORK_NAMES } from "./config";
+import { StabilityPool } from "./Contracts/StabilityPool";
+import { StabilityPool__factory as StabilityPoolFactory } from "./Contracts/factories/StabilityPool__factory";
+
+import { config, NETWORK_NAMES, BPAddresses } from "./config";
+import { SushiMigrator } from "./Contracts/SushiMigrator";
+import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -112,6 +121,8 @@ export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 export const SUSDV2_CRV = "0xC25a3A3b969415c80451098fa907EC722572917F";
 export const THREE_CRV = "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490";
 export const RENBTC_CRV = "0x49849C98ae39Fff122806C06791Fa73784FB3675";
+
+export const SORBETTIERE_REWARDS = "0xF43480afE9863da4AcBD4419A47D9Cc7d25A647F";
 
 export const SCRV_STAKING_REWARDS =
   "0xDCB6A51eA3CA5d3Fd898Fd6564757c7aAeC3ca92";
@@ -176,6 +187,9 @@ export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 
 export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
+export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b"
+export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
+export const PICKLE_SUSHI_REWARDER = "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd"
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -219,6 +233,9 @@ function useContracts() {
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
     null,
   );
+  const [sorbettiereFarm, setSorbettiereFarm] = useState<Sorbettiere | null>(
+    null,
+  );
   const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
     null,
   );
@@ -254,13 +271,23 @@ function useContracts() {
     null,
   );
 
+  const [pickleSushiRewarder, setPickleSushiRewarder] = useState<PickleRewarder | null>(
+    null,
+  );
+
+
   const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
   const [
     yvBoostMigrator,
     setyvBoostMigrator,
   ] = useState<YvboostMigrator | null>(null);
+  const [pBAMM, setPBAMM] = useState<Jar | null>(null);
+  const [stabilityPool, setStabilityPool] = useState<StabilityPool | null>(
+    null,
+  );
 
   const [ironchef, setIronchef] = useState<Ironchef | null>(null);
+  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(null)
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -304,6 +331,9 @@ function useContracts() {
       );
       setCommunalFarm(
         CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
+      );
+      setSorbettiereFarm(
+        SorbettiereFactory.connect(SORBETTIERE_REWARDS, providerOrSigner),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(
@@ -367,8 +397,14 @@ function useContracts() {
       setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
+      setPBAMM(JarFactory.connect(BPAddresses.pBAMM, signer));
+      setStabilityPool(
+        StabilityPoolFactory.connect(BPAddresses.STABILITY_POOL, signer),
+      );
 
       setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
+      setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer))
+      setPickleSushiRewarder(PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer))
     }
   };
 
@@ -402,6 +438,7 @@ function useContracts() {
     curveProxyLogic,
     instabrine,
     sushiChef,
+    sorbettiereFarm,
     dill,
     gaugeProxy,
     gauge,
@@ -416,8 +453,12 @@ function useContracts() {
     sushiComplexRewarder,
     am3crvPool,
     pickleRewarder,
+    pBAMM,
+    stabilityPool,
     controllerMai,
     ironchef,
+    sushiMigrator,
+    pickleSushiRewarder
   };
 }
 
