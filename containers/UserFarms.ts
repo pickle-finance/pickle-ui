@@ -72,6 +72,7 @@ export const updateFarmData = async (
       };
     });
 
+    console.log(`Farms successfully (re)loaded, Farm count: ${newFarmData.length + 1}`)
     setFarmData(newFarmData);
   }
 };

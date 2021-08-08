@@ -2,24 +2,19 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { Contract, ethers, BigNumber } from "ethers";
 
-import { Jars } from "./Jars";
 import { MiniFarms } from "./MiniFarms";
-import { Balances } from "./Balances";
 import { Contracts } from "./Contracts";
 import { Connection } from "./Connection";
-import { ERC20Transfer } from "./Erc20Transfer";
 import { updateFarmData } from "./UserFarms";
 import { UserFarmData } from "../containers/UserFarms";
-
-import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
-import { NETWORK_NAMES } from "./config";
-import { Masterchef } from "./Contracts/Masterchef";
-import { FarmInfo } from "./Farms";
+import { ERC20Transfer } from "./Erc20Transfer";
 
 export interface UserFarmDataMatic extends UserFarmData {
   harvestableMatic: ethers.BigNumber;
   maticApy: number;
 }
+
+const BN_ZERO = BigNumber.from(0)
 
 const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
   const {
@@ -29,22 +24,23 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
     chainName,
   } = Connection.useContainer();
   const { minichef, erc20, pickleRewarder } = Contracts.useContainer();
-  const { jars } = Jars.useContainer();
   const { farms } = MiniFarms.useContainer();
-  const { tokenBalances } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
 
   const [farmData, setFarmData] = useState<Array<UserFarmData> | null>(null);
-  const [farmDataMatic, setFarmDataMatic] = useState<Array<UserFarmDataMatic> | null>(null);
+  const [farmDataMatic, setFarmDataMatic] = useState<Array<
+    UserFarmDataMatic
+  > | null>(null);
 
   const updateMaticFarmData = async () => {
     if (pickleRewarder && farmData && address) {
       const userHarvestableMatic = await Promise.all(
-        farmData.map((farm) =>
-          pickleRewarder
+        farmData.map((farm) => {
+          if(farm.staked.eq(BN_ZERO)) return Promise.resolve(BN_ZERO)
+          return pickleRewarder
             .pendingToken(farm.poolIndex, address)
-            .catch(() => BigNumber.from(0)),
-        ),
+            .catch(() => BigNumber.from(0));
+        }),
       );
       const newFarms = farmData.map((farm, idx) => {
         return {
@@ -66,8 +62,11 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
       multicallProvider,
       setFarmData,
     );
+  }, [farms, blockNum, transferStatus]);
+
+  useEffect(() => {
     updateMaticFarmData();
-  }, [jars, blockNum, tokenBalances, transferStatus]);
+  },[farmData])
 
   return { farmData: farmDataMatic };
 };
