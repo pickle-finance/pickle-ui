@@ -8,6 +8,8 @@ const apiRoutesHost = () => {
   return `https://app.pickle.finance/api`;
 };
 
+console.log(process.env);
+
 /* eslint-env node */
 module.exports = {
   typescript: {
@@ -22,6 +24,5 @@ module.exports = {
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
     apiHost: "https://api.pickle.finance/prod",
     API_ROUTES_HOST: apiRoutesHost(),
-    INFURA_KEY: "05863b3334564e16a96a601abc8e106a",
   },
 };
