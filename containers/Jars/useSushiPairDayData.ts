@@ -113,7 +113,7 @@ export const useSushiPairDayData = () => {
   };
 
   useEffect(() => {
-    if(sushiPairDayData) return
+    if (sushiPairDayData) return;
     if (chainName === NETWORK_NAMES.POLY) {
       queryTheGraphPoly();
     } else {

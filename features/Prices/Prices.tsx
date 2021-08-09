@@ -60,12 +60,16 @@ const CoinIcon = ({ src }: { src: string }) => (
 
 export const Prices: FC = () => {
   const { prices } = PricesContainer.useContainer();
-  const { chainName} = Connection.useContainer()
+  const { chainName } = Connection.useContainer();
   return (
     <Card style={{ height: "169px" }}>
       <Card.Content>
         <TradeButton
-          href={chainName === NETWORK_NAMES.POLY ? "https://swap.cometh.io/#/swap?inputCurrency=0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f&outputCurrency=0x2b88ad57897a8b496595925f43048301c37615da" : "https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"}
+          href={
+            chainName === NETWORK_NAMES.POLY
+              ? "https://swap.cometh.io/#/swap?inputCurrency=0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f&outputCurrency=0x2b88ad57897a8b496595925f43048301c37615da"
+              : "https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"
+          }
           target="_blank"
           rel="noopener noreferrer"
         >

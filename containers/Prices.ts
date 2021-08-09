@@ -46,6 +46,7 @@ interface PriceObject {
   ice: number;
   mim: number;
   spell: number;
+  dino: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -100,6 +101,7 @@ function usePrices() {
         "qi-dao",
         "convex-finance",
         "iron-finance",
+        "dinoswap",
       ],
       vs_currencies: ["usd"],
     });
@@ -148,6 +150,7 @@ function usePrices() {
       ice: response["iron-finance"].usd,
       spell: response["spell-token"].usd,
       mim: response["magic-internet-money"].usd,
+      dino: response["dinoswap"].usd,
     };
     setPrices(prices);
   };

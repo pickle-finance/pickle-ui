@@ -12,7 +12,7 @@ export interface UniLPAPY {
 const COMETH_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_USDC_WETH,
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_PICKLE_MUST,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_MATIC_MUST, 
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].COMETH_MATIC_MUST,
 ];
 
 export const useComethPairDayData = () => {
@@ -65,7 +65,7 @@ export const useComethPairDayData = () => {
   };
 
   useEffect(() => {
-    if(!uniPairDayData) queryTheGraph();
+    if (!uniPairDayData) queryTheGraph();
   }, []);
 
   return {

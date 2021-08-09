@@ -54,7 +54,15 @@ export const FarmInfo: IFarmInfo = {
   "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9": {
     tokenName: "IS3USD",
     poolName: "IS3USD",
-  }
+  },
+  "0xC8450922d18793AD97C401D65BaE8A83aE5353a8": {
+    tokenName: "pSLP DINO/USDC",
+    poolName: "pSLP DINO/USDC",
+  },
+  "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": {
+    tokenName: "pQLP DINO/WETH",
+    poolName: "pQLP DINO/WETH",
+  },
 };
 
 function useFarms() {

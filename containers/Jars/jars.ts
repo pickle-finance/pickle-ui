@@ -51,6 +51,8 @@ export const PICKLE_JARS = {
   pQUICKmiMATICUSDC: "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce",
   pQUICKmiMATICQI: "0xd06a56c864C80e4cC76A2eF778183104BF0c848d",
   pIRON3USD: "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9",
+  pDINOUSDC: "0xC8450922d18793AD97C401D65BaE8A83aE5353a8",
+  pDINOWETH: "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -101,6 +103,8 @@ export const JAR_DEPOSIT_TOKENS = {
     QUICK_MIMATIC_USDC: "0x160532d2536175d65c03b97b0630a9802c274dad",
     QUICK_MIMATIC_QI: "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397",
     IRON_3USD: "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17",
+    POLY_SUSHI_DINO_USDC: "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f",
+    QUICK_DINO_WETH: "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11",
   },
 };
 
@@ -152,6 +156,8 @@ export const DEPOSIT_TOKENS_NAME = {
   QUICK_MIMATIC_USDC: "QUICK MAI/USDC",
   QUICK_MIMATIC_QI: "QUICK MAI/QI",
   IRON_3USD: "IS3USD",
+  POLY_SUSHI_DINO_USDC: "SLP DINO/USDC",
+  QUICK_DINO_WETH: "QUICK DINO/WETH",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -202,6 +208,8 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.QUICK_MIMATIC_USDC]: true,
   [DEPOSIT_TOKENS_NAME.QUICK_MIMATIC_QI]: true,
   [DEPOSIT_TOKENS_NAME.IRON_3USD]: true,
+  [DEPOSIT_TOKENS_NAME.POLY_SUSHI_DINO_USDC]: true,
+  [DEPOSIT_TOKENS_NAME.QUICK_DINO_WETH]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -294,6 +302,10 @@ export const DEPOSIT_TOKENS_LINK = {
   QUICK_MIMATIC_QI:
     "https://quickswap.exchange/#/add/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1/0x580A84C73811E1839F75d86d75d88cCa0c241fF4",
   IRON_3USD: "https://app.iron.finance/swap/pools/is3usd/deposit",
+  POLY_SUSHI_DINO_USDC:
+    "https://app.sushi.com/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xAa9654BECca45B5BDFA5ac646c939C62b527D394",
+  QUICK_DINO_WETH:
+    "https://quickswap.exchange/#/add/0xaa9654becca45b5bdfa5ac646c939c62b527d394/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -349,6 +361,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   QUICK_MIMATIC_USDC: "polyJar 5a",
   QUICK_MIMATIC_QI: "polyJar 5b",
   IRON_3USD: "polyJar 6a",
+  POLY_SUSHI_DINO_USDC: "polyJar 7a",
+  QUICK_DINO_WETH: "polyJar 7b",
 };
 
 export const STRATEGY_NAMES = {
@@ -406,6 +420,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xa3fa99a148fa48d14ed51d610c367c61876997f1": "mimatic",
   "0x580a84c73811e1839f75d86d75d88cca0c241ff4": "qi",
   "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef": "ice",
+  "0xaa9654becca45b5bdfa5ac646c939c62b527d394": "dino",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

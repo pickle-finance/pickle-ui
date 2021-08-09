@@ -152,7 +152,9 @@ export const BProtocol: FC = () => {
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>B.Protocol</div>
               <a
-                href={"https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"}
+                href={
+                  "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"
+                }
                 target="_"
                 style={{ fontSize: `1rem` }}
               >

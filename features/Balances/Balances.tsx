@@ -46,7 +46,7 @@ export const Balances: FC = () => {
     pendingPickles,
     totalSupply,
     picklePerBlock,
-    picklePerSecond
+    picklePerSecond,
   } = useBalances();
 
   const { WETHRewards } = PickleStaking.useContainer();
@@ -70,16 +70,20 @@ export const Balances: FC = () => {
 
   const [liquidity, setLiquidity] = useState<number | null>(null);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
-  const [marketCap, setMarketCap] = useState<number | null>(null)
+  const [marketCap, setMarketCap] = useState<number | null>(null);
   const [tooltipText, setTooltipText] = useState<string | null>("");
 
   useEffect(() => {
     const updateInfo = async () => {
-      setProtocolInfo(await getProtocolData())
-      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true").then(x => x.json())
-      setMarketCap(res["pickle-finance"].usd_market_cap)
-      if (picklePerBlock) setTooltipText(`${picklePerBlock} PICKLEs are printed every block.`)
-      if (picklePerSecond) setTooltipText(`${picklePerSecond} PICKLEs are printed every second.`)
+      setProtocolInfo(await getProtocolData());
+      const res = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true",
+      ).then((x) => x.json());
+      setMarketCap(res["pickle-finance"].usd_market_cap);
+      if (picklePerBlock)
+        setTooltipText(`${picklePerBlock} PICKLEs are printed every block.`);
+      if (picklePerSecond)
+        setTooltipText(`${picklePerSecond} PICKLEs are printed every second.`);
     };
     updateInfo();
   }, [blockNum]);
@@ -139,7 +143,9 @@ export const Balances: FC = () => {
                   text={tooltipText}
                 >
                   Total Supply:{" "}
-                  {totalSupply ? formatPickles(marketCap / prices?.pickle) : "--"}
+                  {totalSupply
+                    ? formatPickles(marketCap / prices?.pickle)
+                    : "--"}
                   <PickleIcon size={14} />
                 </Tooltip>
               ) : (
@@ -165,7 +171,12 @@ export const Balances: FC = () => {
                 text="Total ETH/PICKLE pool value on Uniswap."
                 style={{ cursor: `help` }}
               >
-                Pool size: {protocolInfo ? formatDollars(protocolInfo.totalValue - protocolInfo.jarValue) : "--"}
+                Pool size:{" "}
+                {protocolInfo
+                  ? formatDollars(
+                      protocolInfo.totalValue - protocolInfo.jarValue,
+                    )
+                  : "--"}
               </Tooltip>
             </Card.Footer>
           </Card>

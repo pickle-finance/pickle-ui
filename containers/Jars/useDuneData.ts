@@ -13,11 +13,13 @@ export const useDuneData = () => {
 
   useEffect(() => {
     const fetchYearnData = async () =>
-      setDuneData(await fetch(DUNE_API, {
-        body: JSON.stringify(body),
-        method: "POST",
-        mode: "cors",
-      }).then((x) => x.json()));
+      setDuneData(
+        await fetch(DUNE_API, {
+          body: JSON.stringify(body),
+          method: "POST",
+          mode: "cors",
+        }).then((x) => x.json()),
+      );
     fetchYearnData();
   }, []);
 

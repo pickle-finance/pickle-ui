@@ -43,7 +43,7 @@ export const useZapIn = ({
 }: ZapperData) => {
   const { address, signer } = Connection.useContainer();
   const isSellTokenEth = isEth(sellTokenAddress);
-  const sellAmount = rawAmount ? parseUnits(rawAmount, 18).toString() : '0';
+  const sellAmount = rawAmount ? parseUnits(rawAmount, 18).toString() : "0";
 
   const zapIn = async () => {
     try {
@@ -96,8 +96,10 @@ export const useZapIn = ({
   return { zapIn };
 };
 
-export const getStats = async (jarNames : string[]) => {
-  const jars = await fetchRes(`${ZAPPER_API}/vault-stats/pickle?api_key=${ZAPPER_APIKEY}`)
-  const statsRes = jars.filter(jar => jarNames.includes(jar.value)) 
-  return statsRes
-}
+export const getStats = async (jarNames: string[]) => {
+  const jars = await fetchRes(
+    `${ZAPPER_API}/vault-stats/pickle?api_key=${ZAPPER_APIKEY}`,
+  );
+  const statsRes = jars.filter((jar) => jarNames.includes(jar.value));
+  return statsRes;
+};

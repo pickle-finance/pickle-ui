@@ -50,6 +50,6 @@ export const useBalances = (): IUseBalances => {
     totalSupply,
     pendingPickles,
     picklePerBlock,
-    picklePerSecond
+    picklePerSecond,
   };
 };

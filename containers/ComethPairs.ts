@@ -22,8 +22,16 @@ interface Token {
 
 // prettier-ignore
 const must: Token = { address: addresses.must, priceId: "must", decimals: 18 };
-const pickle: Token = { address: addresses.pickle, priceId: "pickle", decimals: 18 };
-const matic: Token = { address: addresses.matic, priceId: "matic", decimals: 18 };
+const pickle: Token = {
+  address: addresses.pickle,
+  priceId: "pickle",
+  decimals: 18,
+};
+const matic: Token = {
+  address: addresses.matic,
+  priceId: "matic",
+  decimals: 18,
+};
 const weth: Token = { address: addresses.weth, priceId: "eth", decimals: 18 };
 const usdc: Token = { address: addresses.usdc, priceId: "usdc", decimals: 6 };
 
@@ -34,13 +42,11 @@ interface PairMap {
 export const PAIR_INFO: PairMap = {
   "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": { a: usdc, b: weth },
   "0xb0b5E3Bd18eb1E316bcD0bBa876570b3c1779C55": { a: pickle, b: must },
-  "0x80676b414a905De269D0ac593322Af821b683B92": { a: matic, b: must }
+  "0x80676b414a905De269D0ac593322Af821b683B92": { a: matic, b: must },
 };
 
 function useComethPairs() {
-  const {
-    multicallProvider,
-  } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used
@@ -53,9 +59,12 @@ function useComethPairs() {
     const tokenA = new MulticallContract(a.address, erc20.abi);
     const tokenB = new MulticallContract(b.address, erc20.abi);
     const pair = new MulticallContract(pairAddress, erc20.abi);
-    
 
-    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await multicallProvider.all([
+    const [
+      numAInPairBN,
+      numBInPairBN,
+      totalSupplyBN,
+    ] = await multicallProvider.all([
       tokenA.balanceOf(pairAddress),
       tokenB.balanceOf(pairAddress),
       pair.totalSupply(),

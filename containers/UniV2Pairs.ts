@@ -109,7 +109,11 @@ function useUniV2Pairs() {
     const tokenB = new MulticallContract(b.address, erc20.abi);
     const pair = new MulticallContract(pairAddress, erc20.abi);
 
-    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await multicallProvider?.all([
+    const [
+      numAInPairBN,
+      numBInPairBN,
+      totalSupplyBN,
+    ] = await multicallProvider?.all([
       tokenA.balanceOf(pairAddress),
       tokenB.balanceOf(pairAddress),
       pair.totalSupply(),
@@ -123,7 +127,6 @@ function useUniV2Pairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-
     let totalValueOfPair;
     // In case price one token is not listed on coingecko
     if (priceA) {
@@ -131,7 +134,7 @@ function useUniV2Pairs() {
     } else {
       totalValueOfPair = 2 * priceB * numBInPair;
     }
-    
+
     const totalSupply = totalSupplyBN / 1e18; // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 
@@ -166,7 +169,7 @@ function useUniV2Pairs() {
     } else {
       totalValueOfPair = 2 * priceB * numBInPair;
     }
-    
+
     const totalSupply = parseFloat(ethers.utils.formatEther(totalSupplyBN)); // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 

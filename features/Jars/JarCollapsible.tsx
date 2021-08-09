@@ -170,6 +170,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17": (
     <LpIcon swapIconSrc={"/ironswap.png"} tokenIconSrc={"/3usd.png"} />
   ),
+  "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dino.jpeg"} />
+  ),
+  "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

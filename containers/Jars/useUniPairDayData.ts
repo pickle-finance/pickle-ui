@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Connection } from "../Connection";
 import { JAR_DEPOSIT_TOKENS } from "./jars";
 import { PICKLE_ETH_FARM } from "../Farms/farms";
-import { NETWORK_NAMES } from "containers/config"
+import { NETWORK_NAMES } from "containers/config";
 
 export interface UniLPAPY {
   pairAddress: string;
@@ -79,7 +79,7 @@ export const useUniPairDayData = () => {
   };
 
   useEffect(() => {
-    if(!uniPairDayData) queryTheGraph();
+    if (!uniPairDayData) queryTheGraph();
   }, []);
 
   return {

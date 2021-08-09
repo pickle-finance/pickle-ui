@@ -17,7 +17,6 @@ interface TextLogoProps {
 }
 
 const ImageLogo = styled.img<TextLogoProps>`
-
   position: relative;
   width: 8rem;
 
@@ -46,10 +45,7 @@ export const Logo: FC = () => {
   return (
     <Link href="/" passHref>
       <LogoLink>
-        <ImageLogo
-          active={router.pathname === "/"}
-          src="/pickle-logo.png"
-        />
+        <ImageLogo active={router.pathname === "/"} src="/pickle-logo.png" />
       </LogoLink>
     </Link>
   );

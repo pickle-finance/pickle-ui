@@ -49,16 +49,21 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         controller.interface.fragments,
       );
 
-      const tokenKVUnfiltered = Object.entries(JAR_DEPOSIT_TOKENS[chainName])
-        .map(([k, tokenAddress]) => {
-          return {
-            key: k,
-            value: tokenAddress,
-          };
-        });
+      const tokenKVUnfiltered = Object.entries(
+        JAR_DEPOSIT_TOKENS[chainName],
+      ).map(([k, tokenAddress]) => {
+        return {
+          key: k,
+          value: tokenAddress,
+        };
+      });
 
-      const tokenKV = tokenKVUnfiltered.filter(({key, value}) => !IsMaiToken(value))
-      const tokenKVMai = tokenKVUnfiltered.filter(({key, value}) => IsMaiToken(value))  
+      const tokenKV = tokenKVUnfiltered.filter(
+        ({ key, value }) => !IsMaiToken(value),
+      );
+      const tokenKVMai = tokenKVUnfiltered.filter(({ key, value }) =>
+        IsMaiToken(value),
+      );
 
       let jarAddresses = await multicallProvider.all(
         tokenKV.map((t) => {
