@@ -8,8 +8,6 @@ const apiRoutesHost = () => {
   return `https://app.pickle.finance/api`;
 };
 
-console.log(process.env);
-
 /* eslint-env node */
 module.exports = {
   typescript: {
