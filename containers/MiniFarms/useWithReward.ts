@@ -21,7 +21,6 @@ export interface FarmWithReward extends RawFarm {
 }
 
 interface PoolInfo {
-  accPicklePerShare: BigNumber;
   allocPoint: BigNumber;
   lastRewardTime: BigNumber;
 }
@@ -46,14 +45,14 @@ export const useWithReward = (rawFarms: Input): Output => {
       maticPerSecond
     ) {
       const totalAllocPoints = rawFarms?.reduce(
-        (acc: number, farm) => acc + farm.allocPoint.toNumber(),
+        (acc: number, farm) => acc + farm.allocPoint,
         0,
       );
 
       const rewarderPoolInfo: PoolInfo[] = await Promise.all(
         rawFarms?.map((farm) => {
           return pickleRewarder.poolInfo(farm.poolIndex);
-        })
+        }),
       );
 
       const totalRewarderAP = rewarderPoolInfo.reduce((acc, curr) => {
@@ -62,7 +61,7 @@ export const useWithReward = (rawFarms: Input): Output => {
 
       // do calculations for each farm
       const newFarms = rawFarms.map((farm) => {
-        const fraction = farm.allocPoint.toNumber() / totalAllocPoints;
+        const fraction = farm.allocPoint / totalAllocPoints;
         const pickleRewardedPerSecond = fraction * picklePerSecond;
         const valRewardedPerSecond = pickleRewardedPerSecond * prices.pickle;
 
@@ -87,6 +86,7 @@ export const useWithReward = (rawFarms: Input): Output => {
           maticValuePerYear: maticValuePerSecond * 3600 * 24 * 365,
         };
       });
+
       setFarms(newFarms);
     }
   };

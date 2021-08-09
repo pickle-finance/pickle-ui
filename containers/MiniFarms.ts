@@ -1,7 +1,6 @@
 import { createContainer } from "unstated-next";
 
 import { useWithReward } from "./MiniFarms/useWithReward";
-import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 import { useFetchFarms } from "./Farms/useFetchFarms";
 import { useMaticJarApy } from "./MiniFarms/useMaticJarApy";
@@ -54,13 +53,19 @@ export const FarmInfo: IFarmInfo = {
   "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9": {
     tokenName: "IS3USD",
     poolName: "IS3USD",
-  }
+  },
 };
 
 function useFarms() {
   const { rawFarms } = useFetchFarms();
+  console.log("xxx raw farms", rawFarms);
+
   const { farmsWithReward } = useWithReward(rawFarms);
+  console.log("xxx raw farms with Reward", farmsWithReward);
+
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
+  console.log("xxx jar farm apy", jarFarmWithApy);
+
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
   const jarFarms = jarFarmWithMaticApy
     ?.map((farm) => {

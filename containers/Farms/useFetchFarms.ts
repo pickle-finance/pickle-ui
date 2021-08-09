@@ -1,68 +1,23 @@
 import { useState, useEffect } from "react";
-import { BigNumber, Contract } from "ethers";
 
 import { Connection } from "../Connection";
-import { Contracts } from "../Contracts";
-import { NETWORK_NAMES } from "containers/config";
-import { X } from "@geist-ui/react-icons";
-import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface RawFarm {
-  lpToken: string;
   poolIndex: number;
-  allocPoint: BigNumber;
-  lastRewardTime: BigNumber;
-  accPicklePerShare: BigNumber;
+  lpToken: string;
+  allocPoint: number;
 }
 
-export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
-  const { blockNum, multicallProvider, chainName } = Connection.useContainer();
-  const {
-    masterchef: masterchefContract,
-    minichef: minichefContract,
-  } = Contracts.useContainer();
-  const masterchef =
-    chainName === NETWORK_NAMES.POLY ? minichefContract : masterchefContract;
-
-  const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
+export const useFetchFarms = (): { rawFarms: RawFarm[] | null } => {
+  const { blockNum, chainName } = Connection.useContainer();
+  const [farms, setFarms] = useState<RawFarm[]>([]);
 
   const getFarms = async () => {
-    if (masterchef && multicallProvider) {
-      const poolLengthBN = (await masterchef.poolLength()) as BigNumber;
-      const poolLength = parseInt(poolLengthBN.toString());
-
-      const mcMasterchef = new MulticallContract(
-        masterchef.address,
-        masterchef.interface.fragments,
-      );
-
-      let farmInfo = await multicallProvider.all(
-        Array(parseInt(poolLength.toString()))
-          .fill(0)
-          .map((_, poolIndex) => {
-            return mcMasterchef.poolInfo(poolIndex);
-          }),
-      );
-
-      if (!farmInfo[0].lpToken) {
-        farmInfo = await Promise.all(
-          farmInfo.map(async (x, idx) => {
-            const lpToken = await masterchef.lpToken(idx);
-            return {
-              ...x,
-              lpToken,
-            };
-          }),
-        );
-      }
-
-      // extract response and convert to something we can use
-      const farms = farmInfo.map((x, idx) => {
-        return {
-          ...x,
-          poolIndex: idx,
-        };
-      });
+    if (chainName) {
+      const network = chainName.toLowerCase();
+      const endpoint = `${process.env.API_ROUTES_HOST}/farms/${network}`;
+      const response = await fetch(endpoint);
+      const farms = await response.json();
 
       setFarms(farms);
     }
@@ -70,7 +25,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
 
   useEffect(() => {
     getFarms();
-  }, [masterchef, blockNum]);
+  }, [blockNum]);
 
   return { rawFarms: farms };
 };
