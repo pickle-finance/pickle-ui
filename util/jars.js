@@ -8,6 +8,7 @@ export const crvJars = [
   "IS3USD",
   "ALETH",
   "saddled4",
+  "MIM3CRV",
 ];
 
 export const uniJars = [
@@ -19,6 +20,7 @@ export const uniJars = [
   "MBABA-UST",
   "FEI-TRIBE",
   "LUSD-ETH",
+  "FOX-ETH",
 ];
 
 export const sushiJars = [
@@ -33,6 +35,8 @@ export const sushiJars = [
   "ALCX-ETH",
   "CVX-ETH",
   "LQTY",
+  "MIM-ETH",
+  "SPELL-ETH",
 ];
 
 export const polyJars = [
@@ -46,6 +50,8 @@ export const polyJars = [
   "QLP-MIMATIC",
   "QLP-QI",
   "IS3USD",
+  "DINO-USDC",
+  "DINO-WETH"
 ];
 
 export const powerPool = "PICKLE-ETH";
