@@ -26,6 +26,7 @@ import {
   ALCHEMIX_ALCX_ETH_STAKING_POOLS,
   COMETH_USDC_WETH_REWARDS,
   COMMUNAL_FARM,
+  FOX_ETH_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
@@ -407,6 +408,42 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateFoxAPY = async (rewardsAddress: string) => {
+    if (stakingRewards && prices?.fox && getUniPairData && multicallProvider) {
+      const multicallUniStakingRewards = new MulticallContract(
+        rewardsAddress,
+        stakingRewards.interface.fragments,
+      );
+
+      const [
+        rewardRateBN,
+        stakingToken,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallUniStakingRewards.rewardRate(),
+        multicallUniStakingRewards.stakingToken(),
+        multicallUniStakingRewards.totalSupply(),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const foxRewardRate = parseFloat(formatEther(rewardRateBN));
+
+      const { pricePerToken } = await getUniPairData(stakingToken);
+
+      const foxRewardsPerYear = foxRewardRate * (360 * 24 * 60 * 60);
+      const valueRewardedPerYear = prices.fox * foxRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const foxAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        { fox: getCompoundingAPY(foxAPY * 0.8), apr: foxAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateMCv2APY = async (
     lpTokenAddress: string,
     rewardToken: PriceIds,
@@ -632,6 +669,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         mirrorMslvUstApy,
         mirrorMbabaUstApy,
         feiTribeApy,
+        foxEthApy,
         lqtyEthLusdApy,
         lqtyApy,
         saddled4Apy,
@@ -643,6 +681,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateMirAPY(MIRROR_MSLV_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
         calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
+        calculateFoxAPY(FOX_ETH_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
         calculateLqtyStakingAPY(),
         calculateSaddleD4APY(),
@@ -744,6 +783,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...feiTribeApy,
             ...getUniPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_FEI_TRIBE,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_FOX_ETH) {
+          APYs = [
+            ...foxEthApy,
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_FOX_ETH,
             ),
           ];
         }

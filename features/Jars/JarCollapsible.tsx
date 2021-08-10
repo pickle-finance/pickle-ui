@@ -170,6 +170,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17": (
     <LpIcon swapIconSrc={"/ironswap.png"} tokenIconSrc={"/3usd.png"} />
   ),
+  "0x470e8de2eBaef52014A47Cb5E6aF86884947F08c": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fox.png"} />
+  ),
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),

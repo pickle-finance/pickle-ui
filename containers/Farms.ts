@@ -202,6 +202,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pMIMETH",
     poolName: "Abracadabra MIMETH",
   },
+  "0xeb8174F94FDAcCB099422d9A816B8E17d5e393E3": {
+    tokenName: "pUNIV2 FOX/ETH",
+    poolName: "pUNIV2 FOX/ETH",
+  },
 };
 
 function useFarms() {
