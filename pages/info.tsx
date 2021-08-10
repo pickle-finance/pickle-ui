@@ -484,7 +484,6 @@ export default function Brining() {
                     const jar = jarInfo.find(
                       (jar) => jar.asset.toLowerCase() === farm,
                     );
-                    if(jar.asset === "SPELL-ETH") console.log({item, jar})
                     return jar ? (
                       <FarmRow key={farm} farm={farm} item={item} jar={jar} />
                     ) : null;
