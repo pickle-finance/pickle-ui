@@ -76,6 +76,8 @@ import { StabilityPool__factory as StabilityPoolFactory } from "./Contracts/fact
 import { config, NETWORK_NAMES, BPAddresses } from "./config";
 import { SushiMigrator } from "./Contracts/SushiMigrator";
 import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
+import { FossilFarms } from "./Contracts/FossilFarms";
+import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factories/FossilFarms__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -177,6 +179,7 @@ export const COMETH_MATIC_MUST_REWARDS =
   "0x2328c83431a29613b1780706E0Af3679E3D04afd";
 export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
 export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
+export const FOSSIL_FARMS = "0x1948abc5400aa1d72223882958da3bec643fb4e5";
 export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
@@ -261,6 +264,7 @@ function useContracts() {
     null,
   );
   const [minichef, setMinichef] = useState<Minichef | null>(null);
+  const [fossilFarms, setFossilFarms] = useState<FossilFarms | null>(null);
   const [
     sushiComplexRewarder,
     setSushiComplexRewarder,
@@ -391,6 +395,7 @@ function useContracts() {
       setFraxPool(PoolFactory.connect(FRAX_POOL_ADDR, signer));
 
       setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
+      setFossilFarms(FossilFarmsFactory.connect(FOSSIL_FARMS, signer));
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
       );
@@ -451,6 +456,7 @@ function useContracts() {
     fraxPool,
     minichef,
     sushiMinichef,
+    fossilFarms,
     sushiComplexRewarder,
     am3crvPool,
     pickleRewarder,

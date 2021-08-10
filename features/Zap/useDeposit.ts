@@ -35,20 +35,13 @@ export const useDeposit = (
   const { address } = Connection.useContainer();
   const { instabrine, erc20, masterchef } = Contracts.useContainer();
   const approve = async () => {
-    if (
-      !instabrine ||
-      !inputToken ||
-      !decimals ||
-      !erc20 ||
-      !address
-    )
-      return;
+    if (!instabrine || !inputToken || !decimals || !erc20 || !address) return;
     const amount = parseUnits(rawAmount, decimals);
     const token = erc20.attach(TOKEN[inputToken]);
     let allowance;
 
-      allowance = await token.allowance(address, instabrine.address);
-    
+    allowance = await token.allowance(address, instabrine.address);
+
     if (!allowance.gte(amount)) {
       const tx = await token.approve(instabrine.address, MaxUint256);
       await tx.wait();

@@ -41,18 +41,16 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
         if (!farmingJar) {
-          return new MulticallContract(
-            mlErc20.dai.address,
-            mlErc20.abi,
-          );
+          return new MulticallContract(mlErc20.dai.address, mlErc20.abi);
         }
 
-        return farmingJar.contract
+        return farmingJar.contract;
       });
 
-
       const farmBalances = await Promise.all(
-        farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0))),
+        farmingJarsMCContracts.map((x) =>
+          x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0)),
+        ),
       );
 
       const res = jarFarms.map((farm, idx) => {

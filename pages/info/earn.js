@@ -259,8 +259,8 @@ export default function Earn(props) {
                                 .filter((jar) => jar.balance > 0)
                                 .reduce((acc, jar) => {
                                   const jarValue = isMStonksJar(jar.id)
-                                  ? jar.balanceUsd * 2
-                                  : jar.balanceUsd
+                                    ? jar.balanceUsd * 2
+                                    : jar.balanceUsd;
                                   return acc + jarValue;
                                 }, 0),
                             )

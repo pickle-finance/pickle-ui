@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { FarmWithReward } from "./useWithReward";
 import { FarmWithApy } from "../Farms/useUniV2Apy";
@@ -12,21 +11,19 @@ type Input = FarmWithApyMatic[] | null;
 type Output = { jarFarmWithMaticApy: FarmWithApyMatic[] | null };
 
 export const useMaticJarApy = (inputFarms: Input): Output => {
-
-  const [ farms, setFarms] = useState<FarmWithApyMatic[] | null>(null)
+  const [farms, setFarms] = useState<FarmWithApyMatic[] | null>(null);
   const calculateApy = async () => {
     if (inputFarms) {
       const farmsWithMatic = inputFarms.map((farm) => {
-        const maticApy = farm.maticValuePerYear / farm.valueStakedInFarm
+        const maticApy = farm.maticValuePerYear / farm.valueStakedInFarm;
         return {
           ...farm,
-          maticApy
-        }
+          maticApy,
+        };
       });
-      setFarms(farmsWithMatic)
+      setFarms(farmsWithMatic);
     }
   };
-
 
   useEffect(() => {
     calculateApy();

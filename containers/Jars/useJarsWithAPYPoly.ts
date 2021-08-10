@@ -4,7 +4,7 @@ import {
   DEPOSIT_TOKENS_JAR_NAMES,
   getPriceId,
   JAR_DEPOSIT_TOKENS,
-  PICKLE_JARS
+  PICKLE_JARS,
 } from "./jars";
 import { Prices } from "../Prices";
 import {
@@ -27,6 +27,7 @@ import fetch from "node-fetch";
 import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import MasterchefAbi from "../ABIs/masterchef.json";
 import IronchefAbi from "../ABIs/ironchef.json";
+import FossilFarmsAbi from "../ABIs/fossil-farms.json";
 import { ethers } from "ethers";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveAm3MaticAPY } from "./useCurveAm3MaticAPY";
@@ -46,6 +47,15 @@ interface SushiPoolId {
 const sushiPoolIds: SushiPoolId = {
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": 2,
   "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": 0,
+};
+
+interface DinoPoolId {
+  [key: string]: number;
+}
+
+const dinoPoolIds: DinoPoolId = {
+  "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": 10,
+  "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": 11,
 };
 
 export interface JarWithAPY extends Jar {
@@ -264,7 +274,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       multicallProvider &&
       ironchef &&
       controller &&
-      strategy && 
+      strategy &&
       jar
     ) {
       const jarStrategy = await controller.strategies(jar.depositToken.address);
@@ -374,6 +384,65 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateFossilFarmsAPY = async (jar: Jar | undefined) => {
+    if (prices && multicallProvider && jar && controller && strategy) {
+      const jarStrategy = await controller.strategies(jar.depositToken.address);
+      const strategyContract = await strategy.attach(jarStrategy);
+      const fossilFarmsAddress = await strategyContract.masterChef();
+      const poolId = await strategyContract.poolId();
+      const rewardTokenAddress = await strategyContract.rewardToken();
+      const multicallFossilFarms = new MulticallContract(
+        fossilFarmsAddress,
+        FossilFarmsAbi,
+      );
+
+      const lpToken = new MulticallContract(
+        jar.depositToken.address,
+        erc20.abi,
+      );
+
+      const [
+        dinoPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallFossilFarms.dinoPerBlock(),
+        multicallFossilFarms.totalAllocPoint(),
+        multicallFossilFarms.poolInfo(poolId),
+        lpToken.balanceOf(fossilFarmsAddress),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rewardsPerBlock =
+        (parseFloat(formatEther(dinoPerBlockBN)) *
+          0.9 *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const { pricePerToken } = await getSushiPairData(
+        jar.depositToken.address,
+      );
+
+      const rewardsPerYear =
+        rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+      const rewardToken = getPriceId(rewardTokenAddress);
+      const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const rewardAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          [rewardToken]: getCompoundingAPY(rewardAPY * 0.8),
+          apr: rewardAPY * 0.8 * 100,
+        },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
       const usdcMimaticJar = jars.find(
@@ -394,6 +463,18 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].IRON_3USD,
       );
 
+      const dinoUsdcJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC,
+      );
+
+      const dinoWethJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_DINO_WETH,
+      );
+
       const [
         comethUsdcWethApy,
         comethPickleMustApy,
@@ -403,7 +484,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiMaticEthApy,
         quickMimaticUsdcApy,
         quickMimaticQiApy,
-        iron3usdApy
+        iron3usdApy,
+        dinoUsdcApy,
+        dinoWethApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -420,7 +503,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
         calculateMasterChefAPY(usdcMimaticJar),
         calculateMasterChefAPY(qiMimaticJar),
-        calculateIronChefAPY(iron3usdJar)
+        calculateIronChefAPY(iron3usdJar),
+        calculateFossilFarmsAPY(dinoUsdcJar),
+        calculateFossilFarmsAPY(dinoWethJar),
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -502,11 +587,26 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.IRON_3USD) {
+          APYs = [...iron3usdApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_DINO_USDC) {
           APYs = [
-            ...iron3usdApy,
+            ...dinoUsdcApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC,
+            ),
           ];
         }
 
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_DINO_WETH) {
+          APYs = [
+            ...dinoWethApy,
+            ...getQuickPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_DINO_WETH,
+            ),
+          ];
+        }
 
         let apr = 0;
         APYs.map((x) => {

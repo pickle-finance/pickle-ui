@@ -402,14 +402,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 onClick={() => {
                   const { tokens, weights } = handleBoost();
                   if (gaugeProxy) {
-			let newWeights = [];
-			let newTokens = [];
-			for( var it = 0; it < weights.length; it++ ) {
-				if( weights[it] !== 0 ) {
-					newWeights.push(weights[it]);
-					newTokens.push(tokens[it]);
-				}
-			}
+                    let newWeights = [];
+                    let newTokens = [];
+                    for (var it = 0; it < weights.length; it++) {
+                      if (weights[it] !== 0) {
+                        newWeights.push(weights[it]);
+                        newTokens.push(tokens[it]);
+                      }
+                    }
                     transfer({
                       token: "vote",
                       recipient: gaugeProxy.address,
