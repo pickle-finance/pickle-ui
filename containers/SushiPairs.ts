@@ -111,7 +111,7 @@ const dino: Token = {
 const tru: Token = {
   address: addresses.tru,
   priceId: "tru",
-  decimals: 18,
+  decimals: 8,
 };
 
 interface PairMap {

@@ -41,7 +41,11 @@ import { useSushiPairDayData } from "./useSushiPairDayData";
 import { useYearnData } from "./useYearnData";
 import { useDuneData } from "./useDuneData";
 import { ethers } from "ethers";
-import { formatEther, getJsonWalletAddress } from "ethers/lib/utils";
+import {
+  formatEther,
+  formatUnits,
+  getJsonWalletAddress,
+} from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
 import erc20 from "@studydefi/money-legos/erc20";
 
@@ -468,9 +472,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           AVERAGE_BLOCK_TIME;
       } else if (rewardToken === "cvx") {
         const tokenPerSecondBN = await rewarder.rewardRate();
-
         rewardsPerYear =
           parseFloat(formatEther(tokenPerSecondBN)) * (360 * 24 * 60 * 60);
+      } else if (rewardToken === "tru") {
+        const tokenPerSecondBN = await rewarder.rewardPerSecond();
+        rewardsPerYear =
+          parseFloat(formatUnits(tokenPerSecondBN, 8)) * (360 * 24 * 60 * 60);
       }
 
       const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
