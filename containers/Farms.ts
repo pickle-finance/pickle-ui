@@ -206,6 +206,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pUNIV2 FOX/ETH",
     poolName: "pUNIV2 FOX/ETH",
   },
+  "0xfCEAAf9792139BF714a694f868A215493461446D": {
+    tokenName: "pSLP TRU/ETH",
+    poolName: "pSLP TRU/ETH",
+  },
 };
 
 function useFarms() {

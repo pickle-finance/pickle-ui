@@ -179,6 +179,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+  "0xfCEAAf9792139BF714a694f868A215493461446D": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
