@@ -23,8 +23,9 @@ function useConnection() {
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
   const switchChain = async (chainId: number) => {
-    if (chainId !== 137) return false;
+    if (chainId === 1) return false;
 
+    if(chainId === 137)
     try {
       await library.provider.request({
         method: "wallet_addEthereumChain",
@@ -39,6 +40,29 @@ function useConnection() {
             },
             rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
             blockExplorerUrls: ["https://polygonscan.com/"],
+          },
+        ],
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+
+    if(chainId === 66) 
+    try {
+      await library.provider.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x42",
+            chainName: "OKEx Chain",
+            nativeCurrency: {
+              name: "OKT",
+              symbol: "OKT",
+              decimals: 18,
+            },
+            rpcUrls: ["https://exchainrpc.okex.org"],
+            blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
           },
         ],
       });

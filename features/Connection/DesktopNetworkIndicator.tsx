@@ -118,6 +118,22 @@ export const DesktopNetworkIndicator: FC = () => {
     }
   };
 
+  const renderBlock = () => {
+    if (chainName === NETWORK_NAMES.POLY)
+      return `https://polygonscan.com/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.OKEX)
+      `https://www.oklink.com/okexchain/block/${blockNum}`;
+    return `https://etherscan.io/block/${blockNum}`;
+  };
+
+  const renderAddress = () => {
+    if (chainName === NETWORK_NAMES.POLY)
+      return `https://polygonscan.com/address/${address}`;
+    if (chainName === NETWORK_NAMES.OKEX)
+      `https://www.oklink.com/okexchain/address/${address}`;
+    return `https://etherscan.io/address/${address}`;
+  };
+
   return (
     <Container>
       <Modal
@@ -130,7 +146,7 @@ export const DesktopNetworkIndicator: FC = () => {
         <Modal.Title>Change Network</Modal.Title>
         <Modal.Content>
           {!window.ethereum?.selectedAddress
-            ? `Please connect to MetaMask to use Pickle on Polygon`
+            ? `Please connect to MetaMask to use Pickle`
             : `Please switch to ${switchChainName} Network`}
         </Modal.Content>
         <Modal.Action
@@ -149,11 +165,7 @@ export const DesktopNetworkIndicator: FC = () => {
           placement="left"
         >
           <BlockBox
-            href={
-              chainName === NETWORK_NAMES.POLY
-                ? `https://explorer-mainnet.maticvigil.com/blocks/${blockNum}`
-                : `https://etherscan.io/block/${blockNum}`
-            }
+            href={renderBlock()}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -168,14 +180,11 @@ export const DesktopNetworkIndicator: FC = () => {
         key={reset}
       >
         <Select.Option value="1">Ethereum</Select.Option>
+        <Select.Option value="66">OKEx Chain</Select.Option>
         <Select.Option value="137">Polygon</Select.Option>
       </Select>
       <AddressBox
-        href={
-          chainName === NETWORK_NAMES.POLY
-            ? `https://explorer-mainnet.maticvigil.com/address/${address}`
-            : `https://etherscan.io/address/${address}`
-        }
+        href={renderAddress()}
         target="_blank"
         rel="noopener noreferrer"
       >

@@ -10,9 +10,10 @@ interface Addresses {
 export enum NETWORK_NAMES {
   ETH = "Ethereum",
   POLY = "Polygon",
+  OKEX = "OKEx",
 }
 
-export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY | null;
+export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY | NETWORK_NAMES.OKEX | null;
 
 interface Config {
   chains: Record<number, { name: ChainName }>;
@@ -23,6 +24,9 @@ export const config: Config = {
   chains: {
     1: {
       name: NETWORK_NAMES.ETH,
+    },
+    66: {
+      name: NETWORK_NAMES.OKEX,
     },
     137: {
       name: NETWORK_NAMES.POLY,
@@ -41,6 +45,11 @@ export const config: Config = {
       masterChef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
       minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
+    },
+    OKEx: {
+      controller: "0xcf05d96b4c6c5a87b73f5f274dce1085bc7fdcc4",
+      pickle: "0x0000000000000000000000000000000000000000",
+      masterChef: "0x0000000000000000000000000000000000000000"
     },
   },
 };
