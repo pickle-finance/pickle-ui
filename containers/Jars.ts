@@ -29,6 +29,7 @@ function useJars() {
     console.log(
       `Jars successfully (re)loaded, Jar count: ${jarsWithTVL.length}`,
     );
+
   const { addTokens } = Balances.useContainer();
 
   // Automatically update balance here

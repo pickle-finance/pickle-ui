@@ -68,18 +68,21 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         cherryPerBlockBN,
         totalAllocPointBN,
         poolInfo,
+        bonusMultiplierBN,
         totalSupplyBN,
       ] = await multicallProvider.all([
         multicallCherrychef.cherryPerBlock(),
         multicallCherrychef.totalAllocPoint(),
         multicallCherrychef.poolInfo(poolId),
+        multicallCherrychef.BONUS_MULTIPLIER(),
         lpToken.balanceOf(cherrychef.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const rewardsPerBlock =
         (parseFloat(formatEther(cherryPerBlockBN)) *
-          poolInfo.allocPoint.toNumber()) /
+          poolInfo.allocPoint.toNumber() *
+          parseFloat(bonusMultiplierBN.toString())) /
         totalAllocPointBN.toNumber();
 
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
@@ -92,18 +95,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const totalValueStaked = totalSupply * pricePerToken;
       const cherryAPY = valueRewardedPerYear / totalValueStaked;
 
-      console.log({
-        allocPoint: poolInfo.allocPoint.toNumber(),
-        totalAP: totalAllocPointBN.toNumber(),
-        rewardsPerBlock,
-        totalSupply,
-        pricePerToken,
-        priceCherry: prices?.cherry,
-        cherryAPY,
-      });
-
       return [
-        { che: getCompoundingAPY(cherryAPY * 0.8), apr: cherryAPY * 0.8 * 100 },
+        { che: (cherryAPY * 0.8 * 100), apr: cherryAPY * 0.8 * 100 },
       ];
     }
     return [];
@@ -138,7 +131,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           }
         });
 
-        const totalAPY = getCompoundingAPY(apr / 100) + lp;
+        const totalAPY = (apr * 100 / 100) + lp;
 
         return {
           ...jar,
