@@ -48,6 +48,7 @@ interface PriceObject {
   spell: number;
   fox: number;
   dino: number;
+  tru: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -104,6 +105,7 @@ function usePrices() {
         "iron-finance",
         "shapeshift-fox-token",
         "dinoswap",
+        "truefi",
       ],
       vs_currencies: ["usd"],
     });
@@ -154,6 +156,7 @@ function usePrices() {
       mim: response["magic-internet-money"].usd,
       fox: response["shapeshift-fox-token"].usd,
       dino: response["dinoswap"].usd,
+      tru: response["truefi"].usd,
     };
     setPrices(prices);
   };

@@ -41,7 +41,11 @@ import { useSushiPairDayData } from "./useSushiPairDayData";
 import { useYearnData } from "./useYearnData";
 import { useDuneData } from "./useDuneData";
 import { ethers } from "ethers";
-import { formatEther, getJsonWalletAddress } from "ethers/lib/utils";
+import {
+  formatEther,
+  formatUnits,
+  getJsonWalletAddress,
+} from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
 import erc20 from "@studydefi/money-legos/erc20";
 
@@ -73,6 +77,7 @@ const sushiPoolIds: PoolId = {
 const sushiPoolV2Ids: PoolId = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 0,
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": 1,
+  "0xfCEAAf9792139BF714a694f868A215493461446D": 8,
 };
 
 const abracadabraIds: PoolId = {
@@ -467,9 +472,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           AVERAGE_BLOCK_TIME;
       } else if (rewardToken === "cvx") {
         const tokenPerSecondBN = await rewarder.rewardRate();
-
         rewardsPerYear =
           parseFloat(formatEther(tokenPerSecondBN)) * (360 * 24 * 60 * 60);
+      } else if (rewardToken === "tru") {
+        const tokenPerSecondBN = await rewarder.rewardPerSecond();
+        rewardsPerYear =
+          parseFloat(formatUnits(tokenPerSecondBN, 8)) * (360 * 24 * 60 * 60);
       }
 
       const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
@@ -617,6 +625,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiEthYfiApy,
         sushiEthApy,
         sushiEthAlcxApy,
+        sushiTruEthApy,
       ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_DAI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDC),
@@ -626,6 +635,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH),
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
+        ),
+        calculateSushiV2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
         ),
       ]);
 
@@ -638,6 +650,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         alcxEthAlcxApy,
         cvxEthApy,
         sushiCvxEthApy,
+        truEthApy,
       ] = await Promise.all([
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
@@ -658,6 +671,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
+        ),
+        calculateMCv2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+          "tru",
         ),
       ]);
 
@@ -938,6 +955,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY) {
           APYs = [...lqtyApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_TRU_ETH) {
+          APYs = [
+            ...truEthApy,
+            ...sushiTruEthApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+            ),
+          ];
         }
 
         let apr = 0;
