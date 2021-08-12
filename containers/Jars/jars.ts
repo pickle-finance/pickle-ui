@@ -54,6 +54,9 @@ export const PICKLE_JARS = {
   pIRON3USD: "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9",
   pDINOUSDC: "0xC8450922d18793AD97C401D65BaE8A83aE5353a8",
   pDINOWETH: "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F",
+
+  // OKEx Jars
+  pCHERRYOKTCHE: "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9",  
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -108,6 +111,9 @@ export const JAR_DEPOSIT_TOKENS = {
     POLY_SUSHI_DINO_USDC: "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f",
     QUICK_DINO_WETH: "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11",
   },
+  [NETWORK_NAMES.OKEX]: {
+    CHERRY_OKT_CHE: "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88",
+  }
 };
 
 export const DEPOSIT_TOKENS_NAME = {
@@ -161,6 +167,9 @@ export const DEPOSIT_TOKENS_NAME = {
   IRON_3USD: "IS3USD",
   POLY_SUSHI_DINO_USDC: "SLP DINO/USDC",
   QUICK_DINO_WETH: "QUICK DINO/WETH",
+
+  // OKEx Jars
+  CHERRY_OKT_CHE: "CHERRY OKT/CHE",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -214,6 +223,9 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.IRON_3USD]: true,
   [DEPOSIT_TOKENS_NAME.POLY_SUSHI_DINO_USDC]: true,
   [DEPOSIT_TOKENS_NAME.QUICK_DINO_WETH]: true,
+
+  // OKEx Jars
+  [DEPOSIT_TOKENS_NAME.CHERRY_OKT_CHE]: true
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -312,6 +324,9 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xAa9654BECca45B5BDFA5ac646c939C62b527D394",
   QUICK_DINO_WETH:
     "https://quickswap.exchange/#/add/0xaa9654becca45b5bdfa5ac646c939c62b527d394/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+
+  // OKEx Jars
+  CHERRY_OKT_CHE: "https://www.cherryswap.net/#/add/ETH/0x8179D97Eb6488860d816e3EcAFE694a4153F216c"
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -370,6 +385,9 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   IRON_3USD: "polyJar 6a",
   POLY_SUSHI_DINO_USDC: "polyJar 7a",
   QUICK_DINO_WETH: "polyJar 7b",
+
+  // OKEx Jars
+  CHERRY_OKT_CHE: "okJar 1a",
 };
 
 export const STRATEGY_NAMES = {
@@ -429,6 +447,9 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x580a84c73811e1839f75d86d75d88cca0c241ff4": "qi",
   "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef": "ice",
   "0xaa9654becca45b5bdfa5ac646c939c62b527d394": "dino",
+
+  // OKEx
+  "0x8179D97Eb6488860d816e3EcAFE694a4153F216c": "cherry"
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

@@ -6,6 +6,7 @@ import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
+import { useJarWithAPY as useJarsWithAPYOK } from "./Jars/useJarsWithAPYOK";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
@@ -20,6 +21,7 @@ function useJars() {
     chainName,
     rawJars,
   );
+  const { jarswithAPY: jarswithAPYOK } = useJarsWithAPYOK(chainName, rawJars);
   const { jarsWithTVL } = useJarWithTVL(jarsWithAPYEth || jarsWithAPYPoly);
   if (jarsWithTVL)
     console.log(

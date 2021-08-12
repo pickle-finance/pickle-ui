@@ -79,6 +79,9 @@ import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/fact
 import { FossilFarms } from "./Contracts/FossilFarms";
 import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factories/FossilFarms__factory";
 
+import { Cherrychef } from "./Contracts/Cherrychef";
+import { Cherrychef__factory as CherrychefFactory } from "./Contracts/factories/Cherrychef__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -194,12 +197,16 @@ export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
 export const PICKLE_SUSHI_REWARDER =
   "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 
+export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
   const addresses =
     chainName === NETWORK_NAMES.ETH
       ? config.addresses.Ethereum
-      : config.addresses.Polygon;
+      : chainName === NETWORK_NAMES.POLY
+      ? config.addresses.Polygon
+      : config.addresses.OKEx;
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -293,6 +300,8 @@ function useContracts() {
   const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(
     null,
   );
+
+  const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null)
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -412,6 +421,8 @@ function useContracts() {
       setPickleSushiRewarder(
         PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer),
       );
+
+      setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer))
     }
   };
 
@@ -466,6 +477,7 @@ function useContracts() {
     ironchef,
     sushiMigrator,
     pickleSushiRewarder,
+    cherrychef
   };
 }
 
