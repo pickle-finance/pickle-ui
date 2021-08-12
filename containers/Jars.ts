@@ -21,8 +21,10 @@ function useJars() {
     chainName,
     rawJars,
   );
-  const { jarswithAPY: jarswithAPYOK } = useJarsWithAPYOK(chainName, rawJars);
-  const { jarsWithTVL } = useJarWithTVL(jarsWithAPYEth || jarsWithAPYPoly);
+  const { jarsWithAPY: jarswithAPYOK } = useJarsWithAPYOK(chainName, rawJars);
+  const { jarsWithTVL } = useJarWithTVL(
+    jarsWithAPYEth || jarsWithAPYPoly || jarswithAPYOK,
+  );
   if (jarsWithTVL)
     console.log(
       `Jars successfully (re)loaded, Jar count: ${jarsWithTVL.length}`,

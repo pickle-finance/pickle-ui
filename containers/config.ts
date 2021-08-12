@@ -49,7 +49,7 @@ export const config: Config = {
     OKEx: {
       controller: "0xcf05d96b4c6c5a87b73f5f274dce1085bc7fdcc4",
       pickle: "0x0000000000000000000000000000000000000000",
-      masterChef: "0x0000000000000000000000000000000000000000"
+      masterChef: "0x7446BF003b98B7B0D90CE84810AC12d6b8114B62"
     },
   },
 };

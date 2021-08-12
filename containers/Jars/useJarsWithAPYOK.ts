@@ -5,12 +5,17 @@ import {
   JAR_DEPOSIT_TOKENS,
   PICKLE_JARS,
 } from "./jars";
+import { formatEther } from "ethers/lib/utils";
 import { Prices } from "../Prices";
 import { Contracts } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { NETWORK_NAMES, ChainName } from "containers/config";
 import { Connection } from "../Connection";
+import { SushiPairs } from "../SushiPairs";
 import { Contract as MulticallContract } from "ethers-multicall";
+import erc20 from "@studydefi/money-legos/erc20";
+
+const AVERAGE_BLOCK_TIME = 4;
 
 export interface JarApy {
   [k: string]: number;
@@ -44,27 +49,78 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
   const { cherrychef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
+  const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
 
   const calculateCherryAPY = async (lpTokenAddress: string) => {
-    if (cherrychef && multicallProvider) {
+    if (cherrychef && getSushiPairData && prices && multicallProvider) {
       const poolId = cherryPoolIds[lpTokenAddress];
       const multicallCherrychef = new MulticallContract(
         cherrychef.address,
         cherrychef.interface.fragments,
       );
+
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        cherryPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallCherrychef.cherryPerBlock(),
+        multicallCherrychef.totalAllocPoint(),
+        multicallCherrychef.poolInfo(poolId),
+        lpToken.balanceOf(cherrychef.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rewardsPerBlock =
+        (parseFloat(formatEther(cherryPerBlockBN)) *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      const rewardsPerYear =
+        rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+
+      const valueRewardedPerYear = prices?.cherry * rewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const cherryAPY = valueRewardedPerYear / totalValueStaked;
+
+      console.log({
+        allocPoint: poolInfo.allocPoint.toNumber(),
+        totalAP: totalAllocPointBN.toNumber(),
+        rewardsPerBlock,
+        totalSupply,
+        pricePerToken,
+        priceCherry: prices?.cherry,
+        cherryAPY,
+      });
+
+      return [
+        { che: getCompoundingAPY(cherryAPY * 0.8), apr: cherryAPY * 0.8 * 100 },
+      ];
     }
+    return [];
   };
 
   const calculateAPY = async () => {
     if (jars) {
+      const [cherryOktApy] = await Promise.all([
+        calculateCherryAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_CHE,
+        ),
+      ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_CHE) {
-          APYs = [{ TEST: 1 }];
+          APYs = [...cherryOktApy];
         }
 
         let apr = 0;
@@ -92,6 +148,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           lp,
         };
       });
+      const newJarsWithAPY = await Promise.all(promises);
+
+      setJarsWithAPY(newJarsWithAPY);
     }
   };
   useEffect(() => {

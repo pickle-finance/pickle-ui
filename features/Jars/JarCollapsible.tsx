@@ -179,6 +179,11 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+  
+  // OKEx Chain
+  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": (
+    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
+  )
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

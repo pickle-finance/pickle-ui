@@ -44,7 +44,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
           }),
       );
 
-      if (!farmInfo[0].lpToken) {
+      if (farmInfo.length && !farmInfo[0].lpToken) {
         farmInfo = await Promise.all(
           farmInfo.map(async (x, idx) => {
             const lpToken = await masterchef.lpToken(idx);

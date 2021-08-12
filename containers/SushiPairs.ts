@@ -31,6 +31,8 @@ export const addresses = {
   spell: "0x090185f2135308bad17527004364ebcc2d37e5f6",
   mim: "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
+  cherry: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
+  wokt: "0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15",
 };
 
 interface Token {
@@ -107,7 +109,16 @@ const dino: Token = {
   priceId: "dino",
   decimals: 18,
 };
-
+const cherry: Token = {
+  address: addresses.cherry,
+  priceId: "cherry",
+  decimals: 18,
+};
+const wokt: Token = {
+  address: addresses.wokt,
+  priceId: "wokt",
+  decimals: 18,
+};
 interface PairMap {
   [key: string]: { a: Token; b: Token };
 }
@@ -136,6 +147,7 @@ export const PAIR_INFO: PairMap = {
   "0x269db91fc3c7fcc275c2e6f22e5552504512811c": { a: pickle, b: weth },
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": { a: wusdc, b: dino },
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": { a: mweth, b: dino },
+  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": { a: wokt, b: cherry },
 };
 
 function useSushiPairs() {
