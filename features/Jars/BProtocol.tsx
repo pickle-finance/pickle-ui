@@ -249,7 +249,7 @@ export const BProtocol: FC = () => {
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>{`Balance ${depositedStr} PBAMM (${valueStr} LUSD)`}</div>
+            <div>{`Balance ${depositedStr} (${valueStr} B.Protocol LUSD)`}</div>
             <Link
               color
               href="#"
