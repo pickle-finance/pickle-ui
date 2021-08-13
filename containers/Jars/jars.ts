@@ -167,7 +167,7 @@ export const DEPOSIT_TOKENS_NAME = {
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
-  [DEPOSIT_TOKENS_NAME.sCRV]: true,
+  [DEPOSIT_TOKENS_NAME.sCRV]: false,
   [DEPOSIT_TOKENS_NAME.renCRV]: true,
   [DEPOSIT_TOKENS_NAME["3CRV"]]: true,
   [DEPOSIT_TOKENS_NAME.steCRV]: true,
