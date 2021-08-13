@@ -5,6 +5,7 @@ interface Addresses {
   dill?: string;
   gaugeProxy?: string;
   minichef?: string;
+  rewarder?: string;
 }
 
 export enum NETWORK_NAMES {
@@ -45,11 +46,14 @@ export const config: Config = {
       masterChef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
       minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
+      rewarder: "0xE28287544005094be096301E5eE6E2A6E6Ef5749",
     },
     OKEx: {
       controller: "0xcf05d96b4c6c5a87b73f5f274dce1085bc7fdcc4",
       pickle: "0x0000000000000000000000000000000000000000",
-      masterChef: "0x7446BF003b98B7B0D90CE84810AC12d6b8114B62"
+      masterChef: "0x7446BF003b98B7B0D90CE84810AC12d6b8114B62",
+      minichef: "0x7446BF003b98B7B0D90CE84810AC12d6b8114B62",
+      rewarder: "0x48394297ed0a9e9edcc556faaf4222a932605c56",
     },
   },
 };

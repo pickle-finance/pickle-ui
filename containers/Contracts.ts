@@ -185,7 +185,6 @@ export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
 export const FOSSIL_FARMS = "0x1948abc5400aa1d72223882958da3bec643fb4e5";
 export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
-export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
 
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
@@ -301,7 +300,7 @@ function useContracts() {
     null,
   );
 
-  const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null)
+  const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -408,7 +407,12 @@ function useContracts() {
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
       );
-      setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
+      setPickleRewarder(
+        PickleRewarderFactory.connect(
+          addresses.rewarder || ethers.constants.AddressZero,
+          signer,
+        ),
+      );
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(MINICHEF, signer));
       setPBAMM(JarFactory.connect(BPAddresses.pBAMM, signer));
@@ -422,7 +426,7 @@ function useContracts() {
         PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer),
       );
 
-      setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer))
+      setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
     }
   };
 
@@ -477,7 +481,7 @@ function useContracts() {
     ironchef,
     sushiMigrator,
     pickleSushiRewarder,
-    cherrychef
+    cherrychef,
   };
 }
 
