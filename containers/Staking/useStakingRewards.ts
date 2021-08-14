@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import moment from "moment";
+import dayjs from "util/dayjs";
 
 import { StakingRewards } from "../Contracts/StakingRewards";
 
@@ -70,7 +70,7 @@ export function useStakingRewards(
           pickleRewards.periodFinish(),
         ]);
 
-        const rewardsDuration = moment
+        const rewardsDuration = dayjs
           .duration(rewardsStats[2].toNumber(), "seconds")
           .asDays();
 

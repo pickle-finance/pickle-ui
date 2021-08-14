@@ -8,13 +8,12 @@ import {
   cardColor,
   pickleNeon,
   graphFill,
-  pickleBlue,
   pickleWhite,
 } from "../util/constants";
 import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { AreaChart, Area, YAxis, XAxis, Tooltip } from "recharts";
-import moment from "moment";
+import dayjs from "util/dayjs";
 
 const useStyles = makeStyles((theme) => ({
   picklePaper: {
@@ -64,12 +63,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const formatValue = (value) => {
-  return new Intl.NumberFormat("en").format(value.toFixed(2));
-};
-const formatLabel = (label) => {
-  return moment(label).format("lll");
-};
+const formatValue = (value) =>
+  new Intl.NumberFormat("en").format(value.toFixed(2));
+const formatLabel = (label) => dayjs(label).format("lll");
 const formatY = (value) => {
   if (value > 1000000) {
     return `${(value / 1000000).toFixed(0)}M`;
@@ -88,12 +84,12 @@ const formatDollars = (num) =>
 
 export default function JarValueChart(props) {
   const classes = useStyles();
-  const { data, asset, name, format, formatter } = props.jar;
+  const { data, asset, name, formatter } = props.jar;
   const formatTooltip = (value) => {
     return [`${formatValue(value)}`, formatter ? formatter : "TVL"];
   };
   const formatDate = (tick) => {
-    let formattedDate = moment(tick).format("l");
+    let formattedDate = dayjs(tick).format("l");
     return formattedDate.slice(0, formattedDate.lastIndexOf("/"));
   };
 

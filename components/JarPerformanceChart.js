@@ -1,16 +1,11 @@
-import {
-  materialBlack,
-  pickleGreen,
-  cardColor,
-  pickleNeon,
-} from "../util/constants";
+import { materialBlack, pickleGreen, cardColor } from "../util/constants";
 import React, { useState, useEffect, useRef } from "react";
 import { LineChart, Line, YAxis, XAxis, Legend } from "recharts";
 import { makeStyles } from "@material-ui/core/styles";
 import { getTickValues } from "recharts-scale";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Paper from "@material-ui/core/Paper";
-import moment from "moment";
+import dayjs from "util/dayjs";
 
 const useStyles = makeStyles((theme) => ({
   picklePaper: {
@@ -45,7 +40,7 @@ const colors = {
 };
 
 const formatDate = (tick) => {
-  let formattedDate = moment(tick).format("l");
+  let formattedDate = dayjs(tick).format("l");
   return formattedDate.slice(0, formattedDate.lastIndexOf("/"));
 };
 
