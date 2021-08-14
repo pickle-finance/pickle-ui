@@ -15,7 +15,7 @@ type Output = {
   jarsWithTVL: Array<JarWithTVL> | null;
 };
 
-const isMStonksJar = (token) =>
+const isMStonksJar = (token: string) =>
   token === PICKLE_JARS.pUNIMTSLAUST.toLowerCase() ||
   token === PICKLE_JARS.pUNIMBABAUST.toLowerCase() ||
   token === PICKLE_JARS.pUNIMSLVUST.toLowerCase() ||
@@ -52,7 +52,7 @@ export const useJarWithTVL = (jars: Input): Output => {
 
   useEffect(() => {
     measureTVL();
-  }, [jars]);
+  }, [jars?.length, poolData.length]);
 
   return {
     jarsWithTVL,
