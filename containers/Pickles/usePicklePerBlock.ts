@@ -4,12 +4,12 @@ import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 
 export const usePicklePerBlock = (): { picklePerBlock: number | null } => {
-  const { address, blockNum } = Connection.useContainer();
+  const { blockNum } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
   const [picklePerBlock, setPicklePerBlock] = useState<number | null>(null);
 
   const getData = async () => {
-    if (address && masterchef && blockNum) {
+    if (masterchef && blockNum) {
       // queue up the promises
       const promises = [
         masterchef.picklePerBlock(),
@@ -31,7 +31,7 @@ export const usePicklePerBlock = (): { picklePerBlock: number | null } => {
 
   useEffect(() => {
     getData();
-  }, [address, blockNum, masterchef]);
+  }, [blockNum, masterchef]);
 
   return { picklePerBlock };
 };

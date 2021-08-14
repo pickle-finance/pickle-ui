@@ -7,13 +7,13 @@ export const usePicklePerSecond = (): {
   picklePerSecond: number | null;
   maticPerSecond: number | null;
 } => {
-  const { address, blockNum } = Connection.useContainer();
+  const { blockNum } = Connection.useContainer();
   const { minichef, pickleRewarder } = Contracts.useContainer();
   const [picklePerSecond, setPicklePerSecond] = useState<number | null>(null);
   const [maticPerSecond, setMaticPerSecond] = useState<number | null>(null);
 
   const getData = async () => {
-    if (address && minichef && blockNum && pickleRewarder) {
+    if (minichef && pickleRewarder) {
       const pps = await minichef
         .picklePerSecond()
         .catch(() => ethers.BigNumber.from(0));
@@ -28,7 +28,7 @@ export const usePicklePerSecond = (): {
 
   useEffect(() => {
     getData();
-  }, [address, blockNum, minichef]);
+  }, [blockNum, minichef]);
 
   return { picklePerSecond, maticPerSecond };
 };

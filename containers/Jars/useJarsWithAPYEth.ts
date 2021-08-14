@@ -1003,7 +1003,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   useEffect(() => {
     if (network === NETWORK_NAMES.ETH) calculateAPY();
-  }, [jars, prices, network]);
+  }, [jars?.length, prices, network]);
 
   return { jarsWithAPY };
 };
