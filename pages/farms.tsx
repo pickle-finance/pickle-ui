@@ -19,11 +19,9 @@ const Gauges: FC = () => {
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
             Farms
           </h1>
-          {chainName === NETWORK_NAMES.POLY ? (
-            <MiniFarmList />
-          ) : chainName === NETWORK_NAMES.ETH ? (
+          {chainName === NETWORK_NAMES.ETH ? (
             <GaugeList />
-          ) : null}
+          ) : <MiniFarmList />}
         </Page.Content>
         <Footer />
       </Page>

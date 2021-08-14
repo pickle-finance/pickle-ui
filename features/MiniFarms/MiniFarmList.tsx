@@ -39,9 +39,10 @@ export const MiniFarmList: FC = () => {
       </>
     );
   }
+  const isOK = chainName === NETWORK_NAMES.OKEX;
 
-  const activeFarms = farmData.filter((x) => x.apy !== 0);
-  const inactiveFarms = farmData.filter((x) => x.apy === 0);
+  const activeFarms = farmData?.filter((x) => x.maticApy !== 0);
+  const inactiveFarms = farmData?.filter((x) => x.maticApy === 0);
 
   return (
     <Container>
@@ -50,8 +51,8 @@ export const MiniFarmList: FC = () => {
           <p>
             Farms allow you to earn dual PICKLE{" "}
             <MiniIcon source="/pickle.png" /> and MATIC{" "}
-            <MiniIcon source={"/matic.png"} /> rewards by staking tokens. (Note:
-            MATIC rewards end August 23)
+            <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} /> rewards by staking tokens. 
+            {!isOK && `(Note: MATIC rewards end August 23)`}
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.
@@ -69,7 +70,7 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={0.5} />
       <Grid.Container gap={1}>
-        {activeFarms.map((farm) => (
+        {activeFarms?.map((farm) => (
           <>
             <Grid xs={24} key={farm.poolIndex}>
               <MiniFarmCollapsible farmData={farm} />
@@ -81,7 +82,7 @@ export const MiniFarmList: FC = () => {
       <Grid.Container gap={1}>
         {showInactive && <h2>Inactive</h2>}
         {showInactive &&
-          inactiveFarms.map((farm) => (
+          inactiveFarms?.map((farm) => (
             <Grid xs={24} key={farm.poolIndex}>
               <MiniFarmCollapsible farmData={farm} />
             </Grid>

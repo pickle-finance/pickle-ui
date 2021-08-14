@@ -81,6 +81,9 @@ export const FARM_LP_TO_ICON = {
   "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": (
+    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
+  ),
 };
 
 const setButtonStatus = (
@@ -178,6 +181,8 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     text: "Harvest",
   });
 
+  const isOK = chainName === NETWORK_NAMES.OKEX;
+
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }, { matic: maticApy * 100 }];
 
@@ -248,17 +253,17 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
             </div>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3}>
-            <Tooltip text={apy === 0 ? "--" : tooltipText}>
-              <div>{apy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
+            <Tooltip text={maticApy === 0 ? "--" : tooltipText}>
+              <div>{maticApy === 0 ? "--%" : totalAPY.toFixed(2) + "%"}</div>
               <br />
               <Label>Total APY</Label>
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+            <Data isZero={parseFloat(formatEther(harvestableMatic || 0)) === 0}>
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <br />
-              {harvestableMaticStr} <MiniIcon source={"/matic.png"} />
+              {harvestableMaticStr} <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
             </Data>
             <Label>Earned</Label>
           </Grid>

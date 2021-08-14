@@ -22,7 +22,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
     minichef: minichefContract,
   } = Contracts.useContainer();
   const masterchef =
-    chainName === NETWORK_NAMES.POLY ? minichefContract : masterchefContract;
+    chainName === NETWORK_NAMES.ETH ? masterchefContract : minichefContract;
 
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 

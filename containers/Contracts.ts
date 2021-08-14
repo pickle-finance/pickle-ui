@@ -181,7 +181,6 @@ export const COMETH_PICKLE_MUST_REWARDS =
 export const COMETH_MATIC_MUST_REWARDS =
   "0x2328c83431a29613b1780706E0Af3679E3D04afd";
 export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
-export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
 export const FOSSIL_FARMS = "0x1948abc5400aa1d72223882958da3bec643fb4e5";
 export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
@@ -414,7 +413,7 @@ function useContracts() {
         ),
       );
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
-      setMinichef(MinichefFatory.connect(MINICHEF, signer));
+      setMinichef(MinichefFatory.connect(addresses.masterChef, signer));
       setPBAMM(JarFactory.connect(BPAddresses.pBAMM, signer));
       setStabilityPool(
         StabilityPoolFactory.connect(BPAddresses.STABILITY_POOL, signer),

@@ -4,6 +4,8 @@ import { MiniPickles } from "../Pickles";
 import { Contracts } from "../Contracts";
 import { RawFarm } from "../Farms/useFetchFarms";
 import { BigNumber } from "ethers";
+import { NETWORK_NAMES } from "containers/config";
+import { Connection } from "containers/Connection";
 
 // this hook calculates and adds the following properties to the RawFarm objects
 export interface FarmWithReward extends RawFarm {
@@ -31,6 +33,7 @@ type Input = Array<RawFarm> | null;
 type Output = { farmsWithReward: Array<FarmWithReward> | null };
 
 export const useWithReward = (rawFarms: Input): Output => {
+  const { chainName } = Connection.useContainer();
   const { pickleRewarder } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { picklePerSecond, maticPerSecond } = MiniPickles.useContainer();
@@ -40,10 +43,8 @@ export const useWithReward = (rawFarms: Input): Output => {
   const calculateReward = async () => {
     if (
       rawFarms?.length &&
-      picklePerSecond &&
       prices &&
-      pickleRewarder &&
-      maticPerSecond
+      pickleRewarder
     ) {
       const totalAllocPoints = rawFarms?.reduce(
         (acc: number, farm) => acc + farm.allocPoint.toNumber(),
@@ -70,7 +71,7 @@ export const useWithReward = (rawFarms: Input): Output => {
           rewarderPoolInfo[farm.poolIndex].allocPoint.toNumber() /
           totalRewarderAP;
         const maticRewardedPerSecond = maticFraction * maticPerSecond;
-        const maticValuePerSecond = maticRewardedPerSecond * prices.matic;
+        const maticValuePerSecond = maticRewardedPerSecond * (chainName === NETWORK_NAMES.OKEX ? prices.wokt : prices.matic);
 
         return {
           ...farm,

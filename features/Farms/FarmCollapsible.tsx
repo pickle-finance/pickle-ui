@@ -145,7 +145,7 @@ export const FARM_LP_TO_ICON = {
   ),
   "0xeb8174F94FDAcCB099422d9A816B8E17d5e393E3": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fox.png"} />
-  ),
+  )
 };
 
 const setButtonStatus = (
