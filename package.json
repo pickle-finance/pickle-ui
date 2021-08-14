@@ -5,6 +5,7 @@
   "author": "BigBrainBriner <bigbrainbriner@protonmail.com>",
   "license": "MIT",
   "scripts": {
+    "analyze": "ANALYZE=true next build",
     "dev": "yarn typechain && next",
     "build": "yarn typechain && next build",
     "start": "yarn typechain && next start",
@@ -63,6 +64,7 @@
     "unstated-next": "^1.1.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^11.1.0",
     "@typechain/ethers-v5": "^6.0.0",
     "@types/coingecko-api": "^1.0.0",
     "@types/eslint": "^7.2.6",
