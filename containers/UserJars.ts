@@ -55,6 +55,7 @@ const useUserJars = (): { jarData: UserJarData[] | null } => {
           totalAPY: jar.totalAPY,
           apr: jar.apr,
           depositTokenLink: jar.depositTokenLink,
+          pendingAlcx: jar.pendingAlcx,
         };
       });
 

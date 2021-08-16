@@ -28,7 +28,7 @@ const Data = styled.div<DataProps>`
 
 const Label = styled.div`
   font-family: "Source Sans Pro";
-`;
+`; 
 interface ButtonStatus {
   disabled: boolean;
   text: string;
@@ -376,14 +376,22 @@ export const JarCollapsible: FC<{
           </Grid>{" "}
           <Grid xs={24} sm={8} md={4} lg={4}>
             {isAlethJar ? (
-              <Tooltip
-                text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(3)}`}
-              >
+              <>
                 <Data isZero={usdPerPToken * depositedNum === 0}>
-                  ${valueStr}
+                  <Tooltip
+                    text={`Pending ALCX rewards: ${pendingAlcx?.toFixed(5)}`}
+                  >
+                    ${valueStr}
+                    <img
+                      src="./question.svg"
+                      width="15px"
+                      style={{ marginLeft: 5 }}
+                    />
+                  </Tooltip>
                 </Data>
+
                 <Label>Value</Label>
-              </Tooltip>
+              </>
             ) : (
               <>
                 <Data isZero={usdPerPToken * depositedNum === 0}>

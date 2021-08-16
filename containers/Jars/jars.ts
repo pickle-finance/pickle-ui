@@ -214,6 +214,10 @@ export const JAR_YEARN: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
 };
 
+export const JAR_SYMBIOTIC: Record<string, boolean> = {
+  [DEPOSIT_TOKENS_NAME.ALETH]: true,
+};
+
 export const DEPOSIT_TOKENS_LINK = {
   sCRV: "https://www.curve.fi/susdv2/deposit",
   renCRV: "https://www.curve.fi/ren/deposit",
@@ -338,7 +342,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   lusdCRV: "pJar Y-2",
   fraxCRV: "pJar Y-3",
   LQTY: "pJar 0.98l",
-  ALETH: "pJar 0.99al",
+  ALETH: "pJar 1.0a",
   SADDLE_D4: "pJar 0.99s",
   MIM_3CRV: "pJar 0.99m1",
   SPELL_ETH: "pJar 0.99m2",

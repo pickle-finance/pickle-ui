@@ -102,6 +102,7 @@ export interface JarWithAPY extends Jar {
   totalAPY: number;
   apr: number;
   APYs: Array<JarApy>;
+  pendingAlcx?: number;
 }
 
 type Input = Array<Jar> | null;

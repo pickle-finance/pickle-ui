@@ -9,6 +9,7 @@ import { JarCollapsible } from "./JarCollapsible";
 import { BProtocol } from "./BProtocol";
 import {
   JAR_ACTIVE,
+  JAR_SYMBIOTIC,
   JAR_YEARN,
 } from "../../containers/Jars/jars";
 import { Connection } from "../../containers/Connection";
@@ -70,7 +71,9 @@ export const JarList: FC = () => {
   const activeJars = jarData
     .filter(
       (jar) =>
-        JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
+        JAR_ACTIVE[jar.depositTokenName] &&
+        !JAR_YEARN[jar.depositTokenName] &&
+        !JAR_SYMBIOTIC[jar.depositTokenName],
     )
     .sort((a, b) => b.totalAPY - a.totalAPY);
 
@@ -78,6 +81,12 @@ export const JarList: FC = () => {
     (jar) =>
       JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],
   );
+
+  const symbioticJars = jarData.filter(
+    (jar) =>
+      JAR_ACTIVE[jar.depositTokenName] && JAR_SYMBIOTIC[jar.depositTokenName],
+  );
+
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
@@ -121,6 +130,17 @@ export const JarList: FC = () => {
               <Grid xs={24} key={jar.name}>
                 <JarCollapsible jarData={jar} isYearnJar={true} />
                 {idx === yearnJars.length - 1 && <Spacer y={1} />}
+              </Grid>
+            ))}
+          </>
+        )}
+        {chainName === NETWORK_NAMES.ETH && (
+          <>
+            Symbiotic Jars&nbsp;💚
+            {symbioticJars.map((jar, idx) => (
+              <Grid xs={24} key={jar.name}>
+                <JarCollapsible jarData={jar} />
+                {idx === symbioticJars.length - 1 && <Spacer y={1} />}
               </Grid>
             ))}
           </>
