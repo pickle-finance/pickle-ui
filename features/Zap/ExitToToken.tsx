@@ -7,7 +7,7 @@ import { Jar, Token } from "./useExitToToken";
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: parseFloat(numStr) < 1 ? 18 : 4,
+    maximumFractionDigits: parseFloat(numStr) < 1 ? 8 : 4,
   });
 
 export const ExitToToken: FC = () => {

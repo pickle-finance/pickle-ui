@@ -26,7 +26,7 @@ export interface UseDillOutput {
 const WEEK = 7 * 86400;
 
 export function useDill(): UseDillOutput {
-  const { blockNum, address } = Connection.useContainer();
+  const { blockNum, address, chainName } = Connection.useContainer();
   const { dill, feeDistributor } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { weeklyProfit, weeklyDistribution } = useProtocolIncome();
@@ -45,7 +45,13 @@ export function useDill(): UseDillOutput {
   >(null);
 
   useEffect(() => {
-    if (dill && feeDistributor && address && prices) {
+    if (
+      dill &&
+      feeDistributor &&
+      address &&
+      prices &&
+      chainName === "Ethereum"
+    ) {
       const f = async () => {
         const dillContract = dill.attach(DILL);
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);

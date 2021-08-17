@@ -10,19 +10,20 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { NETWORK_NAMES } from "../../containers/config";
 
 export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { gaugeData } = UserGauges.useContainer();
-  const { address, signer } = Connection.useContainer();
+  const { address, signer, chainName } = Connection.useContainer();
   const [balance, setBalance] = useState("0");
   const [totalBalance, setTotalBalance] = useState("0");
   const [userChanged, setUserChanged] = useState(false);
   const [dillBalance, setDillBalance] = useState("0");
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState();
-  const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>()
+  const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>();
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
   const dillRatio = dillSupplyNum ? +dillBalance / (dillSupplyNum || 1) : 0;
@@ -35,14 +36,18 @@ export const CalcCollapsible: FC<{
     );
 
     const isUsdc =
-    selectedGauge.depositToken.address.toLowerCase() ===
-    PICKLE_JARS.pyUSDC.toLowerCase();
+      selectedGauge.depositToken.address.toLowerCase() ===
+      PICKLE_JARS.pyUSDC.toLowerCase();
 
     if (selectedGauge) {
       const balance = +formatEther(
-        selectedGauge.balance.add(selectedGauge.staked)
+        selectedGauge.balance.add(selectedGauge.staked),
       );
-      const balanceUSD = (balance * selectedGauge.usdPerToken * (isUsdc ? 1e12 : 1)).toFixed(2);
+      const balanceUSD = (
+        balance *
+        selectedGauge.usdPerToken *
+        (isUsdc ? 1e12 : 1)
+      ).toFixed(2);
 
       setBalance(balanceUSD);
       setTotalBalance(
@@ -51,7 +56,7 @@ export const CalcCollapsible: FC<{
           (isUsdc ? 1e6 : 1e18)
         ).toFixed(2),
       );
-      setSelectedGauge(selectedGauge)
+      setSelectedGauge(selectedGauge);
     }
   };
 
@@ -87,10 +92,9 @@ export const CalcCollapsible: FC<{
       setDillBalance(formatEther(dillStats.balance.toString() || 0));
   }, [dillStats]);
 
-  if (!gaugeData) {
+  if (!gaugeData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   }
-
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
@@ -161,7 +165,11 @@ export const CalcCollapsible: FC<{
           <Spacer y={0.5} />
           <div>
             PICKLE APY:{" "}
-            <strong>{selectedGauge ? formatAPY(selectedGauge.fullApy / 2.5 * boostFactor * 100) : "0.00%"}</strong>
+            <strong>
+              {selectedGauge
+                ? formatAPY((selectedGauge.fullApy / 2.5) * boostFactor * 100)
+                : "0.00%"}
+            </strong>
           </div>
         </Grid>
       </Grid.Container>

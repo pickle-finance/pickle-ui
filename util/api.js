@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 
-const pickleApi = "https://stkpowy01i.execute-api.us-west-1.amazonaws.com/prod/";
+const pickleApi = process.env.apiHost;
 
 export const getJarChart = async (assets) => {
   const jarData = assets.map(async (asset) => {
@@ -84,6 +84,12 @@ export const getUserEarnings = async (userId) => {
       }
       return response.json();
     },
+  );
+};
+
+export const getPoolData = async () => {
+  return await fetch(`${pickleApi}/protocol/pools`).then((response) =>
+    response.json(),
   );
 };
 

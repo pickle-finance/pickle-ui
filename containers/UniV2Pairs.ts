@@ -1,10 +1,9 @@
 import { createContainer } from "unstated-next";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
-
 import { Contract as MulticallContract } from "ethers-multicall";
 
 const addresses = {
@@ -27,6 +26,7 @@ const addresses = {
   fei: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
   tribe: "0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B",
   lusd: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+  fox: "0xc770eefad204b5180df6a14ee197d99d808ee52d",
 };
 
 interface Token {
@@ -71,6 +71,7 @@ const tribe: Token = {
   decimals: 18,
 };
 const lusd: Token = { address: addresses.lusd, priceId: "lusd", decimals: 18 };
+const fox: Token = { address: addresses.fox, priceId: "fox", decimals: 18 };
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -93,6 +94,7 @@ export const PAIR_INFO: PairMap = {
   "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363": { a: mbaba, b: ust },
   "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": { a: fei, b: tribe },
   "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": { a: lusd, b: weth },
+  "0x470e8de2eBaef52014A47Cb5E6aF86884947F08c": { a: weth, b: fox },
 };
 
 function useUniV2Pairs() {
@@ -128,7 +130,6 @@ function useUniV2Pairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-
     let totalValueOfPair;
     // In case price one token is not listed on coingecko
     if (priceA) {
@@ -136,7 +137,7 @@ function useUniV2Pairs() {
     } else {
       totalValueOfPair = 2 * priceB * numBInPair;
     }
-    
+
     const totalSupply = totalSupplyBN / 1e18; // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 
@@ -171,7 +172,7 @@ function useUniV2Pairs() {
     } else {
       totalValueOfPair = 2 * priceB * numBInPair;
     }
-    
+
     const totalSupply = parseFloat(ethers.utils.formatEther(totalSupplyBN)); // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 

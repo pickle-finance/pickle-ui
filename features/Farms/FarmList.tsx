@@ -6,38 +6,45 @@ import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
-
+import { NETWORK_NAMES } from "containers/config";
+import { getFarmData } from "util/api";
 
 const Container = styled.div`
   padding-top: 1.5rem;
 `;
 
 export const FarmList: FC = () => {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserFarms.useContainer();
-  const [showInactive, setShowInactive] = useState<boolean>(true);
+  const [showInactive, setShowInactive] = useState<boolean>(
+    chainName === NETWORK_NAMES.POLY ? false : true,
+  );
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!farmData) {
+  if (!farmData && chainName !== NETWORK_NAMES.POLY) {
     return <h2>Loading...</h2>;
   }
 
   const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
-  const indexofYvecrv = inactiveFarms.findIndex(x=>x.depositToken.address.toLowerCase() === PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase())
+  const indexofYvecrv = inactiveFarms.findIndex(
+    (x) =>
+      x.depositToken.address.toLowerCase() ===
+      PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase(),
+  );
 
   const moveInArray = (arr: UserFarmData[], from: number, to: number) => {
     var item = arr.splice(from, 1);
-  
+
     if (!item.length) return;
     arr.splice(to, 0, item[0]);
   };
 
-  moveInArray(inactiveFarms, indexofYvecrv, 1)
+  moveInArray(inactiveFarms, indexofYvecrv, 1);
   return (
     <Container>
       <Grid.Container gap={1}>

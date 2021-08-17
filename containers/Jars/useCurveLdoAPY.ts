@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { Prices } from "../Prices";
@@ -7,8 +7,9 @@ import { Jar } from "./useFetchJars";
 import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
-import { Contract as MulticallContract } from "ethers-multicall";
 import { Connection } from "../Connection";
+import { NETWORK_NAMES } from "containers/config";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface JarApy {
   [k: string]: number;
@@ -33,7 +34,7 @@ export const useCurveLdoAPY = (
   pool: Pool | null,
   stakingRewards: StakingRewards | null,
 ): Output => {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   const [ldoAPY, setLdoAPY] = useState<number | null>(null);
@@ -73,7 +74,7 @@ export const useCurveLdoAPY = (
   };
 
   useEffect(() => {
-    getLdoAPY();
+    if (chainName === NETWORK_NAMES.ETH) getLdoAPY();
   }, [jars, prices]);
 
   return {

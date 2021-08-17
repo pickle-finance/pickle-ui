@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, NextRouter } from "next/router";
 import { Popover } from "@geist-ui/react";
 
 interface NavItemProps {
@@ -44,7 +44,7 @@ export const NavItem = styled.a<NavItemProps>`
   }
 `;
 
-const infoItems = (router) => (
+const infoItems = (router: NextRouter) => (
   <div style={{ padding: "0 10px" }}>
     <p>
       <Link href="/info/earn" passHref>
@@ -82,27 +82,16 @@ export const NavItems: FC = () => {
       <Link href="/dill" passHref>
         <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>
       </Link>
-      <a
-        href="https://docs.pickle.finance/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: "none" }}
-      >
-        <NavItem>FAQ</NavItem>
-      </a>
       <Popover content={infoItems(router)} trigger="hover">
         <Link href="/info" passHref>
           <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
         </Link>
       </Popover>
-      <a
-        href="https://feedback.pickle.finance/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: "none" }}
-      >
-        <NavItem>feedback</NavItem>
-      </a>
+      <Link href="https://feedback.pickle.finance/" passHref>
+        <NavItem target="_blank" rel="noopener noreferrer">
+          Feedback
+        </NavItem>
+      </Link>
     </div>
   );
 };

@@ -1,31 +1,65 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
-import type { providers } from "ethers";
-import { Provider as MulticallProvider } from "ethers-multicall";
+import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
+import { config } from "./config";
+import { Provider as MulticallProvider } from "ethers-multicall";
+import { useRouter } from "next/router";
+
+type Network = ethers.providers.Network;
 
 function useConnection() {
-  const { account, library } = useWeb3React<providers.Web3Provider>();
+  const { account, library, chainId } = useWeb3React();
+  const router = useRouter();
 
   const [
     multicallProvider,
     setMulticallProvider,
   ] = useState<MulticallProvider | null>(null);
 
-  const [network, setNetwork] = useState<providers.Network | null>(null);
+  const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
+
+  const switchChain = async (chainId: number) => {
+    if (chainId !== 137) return false;
+
+    try {
+      await library.provider.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x89",
+            chainName: "Polygon",
+            nativeCurrency: {
+              name: "MATIC",
+              symbol: "MATIC",
+              decimals: 18,
+            },
+            rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
+            blockExplorerUrls: ["https://polygonscan.com/"],
+          },
+        ],
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
-      library.getNetwork().then((network) => setNetwork(network));
+      library.getNetwork().then((network: any) => setNetwork(network));
 
-      const ethMulticallProvider = new MulticallProvider(library);
-      ethMulticallProvider
+      const _multicallProvider = new MulticallProvider(library);
+      _multicallProvider
         .init()
-        .then(() => setMulticallProvider(ethMulticallProvider));
+        .then(() => setMulticallProvider(_multicallProvider));
+
+      const { ethereum } = window;
+      ethereum?.on("chainChanged", () => router.reload());
 
       const observable = new Observable<number>((subscriber) => {
         library.on("block", (blockNumber: number) =>
@@ -36,7 +70,7 @@ function useConnection() {
       // debounce to prevent subscribers making unnecessary calls
       observable.pipe(debounceTime(1000)).subscribe((blockNumber) => {
         // Update every 5 blocks otherwise its very laggy
-        if (blockNumber > (blockNum || 0) + 5) {
+        if (blockNumber > (blockNum || 0) + (chainId == 1 ? 5 : 20)) {
           setBlockNum(blockNumber);
         }
       });
@@ -46,6 +80,8 @@ function useConnection() {
     }
   }, [library]);
 
+  const chainName = (chainId && config.chains[chainId].name) || null;
+
   return {
     multicallProvider,
     provider: library,
@@ -53,6 +89,9 @@ function useConnection() {
     network,
     blockNum,
     signer: library?.getSigner(),
+    chainId,
+    chainName,
+    switchChain,
   };
 }
 

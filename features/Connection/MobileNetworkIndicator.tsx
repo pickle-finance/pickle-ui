@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 import { Connection } from "../../containers/Connection";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { config } from "../../containers/config";
 
 const Container = styled.div`
   display: none;
@@ -68,9 +69,9 @@ const ConnectContainer = styled.div`
 `;
 
 export const MobileNetworkIndicator: FC = () => {
-  const { address, network } = Connection.useContainer();
+  const { address, chainId } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
-  const networkName = network?.name === "homestead" ? "mainnet" : network?.name;
+  const networkName = chainId ? config.chains[chainId].name : "";
   return (
     <Container>
       <Left>

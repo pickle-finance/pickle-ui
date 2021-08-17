@@ -1,14 +1,15 @@
 import { useState, FC, useEffect } from "react";
 import { Spacer, Grid, Card, Button } from "@geist-ui/react";
-import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { Connection } from "../../containers/Connection";
-import { Dill, UseDillOutput } from "../../containers/Dill";
+import { UseDillOutput } from "../../containers/Dill";
 import {
   ERC20Transfer,
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
+import { formatPercent } from "../../util/number";
+import PickleIcon from "../../components/PickleIcon";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -47,24 +48,6 @@ const formatNumber = (num: number, precision?: number) =>
     maximumFractionDigits: precision || 2,
   }) ||
     0);
-
-const formatPercent = (decimal: number) =>
-  decimal &&
-  (decimal * 100).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }) + "%";
-
-const PickleIcon = ({ size = "16px" }) => (
-  <img
-    src="/pickle.png"
-    alt="pickle"
-    style={{
-      width: size,
-      verticalAlign: `text-bottom`,
-    }}
-  />
-);
 
 export const Claim: FC<{
   dillStats: UseDillOutput;
@@ -139,7 +122,8 @@ export const Claim: FC<{
             <div>
               Last week's distribution: $
               {formatNumber(dillStats?.lastDistributionValue)} (
-              {formatNumber(dillStats?.lastDistribution)} <PickleIcon />)
+              {formatNumber(dillStats?.lastDistribution)}{" "}
+              <PickleIcon size={16} />)
             </div>
             &nbsp;
             <Spacer />

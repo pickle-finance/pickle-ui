@@ -4,13 +4,11 @@ import { ethers } from "ethers";
 
 import { Jars } from "./Jars";
 import { Gauges } from "./Gauges";
-import { Balances } from "./Balances";
 import { Contracts } from "./Contracts";
 import { Connection } from "./Connection";
 import { ERC20Transfer } from "./Erc20Transfer";
 
 import { Erc20 as Erc20Contract } from "./Contracts/Erc20";
-
 import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface UserGaugeData {
@@ -37,7 +35,6 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   const { jars } = Jars.useContainer();
   const { gauges } = Gauges.useContainer();
   const { gaugeProxy } = Contracts.useContainer();
-  const { tokenBalances, getBalance } = Balances.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
 
   const [gaugeData, setGaugeData] = useState<Array<UserGaugeData> | null>(null);
@@ -106,7 +103,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
 
   useEffect(() => {
     updateJarAndGaugeData();
-  }, [jars, blockNum, tokenBalances, transferStatus]);
+  }, [jars, blockNum, transferStatus]);
 
   return { gaugeData };
 };

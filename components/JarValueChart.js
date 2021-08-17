@@ -187,7 +187,7 @@ export default function JarValueChart(props) {
                 tickFormatter={formatDate}
                 type="number"
                 tick={{ fill: materialBlack }}
-                padding={{ left: 10, right: 10 }} 
+                padding={{ left: 10, right: 10 }}
               />
               <Tooltip
                 contentStyle={tooltipFormat}

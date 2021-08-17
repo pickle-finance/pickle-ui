@@ -206,7 +206,7 @@ export default function Earn(props) {
   let earnRows;
   if (accountData) {
     earnRows = accountData.jarData
-      .filter((jar) => jar.earnedUsd > 0)
+      .filter((jar) => jar.earnedUsd > 0 && jar.balance > 0)
       .map((jar, i) => {
         const jarInfo = jars.find((s) => s.asset === jar.asset.toLowerCase());
         return (
@@ -259,8 +259,8 @@ export default function Earn(props) {
                                 .filter((jar) => jar.balance > 0)
                                 .reduce((acc, jar) => {
                                   const jarValue = isMStonksJar(jar.id)
-                                  ? jar.balanceUsd * 2
-                                  : jar.balanceUsd
+                                    ? jar.balanceUsd * 2
+                                    : jar.balanceUsd;
                                   return acc + jarValue;
                                 }, 0),
                             )

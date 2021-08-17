@@ -16,7 +16,7 @@ import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
-import { UserGaugeData } from "../../containers/UserGauges";
+
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
@@ -26,14 +26,14 @@ import {
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { getProtocolData } from "../../util/api";
-import { JarApy } from "../../containers/Jars/useJarsWithAPY";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { UserGaugeDataWithAPY } from "./GaugeList";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 
 interface ButtonStatus {
@@ -88,7 +88,7 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
-export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
+export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   gaugeData,
 }) => {
   const { jars } = Jars.useContainer();
@@ -110,6 +110,12 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
+
+  const stakedStr = stakedNum.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: stakedNum < 1 ? 8 : 4,
+  });
+
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
@@ -119,27 +125,21 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     maximumFractionDigits: balanceNum < 1 ? 8 : 2,
   });
 
-  const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
-    depositToken,
-    0,
-    balance,
-    staked,
-  );
+  const {
+    deposit,
+    withdraw,
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+    migratePickleEth,
+    depositPickleEth,
+  } = useMigrate(depositToken, 0, balance, staked);
+
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const bal = parseFloat(
-    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
-  );
-  const balStr = bal.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: bal < 1 ? 8 : 2,
-  });
-  const stakedStr = stakedNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 8 : 2,
-  });
+
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
   ).toLocaleString();
@@ -176,10 +176,14 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
 
+  const [pickleMigrateState, setPickleMigrateState] = useState<string | null>(
+    null,
+  );
+
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
-  // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [];
+
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
@@ -190,17 +194,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
   }
 
-  const { getUniPairDayAPY } = useUniPairDayData();
-  if (depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()) {
-    APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
-  }
-
-  const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce(
-      (acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y),
-      0,
-    );
-  }).reduce((acc, x) => acc + x, 0);
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
     : 0;
@@ -211,11 +204,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
-  const realAPY = totalAPY + pickleAPY;
+  const realAPY = gaugeData.totalAPY + pickleAPY;
 
   const apyRangeTooltipText = [
     `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
-    ...APYs.map((x) => {
+    ...gaugeData.APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
@@ -225,7 +218,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
     .join(" + ");
   const yourApyTooltipText = [
     `pickle: ${formatAPY(pickleAPY)}`,
-    ...APYs.map((x) => {
+    ...gaugeData.APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
@@ -237,6 +230,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
   const isyveCRVFarm =
     depositToken.address.toLowerCase() ===
     PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
+
+  const isPickleFarm = depositToken.address.toLowerCase() === PICKLE_ETH_FARM;
 
   const handleYvboostMigrate = async () => {
     if (stakedNum || balanceNum) {
@@ -253,6 +248,26 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
         console.error(error);
         alert(error.message);
         setYvMigrateState(null);
+        return;
+      }
+    }
+  };
+
+  const handlePickleEthMigrate = async () => {
+    if (stakedNum || balanceNum) {
+      try {
+        setPickleMigrateState("Withdrawing from Farm...");
+        await withdrawGauge(gauge);
+        setPickleMigrateState("Migrating to Sushi LP...");
+        await migratePickleEth();
+        setPickleMigrateState("Migrated! Staking in Sushi MasterChef v2...");
+        await depositPickleEth();
+        setPickleMigrateState(null);
+        setSuccess(true);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+        setPickleMigrateState(null);
         return;
       }
     }
@@ -355,30 +370,40 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
             <Label>Deposit Value</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Tooltip
-              text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
-            >
-              <div>
-                {totalAPY + fullApy === 0
-                  ? "--%"
-                  : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                      totalAPY + pickleAPYMax,
-                    )}`}
-              </div>
-              <Label>APY Range</Label>
-            </Tooltip>
-            {Boolean(realAPY) && (
-              <div>
+            {isPickleFarm ? (
+              "Migrate to Sushi ⬇️"
+            ) : (
+              <>
                 <Tooltip
-                  text={realAPY === 0 ? "--" : yourApyTooltipText}
-                  style={{ marginTop: 5 }}
+                  text={
+                    gaugeData.totalAPY + fullApy === 0
+                      ? "--"
+                      : apyRangeTooltipText
+                  }
                 >
-                  <div style={{ display: "flex" }}>
-                    <Label>Your APY: </Label>
-                    <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                  <div>
+                    {gaugeData.totalAPY + fullApy === 0
+                      ? "--%"
+                      : `${formatAPY(
+                          gaugeData.totalAPY + pickleAPYMin,
+                        )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
                   </div>
+                  <Label>APY Range</Label>
                 </Tooltip>
-              </div>
+                {Boolean(realAPY) && (
+                  <div>
+                    <Tooltip
+                      text={realAPY === 0 ? "--" : yourApyTooltipText}
+                      style={{ marginTop: 5 }}
+                    >
+                      <div style={{ display: "flex" }}>
+                        <Label>Your APY: </Label>
+                        <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                      </div>
+                    </Tooltip>
+                  </div>
+                )}
+              </>
             )}
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
@@ -393,7 +418,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
         <Grid xs={24} md={stakedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              Balance: {balStr} {depositTokenName}
+              Balance: {balanceStr} {depositTokenName}
             </div>
             <Link
               color
@@ -419,7 +444,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled || isyveCRVFarm}
+            disabled={stakeButton.disabled || isyveCRVFarm || isPickleFarm}
             onClick={() => {
               if (gauge && signer) {
                 transfer({
@@ -531,47 +556,82 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeData }> = ({
           </Button>
         </Grid>
 
-        {isyveCRVFarm && (
-          <Grid xs={24}>
-            <Button
-              disabled={yvMigrateState !== null}
-              onClick={handleYvboostMigrate}
-              style={{ width: "100%", textTransform: "none" }}
-            >
-              {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
-            </Button>
-            <div
-              style={{
-                width: "100%",
-                textAlign: "center",
-                fontFamily: "Source Sans Pro",
-                fontSize: "1rem",
-              }}
-            >
-              Your tokens will be unstaked and migrated to the yvBOOST pJar and
-              staked in the Farm.
-              <br />
-              This process will require a number of transactions.
-              <br />
-              Learn more about yvBOOST{" "}
-              <a
-                target="_"
-                href="https://twitter.com/iearnfinance/status/1388131568481411077"
+        <Grid xs={24}>
+          {isyveCRVFarm ? (
+            <>
+              <Button
+                disabled={yvMigrateState !== null}
+                onClick={handleYvboostMigrate}
+                style={{ width: "100%", textTransform: "none" }}
               >
-                here
-              </a>
-              .
-              {isSuccess ? (
-                <p style={{ fontWeight: "bold" }}>
-                  Migration completed! See your deposits{" "}
-                  <Link color href="/farms">
-                    here
-                  </Link>
-                </p>
-              ) : null}
-            </div>
-          </Grid>
-        )}
+                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+              </Button>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontFamily: "Source Sans Pro",
+                  fontSize: "1rem",
+                }}
+              >
+                Your tokens will be unstaked and migrated to the yvBOOST pJar
+                and staked in the Farm.
+                <br />
+                This process will require a number of transactions.
+                <br />
+                Learn more about yvBOOST{" "}
+                <a
+                  target="_"
+                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                >
+                  here
+                </a>
+                .
+                {isSuccess ? (
+                  <p style={{ fontWeight: "bold" }}>
+                    Migration completed! See your deposits{" "}
+                    <Link color href="/farms">
+                      here
+                    </Link>
+                  </p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+          {isPickleFarm ? (
+            <>
+              <Button
+                disabled={pickleMigrateState !== null}
+                onClick={handlePickleEthMigrate}
+                style={{ width: "100%", textTransform: "none" }}
+              >
+                {pickleMigrateState || (
+                  <>
+                    Migrate PICKLE-ETH to Sushi for dual&nbsp;
+                    <MiniIcon source={"/pickle.png"} /> &nbsp;and&nbsp;
+                    <MiniIcon source={"/sushiswap.png"} /> &nbsp;rewards&nbsp;
+                  </>
+                )}
+              </Button>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontFamily: "Source Sans Pro",
+                  fontSize: "1rem",
+                }}
+              >
+                Your PICKLE/ETH LP tokens will be unstaked and migrated from
+                Uniswap LP tokens to Sushi LP tokens
+                <br /> and then staked in Sushi's MasterChef v2. This process
+                will require a number of transactions.
+                {isSuccess ? (
+                  <p style={{ fontWeight: "bold" }}>Migration completed!</p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+        </Grid>
       </Grid.Container>
     </Collapse>
   );

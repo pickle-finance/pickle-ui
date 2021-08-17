@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
@@ -6,9 +6,10 @@ import Switch from "@material-ui/core/Switch";
 import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
-import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
+import { useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
+import { MC2Farm } from "../MasterchefV2/MC2Farm";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { useJarData } from "./useJarData";
@@ -16,6 +17,19 @@ import { JarCollapsible } from "./JarCollapsible";
 import { GaugeCollapsible } from "./GaugeCollapsible";
 import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import {
+  JAR_GAUGE_MAP,
+  PICKLE_ETH_GAUGE,
+} from "../../containers/Gauges/gauges";
+import type { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { Jars } from "../../containers/Jars";
+
+export interface UserGaugeDataWithAPY extends UserGaugeData {
+  APYs: Array<JarApy>;
+  totalAPY: number;
+}
 
 interface Weights {
   [key: string]: number;
@@ -41,6 +55,11 @@ export const GaugeList: FC = () => {
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState(false);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
+  const [voteWeights, setVoteWeights] = useState<Weights>({});
+  const { status: voteTxStatus, vote } = useGaugeProxy();
+  const [showUserGauges, setShowUserGauges] = useState<boolean>(false);
+  const { getUniPairDayAPY } = useUniPairDayData();
+  const { jars } = Jars.useContainer();
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
@@ -48,14 +67,38 @@ export const GaugeList: FC = () => {
 
   if (!jarData || !gaugeData) return <h2>Loading...</h2>;
 
-  const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS.pUNIBACDAI ||
-    depositToken === PICKLE_JARS.pUNIBASDAI ||
-    depositToken === PICKLE_JARS.pUNIETHLUSD;
+  const gaugesWithAPY = gaugeData.map((gauge) => {
+    // Get Jar APY (if its from a Jar)
+    let APYs: JarApy[] = [];
+    const maybeJar = JAR_GAUGE_MAP[gauge.depositToken.address];
+    if (jars && maybeJar) {
+      const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
+      APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
+    }
 
-  const activeGauges = gaugeData.filter(
-    (x) => !isDisabledFarm(x.depositToken.address),
-  );
+    if (
+      gauge.depositToken.address.toLowerCase() ===
+      PICKLE_ETH_GAUGE.toLowerCase()
+    ) {
+      APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
+    }
+
+    const totalAPY = APYs.map((x) => {
+      return Object.values(x).reduce(
+        (acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y),
+        0,
+      );
+    }).reduce((acc, x) => acc + x, 0);
+
+    return {
+      ...gauge,
+      APYs,
+      totalAPY,
+    };
+  });
+
+  const isDisabledFarm = (depositToken: string) =>
+    depositToken === PICKLE_JARS.pUNIETHLUSD;
 
   const activeJars = jarData.filter(
     (jar) =>
@@ -70,8 +113,27 @@ export const GaugeList: FC = () => {
     parseFloat(formatEther(jar.deposited)),
   );
 
+  const activeGauges = gaugesWithAPY
+    .filter((x) => !isDisabledFarm(x.depositToken.address))
+    .sort((a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy));
+
+  const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
+    var item = arr.splice(from, 1);
+
+    if (!item.length) return;
+    arr.splice(to, 0, item[0]);
+  };
+
+  const indexofPickleEth = activeGauges.findIndex(
+    (x) => x.depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE,
+  );
+  moveInArray(activeGauges, indexofPickleEth, 0);
+
   return (
     <>
+      <h2>Pickle Power</h2>
+      <MC2Farm />
+      <Spacer y={1} />
       <Grid.Container>
         <Grid md={12}>
           <p>
@@ -104,7 +166,9 @@ export const GaugeList: FC = () => {
       <h2>Vote</h2>
       <VoteCollapsible
         gauges={activeGauges.filter(
-          (x) => x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV,
+          (x) =>
+            x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV &&
+            x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM,
         )}
       />
       <div
@@ -118,10 +182,10 @@ export const GaugeList: FC = () => {
       </div>
       <Grid.Container gap={1}>
         <Grid xs={24}>
-          <GaugeCollapsible gaugeData={gaugeData[0]} />
+          <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
         </Grid>
         {(showUserJars ? userJars : activeJars).map((jar) => {
-          const gauge = gaugeData.find(
+          const gauge = gaugesWithAPY.find(
             (x) =>
               x.depositToken.address.toLowerCase() ===
               jar.jarContract.address.toLowerCase(),
@@ -143,7 +207,7 @@ export const GaugeList: FC = () => {
         {showInactive && <h2>Inactive</h2>}
         {showInactive &&
           inactiveJars.map((jar) => {
-            const gauge = gaugeData.find(
+            const gauge = gaugesWithAPY.find(
               (x) =>
                 x.depositToken.address.toLowerCase() ===
                 jar.jarContract.address.toLowerCase(),

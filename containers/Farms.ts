@@ -6,7 +6,7 @@ import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 
 interface IFarmInfo {
-  [key: string]: { tokenName: string; poolName: string; };
+  [key: string]: { tokenName: string; poolName: string };
 }
 
 export const FarmInfo: IFarmInfo = {
@@ -174,34 +174,72 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pYearnLusdCRV",
     poolName: "Pickled Yearn LUSD",
   },
+  "0x729C6248f9B1Ce62B3d5e31D4eE7EE95cAB32dfD": {
+    tokenName: "pYearnFraxCRV",
+    poolName: "Pickled Yearn FRAX",
+  },
+  "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F": {
+    tokenName: "pSUSHICVXETH",
+    poolName: "pSUSHICVXETH",
+  },
+  "0x65B2532474f717D5A8ba38078B78106D56118bbb": {
+    tokenName: "pLQTY",
+    poolName: "Pickled LQTY",
+  },
+  "0xe6487033F5C8e2b4726AF54CA1449FEC18Bd1484": {
+    tokenName: "pSADDLED4",
+    poolName: "Saddle D4",
+  },
+  "0x1Bf62aCb8603Ef7F3A0DFAF79b25202fe1FAEE06": {
+    tokenName: "pMIM3CRV",
+    poolName: "Abracadabra Mim3Crv",
+  },
+  "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE": {
+    tokenName: "pSPELLETH",
+    poolName: "Abracadabra SPELLETH",
+  },
+  "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C": {
+    tokenName: "pMIMETH",
+    poolName: "Abracadabra MIMETH",
+  },
+  "0xeb8174F94FDAcCB099422d9A816B8E17d5e393E3": {
+    tokenName: "pUNIV2 FOX/ETH",
+    poolName: "pUNIV2 FOX/ETH",
+  },
+  "0x1d92e1702D7054f74eAC3a9569AeB87FC93e101D": {
+    tokenName: "pSLP TRU/ETH",
+    poolName: "pSLP TRU/ETH",
+  },
 };
 
 function useFarms() {
   const { rawFarms } = useFetchFarms();
   const { farmsWithReward } = useWithReward(rawFarms);
-  const { uniV2FarmsWithApy } = useUniV2Apy(farmsWithReward);
-  const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
+  // const { uniV2FarmsWithApy } = useUniV2Apy(farmsWithReward);
+  // const { jarFarmWithApy } = useJarFarmApy(farmsWithReward)
 
-  const uniFarms = uniV2FarmsWithApy?.map((farm) => {
-    const { tokenName, poolName } = FarmInfo[farm.lpToken];
-    return {
-      ...farm,
-      tokenName,
-      poolName,
-    };
-  });
-
-  const jarFarms = jarFarmWithApy?.map((farm) => {
-    const { tokenName, poolName } = FarmInfo[farm.lpToken];
-    return {
-      ...farm,
-      tokenName,
-      poolName,
-    };
-  });
+  const farms = farmsWithReward
+    ?.filter(
+      (x) =>
+        x.lpToken != "0x73feA839bEad0E4100B6e5f59Fb6E896Ad69910f" &&
+        x.lpToken != "0x45F7fa97BD0e0C212A844BAea35876C7560F465B",
+    )
+    .map((farm) => {
+      const { tokenName, poolName } = FarmInfo[farm.lpToken];
+      return {
+        ...farm,
+        tokenName,
+        poolName,
+        apy: 0,
+        usdPerToken: 0,
+        totalValue: 0,
+        valueStakedInFarm: 0,
+        numTokensInPool: 0,
+      };
+    });
 
   return {
-    farms: uniFarms && jarFarms ? [...uniFarms, ...jarFarms] : null,
+    farms,
   };
 }
 

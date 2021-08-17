@@ -9,8 +9,8 @@ import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";
 import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { GaugeWithReward } from "./useWithReward";
 
-import { Contract as MulticallContract } from "ethers-multicall";
 import { ethers } from "ethers";
+import { Contract as MulticallContract } from "ethers-multicall";
 
 const { formatEther } = ethers.utils;
 

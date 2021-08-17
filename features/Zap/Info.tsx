@@ -9,7 +9,7 @@ const formatNumber = (num?: number) => {
   if (!num) return "--";
   return num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: num < 1 ? 18 : 4,
+    maximumFractionDigits: num < 1 ? 8 : 4,
   });
 };
 

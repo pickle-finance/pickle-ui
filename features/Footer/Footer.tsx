@@ -34,7 +34,7 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://info.uniswap.org/pair/0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
+        href="https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"
       >
         PICKLE-ETH
       </NavItem>
@@ -48,9 +48,9 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://signal.pickle.finance"
+        href="https://snapshot.org/#/pickle.eth"
       >
-        Signal
+        Vote
       </NavItem>
       <NavItem
         target="_blank"
@@ -76,16 +76,16 @@ export const Footer: FC = () => {
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://t.me/picklefinance"
+        href="https://picklefinance.medium.com/"
       >
-        Telegram
+        Medium
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
-        href="https://t.me/picklefinancechinese"
+        href="https://docs.pickle.finance"
       >
-        中文tg
+        DOCS
       </NavItem>
     </Container>
   );

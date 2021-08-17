@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { crvJars, sushiJars, uniJars } from "../../util/jars";
-import { getJarChart, getStakingChart, getProtocolData } from "../../util/api";
+import { crvJars, sushiJars, uniJars, polyJars } from "../../util/jars";
+import { getJarChart, getProtocolData } from "../../util/api";
 import { materialBlack } from "../../util/constants";
 import JarValueChart from "../../components/JarValueChart";
 import Grid from "@material-ui/core/Grid";
@@ -39,6 +38,7 @@ export default function Dashboard() {
     crvJars: chartSkeletons(crvJars),
     sushiJars: chartSkeletons(sushiJars),
     uniJars: chartSkeletons(uniJars),
+    polyJars: chartSkeletons(polyJars),
   });
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function Dashboard() {
         getProtocolData(),
         getJarChart(sushiJars),
         getJarChart(uniJars),
+        getJarChart(polyJars),
       ];
       const dashboardData = await Promise.all(requests);
 
@@ -56,6 +57,7 @@ export default function Dashboard() {
       const protocolData = dashboardData[1];
       const sushiData = dashboardData[2];
       const uniData = dashboardData[3];
+      const polyData = dashboardData[4];
       const metrics = {
         date: protocolData.updatedAt,
         jarValue: protocolData.jarValue,
@@ -68,6 +70,7 @@ export default function Dashboard() {
         metrics: metrics,
         sushiJars: sushiData,
         uniJars: uniData,
+        polyJars: polyData,
       });
     };
     retrieveDashboardData();
@@ -76,28 +79,33 @@ export default function Dashboard() {
   const jars = dashboardData.sushiJars.concat(dashboardData.uniJars);
   const allJars = dashboardData.sushiJars
     .concat(dashboardData.crvJars)
-    .concat(dashboardData.uniJars);
+    .concat(dashboardData.uniJars)
+    .concat(dashboardData.polyJars);
 
   const assets = allJars.map((d) => d.asset);
   const blockData = {};
+  const mostRecent = {};
   allJars.forEach((item) => {
     item.data.forEach((d) => {
       if (blockData[d.x] === undefined) {
         blockData[d.x] = { x: d.x };
       }
       blockData[d.x][item.asset] = d.y;
+      mostRecent[item.asset] = 0;
     });
   });
 
   const combinedData = [];
-  let y = 0;
-  for (const key of Object.keys(blockData).sort()) {
-    let point = { x: parseInt(key) };
-    const value = blockData[key];
+  for (const timestampid of Object.keys(blockData).sort()) {
+    let point = { x: parseInt(timestampid) };
+    const value = blockData[timestampid];
+    let y = 0;
     for (const asset of assets) {
       if (value[asset]) {
-        point = { ...point, y: (y += value[asset])/1000 };
+        mostRecent[asset] = value[asset];
       }
+      y += mostRecent[asset];
+      point = { ...point, y: y };
     }
     combinedData.push(point);
   }
@@ -126,6 +134,20 @@ export default function Dashboard() {
             <JarValueChart jar={tvlJar} />
           </Grid>
 
+          <Grid
+            item
+            xs={12}
+            className={clsx(classes.section, classes.separator)}
+          >
+            <h1>polyJars</h1>
+          </Grid>
+          {dashboardData.polyJars.map((jar) => {
+            return (
+              <Grid item xs={12} sm={6} key={jar.asset}>
+                <JarValueChart jar={jar} />
+              </Grid>
+            );
+          })}
           <Grid
             item
             xs={12}

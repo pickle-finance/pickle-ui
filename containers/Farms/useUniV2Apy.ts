@@ -8,9 +8,9 @@ import { Prices } from "../Prices";
 import { UniV2Pairs, PAIR_INFO } from "../UniV2Pairs";
 import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { FarmWithReward } from "./useWithReward";
-
 import { Contract as MulticallContract } from "ethers-multicall";
-import { ethers } from "ethers";
+
+import { Contract, ethers } from "ethers";
 
 const { formatEther } = ethers.utils;
 
@@ -29,14 +29,13 @@ type Output = { uniV2FarmsWithApy: FarmWithApy[] | null };
 export const useUniV2Apy = (inputFarms: Input): Output => {
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
-  const { multicallProvider, provider } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairDataPrefill } = UniV2Pairs.useContainer();
 
   const calculateApy = async () => {
     if (
-      provider &&
       inputFarms &&
       prices &&
       masterchef &&

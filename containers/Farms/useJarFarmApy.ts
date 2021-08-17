@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
@@ -11,6 +11,7 @@ import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
+import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 // what comes in and goes out of this function
@@ -20,7 +21,7 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
 
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 
@@ -43,14 +44,13 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           return new MulticallContract(mlErc20.dai.address, mlErc20.abi);
         }
 
-        return new MulticallContract(
-          farmingJar.contract.address,
-          farmingJar.contract.interface.fragments,
-        );
+        return farmingJar.contract;
       });
 
-      const farmBalances = await multicallProvider?.all(
-        farmingJarsMCContracts.map((x) => x.balanceOf(masterchef.address)),
+      const farmBalances = await Promise.all(
+        farmingJarsMCContracts.map((x) =>
+          x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0)),
+        ),
       );
 
       const res = jarFarms.map((farm, idx) => {
@@ -97,14 +97,13 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           numTokensInPool,
         };
       });
-
       setFarms(res);
     }
   };
 
   useEffect(() => {
     calculateApy();
-  }, [inputFarms, prices, masterchef, jars, multicallProvider]);
+  }, [inputFarms, prices, masterchef, jars]);
 
   return { jarFarmWithApy: farms };
 };

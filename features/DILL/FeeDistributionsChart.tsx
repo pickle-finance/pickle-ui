@@ -59,11 +59,13 @@ const tooltipFormatter = (
 
   switch (name) {
     case "weeklyPickleAmount":
-      return [formattedDollarValue, "Weekly PICKLEs"];
+      return [formattedDollarValue, "Weekly PICKLEs distributed"];
     case "totalPickleAmount":
-      return [formattedDollarValue, "Total PICKLEs"];
-    case "dillAmount":
-      return [formattedNumber, "DILL amount"];
+      return [formattedDollarValue, "Total PICKLEs distributed"];
+    case "weeklyDillAmount":
+      return [formattedNumber, "Weekly DILL 🔒"];
+    case "totalDillAmount":
+      return [formattedNumber, "Total DILL 🔒"];
     case "pickleDillRatio":
       return [
         `${formattedNumber} (${formatDollarValue(amount, 2)})`,
@@ -79,8 +81,10 @@ const legendFormatter = (value: string): string => {
       return "Weekly PICKLEs";
     case "totalPickleAmount":
       return "Total PICKLEs";
-    case "dillAmount":
-      return "DILL amount";
+    case "weeklyDillAmount":
+      return "Weekly DILL amount";
+    case "totalDillAmount":
+      return "Total DILL amount";
     case "pickleDillRatio":
       return "Distributed PICKLEs per 1 DILL";
     default:
@@ -124,7 +128,7 @@ export const FeeDistributionsChart: FC = () => {
         <Radio value="total">Total</Radio>
       </Radio.Group>
       <Spacer y={1} />
-      <div style={{ height: 300 }}>
+      <div style={{ height: 360 }}>
         {dataSeries.length > 0 ? (
           <ResponsiveContainer>
             {/* Passing in a new array object every time ensures transitions work correctly. */}
@@ -132,8 +136,10 @@ export const FeeDistributionsChart: FC = () => {
               <XAxis
                 dataKey="distributionTime"
                 tickFormatter={dateFormatter}
-                height={40}
-                padding={{ left: 20, right: 20 }}
+                height={75}
+                angle={300}
+                interval={0}
+                tickMargin={26}
               />
               <YAxis width={90} padding={{ top: 20 }}>
                 <Label
@@ -187,7 +193,14 @@ export const FeeDistributionsChart: FC = () => {
                   />
                 ))}
               </Bar>
-              <Bar dataKey="dillAmount" fill="#ebebeb">
+              <Bar
+                dataKey={
+                  chartMode === "weekly"
+                    ? "weeklyDillAmount"
+                    : "totalDillAmount"
+                }
+                fill="#ebebeb"
+              >
                 {dataSeries.map((point, index) => (
                   <Cell
                     fill="#ebebeb"

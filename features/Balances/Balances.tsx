@@ -9,6 +9,8 @@ import { Jars } from "../../containers/Jars";
 import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
+import { getProtocolData } from "util/api";
+import PickleIcon from "../../components/PickleIcon";
 
 const Container = styled(Grid.Container)`
   font-family: "Source Code Pro", sans-serif;
@@ -26,26 +28,14 @@ const HideOnMobile = styled.div`
   }
 `;
 
-const PickleIcon = ({ size = "24px", margin = "0 0 0 0.5rem" }) => (
-  <img
-    src="/pickle.png"
-    alt="pickle"
-    style={{
-      width: size,
-      margin,
-      verticalAlign: `text-bottom`,
-    }}
-  />
-);
-
 const formatPickles = (num: number) =>
-  num.toLocaleString(undefined, {
+  num?.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
 const formatDollars = (num: number) =>
   "$" +
-  num.toLocaleString(undefined, {
+  num?.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -56,6 +46,7 @@ export const Balances: FC = () => {
     pendingPickles,
     totalSupply,
     picklePerBlock,
+    picklePerSecond,
   } = useBalances();
 
   const { WETHRewards } = PickleStaking.useContainer();
@@ -78,26 +69,24 @@ export const Balances: FC = () => {
   const { jars } = Jars.useContainer();
 
   const [liquidity, setLiquidity] = useState<number | null>(null);
+  const [protocolInfo, setProtocolInfo] = useState(undefined);
+  const [marketCap, setMarketCap] = useState<number | null>(null);
+  const [tooltipText, setTooltipText] = useState<string | null>("");
 
   useEffect(() => {
-    const getLiquidity = async () => {
-      if (getPairData) {
-        const { totalValueOfPair } = await getPairData(
-          "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819",
-        );
-        setLiquidity(totalValueOfPair);
-      }
+    const updateInfo = async () => {
+      setProtocolInfo(await getProtocolData());
+      const res = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true",
+      ).then((x) => x.json());
+      setMarketCap(res["pickle-finance"].usd_market_cap);
+      if (picklePerBlock)
+        setTooltipText(`${picklePerBlock} PICKLEs are printed every block.`);
+      if (picklePerSecond)
+        setTooltipText(`${picklePerSecond} PICKLEs are printed every second.`);
     };
-    getLiquidity();
-  }, [getPairData, blockNum]);
-
-  let totalValueLocked = null;
-  if (jars) {
-    totalValueLocked = jars.reduce((acc, x) => {
-      return acc + (x?.tvlUSD || 0);
-    }, liquidity || 0);
-  }
-
+    updateInfo();
+  }, [blockNum]);
   return (
     <>
       <Container gap={2}>
@@ -108,7 +97,7 @@ export const Balances: FC = () => {
               <span>
                 {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
               </span>
-              <PickleIcon />
+              <PickleIcon size={24} margin="0 0 0 0.5rem" />
               {pickleBalance !== null && prices?.pickle && (
                 <HideOnMobile>
                   <span style={{ fontSize: `1rem` }}>
@@ -122,7 +111,7 @@ export const Balances: FC = () => {
               Pending:&nbsp;
               <span>
                 {pendingPickles !== null ? formatPickles(pendingPickles) : "--"}
-                <PickleIcon size="14px" />
+                <PickleIcon size={14} margin="0 0 0 0.5rem" />
               </span>
               {pendingPickles !== null && prices?.pickle && (
                 <HideOnMobile>
@@ -141,30 +130,28 @@ export const Balances: FC = () => {
             <h2>Market Cap</h2>
             <DataPoint>
               <span>
-                {prices?.pickle && totalSupply
-                  ? formatDollars(prices.pickle * totalSupply)
+                {prices?.pickle && totalSupply && marketCap
+                  ? formatDollars(marketCap)
                   : "--"}
               </span>
             </DataPoint>
             <Card.Footer>
-              {totalSupply && picklePerBlock ? (
+              {totalSupply && tooltipText && marketCap ? (
                 <Tooltip
                   placement="bottom"
                   style={{ cursor: `help` }}
-                  text={
-                    picklePerBlock
-                      ? `${picklePerBlock} PICKLEs are printed every block.`
-                      : ""
-                  }
+                  text={tooltipText}
                 >
                   Total Supply:{" "}
-                  {totalSupply ? formatPickles(totalSupply) : "--"}
-                  <PickleIcon size="14px" />
+                  {totalSupply
+                    ? formatPickles(marketCap / prices?.pickle)
+                    : "--"}
+                  <PickleIcon size={14} />
                 </Tooltip>
               ) : (
                 <span>
                   Total Supply: --
-                  <PickleIcon size="14px" />
+                  <PickleIcon size={14} margin="0 0 0 0.5rem" />
                 </span>
               )}
             </Card.Footer>
@@ -175,7 +162,7 @@ export const Balances: FC = () => {
             <h2>Total Value Locked</h2>
             <DataPoint>
               <span>
-                {totalValueLocked ? formatDollars(totalValueLocked) : "--"}
+                {protocolInfo ? formatDollars(protocolInfo.totalValue) : "--"}
               </span>
             </DataPoint>
             <Card.Footer>
@@ -184,7 +171,12 @@ export const Balances: FC = () => {
                 text="Total ETH/PICKLE pool value on Uniswap."
                 style={{ cursor: `help` }}
               >
-                Pool size: {liquidity ? formatDollars(liquidity) : "--"}
+                Pool size:{" "}
+                {protocolInfo
+                  ? formatDollars(
+                      protocolInfo.totalValue - protocolInfo.jarValue,
+                    )
+                  : "--"}
               </Tooltip>
             </Card.Footer>
           </Card>

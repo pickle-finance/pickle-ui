@@ -16,6 +16,7 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { getProtocolData } from "../../util/api";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
+import { NETWORK_NAMES } from "containers/config";
 
 interface DataProps {
   isZero?: boolean;
@@ -53,9 +54,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xC3D03e4F041Fd4cD388c549Ee2A29a9E5075882f": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dai.png"} />
   ),
-  "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c": (
-    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/alchemix.png"} />
-  ),
+  "0xd48cf4d7fb0824cc8bae055df3092584d0a1726a": "/saddle.svg",
   "0x397FF1542f962076d0BFE58eA045FfA2d347ACa0": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
@@ -125,6 +124,66 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/lusd.webp"} />
   ),
+  "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  "0x05767d9EF41dC40689678fFca0608878fb3dE906": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
+  ),
+  "0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D": "/liquity.png",
+  "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": (
+    <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/3crv.png"} />
+  ),
+  "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
+  ),
+  "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+
+  // Polygon Jars
+
+  "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xb0b5e3bd18eb1e316bcd0bba876570b3c1779c55": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x80676b414a905de269d0ac593322af821b683b92": (
+    <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "/dai.png",
+  "0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171": "/3crv.png",
+  "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x160532d2536175d65c03b97b0630a9802c274dad": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0x74dC9cdCa9a96Fd0B7900e6eb953d1EA8567c3Ce": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0xb4d09ff3dA7f9e9A2BA029cb0A81A989fd7B8f17": (
+    <LpIcon swapIconSrc={"/ironswap.png"} tokenIconSrc={"/3usd.png"} />
+  ),
+  "0x470e8de2eBaef52014A47Cb5E6aF86884947F08c": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fox.png"} />
+  ),
+  "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/dino.jpeg"} />
+  ),
+  "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
+  ),
+  "0xfCEAAf9792139BF714a694f868A215493461446D": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -180,7 +239,17 @@ export const JarCollapsible: FC<{
   } = jarData;
   const isUsdc =
     depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.USDC.toLowerCase();
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
+
+  const isMaiJar =
+    depositToken.address.toLowerCase() ===
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_USDC.toLowerCase() ||
+    depositToken.address.toLowerCase() ===
+      JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI.toLowerCase();
+
+  const isSaddleJar =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SADDLE_D4;
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -190,11 +259,11 @@ export const JarCollapsible: FC<{
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: balNum < 1 ? 18 : 4,
+    maximumFractionDigits: balNum < 1 ? 8 : 4,
   });
   const depositedStr = depositedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const depositedUnderlyingStr = (
     parseFloat(
@@ -202,7 +271,7 @@ export const JarCollapsible: FC<{
     ) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: depositedNum < 1 ? 18 : 4,
+    maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const valueStr = (usdPerPToken * depositedNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -226,7 +295,7 @@ export const JarCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
 
   const [tvlData, setTVLData] = useState();
 
@@ -252,18 +321,6 @@ export const JarCollapsible: FC<{
   })
     .filter((x) => x)
     .join(" + ");
-
-  const isDisabledJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAC_DAI ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_BAS_DAI;
-
-  const isMStonksJar =
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MIR_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MAAPL_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MBABA_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MSLV_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MQQQ_UST ||
-    depositToken.address === JAR_DEPOSIT_TOKENS.UNIV2_MTSLA_UST;
 
   const tvlNum =
     tvlData &&
@@ -322,8 +379,8 @@ export const JarCollapsible: FC<{
                 text={
                   isYearnJar
                     ? `This jar deposits into Yearn's ${
-                        APYs[1].vault
-                      }, The base rate of ${apr.toFixed(
+                        APYs[1]?.vault
+                      }. The base rate of ${apr.toFixed(
                         2,
                       )}% is provided by the underlying Yearn strategy`
                     : `This yield is calculated in real time from a base rate of ${apr.toFixed(
@@ -379,7 +436,7 @@ export const JarCollapsible: FC<{
           <Spacer y={0.5} />
           <Button
             onClick={() => {
-              if (signer && !isDisabledJar) {
+              if (signer) {
                 // Allow Jar to get LP Token
                 transfer({
                   token: depositToken.address,
@@ -394,15 +451,23 @@ export const JarCollapsible: FC<{
                 });
               }
             }}
-            disabled={
-              depositButton.disabled ||
-              depositTokenName === "DAI" ||
-              isDisabledJar
-            }
+            disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
             {depositButton.text}
           </Button>
+          {isMaiJar ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
+              }}
+            >
+              A 0.5% fee is charged by Mai Finance upon depositing
+            </div>
+          ) : null}
         </Grid>
         {depositedNum !== 0 && (
           <Grid xs={24} md={12}>

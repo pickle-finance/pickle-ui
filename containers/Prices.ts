@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import CoinGecko from "coingecko-api";
+
 interface PriceObject {
   dai: number;
   comp: number;
@@ -31,10 +32,23 @@ interface PriceObject {
   fei: number;
   tribe: number;
   lusd: number;
+  frax: number;
   lqty: number;
+  must: number;
+  matic: number;
   yvboost: number;
   alcx: number;
+  fxs: number;
   luna: number;
+  mimatic: number;
+  qi: number;
+  cvx: number;
+  ice: number;
+  mim: number;
+  spell: number;
+  fox: number;
+  dino: number;
+  tru: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -76,10 +90,22 @@ function usePrices() {
         "tribe-2",
         "liquity-usd",
         "liquity",
-        "alchemix",
-        "alchemix-usd",
+        "frax",
+        "frax-share",
+        "must",
+        "matic-network",
+        "magic-internet-money",
+        "spell-token",
         // "yvboost",
+        "alchemix",
         "terra-luna",
+        "mimatic",
+        "qi-dao",
+        "convex-finance",
+        "iron-finance",
+        "shapeshift-fox-token",
+        "dinoswap",
+        "truefi",
       ],
       vs_currencies: ["usd"],
     });
@@ -115,9 +141,22 @@ function usePrices() {
       tribe: response["tribe-2"].usd,
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
-      alcx: response["alchemix"].usd,
+      frax: response["frax"].usd,
+      fxs: response["frax-share"].usd,
+      must: response["must"].usd,
+      matic: response["matic-network"].usd,
       yvboost: 0, // to update once CG provides yvboost price
+      alcx: response["alchemix"].usd,
       luna: response["terra-luna"].usd,
+      mimatic: response["mimatic"].usd,
+      qi: response["qi-dao"].usd,
+      cvx: response["convex-finance"].usd,
+      ice: response["iron-finance"].usd,
+      spell: response["spell-token"].usd,
+      mim: response["magic-internet-money"].usd,
+      fox: response["shapeshift-fox-token"].usd,
+      dino: response["dinoswap"].usd,
+      tru: response["truefi"].usd,
     };
     setPrices(prices);
   };

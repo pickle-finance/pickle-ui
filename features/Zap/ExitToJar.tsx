@@ -7,7 +7,7 @@ import { useExitToJar } from "./useExitToJar";
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: parseFloat(numStr) < 1 ? 18 : 4,
+    maximumFractionDigits: parseFloat(numStr) < 1 ? 8 : 4,
   });
 
 export const ExitToJar: FC = () => {

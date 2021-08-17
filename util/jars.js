@@ -1,4 +1,14 @@
-export const crvJars = ["3poolCRV", "renBTCCRV", "steCRV", "lusdCRV", "USDC"];
+export const crvJars = [
+  "3poolCRV",
+  "renBTCCRV",
+  "steCRV",
+  "lusdCRV",
+  "fraxCRV",
+  "USDC",
+  "IS3USD",
+  "ALETH",
+  "saddled4",
+];
 
 export const uniJars = [
   "MIR-UST",
@@ -21,6 +31,21 @@ export const sushiJars = [
   "yvBOOST-ETH",
   "SUSHI-ETH",
   "ALCX-ETH",
+  "CVX-ETH",
+  "LQTY",
+];
+
+export const polyJars = [
+  "COMETH-USDC",
+  "COMETH-PICKLE",
+  "COMETH-MATIC",
+  "DAI",
+  "am3CRV",
+  "PSLP-USDT",
+  "PSLP-MATIC",
+  "QLP-MIMATIC",
+  "QLP-QI",
+  "IS3USD",
 ];
 
 export const powerPool = "PICKLE-ETH";

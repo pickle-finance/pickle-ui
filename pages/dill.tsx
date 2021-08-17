@@ -3,8 +3,11 @@ import { Page } from "@geist-ui/react";
 import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
 import { DillFeature } from "../features/DILL/DILL";
+import { Connection } from "../containers/Connection";
 
 const Dill: FC = () => {
+  const { chainName } = Connection.useContainer();
+
   return (
     <>
       <TopBar />
@@ -17,7 +20,11 @@ const Dill: FC = () => {
             Stake your PICKLEs to receive a portion of the profits from
             PickleJars.
           </p>
-          <DillFeature />
+          {chainName === "Polygon" ? (
+            "Please switch to Ethereum network to use DILL features."
+          ) : (
+            <DillFeature />
+          )}
         </Page.Content>
         <Footer />
       </Page>
