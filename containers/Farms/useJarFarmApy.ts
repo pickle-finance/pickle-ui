@@ -11,7 +11,6 @@ import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 
 import mlErc20 from "@studydefi/money-legos/erc20";
-import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 // what comes in and goes out of this function
@@ -21,7 +20,7 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider, chainName } = Connection.useContainer();
+  const { multicallProvider } = Connection.useContainer();
 
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
 

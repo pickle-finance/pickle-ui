@@ -1,5 +1,5 @@
 import { FC, useState, ReactNode } from "react";
-import moment from "moment";
+import dayjs from "util/dayjs";
 import { Card, Radio, Spacer, Text } from "@geist-ui/react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import {
@@ -27,7 +27,7 @@ type ChartMode = "weekly" | "total";
 const formatDollarValue = (amount: number, digits: number) =>
   `$${roundNumber(amount, digits).toLocaleString()}`;
 
-const dateFormatter = (time: Date): string => moment(time).format("MMM D");
+const dateFormatter = (time: Date): string => dayjs(time).format("MMM D");
 const labelFormatter = (time: Date, data: any[]): string | ReactNode => {
   const payload: FeeDistributionDataPoint | undefined = data[0]?.payload;
   const formattedTime = dateFormatter(time);

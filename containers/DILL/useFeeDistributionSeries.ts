@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
-import moment from "moment";
+import dayjs from "util/dayjs";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
@@ -88,7 +88,7 @@ export function useFeeDistributionSeries() {
             : parseFloat(ethers.utils.formatEther(payouts[index]));
 
           const historicalEntry = picklePriceSeries.find((value) =>
-            moment(value[0]).isSame(distributionTime, "day"),
+            dayjs(value[0]).isSameOrAfter(distributionTime, "day"),
           );
           const picklePriceUsd = historicalEntry
             ? historicalEntry[1]

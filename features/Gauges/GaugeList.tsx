@@ -6,7 +6,6 @@ import Switch from "@material-ui/core/Switch";
 import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Connection } from "../../containers/Connection";
-import { useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { MC2Farm } from "../MasterchefV2/MC2Farm";
@@ -55,9 +54,6 @@ export const GaugeList: FC = () => {
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState(false);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
-  const [voteWeights, setVoteWeights] = useState<Weights>({});
-  const { status: voteTxStatus, vote } = useGaugeProxy();
-  const [showUserGauges, setShowUserGauges] = useState<boolean>(false);
   const { getUniPairDayAPY } = useUniPairDayData();
   const { jars } = Jars.useContainer();
 

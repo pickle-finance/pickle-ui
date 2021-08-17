@@ -1,4 +1,4 @@
-import { DEPOSIT_TOKENS_JAR_NAMES, DEPOSIT_TOKENS_NAME } from "../Jars/jars";
+import { DEPOSIT_TOKENS_JAR_NAMES } from "../Jars/jars";
 
 export const PICKLE_ETH_FARM = "0xdc98556ce24f007a5ef6dc1ce96322d65832a819";
 

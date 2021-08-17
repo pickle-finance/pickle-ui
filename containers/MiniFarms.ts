@@ -1,7 +1,6 @@
 import { createContainer } from "unstated-next";
 
 import { useWithReward } from "./MiniFarms/useWithReward";
-import { useUniV2Apy } from "./Farms/useUniV2Apy";
 import { useJarFarmApy } from "./Farms/useJarFarmApy";
 import { useFetchFarms } from "./Farms/useFetchFarms";
 import { useMaticJarApy } from "./MiniFarms/useMaticJarApy";
@@ -70,6 +69,7 @@ function useFarms() {
   const { farmsWithReward } = useWithReward(rawFarms);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
+
   const jarFarms = jarFarmWithMaticApy
     ?.map((farm) => {
       if (!FarmInfo[farm.lpToken]) return null;

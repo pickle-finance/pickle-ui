@@ -1,12 +1,11 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox } from "@geist-ui/react";
 
 import { MiniFarmCollapsible } from "../MiniFarms/MiniFarmCollapsible";
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { MiniIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { pickleWhite } from "../../util/constants";
 import { NETWORK_NAMES } from "containers/config";
 

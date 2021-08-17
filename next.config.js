@@ -1,5 +1,8 @@
-/* eslint-env node */
-module.exports = {
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
+module.exports = withBundleAnalyzer({
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -12,4 +15,4 @@ module.exports = {
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
     apiHost: "https://api.pickle.finance/prod",
   },
-};
+});
