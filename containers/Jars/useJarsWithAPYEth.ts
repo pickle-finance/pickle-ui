@@ -366,7 +366,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return [
         {
-          "LQTY+FXS+FEI+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
+          "LQTY+FXS+TRIBE+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
           apr: saddled4Apy * 0.8 * 100,
         },
       ];
