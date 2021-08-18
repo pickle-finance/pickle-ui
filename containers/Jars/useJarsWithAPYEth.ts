@@ -326,7 +326,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const [
         fxsRateBN,
-        feiRateBN,
+        tribeRateBN,
         alcxRateBN,
         lqtyRateBN,
         totalValueLockedBN,
@@ -340,7 +340,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const valueRewardedPerYear =
         prices.fxs * parseFloat(formatEther(fxsRateBN)) * (360 * 24 * 60 * 60) +
-        prices.fei * parseFloat(formatEther(feiRateBN)) * (360 * 24 * 60 * 60) +
+        prices.tribe *
+          parseFloat(formatEther(tribeRateBN)) *
+          (360 * 24 * 60 * 60) +
         prices.alcx *
           parseFloat(formatEther(alcxRateBN)) *
           (360 * 24 * 60 * 60) +
@@ -364,7 +366,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return [
         {
-          "LQTY+FXS+FEI+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
+          "LQTY+FXS+TRIBE+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
           apr: saddled4Apy * 0.8 * 100,
         },
       ];
