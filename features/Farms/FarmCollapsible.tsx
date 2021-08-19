@@ -129,6 +129,9 @@ export const FARM_LP_TO_ICON = {
   "0x729C6248f9B1Ce62B3d5e31D4eE7EE95cAB32dfD": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/frax.webp"} />
   ),
+  "0x4E9806345fb39FFebd70A01f177A675805019ba8": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
+  ),
   "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
   ),

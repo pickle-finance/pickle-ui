@@ -649,6 +649,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         usdcApy,
         crvLusdApy,
         crvFraxApy,
+        crvIBApy,
         alcxEthAlcxApy,
         cvxEthApy,
         sushiCvxEthApy,
@@ -663,6 +664,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].lusdCRV),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].fraxCRV),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].ibCRV),
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
           "alcx",
@@ -943,6 +945,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.fraxCRV) {
           APYs = [...crvFraxApy];
           totalAPY = crvFraxApy[0]?.apr || 0;
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ibCRV) {
+          APYs = [...crvIBApy];
+          totalAPY = crvIBApy[0]?.apr || 0;
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_CVX_ETH) {
