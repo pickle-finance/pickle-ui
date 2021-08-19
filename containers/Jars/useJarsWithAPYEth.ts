@@ -223,6 +223,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         },
       ];
     }
+    return [];
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
