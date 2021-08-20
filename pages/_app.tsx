@@ -92,11 +92,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       <Head>
         <title>Pickle Interface</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:wght@300&family=VT323&display=swap"
-          rel="stylesheet"
-        />
-
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"
