@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import * as Sentry from "@sentry/react";
+
 import { Connection } from "../../containers/Connection";
 import { Farms } from "../../containers/Farms";
 import { FarmWithApy } from "../../containers/Farms/useUniV2Apy";
@@ -21,7 +23,7 @@ export const useInfoAPYs = () => {
   const [p3CRVAPYs, setp3CRVAPYs] = useState<JarApy[] | null>(null);
   const [pDAIAPYs, setpDAIAPYs] = useState<JarApy[] | null>(null);
 
-  const fetchAPYs = async () => {
+  const fetchAPYs = () => {
     if (farms && jars) {
       // get farms
       const getFarm = (farms: FarmWithApy[], addr: string) =>
@@ -45,7 +47,11 @@ export const useInfoAPYs = () => {
   };
 
   useEffect(() => {
-    fetchAPYs();
+    try {
+      fetchAPYs();
+    } catch (err) {
+      Sentry.captureException(err);
+    }
   }, [jars, blockNum]);
 
   return { prenCRVAPYs, p3CRVAPYs, pDAIAPYs };
