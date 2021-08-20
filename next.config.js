@@ -4,9 +4,11 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require("@sentry/nextjs");
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
-});
+
+// To run `yarn analyze` uncomment the respective lines:
+// const withBundleAnalyzer = require("@next/bundle-analyzer")({
+//   enabled: process.env.ANALYZE === "true",
+// });
 
 const moduleExports = {
   typescript: {
@@ -35,6 +37,5 @@ const SentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
-module.exports = withBundleAnalyzer(
-  withSentryConfig(moduleExports, SentryWebpackPluginOptions),
-);
+// module.exports = withBundleAnalyzer(moduleExports);
+module.exports = withSentryConfig(moduleExports, SentryWebpackPluginOptions);
