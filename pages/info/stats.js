@@ -21,7 +21,6 @@ import Grid from "@material-ui/core/Grid";
 import dayjs from "util/dayjs";
 import clsx from "clsx";
 import { Page } from "@geist-ui/react";
-import { TopBar } from "../../features/TopBar/TopBar";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
@@ -95,7 +94,6 @@ export default function Statistics() {
   );
   return (
     <>
-      <TopBar />
       <Page>
         <InfoBar />
         <Grid container spacing={2}>

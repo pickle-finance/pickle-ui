@@ -31,6 +31,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
 import { PoolData } from "../containers/Jars/usePoolData";
+import { TopBar } from "../features/TopBar/TopBar";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -108,6 +109,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
       <GeistProvider theme={geistTheme}>
         <WithContainers>
+          <TopBar />
           <Component {...pageProps} />
         </WithContainers>
       </GeistProvider>

@@ -3,14 +3,12 @@ import { Page, Note, Grid, Spacer } from "@geist-ui/react";
 import { ArrowLeft } from "@geist-ui/react-icons";
 
 import Link from "next/link";
-import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
 import { FarmList } from "../features/Farms/FarmList";
 
 const Farms: FC = () => {
   return (
     <>
-      <TopBar />
       <Page>
         <Page.Content>
           {/* <strong>

@@ -7,7 +7,6 @@ import JarValueChart from "../../components/JarValueChart";
 import Grid from "@material-ui/core/Grid";
 import clsx from "clsx";
 import { Page } from "@geist-ui/react";
-import { TopBar } from "../../features/TopBar/TopBar";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
@@ -124,7 +123,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <TopBar />
       <Page>
         <InfoBar />
         <Grid container spacing={2}>
