@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import * as Sentry from "@sentry/react";
+import * as Sentry from "@sentry/nextjs";
 
 import { Connection } from "../../containers/Connection";
 import { Farms } from "../../containers/Farms";
