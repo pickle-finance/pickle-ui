@@ -79,6 +79,9 @@ import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/fact
 import { FossilFarms } from "./Contracts/FossilFarms";
 import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factories/FossilFarms__factory";
 
+import { CvxBooster } from "./Contracts/CvxBooster";
+import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/CvxBooster__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -112,6 +115,7 @@ export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
 export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
 export const FRAX_POOL_ADDR = "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B";
+export const CVX_BOOSTER = "0xF403C135812408BFbE8713b5A23a04b3D48AAE31";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 
@@ -294,6 +298,8 @@ function useContracts() {
     null,
   );
 
+  const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
+
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
@@ -412,6 +418,7 @@ function useContracts() {
       setPickleSushiRewarder(
         PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer),
       );
+      setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
     }
   };
 
@@ -466,6 +473,7 @@ function useContracts() {
     ironchef,
     sushiMigrator,
     pickleSushiRewarder,
+    cvxBooster,
   };
 }
 
