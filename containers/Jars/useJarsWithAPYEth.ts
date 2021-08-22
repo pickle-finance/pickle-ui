@@ -613,17 +613,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateConvexAPY = async (lpTokenAddress: string) => {
-    const curveAPY = await fetch(
-      "https://www.convexfinance.com/api/curve-apys",
+    const curveAPY = (await fetch(
+      "https://cors.bridged.cc/https://www.convexfinance.com/api/curve-apys",
       {
         method: "GET",
         headers: new Headers({
-          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest"
         }),
       },
-    ).then((x) => x.json()?.apys);
-  
-    console.log(curveAPY)
+    ).then((x) => x.json()))?.apys;
     const cvxPool = convexPools[lpTokenAddress];
     if (curveAPY && cvxBooster && multicallProvider && prices) {
       const lpApy = parseFloat(curveAPY.[cvxPool.tokenName]?.baseApy);
@@ -643,21 +641,22 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         crvRewardsMC.duration()
       ])
 
-      const poolValue = parseFloat(formatEther(depositLocked)) * (cvxPool.tokenName === "steth" ? prices.eth : 0);
-
+      const isStEth = cvxPool.tokenName === "steth"
+      
+      const poolValue = parseFloat(formatEther(depositLocked)) * ( isStEth ? prices.eth : 0);
+      
       const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)))
       const cvxValuePerYear = cvxReward * prices.cvx * ONE_YEAR_SECONDS / duration.toNumber(); 
-
+      
       const cvxApy = cvxValuePerYear / poolValue * 100
 
-
-      return [{ lp: lpApy}, {crv: getCompoundingAPY(crvApy * 0.8), apr: crvApy *0.8 }, {cvx: getCompoundingAPY(cvxApy * 0.8), apr: cvxApy *0.8}, {reward: getCompoundingAPY(rewardApy * 0.8), apr: rewardApy * 0.8}];
+      return [{ lp: lpApy}, {crv: crvApy * 0.8, apr: crvApy * 0.8 }, {cvx: cvxApy * 0.8, apr: cvxApy *0.8}, {ldo: rewardApy * 0.8, apr: rewardApy * 0.8}];
     }
     return [];
   };
 
   /* Adapted from https://docs.convexfinance.com/convexfinanceintegration/cvx-minting */
-  
+
   // constants
   const cliffSize = 100000; // new cliff every 100,000 tokens
   const cliffCount = 1000; // 1,000 cliffs
@@ -667,7 +666,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     const cvx = Erc20Factory.connect(addresses.cvx, provider)
   
     // first get total supply
-    const cvxTotalSupply = await cvx.totalSupply();
+    const cvxTotalSupply = parseFloat(formatEther((await cvx.totalSupply())))
   
     // get current cliff
     const currentCliff = cvxTotalSupply / cliffSize;
