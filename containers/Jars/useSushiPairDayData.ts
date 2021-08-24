@@ -56,12 +56,11 @@ export const useSushiPairDayData = () => {
           SUSHI_LP_TOKENS.length
         }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${SUSHI_LP_TOKENS.join(
           '\\", \\"',
-        )}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },
     ).then((x) => x.json());
-
     setSushiPairDayData(res?.data?.pairDayDatas);
   };
 
