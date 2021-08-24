@@ -31,6 +31,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
 import { PoolData } from "../containers/Jars/usePoolData";
+import { TopBar } from "../features/TopBar/TopBar";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -92,11 +93,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       <Head>
         <title>Pickle Interface</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:wght@300&family=VT323&display=swap"
-          rel="stylesheet"
-        />
-
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"
@@ -113,6 +109,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
       <GeistProvider theme={geistTheme}>
         <WithContainers>
+          <TopBar />
           <Component {...pageProps} />
         </WithContainers>
       </GeistProvider>

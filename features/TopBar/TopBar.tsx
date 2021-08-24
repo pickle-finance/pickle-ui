@@ -29,16 +29,6 @@ const Content = styled.div`
   align-items: center;
 `;
 
-const Alert = styled.div`
-  color: white;
-  background: red;
-  text-transform: uppercase;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const TopBar: FC = () => {
   const { address, provider } = Connection.useContainer();
   const isConnected = !!provider && !!address;
