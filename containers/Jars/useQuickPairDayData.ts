@@ -35,7 +35,7 @@ export const useQuickPairDayData = () => {
         referrer: "https://thegraph.com/explorer/subgraph/uniswap/uniswap-v2",
         body: `{"query":"{\\n  pairDayDatas(first: ${QUICK_LP_TOKENS.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${QUICK_LP_TOKENS.join(
           '\\", \\"',
-        )}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
+        ).toLowerCase()}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },

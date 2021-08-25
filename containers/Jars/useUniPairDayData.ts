@@ -50,7 +50,7 @@ export const useUniPairDayData = () => {
         referrer: "https://thegraph.com/explorer/subgraph/uniswap/uniswap-v2",
         body: `{"query":"{\\n  pairDayDatas(first: ${UNI_LP_TOKENS.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${UNI_LP_TOKENS.join(
           '\\", \\"',
-        )}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
+        ).toLowerCase()}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },
@@ -62,7 +62,9 @@ export const useUniPairDayData = () => {
   const getUniPairDayAPY = (pair: string) => {
     if (uniPairDayData) {
       const filteredPair = uniPairDayData.filter(
-        (x) => x.pairAddress.toLowerCase() === pair.toLowerCase(),
+        (x) => {
+          return x.pairAddress.toLowerCase() === pair.toLowerCase()
+        }
       );
 
       if (filteredPair.length > 0) {
@@ -80,7 +82,7 @@ export const useUniPairDayData = () => {
   };
 
   useEffect(() => {
-    if (!uniPairDayData) queryTheGraph();
+    queryTheGraph();
   }, []);
 
   return {
