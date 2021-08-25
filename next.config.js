@@ -31,8 +31,7 @@ const moduleExports = {
       },
     ]
   },
-});
-};
+}
 
 const SentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
