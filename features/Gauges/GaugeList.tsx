@@ -30,6 +30,10 @@ export interface UserGaugeDataWithAPY extends UserGaugeData {
   totalAPY: number;
 }
 
+export interface JarApy {
+  [k: string]: number;
+}
+
 interface Weights {
   [key: string]: number;
 }

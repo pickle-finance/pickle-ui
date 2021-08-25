@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-import { useState, FC, useEffect } from "react";
+import { useState, FC, useEffect, ReactNode } from "react";
 import {
   Button,
   Link,
@@ -47,7 +47,9 @@ const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
 
-export const FARM_LP_TO_ICON = {
+export const FARM_LP_TO_ICON: {
+  [key: string]: string | ReactNode;
+} = {
   // Polygon,
   "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c": (
     <LpIcon swapIconSrc={"/comethswap.png"} tokenIconSrc={"/usdc.png"} />
