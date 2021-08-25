@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -13,7 +14,7 @@ import {
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
@@ -29,11 +30,10 @@ interface FarmDataWithAPY extends UserFarmDataMatic {
   tooltipText: string;
 }
 
-const formatNumber = (num?: number) => {
-  if (!num) return "--";
+const formatNumber = (num: number) => {
   return num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: num < 1 ? 8 : 2,
+    maximumFractionDigits: num < 1 ? 6 : 4,
   });
 };
 
@@ -164,10 +164,10 @@ export const JarMiniFarmCollapsible: FC<{
     balance: farmBalance,
     staked,
     harvestable,
+    harvestableMatic,
     depositTokenName: farmDepositTokenName,
     poolIndex,
     tooltipText,
-    APYs,
     totalAPY,
   } = farmData;
 
@@ -209,6 +209,10 @@ export const JarMiniFarmCollapsible: FC<{
   const harvestableStr = formatNumber(
     parseFloat(formatEther(harvestable || 0)),
   );
+
+  const harvestableMaticStr = parseFloat(
+    formatEther(harvestableMatic || 0),
+  ).toLocaleString();
 
   const balanceNum = parseFloat(formatEther(balance));
 
@@ -380,7 +384,7 @@ export const JarMiniFarmCollapsible: FC<{
             <TokenIcon
               src={
                 FARM_LP_TO_ICON[
-                  depositToken.address as keyof typeof FARM_LP_TO_ICON
+                  farmDepositToken.address as keyof typeof FARM_LP_TO_ICON
                 ]
               }
             />
@@ -397,23 +401,27 @@ export const JarMiniFarmCollapsible: FC<{
           </JarName>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={balanceNum === 0}>{balanceStr}</Data>
+            <br />
             <Label>Wallet Balance</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
+              {harvestableStr} <MiniIcon source={"/pickle.png"} />
+              <br />
+              {harvestableMaticStr} <MiniIcon source={"/matic.png"} />
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
+              <br />
               <Label>Deposit Value</Label>
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data>
-              <Tooltip text={tooltipText}>
+              <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {totalAPY.toFixed(2) + "%" || "--"}
               </Tooltip>
               <img
@@ -422,19 +430,13 @@ export const JarMiniFarmCollapsible: FC<{
                 style={{ marginLeft: 5 }}
               />
               <div>
-                <Tooltip
-                  text={`This yield is calculated in real time from a base rate of ${apr.toFixed(
-                    2,
-                  )}% which we auto-compound regularly.`}
-                >
-                  <span>APY</span>
-                </Tooltip>
+                <span>APY</span>
               </div>
             </Data>
-            )
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
+            <br />
             <Label>TVL</Label>
           </Grid>
         </Grid.Container>
@@ -599,9 +601,7 @@ export const JarMiniFarmCollapsible: FC<{
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    setUnstakeAmount(
-                      formatEther(staked),
-                    );
+                    setUnstakeAmount(formatEther(staked));
                   }}
                 >
                   Max

@@ -3,6 +3,8 @@ import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 export const PICKLE_POWER = "pickle-eth";
 
 export const GAUGE_TVL_KEY = {
+
+  //Ethereum
   [JAR_DEPOSIT_TOKENS.Ethereum.sCRV]: "scrv",
   [JAR_DEPOSIT_TOKENS.Ethereum["3CRV"]]: "3poolcrv",
   [JAR_DEPOSIT_TOKENS.Ethereum.steCRV]: "stecrv",
@@ -34,6 +36,22 @@ export const GAUGE_TVL_KEY = {
   [JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH]: "mim-eth",
   [JAR_DEPOSIT_TOKENS.Ethereum.UNIV2_FOX_ETH]: "fox-eth",
   [JAR_DEPOSIT_TOKENS.Ethereum.SUSHI_TRU_ETH]: "tru-eth",
+  [JAR_DEPOSIT_TOKENS.Ethereum.fraxCRV]: "fraxcrv",
+
+  // Polygon
+  [JAR_DEPOSIT_TOKENS.Polygon.DAI]: "dai",
+  [JAR_DEPOSIT_TOKENS.Polygon.COMETH_USDC_WETH]: "cometh-usdc",
+  [JAR_DEPOSIT_TOKENS.Polygon.COMETH_PICKLE_MUST]: "cometh-pickle",
+  [JAR_DEPOSIT_TOKENS.Polygon.COMETH_MATIC_MUST]: "cometh-matic",
+  [JAR_DEPOSIT_TOKENS.Polygon.AM3CRV]: "am3crv",
+  [JAR_DEPOSIT_TOKENS.Polygon.POLY_SUSHI_ETH_USDT]: "pslp-usdt",
+  [JAR_DEPOSIT_TOKENS.Polygon.POLY_SUSHI_MATIC_ETH]: "pslp-matic",
+  [JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_USDC]: "qlp-mimatic",
+  [JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_QI]: "qlp-qi",
+  [JAR_DEPOSIT_TOKENS.Polygon.IRON_3USD]: "is3usd",
+  [JAR_DEPOSIT_TOKENS.Polygon.POLY_SUSHI_DINO_USDC]: "dino-usdc",
+  [JAR_DEPOSIT_TOKENS.Polygon.QUICK_DINO_WETH]: "dino-weth"
+  
 };
 
 export const getFormatString = (value) => {

@@ -25,8 +25,6 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "containers/config";
 
 interface ButtonStatus {
   disabled: boolean;

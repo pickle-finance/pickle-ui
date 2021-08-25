@@ -11,6 +11,7 @@ import {
   Tooltip,
   Select,
 } from "@geist-ui/react";
+import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -34,6 +35,7 @@ import { tokenInfo, useBalance } from "../Zap/useBalance";
 import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
 import { NETWORK_NAMES } from "../../containers/config";
+import { uncompoundAPY } from "../../util/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -65,7 +67,7 @@ const formatAPY = (apy: number) => {
 const formatValue = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: num < 1 ? 8 : 4,
+    maximumFractionDigits: num < 1 ? 6 : 4,
   });
 
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
@@ -265,6 +267,7 @@ export const JarGaugeCollapsible: FC<{
     depositTokenLink,
     apr,
   } = jarData;
+  console.log(name, APYs);
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
 
@@ -327,23 +330,28 @@ export const JarGaugeCollapsible: FC<{
   const realAPY = totalAPY + pickleAPY;
 
   const apyRangeTooltipText = [
+    `Base APRs:`,
     `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
-      const v = Object.values(x)[0];
+      const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
   ]
     .filter((x) => x)
-    .join(" + ");
+    .join(` <br/> `);
+
   const yourApyTooltipText = [
+    `Base APRs:`,
     `pickle: ${formatAPY(pickleAPY)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
-      const v = Object.values(x)[0];
+      const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
-  ].filter((x) => x);
+  ]
+    .filter((x) => x)
+    .join(` <br/> `);
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -622,20 +630,6 @@ export const JarGaugeCollapsible: FC<{
     .filter((x) => x)
     .join(" + ");
 
-  const renderTooltip = () => {
-    if (isYearnJar) {
-      return `This jar deposits into Yearn's ${
-        APYs[1].vault
-      }, The base rate of ${apr.toFixed(
-        2,
-      )}% is provided by the underlying Yearn strategy`;
-    } else {
-      return `This yield is calculated in real time from a base rate of ${apr.toFixed(
-        2,
-      )}% which we auto-compound regularly.`;
-    }
-  };
-
   const tvlNum =
     tvlData &&
     GAUGE_TVL_KEY[depositToken.address] &&
@@ -688,7 +682,7 @@ export const JarGaugeCollapsible: FC<{
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
             {!gaugeData ? (
               <Data>
-                <Tooltip text={tooltipText}>
+                <Tooltip text={ReactHtmlParser(apyRangeTooltipText)}>
                   {totalAPY.toFixed(2) + "%" || "--"}
                 </Tooltip>
                 <img
@@ -697,16 +691,20 @@ export const JarGaugeCollapsible: FC<{
                   style={{ marginLeft: 5 }}
                 />
                 <div>
-                  <Tooltip text={renderTooltip()}>
-                    <span>APY</span>
-                  </Tooltip>
+                  <span>APY</span>
                 </div>
               </Data>
             ) : (
               <div>
                 <div>
                   <Tooltip
-                    text={totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}
+                    text={
+                      totalAPY + fullApy === 0 ? (
+                        "--"
+                      ) : (
+                        <>{ReactHtmlParser(apyRangeTooltipText)}</>
+                      )
+                    }
                   >
                     <div style={{ display: "flex" }}>
                       <span>

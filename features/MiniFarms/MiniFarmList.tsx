@@ -10,6 +10,7 @@ import { useJarData } from "features/Gauges/useJarData";
 import { JAR_FARM_MAP } from "../../containers/Farms/farms";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
+import { uncompoundAPY } from "../../util/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -43,11 +44,16 @@ export const MiniFarmList: FC = () => {
       const farmingJar = jarData.filter((x) => x.name === jar.jarName)[0];
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
     }
-    const tooltipText = APYs.map((x) => {
-      const k = Object.keys(x)[0];
-      const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
-    }).join(" + ");
+    const tooltipText = [
+      `Base APRs:`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = uncompoundAPY(Object.values(x)[0]);
+        return `${k}: ${v.toFixed(2)}%`;
+      }),
+    ]
+      .filter((x) => x)
+      .join(" <br/> ");
 
     const totalAPY = APYs.map((x) => {
       return Object.values(x).reduce((acc, y) => acc + y, 0);

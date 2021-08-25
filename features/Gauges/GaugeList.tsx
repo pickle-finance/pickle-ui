@@ -102,7 +102,7 @@ export const GaugeList: FC = () => {
 
   const activeJars = jarData.filter(
     (jar) =>
-      JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
+      JAR_ACTIVE[jar.depositTokenName],
   );
 
   const inactiveJars = jarData.filter(
