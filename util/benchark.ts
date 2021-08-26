@@ -32,7 +32,8 @@ export const end = (name: string, value: any) => {
   const key = `${name}_ended`;
 
   if (!(window as any)[key]) {
-    if (value) {
+    // Handle 0 values.
+    if (value || typeof value === "number") {
       console.timeEnd(`tracking_${name}`);
       (window as any)[key] = true;
     }

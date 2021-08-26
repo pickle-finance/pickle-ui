@@ -210,6 +210,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP TRU/ETH",
     poolName: "pSLP TRU/ETH",
   },
+  "0x4E9806345fb39FFebd70A01f177A675805019ba8": {
+    tokenName: "pYearnIronBankCRV",
+    poolName: "Pickled Yearn crvIB",
+  },
 };
 
 function useFarms() {
