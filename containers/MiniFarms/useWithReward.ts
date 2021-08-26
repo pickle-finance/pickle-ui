@@ -47,8 +47,9 @@ export const useWithReward = (rawFarms: Input): Output => {
       prices &&
       pickleRewarder &&
       multicallProvider &&
-      maticPerSecond &&
-      picklePerSecond
+      // NOTE: these values can be 0, which is a falsy value.
+      typeof maticPerSecond === "number" &&
+      typeof picklePerSecond === "number"
     ) {
       const totalAllocPoints = rawFarms.reduce(
         (acc: number, farm) => acc + farm.allocPoint.toNumber(),
