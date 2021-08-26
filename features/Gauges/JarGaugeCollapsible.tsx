@@ -267,7 +267,6 @@ export const JarGaugeCollapsible: FC<{
     depositTokenLink,
     apr,
   } = jarData;
-  console.log(name, APYs);
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
 
@@ -849,11 +848,11 @@ export const JarGaugeCollapsible: FC<{
             </Grid>
           </Grid.Container>
         </Grid>
-        {depositedNum !== 0 && !isEntryBatch && (
+        {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                Balance {depositedStr} (
+                Balance: {depositedStr} (
                 <Tooltip
                   text={`${
                     deposited && ratio
@@ -953,7 +952,7 @@ export const JarGaugeCollapsible: FC<{
             </Grid>
           )}
           {Boolean(stakedNum) && (
-            <Grid xs={24} md={!depositedNum && stakedNum ? 24 : 12}>
+            <Grid xs={24} md={(!depositedNum || isEntryBatch || isExitBatch) && stakedNum ? 24 : 12}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   Staked: {stakedStr} {gaugeDepositTokenName}
