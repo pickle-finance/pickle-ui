@@ -6,7 +6,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import {
   ERC20Transfer,
@@ -19,6 +19,7 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
+import { Balances } from "../../containers/Balances";
 
 interface DataProps {
   isZero?: boolean;
@@ -153,7 +154,7 @@ export const JarMiniFarmCollapsible: FC<{
   const balStr = formatNumber(balNum);
 
   const depositedStr = formatNumber(depositedNum);
-
+  
   const depositedUnderlyingStr = formatNumber(
     parseFloat(formatEther(deposited)) * ratio,
   );
@@ -203,6 +204,7 @@ export const JarMiniFarmCollapsible: FC<{
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum } = Connection.useContainer();
   const { minichef } = Contracts.useContainer();
+  const { getBalance } = Balances.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
 
@@ -249,12 +251,12 @@ export const JarMiniFarmCollapsible: FC<{
           transferCallback: async () => {
             return jarContract
               .connect(signer)
-              .deposit(ethers.utils.parseEther(depositAmount));
+              .deposit(parseEther(depositAmount));
           },
         });
+        const Token = erc20?.attach(farmDepositToken.address).connect(signer);
         if (!approved) {
           setDepositStakeButton("Approving...");
-          const Token = erc20?.attach(farmDepositTokenName).connect(signer);
           const tx = await Token.approve(
             minichef.address,
             ethers.constants.MaxUint256,
@@ -262,7 +264,12 @@ export const JarMiniFarmCollapsible: FC<{
           await tx.wait();
         }
         setDepositStakeButton("Staking...");
-        const farmTx = await minichef.deposit(poolIndex, deposited, address);
+        const newBalance = await Token.balanceOf(address)
+        const farmTx = await minichef.deposit(
+          poolIndex,
+          newBalance,
+          address,
+        );
         await farmTx.wait();
         setDepositStakeButton(null);
         setIsEntryBatch(false);
@@ -344,7 +351,7 @@ export const JarMiniFarmCollapsible: FC<{
         setHarvestButton,
       );
     }
-  }, [erc20TransferStatuses, jarData]);
+  }, [erc20TransferStatuses, jarData, depositedStr]);
 
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
@@ -444,7 +451,10 @@ export const JarMiniFarmCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={depositedNum && !isEntryBatch ? 12 : 24}>
+        <Grid
+          xs={24}
+          md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}
+        >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance: {balStr} {depositTokenName}
@@ -478,7 +488,7 @@ export const JarMiniFarmCollapsible: FC<{
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)
-                          .deposit(ethers.utils.parseEther(depositAmount));
+                          .deposit(parseEther(depositAmount));
                       },
                     });
                   }
@@ -500,11 +510,11 @@ export const JarMiniFarmCollapsible: FC<{
             </Grid>
           </Grid.Container>
         </Grid>
-        {depositedNum !== 0 && !isEntryBatch && (
+        {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                Balance {depositedStr} (
+                Balance: {depositedStr} (
                 <Tooltip
                   text={`${
                     deposited && ratio
@@ -545,7 +555,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(ethers.utils.formatEther(withdrawAmount));
+                        .withdraw(parseEther(withdrawAmount));
                     },
                     approval: false,
                   });
@@ -591,7 +601,14 @@ export const JarMiniFarmCollapsible: FC<{
             </Grid>
           )}
           {Boolean(stakedNum) && (
-            <Grid xs={24} md={!depositedNum && stakedNum ? 24 : 12}>
+            <Grid
+              xs={24}
+              md={
+                (!depositedNum || isEntryBatch || isExitBatch) && stakedNum
+                  ? 24
+                  : 12
+              }
+            >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   Staked: {stakedStr} {farmDepositTokenName}
