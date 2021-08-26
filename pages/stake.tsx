@@ -1,13 +1,11 @@
 import { FC } from "react";
 import { Page, Note, Link } from "@geist-ui/react";
-import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
 import { Stake as StakeFeature } from "../features/Stake/Stake";
 
 const Stake: FC = () => {
   return (
     <>
-      <TopBar />
       <Page>
         <Page.Content>
           <Note type="warning">
