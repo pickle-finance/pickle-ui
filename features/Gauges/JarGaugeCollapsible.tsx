@@ -495,7 +495,7 @@ export const JarGaugeCollapsible: FC<{
           transferCallback: async () => {
             return jarContract
               .connect(signer)
-              .deposit(ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18));
+              .deposit(convertDecimals(depositAmount));
           },
         });
 
@@ -553,6 +553,9 @@ export const JarGaugeCollapsible: FC<{
       }
     }
   };
+
+  const convertDecimals = (num: string) =>
+    ethers.utils.parseUnits(num, isUsdc ? 6 : 18);
 
   useEffect(() => {
     if (jarData && !isExitBatch) {
@@ -812,12 +815,7 @@ export const JarGaugeCollapsible: FC<{
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)
-                          .deposit(
-                            ethers.utils.parseUnits(
-                              depositAmount,
-                              isUsdc ? 6 : 18,
-                            ),
-                          );
+                          .deposit(convertDecimals(depositAmount));
                       },
                     });
                   }
@@ -901,12 +899,7 @@ export const JarGaugeCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(
-                          ethers.utils.parseUnits(
-                            withdrawAmount,
-                            isUsdc ? 6 : 18,
-                          ),
-                        );
+                        .withdraw(convertDecimals(withdrawAmount));
                     },
                     approval: false,
                   });
@@ -952,7 +945,14 @@ export const JarGaugeCollapsible: FC<{
             </Grid>
           )}
           {Boolean(stakedNum) && (
-            <Grid xs={24} md={(!depositedNum || isEntryBatch || isExitBatch) && stakedNum ? 24 : 12}>
+            <Grid
+              xs={24}
+              md={
+                (!depositedNum || isEntryBatch || isExitBatch) && stakedNum
+                  ? 24
+                  : 12
+              }
+            >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   Staked: {stakedStr} {gaugeDepositTokenName}
@@ -1015,12 +1015,9 @@ export const JarGaugeCollapsible: FC<{
                       recipient: gaugeDepositToken.address,
                       approval: false,
                       transferCallback: async () => {
-                        return gauge.withdraw(
-                          ethers.utils.parseUnits(
-                            unstakeAmount,
-                            isUsdc ? 6 : 18,
-                          ),
-                        );
+                        return convertDecimals(unstakeAmount).eq(staked)
+                          ? gauge.exit()
+                          : convertDecimals(unstakeAmount);
                       },
                     });
                   }
