@@ -115,6 +115,7 @@ export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
 export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
 export const FRAX_POOL_ADDR = "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B";
+export const IRONBANK_POOL_ADDR = "0x5282a4eF67D9C33135340fB3289cc1711c13638C";
 export const CVX_BOOSTER = "0xF403C135812408BFbE8713b5A23a04b3D48AAE31";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
@@ -264,6 +265,7 @@ function useContracts() {
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
   const [fraxPool, setFraxPool] = useState<Pool | null>(null);
+  const [ibPool, setIBPool] = useState<Pool | null>(null);
   const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
     null,
   );
@@ -400,6 +402,8 @@ function useContracts() {
 
       setFraxPool(PoolFactory.connect(FRAX_POOL_ADDR, signer));
 
+      setIBPool(PoolFactory.connect(IRONBANK_POOL_ADDR, signer));
+
       setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
       setFossilFarms(FossilFarmsFactory.connect(FOSSIL_FARMS, signer));
       setSushiComplexRewarder(
@@ -461,6 +465,7 @@ function useContracts() {
     yearnRegistry,
     lusdPool,
     fraxPool,
+    ibPool,
     minichef,
     sushiMinichef,
     fossilFarms,

@@ -138,6 +138,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
   ),
+  "0x5282a4ef67d9c33135340fb3289cc1711c13638c": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
+  ),
 
   // Polygon Jars
 
