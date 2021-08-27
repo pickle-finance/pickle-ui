@@ -728,7 +728,7 @@ export const JarGaugeCollapsible: FC<{
                 {Boolean(realAPY) && (
                   <div>
                     <Tooltip
-                      text={realAPY === 0 ? "--" : yourApyTooltipText}
+                      text={realAPY === 0 ? "--" : ReactHtmlParser(yourApyTooltipText)}
                       style={{ marginTop: 5 }}
                     >
                       <div style={{ display: "flex" }}>
