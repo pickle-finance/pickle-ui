@@ -45,6 +45,7 @@ import {
   formatEther,
   formatUnits,
   getJsonWalletAddress,
+  parseEther,
 } from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
 import erc20 from "@studydefi/money-legos/erc20";
@@ -68,6 +69,9 @@ interface PoolInfo {
   [key: string]: {
     poolId: number;
     tokenName: string;
+    rewardName: string;
+    tokenPrice: number;
+    rewardPrice: number;
   };
 }
 
@@ -94,12 +98,7 @@ const abracadabraIds: PoolId = {
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": 2,
 };
 
-const convexPools: PoolInfo = {
-  "0x06325440D014e39736583c165C2963BA99fAf14E": {
-    poolId: 25,
-    tokenName: "steth",
-  },
-};
+
 
 const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
 
@@ -190,6 +189,23 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     null,
   );
   const [tvlData, setTVLData] = useState<Array<Object>>([]);
+
+  const convexPools: PoolInfo = {
+    "0x06325440D014e39736583c165C2963BA99fAf14E": {
+      poolId: 25,
+      tokenName: "steth",
+      rewardName: "ldo",
+      tokenPrice: prices?.eth,
+      rewardPrice: prices?.ldo
+    },
+    "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": {
+      poolId: 40,
+      tokenName: "mim",
+      rewardName: "spell",
+      tokenPrice: prices?.dai,
+      rewardPrice: prices?.spell
+    }
+  };
 
   const calculateMirAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
@@ -623,34 +639,37 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       },
     ).then((x) => x.json()))?.apys;
     const cvxPool = convexPools[lpTokenAddress];
-    if (curveAPY && cvxBooster && multicallProvider && prices) {
+    if (curveAPY && cvxBooster && multicallProvider && prices && stakingRewards) {
       const lpApy = parseFloat(curveAPY.[cvxPool.tokenName]?.baseApy);
       const crvApy = parseFloat(curveAPY.[cvxPool.tokenName]?.crvApy);
-      const rewardApy = parseFloat(curveAPY.[cvxPool.tokenName]?.additionalRewards[0].apy);
 
-      const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId)
+      const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId);
 
       const crvRewardsMC = new MulticallContract(
         poolInfo.crvRewards,
         CrvRewardsABI,
       );
 
-      const [crvReward, depositLocked, duration] = await multicallProvider.all([
+      const [crvReward, depositLocked, duration, extraRewardsAddress] = await multicallProvider.all([
         crvRewardsMC.currentRewards(),
         crvRewardsMC.totalSupply(),
-        crvRewardsMC.duration()
+        crvRewardsMC.duration(),
+        crvRewardsMC.extraRewards(0)
       ])
 
-      const isStEth = cvxPool.tokenName === "steth"
+      const extraRewardsContract = stakingRewards.attach(extraRewardsAddress)
+      const rewardRate = +formatEther(await extraRewardsContract.rewardRate())
+      const rewardValuePerYear = rewardRate * cvxPool.rewardPrice * ONE_YEAR_SECONDS;
       
-      const poolValue = parseFloat(formatEther(depositLocked)) * ( isStEth ? prices.eth : 0);
+      const poolValue = parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
       
       const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)))
       const cvxValuePerYear = cvxReward * prices.cvx * ONE_YEAR_SECONDS / duration.toNumber(); 
       
-      const cvxApy = cvxValuePerYear / poolValue * 100
+      const cvxApy = cvxValuePerYear / poolValue
+      const rewardApy = rewardValuePerYear / poolValue
 
-      return [{ lp: lpApy}, {crv: crvApy * 0.8, apr: crvApy * 0.8 }, {cvx: cvxApy * 0.8, apr: cvxApy *0.8}, {ldo: rewardApy * 0.8, apr: rewardApy * 0.8}];
+      return [{ lp: lpApy}, {crv: getCompoundingAPY(crvApy * 0.8 / 100), apr: crvApy * 0.8 }, {cvx: getCompoundingAPY(cvxApy * 0.8), apr: cvxApy * 0.8 * 100}, {[cvxPool.rewardName]: getCompoundingAPY(rewardApy * 0.8), apr: rewardApy * 0.8 * 100}];
     }
     return [];
   };
@@ -805,7 +824,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ]);
 
       const [mim3crvApy, mimEthApy, spellEthApy] = await Promise.all([
-        calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
       ]);
