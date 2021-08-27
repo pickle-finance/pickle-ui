@@ -30,10 +30,8 @@ export const MiniFarmList: FC = () => {
         <h2>Loading...</h2>
         <span style={{ color: pickleWhite }}>
           If you have been waiting more than a few seconds, you may be
-          rate-limited. Consider changing to a different Polygon RPC such as
-          'https://matic-mainnet.chainstacklabs.com/' or
-          'https://rpc-mainnet.matic.network' or
-          'https://rpc-mainnet.maticvigil.com'
+          rate-limited. Consider changing to the following Polygon RPC
+          'https://polygon-rpc.com'
         </span>
       </>
     );
