@@ -59,7 +59,7 @@ import { Contract as MulticallContract } from "ethers-multicall";
 import RewarderABI from "../ABIs/rewarder.json";
 
 const AVERAGE_BLOCK_TIME = 13.22;
-const ONE_YEAR_SECONDS = (360 * 24 * 60 * 60)
+const ONE_YEAR_SECONDS = (365 * 24 * 60 * 60)
 
 interface PoolId {
   [key: string]: number;
@@ -642,6 +642,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     if (curveAPY && cvxBooster && multicallProvider && prices && stakingRewards) {
       const lpApy = parseFloat(curveAPY.[cvxPool.tokenName]?.baseApy);
       const crvApy = parseFloat(curveAPY.[cvxPool.tokenName]?.crvApy);
+      const rewardApy = parseFloat(curveAPY.[cvxPool.tokenName]?.additionalRewards?.[0].apy)
 
       const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId);
 
@@ -650,26 +651,22 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         CrvRewardsABI,
       );
 
-      const [crvReward, depositLocked, duration, extraRewardsAddress] = await multicallProvider.all([
-        crvRewardsMC.currentRewards(),
+      const [depositLocked, duration ] = await multicallProvider.all([
         crvRewardsMC.totalSupply(),
         crvRewardsMC.duration(),
-        crvRewardsMC.extraRewards(0)
       ])
 
-      const extraRewardsContract = stakingRewards.attach(extraRewardsAddress)
-      const rewardRate = +formatEther(await extraRewardsContract.rewardRate())
-      const rewardValuePerYear = rewardRate * cvxPool.rewardPrice * ONE_YEAR_SECONDS;
-      
+      // Work backwards from reported CRV APR
       const poolValue = parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
+
+      const crvRewardPerDuration = crvApy * poolValue / (duration.toNumber() * prices.crv) 
       
-      const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)))
+      const cvxReward = await getCvxMint(crvRewardPerDuration * 100)
       const cvxValuePerYear = cvxReward * prices.cvx * ONE_YEAR_SECONDS / duration.toNumber(); 
       
-      const cvxApy = cvxValuePerYear / poolValue
-      const rewardApy = rewardValuePerYear / poolValue
+      const cvxApy = cvxValuePerYear / poolValue;
 
-      return [{ lp: lpApy}, {crv: getCompoundingAPY(crvApy * 0.8 / 100), apr: crvApy * 0.8 }, {cvx: getCompoundingAPY(cvxApy * 0.8), apr: cvxApy * 0.8 * 100}, {[cvxPool.rewardName]: getCompoundingAPY(rewardApy * 0.8), apr: rewardApy * 0.8 * 100}];
+      return [{ lp: lpApy}, {crv: getCompoundingAPY(crvApy * 0.8 / 100), apr: crvApy * 0.8 }, {cvx: (cvxApy * 0.8 * 100), apr: cvxApy * 0.8 * 100}, {[cvxPool.rewardName]: getCompoundingAPY(rewardApy * 0.8 / 100), apr: rewardApy * 0.8}];
     }
     return [];
   };
