@@ -421,7 +421,7 @@ export const JarGaugeCollapsible: FC<{
   const [isSuccess, setSuccess] = useState<boolean>(false);
   const zapInputTokens = [
     { symbol: depositTokenName, label: depositTokenName },
-    ...zapDefaultTokens,
+    ...zapDefaultTokens.filter((x) => x.symbol != depositTokenName),
   ];
   const [inputToken, setInputToken] = useState(zapInputTokens[0].symbol);
   const { balanceStr: zapBalanceStr, balanceRaw } = useBalance(inputToken);
@@ -728,7 +728,11 @@ export const JarGaugeCollapsible: FC<{
                 {Boolean(realAPY) && (
                   <div>
                     <Tooltip
-                      text={realAPY === 0 ? "--" : ReactHtmlParser(yourApyTooltipText)}
+                      text={
+                        realAPY === 0
+                          ? "--"
+                          : ReactHtmlParser(yourApyTooltipText)
+                      }
                       style={{ marginTop: 5 }}
                     >
                       <div style={{ display: "flex" }}>
