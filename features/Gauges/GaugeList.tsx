@@ -3,8 +3,8 @@ import { formatEther } from "ethers/lib/utils";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
-import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
+import { BProtocol } from "./BProtocol";
 import { Connection } from "../../containers/Connection";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
@@ -21,9 +21,10 @@ import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
-import type { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
+import { NETWORK_NAMES } from "containers/config";
+import { UserJarData } from "containers/UserJars";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -53,7 +54,7 @@ const GreenSwitch = withStyles({
 })(Switch);
 
 export const GaugeList: FC = () => {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { gaugeData } = UserGauges.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState(false);
@@ -102,11 +103,16 @@ export const GaugeList: FC = () => {
 
   const activeJars = jarData.filter(
     (jar) =>
-      JAR_ACTIVE[jar.depositTokenName],
+      JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
   );
 
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
+  );
+
+  const yearnJars = jarData.filter(
+    (jar) =>
+      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],
   );
 
   const userJars = jarData.filter((jar) =>
@@ -129,6 +135,13 @@ export const GaugeList: FC = () => {
   );
   moveInArray(activeGauges, indexofPickleEth, 0);
 
+  const findGauge = (jar: UserJarData) =>
+    gaugesWithAPY.find(
+      (x) =>
+        x.depositToken.address.toLowerCase() ===
+        jar.jarContract.address.toLowerCase(),
+    );
+
   return (
     <>
       <h2>Pickle Power</h2>
@@ -141,7 +154,7 @@ export const GaugeList: FC = () => {
             <b>$PICKLEs</b>.
             <br />
             Deposit & Stake to get into both. Hover over the displayed APY to
-            see where the returns are coming from. Farms allow you to earn
+            see where the returns are coming from.
           </p>
         </Grid>
         <Grid md={12} style={{ textAlign: "right" }}>
@@ -178,18 +191,51 @@ export const GaugeList: FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>Active Jars & Farms</h2>
+        <h2>Jars & Farms</h2>
       </div>
       <Grid.Container gap={1}>
+        {chainName === NETWORK_NAMES.ETH && (
+          <>
+            Powered by&nbsp;
+            <a href="https://yearn.finance/" target="_">
+              Yearn
+            </a>
+            &nbsp;⚡
+            {yearnJars.map((jar, idx) => {
+              const gauge = findGauge(jar);
+              return (
+                gauge && (
+                  <Grid xs={24} key={jar.name}>
+                    <JarGaugeCollapsible
+                      jarData={jar}
+                      gaugeData={gauge}
+                      isYearnJar={true}
+                    />
+                    {idx === yearnJars.length - 1 && <Spacer y={1} />}
+                  </Grid>
+                )
+              );
+            })}
+          </>
+        )}
+        {chainName === NETWORK_NAMES.ETH && (
+          <>
+            Powered by&nbsp;
+            <a href="https://bprotocol.org/" target="_">
+              B.Protocol
+            </a>
+            &nbsp;⚡
+            <Grid xs={24}>
+              <BProtocol />
+              <Spacer y={1} />
+            </Grid>
+          </>
+        )}
         <Grid xs={24}>
           <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
         </Grid>
         {(showUserJars ? userJars : activeJars).map((jar) => {
-          const gauge = gaugesWithAPY.find(
-            (x) =>
-              x.depositToken.address.toLowerCase() ===
-              jar.jarContract.address.toLowerCase(),
-          );
+          const gauge = findGauge(jar);
 
           return (
             <Grid xs={24} key={jar.name}>
@@ -207,11 +253,7 @@ export const GaugeList: FC = () => {
         {showInactive && <h2>Inactive</h2>}
         {showInactive &&
           inactiveJars.map((jar) => {
-            const gauge = gaugesWithAPY.find(
-              (x) =>
-                x.depositToken.address.toLowerCase() ===
-                jar.jarContract.address.toLowerCase(),
-            );
+            const gauge = findGauge(jar);
             return (
               <Grid xs={24} key={jar.name}>
                 {!gauge ? (

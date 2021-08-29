@@ -37,6 +37,7 @@ export const GAUGE_TVL_KEY = {
   [JAR_DEPOSIT_TOKENS.Ethereum.UNIV2_FOX_ETH]: "fox-eth",
   [JAR_DEPOSIT_TOKENS.Ethereum.SUSHI_TRU_ETH]: "tru-eth",
   [JAR_DEPOSIT_TOKENS.Ethereum.fraxCRV]: "fraxcrv",
+  [JAR_DEPOSIT_TOKENS.Ethereum.ibCRV]: "ibcrv",
 
   // Polygon
   [JAR_DEPOSIT_TOKENS.Polygon.DAI]: "dai",

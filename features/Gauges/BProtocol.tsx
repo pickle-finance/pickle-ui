@@ -17,6 +17,7 @@ import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/facto
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { useDuneData } from "../../containers/Jars/useDuneData";
+import { getFormatString } from "./GaugeInfo";
 
 const JarName = styled(Grid)({
   display: "flex",
@@ -25,6 +26,10 @@ const JarName = styled(Grid)({
 interface DataProps {
   isZero?: boolean;
 }
+
+const CenteredGrid = styled(Grid)({
+  textAlign: "center",
+});
 
 const Data = styled.div<DataProps>`
   overflow: hidden;
@@ -88,6 +93,7 @@ export const BProtocol: FC = () => {
     userValue,
     lqtyApr,
     userPendingLqty,
+    tvl
   } = usePBAMM();
   const { duneData } = useDuneData();
 
@@ -145,7 +151,7 @@ export const BProtocol: FC = () => {
       shadow
       preview={
         <Grid.Container gap={1}>
-          <JarName xs={24} sm={12} md={5} lg={5}>
+          <JarName xs={24} sm={12} md={6} lg={6}>
             <a href="https://app.bprotocol.org/app" target="_">
               <TokenIcon src={"/bprotocol.png"} />
             </a>
@@ -162,7 +168,28 @@ export const BProtocol: FC = () => {
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={5} lg={5}>
+          <CenteredGrid xs={24} sm={8} md={3} lg={3}>
+            <Data isZero={balNum === 0}>{balStr}</Data>
+            <Label>Wallet Balance</Label>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={8} md={3} lg={3}>
+            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
+            <Label>Deposited</Label>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={8} md={3} lg={3}>
+            <Data isZero={depositedNum === 0}>
+              <Tooltip text={`${valueStr} LUSD + ${pendingLqtyStr} pLQTY`}>
+                ${formatString(userValue + pendingLqtyNum * prices?.lqty)}
+                <img
+                  src="./question.svg"
+                  width="15px"
+                  style={{ marginLeft: 5 }}
+                />
+              </Tooltip>
+            </Data>
+            <Label>Deposit Value</Label>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={12} md={5} lg={5}>
             <Data>
               {lqtyApr.toFixed(2)}% lqty +{" "}
               {((liquidationApy * 0.8 * lqtyApr) / 2).toFixed(2)}%{" "}
@@ -174,32 +201,15 @@ export const BProtocol: FC = () => {
               </a>
             </Data>
             <Data>
-              <div style={{ display: "flex", marginTop: 5 }}>
-                <span>APY</span>
+              <div style={{ marginTop: 5 }}>
+                <Label>APY</Label>
               </div>
             </Data>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={5}>
-            <Data isZero={balNum === 0}>{balStr}</Data>
-            <Label>Balance</Label>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
-            <Label>Deposited</Label>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={depositedNum === 0}>
-              <Tooltip text={`${valueStr} LUSD + ${pendingLqtyStr} pLQTY`}>
-                ${formatString(userValue + pendingLqtyNum * prices?.lqty)}
-                <img
-                  src="./question.svg"
-                  width="15px"
-                  style={{ marginLeft: 5 }}
-                />
-              </Tooltip>
-            </Data>
-            <Label>Value</Label>
-          </Grid>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={12} md={4} lg={4}>
+            <Data isZero={tvl === 0}>${getFormatString(tvl)}</Data>
+            <Label>TVL</Label>
+          </CenteredGrid>
         </Grid.Container>
       }
     >

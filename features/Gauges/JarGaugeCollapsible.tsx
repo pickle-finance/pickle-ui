@@ -214,6 +214,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xfCEAAf9792139BF714a694f868A215493461446D": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
   ),
+  "0x5282a4ef67d9c33135340fb3289cc1711c13638c": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -736,7 +739,7 @@ export const JarGaugeCollapsible: FC<{
                       style={{ marginTop: 5 }}
                     >
                       <div style={{ display: "flex" }}>
-                        <Label>Your APY: </Label>
+                        <Label>Your APY:&nbsp;</Label>
                         <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
                       </div>
                     </Tooltip>
