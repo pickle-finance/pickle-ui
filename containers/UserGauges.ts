@@ -103,7 +103,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
 
   useEffect(() => {
     updateJarAndGaugeData();
-  }, [jars, blockNum, transferStatus]);
+  }, [jars, gauges, blockNum, transferStatus]);
 
   return { gaugeData };
 };
