@@ -491,7 +491,6 @@ export const JarGaugeCollapsible: FC<{
     if (balNum) {
       try {
         setIsEntryBatch(true);
-        setDepositStakeButton("Depositing...");
         await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
@@ -501,7 +500,6 @@ export const JarGaugeCollapsible: FC<{
               .deposit(convertDecimals(depositAmount));
           },
         });
-
         await depositGauge();
         setIsEntryBatch(false);
       } catch (error) {
@@ -841,13 +839,11 @@ export const JarGaugeCollapsible: FC<{
               <Button
                 onClick={depositAndStake}
                 disabled={
-                  Boolean(depositStakeButton) || Boolean(zapStakeButton)
+                  Boolean(depositStakeButton) || Boolean(zapStakeButton) || depositButton.disabled
                 }
                 style={{ width: "100%" }}
               >
-                {depositStakeButton ||
-                  zapStakeButton ||
-                  (isZap ? "Zap and Stake" : "Deposit and Stake")}
+                {isZap ? zapStakeButton || "Zap and Stake" : (isEntryBatch ? (depositStakeButton || depositButton.text) : "Deposit and Stake")}
                 {isZap && ZapperIcon}
               </Button>
             </Grid>

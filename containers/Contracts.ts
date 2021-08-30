@@ -302,6 +302,7 @@ function useContracts() {
   );
 
   const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
+  const [jar, setJar] = useState<Jar | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -356,6 +357,9 @@ function useContracts() {
       );
       setERC20(
         Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setJar(
+        JarFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
       setCToken(
         CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner),
@@ -480,6 +484,7 @@ function useContracts() {
     sushiMigrator,
     pickleSushiRewarder,
     cvxBooster,
+    jar
   };
 }
 

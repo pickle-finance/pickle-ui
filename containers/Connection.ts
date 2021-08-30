@@ -70,7 +70,7 @@ function useConnection() {
       // debounce to prevent subscribers making unnecessary calls
       observable.pipe(debounceTime(1000)).subscribe((blockNumber) => {
         // Update every 5 blocks otherwise its very laggy
-        if (blockNumber > (blockNum || 0) + (chainId == 1 ? 5 : 20)) {
+        if (blockNumber > (blockNum || 0) + (chainId == 1 ? 5 : 5)) {
           setBlockNum(blockNumber);
         }
       });

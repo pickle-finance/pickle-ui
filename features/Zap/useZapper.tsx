@@ -60,7 +60,11 @@ export const useZapIn = ({
         .toString();
 
       if (!isSellTokenEth) {
-        const TOKEN = new ethers.Contract(sellTokenAddress, erc20.abi, provider);
+        const TOKEN = new ethers.Contract(
+          sellTokenAddress,
+          erc20.abi,
+          provider,
+        );
         decimals = await TOKEN.decimals();
         const approvalState = await fetchRes(
           getZapperApi("/zap-in/pickle/approval-state", {
@@ -80,7 +84,9 @@ export const useZapIn = ({
           await approveTx.wait();
         }
       }
-      const sellAmount = rawAmount ? parseUnits(rawAmount, decimals || 18).toString() : "0";
+      const sellAmount = rawAmount
+        ? parseUnits(rawAmount, decimals || 18).toString()
+        : "0";
       const { from, to, data, value } = await fetchRes(
         getZapperApi("/zap-in/pickle/transaction", {
           slippagePercentage,
@@ -91,7 +97,13 @@ export const useZapIn = ({
           ownerAddress: address,
         }),
       );
-      const zapTx = await signer.sendTransaction({ from, to, data, value });
+      const zapTx = await signer.sendTransaction({
+        from,
+        to,
+        data,
+        value,
+        gasLimit: 800000,
+      });
       await zapTx.wait();
       return true;
     } catch (error) {

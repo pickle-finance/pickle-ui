@@ -66,6 +66,8 @@ export const GaugeList: FC = () => {
     return <h2>Please connect wallet to continue</h2>;
   }
 
+  console.log({jarData, gaugeData})
+
   if (!jarData || !gaugeData) return <h2>Loading...</h2>;
 
   const gaugesWithAPY = gaugeData.map((gauge) => {

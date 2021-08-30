@@ -61,6 +61,10 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export const FARM_LP_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
@@ -154,7 +158,7 @@ export const JarMiniFarmCollapsible: FC<{
   const balStr = formatNumber(balNum);
 
   const depositedStr = formatNumber(depositedNum);
-  
+
   const depositedUnderlyingStr = formatNumber(
     parseFloat(formatEther(deposited)) * ratio,
   );
@@ -203,7 +207,7 @@ export const JarMiniFarmCollapsible: FC<{
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum } = Connection.useContainer();
-  const { minichef } = Contracts.useContainer();
+  const { minichef, jar } = Contracts.useContainer();
   const { getBalance } = Balances.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
@@ -244,8 +248,7 @@ export const JarMiniFarmCollapsible: FC<{
     if (balNum && minichef && address) {
       try {
         setIsEntryBatch(true);
-        setDepositStakeButton("Depositing...");
-        await transfer({
+        const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
           transferCallback: async () => {
@@ -254,7 +257,8 @@ export const JarMiniFarmCollapsible: FC<{
               .deposit(parseEther(depositAmount));
           },
         });
-        const Token = erc20?.attach(farmDepositToken.address).connect(signer);
+        if (!res) throw "Deposit Failed";
+        const Token = jar?.attach(farmDepositToken.address).connect(signer);
         if (!approved) {
           setDepositStakeButton("Approving...");
           const tx = await Token.approve(
@@ -263,23 +267,29 @@ export const JarMiniFarmCollapsible: FC<{
           );
           await tx.wait();
         }
+        const realRatio = await Token.getRatio();
         setDepositStakeButton("Staking...");
-        const newBalance = await Token.balanceOf(address)
-        const farmTx = await minichef.deposit(
-          poolIndex,
-          newBalance,
-          address,
-        );
+        const newBalance = getStakeableBalance(realRatio);
+        const farmTx = await minichef.deposit(poolIndex, newBalance, address);
         await farmTx.wait();
+        await sleep(10000)
         setDepositStakeButton(null);
         setIsEntryBatch(false);
       } catch (error) {
         console.error(error);
+        setDepositStakeButton(null);
         setIsEntryBatch(false);
         return;
       }
     }
   };
+
+  // Necessary because querying pToken balance intros a race condition
+  const getStakeableBalance = (realRatio: ethers.BigNumber) =>
+    parseEther(depositAmount)
+      .mul(ethers.utils.parseUnits("1", 18))
+      .div(realRatio)
+      .add(deposited);
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
@@ -295,6 +305,7 @@ export const JarMiniFarmCollapsible: FC<{
         setExitButton("Withdrawing from Jar...");
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
+        await sleep(10000)
         setExitButton(null);
         setIsExitBatch(false);
       } catch (error) {
@@ -502,10 +513,12 @@ export const JarMiniFarmCollapsible: FC<{
             <Grid xs={24} md={12}>
               <Button
                 onClick={depositAndStake}
-                disabled={Boolean(depositStakeButton)}
+                disabled={Boolean(depositStakeButton) || depositButton.disabled}
                 style={{ width: "100%" }}
               >
-                {depositStakeButton || "Deposit and Stake"}
+                {isEntryBatch
+                  ? depositStakeButton || depositButton.text
+                  : "Deposit and Stake"}
               </Button>
             </Grid>
           </Grid.Container>
