@@ -39,7 +39,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
 
   const [gaugeData, setGaugeData] = useState<Array<UserGaugeData> | null>(null);
 
-  const updateGaugeData = async () => {
+  const updateJarAndGaugeData = async () => {
     if (
       gauges &&
       erc20 &&
@@ -102,8 +102,8 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   };
 
   useEffect(() => {
-    updateGaugeData();
-  }, [jars?.length, gauges?.length, blockNum, transferStatus]);
+    updateJarAndGaugeData();
+  }, [jars, gauges, blockNum, transferStatus]);
 
   return { gaugeData };
 };

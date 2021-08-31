@@ -52,7 +52,7 @@ function useERC20Transfer() {
             await tx.wait();
           } catch (e) {
             setTransferStatus(token, recipient, Status.Failed);
-            return;
+            return false;
           }
         }
       }
@@ -65,10 +65,11 @@ function useERC20Transfer() {
       } catch (e) {
         console.log("error", e.toString());
         setTransferStatus(token, recipient, Status.Failed);
-        return;
+        return false;
       }
 
       setTransferStatus(token, recipient, Status.Success);
+      return true;
     }
   };
 

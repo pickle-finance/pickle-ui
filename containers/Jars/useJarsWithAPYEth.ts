@@ -492,7 +492,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const poolId = sushiPoolV2Ids[lpTokenAddress];
 
       const rewarder_addr = await masterchefV2.rewarder(poolId);
-
       const rewarder = new Contract(rewarder_addr, RewarderABI, provider);
       const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
       const totalSupplyBN = await lpToken.balanceOf(masterchefV2.address);

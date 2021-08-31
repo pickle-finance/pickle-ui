@@ -31,6 +31,7 @@ export const usePBAMM = () => {
   const [userPendingLqty, setUserPendingLqty] = useState<ethers.BigNumber>(
     ethers.BigNumber.from(0),
   );
+  const [tvl, setTvl] = useState<number>(0);
 
   const lusdToken = new Contract(BPAddresses.LUSD, erc20.abi, provider);
   const bLens = new Contract(
@@ -62,6 +63,7 @@ export const usePBAMM = () => {
         +formatEther(totalShares);
 
       setPricePerToken(ppt);
+      setTvl(+formatEther(lusdNum) * prices.lusd);
       setUserValue(ppt * +formatEther(_pbamm || 0));
 
       // LQTY APR calc
@@ -93,5 +95,6 @@ export const usePBAMM = () => {
     userValue,
     lqtyApr,
     userPendingLqty,
+    tvl
   };
 };

@@ -105,6 +105,7 @@ export const CURVE_PROXY_LOGIC = "0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8";
 
 export const GAUGE_CONTROLLER_ADDR =
   "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB";
+
 export const SUSD_GAUGE_ADDR = "0xA90996896660DEcC6E997655E065b23788857849";
 export const SUSD_POOL_ADDR = "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD";
 export const STETH_GAUGE_ADDR = "0x182B723a58739a9c974cFDB385ceaDb237453c28";
@@ -301,6 +302,7 @@ function useContracts() {
   );
 
   const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
+  const [jar, setJar] = useState<Jar | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -355,6 +357,9 @@ function useContracts() {
       );
       setERC20(
         Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
+      setJar(
+        JarFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
       setCToken(
         CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner),
@@ -479,6 +484,7 @@ function useContracts() {
     sushiMigrator,
     pickleSushiRewarder,
     cvxBooster,
+    jar
   };
 }
 

@@ -83,7 +83,6 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
           totalSupply: +totalSupplies[idx].toString(),
         };
       });
-
       setGauges(gauges);
     }
   };

@@ -18,6 +18,7 @@ import Collapse from "../Collapsible/Collapse";
 import { useSushiPairDayData } from "../../containers/Jars/useSushiPairDayData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useMC2 } from "../../containers/Gauges/useMC2";
+import { getFormatString } from "../Gauges/GaugeInfo";
 
 const PICKLE_PID = 3;
 
@@ -29,6 +30,10 @@ interface ButtonStatus {
 interface DataProps {
   isZero?: boolean;
 }
+
+const CenteredGrid = styled(Grid)({
+  textAlign: "center",
+});
 
 const Data = styled.div<DataProps>`
   overflow: hidden;
@@ -85,6 +90,7 @@ export const MC2Farm: FC = () => {
     apy,
     pendingPickle,
     pendingSushi,
+    tvl,
   } = useMC2();
 
   const balNum = parseFloat(formatEther(slpBalance));
@@ -178,7 +184,7 @@ export const MC2Farm: FC = () => {
       shadow
       preview={
         <Grid.Container gap={1}>
-          <Grid xs={24} sm={12} md={6} lg={6}>
+          <CenteredGrid xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
               src={
                 <LpIcon
@@ -199,8 +205,26 @@ export const MC2Farm: FC = () => {
                 </a>
               </Label>
             </div>
-          </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3}>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={6} md={3} lg={3}>
+            <Data isZero={balNum === 0}>{balStr}</Data>
+            <br />
+            <Label>Wallet Balance</Label>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={6} md={3} lg={3}>
+            <Data isZero={pendingPickleNum === 0}>
+              {pendingPickleStr} <MiniIcon source={"/pickle.png"} />
+              <br />
+              {pendingSushiStr} <MiniIcon source={"/sushiswap.png"} />
+            </Data>
+            <Label>Earned</Label>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={6} md={4} lg={4}>
+            <Data isZero={userValue === 0}>${valueStr}</Data>
+            <br />
+            <Label>Deposit Value</Label>
+          </CenteredGrid>
+          <CenteredGrid xs={24} sm={12} md={4} lg={4}>
             <Tooltip text={typeof apy === "undefined" ? "--" : tooltipText}>
               <div>
                 {typeof apy === "undefined" ? "--%" : totalAPY.toFixed(2) + "%"}
@@ -208,30 +232,13 @@ export const MC2Farm: FC = () => {
               <br />
               <Label>Total APY</Label>
             </Tooltip>
-          </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3}>
-            <Data isZero={pendingPickleNum === 0}>
-              {pendingPickleStr} <MiniIcon source={"/pickle.png"} />
-              <br />
-              {pendingSushiStr} <MiniIcon source={"/sushiswap.png"} />
-            </Data>
-            <Label>Earned</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={balNum === 0}>{balStr}</Data>
+          </CenteredGrid>
+
+          <CenteredGrid xs={24} sm={6} md={4} lg={4}>
+            <Data isZero={tvl === 0}>${getFormatString(tvl)}</Data>
             <br />
-            <Label>Balance</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
-            <br />
-            <Label>Staked</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={userValue === 0}>${valueStr}</Data>
-            <br />
-            <Label>Value Staked</Label>
-          </Grid>
+            <Label>TVL</Label>
+          </CenteredGrid>
         </Grid.Container>
       }
     >

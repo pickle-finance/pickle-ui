@@ -6,36 +6,72 @@ import { MiniFarmCollapsible } from "../MiniFarms/MiniFarmCollapsible";
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { MiniIcon } from "../../components/TokenIcon";
-import { pickleWhite } from "../../util/constants";
-import { NETWORK_NAMES } from "containers/config";
+import { useJarData } from "features/Gauges/useJarData";
+import { JAR_FARM_MAP } from "../../containers/Farms/farms";
+import { JAR_ACTIVE } from "../../containers/Jars/jars";
+import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
+import { uncompoundAPY } from "../../util/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;
 `;
 
+export interface JarApy {
+  [k: string]: number;
+}
+
 export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserMiniFarms.useContainer();
+  const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
 
-  if (!farmData && chainName !== NETWORK_NAMES.POLY) {
-    return <h2>Loading...</h2>;
-  } else if (!farmData && chainName === NETWORK_NAMES.POLY) {
-    return (
-      <>
-        <h2>Loading...</h2>
-        <span style={{ color: pickleWhite }}>
-          If you have been waiting more than a few seconds, you may be
-          rate-limited. Consider changing to the following Polygon RPC
-          'https://polygon-rpc.com'
-        </span>
-      </>
-    );
-  }
+  if (!jarData || !farmData) return <h2>Loading...</h2>;
+
+  const farmsWithAPY = farmData.map((farm) => {
+    let APYs: JarApy[] = [
+      { pickle: farm.apy * 100 },
+      { matic: farm.maticApy * 100 },
+    ];
+
+    const jar =
+      JAR_FARM_MAP[farm.depositToken.address as keyof typeof JAR_FARM_MAP];
+    if (jar) {
+      const farmingJar = jarData.filter((x) => x.name === jar.jarName)[0];
+      APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
+    }
+    const tooltipText = [
+      `Base APRs:`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = uncompoundAPY(Object.values(x)[0]);
+        return `${k}: ${v.toFixed(2)}%`;
+      }),
+    ]
+      .filter((x) => x)
+      .join(" <br/> ");
+
+    const totalAPY = APYs.map((x) => {
+      return Object.values(x).reduce((acc, y) => acc + y, 0);
+    }).reduce((acc, x) => acc + x, 0);
+
+    return {
+      ...farm,
+      APYs,
+      totalAPY,
+      tooltipText,
+    };
+  });
+
+  const activeJars = jarData.filter((jar) => JAR_ACTIVE[jar.depositTokenName]);
+
+  const inactiveJars = jarData.filter(
+    (jar) => !JAR_ACTIVE[jar.depositTokenName],
+  );
 
   const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
@@ -66,17 +102,37 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={0.5} />
       <Grid.Container gap={1}>
-        {activeFarms.map((farm) => (
-          <>
-            <Grid xs={24} key={farm.poolIndex}>
-              <MiniFarmCollapsible farmData={farm} />
+        {activeJars.map((jar) => {
+          const farm = farmsWithAPY.find(
+            (x) =>
+              x.depositToken.address.toLowerCase() ===
+              jar.jarContract.address.toLowerCase(),
+          );
+          return (
+            <Grid xs={24} key={jar.name}>
+              {farm && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
             </Grid>
-          </>
-        ))}
+          );
+        })}
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
         {showInactive && <h2>Inactive</h2>}
+        {showInactive &&
+          inactiveJars.map((jar) => {
+            const farm = farmsWithAPY.find(
+              (x) =>
+                x.depositToken.address.toLowerCase() ===
+                jar.jarContract.address.toLowerCase(),
+            );
+            return (
+              <Grid xs={24} key={jar.name}>
+                {farm && (
+                  <JarMiniFarmCollapsible jarData={jar} farmData={farm} />
+                )}
+              </Grid>
+            );
+          })}
         {showInactive &&
           inactiveFarms.map((farm) => (
             <Grid xs={24} key={farm.poolIndex}>

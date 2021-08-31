@@ -11,6 +11,12 @@ import {
   Checkbox,
 } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
+
+import {
+  JAR_GAUGE_MAP,
+  PICKLE_ETH_GAUGE,
+} from "../../containers/Gauges/gauges";
+
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
@@ -19,6 +25,7 @@ import {
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
+import { getProtocolData } from "../../util/api";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
@@ -27,6 +34,7 @@ import { useMigrate } from "../Farms/UseMigrate";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { UserGaugeDataWithAPY } from "./GaugeList";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 
 interface ButtonStatus {
   disabled: boolean;
@@ -102,9 +110,21 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
+
+  const stakedStr = stakedNum.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: stakedNum < 1 ? 8 : 4,
+  });
+
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
   );
+
+  const balanceStr = balanceNum.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: balanceNum < 1 ? 8 : 2,
+  });
+
   const {
     deposit,
     withdraw,
@@ -114,21 +134,12 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     migratePickleEth,
     depositPickleEth,
   } = useMigrate(depositToken, 0, balance, staked);
+
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const bal = parseFloat(
-    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
-  );
-  const balStr = bal.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: bal < 1 ? 8 : 4,
-  });
-  const stakedStr = stakedNum.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: stakedNum < 1 ? 8 : 4,
-  });
+
   const harvestableStr = parseFloat(
     formatEther(harvestable || 0),
   ).toLocaleString();
@@ -160,6 +171,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     text: "Harvest and Exit",
   });
 
+  const [tvlData, setTVLData] = useState();
+
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
 
@@ -169,8 +182,17 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
+  let APYs: JarApy[] = [];
+
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
+
+  const maybeJar =
+    JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
+  if (jars && maybeJar) {
+    const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
+    APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
+  }
 
   const dillRatio = +(dillSupply?.toString() || 0)
     ? +(dillBalance?.toString() || 0) / +(dillSupply?.toString() || 1)
@@ -252,6 +274,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   };
 
   useEffect(() => {
+    getProtocolData().then((info) => setTVLData(info));
+  }, []);
+
+  useEffect(() => {
     if (gaugeData) {
       const stakeStatus = getTransferStatus(
         depositToken.address,
@@ -307,6 +333,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     checkAllowance();
   }, [blockNum, address, erc20]);
 
+  const tvlNum = tvlData ? tvlData[PICKLE_POWER] : 0;
+  const tvlStr = getFormatString(tvlNum);
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
@@ -326,60 +355,71 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
               <Label style={{ fontSize: `1rem` }}>{depositTokenName}</Label>
             </div>
           </Grid>
-          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            {isPickleFarm ? (
-              "Migrate to Sushi ⬇️"
-            ) : (
-              <Tooltip
-                text={
-                  gaugeData.totalAPY + fullApy === 0
-                    ? "--"
-                    : apyRangeTooltipText
-                }
-              >
-                <div>
-                  {gaugeData.totalAPY + fullApy === 0
-                    ? "--%"
-                    : `${formatAPY(
-                        gaugeData.totalAPY + pickleAPYMin,
-                      )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
-                </div>
-                <Label>APY Range</Label>
-              </Tooltip>
-            )}
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={balanceNum === 0}>{balanceStr}</Data>
+            <Label>Wallet Balance</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Tooltip text={realAPY === 0 ? "--" : yourApyTooltipText}>
-              <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
-              <Label>Your APY</Label>
-            </Tooltip>
-          </Grid>
-          <Grid xs={24} sm={6} md={2} lg={2} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
             <Label>Earned</Label>
           </Grid>
-          <Grid xs={24} sm={6} md={2.5} lg={2.5} css={{ textAlign: "center" }}>
-            <Data isZero={bal === 0}>{balStr}</Data>
-            <Label>Balance</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={2.5} lg={2.5} css={{ textAlign: "center" }}>
-            <Data isZero={stakedNum === 0}>{stakedStr}</Data>
-            <Label>Staked</Label>
-          </Grid>
-          <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
-            <Label>Value Staked</Label>
+            <Label>Deposit Value</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
+            {isPickleFarm ? (
+              "Migrate to Sushi ⬇️"
+            ) : (
+              <>
+                <Tooltip
+                  text={
+                    gaugeData.totalAPY + fullApy === 0
+                      ? "--"
+                      : apyRangeTooltipText
+                  }
+                >
+                  <div>
+                    {gaugeData.totalAPY + fullApy === 0
+                      ? "--%"
+                      : `${formatAPY(
+                          gaugeData.totalAPY + pickleAPYMin,
+                        )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
+                  </div>
+                  <Label>APY Range</Label>
+                </Tooltip>
+                {Boolean(realAPY) && (
+                  <div>
+                    <Tooltip
+                      text={realAPY === 0 ? "--" : yourApyTooltipText}
+                      style={{ marginTop: 5 }}
+                    >
+                      <div style={{ display: "flex" }}>
+                        <Label>Your APY: </Label>
+                        <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                      </div>
+                    </Tooltip>
+                  </div>
+                )}
+              </>
+            )}
+          </Grid>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data isZero={tvlNum === 0}>${tvlStr}</Data>
+            <Label>TVL</Label>
           </Grid>
         </Grid.Container>
       }
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={stakedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Balance: {balStr}</div>
+            <div>
+              Balance: {balanceStr} {depositTokenName}
+            </div>
             <Link
               color
               href="#"
@@ -423,55 +463,59 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
             {stakeButton.text}
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Staked: {stakedStr}</div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setUnstakeAmount(
-                  formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
-                );
+        {stakedNum !== 0 && (
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Staked: {stakedStr} {depositTokenName}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setUnstakeAmount(
+                    formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                  );
+                }}
+              >
+                Max
+              </Link>
+            </div>
+            <Input
+              onChange={(e) => setUnstakeAmount(e.target.value)}
+              value={unstakeAmount}
+              width="100%"
+              type="number"
+              size="large"
+            />
+            <Spacer y={0.5} />
+            <Button
+              disabled={unstakeButton.disabled}
+              onClick={() => {
+                if (gauge && signer) {
+                  transfer({
+                    token: gauge.address,
+                    recipient: depositToken.address,
+                    approval: false,
+                    transferCallback: async () => {
+                      return gauge.withdraw(
+                        ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
+                      );
+                    },
+                  });
+                }
               }}
+              style={{ width: "100%" }}
             >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setUnstakeAmount(e.target.value)}
-            value={unstakeAmount}
-            width="100%"
-            type="number"
-            size="large"
-          />
-          <Spacer y={0.5} />
-          <Button
-            disabled={unstakeButton.disabled}
-            onClick={() => {
-              if (gauge && signer) {
-                transfer({
-                  token: gauge.address,
-                  recipient: depositToken.address,
-                  approval: false,
-                  transferCallback: async () => {
-                    return gauge.withdraw(
-                      ethers.utils.parseUnits(unstakeAmount, isUsdc ? 6 : 18),
-                    );
-                  },
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {unstakeButton.text}
-          </Button>
-        </Grid>
+              {unstakeButton.text}
+            </Button>
+          </Grid>
+        )}
         <Spacer />
       </Grid.Container>
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={24}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {
@@ -488,10 +532,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
             }}
             style={{ width: "100%" }}
           >
-            {harvestButton.text}
+            {harvestButton.text} {harvestableStr} $PICKLES
           </Button>
         </Grid>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={24}>
           <Button
             disabled={harvestButton.disabled}
             onClick={() => {

@@ -52,7 +52,7 @@ export const useJarWithTVL = (jars: Input): Output => {
 
   useEffect(() => {
     measureTVL();
-  }, [jars?.length, poolData.length]);
+  }, [jars?.length, poolData?.length]);
 
   return {
     jarsWithTVL,

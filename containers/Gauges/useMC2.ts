@@ -43,8 +43,7 @@ export const useMC2 = () => {
   const [slpStaked, setSlpStaked] = useState<ethers.BigNumber>(
     ethers.BigNumber.from(0),
   );
-
-  const pickleEthSLP = new Contract(PICKLE_ETH_SLP, erc20.abi, provider);
+  const [tvl, setTvl] = useState<number>(0);
 
   const updateData = async () => {
     if (
@@ -89,6 +88,7 @@ export const useMC2 = () => {
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      setTvl(pricePerToken * totalSupply);
       const sushiRewardsPerBlock =
         (parseFloat(formatEther(sushiPerBlockBN)) *
           0.9 *
@@ -139,5 +139,6 @@ export const useMC2 = () => {
     apy,
     pendingPickle,
     pendingSushi,
+    tvl,
   };
 };

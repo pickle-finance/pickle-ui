@@ -23,7 +23,15 @@ const moduleExports = {
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
     apiHost: "https://api.pickle.finance/prod",
   },
-};
+  async rewrites() {
+    return [
+      {
+        source: '/jars',
+        destination: '/farms',
+      },
+    ]
+  },
+}
 
 const SentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
