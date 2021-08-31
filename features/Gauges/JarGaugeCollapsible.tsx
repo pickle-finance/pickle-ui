@@ -774,7 +774,7 @@ export const JarGaugeCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={depositedNum && !isEntryBatch ? 12 : 24}>
+        <Grid xs={24} md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance:{" "}
