@@ -4,7 +4,7 @@ import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
   1: process.env.infura,
-  137: "https://rpc-mumbai.matic.today",
+  137: "https://polygon-rpc.com",
 };
 
 export const injected = new InjectedConnector({
