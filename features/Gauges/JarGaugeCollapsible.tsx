@@ -22,7 +22,12 @@ import {
 } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
-import { LpIcon, TokenIcon, ZapperIcon } from "../../components/TokenIcon";
+import {
+  LpIcon,
+  TokenIcon,
+  ZapperIcon,
+  MiniIcon,
+} from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { UserGaugeData } from "../../containers/UserGauges";
 import { useDill } from "../../containers/Dill";
@@ -221,6 +226,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const setButtonStatus = (
   status: ERC20TransferStatus,
   transfering: string,
@@ -391,7 +400,11 @@ export const JarGaugeCollapsible: FC<{
 
   const stakedStr = formatValue(stakedNum);
 
-  const harvestableStr = formatValue(parseFloat(formatEther(harvestable || 0)));
+  const harvestableNum = parseFloat(formatEther(harvestable || 0));
+
+  const harvestableStr = parseFloat(
+    formatEther(harvestable || 0),
+  ).toLocaleString();
 
   const balanceNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -427,7 +440,7 @@ export const JarGaugeCollapsible: FC<{
     ...zapDefaultTokens.filter((x) => x.symbol != depositTokenName),
   ];
   const [inputToken, setInputToken] = useState(zapInputTokens[0].symbol);
-  const { balanceStr: zapBalanceStr, balanceRaw } = useBalance(inputToken);
+  const { balanceStr: zapBalanceStr, balanceRaw } = useBalance("USDC");
   const { zapIn } = useZapIn({
     poolAddress: jarContract.address,
     sellTokenAddress: tokenInfo[inputToken as keyof typeof tokenInfo],
@@ -460,7 +473,6 @@ export const JarGaugeCollapsible: FC<{
     setDepositStakeButton("Staking...");
     const gaugeTx = await gauge.depositAll();
     await gaugeTx.wait();
-    setDepositStakeButton(null);
   };
 
   const handleYvboostMigrate = async () => {
@@ -491,7 +503,7 @@ export const JarGaugeCollapsible: FC<{
     if (balNum) {
       try {
         setIsEntryBatch(true);
-        await transfer({
+        const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
           transferCallback: async () => {
@@ -500,7 +512,10 @@ export const JarGaugeCollapsible: FC<{
               .deposit(convertDecimals(depositAmount));
           },
         });
+        if (!res) throw "Deposit Failed";
         await depositGauge();
+        await sleep(10000)
+        setDepositStakeButton(null);
         setIsEntryBatch(false);
       } catch (error) {
         console.error(error);
@@ -520,6 +535,7 @@ export const JarGaugeCollapsible: FC<{
         setExitButton("Withdrawing from Jar...");
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
+        await sleep(10000)
         setExitButton(null);
         setIsExitBatch(false);
       } catch (error) {
@@ -542,11 +558,14 @@ export const JarGaugeCollapsible: FC<{
             setZapStakeButton("Staking...");
             await depositGauge();
           }
+          await sleep(10000)
+          setDepositStakeButton(null)
           setZapOnlyButton(null);
           setZapStakeButton(null);
         } catch (error) {
           console.error(error);
           alert(error.message);
+          setDepositStakeButton(null)
           setZapOnlyButton(null);
           setZapStakeButton(null);
           return;
@@ -604,7 +623,6 @@ export const JarGaugeCollapsible: FC<{
       );
     }
   }, [erc20TransferStatuses, jarData]);
-
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
 
@@ -671,8 +689,9 @@ export const JarGaugeCollapsible: FC<{
             <Label>Wallet Balance</Label>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
+            <Data isZero={harvestableNum === 0}>
+              {harvestableStr}{" "}
+              {harvestableNum && <MiniIcon source={"/pickle.png"} />}
             </Data>
             <Label>Earned</Label>
           </Grid>
@@ -839,11 +858,17 @@ export const JarGaugeCollapsible: FC<{
               <Button
                 onClick={depositAndStake}
                 disabled={
-                  Boolean(depositStakeButton) || Boolean(zapStakeButton) || depositButton.disabled
+                  Boolean(depositStakeButton) ||
+                  Boolean(zapStakeButton) ||
+                  depositButton.disabled
                 }
                 style={{ width: "100%" }}
               >
-                {isZap ? zapStakeButton || "Zap and Stake" : (isEntryBatch ? (depositStakeButton || depositButton.text) : "Deposit and Stake")}
+                {isZap
+                  ? zapStakeButton || "Zap and Stake"
+                  : isEntryBatch
+                  ? depositStakeButton || depositButton.text
+                  : "Deposit and Stake"}
                 {isZap && ZapperIcon}
               </Button>
             </Grid>
