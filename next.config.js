@@ -17,8 +17,7 @@ const moduleExports = {
   env: {
     infura: "https://cloudflare-eth.com/",
     ethRPC: "https://cloudflare-eth.com/",
-    polygonRPC:
-      "https://polygon-rpc.com",
+    polygonRPC: "https://polygon-rpc.com",
     Fortmatic: "pk_live_3754096A894BEFE4",
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
     apiHost: "https://api.pickle.finance/prod",
@@ -26,12 +25,12 @@ const moduleExports = {
   async rewrites() {
     return [
       {
-        source: '/jars',
-        destination: '/farms',
+        source: "/jars",
+        destination: "/farms",
       },
-    ]
+    ];
   },
-}
+};
 
 const SentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
