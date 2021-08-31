@@ -440,7 +440,7 @@ export const JarGaugeCollapsible: FC<{
     ...zapDefaultTokens.filter((x) => x.symbol != depositTokenName),
   ];
   const [inputToken, setInputToken] = useState(zapInputTokens[0].symbol);
-  const { balanceStr: zapBalanceStr, balanceRaw } = useBalance("USDC");
+  const { balanceStr: zapBalanceStr, balanceRaw } = useBalance(inputToken);
   const { zapIn } = useZapIn({
     poolAddress: jarContract.address,
     sellTokenAddress: tokenInfo[inputToken as keyof typeof tokenInfo],
