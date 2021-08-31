@@ -18,11 +18,10 @@ export interface RawFarm {
 export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
   const { blockNum, multicallProvider, chainName } = Connection.useContainer();
   const {
-    masterchef: masterchefContract,
     minichef: minichefContract,
   } = Contracts.useContainer();
   const masterchef =
-    chainName === NETWORK_NAMES.POLY ? minichefContract : masterchefContract;
+    chainName === NETWORK_NAMES.POLY ? minichefContract : null;
 
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 
