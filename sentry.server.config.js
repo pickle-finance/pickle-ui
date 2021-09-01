@@ -8,7 +8,8 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  // Adjust this value in production, or use tracesSampler for greater control
+  // Only send a sample of errors due to error quotas.
+  sampleRate: 0.2,
   tracesSampleRate: 0.2,
   // ...
   // Note: if you want to override the automatic release value, do not set a
