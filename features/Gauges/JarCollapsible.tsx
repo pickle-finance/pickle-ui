@@ -17,6 +17,7 @@ import { getProtocolData } from "../../util/api";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 import { NETWORK_NAMES } from "containers/config";
+import { isDisabledFarm } from "./GaugeList";
 
 interface DataProps {
   isZero?: boolean;
@@ -240,6 +241,8 @@ export const JarCollapsible: FC<{
     depositTokenLink,
     apr,
   } = jarData;
+
+  const isDisabledJar = isDisabledFarm(jarContract.address.toLowerCase());
   const isUsdc =
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();

@@ -53,6 +53,9 @@ const GreenSwitch = withStyles({
   track: {},
 })(Switch);
 
+export const isDisabledFarm = (depositToken: string) =>
+    depositToken === PICKLE_JARS.pUNIETHLUSD;
+
 export const GaugeList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   const { gaugeData } = UserGauges.useContainer();
@@ -98,8 +101,6 @@ export const GaugeList: FC = () => {
     };
   });
 
-  const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS.pUNIETHLUSD;
 
   const activeJars = jarData.filter(
     (jar) =>
