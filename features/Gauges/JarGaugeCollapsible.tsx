@@ -514,7 +514,7 @@ export const JarGaugeCollapsible: FC<{
         });
         if (!res) throw "Deposit Failed";
         await depositGauge();
-        await sleep(10000)
+        await sleep(10000);
         setDepositStakeButton(null);
         setIsEntryBatch(false);
       } catch (error) {
@@ -535,7 +535,7 @@ export const JarGaugeCollapsible: FC<{
         setExitButton("Withdrawing from Jar...");
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
-        await sleep(10000)
+        await sleep(10000);
         setExitButton(null);
         setIsExitBatch(false);
       } catch (error) {
@@ -558,14 +558,14 @@ export const JarGaugeCollapsible: FC<{
             setZapStakeButton("Staking...");
             await depositGauge();
           }
-          await sleep(10000)
-          setDepositStakeButton(null)
+          await sleep(10000);
+          setDepositStakeButton(null);
           setZapOnlyButton(null);
           setZapStakeButton(null);
         } catch (error) {
           console.error(error);
           alert(error.message);
-          setDepositStakeButton(null)
+          setDepositStakeButton(null);
           setZapOnlyButton(null);
           setZapStakeButton(null);
           return;
@@ -774,7 +774,10 @@ export const JarGaugeCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}>
+        <Grid
+          xs={24}
+          md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}
+        >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               Balance:{" "}

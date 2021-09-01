@@ -808,7 +808,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
       ]);
 
-      const promises = jars.map(async (jar) => {
+      const newJarsWithAPY = jars.map((jar) => {
         let APYs: Array<JarApy> = [];
         let totalAPY = 0;
 
@@ -1094,15 +1094,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         };
       });
 
-      const newJarsWithAPY = await Promise.all(promises);
-
       setJarsWithAPY(newJarsWithAPY);
     }
   };
 
   useEffect(() => {
     if (network === NETWORK_NAMES.ETH) calculateAPY();
-  }, [jars?.length, prices, network, yearnData]);
+  }, [jars, prices, network, yearnData]);
 
   return { jarsWithAPY };
 };

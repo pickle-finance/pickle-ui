@@ -24,10 +24,11 @@ type YearnVaultsResponse = YearnVault[];
 export const useYearnData = () => {
   const [yearnData, setYearnData] = useState<YearnVaultsResponse | null>(null);
 
+  const fetchYearnData = async () =>
+    setYearnData(await fetch(YEARN_API).then((x) => x.json()));
+
   useEffect(() => {
-    const fetchYearnData = async () =>
-      setYearnData(await fetch(YEARN_API).then((x) => x.json()));
-    if (!yearnData) fetchYearnData();
+    fetchYearnData();
   }, []);
 
   return {
