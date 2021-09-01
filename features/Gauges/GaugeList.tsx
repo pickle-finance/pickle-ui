@@ -12,7 +12,6 @@ import { MC2Farm } from "../MasterchefV2/MC2Farm";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { useJarData } from "./useJarData";
-import { JarCollapsible } from "./JarCollapsible";
 import { GaugeCollapsible } from "./GaugeCollapsible";
 import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
@@ -239,11 +238,7 @@ export const GaugeList: FC = () => {
 
           return (
             <Grid xs={24} key={jar.name}>
-              {!gauge ? (
-                <JarCollapsible jarData={jar} />
-              ) : (
-                <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
-              )}
+              {gauge && <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />}
             </Grid>
           );
         })}
@@ -256,9 +251,7 @@ export const GaugeList: FC = () => {
             const gauge = findGauge(jar);
             return (
               <Grid xs={24} key={jar.name}>
-                {!gauge ? (
-                  <JarCollapsible jarData={jar} />
-                ) : (
+                {gauge && (
                   <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
                 )}
               </Grid>
