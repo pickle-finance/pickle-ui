@@ -95,25 +95,65 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const totalValueStaked = totalSupply * pricePerToken;
       const cherryAPY = valueRewardedPerYear / totalValueStaked;
 
-      return [
-        { che: (cherryAPY * 0.8 * 100), apr: cherryAPY * 0.8 * 100 },
-      ];
+      return [{ che: cherryAPY * 0.8 * 100, apr: cherryAPY * 0.8 * 100 }];
     }
     return [];
   };
 
   const calculateAPY = async () => {
     if (jars) {
-      const [cherryOktApy] = await Promise.all([
+      const [
+        cherryCheOktApy,
+        cherryCheUsdtApy,
+        cherryBtckUsdtApy,
+        cherryEthkUsdtApy,
+        cherryOktUsdtApy,
+        cherryUsdcUsdtApy,
+      ] = await Promise.all([
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_CHE,
+        ),
+        calculateCherryAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_USDT_CHE,
+        ),
+        calculateCherryAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_BTCK_USDT,
+        ),
+        calculateCherryAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_ETHK_USDT,
+        ),
+        calculateCherryAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_USDT,
+        ),
+        calculateCherryAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_USDT_USDC,
         ),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_CHE) {
-          APYs = [...cherryOktApy];
+          APYs = [...cherryCheOktApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_CHE) {
+          APYs = [...cherryCheUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_BTCK_USDT) {
+          APYs = [...cherryBtckUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_ETHK_USDT) {
+          APYs = [...cherryEthkUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT) {
+          APYs = [...cherryOktUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_USDC) {
+          APYs = [...cherryUsdcUsdtApy];
         }
 
         let apr = 0;
@@ -131,7 +171,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           }
         });
 
-        const totalAPY = (apr * 100 / 100) + lp;
+        const totalAPY = (apr * 100) / 100 + lp;
 
         return {
           ...jar,

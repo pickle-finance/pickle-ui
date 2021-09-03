@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
-import { PICKLE_JARS } from "./jars";
+import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "./jars";
 import { PoolData } from "./usePoolData";
 import { Contracts } from "containers/Contracts";
 import { Prices } from "containers/Prices";
@@ -24,7 +24,7 @@ type Output = {
   jarsWithTVL: Array<JarWithTVL> | null;
 };
 
-const isMStonksJar = (token) =>
+const isMStonksJar = (token: string): boolean =>
   token === PICKLE_JARS.pUNIMTSLAUST.toLowerCase() ||
   token === PICKLE_JARS.pUNIMBABAUST.toLowerCase() ||
   token === PICKLE_JARS.pUNIMSLVUST.toLowerCase() ||
@@ -32,7 +32,14 @@ const isMStonksJar = (token) =>
   token === PICKLE_JARS.pUNIMAAPLUST.toLowerCase();
 
 const isUniPool = (jarName: string): boolean => {
-  return jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_CHE;
+  return (
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_CHE ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_CHE ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_BTCK_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_ETHK_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_USDC
+  );
 };
 
 export const useJarWithTVL = (jars: Input): Output => {

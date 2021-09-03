@@ -65,8 +65,28 @@ export const FarmInfo: IFarmInfo = {
   },
   "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
     tokenName: "pCLP CHE/OKT",
-    poolName: "pCLP CHE/OKT"
-  }
+    poolName: "pCLP CHE/OKT",
+  },
+  "0xe75c8805f9970c7547255059A22d14001d3D7b94": {
+    tokenName: "pCLP CHE/USDT",
+    poolName: "pCLP CHE/USDT",
+  },
+  "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": {
+    tokenName: "pCLP BTCK/USDT",
+    poolName: "pCLP BTCK/USDT",
+  },
+  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": {
+    tokenName: "pCLP ETHK/USDT",
+    poolName: "pCLP ETHK/USDT",
+  },
+  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": {
+    tokenName: "pCLP OKT/USDT",
+    poolName: "pCLP OKT/USDT",
+  },
+  "0x80aB65b1525816Ffe4222607EDa73F86D211AC95": {
+    tokenName: "pCLP USDT/USDC",
+    poolName: "pCLP USDT/USDC",
+  },
 };
 
 function useFarms() {

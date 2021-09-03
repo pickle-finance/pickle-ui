@@ -50,6 +50,8 @@ interface PriceObject {
   dino: number;
   cherry: number;
   wokt: number;
+  ethk: number;
+  btck: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -107,7 +109,7 @@ function usePrices() {
         "shapeshift-fox-token",
         "dinoswap",
         "cherryswap",
-        "okexchain"
+        "okexchain",
       ],
       vs_currencies: ["usd"],
     });
@@ -160,6 +162,8 @@ function usePrices() {
       dino: response["dinoswap"].usd,
       cherry: response["cherryswap"].usd,
       wokt: response["okexchain"].usd,
+      ethk: response.ethereum.usd,
+      btck: response["wrapped-bitcoin"].usd,
     };
     setPrices(prices);
   };
