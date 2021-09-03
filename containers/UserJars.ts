@@ -25,6 +25,7 @@ export interface UserJarData {
   totalAPY: number;
   apr: number;
   depositTokenLink: string;
+  tvlUSD: number;
 }
 
 const useUserJars = (): { jarData: UserJarData[] | null } => {

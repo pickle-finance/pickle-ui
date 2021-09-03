@@ -18,10 +18,9 @@ import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import { jars } from "../../util/jars";
 import Grid from "@material-ui/core/Grid";
-import moment from "moment";
+import dayjs from "util/dayjs";
 import clsx from "clsx";
 import { Page } from "@geist-ui/react";
-import { TopBar } from "../../features/TopBar/TopBar";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
@@ -95,7 +94,6 @@ export default function Statistics() {
   );
   return (
     <>
-      <TopBar />
       <Page>
         <InfoBar />
         <Grid container spacing={2}>
@@ -167,7 +165,7 @@ export default function Statistics() {
               >
                 Last Updated:{" "}
                 {performanceData.performance.length > 0
-                  ? moment(
+                  ? dayjs(
                       performanceData.performance[
                         performanceData.performance.length - 1
                       ].x,

@@ -39,6 +39,8 @@ export const PICKLE_JARS = {
   pSPELLETH: "0xdB84a6A48881545E8595218b7a2A3c9bd28498aE",
   pMIMETH: "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C",
   pFOXETH: "0xeb8174F94FDAcCB099422d9A816B8E17d5e393E3",
+  pTRUETH: "0x1d92e1702D7054f74eAC3a9569AeB87FC93e101D",
+  pyCRVIB: "0x4E9806345fb39FFebd70A01f177A675805019ba8",
 
   // Polygon Jars
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
@@ -101,6 +103,8 @@ export const JAR_DEPOSIT_TOKENS = {
     SPELL_ETH: "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E",
     MIM_ETH: "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4",
     UNIV2_FOX_ETH: "0x470e8de2eBaef52014A47Cb5E6aF86884947F08c",
+    SUSHI_TRU_ETH: "0xfCEAAf9792139BF714a694f868A215493461446D",
+    ibCRV: "0x5282a4ef67d9c33135340fb3289cc1711c13638c",
   },
   [NETWORK_NAMES.POLY]: {
     COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
@@ -153,9 +157,11 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_ETH: "SLP SUSHI/ETH",
   SUSHI_ETH_YVBOOST: "SLP YVBOOST/ETH",
   SUSHI_ETH_ALCX: "SLP ALCX/ETH",
+  SUSHI_TRU_ETH: "SLP TRU/ETH",
   USDC: "USDC",
   lusdCRV: "lusdCRV",
   fraxCRV: "fraxCRV",
+  ibCRV: "ibCRV",
   SUSHI_CVX_ETH: "SLP CVX/ETH",
   LQTY: "LQTY",
   LUSD: "LUSD",
@@ -188,7 +194,7 @@ export const DEPOSIT_TOKENS_NAME = {
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
-  [DEPOSIT_TOKENS_NAME.sCRV]: true,
+  [DEPOSIT_TOKENS_NAME.sCRV]: false,
   [DEPOSIT_TOKENS_NAME.renCRV]: true,
   [DEPOSIT_TOKENS_NAME["3CRV"]]: true,
   [DEPOSIT_TOKENS_NAME.steCRV]: true,
@@ -214,9 +220,11 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_YVBOOST]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_ETH_ALCX]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_TRU_ETH]: true,
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
   [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
+  [DEPOSIT_TOKENS_NAME.ibCRV]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_CVX_ETH]: true,
   [DEPOSIT_TOKENS_NAME.LUSD]: true,
   [DEPOSIT_TOKENS_NAME.LQTY]: true,
@@ -252,6 +260,7 @@ export const JAR_YEARN: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.USDC]: true,
   [DEPOSIT_TOKENS_NAME.lusdCRV]: true,
   [DEPOSIT_TOKENS_NAME.fraxCRV]: true,
+  [DEPOSIT_TOKENS_NAME.ibCRV]: true,
 };
 
 export const DEPOSIT_TOKENS_LINK = {
@@ -309,9 +318,12 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/ETH/0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF",
   SUSHI_CVX_ETH:
     "https://app.sushi.com/add/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b/ETH",
+  SUSHI_TRU_ETH:
+    "https://app.sushi.com/add/0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784/ETH",
   USDC: "https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   lusdCRV: "https://curve.fi/lusd/deposit",
   fraxCRV: "https://curve.fi/frax/deposit",
+  ibCRV: "https://curve.fi/ib/deposit",
   LQTY:
     "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
   SADDLE_D4: "https://saddle.exchange/#/pools/d4/deposit",
@@ -396,12 +408,14 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   USDC: "pJar Y-1",
   lusdCRV: "pJar Y-2",
   fraxCRV: "pJar Y-3",
+  ibCRV: "pJar Y-4",
   LQTY: "pJar 0.98l",
   SADDLE_D4: "pJar 0.99s",
   MIM_3CRV: "pJar 0.99m1",
   SPELL_ETH: "pJar 0.99m2",
   MIM_ETH: "pJar 0.99m3",
   UNIV2_FOX_ETH: "pJar 0.99f1",
+  SUSHI_TRU_ETH: "pJar 0.99t",
 
   // Polygon Jars
   COMETH_USDC_WETH: "polyJar 1a",
@@ -469,6 +483,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x090185f2135308bad17527004364ebcc2d37e5f6": "spell",
   "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3": "mim",
   "0xc770eefad204b5180df6a14ee197d99d808ee52d": "fox",
+  "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784": "tru",
 
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",

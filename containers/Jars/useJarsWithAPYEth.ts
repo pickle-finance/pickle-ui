@@ -1,17 +1,9 @@
 import { useEffect, useState } from "react";
 
-import {
-  DEPOSIT_TOKENS_JAR_NAMES,
-  JAR_DEPOSIT_TOKENS,
-  getPriceId,
-} from "./jars";
+import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS } from "./jars";
 import { ChainName, NETWORK_NAMES } from "containers/config";
 import { PriceIds, Prices } from "../Prices";
 import {
-  UNI_ETH_DAI_STAKING_REWARDS,
-  UNI_ETH_USDC_STAKING_REWARDS,
-  UNI_ETH_USDT_STAKING_REWARDS,
-  UNI_ETH_WBTC_STAKING_REWARDS,
   SCRV_STAKING_REWARDS,
   Contracts,
   STECRV_STAKING_REWARDS,
@@ -23,30 +15,27 @@ import {
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
   FEI_TRIBE_STAKING_REWARDS,
-  ALCHEMIX_ALCX_ETH_STAKING_POOLS,
-  COMETH_USDC_WETH_REWARDS,
   COMMUNAL_FARM,
   FOX_ETH_STAKING_REWARDS,
 } from "../Contracts";
 import { Jar } from "./useFetchJars";
-import AaveStrategyAbi from "../ABIs/aave-strategy.json";
 import SwapFlashLoanABI from "../ABIs/swapflashloan.json";
+import CrvRewardsABI from "../ABIs/crv-rewards.json";
+import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__factory";
 import { useCurveRawStats } from "./useCurveRawStats";
 import { useCurveCrvAPY } from "./useCurveCrvAPY";
 import { useCurveSNXAPY } from "./useCurveSNXAPY";
 import { CurvePairs } from "../CurvePairs";
 import { useUniPairDayData } from "./useUniPairDayData";
-import { useComethPairDayData } from "./useComethPairDayData";
 import { useSushiPairDayData } from "./useSushiPairDayData";
 import { useYearnData } from "./useYearnData";
 import { useDuneData } from "./useDuneData";
-import { ethers } from "ethers";
-import { formatEther, getJsonWalletAddress } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import { UniV2Pairs } from "../UniV2Pairs";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { Connection } from "../Connection";
-import { SushiPairs } from "../SushiPairs";
+import { SushiPairs, addresses } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 import { Contract } from "@ethersproject/contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
@@ -54,9 +43,20 @@ import { Contract as MulticallContract } from "ethers-multicall";
 import RewarderABI from "../ABIs/rewarder.json";
 
 const AVERAGE_BLOCK_TIME = 13.22;
+const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
 
 interface PoolId {
   [key: string]: number;
+}
+
+interface PoolInfo {
+  [key: string]: {
+    poolId: number;
+    tokenName: string;
+    rewardName: string;
+    tokenPrice: number;
+    rewardPrice: number;
+  };
 }
 
 const sushiPoolIds: PoolId = {
@@ -73,6 +73,7 @@ const sushiPoolIds: PoolId = {
 const sushiPoolV2Ids: PoolId = {
   "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8": 0,
   "0x05767d9EF41dC40689678fFca0608878fb3dE906": 1,
+  "0xfCEAAf9792139BF714a694f868A215493461446D": 8,
 };
 
 const abracadabraIds: PoolId = {
@@ -80,8 +81,6 @@ const abracadabraIds: PoolId = {
   "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": 1,
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": 2,
 };
-
-const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
 
 export interface JarApy {
   [k: string]: number;
@@ -124,6 +123,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     steCRVGauge,
     masterchefV2,
     yearnRegistry,
+    cvxBooster,
   } = Contracts.useContainer();
   const { getUniPairDayAPY } = useUniPairDayData();
   const { getSushiPairDayAPY } = useSushiPairDayData();
@@ -135,12 +135,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     prices?.usdc || null,
     susdGauge,
     susdPool,
-  );
-  const { APYs: stEthCrvAPY } = useCurveCrvAPY(
-    jars,
-    prices?.eth || null,
-    steCRVGauge,
-    steCRVPool,
   );
   const { APYs: threePoolCrvAPY } = useCurveCrvAPY(
     jars,
@@ -159,16 +153,27 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     susdPool,
     stakingRewards ? stakingRewards.attach(SCRV_STAKING_REWARDS) : null,
   );
-  const { APYs: stEthLdoAPY } = useCurveLdoAPY(
-    jars,
-    steCRVPool,
-    stakingRewards ? stakingRewards.attach(STECRV_STAKING_REWARDS) : null,
-  );
 
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  const [tvlData, setTVLData] = useState<Array<Object>>([]);
+
+  const convexPools: PoolInfo = {
+    "0x06325440D014e39736583c165C2963BA99fAf14E": {
+      poolId: 25,
+      tokenName: "steth",
+      rewardName: "ldo",
+      tokenPrice: prices?.eth,
+      rewardPrice: prices?.ldo,
+    },
+    "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": {
+      poolId: 40,
+      tokenName: "mim",
+      rewardName: "spell",
+      tokenPrice: prices?.dai,
+      rewardPrice: prices?.spell,
+    },
+  };
 
   const calculateMirAPY = async (rewardsAddress: string) => {
     if (stakingRewards && prices?.mir && getUniPairData && multicallProvider) {
@@ -192,7 +197,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const { pricePerToken } = await getUniPairData(stakingToken);
 
-      const mirRewardsPerYear = mirRewardRate * (360 * 24 * 60 * 60);
+      const mirRewardsPerYear = mirRewardRate * ONE_YEAR_SECONDS;
       const valueRewardedPerYear = prices.mir * mirRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -218,6 +223,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         },
       ];
     }
+    return [];
   };
 
   const calculateLqtyAPY = async (rewardsAddress: string) => {
@@ -241,7 +247,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const { pricePerToken } = await getUniPairData(stakingToken);
 
-      const mirRewardsPerYear = lqtyRewardRate * (360 * 24 * 60 * 60);
+      const mirRewardsPerYear = lqtyRewardRate * ONE_YEAR_SECONDS;
       const valueRewardedPerYear = prices.lqty * mirRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -296,7 +302,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         tokenPrice = pricePerToken;
       }
 
-      const iceRewardsPerYear = icePerSecond * (360 * 24 * 60 * 60);
+      const iceRewardsPerYear = icePerSecond * ONE_YEAR_SECONDS;
       const valueRewardedPerYear = prices.spell * iceRewardsPerYear;
 
       const totalValueStaked = totalSupply * tokenPrice;
@@ -321,7 +327,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const [
         fxsRateBN,
-        feiRateBN,
+        tribeRateBN,
         alcxRateBN,
         lqtyRateBN,
         totalValueLockedBN,
@@ -334,14 +340,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ]);
 
       const valueRewardedPerYear =
-        prices.fxs * parseFloat(formatEther(fxsRateBN)) * (360 * 24 * 60 * 60) +
-        prices.fei * parseFloat(formatEther(feiRateBN)) * (360 * 24 * 60 * 60) +
-        prices.alcx *
-          parseFloat(formatEther(alcxRateBN)) *
-          (360 * 24 * 60 * 60) +
-        prices.lqty *
-          parseFloat(formatEther(lqtyRateBN)) *
-          (360 * 24 * 60 * 60);
+        prices.fxs * parseFloat(formatEther(fxsRateBN)) * ONE_YEAR_SECONDS +
+        prices.tribe * parseFloat(formatEther(tribeRateBN)) * ONE_YEAR_SECONDS +
+        prices.alcx * parseFloat(formatEther(alcxRateBN)) * ONE_YEAR_SECONDS +
+        prices.lqty * parseFloat(formatEther(lqtyRateBN)) * ONE_YEAR_SECONDS;
 
       const multicallSwapFlashLoan = new MulticallContract(
         swapFlashLoanAddress,
@@ -359,7 +361,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return [
         {
-          "LQTY+FXS+FEI+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
+          "LQTY+FXS+TRIBE+ALCX": getCompoundingAPY(saddled4Apy * 0.8),
           apr: saddled4Apy * 0.8 * 100,
         },
       ];
@@ -394,7 +396,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const { pricePerToken } = await getUniPairData(stakingToken);
 
-      const tribeRewardsPerYear = tribeRewardRate * (360 * 24 * 60 * 60);
+      const tribeRewardsPerYear = tribeRewardRate * ONE_YEAR_SECONDS;
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -430,7 +432,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const { pricePerToken } = await getUniPairData(stakingToken);
 
-      const foxRewardsPerYear = foxRewardRate * (360 * 24 * 60 * 60);
+      const foxRewardsPerYear = foxRewardRate * ONE_YEAR_SECONDS;
       const valueRewardedPerYear = prices.fox * foxRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -452,7 +454,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const poolId = sushiPoolV2Ids[lpTokenAddress];
 
       const rewarder_addr = await masterchefV2.rewarder(poolId);
-
       const rewarder = new Contract(rewarder_addr, RewarderABI, provider);
       const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
       const totalSupplyBN = await lpToken.balanceOf(masterchefV2.address);
@@ -463,13 +464,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       if (rewardToken === "alcx") {
         const tokenPerBlockBN = await rewarder.tokenPerBlock();
         rewardsPerYear =
-          (parseFloat(formatEther(tokenPerBlockBN)) * (360 * 24 * 60 * 60)) /
+          (parseFloat(formatEther(tokenPerBlockBN)) * ONE_YEAR_SECONDS) /
           AVERAGE_BLOCK_TIME;
       } else if (rewardToken === "cvx") {
         const tokenPerSecondBN = await rewarder.rewardRate();
-
         rewardsPerYear =
-          parseFloat(formatEther(tokenPerSecondBN)) * (360 * 24 * 60 * 60);
+          parseFloat(formatEther(tokenPerSecondBN)) * ONE_YEAR_SECONDS;
+      } else if (rewardToken === "tru") {
+        const tokenPerSecondBN = await rewarder.rewardPerSecond();
+        rewardsPerYear =
+          parseFloat(formatUnits(tokenPerSecondBN, 8)) * ONE_YEAR_SECONDS;
       }
 
       const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
@@ -519,7 +523,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const sushiRewardsPerYear =
-        sushiRewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+        sushiRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.sushi * sushiRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -570,7 +574,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const sushiRewardsPerYear =
-        sushiRewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+        sushiRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.sushi * sushiRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -585,6 +589,104 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateConvexAPY = async (lpTokenAddress: string) => {
+    const curveAPY = (
+      await fetch(
+        "https://cors.bridged.cc/https://www.convexfinance.com/api/curve-apys",
+        {
+          method: "GET",
+          headers: new Headers({
+            "X-Requested-With": "XMLHttpRequest",
+          }),
+        },
+      ).then((x) => x.json())
+    )?.apys;
+    const cvxPool = convexPools[lpTokenAddress];
+    if (
+      curveAPY &&
+      cvxBooster &&
+      multicallProvider &&
+      prices &&
+      stakingRewards
+    ) {
+      const lpApy = parseFloat(curveAPY[cvxPool.tokenName]?.baseApy);
+      const crvApy = parseFloat(curveAPY[cvxPool.tokenName]?.crvApy);
+      const rewardApy = parseFloat(
+        curveAPY[cvxPool.tokenName]?.additionalRewards?.[0].apy,
+      );
+
+      const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId);
+
+      const crvRewardsMC = new MulticallContract(
+        poolInfo.crvRewards,
+        CrvRewardsABI,
+      );
+
+      const [depositLocked, duration] = await multicallProvider.all([
+        crvRewardsMC.totalSupply(),
+        crvRewardsMC.duration(),
+      ]);
+
+      // Work backwards from reported CRV APR
+      const poolValue =
+        parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
+
+      const crvRewardPerDuration =
+        (crvApy * poolValue) / (duration.toNumber() * prices.crv);
+
+      const cvxReward = await getCvxMint(crvRewardPerDuration * 100);
+      const cvxValuePerYear =
+        (cvxReward * prices.cvx * ONE_YEAR_SECONDS) / duration.toNumber();
+
+      const cvxApy = cvxValuePerYear / poolValue;
+
+      return [
+        { lp: lpApy },
+        { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
+        { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
+        {
+          [cvxPool.rewardName]: getCompoundingAPY((rewardApy * 0.8) / 100),
+          apr: rewardApy * 0.8,
+        },
+      ];
+    }
+    return [];
+  };
+
+  /* Adapted from https://docs.convexfinance.com/convexfinanceintegration/cvx-minting */
+
+  // constants
+  const cliffSize = 100000; // new cliff every 100,000 tokens
+  const cliffCount = 1000; // 1,000 cliffs
+  const maxSupply = 100000000; // 100 mil max supply
+
+  const getCvxMint = async (crvEarned: number): Promise<number> => {
+    const cvx = Erc20Factory.connect(addresses.cvx, provider);
+
+    // first get total supply
+    const cvxTotalSupply = parseFloat(formatEther(await cvx.totalSupply()));
+
+    // get current cliff
+    const currentCliff = cvxTotalSupply / cliffSize;
+
+    // if current cliff is under the max
+    if (currentCliff < cliffCount) {
+      // get remaining cliffs
+      const remaining = cliffCount - currentCliff;
+
+      // multiply ratio of remaining cliffs to total cliffs against amount CRV received
+      let cvxEarned = (crvEarned * remaining) / cliffCount;
+
+      // double check we have not gone over the max supply
+      const amountTillMax = maxSupply - cvxTotalSupply;
+      if (cvxEarned > amountTillMax) {
+        cvxEarned = amountTillMax;
+      }
+      return cvxEarned;
+    }
+    return 0;
+  };
+
   const calculateYearnAPY = async (depositToken: string) => {
     if (yearnRegistry && yearnData) {
       const vault = await yearnRegistry.latestVault(depositToken, {
@@ -594,7 +696,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (x) => x.address.toLowerCase() === vault.toLowerCase(),
       );
       if (vaultData) {
-        const apr = vaultData?.apy?.data?.netApy || 0;
+        const apr = vaultData.apy?.data?.netApy || 0;
         return [
           {
             yearn: apr * 100,
@@ -617,6 +719,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiEthYfiApy,
         sushiEthApy,
         sushiEthAlcxApy,
+        sushiTruEthApy,
       ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_DAI),
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDC),
@@ -627,6 +730,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
         ),
+        calculateSushiV2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+        ),
       ]);
 
       const [
@@ -635,9 +741,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         usdcApy,
         crvLusdApy,
         crvFraxApy,
+        crvIBApy,
         alcxEthAlcxApy,
         cvxEthApy,
         sushiCvxEthApy,
+        truEthApy,
+        steCRVApy,
       ] = await Promise.all([
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
@@ -648,6 +757,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].lusdCRV),
         calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].fraxCRV),
+        calculateYearnAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].ibCRV),
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
           "alcx",
@@ -659,6 +769,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
         ),
+        calculateMCv2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+          "tru",
+        ),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].steCRV),
       ]);
 
       const [
@@ -688,12 +803,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ]);
 
       const [mim3crvApy, mimEthApy, spellEthApy] = await Promise.all([
-        calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
       ]);
 
-      const promises = jars.map(async (jar) => {
+      const newJarsWithAPY = jars.map((jar) => {
         let APYs: Array<JarApy> = [];
         let totalAPY = 0;
 
@@ -706,11 +821,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.steCRV) {
-          APYs = [
-            { lp: curveRawStats?.steth || 0 },
-            ...stEthLdoAPY,
-            ...stEthCrvAPY,
-          ];
+          APYs = [...steCRVApy];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.renCRV) {
@@ -926,6 +1037,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           totalAPY = crvFraxApy[0]?.apr || 0;
         }
 
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.ibCRV) {
+          APYs = [...crvIBApy];
+          totalAPY = crvIBApy[0]?.apr || 0;
+        }
+
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_CVX_ETH) {
           APYs = [
             ...cvxEthApy,
@@ -938,6 +1054,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY) {
           APYs = [...lqtyApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_TRU_ETH) {
+          APYs = [
+            ...truEthApy,
+            ...sushiTruEthApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+            ),
+          ];
         }
 
         let apr = 0;
@@ -968,15 +1094,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         };
       });
 
-      const newJarsWithAPY = await Promise.all(promises);
-
       setJarsWithAPY(newJarsWithAPY);
     }
   };
 
   useEffect(() => {
     if (network === NETWORK_NAMES.ETH) calculateAPY();
-  }, [jars, prices, network]);
+  }, [jars, prices, network, yearnData]);
 
   return { jarsWithAPY };
 };

@@ -29,7 +29,6 @@ import EarnRow from "../../components/EarnRow";
 import ThemedTable from "../../components/ThemedTable";
 import { jars } from "../../util/jars";
 import { Connection } from "../../containers/Connection";
-import { TopBar } from "../../features/TopBar/TopBar";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
@@ -234,7 +233,6 @@ export default function Earn(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <TopBar />
       <Page>
         <InfoBar />
         {account && (

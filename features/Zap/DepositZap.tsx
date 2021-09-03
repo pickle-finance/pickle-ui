@@ -28,6 +28,7 @@ const formatValue = (numStr: string) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: parseFloat(numStr) < 1 ? 6 : 4,
   });
+  
 
 export const DepositZap: FC = () => {
   const [inputToken, setInputToken] = useState<TokenSymbol>("ETH");

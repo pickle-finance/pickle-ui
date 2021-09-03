@@ -9,6 +9,10 @@ export const SYMBOL_TO_TOKEN = {
   ETH: "/ethereum.png",
   CRV: "/crv.png",
   YVECRV: "/yvecrv.png",
+  YFI: "/yfi.png",
+  SUSHI: "/sushiswap.png",
+  FEI: "/fei.png",
+  FRAX: "/frax.webp"
 };
 
 export const getTokenLabel = (
@@ -40,3 +44,16 @@ export const getLPLabel = (symbol: keyof typeof SYMBOL_TO_LP): ReactNode => (
     </span>
   </>
 );
+
+export const zapDefaultTokens = [
+  { symbol: "ETH", label: getTokenLabel("ETH") },
+  { symbol: "USDC", label: getTokenLabel("USDC") },
+  { symbol: "USDT", label: getTokenLabel("USDT") },
+  { symbol: "DAI", label: getTokenLabel("DAI") },
+  { symbol: "wBTC", label: getTokenLabel("wBTC") },
+  { symbol: "YFI", label: getTokenLabel("YFI") },
+  { symbol: "SUSHI", label: getTokenLabel("SUSHI") },
+  { symbol: "CRV", label: getTokenLabel("CRV") },
+  { symbol: "FEI", label: getTokenLabel("FEI") },
+  { symbol: "FRAX", label: getTokenLabel("FRAX") },
+];

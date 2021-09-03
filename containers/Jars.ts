@@ -10,7 +10,6 @@ import { useJarWithAPY as useJarsWithAPYOK } from "./Jars/useJarsWithAPYOK";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
-
 import { NETWORK_NAMES } from "./config";
 
 function useJars() {

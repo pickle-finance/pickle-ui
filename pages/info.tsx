@@ -14,7 +14,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import { Page } from "@geist-ui/react";
-import { TopBar } from "../features/TopBar/TopBar";
 import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
 import { Jars } from "../containers/Jars";
@@ -424,7 +423,6 @@ export default function Brining() {
 
   return (
     <>
-      <TopBar />
       <Page>
         <InfoBar />
         <Grid container spacing={5} className={classes.pickleHeader}>

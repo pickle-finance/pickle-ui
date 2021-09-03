@@ -11,7 +11,6 @@ import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
-import { isArray } from "util";
 import { pickleWhite } from "../../util/constants";
 import {
   ERC20Transfer,
@@ -140,7 +139,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   const handleSelect = async (depositTokens: string | string[]) => {
-    const selectedFarms = isArray(depositTokens)
+    const selectedFarms = Array.isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
       : null;
 

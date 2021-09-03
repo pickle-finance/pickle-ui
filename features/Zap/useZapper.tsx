@@ -1,4 +1,5 @@
 import { BigNumber, ethers } from "ethers";
+import erc20 from "@studydefi/money-legos/erc20";
 import { Connection } from "../../containers/Connection";
 import { ETH_ADDRESS } from "./constants";
 
@@ -41,9 +42,9 @@ export const useZapIn = ({
   rawAmount,
   slippagePercentage,
 }: ZapperData) => {
-  const { address, signer } = Connection.useContainer();
+  const { address, signer, provider } = Connection.useContainer();
   const isSellTokenEth = isEth(sellTokenAddress);
-  const sellAmount = rawAmount ? parseUnits(rawAmount, 18).toString() : "0";
+  let decimals: number = 0;
 
   const zapIn = async () => {
     try {
@@ -59,6 +60,12 @@ export const useZapIn = ({
         .toString();
 
       if (!isSellTokenEth) {
+        const TOKEN = new ethers.Contract(
+          sellTokenAddress,
+          erc20.abi,
+          provider,
+        );
+        decimals = await TOKEN.decimals();
         const approvalState = await fetchRes(
           getZapperApi("/zap-in/pickle/approval-state", {
             sellTokenAddress,
@@ -77,6 +84,9 @@ export const useZapIn = ({
           await approveTx.wait();
         }
       }
+      const sellAmount = rawAmount
+        ? parseUnits(rawAmount, decimals || 18).toString()
+        : "0";
       const { from, to, data, value } = await fetchRes(
         getZapperApi("/zap-in/pickle/transaction", {
           slippagePercentage,
@@ -87,8 +97,15 @@ export const useZapIn = ({
           ownerAddress: address,
         }),
       );
-      const zapTx = await signer.sendTransaction({ from, to, data, value });
+      const zapTx = await signer.sendTransaction({
+        from,
+        to,
+        data,
+        value,
+        gasLimit: 800000,
+      });
       await zapTx.wait();
+      return true;
     } catch (error) {
       console.log("Zap Failed", error);
     }

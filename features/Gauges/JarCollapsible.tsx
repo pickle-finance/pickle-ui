@@ -13,7 +13,9 @@ import {
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { getProtocolData } from "../../util/api";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 import { NETWORK_NAMES } from "containers/config";
 
 interface DataProps {
@@ -99,7 +101,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mis.png"} />
   ),
   "0x06325440D014e39736583c165C2963BA99fAf14E": (
-    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/steth.png"} />
   ),
   "0x10B47177E92Ef9D5C6059055d92DdF6290848991": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yvecrv.png"} />
@@ -137,6 +139,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x5282a4ef67d9c33135340fb3289cc1711c13638c": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
   ),
 
   // Polygon Jars
@@ -179,11 +184,14 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
-  
+  "0xfCEAAf9792139BF714a694f868A215493461446D": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
+  ),
+
   // OKEx Chain
   "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
-  )
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -297,6 +305,12 @@ export const JarCollapsible: FC<{
   } = ERC20Transfer.useContainer();
   const { signer, chainName } = Connection.useContainer();
 
+  const [tvlData, setTVLData] = useState();
+
+  useEffect(() => {
+    getProtocolData().then((info) => setTVLData(info));
+  }, []);
+
   useEffect(() => {
     const dStatus = getTransferStatus(
       depositToken.address,
@@ -316,13 +330,21 @@ export const JarCollapsible: FC<{
     .filter((x) => x)
     .join(" + ");
 
+  const tvlNum =
+    tvlData &&
+    GAUGE_TVL_KEY[depositToken.address] &&
+    tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+      : 0;
+  const tvlStr = getFormatString(tvlNum);
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
       shadow
       preview={
         <Grid.Container gap={1}>
-          <JarName xs={24} sm={12} md={5} lg={5}>
+          <JarName xs={24} sm={12} md={5} lg={6}>
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
@@ -341,7 +363,20 @@ export const JarCollapsible: FC<{
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={5} lg={5}>
+          <Grid xs={24} sm={8} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data isZero={balNum === 0}>{balStr}</Data>
+            <Label>Balance</Label>
+          </Grid>
+          <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
+            <Label>Deposited</Label>
+          </Grid>
+          <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
+            <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
+            <Label>Value</Label>
+          </Grid>
+
+          <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
             <Data>
               <Tooltip text={tooltipText}>
                 {totalAPY.toFixed(2) + "%" || "--"}
@@ -372,26 +407,20 @@ export const JarCollapsible: FC<{
               </Tooltip>
             </Data>
           </Grid>
-          <Grid xs={24} sm={8} md={4} lg={5}>
-            <Data isZero={balNum === 0}>{balStr}</Data>
-            <Label>Balance</Label>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={depositedNum === 0}>{depositedStr}</Data>
-            <Label>Deposited</Label>
-          </Grid>
-          <Grid xs={24} sm={8} md={4} lg={4}>
-            <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
-            <Label>Value</Label>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data isZero={tvlNum === 0}>${tvlStr}</Data>
+            <Label>TVL</Label>
           </Grid>
         </Grid.Container>
       }
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid xs={24} md={12}>
+        <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Balance: {balStr}</div>
+            <div>
+              Balance: {balStr} {depositTokenName}
+            </div>
             <Link
               color
               href="#"
@@ -448,74 +477,86 @@ export const JarCollapsible: FC<{
             </div>
           ) : null}
         </Grid>
-        <Grid xs={24} md={12}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              Balance {depositedStr} (
-              <Tooltip
-                text={`${
-                  deposited && ratio
-                    ? parseFloat(
-                        formatEther(
-                          isUsdc && deposited
-                            ? deposited.mul(USDC_SCALE)
-                            : deposited,
-                        ),
-                      ) * ratio
-                    : 0
-                } ${depositTokenName}`}
+        {depositedNum !== 0 && (
+          <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                Balance {depositedStr} (
+                <Tooltip
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(
+                            isUsdc && deposited
+                              ? deposited.mul(USDC_SCALE)
+                              : deposited,
+                          ),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
+                >
+                  {depositedUnderlyingStr}
+                </Tooltip>{" "}
+                {depositTokenName}){" "}
+              </div>
+              <Link
+                color
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setWithdrawAmount(
+                    formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
+                  );
+                }}
               >
-                {depositedUnderlyingStr}
-              </Tooltip>{" "}
-              {depositTokenName}){" "}
+                Max
+              </Link>
             </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setWithdrawAmount(
-                  formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
-                );
+            <Input
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              value={withdrawAmount}
+              width="100%"
+            ></Input>
+            <Spacer y={0.5} />
+            <Button
+              disabled={withdrawButton.disabled || isDisabledJar}
+              onClick={() => {
+                if (signer && !isDisabledJar) {
+                  // Allow pToken to burn its pToken
+                  // and refund lpToken
+                  transfer({
+                    token: jarContract.address,
+                    recipient: jarContract.address,
+                    transferCallback: async () => {
+                      return jarContract
+                        .connect(signer)
+                        .withdraw(
+                          ethers.utils.parseUnits(
+                            withdrawAmount,
+                            isUsdc ? 6 : 18,
+                          ),
+                        );
+                    },
+                    approval: false,
+                  });
+                }
+              }}
+              style={{ width: "100%" }}
+            >
+              {withdrawButton.text}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                paddingTop: "4px",
+                fontFamily: "Source Sans Pro",
               }}
             >
-              Max
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => setWithdrawAmount(e.target.value)}
-            value={withdrawAmount}
-            width="100%"
-          ></Input>
-          <Spacer y={0.5} />
-          <Button
-            disabled={withdrawButton.disabled}
-            onClick={() => {
-              if (signer) {
-                // Allow pToken to burn its pToken
-                // and refund lpToken
-                transfer({
-                  token: jarContract.address,
-                  recipient: jarContract.address,
-                  transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .withdraw(
-                        ethers.utils.parseUnits(
-                          withdrawAmount,
-                          isUsdc ? 6 : 18,
-                        ),
-                      );
-                  },
-                  approval: false,
-                });
-              }
-            }}
-            style={{ width: "100%" }}
-          >
-            {withdrawButton.text}
-          </Button>
-        </Grid>
+              There is no withdrawal fee
+            </div>
+          </Grid>
+        )}
       </Grid.Container>
     </Collapse>
   );

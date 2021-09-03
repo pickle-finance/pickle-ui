@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { BigNumber } from "ethers";
+import { Contract as MulticallContract } from "ethers-multicall";
+
 import { Prices } from "../Prices";
 import { MiniPickles } from "../Pickles";
 import { Contracts } from "../Contracts";
+import { Connection } from "../Connection";
 import { RawFarm } from "../Farms/useFetchFarms";
-import { BigNumber } from "ethers";
 import { NETWORK_NAMES } from "containers/config";
-import { Connection } from "containers/Connection";
 
 // this hook calculates and adds the following properties to the RawFarm objects
 export interface FarmWithReward extends RawFarm {
@@ -35,6 +37,7 @@ type Output = { farmsWithReward: Array<FarmWithReward> | null };
 export const useWithReward = (rawFarms: Input): Output => {
   const { chainName } = Connection.useContainer();
   const { pickleRewarder } = Contracts.useContainer();
+  const { multicallProvider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const { picklePerSecond, maticPerSecond } = MiniPickles.useContainer();
 
@@ -42,19 +45,27 @@ export const useWithReward = (rawFarms: Input): Output => {
 
   const calculateReward = async () => {
     if (
-      rawFarms?.length &&
+      rawFarms &&
       prices &&
-      pickleRewarder
+      pickleRewarder &&
+      multicallProvider &&
+      // NOTE: these values can be 0, which is a falsy value.
+      typeof maticPerSecond === "number" &&
+      typeof picklePerSecond === "number"
     ) {
-      const totalAllocPoints = rawFarms?.reduce(
+      const totalAllocPoints = rawFarms.reduce(
         (acc: number, farm) => acc + farm.allocPoint.toNumber(),
         0,
       );
 
-      const rewarderPoolInfo: PoolInfo[] = await Promise.all(
-        rawFarms?.map((farm) => {
-          return pickleRewarder.poolInfo(farm.poolIndex);
-        }),
+      const pickleRewarderMulticallContract = new MulticallContract(
+        pickleRewarder.address,
+        pickleRewarder.interface.fragments,
+      );
+      const rewarderPoolInfo = await multicallProvider.all<PoolInfo[]>(
+        rawFarms.map((farm) =>
+          pickleRewarderMulticallContract.poolInfo(farm.poolIndex),
+        ),
       );
 
       const totalRewarderAP = rewarderPoolInfo.reduce((acc, curr) => {
@@ -94,7 +105,7 @@ export const useWithReward = (rawFarms: Input): Output => {
 
   useEffect(() => {
     calculateReward();
-  }, [rawFarms, picklePerSecond, prices]);
+  }, [rawFarms?.length, picklePerSecond, maticPerSecond, prices]);
 
   return { farmsWithReward: farms };
 };

@@ -81,6 +81,8 @@ import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factorie
 
 import { Cherrychef } from "./Contracts/Cherrychef";
 import { Cherrychef__factory as CherrychefFactory } from "./Contracts/factories/Cherrychef__factory";
+import { CvxBooster } from "./Contracts/CvxBooster";
+import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/CvxBooster__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -105,6 +107,7 @@ export const CURVE_PROXY_LOGIC = "0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8";
 
 export const GAUGE_CONTROLLER_ADDR =
   "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB";
+
 export const SUSD_GAUGE_ADDR = "0xA90996896660DEcC6E997655E065b23788857849";
 export const SUSD_POOL_ADDR = "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD";
 export const STETH_GAUGE_ADDR = "0x182B723a58739a9c974cFDB385ceaDb237453c28";
@@ -115,6 +118,8 @@ export const THREE_GAUGE_ADDR = "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A";
 export const THREE_POOL_ADDR = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
 export const LUSD_POOL_ADDR = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA";
 export const FRAX_POOL_ADDR = "0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B";
+export const IRONBANK_POOL_ADDR = "0x5282a4eF67D9C33135340fB3289cc1711c13638C";
+export const CVX_BOOSTER = "0xF403C135812408BFbE8713b5A23a04b3D48AAE31";
 
 export const SUSDV2_DEPOSIT_ADDR = "0xFCBa3E75865d2d561BE8D220616520c171F12851";
 
@@ -265,6 +270,7 @@ function useContracts() {
   );
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
   const [fraxPool, setFraxPool] = useState<Pool | null>(null);
+  const [ibPool, setIBPool] = useState<Pool | null>(null);
   const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
     null,
   );
@@ -300,6 +306,8 @@ function useContracts() {
   );
 
   const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null);
+  const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
+  const [jar, setJar] = useState<Jar | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -355,6 +363,9 @@ function useContracts() {
       setERC20(
         Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
+      setJar(
+        JarFactory.connect(ethers.constants.AddressZero, providerOrSigner),
+      );
       setCToken(
         CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
@@ -401,6 +412,8 @@ function useContracts() {
 
       setFraxPool(PoolFactory.connect(FRAX_POOL_ADDR, signer));
 
+      setIBPool(PoolFactory.connect(IRONBANK_POOL_ADDR, signer));
+
       setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
       setFossilFarms(FossilFarmsFactory.connect(FOSSIL_FARMS, signer));
       setSushiComplexRewarder(
@@ -426,6 +439,7 @@ function useContracts() {
       );
 
       setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
+      setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
     }
   };
 
@@ -468,6 +482,7 @@ function useContracts() {
     yearnRegistry,
     lusdPool,
     fraxPool,
+    ibPool,
     minichef,
     sushiMinichef,
     fossilFarms,
@@ -481,6 +496,8 @@ function useContracts() {
     sushiMigrator,
     pickleSushiRewarder,
     cherrychef,
+    cvxBooster,
+    jar
   };
 }
 

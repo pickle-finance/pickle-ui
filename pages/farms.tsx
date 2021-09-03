@@ -1,7 +1,5 @@
 import { FC } from "react";
 import { Page, Note } from "@geist-ui/react";
-import Link from "next/link";
-import { TopBar } from "../features/TopBar/TopBar";
 import { Footer } from "../features/Footer/Footer";
 import { GaugeList } from "../features/Gauges/GaugeList";
 import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
@@ -13,7 +11,6 @@ const Gauges: FC = () => {
 
   return (
     <>
-      <TopBar />
       <Page>
         <Page.Content>
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>

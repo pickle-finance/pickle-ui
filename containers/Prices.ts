@@ -52,6 +52,7 @@ interface PriceObject {
   wokt: number;
   ethk: number;
   btck: number;
+  tru: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -110,6 +111,7 @@ function usePrices() {
         "dinoswap",
         "cherryswap",
         "okexchain",
+        "truefi",
       ],
       vs_currencies: ["usd"],
     });
@@ -164,6 +166,7 @@ function usePrices() {
       wokt: response["okexchain"].usd,
       ethk: response.ethereum.usd,
       btck: response["wrapped-bitcoin"].usd,
+      tru: response["truefi"].usd,
     };
     setPrices(prices);
   };

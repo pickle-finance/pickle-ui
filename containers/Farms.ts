@@ -206,6 +206,14 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pUNIV2 FOX/ETH",
     poolName: "pUNIV2 FOX/ETH",
   },
+  "0x1d92e1702D7054f74eAC3a9569AeB87FC93e101D": {
+    tokenName: "pSLP TRU/ETH",
+    poolName: "pSLP TRU/ETH",
+  },
+  "0x4E9806345fb39FFebd70A01f177A675805019ba8": {
+    tokenName: "pYearnIronBankCRV",
+    poolName: "Pickled Yearn crvIB",
+  },
 };
 
 function useFarms() {

@@ -33,6 +33,7 @@ export const addresses = {
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
   cherry: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
   wokt: "0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15",
+  tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
 };
 
 interface Token {
@@ -119,6 +120,12 @@ const wokt: Token = {
   priceId: "wokt",
   decimals: 18,
 };
+const tru: Token = {
+  address: addresses.tru,
+  priceId: "tru",
+  decimals: 8,
+};
+
 interface PairMap {
   [key: string]: { a: Token; b: Token };
 }
@@ -148,6 +155,7 @@ export const PAIR_INFO: PairMap = {
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": { a: wusdc, b: dino },
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": { a: mweth, b: dino },
   "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": { a: wokt, b: cherry },
+  "0xfCEAAf9792139BF714a694f868A215493461446D": { a: tru, b: weth },
 };
 
 function useSushiPairs() {

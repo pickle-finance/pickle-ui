@@ -115,7 +115,7 @@ export const FARM_LP_TO_ICON = {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/yfi.png"} />
   ),
   "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD": (
-    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/steth.png"} />
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/steth.png"} />
   ),
   "0x9eb0aAd5Bb943D3b2F7603Deb772faa35f60aDF9": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/alchemix.png"} />
@@ -128,6 +128,9 @@ export const FARM_LP_TO_ICON = {
   ),
   "0x729C6248f9B1Ce62B3d5e31D4eE7EE95cAB32dfD": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  "0x4E9806345fb39FFebd70A01f177A675805019ba8": (
+    <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
   ),
   "0xDCfAE44244B3fABb5b351b01Dc9f050E589cF24F": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/convex.png"} />
@@ -145,7 +148,10 @@ export const FARM_LP_TO_ICON = {
   ),
   "0xeb8174F94FDAcCB099422d9A816B8E17d5e393E3": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/fox.png"} />
-  )
+  ),
+  "0x1d92e1702D7054f74eAC3a9569AeB87FC93e101D": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
+  ),
 };
 
 const setButtonStatus = (

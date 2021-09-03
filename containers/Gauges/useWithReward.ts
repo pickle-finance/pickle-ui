@@ -19,7 +19,7 @@ export const useWithReward = (rawGauges: Input): Output => {
   const [gauges, setGauges] = useState<Array<GaugeWithReward> | null>(null);
 
   const calculateReward = () => {
-    if (rawGauges?.length && picklePerBlock && prices) {
+    if (rawGauges && picklePerBlock && prices) {
       // do calculations for each gauge
       const newGauges = rawGauges.map((gauge) => {
         return {

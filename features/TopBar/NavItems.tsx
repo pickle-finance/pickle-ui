@@ -74,12 +74,10 @@ export const NavItems: FC = () => {
   const router = useRouter();
   return (
     <div>
-      <Link href="/jars" passHref>
-        <NavItem active={router.pathname.startsWith("/jars")}>jars</NavItem>
-      </Link>
-
       <Link href="/farms" passHref>
-        <NavItem active={router.pathname.endsWith("farms")}>farms</NavItem>
+        <NavItem active={router.pathname.endsWith("farms")}>
+          jars & farms
+        </NavItem>
       </Link>
       <Link href="/dill" passHref>
         <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>

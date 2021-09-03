@@ -82,6 +82,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     sushiMinichef,
     sushiComplexRewarder,
     ironchef,
+    fossilFarms,
   } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getComethPairData } = ComethPairs.useContainer();
@@ -385,15 +386,17 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateFossilFarmsAPY = async (jar: Jar | undefined) => {
-    if (prices && multicallProvider && jar && controller && strategy) {
-      const jarStrategy = await controller.strategies(jar.depositToken.address);
-      const strategyContract = await strategy.attach(jarStrategy);
-      const fossilFarmsAddress = await strategyContract.masterChef();
-      const poolId = await strategyContract.poolId();
-      const rewardTokenAddress = await strategyContract.rewardToken();
+    if (
+      prices &&
+      multicallProvider &&
+      jar &&
+      controller &&
+      strategy &&
+      fossilFarms
+    ) {
       const multicallFossilFarms = new MulticallContract(
-        fossilFarmsAddress,
-        FossilFarmsAbi,
+        fossilFarms.address,
+        fossilFarms.interface.fragments,
       );
 
       const lpToken = new MulticallContract(
@@ -409,8 +412,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ] = await multicallProvider.all([
         multicallFossilFarms.dinoPerBlock(),
         multicallFossilFarms.totalAllocPoint(),
-        multicallFossilFarms.poolInfo(poolId),
-        lpToken.balanceOf(fossilFarmsAddress),
+        multicallFossilFarms.poolInfo(dinoPoolIds[jar.depositToken.address]),
+        lpToken.balanceOf(fossilFarms.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
@@ -426,16 +429,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const rewardsPerYear =
         rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
-      const rewardToken = getPriceId(rewardTokenAddress);
-      const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
+      const dinoRewardedPerYear = prices.dino * rewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
-      const rewardAPY = valueRewardedPerYear / totalValueStaked;
+      const dinoAPY = dinoRewardedPerYear / totalValueStaked;
 
       return [
         {
-          [rewardToken]: getCompoundingAPY(rewardAPY * 0.8),
-          apr: rewardAPY * 0.8 * 100,
+          dino: getCompoundingAPY(dinoAPY * 0.8),
+          apr: dinoAPY * 0.8 * 100,
         },
       ];
     }

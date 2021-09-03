@@ -51,8 +51,12 @@ export const polyJars = [
   "QLP-QI",
   "IS3USD",
   "DINO-USDC",
-  "DINO-WETH"
+  "DINO-WETH",
 ];
 
 export const powerPool = "PICKLE-ETH";
 export const jars = crvJars.concat(uniJars, sushiJars);
+
+export const uncompoundAPY = (apy) => {
+  return 100 * 365 * (Math.pow(apy / 100 + 1, 1 / 365) - 1);
+};

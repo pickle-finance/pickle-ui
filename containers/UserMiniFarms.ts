@@ -14,15 +14,10 @@ export interface UserFarmDataMatic extends UserFarmData {
   maticApy: number;
 }
 
-const BN_ZERO = BigNumber.from(0)
+const BN_ZERO = BigNumber.from(0);
 
 const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
-  const {
-    blockNum,
-    address,
-    multicallProvider,
-    chainName,
-  } = Connection.useContainer();
+  const { blockNum, address, multicallProvider } = Connection.useContainer();
   const { minichef, erc20, pickleRewarder } = Contracts.useContainer();
   const { farms } = MiniFarms.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
@@ -36,7 +31,7 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
     if (pickleRewarder && farmData && address) {
       const userHarvestableMatic = await Promise.all(
         farmData.map((farm) => {
-          if(farm.staked.eq(BN_ZERO)) return Promise.resolve(BN_ZERO)
+          if (farm.staked.eq(BN_ZERO)) return Promise.resolve(BN_ZERO);
           return pickleRewarder
             .pendingToken(farm.poolIndex, address)
             .catch(() => BigNumber.from(0));
@@ -66,7 +61,7 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
 
   useEffect(() => {
     updateMaticFarmData();
-  },[farmData])
+  }, [farmData]);
 
   return { farmData: farmDataMatic };
 };
