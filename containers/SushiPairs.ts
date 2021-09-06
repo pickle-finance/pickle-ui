@@ -31,9 +31,15 @@ export const addresses = {
   spell: "0x090185f2135308bad17527004364ebcc2d37e5f6",
   mim: "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
+  tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
+
+  // OKEx
   cherry: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
   wokt: "0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15",
-  tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
+  okusdc: "0xc946DAf81b08146B1C7A8Da2A851Ddf2B3EAaf85",
+  ousdt: "0x382bb369d343125bfb2117af9c149795c6c65c50",
+  btck: "0x54e4622DC504176b3BB432dCCAf504569699a7fF",
+  ethk: "0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C",
 };
 
 interface Token {
@@ -125,6 +131,26 @@ const tru: Token = {
   priceId: "tru",
   decimals: 8,
 };
+const okusdc: Token = {
+  address: addresses.okusdc,
+  priceId: "usdc",
+  decimals:6
+};
+const okusdt: Token = {
+  address: addresses.okusdc,
+  priceId: "usdt",
+  decimals:18
+};
+const ethk: Token = {
+  address: addresses.ethk,
+  priceId: "eth",
+  decimals: 18
+};
+const btck: Token = {
+  address: addresses.btck,
+  priceId: "eth",
+  decimals: 18
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -154,8 +180,13 @@ export const PAIR_INFO: PairMap = {
   "0x269db91fc3c7fcc275c2e6f22e5552504512811c": { a: pickle, b: weth },
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": { a: wusdc, b: dino },
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": { a: mweth, b: dino },
-  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": { a: wokt, b: cherry },
   "0xfCEAAf9792139BF714a694f868A215493461446D": { a: tru, b: weth },
+  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": { a: wokt, b: cherry },
+  "0x089dedbFD12F2aD990c55A2F1061b8Ad986bFF88": { a: okusdt, b: cherry },
+  "0x94E01843825eF85Ee183A711Fa7AE0C5701A731a": { a: btck, b: okusdt },
+  "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": { a: ethk, b: okusdt },
+  "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": { a: wokt, b: okusdt },
+  "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": { a: okusdt, b: okusdc },
 };
 
 function useSushiPairs() {

@@ -11,6 +11,8 @@ import { JAR_FARM_MAP } from "../../containers/Farms/farms";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { uncompoundAPY } from "../../util/jars";
+import { NETWORK_NAMES } from "containers/config";
+import { copySync } from "fs-extra";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -67,6 +69,7 @@ export const MiniFarmList: FC = () => {
     };
   });
 
+  const isOK = chainName === NETWORK_NAMES.OKEX;
   const activeJars = jarData.filter((jar) => JAR_ACTIVE[jar.depositTokenName]);
 
   const inactiveJars = jarData.filter(
@@ -108,6 +111,8 @@ export const MiniFarmList: FC = () => {
               x.depositToken.address.toLowerCase() ===
               jar.jarContract.address.toLowerCase(),
           );
+          console.log(jar)
+          console.log(farm)
           return (
             <Grid xs={24} key={jar.name}>
               {farm && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
