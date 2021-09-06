@@ -24,6 +24,7 @@ import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
 import { NETWORK_NAMES } from "containers/config";
 import { UserJarData } from "containers/UserJars";
+import { BigNumber } from "ethers";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -126,9 +127,11 @@ export const GaugeList: FC = () => {
 
   const userJars = jarData.filter((jar) => {
     const gauge = findGauge(jar);
-    return (parseFloat(formatEther(jar.deposited)) ||
-      parseFloat(formatEther(gauge?.staked || 0))) &&
-      !JAR_YEARN[jar.depositTokenName];
+    return (
+      (parseFloat(formatEther(jar.deposited)) ||
+        parseFloat(formatEther(gauge?.staked || 0))) &&
+      !JAR_YEARN[jar.depositTokenName]
+    );
   });
 
   const activeGauges = gaugesWithAPY
@@ -146,6 +149,12 @@ export const GaugeList: FC = () => {
     (x) => x.depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE,
   );
   moveInArray(activeGauges, indexofPickleEth, 0);
+
+  const PicklePower = (
+    <Grid xs={24}>
+      <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
+    </Grid>
+  );
 
   return (
     <>
@@ -226,9 +235,10 @@ export const GaugeList: FC = () => {
         {chainName === NETWORK_NAMES.ETH && (
           <BProtocol showUserJars={showUserJars} />
         )}
-        <Grid xs={24}>
-          <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
-        </Grid>
+        {showUserJars
+          ? gaugesWithAPY[0].staked.gt(BigNumber.from(0)) && PicklePower
+          : PicklePower}
+
         {(showUserJars ? userJars : activeJars).map((jar) => {
           const gauge = findGauge(jar);
 
