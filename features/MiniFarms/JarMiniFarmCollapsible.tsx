@@ -20,6 +20,7 @@ import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { Balances } from "../../containers/Balances";
+import { NETWORK_NAMES } from "containers/config";
 
 interface DataProps {
   isZero?: boolean;
@@ -209,7 +210,7 @@ export const JarMiniFarmCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer, address, blockNum } = Connection.useContainer();
+  const { signer, address, blockNum, chainName } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
   const { getBalance } = Balances.useContainer();
 
@@ -275,7 +276,7 @@ export const JarMiniFarmCollapsible: FC<{
         const newBalance = getStakeableBalance(realRatio);
         const farmTx = await minichef.deposit(poolIndex, newBalance, address);
         await farmTx.wait();
-        await sleep(10000)
+        await sleep(10000);
         setDepositStakeButton(null);
         setIsEntryBatch(false);
       } catch (error) {
@@ -308,7 +309,7 @@ export const JarMiniFarmCollapsible: FC<{
         setExitButton("Withdrawing from Jar...");
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
-        await sleep(10000)
+        await sleep(10000);
         setExitButton(null);
         setIsExitBatch(false);
       } catch (error) {
@@ -370,6 +371,8 @@ export const JarMiniFarmCollapsible: FC<{
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
 
+  const isOK = chainName === NETWORK_NAMES.OKEX;
+
   useEffect(() => {
     const checkAllowance = async () => {
       if (erc20 && address && signer && minichef) {
@@ -426,10 +429,11 @@ export const JarMiniFarmCollapsible: FC<{
             <Label>Wallet Balance</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+            <Data isZero={parseFloat(formatEther(harvestableMatic)) === 0}>
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <br />
-              {harvestableMaticStr} <MiniIcon source={"/matic.png"} />
+              {harvestableMaticStr}{" "}
+              <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
             </Data>
             <Label>Earned</Label>
           </Grid>

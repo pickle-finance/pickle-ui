@@ -45,6 +45,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
         return farmingJar.contract;
       });
+      console.log(farmingJarsMCContracts)
 
       const farmBalances = await Promise.all(
         farmingJarsMCContracts.map((x) =>

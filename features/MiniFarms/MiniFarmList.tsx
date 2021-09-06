@@ -111,8 +111,6 @@ export const MiniFarmList: FC = () => {
               x.depositToken.address.toLowerCase() ===
               jar.jarContract.address.toLowerCase(),
           );
-          console.log(jar)
-          console.log(farm)
           return (
             <Grid xs={24} key={jar.name}>
               {farm && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
