@@ -24,10 +24,6 @@ function useJars() {
   const { jarsWithTVL } = useJarWithTVL(
     jarsWithAPYEth || jarsWithAPYPoly || jarswithAPYOK,
   );
-  if (jarsWithTVL)
-    console.log(
-      `Jars successfully (re)loaded, Jar count: ${jarsWithTVL.length}`,
-    );
 
   const { addTokens } = Balances.useContainer();
 
