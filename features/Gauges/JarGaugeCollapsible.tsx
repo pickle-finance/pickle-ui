@@ -1044,7 +1044,7 @@ export const JarGaugeCollapsible: FC<{
                       transferCallback: async () => {
                         return convertDecimals(unstakeAmount).eq(staked)
                           ? gauge.exit()
-                          : convertDecimals(unstakeAmount);
+                          : gauge.withdraw(convertDecimals(unstakeAmount));
                       },
                     });
                   }
