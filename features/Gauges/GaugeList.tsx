@@ -105,17 +105,22 @@ export const GaugeList: FC = () => {
       JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
   );
 
+  console.log(activeJars)
+
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
 
-  const yearnJars = jarData.filter(
-    (jar) =>
-      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],
-  );
+  const yearnJars = jarData.filter((jar) => {
+    const activeAndYearn =
+      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName];
+    return showUserJars
+      ? activeAndYearn && parseFloat(formatEther(jar.deposited))
+      : activeAndYearn;
+  });
 
   const userJars = jarData.filter((jar) =>
-    parseFloat(formatEther(jar.deposited)),
+    parseFloat(formatEther(jar.deposited)) && !JAR_YEARN[jar.depositTokenName]
   );
 
   const activeGauges = gaugesWithAPY
@@ -193,7 +198,7 @@ export const GaugeList: FC = () => {
         <h2>Jars & Farms</h2>
       </div>
       <Grid.Container gap={1}>
-        {chainName === NETWORK_NAMES.ETH && (
+        {chainName === NETWORK_NAMES.ETH && yearnJars.length > 0 && (
           <>
             Powered by&nbsp;
             <a href="https://yearn.finance/" target="_">
@@ -218,17 +223,7 @@ export const GaugeList: FC = () => {
           </>
         )}
         {chainName === NETWORK_NAMES.ETH && (
-          <>
-            Powered by&nbsp;
-            <a href="https://bprotocol.org/" target="_">
-              B.Protocol
-            </a>
-            &nbsp;⚡
-            <Grid xs={24}>
-              <BProtocol />
-              <Spacer y={1} />
-            </Grid>
-          </>
+          <BProtocol showUserJars={showUserJars} />
         )}
         <Grid xs={24}>
           <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
