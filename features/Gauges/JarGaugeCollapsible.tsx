@@ -960,11 +960,7 @@ export const JarGaugeCollapsible: FC<{
                       token: gaugeDepositToken.address,
                       recipient: gauge.address,
                       transferCallback: async () => {
-                        return gauge.deposit(
-                          isUsdc && gaugeBalance
-                            ? gaugeBalance.mul(USDC_SCALE)
-                            : gaugeBalance,
-                        );
+                        return gauge.depositAll();
                       },
                     });
                   }

@@ -118,10 +118,11 @@ export const GaugeList: FC = () => {
   );
 
   const yearnJars = jarData.filter((jar) => {
+    const gauge = findGauge(jar);
     const activeAndYearn =
       JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName];
     return showUserJars
-      ? activeAndYearn && parseFloat(formatEther(jar.deposited))
+      ? activeAndYearn && (parseFloat(formatEther(jar.deposited)) ||  parseFloat(formatEther(gauge?.staked || 0)))
       : activeAndYearn;
   });
 
