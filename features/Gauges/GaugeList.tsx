@@ -67,6 +67,13 @@ export const GaugeList: FC = () => {
 
   if (!jarData || !gaugeData) return <h2>Loading...</h2>;
 
+  const findGauge = (jar: UserJarData) =>
+    gaugesWithAPY.find(
+      (x) =>
+        x.depositToken.address.toLowerCase() ===
+        jar.jarContract.address.toLowerCase(),
+    );
+
   const gaugesWithAPY = gaugeData.map((gauge) => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
@@ -105,8 +112,6 @@ export const GaugeList: FC = () => {
       JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
   );
 
-  console.log(activeJars)
-
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
@@ -119,9 +124,12 @@ export const GaugeList: FC = () => {
       : activeAndYearn;
   });
 
-  const userJars = jarData.filter((jar) =>
-    parseFloat(formatEther(jar.deposited)) && !JAR_YEARN[jar.depositTokenName]
-  );
+  const userJars = jarData.filter((jar) => {
+    const gauge = findGauge(jar);
+    return (parseFloat(formatEther(jar.deposited)) ||
+      parseFloat(formatEther(gauge?.staked || 0))) &&
+      !JAR_YEARN[jar.depositTokenName];
+  });
 
   const activeGauges = gaugesWithAPY
     .filter((x) => !isDisabledFarm(x.depositToken.address))
@@ -138,13 +146,6 @@ export const GaugeList: FC = () => {
     (x) => x.depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE,
   );
   moveInArray(activeGauges, indexofPickleEth, 0);
-
-  const findGauge = (jar: UserJarData) =>
-    gaugesWithAPY.find(
-      (x) =>
-        x.depositToken.address.toLowerCase() ===
-        jar.jarContract.address.toLowerCase(),
-    );
 
   return (
     <>
