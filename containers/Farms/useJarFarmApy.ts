@@ -30,10 +30,15 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
     if (inputFarms && masterchef && jars && prices && multicallProvider) {
       const jarAddresses = jars.map((x) => x.contract.address);
       const jarFarms = inputFarms
-        ?.filter(
+        .filter(
           (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
         )
-        .filter((x) => jarAddresses.includes(x.lpToken));
+        .filter((x) => jarAddresses.includes(x.lpToken))
+        .reduce((p, c) => {
+          if (!p.some((el) => el.lpToken === c.lpToken)) p.push(c);
+          return p;
+        }, []);
+
       const farmingJarsMCContracts = jarFarms
         .map((farm) => {
           const { jarName } = JAR_FARM_MAP[
