@@ -29,9 +29,9 @@ const cherryPoolIds: PoolId = {
   "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": 1,
   "0x089dedbFD12F2aD990c55A2F1061b8Ad986bFF88": 2,
   "0x94E01843825eF85Ee183A711Fa7AE0C5701A731a": 4,
-  "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": 5,
+  "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": 5, // Gone for now
   "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": 3,
-  "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": 23,
+  "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": 23, // Gone for now
 };
 
 const getCompoundingAPY = (apr: number) => {
@@ -110,10 +110,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const [
         cherryCheOktApy,
         cherryCheUsdtApy,
-        cherryBtckUsdtApy,
         cherryEthkUsdtApy,
         cherryOktUsdtApy,
-        cherryUsdcUsdtApy,
       ] = await Promise.all([
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_CHE,
@@ -122,16 +120,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_USDT_CHE,
         ),
         calculateCherryAPY(
-          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_BTCK_USDT,
-        ),
-        calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_ETHK_USDT,
         ),
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_USDT,
-        ),
-        calculateCherryAPY(
-          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_USDT_USDC,
         ),
       ]);
       const promises = jars.map(async (jar) => {
@@ -145,20 +137,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           APYs = [...cherryCheUsdtApy];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_BTCK_USDT) {
-          APYs = [...cherryBtckUsdtApy];
-        }
-
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_ETHK_USDT) {
           APYs = [...cherryEthkUsdtApy];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT) {
           APYs = [...cherryOktUsdtApy];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_USDC) {
-          APYs = [...cherryUsdcUsdtApy];
         }
 
         let apr = 0;

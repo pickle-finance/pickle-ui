@@ -28,24 +28,28 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
   const calculateApy = async () => {
     if (inputFarms && masterchef && jars && prices && multicallProvider) {
-      const jarFarms = inputFarms?.filter(
-        (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
-      );
+      const jarAddresses = jars.map((x) => x.contract.address);
+      const jarFarms = inputFarms
+        ?.filter(
+          (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
+        )
+        .filter((x) => jarAddresses.includes(x.lpToken));
 
-      const farmingJarsMCContracts = jarFarms.map((farm) => {
-        const { jarName } = JAR_FARM_MAP[
-          farm.lpToken as keyof typeof JAR_FARM_MAP
-        ];
+      const farmingJarsMCContracts = jarFarms
+        .map((farm) => {
+          const { jarName } = JAR_FARM_MAP[
+            farm.lpToken as keyof typeof JAR_FARM_MAP
+          ];
 
-        const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
+          const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
-        if (!farmingJar) {
-          return new MulticallContract(mlErc20.dai.address, mlErc20.abi);
-        }
+          if (!farmingJar) {
+            return null;
+          }
 
-        return farmingJar.contract;
-      });
-      console.log(farmingJarsMCContracts)
+          return farmingJar.contract;
+        })
+        .filter((x) => x);
 
       const farmBalances = await Promise.all(
         farmingJarsMCContracts.map((x) =>

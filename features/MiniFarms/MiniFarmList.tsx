@@ -28,6 +28,8 @@ export const MiniFarmList: FC = () => {
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
 
+  const isOK = chainName === NETWORK_NAMES.OKEX;
+  
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
@@ -37,7 +39,7 @@ export const MiniFarmList: FC = () => {
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },
-      { matic: farm.maticApy * 100 },
+      { [isOK ? 'okt' : 'matic']: farm.maticApy * 100 },
     ];
 
     const jar =
@@ -69,7 +71,6 @@ export const MiniFarmList: FC = () => {
     };
   });
 
-  const isOK = chainName === NETWORK_NAMES.OKEX;
   const activeJars = jarData.filter((jar) => JAR_ACTIVE[jar.depositTokenName]);
 
   const inactiveJars = jarData.filter(

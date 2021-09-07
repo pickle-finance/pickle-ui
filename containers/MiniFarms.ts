@@ -82,10 +82,6 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pCLP OKT/USDT",
     poolName: "pCLP OKT/USDT",
   },
-  "0x80aB65b1525816Ffe4222607EDa73F86D211AC95": {
-    tokenName: "pCLP USDT/USDC",
-    poolName: "pCLP USDT/USDC",
-  },
 };
 
 function useFarms() {
