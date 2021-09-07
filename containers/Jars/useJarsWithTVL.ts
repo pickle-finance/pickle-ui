@@ -35,11 +35,14 @@ const isUniPool = (jarName: string): boolean => {
   return (
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_CHE ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_CHE ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_BTCK_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_ETHK_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_USDC
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT
   );
+};
+
+const isUsd = (jarName: string): boolean => {
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_XUSDT;
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
@@ -127,6 +130,22 @@ export const useJarWithTVL = (jars: Input): Output => {
     };
   };
 
+  const measureUsdJarTVL = async (jar: JarWithAPY): Promise<JarWithTVL> => {
+    const token = new ethers.Contract(
+      jar.depositToken.address,
+      erc20.abi,
+      signer,
+    );
+    const balance = await token.balanceOf(jar.contract.address);
+    const ratio = await jar.contract.getRatio();
+    return {
+      ...jar,
+      tvlUSD: parseFloat(formatEther(balance)),
+      usdPerPToken: 1,
+      ratio: parseFloat(formatEther(ratio)),
+    };
+  };
+
   const measureTVL = async () => {
     if (jars && poolData) {
       let newJars: JarWithTVL[] = jars.map((jar) => {
@@ -149,6 +168,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       if (chainName === NETWORK_NAMES.OKEX) {
         const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
           if (isUniPool(jar.jarName)) return measureUniJarTVL(jar);
+          if (isUsd(jar.jarName)) return measureUsdJarTVL(jar);
         });
         const okexJars = await Promise.all(promises);
         newJars = okexJars;

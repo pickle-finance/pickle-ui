@@ -34,7 +34,6 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
         )
         .filter((x) => jarAddresses.includes(x.lpToken));
-
       const farmingJarsMCContracts = jarFarms
         .map((farm) => {
           const { jarName } = JAR_FARM_MAP[

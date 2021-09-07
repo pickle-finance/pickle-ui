@@ -40,6 +40,7 @@ export const addresses = {
   ousdt: "0x382bb369d343125bfb2117af9c149795c6c65c50",
   btck: "0x54e4622DC504176b3BB432dCCAf504569699a7fF",
   ethk: "0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C",
+  bxh: "0x145ad28a42bf334104610f7836d0945dffb6de63"
 };
 
 interface Token {
@@ -151,6 +152,11 @@ const btck: Token = {
   priceId: "eth",
   decimals: 18
 };
+const bxh: Token = {
+  address: addresses.bxh,
+  priceId: "bxh",
+  decimals: 18
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -187,6 +193,7 @@ export const PAIR_INFO: PairMap = {
   "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": { a: ethk, b: okusdt },
   "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": { a: wokt, b: okusdt },
   "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": { a: okusdt, b: okusdc },
+  "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: bxh, b: okusdt }
 };
 
 function useSushiPairs() {

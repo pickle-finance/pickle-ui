@@ -34,6 +34,11 @@ const cherryPoolIds: PoolId = {
   "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": 23, // Gone for now
 };
 
+const bxhPoolIds: PoolId = {
+  "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": 12,
+  "0x8E017294cB690744eE2021f9ba75Dd1683f496fb": 1,
+};
+
 const getCompoundingAPY = (apr: number) => {
   return 100 * (Math.pow(1 + apr / 365, 365) - 1);
 };
@@ -52,7 +57,7 @@ type Output = {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
-  const { cherrychef } = Contracts.useContainer();
+  const { cherrychef, bxhchef } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
@@ -105,6 +110,59 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateBxhAPY = async (lpTokenAddress: string) => {
+    if (bxhchef && getSushiPairData && prices && multicallProvider) {
+      const poolId = bxhPoolIds[lpTokenAddress];
+      const multicallBxhchef = new MulticallContract(
+        bxhchef.address,
+        bxhchef.interface.fragments,
+      );
+
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+      const [poolInfo] = await multicallProvider.all([
+        multicallBxhchef.poolInfo(poolId),
+      ]);
+
+      const [
+        bxhPerBlockBN,
+        totalAllocPointBN,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallBxhchef.getBXHBlockRewardV(poolInfo.lastRewardBlock),
+        multicallBxhchef.totalAllocPoint(),
+        lpToken.balanceOf(bxhchef.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rewardsPerBlock =
+        (parseFloat(formatEther(bxhPerBlockBN)) *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
+
+      let pricePerToken = 0;
+      if (
+        lpTokenAddress === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_BXH_USDT
+      ) {
+        ({ pricePerToken } = await getSushiPairData(lpTokenAddress));
+      } else if (
+        lpTokenAddress === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_XUSDT
+      ) {
+        pricePerToken = prices.usdt;
+      }
+
+      const rewardsPerYear =
+        rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+
+      const valueRewardedPerYear = prices?.bxh * rewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const bxhAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [{ bxh: bxhAPY * 0.8 * 100, apr: bxhAPY * 0.8 * 100 }];
+    }
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars) {
       const [
@@ -112,6 +170,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         cherryCheUsdtApy,
         cherryEthkUsdtApy,
         cherryOktUsdtApy,
+        bxhUsdtApy,
+        bxhXusdtApy,
       ] = await Promise.all([
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_CHE,
@@ -125,6 +185,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_USDT,
         ),
+        calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_BXH_USDT),
+        calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_XUSDT),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -143,6 +205,14 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT) {
           APYs = [...cherryOktUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT) {
+          APYs = [...bxhUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_XUSDT) {
+          APYs = [...bxhXusdtApy];
         }
 
         let apr = 0;

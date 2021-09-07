@@ -82,6 +82,14 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pCLP OKT/USDT",
     poolName: "pCLP OKT/USDT",
   },
+  "0x09C22BDC438B69bCC190EFa8F8E3417277E1DD4F": {
+    tokenName: "pBLP BXH/USDT",
+    poolName: "pBLP BXH/USDT",
+  },
+  "0xd60514536195573Ce4a4A78CE5706e94e9Ee7917": {
+    tokenName: "XUSDT",
+    poolName: "XUSDT",
+  },
 };
 
 function useFarms() {
@@ -89,7 +97,7 @@ function useFarms() {
   const { farmsWithReward } = useWithReward(rawFarms);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
-
+  
   const jarFarms = jarFarmWithMaticApy
     ?.map((farm) => {
       if (!FarmInfo[farm.lpToken]) return null;

@@ -62,6 +62,8 @@ export const PICKLE_JARS = {
   pCHERRYUSDTCHE: "0xe75c8805f9970c7547255059A22d14001d3D7b94",
   pCHERRYETHKUSDT: "0x4a19C49Ee3233A2AE103487f3699D70573EC2371",
   pCHERRYOKTUSDT: "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e",
+  pBXHBXHUSDT: "0x09c22bdc438b69bcc190efa8f8e3417277e1dd4f",
+  pBXHXUSDT: "0xd60514536195573ce4a4a78ce5706e94e9ee7917",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -123,6 +125,8 @@ export const JAR_DEPOSIT_TOKENS = {
     CHERRY_USDT_CHE: "0x089dedbFD12F2aD990c55A2F1061b8Ad986bFF88",
     CHERRY_ETHK_USDT: "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93",
     CHERRY_OKT_USDT: "0xF3098211d012fF5380A03D80f150Ac6E5753caA8",
+    BXH_BXH_USDT: "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF",
+    BXH_XUSDT: "0x8E017294cB690744eE2021f9ba75Dd1683f496fb",
   },
 };
 
@@ -185,6 +189,8 @@ export const DEPOSIT_TOKENS_NAME = {
   CHERRY_USDT_CHE: "CHERRY USDT/CHE",
   CHERRY_ETHK_USDT: "CHERRY ETHK/USDT",
   CHERRY_OKT_USDT: "CHERRY OKT/USDT",
+  BXH_BXH_USDT: "BXH/USDT",
+  BXH_XUSDT: "BXH XUSDT"
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -246,6 +252,8 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.CHERRY_USDT_CHE]: true,
   [DEPOSIT_TOKENS_NAME.CHERRY_ETHK_USDT]: true,
   [DEPOSIT_TOKENS_NAME.CHERRY_OKT_USDT]: true,
+  [DEPOSIT_TOKENS_NAME.BXH_BXH_USDT]: true,
+  [DEPOSIT_TOKENS_NAME.BXH_XUSDT]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -358,6 +366,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://www.cherryswap.net/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x382bb369d343125bfb2117af9c149795c6c65c50",
   CHERRY_OKT_USDT:
     "https://www.cherryswap.net/#/add/ETH/0x382bb369d343125bfb2117af9c149795c6c65c50",
+  BXH_BXH_USDT: "http://bxh.com/#/bxhTradeStake/12",
+  BXH_XUSDT: "https://www.bxh.com/#/twist/1"
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -424,6 +434,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   CHERRY_USDT_CHE: "okJar 1b",
   CHERRY_ETHK_USDT: "okJar 1c",
   CHERRY_OKT_USDT: "okJar 1d",
+  BXH_BXH_USDT: "okJar 2a",
+  BXH_XUSDT: "okJar 2b",
 };
 
 export const STRATEGY_NAMES = {
@@ -492,6 +504,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x54e4622dc504176b3bb432dccaf504569699a7ff": "btck",
   "0xef71ca2ee68f45b9ad6f72fbdb33d707b872315c": "ethk",
   "0xc946daf81b08146b1c7a8da2a851ddf2b3eaaf85": "usdc",
+  "0x145ad28a42bf334104610f7836d0945dffb6de63": "bxh",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {
