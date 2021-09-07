@@ -125,7 +125,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     yearnRegistry,
     cvxBooster,
   } = Contracts.useContainer();
-  const { getUniPairDayAPY } = useUniPairDayData();
+  const { getUniPairDayAPY, uniPairDayData } = useUniPairDayData();
+
   const { getSushiPairDayAPY } = useSushiPairDayData();
   const { yearnData } = useYearnData();
   const { duneData } = useDuneData();
@@ -1098,9 +1099,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     }
   };
 
+  /**
+   * We only care about yearnData and uniPairDayData being present or not,
+   * so checking for array length is safe. However, this is not the case
+   * when it comes to jars, where the data changes while the array length
+   * remains the same.
+   */
   useEffect(() => {
     if (network === NETWORK_NAMES.ETH) calculateAPY();
-  }, [jars, prices, network, yearnData]);
+  }, [jars, prices, network, yearnData?.length, uniPairDayData?.length]);
 
   return { jarsWithAPY };
 };
