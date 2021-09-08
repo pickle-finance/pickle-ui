@@ -405,7 +405,6 @@ export const JarMiniFarmCollapsible: FC<{
   useEffect(() => {
     getProtocolData().then((info) => setTVLData(info));
   }, []);
-  console.log("tvl", tvlUSD)
 
   const tvlNum =
     tvlData &&
