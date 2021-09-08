@@ -4,6 +4,10 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require("@sentry/nextjs");
+const path = require("path");
+const { I18NextHMRPlugin } = require("i18next-hmr/plugin");
+const { i18n } = require("./next-i18next.config");
+const localesDir = path.resolve("public/locales");
 
 // To run `yarn analyze` uncomment the respective lines:
 // const withBundleAnalyzer = require("@next/bundle-analyzer")({
@@ -22,6 +26,7 @@ const moduleExports = {
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
     apiHost: "https://api.pickle.finance/prod",
   },
+  i18n,
   async rewrites() {
     return [
       {
@@ -29,6 +34,13 @@ const moduleExports = {
         destination: "/farms",
       },
     ];
+  },
+  webpack(config, context) {
+    if (!context.isServer && context.dev) {
+      config.plugins.push(new I18NextHMRPlugin({ localesDir }));
+    }
+
+    return config;
   },
 };
 

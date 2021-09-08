@@ -1,6 +1,8 @@
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Card, Grid, Tooltip } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { useBalances } from "./useBalances";
 import { Prices } from "../../containers/Prices";
 import { UniV2Pairs } from "../../containers/UniV2Pairs";
@@ -72,6 +74,7 @@ export const Balances: FC = () => {
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [marketCap, setMarketCap] = useState<number | null>(null);
   const [tooltipText, setTooltipText] = useState<string | null>("");
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const updateInfo = async () => {
@@ -171,7 +174,7 @@ export const Balances: FC = () => {
                 text="Total ETH/PICKLE pool value on Uniswap."
                 style={{ cursor: `help` }}
               >
-                Pool size:{" "}
+                {t("poolSize")}:{" "}
                 {protocolInfo
                   ? formatDollars(
                       protocolInfo.totalValue - protocolInfo.jarValue,
