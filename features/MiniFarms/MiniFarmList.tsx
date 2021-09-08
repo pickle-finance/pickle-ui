@@ -29,7 +29,7 @@ export const MiniFarmList: FC = () => {
   const [showInactive, setShowInactive] = useState<boolean>(false);
 
   const isOK = chainName === NETWORK_NAMES.OKEX;
-  
+
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
   }
@@ -39,7 +39,7 @@ export const MiniFarmList: FC = () => {
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },
-      { [isOK ? 'okt' : 'matic']: farm.maticApy * 100 },
+      { [isOK ? "okt" : "matic"]: farm.maticApy * 100 },
     ];
 
     const jar =
@@ -85,10 +85,14 @@ export const MiniFarmList: FC = () => {
       <Grid.Container gap={1}>
         <Grid md={16}>
           <p>
-            Farms allow you to earn dual PICKLE{" "}
-            <MiniIcon source="/pickle.png" /> and MATIC{" "}
-            <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} /> rewards by staking tokens. 
-            {!isOK && `(Note: MATIC rewards end August 23)`}
+            Farms allow you to earn PICKLE <MiniIcon source="/pickle.png" />
+            {isOK ? (
+              <>
+                and OKT <MiniIcon source="/okex.png" /> rewards by staking
+                tokens.
+              </>
+            ) : null}{" "}
+            {!isOK && `(Note: MATIC rewards ended August 23)`}
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.

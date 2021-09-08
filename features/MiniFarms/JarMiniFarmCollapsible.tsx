@@ -169,6 +169,7 @@ export const JarMiniFarmCollapsible: FC<{
     usdPerPToken,
     depositTokenLink,
     apr,
+    tvlUSD
   } = jarData;
 
   const balNum = parseFloat(formatEther(balance));
@@ -404,13 +405,14 @@ export const JarMiniFarmCollapsible: FC<{
   useEffect(() => {
     getProtocolData().then((info) => setTVLData(info));
   }, []);
+  console.log("tvl", tvlUSD)
 
   const tvlNum =
     tvlData &&
     GAUGE_TVL_KEY[depositToken.address] &&
     tvlData[GAUGE_TVL_KEY[depositToken.address]]
       ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      : 0;
+      : tvlUSD;
   const tvlStr = getFormatString(tvlNum);
 
   return (
