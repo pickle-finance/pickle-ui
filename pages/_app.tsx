@@ -2,6 +2,7 @@ import { FC } from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { GeistProvider } from "@geist-ui/react";
+import { appWithTranslation } from "next-i18next";
 
 import "../styles/reset.css";
 import "../styles/global.scss";
@@ -32,6 +33,10 @@ import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
 import { PoolData } from "../containers/Jars/usePoolData";
 import { TopBar } from "../features/TopBar/TopBar";
+
+// i18n
+import useTranslationsHMR from "../hooks/useTranslationsHMR";
+import config from "../next-i18next.config";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -88,6 +93,8 @@ const WithContainers: FC = ({ children }) => (
 );
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
+  useTranslationsHMR();
+
   return (
     <>
       <Head>
@@ -117,4 +124,4 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   );
 };
 
-export default App;
+export default appWithTranslation(App, config);
