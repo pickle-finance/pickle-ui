@@ -101,6 +101,9 @@ export const FARM_LP_TO_ICON: {
   "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
+  ),
 };
 
 const setButtonStatus = (
