@@ -51,7 +51,8 @@ export const GAUGE_TVL_KEY = {
   [JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_QI]: "qlp-qi",
   [JAR_DEPOSIT_TOKENS.Polygon.IRON_3USD]: "is3usd",
   [JAR_DEPOSIT_TOKENS.Polygon.POLY_SUSHI_DINO_USDC]: "dino-usdc",
-  [JAR_DEPOSIT_TOKENS.Polygon.QUICK_DINO_WETH]: "dino-weth"
+  [JAR_DEPOSIT_TOKENS.Polygon.QUICK_DINO_WETH]: "dino-weth",
+  [JAR_DEPOSIT_TOKENS.Polygon.QUICK_MATIC_QI]: "qlp-qimatic"
   
 };
 
