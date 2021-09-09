@@ -1,6 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { useTranslation } from "next-i18next";
 
 import { Logo } from "./Logo";
 import { NavItems } from "./NavItems";
@@ -34,7 +33,6 @@ const Content = styled.div`
 export const TopBar: FC = () => {
   const { address, provider } = Connection.useContainer();
   const isConnected = !!provider && !!address;
-  const { t } = useTranslation("common");
 
   return (
     <>
@@ -42,7 +40,6 @@ export const TopBar: FC = () => {
         <MaxWidthWrapper>
           <Content>
             <Logo />
-            {t("greeting")}
             <NavItems />
           </Content>
           {isConnected ? <DesktopNetworkIndicator /> : <DesktopConnect />}

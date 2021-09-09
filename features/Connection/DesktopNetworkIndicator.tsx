@@ -1,6 +1,9 @@
 import { FC, useState } from "react";
+import { useRouter } from "next/router";
 import styled, { keyframes } from "styled-components";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import Skeleton from "@material-ui/lab/Skeleton";
+
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
 import { config, NETWORK_NAMES } from "../../containers/config";
@@ -20,18 +23,15 @@ const Container = styled.div`
   }
 `;
 
-const AddressBox = styled.a`
+const AddressContainer = styled.a`
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 5px;
   text-decoration: none;
   z-index: 1;
   background: var(--bg-color);
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
 
   &:hover {
     text-shadow: none;
@@ -39,20 +39,29 @@ const AddressBox = styled.a`
   }
 `;
 
+const Address = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const AddressLabel = styled.div`
   color: #aaa;
+  font-size: 15px;
   margin-right: 0.5rem;
+`;
+
+const Block = styled.div`
+  display: flex;
+  justify-content: start;
+  margin-top: 6px;
 `;
 
 const BlockBox = styled.a`
   display: flex;
   align-items: center;
+  justify-content: start;
+  font-size: 12px;
   color: #8bc34a;
-  background: #161616;
-  padding: 0.5rem 1rem;
-  border: 1px solid #004221;
-  border-top-left-radius: 5px;
-  transform: translateX(4px);
   text-decoration: none;
 
   &:hover {
@@ -68,9 +77,9 @@ const BlockBox = styled.a`
 `;
 
 const pulse = keyframes`
-  0% { background-color: #5ec591; }
-  50% { background-color: #7fa491; }
-  100% { background-color: #5ec591; }
+  0%   { opacity: 1; }
+  50%  { opacity: 0.2; }
+  100% { opacity: 1; }
 `;
 
 const BlockNumber = styled.div`
@@ -79,11 +88,14 @@ const BlockNumber = styled.div`
   text-decoration: none;
 `;
 
+const circleSize = 6;
+
 const Circle = styled.div`
-  width: 8px;
-  height: 8px;
-  min-height: 8px;
-  min-width: 8px;
+  width: ${circleSize}px;
+  height: ${circleSize}px;
+  min-height: ${circleSize}px;
+  min-width: ${circleSize}px;
+  background-color: #5ec591;
   margin-left: 0.5rem;
   margin-top: 1px;
   border-radius: 50%;
@@ -102,6 +114,7 @@ export const DesktopNetworkIndicator: FC = () => {
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
   const [reset, setReset] = useState(0);
+  const router = useRouter();
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
@@ -117,6 +130,9 @@ export const DesktopNetworkIndicator: FC = () => {
       setSwitchChainModalOpen(true);
     }
   };
+
+  const handleLanguageSwitch = (locale: string) =>
+    router.push("", "", { locale });
 
   return (
     <Container>
@@ -143,34 +159,31 @@ export const DesktopNetworkIndicator: FC = () => {
           OK
         </Modal.Action>
       </Modal>
-      {blockNum && (
-        <Tooltip
-          text="This is the current block number. This page is updated with every new block."
-          placement="left"
-        >
-          <BlockBox
-            href={
-              chainName === NETWORK_NAMES.POLY
-                ? `https://explorer-mainnet.maticvigil.com/blocks/${blockNum}`
-                : `https://etherscan.io/block/${blockNum}`
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <BlockNumber>{blockNum + ` `}</BlockNumber>
-            <Circle />
-          </BlockBox>
-        </Tooltip>
-      )}
+      <Select
+        value={router.locale}
+        onChange={(locale) => handleLanguageSwitch(locale as string)}
+        style={{
+          borderRadius: "5px 0 0 5px",
+          minWidth: "4rem",
+          borderRight: 0,
+        }}
+      >
+        <Select.Option value="en">EN</Select.Option>
+        <Select.Option value="zh-CN">CN</Select.Option>
+      </Select>
       <Select
         value={`${chainId || 1}`}
         onChange={(id) => handleSwitchChain(+id)}
-        key={reset}
+        style={{
+          borderRadius: "0 5px 5px 0",
+          minWidth: "7rem",
+          marginRight: "1.5rem",
+        }}
       >
         <Select.Option value="1">Ethereum</Select.Option>
         <Select.Option value="137">Polygon</Select.Option>
       </Select>
-      <AddressBox
+      <AddressContainer
         href={
           chainName === NETWORK_NAMES.POLY
             ? `https://explorer-mainnet.maticvigil.com/address/${address}`
@@ -179,9 +192,44 @@ export const DesktopNetworkIndicator: FC = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
-        <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
-      </AddressBox>
+        <Address>
+          <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
+          <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
+        </Address>
+        <Block>
+          <Tooltip
+            text="This is the current block number. This page is updated with every new block."
+            placement="left"
+          >
+            <BlockBox
+              href={
+                chainName === NETWORK_NAMES.POLY
+                  ? `https://explorer-mainnet.maticvigil.com/blocks/${blockNum}`
+                  : `https://etherscan.io/block/${blockNum}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <BlockNumber>
+                {blockNum ? (
+                  blockNum
+                ) : (
+                  <Skeleton
+                    animation="wave"
+                    width="55px"
+                    height="16px"
+                    style={{
+                      backgroundColor: "#FFF",
+                      opacity: 0.1,
+                    }}
+                  />
+                )}
+              </BlockNumber>
+              <Circle />
+            </BlockBox>
+          </Tooltip>
+        </Block>
+      </AddressContainer>
     </Container>
   );
 };

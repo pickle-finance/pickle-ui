@@ -1,4 +1,7 @@
 const HttpBackend = require("i18next-http-backend/cjs");
+const path = require("path");
+
+const localePath = path.resolve("./public/locales");
 
 module.exports = {
   i18n: {
@@ -11,6 +14,7 @@ module.exports = {
       "zh-HK": ["zh-Hant", "en"],
       default: ["en"],
     },
+    localePath,
     react: {
       useSuspense: false,
     },
