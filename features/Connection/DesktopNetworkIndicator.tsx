@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { useRouter } from "next/router";
 import styled, { keyframes } from "styled-components";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -7,6 +6,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
 import { config, NETWORK_NAMES } from "../../containers/config";
+import LanguageSelect from "./LanguageSelect";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -46,7 +46,7 @@ const Address = styled.div`
 
 const AddressLabel = styled.div`
   color: #aaa;
-  font-size: 15px;
+  font-size: 14px;
   margin-right: 0.5rem;
 `;
 
@@ -60,7 +60,7 @@ const BlockBox = styled.a`
   display: flex;
   align-items: center;
   justify-content: start;
-  font-size: 12px;
+  font-size: 11px;
   color: #8bc34a;
   text-decoration: none;
 
@@ -114,7 +114,6 @@ export const DesktopNetworkIndicator: FC = () => {
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
   const [reset, setReset] = useState(0);
-  const router = useRouter();
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
@@ -130,9 +129,6 @@ export const DesktopNetworkIndicator: FC = () => {
       setSwitchChainModalOpen(true);
     }
   };
-
-  const handleLanguageSwitch = (locale: string) =>
-    router.push("", "", { locale });
 
   return (
     <Container>
@@ -159,18 +155,7 @@ export const DesktopNetworkIndicator: FC = () => {
           OK
         </Modal.Action>
       </Modal>
-      <Select
-        value={router.locale}
-        onChange={(locale) => handleLanguageSwitch(locale as string)}
-        style={{
-          borderRadius: "5px 0 0 5px",
-          minWidth: "4rem",
-          borderRight: 0,
-        }}
-      >
-        <Select.Option value="en">EN</Select.Option>
-        <Select.Option value="zh-CN">CN</Select.Option>
-      </Select>
+      <LanguageSelect type="grouped" />
       <Select
         value={`${chainId || 1}`}
         onChange={(id) => handleSwitchChain(+id)}
@@ -178,6 +163,7 @@ export const DesktopNetworkIndicator: FC = () => {
           borderRadius: "0 5px 5px 0",
           minWidth: "7rem",
           marginRight: "1.5rem",
+          borderLeft: 0,
         }}
       >
         <Select.Option value="1">Ethereum</Select.Option>
