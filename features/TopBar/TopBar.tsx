@@ -10,6 +10,7 @@ import { DesktopNetworkIndicator } from "../Connection/DesktopNetworkIndicator";
 import { MobileConnect } from "../Connection/MobileConnect";
 import { MobileNetworkIndicator } from "../Connection/MobileNetworkIndicator";
 import { Connection } from "../../containers/Connection";
+import LanguageSelect from "../Connection/LanguageSelect";
 
 const Container = styled.div`
   border-bottom: 1px solid var(--accent-color);
@@ -30,6 +31,15 @@ const Content = styled.div`
   align-items: center;
 `;
 
+const DesktopConnectContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+`;
+
 export const TopBar: FC = () => {
   const { address, provider } = Connection.useContainer();
   const isConnected = !!provider && !!address;
@@ -42,7 +52,14 @@ export const TopBar: FC = () => {
             <Logo />
             <NavItems />
           </Content>
-          {isConnected ? <DesktopNetworkIndicator /> : <DesktopConnect />}
+          {isConnected ? (
+            <DesktopNetworkIndicator />
+          ) : (
+            <DesktopConnectContainer>
+              <LanguageSelect type="standalone" />
+              <DesktopConnect />
+            </DesktopConnectContainer>
+          )}
         </MaxWidthWrapper>
       </Container>
       {isConnected ? <MobileNetworkIndicator /> : <MobileConnect />}
