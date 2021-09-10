@@ -14,7 +14,6 @@ import {
   MIRROR_MQQQ_UST_STAKING_REWARDS,
   MIRROR_MSLV_UST_STAKING_REWARDS,
   MIRROR_MBABA_UST_STAKING_REWARDS,
-  FEI_TRIBE_STAKING_REWARDS,
   COMMUNAL_FARM,
   FOX_ETH_STAKING_REWARDS,
 } from "../Contracts";
@@ -124,6 +123,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     masterchefV2,
     yearnRegistry,
     cvxBooster,
+    feichef
   } = Contracts.useContainer();
   const { getUniPairDayAPY, uniPairDayData } = useUniPairDayData();
 
@@ -370,34 +370,43 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
-  const calculateFeiAPY = async (rewardsAddress: string) => {
+  const calculateFeiAPY = async (lpTokenAddress: string) => {
     if (
-      stakingRewards &&
+      feichef &&
       prices?.tribe &&
       getUniPairData &&
       multicallProvider
     ) {
-      const multicallUniStakingRewards = new MulticallContract(
-        rewardsAddress,
-        stakingRewards.interface.fragments,
+      const multicallFeichef = new MulticallContract(
+        feichef.address,
+        feichef.interface.fragments,
       );
 
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+
       const [
-        rewardRateBN,
-        stakingToken,
-        totalSupplyBN,
+        tribePerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN
       ] = await multicallProvider.all([
-        multicallUniStakingRewards.rewardRate(),
-        multicallUniStakingRewards.stakingToken(),
-        multicallUniStakingRewards.totalSupply(),
+        multicallFeichef.tribePerBlock(),
+        multicallFeichef.totalAllocPoint(),
+        multicallFeichef.poolInfo(0), // poolId for FEI-TRIBE
+        lpToken.balanceOf(feichef.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
-      const tribeRewardRate = parseFloat(formatEther(rewardRateBN));
+      const tribeRewardsPerBlock =
+        (parseFloat(formatEther(tribePerBlockBN)) *
+          0.9 *
+          poolInfo.allocPoint.toNumber()) /
+        totalAllocPointBN.toNumber();
 
-      const { pricePerToken } = await getUniPairData(stakingToken);
+      const { pricePerToken } = await getUniPairData(lpTokenAddress);
 
-      const tribeRewardsPerYear = tribeRewardRate * ONE_YEAR_SECONDS;
+      const tribeRewardsPerYear = tribeRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -796,7 +805,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateMirAPY(MIRROR_MQQQ_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MSLV_UST_STAKING_REWARDS),
         calculateMirAPY(MIRROR_MBABA_UST_STAKING_REWARDS),
-        calculateFeiAPY(FEI_TRIBE_STAKING_REWARDS),
+        calculateFeiAPY(JAR_DEPOSIT_TOKENS.Ethereum.UNIV2_FEI_TRIBE),
         calculateFoxAPY(FOX_ETH_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
         calculateLqtyStakingAPY(),
