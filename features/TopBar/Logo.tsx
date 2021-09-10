@@ -9,6 +9,7 @@ const ImageContainer = styled.div`
   position: relative;
   width: 8rem;
   margin-right: 1rem;
+  flex-shrink: 0.75;
 `;
 
 export const Logo: FC = () => (

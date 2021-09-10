@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter, NextRouter } from "next/router";
 import { Popover } from "@geist-ui/react";
 
+import LanguageSelect from "../Connection/LanguageSelect";
+
 interface NavItemProps {
   active?: boolean;
 }
@@ -25,6 +27,7 @@ export const NavItem = styled.a<NavItemProps>`
 
   @media screen and (max-width: 600px) {
     padding: 0;
+    margin-bottom: 0.45rem;
     letter-spacing: 2px;
   }
 
@@ -41,6 +44,17 @@ export const NavItem = styled.a<NavItemProps>`
     @media screen and (max-width: 600px) {
       right: 2px;
     }
+  }
+`;
+
+const NavItemsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const LanguageSelectContainer = styled.div`
+  @media screen and (min-width: 600px) {
+    display: none;
   }
 `;
 
@@ -72,26 +86,36 @@ const infoItems = (router: NextRouter) => (
 
 export const NavItems: FC = () => {
   const router = useRouter();
+
   return (
-    <div>
-      <Link href="/farms" passHref>
-        <NavItem active={router.pathname.endsWith("farms")}>
-          jars & farms
-        </NavItem>
-      </Link>
-      <Link href="/dill" passHref>
-        <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>
-      </Link>
-      <Popover content={infoItems(router)} trigger="hover">
-        <Link href="/info" passHref>
-          <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
+    <>
+      <NavItemsContainer>
+        <Link href="/farms" passHref>
+          <NavItem active={router.pathname.endsWith("farms")}>
+            jars & farms
+          </NavItem>
         </Link>
-      </Popover>
-      <Link href="https://feedback.pickle.finance/" passHref>
-        <NavItem target="_blank" rel="noopener noreferrer">
-          Feedback
-        </NavItem>
-      </Link>
-    </div>
+        <Link href="/dill" passHref>
+          <NavItem active={router.pathname.startsWith("/dill")}>dill</NavItem>
+        </Link>
+        <Popover
+          content={infoItems(router)}
+          trigger="hover"
+          style={{ display: "flex" }}
+        >
+          <Link href="/info" passHref>
+            <NavItem active={router.pathname.startsWith("/info")}>info</NavItem>
+          </Link>
+        </Popover>
+        <Link href="https://feedback.pickle.finance/" passHref>
+          <NavItem target="_blank" rel="noopener noreferrer">
+            Feedback
+          </NavItem>
+        </Link>
+      </NavItemsContainer>
+      <LanguageSelectContainer>
+        <LanguageSelect type="standalone" />
+      </LanguageSelectContainer>
+    </>
   );
 };
