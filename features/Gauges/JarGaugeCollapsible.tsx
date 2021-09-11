@@ -41,6 +41,7 @@ import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
 import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
+import { JarApy } from "./GaugeList";
 
 interface DataProps {
   isZero?: boolean;
@@ -340,6 +341,23 @@ export const JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
+
+  const uncompounded = APYs.map((x) => {
+    const k : string = Object.keys(x)[0];
+    const shouldNotUncompound = (k === 'pickle' || k === 'lp');
+    const v = (shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]));
+    const ret : JarApy = {};
+    ret[k] = v;
+    return ret;
+  });
+  const totalAPY1 : number = APYs.map((x) => {
+    return Object.values(x).filter((x)=>!isNaN(x)).reduce((acc, y) => acc + y, 0);
+  }).reduce((acc, x) => acc + x, 0);
+  const totalAPR1 : number = uncompounded.map((x) => {
+    return Object.values(x).filter((x)=>!isNaN(x)).reduce((acc, y) => acc + y, 0);
+  }).reduce((acc, x) => acc + x, 0);
+  const difference = totalAPY1 - totalAPR1;
+
   const apyRangeTooltipText = [
     `Base APRs:`,
     `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
@@ -348,6 +366,7 @@ export const JarGaugeCollapsible: FC<{
       const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
+    `Compounding <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`
   ]
     .filter((x) => x)
     .join(` <br/> `);

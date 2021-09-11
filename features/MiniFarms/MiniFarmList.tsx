@@ -44,21 +44,36 @@ export const MiniFarmList: FC = () => {
       const farmingJar = jarData.filter((x) => x.name === jar.jarName)[0];
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
     }
+
+
+    const uncompounded = APYs.map((x) => {
+        const k : string = Object.keys(x)[0];
+        const shouldNotUncompound = (k === 'pickle' || k === 'lp');
+        const v = (shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]));
+        const ret : JarApy = {};
+        ret[k] = v;
+        return ret;
+    });
+
+    const totalAPY : number = APYs.map((x) => {
+      return Object.values(x).reduce((acc, y) => acc + y, 0);
+    }).reduce((acc, x) => acc + x, 0);
+    const totalAPR : number = uncompounded.map((x) => {
+      return Object.values(x).reduce((acc, y) => acc + y, 0);
+    }).reduce((acc, x) => acc + x, 0);
+    const difference = totalAPY - totalAPR;
+
     const tooltipText = [
       `Base APRs:`,
-      ...APYs.map((x) => {
+      ...uncompounded.map((x) => {
         const k = Object.keys(x)[0];
-        const shouldUncompound = (k === 'pickle' || k === 'lp');
-        const v = (shouldUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]));
+        const v = Object.values(x)[0];
         return `${k}: ${v.toFixed(2)}%`;
       }),
+      `Compounding <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`
     ]
       .filter((x) => x)
       .join(" <br/> ");
-
-    const totalAPY = APYs.map((x) => {
-      return Object.values(x).reduce((acc, y) => acc + y, 0);
-    }).reduce((acc, x) => acc + x, 0);
 
     return {
       ...farm,
