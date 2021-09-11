@@ -48,7 +48,8 @@ export const MiniFarmList: FC = () => {
       `Base APRs:`,
       ...APYs.map((x) => {
         const k = Object.keys(x)[0];
-        const v = uncompoundAPY(Object.values(x)[0]);
+        const shouldUncompound = (k === 'pickle' || k === 'lp');
+        const v = (shouldUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]));
         return `${k}: ${v.toFixed(2)}%`;
       }),
     ]
