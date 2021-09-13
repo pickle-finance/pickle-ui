@@ -370,9 +370,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
             <Label>Deposit Value</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-            {isPickleFarm ? (
-              "Migrate to Sushi ⬇️"
-            ) : (
               <>
                 <Tooltip
                   text={
@@ -404,7 +401,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                   </div>
                 )}
               </>
-            )}
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
@@ -444,7 +440,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           />
           <Spacer y={0.5} />
           <Button
-            disabled={stakeButton.disabled || isyveCRVFarm || isPickleFarm}
+            disabled={stakeButton.disabled || isyveCRVFarm}
             onClick={() => {
               if (gauge && signer) {
                 transfer({
