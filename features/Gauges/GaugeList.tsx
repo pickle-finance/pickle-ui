@@ -104,6 +104,10 @@ export const GaugeList: FC = () => {
       totalAPY,
     };
   });
+  
+  const harvestableFarms = gaugeData
+    .filter((g) => !g.harvestable.isZero())
+    .map((x) => x.address);
 
   const isDisabledFarm = (depositToken: string) =>
     depositToken === PICKLE_JARS.pUNIETHLUSD;
