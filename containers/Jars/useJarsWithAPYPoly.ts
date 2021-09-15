@@ -47,6 +47,7 @@ interface SushiPoolId {
 const sushiPoolIds: SushiPoolId = {
   "0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": 2,
   "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": 0,
+  "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": 37,
 };
 
 interface DinoPoolId {
