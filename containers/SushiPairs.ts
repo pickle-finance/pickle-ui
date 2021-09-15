@@ -37,10 +37,10 @@ export const addresses = {
   cherry: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
   wokt: "0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15",
   okusdc: "0xc946DAf81b08146B1C7A8Da2A851Ddf2B3EAaf85",
-  ousdt: "0x382bb369d343125bfb2117af9c149795c6c65c50",
+  okusdt: "0x382bb369d343125bfb2117af9c149795c6c65c50",
   btck: "0x54e4622DC504176b3BB432dCCAf504569699a7fF",
   ethk: "0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C",
-  bxh: "0x145ad28a42bf334104610f7836d0945dffb6de63"
+  bxh: "0x145ad28a42bf334104610f7836d0945dffb6de63",
 };
 
 interface Token {
@@ -135,27 +135,27 @@ const tru: Token = {
 const okusdc: Token = {
   address: addresses.okusdc,
   priceId: "usdc",
-  decimals:6
+  decimals: 6,
 };
 const okusdt: Token = {
-  address: addresses.okusdc,
+  address: addresses.okusdt,
   priceId: "usdt",
-  decimals:18
+  decimals: 18,
 };
 const ethk: Token = {
   address: addresses.ethk,
   priceId: "eth",
-  decimals: 18
+  decimals: 18,
 };
 const btck: Token = {
   address: addresses.btck,
-  priceId: "eth",
-  decimals: 18
+  priceId: "wbtc",
+  decimals: 18,
 };
 const bxh: Token = {
   address: addresses.bxh,
   priceId: "bxh",
-  decimals: 18
+  decimals: 18,
 };
 
 interface PairMap {
@@ -193,7 +193,8 @@ export const PAIR_INFO: PairMap = {
   "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": { a: ethk, b: okusdt },
   "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": { a: wokt, b: okusdt },
   "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": { a: okusdt, b: okusdc },
-  "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: bxh, b: okusdt }
+  "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: okusdt, b: bxh },
+  "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": { a: ethk, b: btck },
 };
 
 function useSushiPairs() {

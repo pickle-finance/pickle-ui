@@ -37,12 +37,9 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_USDT_CHE ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_ETHK_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC
   );
-};
-
-const isUsd = (jarName: string): boolean => {
-  return jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_XUSDT;
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
@@ -168,7 +165,6 @@ export const useJarWithTVL = (jars: Input): Output => {
       if (chainName === NETWORK_NAMES.OKEX) {
         const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
           if (isUniPool(jar.jarName)) return measureUniJarTVL(jar);
-          if (isUsd(jar.jarName)) return measureUsdJarTVL(jar);
         });
         const okexJars = await Promise.all(promises);
         newJars = okexJars;

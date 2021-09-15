@@ -36,7 +36,7 @@ const cherryPoolIds: PoolId = {
 
 const bxhPoolIds: PoolId = {
   "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": 12,
-  "0x8E017294cB690744eE2021f9ba75Dd1683f496fb": 1,
+  "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": 9,
 };
 
 const getCompoundingAPY = (apr: number) => {
@@ -57,7 +57,7 @@ type Output = {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
-  const { cherrychef, bxhchef } = Contracts.useContainer();
+  const { cherrychef, bxhchef, erc20: Erc20} = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
@@ -111,25 +111,19 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateBxhAPY = async (lpTokenAddress: string) => {
-    if (bxhchef && getSushiPairData && prices && multicallProvider) {
+    if (bxhchef && getSushiPairData && prices && multicallProvider && Erc20) {
       const poolId = bxhPoolIds[lpTokenAddress];
-      const multicallBxhchef = new MulticallContract(
-        bxhchef.address,
-        bxhchef.interface.fragments,
-      );
 
-      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
-      const [poolInfo] = await multicallProvider.all([
-        multicallBxhchef.poolInfo(poolId),
-      ]);
+      const lpToken = Erc20.attach(lpTokenAddress);
+      const poolInfo = await bxhchef.poolInfo(poolId);
 
       const [
         bxhPerBlockBN,
         totalAllocPointBN,
         totalSupplyBN,
-      ] = await multicallProvider.all([
-        multicallBxhchef.getBXHBlockRewardV(poolInfo.lastRewardBlock),
-        multicallBxhchef.totalAllocPoint(),
+      ] = await Promise.all([
+        bxhchef.rewardV(poolInfo.lastRewardBlock),
+        bxhchef.totalAllocPoint(),
         lpToken.balanceOf(bxhchef.address),
       ]);
 
@@ -139,16 +133,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           poolInfo.allocPoint.toNumber()) /
         totalAllocPointBN.toNumber();
 
-      let pricePerToken = 0;
-      if (
-        lpTokenAddress === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_BXH_USDT
-      ) {
-        ({ pricePerToken } = await getSushiPairData(lpTokenAddress));
-      } else if (
-        lpTokenAddress === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_XUSDT
-      ) {
-        pricePerToken = prices.usdt;
-      }
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const rewardsPerYear =
         rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
@@ -171,7 +156,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         cherryEthkUsdtApy,
         cherryOktUsdtApy,
         bxhUsdtApy,
-        bxhXusdtApy,
+        bxhEthBtcApy,
       ] = await Promise.all([
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_CHE,
@@ -186,7 +171,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_USDT,
         ),
         calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_BXH_USDT),
-        calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_XUSDT),
+        calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_ETH_BTC),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -211,8 +196,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           APYs = [...bxhUsdtApy];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_XUSDT) {
-          APYs = [...bxhXusdtApy];
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC) {
+          APYs = [...bxhEthBtcApy];
         }
 
         let apr = 0;

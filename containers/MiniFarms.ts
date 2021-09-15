@@ -86,9 +86,9 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pBLP BXH/USDT",
     poolName: "pBLP BXH/USDT",
   },
-  "0xd60514536195573Ce4a4A78CE5706e94e9Ee7917": {
-    tokenName: "XUSDT",
-    poolName: "XUSDT",
+  "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": {
+    tokenName: "pBLP ETHK/BTCK",
+    poolName: "pBLP ETHK/BTCK",
   },
 };
 
