@@ -366,8 +366,8 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://www.cherryswap.net/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x382bb369d343125bfb2117af9c149795c6c65c50",
   CHERRY_OKT_USDT:
     "https://www.cherryswap.net/#/add/ETH/0x382bb369d343125bfb2117af9c149795c6c65c50",
-  BXH_BXH_USDT: "http://bxh.com/#/bxhTradeStake/12",
-  BXH_ETH_BTC: "http://bxh.com/#/bxhTradeStake/9"
+  BXH_BXH_USDT: "https://okswap.bxh.com/#/add/0x145ad28a42bf334104610f7836d0945dffb6de63/0x382bb369d343125bfb2117af9c149795c6c65c50",
+  BXH_ETH_BTC: "https://okswap.bxh.com/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x54e4622DC504176b3BB432dCCAf504569699a7fF"
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
