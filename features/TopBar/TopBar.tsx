@@ -29,6 +29,10 @@ const Content = styled.div`
   padding: 1.5rem;
   display: flex;
   align-items: center;
+
+  @media screen and (max-width: 600px) {
+    padding: 1rem;
+  }
 `;
 
 const DesktopConnectContainer = styled.div`

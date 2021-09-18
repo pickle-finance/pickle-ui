@@ -21,7 +21,7 @@ const LanguageSelect: FC<Props> = ({ type }) => {
       onChange={(locale) => handleLanguageSwitch(locale as string)}
       style={{
         borderRadius,
-        minWidth: "7rem",
+        minWidth: "6rem",
       }}
     >
       <Select.Option value="en">English</Select.Option>
