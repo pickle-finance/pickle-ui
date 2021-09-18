@@ -541,3 +541,5 @@ export default function Brining() {
     </>
   );
 }
+
+export { getStaticProps } from "../util/locales";

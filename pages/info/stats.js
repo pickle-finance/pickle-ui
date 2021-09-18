@@ -180,3 +180,5 @@ export default function Statistics() {
     </>
   );
 }
+
+export { getStaticProps } from "../../util/locales";
