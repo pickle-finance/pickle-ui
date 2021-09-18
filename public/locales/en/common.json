@@ -1,4 +1,10 @@
 {
-  "greeting": "Welcome to Pickle!!",
-  "poolSize": "Pool size"
+  "balances": {
+    "poolSize": "Pool size"
+  },
+  "meta": {
+    "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",
+    "title": "The Future of Finance is Green",
+    "titleFull": "Pickle Finance — The Future of Finance is Green"
+  }
 }

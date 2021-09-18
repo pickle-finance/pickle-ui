@@ -67,10 +67,7 @@ export const Balances: FC = () => {
 
   const { blockNum } = Connection.useContainer();
   const { prices } = Prices.useContainer();
-  const { getPairData } = UniV2Pairs.useContainer();
-  const { jars } = Jars.useContainer();
 
-  const [liquidity, setLiquidity] = useState<number | null>(null);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [marketCap, setMarketCap] = useState<number | null>(null);
   const [tooltipText, setTooltipText] = useState<string | null>("");
@@ -174,7 +171,7 @@ export const Balances: FC = () => {
                 text="Total ETH/PICKLE pool value on Uniswap."
                 style={{ cursor: `help` }}
               >
-                {t("poolSize")}:{" "}
+                {t("balances.poolSize")}:{" "}
                 {protocolInfo
                   ? formatDollars(
                       protocolInfo.totalValue - protocolInfo.jarValue,
