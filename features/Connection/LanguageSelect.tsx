@@ -21,11 +21,11 @@ const LanguageSelect: FC<Props> = ({ type }) => {
       onChange={(locale) => handleLanguageSwitch(locale as string)}
       style={{
         borderRadius,
-        minWidth: "4rem",
+        minWidth: "7rem",
       }}
     >
-      <Select.Option value="en">EN</Select.Option>
-      <Select.Option value="zh-CN">CN</Select.Option>
+      <Select.Option value="en">English</Select.Option>
+      {/* <Select.Option value="zh-CN">CN</Select.Option> */}
     </Select>
   );
 };
