@@ -30,4 +30,6 @@ const Dill: FC = () => {
   );
 };
 
+export { getStaticProps } from "../util/locales";
+
 export default Dill;

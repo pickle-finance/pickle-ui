@@ -3,8 +3,6 @@ import { Grid, Page } from "@geist-ui/react";
 import { Balances } from "../features/Balances/Balances";
 import { Footer } from "../features/Footer/Footer";
 import { DepositZap } from "../features/Zap/DepositZap";
-import { GetStaticPropsContext } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const Home: FC = () => (
   <Page>
@@ -25,14 +23,6 @@ const Home: FC = () => (
   </Page>
 );
 
-export const getStaticProps = async ({ locale }: GetStaticPropsContext) => {
-  const locales = await serverSideTranslations(locale!, ["common"]);
-
-  return {
-    props: {
-      ...locales,
-    },
-  };
-};
+export { getStaticProps } from "../util/locales";
 
 export default Home;
