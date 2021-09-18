@@ -10,6 +10,10 @@ const ImageContainer = styled.div`
   width: 8rem;
   margin-right: 1rem;
   flex-shrink: 0.75;
+
+  @media screen and (max-width: 600px) {
+    margin-right: 0.75rem;
+  }
 `;
 
 export const Logo: FC = () => (
