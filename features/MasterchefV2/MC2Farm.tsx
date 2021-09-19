@@ -3,12 +3,10 @@ import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
+import { useTranslation } from "next-i18next";
 
-import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
-import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
-import { Jars } from "../../containers/Jars";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import {
   ERC20Transfer,
@@ -51,37 +49,6 @@ const formatString = (num: number) =>
     maximumFractionDigits: num < 1 ? 5 : 2,
   });
 
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 export const MC2Farm: FC = () => {
   const {
     slpStaked,
@@ -110,21 +77,22 @@ export const MC2Farm: FC = () => {
   } = ERC20Transfer.useContainer();
   const { masterchefV2 } = Contracts.useContainer();
   const { signer, address } = Connection.useContainer();
+  const { t } = useTranslation("common");
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Stake",
+    text: t("farms.stake"),
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Unstake",
+    text: t("farms.unstake"),
   });
   const [harvestButton, setHarvestButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Harvest",
+    text: t("farms.harvest"),
   });
 
   // Get Jar APY (if its from a Jar)
@@ -162,21 +130,57 @@ export const MC2Farm: FC = () => {
         PICKLE_PID.toString(),
       );
 
-      setButtonStatus(stakeStatus, "Staking...", "Stake", setStakeButton);
+      setButtonStatus(
+        stakeStatus,
+        t("farms.staking"),
+        t("farms.stake"),
+        setStakeButton,
+      );
       setButtonStatus(
         unstakeStatus,
-        "Unstaking...",
-        "Unstake",
+        t("farms.unstaking"),
+        t("farms.unstake"),
         setUnstakeButton,
       );
       setButtonStatus(
         harvestStatus,
-        "Harvesting...",
-        "Harvest",
+        t("farms.harvesting"),
+        t("farms.harvest"),
         setHarvestButton,
       );
     }
   }, [erc20TransferStatuses]);
+
+  const setButtonStatus = (
+    status: ERC20TransferStatus,
+    transfering: string,
+    idle: string,
+    setButtonText: (arg0: ButtonStatus) => void,
+  ) => {
+    // Deposit
+    if (status === ERC20TransferStatus.Approving) {
+      setButtonText({
+        disabled: true,
+        text: t("farms.approving"),
+      });
+    }
+    if (status === ERC20TransferStatus.Transfering) {
+      setButtonText({
+        disabled: true,
+        text: transfering,
+      });
+    }
+    if (
+      status === ERC20TransferStatus.Success ||
+      status === ERC20TransferStatus.Failed ||
+      status === ERC20TransferStatus.Cancelled
+    ) {
+      setButtonText({
+        disabled: false,
+        text: idle,
+      });
+    }
+  };
 
   return (
     <Collapse
@@ -194,14 +198,13 @@ export const MC2Farm: FC = () => {
               }
             />
             <div style={{ width: "100%" }}>
-              <div style={{ fontSize: `1rem` }}>SushiSwap MasterChefv2</div>
+              <div style={{ fontSize: `1rem` }}>{t("farms.mc2")}</div>
               <Label style={{ fontSize: `1rem` }}>
                 <a
                   href="https://app.sushi.com/add/ETH/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
                   target="_"
                 >
-                  {" "}
-                  PICKLE/ETH SLP
+                  {t("farms.pickleEthSlp")}
                 </a>
               </Label>
             </div>
@@ -209,7 +212,7 @@ export const MC2Farm: FC = () => {
           <CenteredGrid xs={24} sm={6} md={3} lg={3}>
             <Data isZero={balNum === 0}>{balStr}</Data>
             <br />
-            <Label>Wallet Balance</Label>
+            <Label>{t("balances.walletBalance")}</Label>
           </CenteredGrid>
           <CenteredGrid xs={24} sm={6} md={3} lg={3}>
             <Data isZero={pendingPickleNum === 0}>
@@ -217,12 +220,12 @@ export const MC2Farm: FC = () => {
               <br />
               {pendingSushiStr} <MiniIcon source={"/sushiswap.png"} />
             </Data>
-            <Label>Earned</Label>
+            <Label>{t("balances.earned")}</Label>
           </CenteredGrid>
           <CenteredGrid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={userValue === 0}>${valueStr}</Data>
             <br />
-            <Label>Deposit Value</Label>
+            <Label>{t("balances.depositValue")}</Label>
           </CenteredGrid>
           <CenteredGrid xs={24} sm={12} md={4} lg={4}>
             <Tooltip text={typeof apy === "undefined" ? "--" : tooltipText}>
@@ -230,14 +233,14 @@ export const MC2Farm: FC = () => {
                 {typeof apy === "undefined" ? "--%" : totalAPY.toFixed(2) + "%"}
               </div>
               <br />
-              <Label>Total APY</Label>
+              <Label>{t("balances.totalApy")}</Label>
             </Tooltip>
           </CenteredGrid>
 
           <CenteredGrid xs={24} sm={6} md={4} lg={4}>
             <Data isZero={tvl === 0}>${getFormatString(tvl)}</Data>
             <br />
-            <Label>TVL</Label>
+            <Label>{t("balances.tvl")}</Label>
           </CenteredGrid>
         </Grid.Container>
       }
@@ -246,7 +249,9 @@ export const MC2Farm: FC = () => {
       <Grid.Container gap={2}>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Balance: {balStr}</div>
+            <div>
+              {t("balances.balance")}: {balStr}
+            </div>
             <Link
               color
               href="#"
@@ -255,7 +260,7 @@ export const MC2Farm: FC = () => {
                 setStakeAmount(formatEther(slpBalance));
               }}
             >
-              Max
+              {t("balances.max")}
             </Link>
           </div>
           <Input
@@ -292,7 +297,9 @@ export const MC2Farm: FC = () => {
         </Grid>
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>Staked: {depositedStr}</div>
+            <div>
+              {t("balances.staked")}: {depositedStr}
+            </div>
             <Link
               color
               href="#"
@@ -301,7 +308,7 @@ export const MC2Farm: FC = () => {
                 setUnstakeAmount(formatEther(slpStaked));
               }}
             >
-              Max
+              {t("balances.max")}
             </Link>
           </div>
           <Input
@@ -368,7 +375,7 @@ export const MC2Farm: FC = () => {
               fontSize: "0.8rem",
             }}
           >
-            PICKLE and SUSHI automatically harvested on staking and unstaking.
+            {t("farms.mc2detail")}
           </div>
         </Grid>
       </Grid.Container>

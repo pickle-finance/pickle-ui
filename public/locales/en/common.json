@@ -4,10 +4,15 @@
   },
   "balances": {
     "balance": "Balance",
+    "depositValue": "Deposit Value",
+    "earned": "Earned",
     "max": "Max",
     "poolSize": "Pool size",
     "ratio": "Ratio",
-    "tvl": "TVL"
+    "staked": "Staked",
+    "totalApy": "Total APY",
+    "tvl": "TVL",
+    "walletBalance": "Wallet Balance"
   },
   "connection": {
     "blockNumber": "This is the current block number. This page is updated with every new block.",
@@ -22,6 +27,18 @@
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"
+  },
+  "farms": {
+    "approving": "Approving...",
+    "harvest": "Harvest",
+    "harvesting": "Harvesting...",
+    "mc2": "SushiSwap MasterChefv2",
+    "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
+    "pickleEthSlp": "PICKLE/ETH SLP",
+    "stake": "Stake",
+    "staking": "Staking...",
+    "unstake": "Unstake",
+    "unstaking": "Unstaking..."
   },
   "meta": {
     "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",
