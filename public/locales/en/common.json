@@ -26,11 +26,19 @@
   },
   "nav": {
     "dill": "Dill",
+    "discord": "Discord",
+    "docs": "Docs",
     "feedback": "Feedback",
+    "forum": "Forum",
+    "github": "Github",
     "info": "Info",
     "jars": "Jars",
     "jarsAndFarms": "Jars & Farms",
+    "medium": "Medium",
+    "pickleEth": "PICKLE-ETH",
     "profit": "Profit",
-    "stats": "Stats"
+    "stats": "Stats",
+    "twitter": "Twitter",
+    "vote": "Vote"
   }
 }
