@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 const MaxWidthWrapper = styled.div`
   max-width: 1200px;
@@ -59,26 +60,30 @@ const NavItem = styled.a<NavItemProps>`
 
 export const InfoBar: FC = () => {
   const router = useRouter();
+  const { t } = useTranslation("common");
+
   return (
     <div>
       <MaxWidthWrapper>
         <Content>
           <Link href="/info" passHref>
-            <NavItem active={router.pathname.endsWith("/info")}>Info</NavItem>
+            <NavItem active={router.pathname.endsWith("/info")}>
+              {t("nav.info")}
+            </NavItem>
           </Link>
           <Link href="/info/earn" passHref>
             <NavItem active={router.pathname.startsWith("/info/earn")}>
-              Profit
+              {t("nav.profit")}
             </NavItem>
           </Link>
           <Link href="/info/jars" passHref>
             <NavItem active={router.pathname.startsWith("/info/jars")}>
-              Jars
+              {t("nav.jars")}
             </NavItem>
           </Link>
           <Link href="/info/stats" passHref>
             <NavItem active={router.pathname.startsWith("/info/stats")}>
-              Stats
+              {t("nav.stats")}
             </NavItem>
           </Link>
         </Content>
