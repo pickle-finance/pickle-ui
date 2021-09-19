@@ -1,6 +1,23 @@
 {
+  "actions": {
+    "ok": "OK"
+  },
   "balances": {
     "poolSize": "Pool size"
+  },
+  "connection": {
+    "blockNumber": "This is the current block number. This page is updated with every new block.",
+    "changeNetwork": "Change Network",
+    "coinbase": "Coinbase",
+    "connect": "Connect Wallet",
+    "connectPrompt": "Please connect to MetaMask to use Pickle on Polygon",
+    "metamask": "Metamask",
+    "networks": {
+      "ethereum": "Ethereum",
+      "polygon": "Polygon"
+    },
+    "switchPrompt": "Please switch to {{ network }} Network",
+    "walletConnect": "Wallet Connect"
   },
   "meta": {
     "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",

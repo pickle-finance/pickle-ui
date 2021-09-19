@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import ConnectorItem from "./ConnectorItem";
 import { FC } from "react";
 import type { providers } from "ethers";
-import { injected, walletconnect, walletlink } from "./Connectors";
 import { Modal, Grid } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
+import { useTranslation } from "next-i18next";
+
+import { injected, walletconnect, walletlink } from "./Connectors";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
 
 interface Web3ModalProps {
@@ -12,20 +14,22 @@ interface Web3ModalProps {
 }
 
 const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
+  const { t } = useTranslation("common");
+
   const itemList = [
     {
       icon: "metamask.svg",
-      title: "Metamask",
+      title: t("connection.metamask"),
       connector: injected,
     },
     {
       icon: "walletconnect.svg",
-      title: "Wallet Connect",
+      title: t("connection.walletConnect"),
       connector: walletconnect,
     },
     {
       icon: "coinbase.svg",
-      title: "Coinbase",
+      title: t("connection.coinbase"),
       connector: walletlink,
     },
   ];
@@ -82,7 +86,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
 
   return (
     <Modal width="500px" {...rest}>
-      <Modal.Title>Connect Wallet</Modal.Title>
+      <Modal.Title>{t("connection.connect")}</Modal.Title>
       <Modal.Content>
         <Grid.Container gap={2}>
           {itemList.map(({ icon, title, connector: web3connector }, index) => {
@@ -93,7 +97,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
               <Grid xs={12} key={index}>
                 <ConnectorItem
                   icon={icon}
-                  disabled={title === "Metamask" && !ethereum}
+                  disabled={title === t("connection.metamask") && !ethereum}
                   title={title}
                   loading={activating}
                   onClick={() => onConnectClick(web3connector)}

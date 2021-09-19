@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
@@ -114,6 +115,7 @@ export const DesktopNetworkIndicator: FC = () => {
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
   const [reset, setReset] = useState(0);
+  const { t } = useTranslation("common");
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
@@ -139,11 +141,11 @@ export const DesktopNetworkIndicator: FC = () => {
           setReset(reset + 1);
         }}
       >
-        <Modal.Title>Change Network</Modal.Title>
+        <Modal.Title>{t("connection.changeNetwork")}</Modal.Title>
         <Modal.Content>
           {!window.ethereum?.selectedAddress
-            ? `Please connect to MetaMask to use Pickle on Polygon`
-            : `Please switch to ${switchChainName} Network`}
+            ? t("connection.connectPrompt")
+            : t("connection.switchPrompt", { network: switchChainName })}
         </Modal.Content>
         <Modal.Action
           passive
@@ -152,7 +154,7 @@ export const DesktopNetworkIndicator: FC = () => {
             setReset(reset + 1);
           }}
         >
-          OK
+          {t("actions.ok")}
         </Modal.Action>
       </Modal>
       <LanguageSelect type="grouped" />
@@ -166,8 +168,12 @@ export const DesktopNetworkIndicator: FC = () => {
           borderLeft: 0,
         }}
       >
-        <Select.Option value="1">Ethereum</Select.Option>
-        <Select.Option value="137">Polygon</Select.Option>
+        <Select.Option value="1">
+          {t("connection.networks.ethereum")}
+        </Select.Option>
+        <Select.Option value="137">
+          {t("connection.networks.polygon")}
+        </Select.Option>
       </Select>
       <AddressContainer
         href={
@@ -183,10 +189,7 @@ export const DesktopNetworkIndicator: FC = () => {
           <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
         </Address>
         <Block>
-          <Tooltip
-            text="This is the current block number. This page is updated with every new block."
-            placement="left"
-          >
+          <Tooltip text={t("connection.blockNumber")} placement="left">
             <BlockBox
               href={
                 chainName === NETWORK_NAMES.POLY
