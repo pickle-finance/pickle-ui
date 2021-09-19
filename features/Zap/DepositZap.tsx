@@ -7,7 +7,6 @@ import {
   Button,
   Link as DisplayLink,
 } from "@geist-ui/react";
-import Link from "next/link";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useZapIn } from "./useZapper";
@@ -15,6 +14,8 @@ import { TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "../../features/Farms/UseMigrate";
 import { Connection } from "containers/Connection";
 import { NETWORK_NAMES } from "containers/config";
+import { Trans, useTranslation } from "next-i18next";
+import { Link } from "components/Link";
 
 import {
   DEFAULT_SLIPPAGE,
@@ -28,7 +29,6 @@ const formatValue = (numStr: string) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: parseFloat(numStr) < 1 ? 6 : 4,
   });
-  
 
 export const DepositZap: FC = () => {
   const [inputToken, setInputToken] = useState<TokenSymbol>("ETH");
@@ -36,6 +36,7 @@ export const DepositZap: FC = () => {
   const { chainName } = Connection.useContainer();
   const [amount, setAmount] = useState<string>("0");
   const [txState, setTxState] = useState<string | null>(null);
+  const { t } = useTranslation("common");
 
   const { balanceStr, decimals } = useBalance(inputToken);
   const setToMax = (e: any) => {
@@ -56,9 +57,9 @@ export const DepositZap: FC = () => {
     if (amount && decimals) {
       {
         try {
-          setTxState("Zapping...");
+          setTxState(t("zap.zapping"));
           await zapIn();
-          setTxState("Depositing in Farm...");
+          setTxState(t("zap.depositing"));
           await depositYvboost();
           setTxState(null);
         } catch (error) {
@@ -101,16 +102,15 @@ export const DepositZap: FC = () => {
     <Card>
       <h2>
         <TokenIcon src="/yvboost.png" />
-        Zap to yvBOOST
+        {t("zap.zapTo")}
       </h2>
       <p>
-        Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to{" "}
-        <Link href="/farms" passHref>
-          Pickle Farm
-        </Link>
-        .
+        <Trans i18nKey="zap.description">
+          Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to
+          <Link href="/farms">Pickle Farm</Link>.
+        </Trans>
       </p>
-      <h3>Deposit Token</h3>
+      <h3>{t("zap.deposit")}</h3>
       <Select
         size="large"
         width="100%"
@@ -138,9 +138,12 @@ export const DepositZap: FC = () => {
           lineHeight: "1.25rem",
         }}
       >
-        <div>Balance: {balanceStr !== null ? formatValue(balanceStr) : 0}</div>
+        <div>
+          {t("balances.balance")}:{" "}
+          {balanceStr !== null ? formatValue(balanceStr) : 0}
+        </div>
         <DisplayLink color href="#" onClick={setToMax}>
-          Max
+          {t("balances.max")}
         </DisplayLink>
       </div>
       <Input
@@ -157,7 +160,7 @@ export const DepositZap: FC = () => {
         onClick={handleDeposit}
         disabled={disableZap()}
       >
-        {txState || isPoly ? "Zapping available on mainnet" : "Zap"}
+        {txState || isPoly ? t("zap.notAvailable") : t("zap.zap")}
       </Button>
     </Card>
   );
