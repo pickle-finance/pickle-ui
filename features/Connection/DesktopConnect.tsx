@@ -1,6 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { useModal } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { Web3Modal } from "./Web3Modal";
 
 const Connect = styled.button`
@@ -26,9 +28,13 @@ const Connect = styled.button`
 
 export const DesktopConnect: FC = () => {
   const { setVisible, bindings } = useModal();
+  const { t } = useTranslation("common");
+
   return (
     <>
-      <Connect onClick={() => setVisible(true)}>Connect Wallet</Connect>
+      <Connect onClick={() => setVisible(true)}>
+        {t("connection.connect")}
+      </Connect>
       <Web3Modal setVisible={setVisible} {...bindings} />
     </>
   );
