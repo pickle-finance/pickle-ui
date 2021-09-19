@@ -3,7 +3,11 @@
     "ok": "OK"
   },
   "balances": {
-    "poolSize": "Pool size"
+    "balance": "Balance",
+    "max": "Max",
+    "poolSize": "Pool size",
+    "ratio": "Ratio",
+    "tvl": "TVL"
   },
   "connection": {
     "blockNumber": "This is the current block number. This page is updated with every new block.",
@@ -40,5 +44,14 @@
     "stats": "Stats",
     "twitter": "Twitter",
     "vote": "Vote"
+  },
+  "zap": {
+    "deposit": "Deposit Token",
+    "depositing": "Depositing in Farm...",
+    "description": "Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to <1>Pickle Farm</1>.",
+    "notAvailable": "Zapping available on mainnet",
+    "zap": "Zap",
+    "zapTo": "Zap to yvBOOST",
+    "zapping": "Zapping..."
   }
 }
