@@ -8,10 +8,7 @@ import ReactHtmlParser from "react-html-parser";
 import { Connection } from "../../containers/Connection";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
@@ -21,6 +18,7 @@ import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { Balances } from "../../containers/Balances";
 import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
   isZero?: boolean;
@@ -48,19 +46,10 @@ const Data = styled.div<DataProps>`
 const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
 
 const JarName = styled(Grid)({
   display: "flex",
 });
-
-const formatAPY = (apy: number) => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
-  return apy.toFixed(2) + "%";
-};
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -105,37 +94,6 @@ export const FARM_LP_TO_ICON: {
   "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
   ),
-};
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
 };
 
 export const JarMiniFarmCollapsible: FC<{
@@ -195,6 +153,7 @@ export const JarMiniFarmCollapsible: FC<{
   const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
+  const { setButtonStatus } = useButtonStatus();
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,

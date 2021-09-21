@@ -16,10 +16,7 @@ import ReactHtmlParser from "react-html-parser";
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import {
@@ -42,6 +39,7 @@ import { useZapIn } from "../Zap/useZapper";
 import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
 import { JarApy } from "./GaugeList";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
   isZero?: boolean;
@@ -56,10 +54,6 @@ const Data = styled.div<DataProps>`
 const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
 
 const JarName = styled(Grid)({
   display: "flex",
@@ -231,36 +225,6 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status != ERC20TransferStatus.Approving &&
-    status != ERC20TransferStatus.Transfering
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 export const JarGaugeCollapsible: FC<{
   jarData: UserJarData;
   gaugeData: UserGaugeData;
@@ -282,6 +246,7 @@ export const JarGaugeCollapsible: FC<{
   } = jarData;
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
+  const { setButtonStatus } = useButtonStatus();
 
   const isUsdc =
     depositToken.address.toLowerCase() ===
@@ -341,21 +306,28 @@ export const JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
-
   const uncompounded = APYs.map((x) => {
-    const k : string = Object.keys(x)[0];
-    const shouldNotUncompound = (k === 'pickle' || k === 'lp');
-    const v = (shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]));
-    const ret : JarApy = {};
+    const k: string = Object.keys(x)[0];
+    const shouldNotUncompound = k === "pickle" || k === "lp";
+    const v = shouldNotUncompound
+      ? Object.values(x)[0]
+      : uncompoundAPY(Object.values(x)[0]);
+    const ret: JarApy = {};
     ret[k] = v;
     return ret;
   });
-  const totalAPY1 : number = APYs.map((x) => {
-    return Object.values(x).filter((x)=>!isNaN(x)).reduce((acc, y) => acc + y, 0);
+  const totalAPY1: number = APYs.map((x) => {
+    return Object.values(x)
+      .filter((x) => !isNaN(x))
+      .reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
-  const totalAPR1 : number = uncompounded.map((x) => {
-    return Object.values(x).filter((x)=>!isNaN(x)).reduce((acc, y) => acc + y, 0);
-  }).reduce((acc, x) => acc + x, 0);
+  const totalAPR1: number = uncompounded
+    .map((x) => {
+      return Object.values(x)
+        .filter((x) => !isNaN(x))
+        .reduce((acc, y) => acc + y, 0);
+    })
+    .reduce((acc, x) => acc + x, 0);
   const difference = totalAPY1 - totalAPR1;
 
   const apyRangeTooltipText = [
@@ -366,7 +338,9 @@ export const JarGaugeCollapsible: FC<{
       const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
-    `Compounding <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`
+    `Compounding <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
+      2,
+    )}%`,
   ]
     .filter((x) => x)
     .join(` <br/> `);
