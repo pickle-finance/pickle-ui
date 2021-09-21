@@ -4,10 +4,7 @@ import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
 import Collapse from "../Collapsible/Collapse";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import { Connection } from "../../containers/Connection";
 import { usePBAMM } from "../../containers/Jars/usePBAMM";
 import { Contracts } from "../../containers/Contracts";
@@ -18,6 +15,7 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { useDuneData } from "../../containers/Jars/useDuneData";
 import { getFormatString } from "./GaugeInfo";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const JarName = styled(Grid)({
   display: "flex",
@@ -47,36 +45,6 @@ const formatString = (num: number) =>
     maximumFractionDigits: num < 1 ? 8 : 4,
   });
 
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  } else if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  } else {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
   const {
     status: erc20TransferStatuses,
@@ -96,6 +64,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
     tvl,
   } = usePBAMM();
   const { duneData } = useDuneData();
+  const { setButtonStatus } = useButtonStatus();
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");

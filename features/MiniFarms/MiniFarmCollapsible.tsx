@@ -1,15 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
-import {
-  Button,
-  Link,
-  Input,
-  Grid,
-  Spacer,
-  Tooltip,
-  Checkbox,
-} from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
@@ -17,19 +9,11 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
-import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
   isZero?: boolean;
@@ -83,37 +67,6 @@ export const FARM_LP_TO_ICON: {
   ),
 };
 
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
   farmData,
 }) => {
@@ -161,9 +114,10 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { minichef } = Contracts.useContainer();
-  const { signer, chainName, address } = Connection.useContainer();
+  const { signer, address } = Connection.useContainer();
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
+  const { setButtonStatus } = useButtonStatus();
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,

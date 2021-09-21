@@ -20,10 +20,7 @@ import {
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { getProtocolData } from "../../util/api";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
@@ -35,11 +32,7 @@ import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { UserGaugeDataWithAPY } from "./GaugeList";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
   isZero?: boolean;
@@ -57,31 +50,6 @@ const Label = styled.div`
 
 const GAUGE_LP_TO_ICON = FARM_LP_TO_ICON;
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  } else if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  } else {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
 
 const formatAPY = (apy: number) => {
   if (apy > 1e6) return "∞%";
@@ -150,6 +118,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum } = Connection.useContainer();
+  const { setButtonStatus } = useButtonStatus();
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -370,37 +339,37 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
             <Label>Deposit Value</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
-              <>
-                <Tooltip
-                  text={
-                    gaugeData.totalAPY + fullApy === 0
-                      ? "--"
-                      : apyRangeTooltipText
-                  }
-                >
-                  <div>
-                    {gaugeData.totalAPY + fullApy === 0
-                      ? "--%"
-                      : `${formatAPY(
-                          gaugeData.totalAPY + pickleAPYMin,
-                        )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
-                  </div>
-                  <Label>APY Range</Label>
-                </Tooltip>
-                {Boolean(realAPY) && (
-                  <div>
-                    <Tooltip
-                      text={realAPY === 0 ? "--" : yourApyTooltipText}
-                      style={{ marginTop: 5 }}
-                    >
-                      <div style={{ display: "flex" }}>
-                        <Label>Your APY: </Label>
-                        <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
-                      </div>
-                    </Tooltip>
-                  </div>
-                )}
-              </>
+            <>
+              <Tooltip
+                text={
+                  gaugeData.totalAPY + fullApy === 0
+                    ? "--"
+                    : apyRangeTooltipText
+                }
+              >
+                <div>
+                  {gaugeData.totalAPY + fullApy === 0
+                    ? "--%"
+                    : `${formatAPY(
+                        gaugeData.totalAPY + pickleAPYMin,
+                      )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
+                </div>
+                <Label>APY Range</Label>
+              </Tooltip>
+              {Boolean(realAPY) && (
+                <div>
+                  <Tooltip
+                    text={realAPY === 0 ? "--" : yourApyTooltipText}
+                    style={{ marginTop: 5 }}
+                  >
+                    <div style={{ display: "flex" }}>
+                      <Label>Your APY: </Label>
+                      <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
+                    </div>
+                  </Tooltip>
+                </div>
+              )}
+            </>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
