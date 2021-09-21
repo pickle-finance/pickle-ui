@@ -119,8 +119,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const totalSupplyBN = await lpToken.balanceOf(sushiMinichef.address);
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
-      console.log("fffu", lpTokenAddress)
-
       
       let rewardsPerYear = 0;
       if (rewardToken === "spell") {
