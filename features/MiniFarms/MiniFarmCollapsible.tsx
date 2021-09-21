@@ -294,7 +294,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
         <Grid xs={24} md={12}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              {t("balance.staked")}: {stakedStr}
+              {t("balances.staked")}: {stakedStr}
             </div>
             <Link
               color

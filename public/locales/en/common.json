@@ -3,6 +3,7 @@
     "ok": "OK"
   },
   "balances": {
+    "apy": "APY",
     "balance": "Balance",
     "depositValue": "Deposit Value",
     "earned": "Earned",
@@ -37,7 +38,11 @@
     "approving": "Approving...",
     "baseAPRs": "Base APRs",
     "compounding": "Compounding",
+    "deposit": "Deposit",
+    "depositAndStake": "Deposit and Stake",
+    "depositing": "Depositing...",
     "harvest": "Harvest",
+    "harvestAndExit": "Harvest and Exit",
     "harvesting": "Harvesting...",
     "inactive": "Inactive",
     "mc2": "SushiSwap MasterChefv2",
@@ -47,11 +52,20 @@
       "description": "Farms allow you to earn dual PICKLE <1/> and MATIC <3/> rewards by staking tokens. (Note: MATIC rewards end August 23)",
       "rewards": "Rewards are automatically harvested on staking and unstaking."
     },
+    "mai": {
+      "description": "A 0.5% fee is charged by Mai Finance upon depositing",
+      "rewardsEnded": "Rewards have ended. Consider depositing in the new QI/MATIC Jar"
+    },
     "showInactive": "Show Inactive Farms",
     "stake": "Stake",
+    "stakeUnstaked": "Stake Unstaked {{ amount }} Tokens in Farm",
     "staking": "Staking...",
     "unstake": "Unstake",
-    "unstaking": "Unstaking..."
+    "unstaking": "Unstaking...",
+    "unstakingFromFarm": "Unstaking from Farm...",
+    "withdraw": "Withdraw",
+    "withdrawing": "Withdrawing...",
+    "withdrawingFromJar": "Withdrawing from Jar..."
   },
   "meta": {
     "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",
