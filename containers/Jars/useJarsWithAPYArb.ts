@@ -5,8 +5,8 @@ import {
   JAR_DEPOSIT_TOKENS,
   PICKLE_JARS,
 } from "./jars";
-import { formatEther } from "ethers/lib/utils";
-import { Prices } from "../Prices";
+import { formatEther, formatUnits } from "ethers/lib/utils";
+import { PriceIds, Prices } from "../Prices";
 import { Contracts } from "../Contracts";
 import { Jar } from "./useFetchJars";
 import { NETWORK_NAMES, ChainName } from "containers/config";
@@ -14,8 +14,11 @@ import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { Contract as MulticallContract } from "ethers-multicall";
 import erc20 from "@studydefi/money-legos/erc20";
+import { Contract } from "@ethersproject/contracts";
+import RewarderABI from "../ABIs/rewarder.json";
 
 const AVERAGE_BLOCK_TIME = 4;
+const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
 
 export interface JarApy {
   [k: string]: number;
@@ -102,16 +105,57 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateMCv2APY = async (
+    lpTokenAddress: string,
+    rewardToken: PriceIds,
+  ) => {
+    if (sushiMinichef && prices && getSushiPairData && provider) {
+      const poolId = sushiPoolIds[lpTokenAddress];
+
+      const rewarder_addr = await sushiMinichef.rewarder(poolId);
+      const rewarder = new Contract(rewarder_addr, RewarderABI, provider);
+      const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
+      const totalSupplyBN = await lpToken.balanceOf(sushiMinichef.address);
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      let rewardsPerYear = 0;
+      if (rewardToken === "spell") {
+        const tokenPerSecondBN = await rewarder.rewardPerSecond();
+        rewardsPerYear =
+          parseFloat(formatEther(tokenPerSecondBN)) * ONE_YEAR_SECONDS;
+      }
+
+      const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const rewardAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          [rewardToken]: getCompoundingAPY(rewardAPY * 0.8),
+          apr: rewardAPY * 0.8 * 100,
+        },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars) {
-      const [sushiMimEthApy] = await Promise.all([
+      const [sushiMimEthApy, spellMimEthApy] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH),
+        calculateMCv2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH,
+          "spell",
+        ),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIM_ETH) {
-          APYs = [...sushiMimEthApy];
+          APYs = [...sushiMimEthApy, ...spellMimEthApy];
         }
 
         let apr = 0;

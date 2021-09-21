@@ -528,6 +528,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a": "mim",
   "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "eth",
   "0xd4d42f0b6def4ce0383636770ef773390d85c61a": "sushi",
+  "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af": "spell"
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {
