@@ -84,6 +84,8 @@ import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/
 
 import { Feichef } from "./Contracts/Feichef";
 import { Feichef__factory as FeichefFactory } from "./Contracts/factories/Feichef__factory";
+import { RallyRewardPools } from "./Contracts/RallyRewardPools";
+import { RallyRewardPools__factory as RallyRewardPoolsFactory } from "./Contracts/factories/RallyRewardPools__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -177,6 +179,8 @@ export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 export const YVBOOST_MIGRATOR = "0x61Dde5da89fB3a099035bd9b3f94d1105A22F3d9";
 
 export const YEARN_REGISTRY = "0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804";
+
+export const RALLY_REWARD_POOLS = "0x9cf178df8ddb65b9ea7d4c2f5d1610eb82927230";
 
 // Polygon
 export const COMETH_USDC_WETH_REWARDS =
@@ -307,6 +311,11 @@ function useContracts() {
   const [jar, setJar] = useState<Jar | null>(null);
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
+  const [
+    rallyRewardPools,
+    setRallyRewardPools,
+  ] = useState<RallyRewardPools | null>(null);
+
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
@@ -432,6 +441,9 @@ function useContracts() {
       );
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
       setFeichef(FeichefFactory.connect(FEI_MASTERCHEF, signer));
+      setRallyRewardPools(
+        RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
+      );
     }
   };
 
@@ -490,6 +502,7 @@ function useContracts() {
     cvxBooster,
     jar,
     feichef,
+    rallyRewardPools,
   };
 }
 

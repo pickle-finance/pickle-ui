@@ -97,7 +97,7 @@ export const PAIR_INFO: PairMap = {
   "0x9928e4046d7c6513326cCeA028cD3e7a91c7590A": { a: fei, b: tribe },
   "0xF20EF17b889b437C151eB5bA15A47bFc62bfF469": { a: lusd, b: weth },
   "0x470e8de2eBaef52014A47Cb5E6aF86884947F08c": { a: weth, b: fox },
-  "0x27fd0857f0ef224097001e87e61026e39e1b04d1": { a: weth, b: rly },
+  "0x27fD0857F0EF224097001E87e61026E39e1B04d1": { a: weth, b: rly },
 };
 
 function useUniV2Pairs() {
