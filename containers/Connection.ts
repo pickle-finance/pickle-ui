@@ -5,7 +5,10 @@ import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 import { config } from "./config";
-import { Provider as MulticallProvider } from "ethers-multicall";
+import {
+  Provider as MulticallProvider,
+  setMulticallAddress,
+} from "ethers-multicall";
 import { useRouter } from "next/router";
 
 type Network = ethers.providers.Network;
@@ -25,74 +28,74 @@ function useConnection() {
   const switchChain = async (chainId: number) => {
     if (chainId === 1) return false;
 
-    if(chainId === 137)
-    try {
-      await library.provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x89",
-            chainName: "Polygon",
-            nativeCurrency: {
-              name: "MATIC",
-              symbol: "MATIC",
-              decimals: 18,
+    if (chainId === 137)
+      try {
+        await library.provider.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x89",
+              chainName: "Polygon",
+              nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18,
+              },
+              rpcUrls: ["https://polygon-rpc.com"],
+              blockExplorerUrls: ["https://polygonscan.com/"],
             },
-            rpcUrls: ["https://polygon-rpc.com"],
-            blockExplorerUrls: ["https://polygonscan.com/"],
-          },
-        ],
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+          ],
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
 
-    if(chainId === 66) 
-    try {
-      await library.provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x42",
-            chainName: "OKEx Chain",
-            nativeCurrency: {
-              name: "OKT",
-              symbol: "OKT",
-              decimals: 18,
+    if (chainId === 66)
+      try {
+        await library.provider.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x42",
+              chainName: "OKEx Chain",
+              nativeCurrency: {
+                name: "OKT",
+                symbol: "OKT",
+                decimals: 18,
+              },
+              rpcUrls: ["https://exchainrpc.okex.org"],
+              blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
             },
-            rpcUrls: ["https://exchainrpc.okex.org"],
-            blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
-          },
-        ],
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+          ],
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
 
-    if(chainId === 42161)
-    try {
-      await library.provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0xA4B1",
-            chainName: "Arbitrum",
-            nativeCurrency: {
-              name: "AETH",
-              symbol: "AETH",
-              decimals: 18,
+    if (chainId === 42161)
+      try {
+        await library.provider.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0xA4B1",
+              chainName: "Arbitrum",
+              nativeCurrency: {
+                name: "AETH",
+                symbol: "AETH",
+                decimals: 18,
+              },
+              rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+              blockExplorerUrls: ["https://arbiscan.io/"],
             },
-            rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-            blockExplorerUrls: ["https://arbiscan.io/"],
-          },
-        ],
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+          ],
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
   };
 
   // create observable to stream new blocks
@@ -100,6 +103,8 @@ function useConnection() {
     if (library) {
       library.getNetwork().then((network: any) => setNetwork(network));
 
+      setMulticallAddress(66, "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa");
+      setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
         .init()
