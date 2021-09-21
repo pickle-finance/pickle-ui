@@ -20,6 +20,8 @@
     "coinbase": "Coinbase",
     "connect": "Connect Wallet",
     "connectPrompt": "Please connect to MetaMask to use Pickle on Polygon",
+    "connectToContinue": "Please connect wallet to continue",
+    "loading": "Loading...",
     "metamask": "Metamask",
     "networks": {
       "ethereum": "Ethereum",
@@ -29,12 +31,16 @@
     "walletConnect": "Wallet Connect"
   },
   "farms": {
+    "about": "Farms allow you to earn PICKLEs by staking tokens.",
+    "apy": "Hover over the displayed APY to see where the returns are coming from.",
     "approving": "Approving...",
     "harvest": "Harvest",
     "harvesting": "Harvesting...",
+    "inactive": "Inactive",
     "mc2": "SushiSwap MasterChefv2",
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
     "pickleEthSlp": "PICKLE/ETH SLP",
+    "showInactive": "Show Inactive Farms",
     "stake": "Stake",
     "staking": "Staking...",
     "unstake": "Unstake",

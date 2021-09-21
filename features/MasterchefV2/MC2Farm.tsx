@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-import { useState, FC, useEffect } from "react";
+import { useCallback, useState, FC, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
@@ -78,6 +79,7 @@ export const MC2Farm: FC = () => {
   const { masterchefV2 } = Contracts.useContainer();
   const { signer, address } = Connection.useContainer();
   const { t } = useTranslation("common");
+  const { locale } = useRouter();
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -151,36 +153,39 @@ export const MC2Farm: FC = () => {
     }
   }, [erc20TransferStatuses]);
 
-  const setButtonStatus = (
-    status: ERC20TransferStatus,
-    transfering: string,
-    idle: string,
-    setButtonText: (arg0: ButtonStatus) => void,
-  ) => {
-    // Deposit
-    if (status === ERC20TransferStatus.Approving) {
-      setButtonText({
-        disabled: true,
-        text: t("farms.approving"),
-      });
-    }
-    if (status === ERC20TransferStatus.Transfering) {
-      setButtonText({
-        disabled: true,
-        text: transfering,
-      });
-    }
-    if (
-      status === ERC20TransferStatus.Success ||
-      status === ERC20TransferStatus.Failed ||
-      status === ERC20TransferStatus.Cancelled
-    ) {
-      setButtonText({
-        disabled: false,
-        text: idle,
-      });
-    }
-  };
+  const setButtonStatus = useCallback(
+    (
+      status: ERC20TransferStatus,
+      transfering: string,
+      idle: string,
+      setButtonText: (arg0: ButtonStatus) => void,
+    ) => {
+      // Deposit
+      if (status === ERC20TransferStatus.Approving) {
+        setButtonText({
+          disabled: true,
+          text: t("farms.approving"),
+        });
+      }
+      if (status === ERC20TransferStatus.Transfering) {
+        setButtonText({
+          disabled: true,
+          text: transfering,
+        });
+      }
+      if (
+        status === ERC20TransferStatus.Success ||
+        status === ERC20TransferStatus.Failed ||
+        status === ERC20TransferStatus.Cancelled
+      ) {
+        setButtonText({
+          disabled: false,
+          text: idle,
+        });
+      }
+    },
+    [locale],
+  );
 
   return (
     <Collapse
