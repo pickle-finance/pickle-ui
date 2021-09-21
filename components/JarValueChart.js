@@ -14,6 +14,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { AreaChart, Area, YAxis, XAxis, Tooltip } from "recharts";
 import dayjs from "util/dayjs";
+import { useTranslation } from "next-i18next";
 
 const useStyles = makeStyles((theme) => ({
   picklePaper: {
@@ -84,9 +85,11 @@ const formatDollars = (num) =>
 
 export default function JarValueChart(props) {
   const classes = useStyles();
+  const { t } = useTranslation("common");
+
   const { data, asset, name, formatter } = props.jar;
   const formatTooltip = (value) => {
-    return [`${formatValue(value)}`, formatter ? formatter : "TVL"];
+    return [`${formatValue(value)}`, formatter ? formatter : t("balances.tvl")];
   };
   const formatDate = (tick) => {
     let formattedDate = dayjs(tick).format("l");

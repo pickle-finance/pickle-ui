@@ -226,6 +226,7 @@ export const PAIR_INFO: PairMap = {
   "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": { a: ethk, b: btck },
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": { a: amim, b: aweth },
   "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
+  "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
 };
 
 function useSushiPairs() {

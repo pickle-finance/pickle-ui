@@ -24,6 +24,7 @@ import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
 import { NETWORK_NAMES } from "containers/config";
 import { UserJarData } from "containers/UserJars";
+import { BigNumber } from "ethers";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -67,6 +68,13 @@ export const GaugeList: FC = () => {
 
   if (!jarData || !gaugeData) return <h2>Loading...</h2>;
 
+  const findGauge = (jar: UserJarData) =>
+    gaugesWithAPY.find(
+      (x) =>
+        x.depositToken.address.toLowerCase() ===
+        jar.jarContract.address.toLowerCase(),
+    );
+
   const gaugesWithAPY = gaugeData.map((gauge) => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
@@ -109,14 +117,23 @@ export const GaugeList: FC = () => {
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
 
-  const yearnJars = jarData.filter(
-    (jar) =>
-      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName],
-  );
+  const yearnJars = jarData.filter((jar) => {
+    const gauge = findGauge(jar);
+    const activeAndYearn =
+      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName];
+    return showUserJars
+      ? activeAndYearn && (parseFloat(formatEther(jar.deposited)) ||  parseFloat(formatEther(gauge?.staked || 0)))
+      : activeAndYearn;
+  });
 
-  const userJars = jarData.filter((jar) =>
-    parseFloat(formatEther(jar.deposited)),
-  );
+  const userJars = jarData.filter((jar) => {
+    const gauge = findGauge(jar);
+    return (
+      (parseFloat(formatEther(jar.deposited)) ||
+        parseFloat(formatEther(gauge?.staked || 0))) &&
+      !JAR_YEARN[jar.depositTokenName]
+    );
+  });
 
   const activeGauges = gaugesWithAPY
     .filter((x) => !isDisabledFarm(x.depositToken.address))
@@ -134,12 +151,11 @@ export const GaugeList: FC = () => {
   );
   moveInArray(activeGauges, indexofPickleEth, 0);
 
-  const findGauge = (jar: UserJarData) =>
-    gaugesWithAPY.find(
-      (x) =>
-        x.depositToken.address.toLowerCase() ===
-        jar.jarContract.address.toLowerCase(),
-    );
+  const PicklePower = (
+    <Grid xs={24}>
+      <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
+    </Grid>
+  );
 
   return (
     <>
@@ -193,7 +209,7 @@ export const GaugeList: FC = () => {
         <h2>Jars & Farms</h2>
       </div>
       <Grid.Container gap={1}>
-        {chainName === NETWORK_NAMES.ETH && (
+        {chainName === NETWORK_NAMES.ETH && yearnJars.length > 0 && (
           <>
             Powered by&nbsp;
             <a href="https://yearn.finance/" target="_">
@@ -218,21 +234,12 @@ export const GaugeList: FC = () => {
           </>
         )}
         {chainName === NETWORK_NAMES.ETH && (
-          <>
-            Powered by&nbsp;
-            <a href="https://bprotocol.org/" target="_">
-              B.Protocol
-            </a>
-            &nbsp;⚡
-            <Grid xs={24}>
-              <BProtocol />
-              <Spacer y={1} />
-            </Grid>
-          </>
+          <BProtocol showUserJars={showUserJars} />
         )}
-        <Grid xs={24}>
-          <GaugeCollapsible gaugeData={gaugesWithAPY[0]} />
-        </Grid>
+        {showUserJars
+          ? gaugesWithAPY[0].staked.gt(BigNumber.from(0)) && PicklePower
+          : PicklePower}
+
         {(showUserJars ? userJars : activeJars).map((jar) => {
           const gauge = findGauge(jar);
 

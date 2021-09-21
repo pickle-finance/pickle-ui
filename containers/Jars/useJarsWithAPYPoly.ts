@@ -458,6 +458,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           jar.depositToken.address ===
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
       );
+      
+      const qiMaticJar = jars.find(
+        (jar) =>
+          jar.depositToken.address ===
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MATIC_QI,
+      );
 
       const iron3usdJar = jars.find(
         (jar) =>
@@ -489,6 +495,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         iron3usdApy,
         dinoUsdcApy,
         dinoWethApy,
+        quickMaticQiApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
         calculateComethAPY(COMETH_PICKLE_MUST_REWARDS),
@@ -508,6 +515,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateIronChefAPY(iron3usdJar),
         calculateFossilFarmsAPY(dinoUsdcJar),
         calculateFossilFarmsAPY(dinoWethJar),
+        calculateMasterChefAPY(qiMaticJar)
       ]);
 
       const promises = jars.map(async (jar) => {
@@ -584,6 +592,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...quickMimaticQiApy,
             ...getQuickPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.QUICK_MATIC_QI) {
+          APYs = [
+            ...quickMaticQiApy,
+            ...getQuickPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MATIC_QI,
             ),
           ];
         }

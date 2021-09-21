@@ -86,6 +86,9 @@ import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/
 import { Bxhchef } from "./Contracts/Bxhchef";
 import { Bxhchef__factory as BxhchefFactory } from "./Contracts/factories/Bxhchef__factory";
 
+import { Feichef } from "./Contracts/Feichef";
+import { Feichef__factory as FeichefFactory } from "./Contracts/factories/Feichef__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -161,8 +164,7 @@ export const MIRROR_MSLV_UST_STAKING_REWARDS =
 export const MIRROR_MBABA_UST_STAKING_REWARDS =
   "0x769325E8498bF2C2c3cFd6464A60fA213f26afcc";
 
-export const FEI_TRIBE_STAKING_REWARDS =
-  "0x18305DaAe09Ea2F4D51fAa33318be5978D251aBd";
+export const FEI_MASTERCHEF = "0x9e1076cC0d19F9B0b8019F384B0a29E48Ee46f7f";
 
 export const FOX_ETH_STAKING_REWARDS =
   "0xdd80e21669a664bce83e3ad9a0d74f8dad5d9e72";
@@ -320,6 +322,7 @@ function useContracts() {
   const [bxhchef, setBxhchef] = useState<Bxhchef | null>(null);
   const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
   const [jar, setJar] = useState<Jar | null>(null);
+  const [feichef, setFeichef] = useState<Feichef | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -458,6 +461,7 @@ function useContracts() {
       setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
       setBxhchef(BxhchefFactory.connect(BXHCHEF, signer));
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
+      setFeichef(FeichefFactory.connect(FEI_MASTERCHEF, signer));
     }
   };
 
@@ -517,6 +521,7 @@ function useContracts() {
     cvxBooster,
     bxhchef,
     jar,
+    feichef,
   };
 }
 

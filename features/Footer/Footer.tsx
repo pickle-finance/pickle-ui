@@ -1,6 +1,7 @@
 import { Page } from "@geist-ui/react";
 import { FC } from "react";
 import styled from "styled-components";
+import { useTranslation } from "next-i18next";
 
 const Container = styled(Page.Footer)`
   text-align: center;
@@ -29,6 +30,8 @@ const NavItem = styled.a`
 `;
 
 export const Footer: FC = () => {
+  const { t } = useTranslation("common");
+
   return (
     <Container>
       <NavItem
@@ -36,56 +39,56 @@ export const Footer: FC = () => {
         rel="noopener noreferrer"
         href="https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"
       >
-        PICKLE-ETH
+        {t("nav.pickleEth")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="https://github.com/pickle-finance/contracts"
       >
-        Github
+        {t("nav.github")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="https://snapshot.org/#/pickle.eth"
       >
-        Vote
+        {t("nav.vote")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="https://forum.pickle.finance"
       >
-        Forum
+        {t("nav.forum")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="http://discord.gg/uG6WhYkM8n"
       >
-        Discord
+        {t("nav.discord")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="https://twitter.com/picklefinance"
       >
-        Twitter
+        {t("nav.twitter")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="https://picklefinance.medium.com/"
       >
-        Medium
+        {t("nav.medium")}
       </NavItem>
       <NavItem
         target="_blank"
         rel="noopener noreferrer"
         href="https://docs.pickle.finance"
       >
-        DOCS
+        {t("nav.docs")}
       </NavItem>
     </Container>
   );

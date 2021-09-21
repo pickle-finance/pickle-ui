@@ -50,6 +50,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP QI",
     poolName: "pQLP QI",
   },
+  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": {
+    tokenName: "pQLP QI/MATIC",
+    poolName: "pQLP QI/MATIC",
+  },
   "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9": {
     tokenName: "IS3USD",
     poolName: "IS3USD",

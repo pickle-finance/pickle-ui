@@ -328,3 +328,5 @@ export default function Earn(props) {
     </ThemeProvider>
   );
 }
+
+export { getStaticProps } from "../../util/locales";

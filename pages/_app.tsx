@@ -2,6 +2,7 @@ import { FC } from "react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { GeistProvider } from "@geist-ui/react";
+import { appWithTranslation, useTranslation } from "next-i18next";
 
 import "../styles/reset.css";
 import "../styles/global.scss";
@@ -32,6 +33,10 @@ import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
 import { PoolData } from "../containers/Jars/usePoolData";
 import { TopBar } from "../features/TopBar/TopBar";
+
+// i18n
+import useTranslationsHMR from "../hooks/useTranslationsHMR";
+import config from "../next-i18next.config";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -88,21 +93,22 @@ const WithContainers: FC = ({ children }) => (
 );
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
+  useTranslationsHMR();
+
+  const { t } = useTranslation("common");
+
   return (
     <>
       <Head>
-        <title>Pickle Interface</title>
+        <title>{t("meta.titleFull")}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"
         ></script>
 
-        <meta property="og:title" content="Optimize your yield" />
-        <meta
-          property="og:description"
-          content="The future of finance is green"
-        />
+        <meta property="og:title" content={t("meta.titleFull")} />
+        <meta property="og:description" content={t("meta.description")} />
         <meta property="og:image" content="https://i.imgur.com/avQP3n2.jpg" />
         <meta property="og:url" content="https://app.pickle.finance" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -117,4 +123,4 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   );
 };
 
-export default App;
+export default appWithTranslation(App, config);

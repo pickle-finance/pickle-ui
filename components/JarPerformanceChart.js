@@ -6,6 +6,7 @@ import { getTickValues } from "recharts-scale";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Paper from "@material-ui/core/Paper";
 import dayjs from "util/dayjs";
+import { useTranslation } from "next-i18next";
 
 const useStyles = makeStyles((theme) => ({
   picklePaper: {
@@ -46,6 +47,7 @@ const formatDate = (tick) => {
 
 export default function JarPerformanceChart(props) {
   const classes = useStyles();
+  const { t } = useTranslation("common");
 
   const targetRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -134,7 +136,7 @@ export default function JarPerformanceChart(props) {
               <YAxis
                 domain={[1, "dataMax"]}
                 label={{
-                  value: "Ratio",
+                  value: t("balances.ratio"),
                   angle: -90,
                   position: "insideLeft",
                   offset: 15,

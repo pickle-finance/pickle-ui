@@ -49,4 +49,6 @@ const Farms: FC = () => {
   );
 };
 
+export { getStaticProps } from "../util/locales";
+
 export default Farms;

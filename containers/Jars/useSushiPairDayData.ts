@@ -24,11 +24,14 @@ const SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SPELL_ETH,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].MIM_ETH
 ];
 
 const POLY_SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_ETH_USDT,
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC
 ];
 
 export const useSushiPairDayData = () => {
@@ -56,12 +59,11 @@ export const useSushiPairDayData = () => {
           SUSHI_LP_TOKENS.length
         }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${SUSHI_LP_TOKENS.join(
           '\\", \\"',
-        )}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },
     ).then((x) => x.json());
-
     setSushiPairDayData(res?.data?.pairDayDatas);
   };
 

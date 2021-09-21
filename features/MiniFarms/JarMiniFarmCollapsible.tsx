@@ -21,6 +21,7 @@ import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { Balances } from "../../containers/Balances";
 import { NETWORK_NAMES } from "containers/config";
+import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -120,6 +121,9 @@ export const FARM_LP_TO_ICON: {
   "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": (
     <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/ethbtc.png"} />
   ),
+  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
+  ),
 
   //Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
@@ -127,7 +131,7 @@ export const FARM_LP_TO_ICON: {
   ),
   "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
-  ),
+  )
 };
 
 const setButtonStatus = (
@@ -271,6 +275,16 @@ export const JarMiniFarmCollapsible: FC<{
     null,
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
+
+  const isMaiJar =
+    depositToken.address.toLowerCase() ===
+      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_USDC.toLowerCase() ||
+    depositToken.address.toLowerCase() ===
+      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MATIC_QI.toLowerCase();
+
+  const isQiMaiJar =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_QI.toLowerCase();
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -535,16 +549,30 @@ export const JarMiniFarmCollapsible: FC<{
                     });
                   }
                 }}
-                disabled={depositButton.disabled}
+                disabled={depositButton.disabled || isQiMaiJar}
                 style={{ width: "100%" }}
               >
                 {depositButton.text}
               </Button>
+              {isMaiJar ? (
+                <StyledNotice>
+                  A 0.5% fee is charged by Mai Finance upon depositing
+                </StyledNotice>
+              ) : isQiMaiJar ? (
+                <StyledNotice>
+                  Rewards have ended. Consider depositing in the new QI/MATIC
+                  Jar
+                </StyledNotice>
+              ) : null}
             </Grid>
             <Grid xs={24} md={12}>
               <Button
                 onClick={depositAndStake}
-                disabled={Boolean(depositStakeButton) || depositButton.disabled}
+                disabled={
+                  Boolean(depositStakeButton) ||
+                  depositButton.disabled ||
+                  isQiMaiJar
+                }
                 style={{ width: "100%" }}
               >
                 {isEntryBatch
@@ -749,3 +777,10 @@ export const JarMiniFarmCollapsible: FC<{
     </Collapse>
   );
 };
+
+const StyledNotice = styled.div`
+  width: "100%";
+  textalign: "center";
+  paddingtop: "6px";
+  fontfamily: "Source Sans Pro";
+`;

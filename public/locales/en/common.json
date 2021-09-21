@@ -1,0 +1,76 @@
+{
+  "actions": {
+    "ok": "OK"
+  },
+  "balances": {
+    "balance": "Balance",
+    "depositValue": "Deposit Value",
+    "earned": "Earned",
+    "max": "Max",
+    "poolSize": "Pool size",
+    "ratio": "Ratio",
+    "staked": "Staked",
+    "totalApy": "Total APY",
+    "tvl": "TVL",
+    "walletBalance": "Wallet Balance"
+  },
+  "connection": {
+    "blockNumber": "This is the current block number. This page is updated with every new block.",
+    "changeNetwork": "Change Network",
+    "coinbase": "Coinbase",
+    "connect": "Connect Wallet",
+    "connectPrompt": "Please connect to MetaMask to use Pickle on Polygon",
+    "metamask": "Metamask",
+    "networks": {
+      "ethereum": "Ethereum",
+      "polygon": "Polygon",
+      "okex": "OKEx",
+      "arbitrum": "Arbitrum"
+    },
+    "switchPrompt": "Please switch to {{ network }} Network",
+    "walletConnect": "Wallet Connect"
+  },
+  "farms": {
+    "approving": "Approving...",
+    "harvest": "Harvest",
+    "harvesting": "Harvesting...",
+    "mc2": "SushiSwap MasterChefv2",
+    "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
+    "pickleEthSlp": "PICKLE/ETH SLP",
+    "stake": "Stake",
+    "staking": "Staking...",
+    "unstake": "Unstake",
+    "unstaking": "Unstaking..."
+  },
+  "meta": {
+    "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",
+    "title": "The Future of Finance is Green",
+    "titleFull": "Pickle Finance — The Future of Finance is Green"
+  },
+  "nav": {
+    "dill": "Dill",
+    "discord": "Discord",
+    "docs": "Docs",
+    "feedback": "Feedback",
+    "forum": "Forum",
+    "github": "Github",
+    "info": "Info",
+    "jars": "Jars",
+    "jarsAndFarms": "Jars & Farms",
+    "medium": "Medium",
+    "pickleEth": "PICKLE-ETH",
+    "profit": "Profit",
+    "stats": "Stats",
+    "twitter": "Twitter",
+    "vote": "Vote"
+  },
+  "zap": {
+    "deposit": "Deposit Token",
+    "depositing": "Depositing in Farm...",
+    "description": "Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to <1>Pickle Farm</1>.",
+    "notAvailable": "Zapping available on mainnet",
+    "zap": "Zap",
+    "zapTo": "Zap to yvBOOST",
+    "zapping": "Zapping..."
+  }
+}

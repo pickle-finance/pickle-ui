@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Page, Note } from "@geist-ui/react";
+import { Page } from "@geist-ui/react";
 import { Footer } from "../features/Footer/Footer";
 import { GaugeList } from "../features/Gauges/GaugeList";
 import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
@@ -25,5 +25,7 @@ const Gauges: FC = () => {
     </>
   );
 };
+
+export { getStaticProps } from "../util/locales";
 
 export default Gauges;
