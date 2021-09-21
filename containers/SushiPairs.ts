@@ -41,6 +41,11 @@ export const addresses = {
   btck: "0x54e4622DC504176b3BB432dCCAf504569699a7fF",
   ethk: "0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C",
   bxh: "0x145ad28a42bf334104610f7836d0945dffb6de63",
+
+  // Arbitrum
+  aweth: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+  asushi: "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
+  amim: "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a"
 };
 
 interface Token {
@@ -157,6 +162,24 @@ const bxh: Token = {
   priceId: "bxh",
   decimals: 18,
 };
+const amim: Token = {
+  address: addresses.amim,
+  priceId: "mim",
+  decimals: 18,
+};
+
+const aweth: Token = {
+  address: addresses.aweth,
+  priceId: "eth",
+  decimals: 18,
+};
+
+const asushi: Token = {
+  address: addresses.asushi,
+  priceId: "sushi",
+  decimals: 18,
+};
+
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -195,6 +218,7 @@ export const PAIR_INFO: PairMap = {
   "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": { a: okusdt, b: okusdc },
   "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: okusdt, b: bxh },
   "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": { a: ethk, b: btck },
+  "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": { a: amim, b: aweth },
 };
 
 function useSushiPairs() {

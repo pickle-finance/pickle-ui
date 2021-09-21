@@ -123,6 +123,8 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://polygonscan.com/block/${blockNum}`;
     if (chainName === NETWORK_NAMES.OKEX)
       `https://www.oklink.com/okexchain/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.ARB)
+      `https://arbiscan.io/block/${blockNum}`;
     return `https://etherscan.io/block/${blockNum}`;
   };
 
@@ -131,6 +133,8 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://polygonscan.com/address/${address}`;
     if (chainName === NETWORK_NAMES.OKEX)
       `https://www.oklink.com/okexchain/address/${address}`;
+    if (chainName === NETWORK_NAMES.ARB)
+      `https://arbiscan.io/address/${address}`;
     return `https://etherscan.io/address/${address}`;
   };
 
@@ -182,6 +186,7 @@ export const DesktopNetworkIndicator: FC = () => {
         <Select.Option value="1">Ethereum</Select.Option>
         <Select.Option value="66">OKEx Chain</Select.Option>
         <Select.Option value="137">Polygon</Select.Option>
+        <Select.Option value="42161">Arbitrum</Select.Option>
       </Select>
       <AddressBox
         href={renderAddress()}

@@ -90,6 +90,12 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pBLP ETHK/BTCK",
     poolName: "pBLP ETHK/BTCK",
   },
+
+  // Arbitrum
+  "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": {
+    tokenName: "pSLP MIM/ETH",
+    poolName: "pSLP MIM/ETH",
+  },
 };
 
 function useFarms() {

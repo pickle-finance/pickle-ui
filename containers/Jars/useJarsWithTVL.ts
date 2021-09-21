@@ -38,7 +38,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_ETHK_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIM_ETH
   );
 };
 
@@ -162,7 +163,7 @@ export const useJarWithTVL = (jars: Input): Output => {
         };
       });
 
-      if (chainName === NETWORK_NAMES.OKEX) {
+      if (chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.ARB) {
         const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
           if (isUniPool(jar.jarName)) return measureUniJarTVL(jar);
         });

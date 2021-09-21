@@ -84,9 +84,7 @@ import { Cherrychef__factory as CherrychefFactory } from "./Contracts/factories/
 import { CvxBooster } from "./Contracts/CvxBooster";
 import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/CvxBooster__factory";
 import { Bxhchef } from "./Contracts/Bxhchef";
-import {
-  Bxhchef__factory as BxhchefFactory,
-} from "./Contracts/factories/Bxhchef__factory";
+import { Bxhchef__factory as BxhchefFactory } from "./Contracts/factories/Bxhchef__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -189,7 +187,6 @@ export const COMETH_PICKLE_MUST_REWARDS =
   "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
 export const COMETH_MATIC_MUST_REWARDS =
   "0x2328c83431a29613b1780706E0Af3679E3D04afd";
-export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
 export const FOSSIL_FARMS = "0x1948abc5400aa1d72223882958da3bec643fb4e5";
 export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
@@ -209,12 +206,21 @@ export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
-  const addresses =
-    chainName === NETWORK_NAMES.ETH
-      ? config.addresses.Ethereum
-      : chainName === NETWORK_NAMES.POLY
-      ? config.addresses.Polygon
-      : config.addresses.OKEx;
+  const getNetworkConfig = (network: string | null) => {
+    switch (network) {
+      case NETWORK_NAMES.OKEX:
+        return config.addresses.OKEx;
+      case NETWORK_NAMES.POLY:
+        return config.addresses.Polygon;
+      case NETWORK_NAMES.ARB:
+        return config.addresses.Arbitrum;
+      case NETWORK_NAMES.ETH:
+      default:
+        return config.addresses.Ethereum;
+    }
+  };
+
+  const addresses = getNetworkConfig(chainName);
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -420,7 +426,12 @@ function useContracts() {
 
       setIBPool(PoolFactory.connect(IRONBANK_POOL_ADDR, signer));
 
-      setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
+      setSushiMinichef(
+        SushiMinichefFactory.connect(
+          addresses.sushiMinichef || ethers.constants.AddressZero,
+          signer,
+        ),
+      );
       setFossilFarms(FossilFarmsFactory.connect(FOSSIL_FARMS, signer));
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
@@ -445,7 +456,7 @@ function useContracts() {
       );
 
       setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
-      setBxhchef(BxhchefFactory.connect(BXHCHEF, signer))
+      setBxhchef(BxhchefFactory.connect(BXHCHEF, signer));
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
     }
   };

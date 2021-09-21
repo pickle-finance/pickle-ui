@@ -64,6 +64,9 @@ export const PICKLE_JARS = {
   pCHERRYOKTUSDT: "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e",
   pBXHBXHUSDT: "0x09c22bdc438b69bcc190efa8f8e3417277e1dd4f",
   pBXHETHBTK: "0x2a956403816445553FdA5Cbfce2ac6c251454f6f",
+
+  // Arbitrum Jars
+  pSUSHIMIMETH: "0x94feade0d3d832e4a05d459ebea9350c6cdd3bca",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -128,6 +131,9 @@ export const JAR_DEPOSIT_TOKENS = {
     BXH_BXH_USDT: "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF",
     BXH_ETH_BTC: "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC",
   },
+  [NETWORK_NAMES.ARB]: {
+    SUSHI_MIM_ETH: "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959",
+  },
 };
 
 export const DEPOSIT_TOKENS_NAME = {
@@ -190,7 +196,10 @@ export const DEPOSIT_TOKENS_NAME = {
   CHERRY_ETHK_USDT: "CHERRY ETHK/USDT",
   CHERRY_OKT_USDT: "CHERRY OKT/USDT",
   BXH_BXH_USDT: "BXH: BXH/USDT",
-  BXH_ETH_BTC: "BXH: ETHK/BTCK"
+  BXH_ETH_BTC: "BXH: ETHK/BTCK",
+
+  // Arbitrum Jars
+  SUSHI_MIM_ETH: "SLP MIM/ETH",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -254,6 +263,9 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.CHERRY_OKT_USDT]: true,
   [DEPOSIT_TOKENS_NAME.BXH_BXH_USDT]: true,
   [DEPOSIT_TOKENS_NAME.BXH_ETH_BTC]: true,
+
+  // Arbitrum Jars
+  [DEPOSIT_TOKENS_NAME.SUSHI_MIM_ETH]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -367,7 +379,10 @@ export const DEPOSIT_TOKENS_LINK = {
   CHERRY_OKT_USDT:
     "https://www.cherryswap.net/#/add/ETH/0x382bb369d343125bfb2117af9c149795c6c65c50",
   BXH_BXH_USDT: "https://okswap.bxh.com/#/add/0x145ad28a42bf334104610f7836d0945dffb6de63/0x382bb369d343125bfb2117af9c149795c6c65c50",
-  BXH_ETH_BTC: "https://okswap.bxh.com/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x54e4622DC504176b3BB432dCCAf504569699a7fF"
+  BXH_ETH_BTC: "https://okswap.bxh.com/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x54e4622DC504176b3BB432dCCAf504569699a7fF",
+
+  // Arbitrum Jars
+  SUSHI_MIM_ETH: "https://app.sushi.com/add/0xFEa7a6a0B346362BF88A9e4A88416B77a57D6c2A/ETH",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -436,6 +451,9 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   CHERRY_OKT_USDT: "okJar 1d",
   BXH_BXH_USDT: "okJar 2a",
   BXH_ETH_BTC: "okJar 2b",
+
+  // Arbitrum Jars
+  SUSHI_MIM_ETH: "arbJar 1a",
 };
 
 export const STRATEGY_NAMES = {
@@ -505,6 +523,11 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xef71ca2ee68f45b9ad6f72fbdb33d707b872315c": "ethk",
   "0xc946daf81b08146b1c7a8da2a851ddf2b3eaaf85": "usdc",
   "0x145ad28a42bf334104610f7836d0945dffb6de63": "bxh",
+
+  // Arbitrum
+  "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a": "mim",
+  "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "eth",
+  "0xd4d42f0b6def4ce0383636770ef773390d85c61a": "sushi",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

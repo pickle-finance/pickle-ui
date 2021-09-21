@@ -920,6 +920,13 @@
     enc-utils "^3.0.0"
     randombytes "^2.1.0"
 
+"@pickle-finance/ethers-multicall@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@pickle-finance/ethers-multicall/-/ethers-multicall-0.2.3.tgz#9f14e653b4d52adf584c4971b6dccab983604e7d"
+  integrity sha512-WmqP/FsZyFho2ZTRCq6fePuKHZaL5/f4q0R/wuj+85rwYca1WyZhPOXS2tsDdOYevIpeLvaae276iJ8bI/ya+A==
+  dependencies:
+    ethers "^5.0.0"
+
 "@polka/url@^1.0.0-next.17":
   version "1.0.0-next.17"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.17.tgz#25fdbdfd282c2f86ddf3fcefbd98be99cd2627e2"

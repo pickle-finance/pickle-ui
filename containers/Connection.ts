@@ -70,6 +70,29 @@ function useConnection() {
     } catch (e) {
       return false;
     }
+
+    if(chainId === 42161)
+    try {
+      await library.provider.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0xA4B1",
+            chainName: "Arbitrum",
+            nativeCurrency: {
+              name: "AETH",
+              symbol: "AETH",
+              decimals: 18,
+            },
+            rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+            blockExplorerUrls: ["https://arbiscan.io/"],
+          },
+        ],
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   };
 
   // create observable to stream new blocks

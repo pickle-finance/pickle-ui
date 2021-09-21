@@ -6,15 +6,17 @@ interface Addresses {
   gaugeProxy?: string;
   minichef?: string;
   rewarder?: string;
+  sushiMinichef?: string;
 }
 
 export enum NETWORK_NAMES {
   ETH = "Ethereum",
   POLY = "Polygon",
   OKEX = "OKEx",
+  ARB = "Arbitrum"
 }
 
-export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY | NETWORK_NAMES.OKEX | null;
+export type ChainName = NETWORK_NAMES.ETH | NETWORK_NAMES.POLY | NETWORK_NAMES.OKEX | NETWORK_NAMES.ARB |null;
 
 interface Config {
   chains: Record<number, { name: ChainName }>;
@@ -32,6 +34,9 @@ export const config: Config = {
     137: {
       name: NETWORK_NAMES.POLY,
     },
+    42161: {
+      name: NETWORK_NAMES.ARB,
+    },
   },
   addresses: {
     Ethereum: {
@@ -47,6 +52,7 @@ export const config: Config = {
       controller: "0x83074F0aB8EDD2c1508D3F657CeB5F27f6092d09",
       minichef: "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749",
       rewarder: "0xE28287544005094be096301E5eE6E2A6E6Ef5749",
+      sushiMinichef: "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F"
     },
     OKEx: {
       controller: "0xcf05d96b4c6c5a87b73f5f274dce1085bc7fdcc4",
@@ -54,6 +60,14 @@ export const config: Config = {
       masterChef: "0x7446BF003b98B7B0D90CE84810AC12d6b8114B62",
       minichef: "0x7446BF003b98B7B0D90CE84810AC12d6b8114B62",
       rewarder: "0x48394297ed0a9e9edcc556faaf4222a932605c56",
+    },
+    Arbitrum: {
+      controller: "0x55d5bcef2bfd4921b8790525ff87919c2e26bd03",
+      pickle: "0x0000000000000000000000000000000000000000",
+      masterChef: "0x7ecc7163469f37b777d7b8f45a667314030ace24",
+      minichef: "0x7ecc7163469f37b777d7b8f45a667314030ace24",
+      rewarder: "0x0000000000000000000000000000000000000000",
+      sushiMinichef: "0xF4d73326C13a4Fc5FD7A064217e12780e9Bd62c3"
     },
   },
 };

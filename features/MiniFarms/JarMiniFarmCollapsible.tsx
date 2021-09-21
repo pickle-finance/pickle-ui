@@ -120,6 +120,11 @@ export const FARM_LP_TO_ICON: {
   "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": (
     <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/ethbtc.png"} />
   ),
+
+  //Arbitrum
+  "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
+  ),
 };
 
 const setButtonStatus = (

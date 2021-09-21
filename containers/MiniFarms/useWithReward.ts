@@ -8,6 +8,7 @@ import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { RawFarm } from "../Farms/useFetchFarms";
 import { NETWORK_NAMES } from "containers/config";
+import { NULL_ADDRESS } from "features/Zap/constants";
 
 // this hook calculates and adds the following properties to the RawFarm objects
 export interface FarmWithReward extends RawFarm {
@@ -42,6 +43,10 @@ export const useWithReward = (rawFarms: Input): Output => {
   const { picklePerSecond, maticPerSecond } = MiniPickles.useContainer();
 
   const [farms, setFarms] = useState<Array<FarmWithReward> | null>(null);
+  let rewarderPoolInfo: any;
+  let totalRewarderAP = 0;
+  let maticRewardedPerSecond = 0;
+  let maticValuePerSecond = 0;
 
   const calculateReward = async () => {
     if (
@@ -53,24 +58,27 @@ export const useWithReward = (rawFarms: Input): Output => {
       typeof maticPerSecond === "number" &&
       typeof picklePerSecond === "number"
     ) {
+      const hasRewarder = pickleRewarder.address != NULL_ADDRESS;
       const totalAllocPoints = rawFarms.reduce(
         (acc: number, farm) => acc + farm.allocPoint.toNumber(),
         0,
       );
 
-      const pickleRewarderMulticallContract = new MulticallContract(
-        pickleRewarder.address,
-        pickleRewarder.interface.fragments,
-      );
-      const rewarderPoolInfo = await multicallProvider.all<PoolInfo[]>(
-        rawFarms.map((farm) =>
-          pickleRewarderMulticallContract.poolInfo(farm.poolIndex),
-        ),
-      );
+      if (hasRewarder) {
+        const pickleRewarderMulticallContract = new MulticallContract(
+          pickleRewarder.address,
+          pickleRewarder.interface.fragments,
+        );
+        rewarderPoolInfo = await multicallProvider.all<PoolInfo[]>(
+          rawFarms.map((farm) =>
+            pickleRewarderMulticallContract.poolInfo(farm.poolIndex),
+          ),
+        );
 
-      const totalRewarderAP = rewarderPoolInfo.reduce((acc, curr) => {
-        return acc + curr.allocPoint.toNumber();
-      }, 0);
+        totalRewarderAP = rewarderPoolInfo.reduce((acc: number, curr: any) => {
+          return acc + curr.allocPoint.toNumber();
+        }, 0);
+      }
 
       // do calculations for each farm
       const newFarms = rawFarms.map((farm) => {
@@ -78,11 +86,15 @@ export const useWithReward = (rawFarms: Input): Output => {
         const pickleRewardedPerSecond = fraction * picklePerSecond;
         const valRewardedPerSecond = pickleRewardedPerSecond * prices.pickle;
 
-        const maticFraction =
-          rewarderPoolInfo[farm.poolIndex].allocPoint.toNumber() /
-          totalRewarderAP;
-        const maticRewardedPerSecond = maticFraction * maticPerSecond;
-        const maticValuePerSecond = maticRewardedPerSecond * (chainName === NETWORK_NAMES.OKEX ? prices.wokt : prices.matic);
+        if (hasRewarder) {
+          const maticFraction =
+            rewarderPoolInfo[farm.poolIndex].allocPoint.toNumber() /
+            totalRewarderAP;
+          maticRewardedPerSecond = maticFraction * maticPerSecond;
+          maticValuePerSecond =
+            maticRewardedPerSecond *
+            (chainName === NETWORK_NAMES.OKEX ? prices.wokt : prices.matic);
+        }
 
         return {
           ...farm,

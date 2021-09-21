@@ -29,6 +29,7 @@ export const MiniFarmList: FC = () => {
   const [showInactive, setShowInactive] = useState<boolean>(false);
 
   const isOK = chainName === NETWORK_NAMES.OKEX;
+  const isMatic = chainName === NETWORK_NAMES.POLY;
 
   if (!signer) {
     return <h2>Please connect wallet to continue</h2>;
@@ -39,7 +40,8 @@ export const MiniFarmList: FC = () => {
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },
-      { [isOK ? "okt" : "matic"]: farm.maticApy * 100 },
+      ...(isOK ? [{ okt: farm.maticApy * 100 }] : []),
+      ...(isMatic ? [{ matic: farm.maticApy * 100 }] : []),
     ];
 
     const jar =
@@ -92,7 +94,7 @@ export const MiniFarmList: FC = () => {
                 tokens.
               </>
             ) : null}{" "}
-            {!isOK && `(Note: MATIC rewards ended August 23)`}
+            {isMatic && `(Note: MATIC rewards ended August 23)`}
             <br />
             Hover over the displayed APY to see where the returns are coming
             from.
