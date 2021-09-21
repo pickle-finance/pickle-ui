@@ -34,12 +34,17 @@
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
     "apy": "Hover over the displayed APY to see where the returns are coming from.",
     "approving": "Approving...",
+    "baseAPRs": "Base APRs",
+    "compounding": "Compounding",
     "harvest": "Harvest",
     "harvesting": "Harvesting...",
     "inactive": "Inactive",
     "mc2": "SushiSwap MasterChefv2",
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
     "pickleEthSlp": "PICKLE/ETH SLP",
+    "polygon": {
+      "description": "Farms allow you to earn dual PICKLE <1/> and MATIC <3/> rewards by staking tokens. (Note: MATIC rewards end August 23)"
+    },
     "showInactive": "Show Inactive Farms",
     "stake": "Stake",
     "staking": "Staking...",
