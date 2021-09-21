@@ -1,4 +1,4 @@
-import { DEPOSIT_TOKENS_JAR_NAMES } from "../Jars/jars";
+import { DEPOSIT_TOKENS_JAR_NAMES, DEPOSIT_TOKENS_NAME } from "../Jars/jars";
 
 export const PICKLE_ETH_FARM = "0xdc98556ce24f007a5ef6dc1ce96322d65832a819";
 
@@ -181,5 +181,8 @@ export const JAR_FARM_MAP: FarmMap = {
   },
   "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.QUICK_MATIC_QI,
+  },
+  "0x0989a227E7c50311f7De61e5e61F7c28Df8936f0": {
+    jarName: DEPOSIT_TOKENS_JAR_NAMES.UNIV2_RLY_ETH,
   },
 };
