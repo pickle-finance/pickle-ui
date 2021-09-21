@@ -7,14 +7,22 @@
     "balance": "Balance",
     "depositValue": "Deposit Value",
     "earned": "Earned",
+    "marketCap": "Market Cap",
     "max": "Max",
+    "pending": "Pending",
+    "picklePerBlock": "{{ amount }} PICKLEs are printed every block.",
+    "picklePerSecond": "{{ amount }} PICKLEs are printed every second.",
     "poolSize": "Pool size",
+    "poolSizeTooltip": "Total ETH/PICKLE pool value on Uniswap.",
     "ratio": "Ratio",
     "staked": "Staked",
     "totalApy": "Total APY",
+    "totalSupply": "Total Supply",
+    "totalValueLocked": "Total Value Locked",
     "tvl": "TVL",
     "valueStaked": "Value Staked",
-    "walletBalance": "Wallet Balance"
+    "walletBalance": "Wallet Balance",
+    "yourBalance": "Your Balance"
   },
   "connection": {
     "blockNumber": "This is the current block number. This page is updated with every new block.",
