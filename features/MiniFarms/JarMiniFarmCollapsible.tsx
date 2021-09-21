@@ -123,6 +123,9 @@ export const FARM_LP_TO_ICON: {
 
   //Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
   ),
 };

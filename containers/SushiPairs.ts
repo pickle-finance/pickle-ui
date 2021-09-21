@@ -1,5 +1,5 @@
 import { createContainer } from "unstated-next";
-import { ethers, Contract } from "ethers";
+import { ethers, Contract, BigNumber } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { PriceIds, Prices } from "./Prices";
@@ -45,7 +45,8 @@ export const addresses = {
   // Arbitrum
   aweth: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
   asushi: "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
-  amim: "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a"
+  amim: "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a",
+  aspell: "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af",
 };
 
 interface Token {
@@ -180,6 +181,11 @@ const asushi: Token = {
   decimals: 18,
 };
 
+const aspell: Token = {
+  address: addresses.spell,
+  priceId: "spell",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -219,30 +225,31 @@ export const PAIR_INFO: PairMap = {
   "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: okusdt, b: bxh },
   "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": { a: ethk, b: btck },
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": { a: amim, b: aweth },
+  "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
 };
 
 function useSushiPairs() {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, provider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used
-  if (!multicallProvider || !prices)
+  if (!multicallProvider || !prices || !provider)
     return { getPairData: null, getPairDataPrefill: null };
 
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new MulticallContract(a.address, erc20.abi);
-    const tokenB = new MulticallContract(b.address, erc20.abi);
-    const pair = new MulticallContract(pairAddress, erc20.abi);
+    const tokenA = new Contract(a.address, erc20.abi, provider);
+    const tokenB = new Contract(b.address, erc20.abi, provider);
+    const pair = new Contract(pairAddress, erc20.abi, provider);
 
     const [
       numAInPairBN,
       numBInPairBN,
       totalSupplyBN,
-    ] = await multicallProvider.all([
-      tokenA.balanceOf(pairAddress),
-      tokenB.balanceOf(pairAddress),
+    ] = await Promise.all([
+      tokenA.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
+      tokenB.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
       pair.totalSupply(),
     ]);
 

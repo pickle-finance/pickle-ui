@@ -67,6 +67,7 @@ export const PICKLE_JARS = {
 
   // Arbitrum Jars
   pSUSHIMIMETH: "0x94feade0d3d832e4a05d459ebea9350c6cdd3bca",
+  pSUSHISPELLETH: "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2"
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -133,6 +134,7 @@ export const JAR_DEPOSIT_TOKENS = {
   },
   [NETWORK_NAMES.ARB]: {
     SUSHI_MIM_ETH: "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959",
+    SUSHI_SPELL_ETH: "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8",
   },
 };
 
@@ -200,6 +202,7 @@ export const DEPOSIT_TOKENS_NAME = {
 
   // Arbitrum Jars
   SUSHI_MIM_ETH: "SLP MIM/ETH",
+  SUSHI_SPELL_ETH: "SLP SPELL/ETH",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -266,6 +269,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
 
   // Arbitrum Jars
   [DEPOSIT_TOKENS_NAME.SUSHI_MIM_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.SUSHI_SPELL_ETH]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -383,6 +387,7 @@ export const DEPOSIT_TOKENS_LINK = {
 
   // Arbitrum Jars
   SUSHI_MIM_ETH: "https://app.sushi.com/add/0xFEa7a6a0B346362BF88A9e4A88416B77a57D6c2A/ETH",
+  SUSHI_SPELL_ETH: "https://app.sushi.com/add/0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af/ETH",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -454,6 +459,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
 
   // Arbitrum Jars
   SUSHI_MIM_ETH: "arbJar 1a",
+  SUSHI_SPELL_ETH: "arbJar 1b"
 };
 
 export const STRATEGY_NAMES = {

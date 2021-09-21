@@ -30,6 +30,7 @@ interface PoolId {
 
 const sushiPoolIds: PoolId = {
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": 9,
+  "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": 11,
 };
 
 const getCompoundingAPY = (apr: number) => {
@@ -118,12 +119,14 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const totalSupplyBN = await lpToken.balanceOf(sushiMinichef.address);
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+      console.log("fffu", lpTokenAddress)
 
+      
       let rewardsPerYear = 0;
       if (rewardToken === "spell") {
         const tokenPerSecondBN = await rewarder.rewardPerSecond();
         rewardsPerYear =
-          parseFloat(formatEther(tokenPerSecondBN)) * ONE_YEAR_SECONDS;
+        parseFloat(formatEther(tokenPerSecondBN)) * ONE_YEAR_SECONDS;
       }
 
       const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
@@ -144,10 +147,22 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateAPY = async () => {
     if (jars) {
-      const [sushiMimEthApy, spellMimEthApy] = await Promise.all([
+      const [
+        sushiMimEthApy,
+        spellMimEthApy,
+        sushiSpellEthApy,
+        spellEthApy,
+      ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH),
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH,
+          "spell",
+        ),
+        calculateSushiAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_SPELL_ETH,
+        ),
+        calculateMCv2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_SPELL_ETH,
           "spell",
         ),
       ]);
@@ -156,6 +171,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIM_ETH) {
           APYs = [...sushiMimEthApy, ...spellMimEthApy];
+        }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_SPELL_ETH) {
+          APYs = [...sushiSpellEthApy, ...spellEthApy];
         }
 
         let apr = 0;

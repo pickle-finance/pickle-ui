@@ -96,6 +96,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP MIM/ETH",
     poolName: "pSLP MIM/ETH",
   },
+  "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2": {
+    tokenName: "pSLP SPELL/ETH",
+    poolName: "pSLP SPELL/ETH",
+  },
 };
 
 function useFarms() {
@@ -103,7 +107,7 @@ function useFarms() {
   const { farmsWithReward } = useWithReward(rawFarms);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
-  
+
   const jarFarms = jarFarmWithMaticApy
     ?.map((farm) => {
       if (!FarmInfo[farm.lpToken]) return null;
