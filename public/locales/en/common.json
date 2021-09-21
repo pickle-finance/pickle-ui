@@ -12,6 +12,7 @@
     "staked": "Staked",
     "totalApy": "Total APY",
     "tvl": "TVL",
+    "valueStaked": "Value Staked",
     "walletBalance": "Wallet Balance"
   },
   "connection": {
@@ -43,7 +44,8 @@
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
     "pickleEthSlp": "PICKLE/ETH SLP",
     "polygon": {
-      "description": "Farms allow you to earn dual PICKLE <1/> and MATIC <3/> rewards by staking tokens. (Note: MATIC rewards end August 23)"
+      "description": "Farms allow you to earn dual PICKLE <1/> and MATIC <3/> rewards by staking tokens. (Note: MATIC rewards end August 23)",
+      "rewards": "Rewards are automatically harvested on staking and unstaking."
     },
     "showInactive": "Show Inactive Farms",
     "stake": "Stake",
