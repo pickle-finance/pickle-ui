@@ -2,6 +2,8 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { Connection } from "../../containers/Connection";
 import { PercentageInput } from "../../components/PercentageInput";
@@ -64,9 +66,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const { blockNum, address, signer } = Connection.useContainer();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState(null);
+  const { t } = useTranslation("common");
   const [voteButton, setVoteButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Submit Vote",
+    text: t("gauges.submitVote"),
   });
   const {
     status: transferStatus,
@@ -208,12 +211,17 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       const balance = +dillBalanceBN?.toString();
       const buttonText = balance
         ? weightsValid
-          ? "Submit Vote"
-          : "Submit Vote (weights must total 100%)"
-        : "DILL balance needed to vote";
+          ? t("gauges.submitVote")
+          : t("gauges.weightsInvalid")
+        : t("gauges.dillNeeded");
 
       if (voteStatus === ERC20TransferStatus.Transfering) {
-        setButtonStatus(voteStatus, "Voting...", buttonText, setVoteButton);
+        setButtonStatus(
+          voteStatus,
+          t("gauges.voting"),
+          buttonText,
+          setVoteButton,
+        );
       } else {
         setVoteButton({
           disabled: !balance || !weightsValid,
@@ -279,27 +287,27 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
             <Label style={{ fontSize: `0.85rem` }}>{depositTokenName}</Label>
           </div>
         </Grid>
-        <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
+        <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
           <Data isZero={fullApy === 0}>
             {formatAPY(totalAPY + pickleAPYMin)}~
             {formatAPY(totalAPY + pickleAPYMax)}
           </Data>
-          <Label>Total APY range</Label>
+          <Label>{t("gauges.totalApyRange")}</Label>
         </Grid>
-        <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
+        <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
           <Data isZero={fullApy === 0}>
             {formatAPY(pickleAPYMin)}~{formatAPY(pickleAPYMax)}
           </Data>
-          <Label>PICKLE APY</Label>
+          <Label>{t("gauges.pickleApy")}</Label>
         </Grid>
-        <Grid xs={24} sm={6} md={5} lg={5} css={{ textAlign: "center" }}>
+        <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
           <Data>
             {formatPercent(allocPoint)}%{" "}
             {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
           </Data>
-          <Label>Current reward weight</Label>
+          <Label>{t("gauges.currentWeight")}</Label>
         </Grid>
-        <Grid xs={24} sm={6} md={3} lg={3} css={{ textAlign: "center" }}>
+        <Grid xs={24} sm={6} md={3} lg={3} style={{ textAlign: "center" }}>
           <PercentageInput
             placeholder="0%"
             css={{
@@ -324,17 +332,12 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
       shadow
-      preview={
-        <div>
-          Select which farms to allocate PICKLE rewards to using your DILL
-          balance
-        </div>
-      }
+      preview={t("gauges.selectFarms")}
     >
       <Spacer y={1} />
-      <div css={{ display: "flex" }}>
+      <div style={{ display: "flex" }}>
         <Select
-          placeholder="Select farms to boost"
+          placeholder={t("gauges.selectBoost")}
           multiple
           width="100%"
           onChange={(value) => handleSelect(value)}
@@ -353,11 +356,11 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           }}
           onClick={handleSelectAll}
         >
-          Select All
+          {t("gauges.selectAll")}
         </Button>
       </div>
       <Spacer y={0.5} />
-      <h3>Selected Farms</h3>
+      <h3>{t("gauges.selectedFarms")}</h3>
       {votingFarms?.length ? (
         <>
           {votingFarms.map(renderVotingOption)}
@@ -366,7 +369,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           <Grid.Container gap={2}>
             <Grid xs={24} md={24}>
               <span style={{ float: "right" }}>
-                Current allocation: {totalGaugeWeight}%
+                {t("gauges.currentAllocation")}: {totalGaugeWeight}%
               </span>
               <Button
                 disabled={voteButton.disabled || !weightsValid}
@@ -404,7 +407,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           </Grid.Container>
         </>
       ) : (
-        "Please select farms from dropdown"
+        t("gauges.selectPrompt")
       )}
     </Collapse>
   );

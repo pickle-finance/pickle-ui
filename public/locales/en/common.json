@@ -76,6 +76,21 @@
     "withdrawing": "Withdrawing...",
     "withdrawingFromJar": "Withdrawing from Jar..."
   },
+  "gauges": {
+    "currentAllocation": "Current allocation",
+    "currentWeight": "Current reward weight",
+    "dillNeeded": "DILL balance needed to vote",
+    "pickleApy": "PICKLE APY",
+    "selectAll": "Select All",
+    "selectBoost": "Select farms to boost",
+    "selectedFarms": "Selected Farms",
+    "selectFarms": "Select which farms to allocate PICKLE rewards to using your DILL balance",
+    "selectPrompt": "Please select farms from dropdown",
+    "submitVote": "Submit Vote",
+    "totalApyRange": "Total APY range",
+    "voting": "Voting...",
+    "weightsInvalid": "Submit Vote (weights must total 100%)"
+  },
   "meta": {
     "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",
     "title": "The Future of Finance is Green",
