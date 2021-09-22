@@ -131,7 +131,7 @@ export const FARM_LP_TO_ICON: {
   ),
   "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
-  )
+  ),
 };
 
 const setButtonStatus = (
@@ -181,7 +181,7 @@ export const JarMiniFarmCollapsible: FC<{
     usdPerPToken,
     depositTokenLink,
     apr,
-    tvlUSD
+    tvlUSD,
   } = jarData;
 
   const balNum = parseFloat(formatEther(balance));
@@ -410,6 +410,7 @@ export const JarMiniFarmCollapsible: FC<{
   const [approved, setApproved] = useState(false);
 
   const isOK = chainName === NETWORK_NAMES.OKEX;
+  const isArb = chainName === NETWORK_NAMES.ARB;
 
   useEffect(() => {
     const checkAllowance = async () => {
@@ -467,11 +468,20 @@ export const JarMiniFarmCollapsible: FC<{
             <Label>Wallet Balance</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Data isZero={parseFloat(formatEther(harvestableMatic)) === 0}>
+            <Data
+              isZero={
+                +formatEther(harvestableMatic) === 0 &&
+                +formatEther(harvestable) === 0
+              }
+            >
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
-              <br />
-              {harvestableMaticStr}{" "}
-              <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+              <Spacer y={1} />
+              {!isArb && (
+                <>
+                  {harvestableMaticStr}{" "}
+                  <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+                </>
+              )}
             </Data>
             <Label>Earned</Label>
           </Grid>
@@ -492,6 +502,7 @@ export const JarMiniFarmCollapsible: FC<{
                 width="15px"
                 style={{ marginLeft: 5 }}
               />
+              <Spacer y={1} />
               <div>
                 <span>APY</span>
               </div>
