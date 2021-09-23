@@ -25,6 +25,7 @@ import { Jars } from "../../containers/Jars";
 import { NETWORK_NAMES } from "containers/config";
 import { UserJarData } from "containers/UserJars";
 import { BigNumber } from "ethers";
+import { Trans, useTranslation } from "next-i18next";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -61,12 +62,11 @@ export const GaugeList: FC = () => {
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
   const { getUniPairDayAPY } = useUniPairDayData();
   const { jars } = Jars.useContainer();
+  const { t } = useTranslation("common");
 
-  if (!signer) {
-    return <h2>Please connect wallet to continue</h2>;
-  }
+  if (!signer) <h2>{t("connection.connectToContinue")}</h2>;
 
-  if (!jarData || !gaugeData) return <h2>Loading...</h2>;
+  if (!jarData || !gaugeData) return <h2>{t("connection.loading")}</h2>;
 
   const findGauge = (jar: UserJarData) =>
     gaugesWithAPY.find(
@@ -161,17 +161,19 @@ export const GaugeList: FC = () => {
 
   return (
     <>
-      <h2>Pickle Power</h2>
+      <h2>{t("farms.picklePower")}</h2>
       <MC2Farm />
       <Spacer y={1} />
       <Grid.Container>
         <Grid md={12}>
           <p>
-            Jars auto-invest your deposit tokens and Farms earn you{" "}
-            <b>$PICKLEs</b>.
-            <br />
-            Deposit & Stake to get into both. Hover over the displayed APY to
-            see where the returns are coming from.
+            <Trans i18nKey="farms.intro">
+              Jars auto-invest your deposit tokens and Farms earn you{" "}
+              <strong>$PICKLEs</strong>.
+              <br />
+              Deposit & Stake to get into both. Hover over the displayed APY to
+              see where the returns are coming from.
+            </Trans>
           </p>
         </Grid>
         <Grid md={12} style={{ textAlign: "right" }}>
@@ -181,19 +183,19 @@ export const GaugeList: FC = () => {
             size="medium"
             onChange={(e) => setShowInactive(e.target.checked)}
           >
-            Show Inactive Jars
+            {t("farms.showInactive")}
           </Checkbox>{" "}
           <GreenSwitch
             style={{ top: "-2px" }}
             checked={showUserJars}
             onChange={() => setShowUserJars(!showUserJars)}
           />
-          Show My Jars
+          {t("farms.showMyJars")}
         </Grid>
       </Grid.Container>
-      <h2>Current Weights</h2>
+      <h2>{t("gauges.currentWeights")}</h2>
       <GaugeChartCollapsible gauges={activeGauges} />
-      <h2>Vote</h2>
+      <h2>{t("gauges.vote")}</h2>
       <VoteCollapsible
         gauges={activeGauges.filter(
           (x) =>
@@ -208,12 +210,12 @@ export const GaugeList: FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>Jars & Farms</h2>
+        <h2>{t("farms.jarsAndFarms")}</h2>
       </div>
       <Grid.Container gap={1}>
         {chainName === NETWORK_NAMES.ETH && yearnJars.length > 0 && (
           <>
-            Powered by&nbsp;
+            {t("farms.poweredBy")}&nbsp;
             <a href="https://yearn.finance/" target="_">
               Yearn
             </a>
@@ -254,7 +256,7 @@ export const GaugeList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {showInactive && <h2>Inactive</h2>}
+        {showInactive && <h2>{t("farms.inactive")}</h2>}
         {showInactive &&
           inactiveJars.map((jar) => {
             const gauge = findGauge(jar);
