@@ -12,6 +12,8 @@ import { JAR_FARM_MAP } from "../../containers/Farms/farms";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { uncompoundAPY } from "../../util/jars";
+import { NETWORK_NAMES } from "containers/config";
+import { pickleWhite } from "util/constants";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -22,7 +24,7 @@ export interface JarApy {
 }
 
 export const MiniFarmList: FC = () => {
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
@@ -30,7 +32,18 @@ export const MiniFarmList: FC = () => {
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
-  if (!jarData || !farmData) return <h2>{t("connection.loading")}</h2>;
+  if ((!jarData || !farmData) && chainName !== NETWORK_NAMES.POLY) {
+    return <h2>{t("connection.loading")}</h2>;
+  } else if ((!jarData || !farmData) && chainName === NETWORK_NAMES.POLY) {
+    return (
+      <>
+        <h2>{t("connection.loading")}</h2>
+        <span style={{ color: pickleWhite }}>
+          {t("connection.polygonRpc")}
+        </span>{" "}
+      </>
+    );
+  }
 
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [

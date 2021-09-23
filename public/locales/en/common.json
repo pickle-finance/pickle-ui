@@ -32,6 +32,7 @@
     "connectPrompt": "Please connect to MetaMask to use Pickle on Polygon",
     "connectToContinue": "Please connect wallet to continue",
     "loading": "Loading...",
+    "polygonRpc": "If you have been waiting more than a few seconds, consider changing to the unified Polygon RPC at 'https://polygon-rpc.com'",
     "metamask": "Metamask",
     "networks": {
       "ethereum": "Ethereum",
