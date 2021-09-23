@@ -46,8 +46,13 @@
     "apy": "Hover over the displayed APY to see where the returns are coming from.",
     "approving": "Approving...",
     "baseAPRs": "Base APRs",
+    "bProtocol": {
+      "liquidation": "liquidation",
+      "info": "This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are automatically sold back into users' LUSD positions and all LQTY rewards are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing."
+    },
     "compounding": "Compounding",
     "deposit": "Deposit",
+    "deposited": "Deposited",
     "depositAndStake": "Deposit and Stake",
     "depositing": "Depositing...",
     "harvest": "Harvest",
@@ -65,6 +70,7 @@
       "description": "A 0.5% fee is charged by Mai Finance upon depositing",
       "rewardsEnded": "Rewards have ended. Consider depositing in the new QI/MATIC Jar"
     },
+    "poweredBy": "Powered by",
     "showInactive": "Show Inactive Farms",
     "stake": "Stake",
     "stakeUnstaked": "Stake Unstaked {{ amount }} Tokens in Farm",
