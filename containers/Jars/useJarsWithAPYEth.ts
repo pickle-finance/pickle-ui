@@ -355,18 +355,18 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const rlyPerBlock =
         (parseFloat(formatEther(rlyPerBlockBN)) * poolInfo.allocPoint) /
         totalAllocPointBN.toNumber();
-      const pricePerToken: any = await getUniPairData(lpTokenAddress);
-
+      const { pricePerToken } = await getUniPairData(lpTokenAddress);
+      
       const rlyRewardsPerYear =
-        rlyPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
+      rlyPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.rly * rlyRewardsPerYear;
-
+      
       const totalValueStaked = totalSupply * pricePerToken;
       const rlyAPY = valueRewardedPerYear / totalValueStaked;
 
       // no more UNI being distributed
       return [
-        { spell: getCompoundingAPY(rlyAPY * 0.8), apr: rlyAPY * 0.8 * 100 },
+        { rally: getCompoundingAPY(rlyAPY * 0.8), apr: rlyAPY * 0.8 * 100 },
       ];
     }
 

@@ -107,7 +107,7 @@ function usePrices() {
         "shapeshift-fox-token",
         "dinoswap",
         "truefi",
-        "rally",
+        "rally-2",
       ],
       vs_currencies: ["usd"],
     });
@@ -159,7 +159,7 @@ function usePrices() {
       fox: response["shapeshift-fox-token"].usd,
       dino: response["dinoswap"].usd,
       tru: response["truefi"].usd,
-      rly: response["rally"].usd,
+      rly: response["rally-2"].usd,
     };
     setPrices(prices);
   };
