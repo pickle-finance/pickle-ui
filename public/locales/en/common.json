@@ -73,6 +73,7 @@
     "migrateFromTo": "Migrate from {{ from }} to {{ to }}",
     "migratingTo": "Migrating to {{ target }}...",
     "migrationCompleted": "Migration completed! See your deposits <1>here</1>.",
+    "noneActive": "There are no active Farms",
     "pickleEthSlp": "PICKLE/ETH SLP",
     "picklePower": "Pickle Power",
     "polygon": {
@@ -95,10 +96,12 @@
     "yvBOOSTMigration": "Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the Farm.<br />This process will require a number of transactions.<br />Learn more about yvBOOST <5>here</5>."
   },
   "gauges": {
+    "chartPreview": "View allocation of PICKLE reward weights <1>(based on votes cast by DILL holders)</1>",
     "currentAllocation": "Current allocation",
     "currentWeight": "Current reward weight",
     "currentWeights": "Current weights",
     "dillNeeded": "DILL balance needed to vote",
+    "other": "other",
     "pickleApy": "PICKLE APY",
     "selectAll": "Select All",
     "selectBoost": "Select farms to boost",
@@ -106,9 +109,11 @@
     "selectFarms": "Select which farms to allocate PICKLE rewards to using your DILL balance",
     "selectPrompt": "Please select farms from dropdown",
     "submitVote": "Submit Vote",
+    "token": "Token",
     "totalApyRange": "Total APY range",
     "vote": "Vote",
     "voting": "Voting...",
+    "weight": "Weight",
     "weightsInvalid": "Submit Vote (weights must total 100%)"
   },
   "meta": {
