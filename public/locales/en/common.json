@@ -4,6 +4,7 @@
   },
   "balances": {
     "apy": "APY",
+    "apyRange": "APY Range",
     "balance": "Balance",
     "depositValue": "Deposit Value",
     "earned": "Earned",
@@ -22,6 +23,7 @@
     "tvl": "TVL",
     "valueStaked": "Value Staked",
     "walletBalance": "Wallet Balance",
+    "yourApy": "Your APY",
     "yourBalance": "Your Balance"
   },
   "connection": {
@@ -50,7 +52,7 @@
       "liquidation": "liquidation",
       "info": "This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are automatically sold back into users' LUSD positions and all LQTY rewards are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing."
     },
-    "compounding": "Compounding",
+    "compounding": "compounding",
     "deposit": "Deposit",
     "deposited": "Deposited",
     "depositAndStake": "Deposit and Stake",
@@ -67,6 +69,10 @@
     },
     "mc2": "SushiSwap MasterChefv2",
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
+    "migrated": "Migrated! Staking in Farm...",
+    "migrateFromTo": "Migrate from {{ from }} to {{ to }}",
+    "migratingTo": "Migrating to {{ target }}...",
+    "migrationCompleted": "Migration completed! See your deposits <1>here</1>.",
     "pickleEthSlp": "PICKLE/ETH SLP",
     "picklePower": "Pickle Power",
     "polygon": {
@@ -84,7 +90,9 @@
     "unstakingFromFarm": "Unstaking from Farm...",
     "withdraw": "Withdraw",
     "withdrawing": "Withdrawing...",
-    "withdrawingFromJar": "Withdrawing from Jar..."
+    "withdrawingFromFarm": "Withdrawing from Farm...",
+    "withdrawingFromJar": "Withdrawing from Jar...",
+    "yvBOOSTMigration": "Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the Farm.<br />This process will require a number of transactions.<br />Learn more about yvBOOST <5>here</5>."
   },
   "gauges": {
     "currentAllocation": "Current allocation",
@@ -131,6 +139,8 @@
     "description": "Zap ETH or CRV into ETH/yvBOOST SLP and auto-deposit to <1>Pickle Farm</1>.",
     "notAvailable": "Zapping available on mainnet",
     "zap": "Zap",
+    "zapAndStake": "Zap and Stake",
+    "zapIntoJar": "Zap into Jar",
     "zapTo": "Zap to yvBOOST",
     "zapping": "Zapping..."
   }
