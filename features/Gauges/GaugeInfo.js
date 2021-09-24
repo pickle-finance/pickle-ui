@@ -3,7 +3,6 @@ import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 export const PICKLE_POWER = "pickle-eth";
 
 export const GAUGE_TVL_KEY = {
-
   //Ethereum
   [JAR_DEPOSIT_TOKENS.Ethereum.sCRV]: "scrv",
   [JAR_DEPOSIT_TOKENS.Ethereum["3CRV"]]: "3poolcrv",
@@ -55,7 +54,6 @@ export const GAUGE_TVL_KEY = {
   [JAR_DEPOSIT_TOKENS.Polygon.QUICK_DINO_WETH]: "dino-weth",
   [JAR_DEPOSIT_TOKENS.Polygon.QUICK_MATIC_QI]: "qlp-qimatic",
   [JAR_DEPOSIT_TOKENS.Polygon.POLY_SUSHI_PICKLE_DAI]: "pslp-pickle",
-  
 };
 
 export const getFormatString = (value) => {

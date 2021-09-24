@@ -122,7 +122,9 @@ export const GaugeList: FC = () => {
     const activeAndYearn =
       JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName];
     return showUserJars
-      ? activeAndYearn && (parseFloat(formatEther(jar.deposited)) ||  parseFloat(formatEther(gauge?.staked || 0)))
+      ? activeAndYearn &&
+          (parseFloat(formatEther(jar.deposited)) ||
+            parseFloat(formatEther(gauge?.staked || 0)))
       : activeAndYearn;
   });
 

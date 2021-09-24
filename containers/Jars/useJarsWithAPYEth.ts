@@ -356,11 +356,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (parseFloat(formatEther(rlyPerBlockBN)) * poolInfo.allocPoint) /
         totalAllocPointBN.toNumber();
       const { pricePerToken } = await getUniPairData(lpTokenAddress);
-      
+
       const rlyRewardsPerYear =
-      rlyPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
+        rlyPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.rly * rlyRewardsPerYear;
-      
+
       const totalValueStaked = totalSupply * pricePerToken;
       const rlyAPY = valueRewardedPerYear / totalValueStaked;
 

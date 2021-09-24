@@ -33,7 +33,7 @@ export const addresses = {
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
   tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
   mpickle: "0x2b88ad57897a8b496595925f43048301c37615da",
-  mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"
+  mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
 };
 
 interface Token {
