@@ -254,8 +254,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           poolInfoCR.allocPoint.toNumber()) /
         totalAllocPointCR[0].toNumber();
 
-        console.log(maticRewardsPerSecond)
-
       const maticRewardsPerYear = maticRewardsPerSecond * (365 * 24 * 60 * 60);
 
       const maticValueRewardedPerYear = prices.matic * maticRewardsPerYear;

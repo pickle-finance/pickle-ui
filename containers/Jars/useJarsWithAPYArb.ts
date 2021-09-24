@@ -16,6 +16,7 @@ import { Contract as MulticallContract } from "ethers-multicall";
 import erc20 from "@studydefi/money-legos/erc20";
 import { Contract } from "@ethersproject/contracts";
 import RewarderABI from "../ABIs/rewarder.json";
+import { CurvePairs } from "containers/CurvePairs";
 
 const AVERAGE_BLOCK_TIME = 4;
 const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
@@ -31,6 +32,10 @@ interface PoolId {
 const sushiPoolIds: PoolId = {
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": 9,
   "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": 11,
+};
+
+const abracadabraIds: PoolId = {
+  "0x30dF229cefa463e991e29D42DB0bae2e122B2AC7": 0,
 };
 
 const getCompoundingAPY = (apr: number) => {
@@ -51,8 +56,9 @@ type Output = {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
-  const { sushiMinichef } = Contracts.useContainer();
+  const { sushiMinichef, sorbettiereFarm } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
+  const { getCurveLpPriceData } = CurvePairs.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
@@ -119,12 +125,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const totalSupplyBN = await lpToken.balanceOf(sushiMinichef.address);
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
-      
+
       let rewardsPerYear = 0;
       if (rewardToken === "spell") {
         const tokenPerSecondBN = await rewarder.rewardPerSecond();
         rewardsPerYear =
-        parseFloat(formatEther(tokenPerSecondBN)) * ONE_YEAR_SECONDS;
+          parseFloat(formatEther(tokenPerSecondBN)) * ONE_YEAR_SECONDS;
       }
 
       const valueRewardedPerYear = prices[rewardToken] * rewardsPerYear;
@@ -142,6 +148,57 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
     return [];
   };
+  const calculateAbradabraApy = async (lpTokenAddress: string) => {
+    if (
+      sorbettiereFarm &&
+      prices?.mim &&
+      prices?.spell &&
+      getCurveLpPriceData &&
+      getSushiPairData &&
+      multicallProvider
+    ) {
+      const poolId = abracadabraIds[lpTokenAddress];
+      const multicallSorbettiereFarm = new MulticallContract(
+        sorbettiereFarm.address,
+        sorbettiereFarm.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        icePerSecondBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallSorbettiereFarm.icePerSecond(),
+        multicallSorbettiereFarm.totalAllocPoint(),
+        multicallSorbettiereFarm.poolInfo(poolId),
+        lpToken.balanceOf(multicallSorbettiereFarm.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const icePerSecond =
+        (parseFloat(formatEther(icePerSecondBN)) * poolInfo.allocPoint) /
+        totalAllocPointBN.toNumber();
+      let tokenPrice: any;
+      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.Arbitrum.MIM_2CRV) {
+        tokenPrice = await getCurveLpPriceData(lpTokenAddress);
+      }
+
+      const iceRewardsPerYear = icePerSecond * ONE_YEAR_SECONDS;
+      const valueRewardedPerYear = prices.spell * iceRewardsPerYear;
+
+      const totalValueStaked = totalSupply * tokenPrice;
+      const spellAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [
+        { spell: getCompoundingAPY(spellAPY * 0.8), apr: spellAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
 
   const calculateAPY = async () => {
     if (jars) {
@@ -150,6 +207,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         spellMimEthApy,
         sushiSpellEthApy,
         spellEthApy,
+        mim2crvApy,
       ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH),
         calculateMCv2APY(
@@ -163,6 +221,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_SPELL_ETH,
           "spell",
         ),
+        calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Arbitrum.MIM_2CRV),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -172,6 +231,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         }
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_SPELL_ETH) {
           APYs = [...sushiSpellEthApy, ...spellEthApy];
+        }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_2CRV) {
+          APYs = [...mim2crvApy];
         }
 
         let apr = 0;

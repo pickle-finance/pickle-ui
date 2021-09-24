@@ -367,7 +367,7 @@ function useContracts() {
         CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
       );
       setSorbettiereFarm(
-        SorbettiereFactory.connect(SORBETTIERE_REWARDS, providerOrSigner),
+        SorbettiereFactory.connect(addresses.sorbettiere || ethers.constants.AddressZero, providerOrSigner),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(

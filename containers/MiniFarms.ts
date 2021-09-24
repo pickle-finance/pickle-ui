@@ -104,6 +104,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pSLP SPELL/ETH",
     poolName: "pSLP SPELL/ETH",
   },
+  "0x973B669eF8c1459f7cb685bf7D7bCD4150977504": {
+    tokenName: "Abracadabra MIM2CRV",
+    poolName: "Abracadabra MIM2CRV",
+  },
 };
 
 function useFarms() {

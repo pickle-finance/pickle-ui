@@ -68,7 +68,8 @@ export const PICKLE_JARS = {
 
   // Arbitrum Jars
   pSUSHIMIMETH: "0x94feade0d3d832e4a05d459ebea9350c6cdd3bca",
-  pSUSHISPELLETH: "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2"
+  pSUSHISPELLETH: "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2",
+  pMIM2CRV: "0x973b669ef8c1459f7cb685bf7d7bcd4150977504",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -137,6 +138,7 @@ export const JAR_DEPOSIT_TOKENS = {
   [NETWORK_NAMES.ARB]: {
     SUSHI_MIM_ETH: "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959",
     SUSHI_SPELL_ETH: "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8",
+    MIM_2CRV: "0x30dF229cefa463e991e29D42DB0bae2e122B2AC7",
   },
 };
 
@@ -206,6 +208,7 @@ export const DEPOSIT_TOKENS_NAME = {
   // Arbitrum Jars
   SUSHI_MIM_ETH: "SLP MIM/ETH",
   SUSHI_SPELL_ETH: "SLP SPELL/ETH",
+  MIM_2CRV: "Abracadabra MIM2CRV",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -274,6 +277,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   // Arbitrum Jars
   [DEPOSIT_TOKENS_NAME.SUSHI_MIM_ETH]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_SPELL_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.MIM_2CRV]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -379,7 +383,6 @@ export const DEPOSIT_TOKENS_LINK = {
   QUICK_MATIC_QI:
     "https://quickswap.exchange/#/add/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/0x580A84C73811E1839F75d86d75d88cCa0c241fF4",
 
-
   // OKEx Jars
   CHERRY_OKT_CHE:
     "https://www.cherryswap.net/#/add/ETH/0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
@@ -389,13 +392,17 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://www.cherryswap.net/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x382bb369d343125bfb2117af9c149795c6c65c50",
   CHERRY_OKT_USDT:
     "https://www.cherryswap.net/#/add/ETH/0x382bb369d343125bfb2117af9c149795c6c65c50",
-  BXH_BXH_USDT: "https://okswap.bxh.com/#/add/0x145ad28a42bf334104610f7836d0945dffb6de63/0x382bb369d343125bfb2117af9c149795c6c65c50",
-  BXH_ETH_BTC: "https://okswap.bxh.com/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x54e4622DC504176b3BB432dCCAf504569699a7fF",
+  BXH_BXH_USDT:
+    "https://okswap.bxh.com/#/add/0x145ad28a42bf334104610f7836d0945dffb6de63/0x382bb369d343125bfb2117af9c149795c6c65c50",
+  BXH_ETH_BTC:
+    "https://okswap.bxh.com/#/add/0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C/0x54e4622DC504176b3BB432dCCAf504569699a7fF",
 
   // Arbitrum Jars
-  SUSHI_MIM_ETH: "https://app.sushi.com/add/0xFEa7a6a0B346362BF88A9e4A88416B77a57D6c2A/ETH",
-  SUSHI_SPELL_ETH: "https://app.sushi.com/add/0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af/ETH",
-
+  SUSHI_MIM_ETH:
+    "https://app.sushi.com/add/0xFEa7a6a0B346362BF88A9e4A88416B77a57D6c2A/ETH",
+  SUSHI_SPELL_ETH:
+    "https://app.sushi.com/add/0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af/ETH",
+  MIM_2CRV: "https://arbitrum.curve.fi/factory/0/deposit",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -468,7 +475,8 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
 
   // Arbitrum Jars
   SUSHI_MIM_ETH: "arbJar 1a",
-  SUSHI_SPELL_ETH: "arbJar 1b"
+  SUSHI_SPELL_ETH: "arbJar 1b",
+  MIM_2CRV: "arbJar 1c",
 };
 
 export const STRATEGY_NAMES = {
@@ -543,7 +551,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a": "mim",
   "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "eth",
   "0xd4d42f0b6def4ce0383636770ef773390d85c61a": "sushi",
-  "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af": "spell"
+  "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af": "spell",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

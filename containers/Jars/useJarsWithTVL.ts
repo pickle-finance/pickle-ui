@@ -12,6 +12,7 @@ import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
 import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
 import erc20 from "@studydefi/money-legos/erc20";
+import { CurvePairs } from "containers/CurvePairs";
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
@@ -44,14 +45,48 @@ const isUniPool = (jarName: string): boolean => {
   );
 };
 
+const isCurvePool = (jarName: string): boolean => {
+  return jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_2CRV;
+};
+
 export const useJarWithTVL = (jars: Input): Output => {
   const { uniswapv2Pair } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { multicallProvider, signer, chainName } = Connection.useContainer();
   const { poolData } = PoolData.useContainer();
+  const { getCurveLpPriceData } = CurvePairs.useContainer();
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
     null,
   );
+
+  const measureCurveTVL = async (jar: JarWithAPY) => {
+    const pricePerUnderlying = 1;
+
+    if (!multicallProvider || !getCurveLpPriceData) {
+      return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
+    }
+
+    const multicallJarContract = new MulticallContract(
+      jar.contract.address,
+      jar.contract.interface.fragments,
+    );
+
+    const [supply, balance, ratio] = (
+      await multicallProvider.all([
+        multicallJarContract.totalSupply(),
+        multicallJarContract.balance(),
+        multicallJarContract.getRatio(),
+      ])
+    ).map((x) => parseFloat(formatEther(x)));
+
+    const virtualPrice = await getCurveLpPriceData(jar.depositToken.address);
+
+    const tvlUSD = balance * virtualPrice * pricePerUnderlying;
+
+    const usdPerPToken = tvlUSD / supply;
+
+    return { ...jar, tvlUSD, usdPerPToken, ratio };
+  };
 
   const measureUniJarTVL = async (jar: JarWithAPY): Promise<JarWithTVL> => {
     if (!uniswapv2Pair || !prices || !multicallProvider) {
@@ -167,6 +202,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       if (chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.ARB) {
         const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
           if (isUniPool(jar.jarName)) return measureUniJarTVL(jar);
+          if (isCurvePool(jar.jarName)) return measureCurveTVL(jar);
         });
         const okexJars = await Promise.all(promises);
         newJars = okexJars;

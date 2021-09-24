@@ -7,6 +7,7 @@ interface Addresses {
   minichef?: string;
   rewarder?: string;
   sushiMinichef?: string;
+  sorbettiere?: string;
 }
 
 export enum NETWORK_NAMES {
@@ -45,6 +46,7 @@ export const config: Config = {
       controller: "0x6847259b2B3A4c17e7c43C54409810aF48bA5210",
       dill: "0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf",
       gaugeProxy: "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f",
+      sorbettiere: "0xF43480afE9863da4AcBD4419A47D9Cc7d25A647F"
     },
     Polygon: {
       pickle: "0x2b88ad57897a8b496595925f43048301c37615da",
@@ -67,7 +69,8 @@ export const config: Config = {
       masterChef: "0x7ecc7163469f37b777d7b8f45a667314030ace24",
       minichef: "0x7ecc7163469f37b777d7b8f45a667314030ace24",
       rewarder: "0x0000000000000000000000000000000000000000",
-      sushiMinichef: "0xF4d73326C13a4Fc5FD7A064217e12780e9Bd62c3"
+      sushiMinichef: "0xF4d73326C13a4Fc5FD7A064217e12780e9Bd62c3",
+      sorbettiere: "0x839De324a1ab773F76a53900D70Ac1B913d2B387"
     },
   },
 };
