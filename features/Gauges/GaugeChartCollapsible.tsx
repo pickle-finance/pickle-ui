@@ -4,6 +4,7 @@ import { UserGaugeData } from "../../containers/UserGauges";
 import Collapse from "../Collapsible/Collapse";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import styled from "styled-components";
+import { Trans, useTranslation } from "next-i18next";
 
 const shadeColor = (color: string, percent: number) => {
   let R = parseInt(color.substring(1, 3), 16);
@@ -35,6 +36,8 @@ const TableContainer = styled.div`
 export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
 }) => {
+  const { t } = useTranslation("common");
+
   const gaugeChartData = gauges
     .map((gauge) => {
       const { allocPoint, depositTokenName } = gauge;
@@ -51,7 +54,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const smallFarmsData = dataForTable.reduce((acc, cur) => {
     return {
       allocPoint: acc.allocPoint + cur.allocPoint,
-      depositTokenName: "other",
+      depositTokenName: t("gauges.other"),
     };
   });
 
@@ -65,8 +68,12 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       shadow
       preview={
         <div>
-          View allocation of PICKLE reward weights &nbsp;
-          <p style={{ margin: "0px" }}>(based on votes cast by DILL holders)</p>
+          <Trans i18nKey="gauges.chartPreview">
+            View allocation of PICKLE reward weights
+            <p style={{ margin: "0px" }}>
+              (based on votes cast by DILL holders)
+            </p>
+          </Trans>
         </div>
       }
     >
@@ -107,14 +114,17 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                   allocPoint: formatter(entry.allocPoint),
                 }))}
               >
-                <Table.Column prop="depositTokenName" label="Token" />
-                <Table.Column prop="allocPoint" label="Weight" />
+                <Table.Column
+                  prop="depositTokenName"
+                  label={t("gauges.token")}
+                />
+                <Table.Column prop="allocPoint" label={t("gauges.weight")} />
               </Table>
             </div>
           </TableContainer>
         </>
       ) : (
-        "There are no active Farms"
+        t("farms.noneActive")
       )}
     </Collapse>
   );
