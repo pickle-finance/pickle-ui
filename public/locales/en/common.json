@@ -46,6 +46,7 @@
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
     "apy": "Hover over the displayed APY to see where the returns are coming from.",
+    "approveAndStake": "Approve and Stake",
     "approving": "Approving...",
     "baseAPRs": "Base APRs",
     "bProtocol": {
@@ -57,6 +58,7 @@
     "deposited": "Deposited",
     "depositAndStake": "Deposit and Stake",
     "depositing": "Depositing...",
+    "exiting": "Exiting...",
     "harvest": "Harvest",
     "harvestAndExit": "Harvest and Exit",
     "harvesting": "Harvesting...",
@@ -70,7 +72,9 @@
     "mc2": "SushiSwap MasterChefv2",
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
     "migrated": "Migrated! Staking in Farm...",
+    "migratedMasterchef": "Migrated! Staking in Sushi MasterChef v2...",
     "migrateFromTo": "Migrate from {{ from }} to {{ to }}",
+    "migrateToSushi": "Migrate PICKLE-ETH to Sushi for dual <1/> and <3/> rewards",
     "migratingTo": "Migrating to {{ target }}...",
     "migrationCompleted": "Migration completed! See your deposits <1>here</1>.",
     "noneActive": "There are no active Farms",
@@ -93,7 +97,8 @@
     "withdrawing": "Withdrawing...",
     "withdrawingFromFarm": "Withdrawing from Farm...",
     "withdrawingFromJar": "Withdrawing from Jar...",
-    "yvBOOSTMigration": "Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the Farm.<br />This process will require a number of transactions.<br />Learn more about yvBOOST <5>here</5>."
+    "yvBOOSTMigration": "Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the Farm.<br />This process will require a number of transactions.<br />Learn more about yvBOOST <5>here</5>.",
+    "sushiMigration": "Your PICKLE/ETH LP tokens will be unstaked and migrated from Uniswap LP tokens to Sushi LP tokens <br /> and then staked in Sushi's MasterChef v2. This process will require a number of transactions."
   },
   "gauges": {
     "chartPreview": "View allocation of PICKLE reward weights <1>(based on votes cast by DILL holders)</1>",

@@ -1,21 +1,11 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
-import {
-  Button,
-  Link,
-  Input,
-  Grid,
-  Spacer,
-  Tooltip,
-  Checkbox,
-} from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
+import { Trans, useTranslation } from "next-i18next";
 
-import {
-  JAR_GAUGE_MAP,
-  PICKLE_ETH_GAUGE,
-} from "../../containers/Gauges/gauges";
+import { JAR_GAUGE_MAP } from "../../containers/Gauges/gauges";
 
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -74,6 +64,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const isUsdc =
     depositToken.address.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
 
+  const { t } = useTranslation("common");
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
@@ -125,19 +116,19 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Approve and Stake",
+    text: t("farms.approveAndStake"),
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Unstake",
+    text: t("farms.unstake"),
   });
   const [harvestButton, setHarvestButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Harvest",
+    text: t("farms.harvest"),
   });
   const [exitButton, setExitButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Harvest and Exit",
+    text: t("farms.harvestAndExit"),
   });
 
   const [tvlData, setTVLData] = useState();
@@ -205,11 +196,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const handleYvboostMigrate = async () => {
     if (stakedNum || balanceNum) {
       try {
-        setYvMigrateState("Withdrawing from Farm...");
+        setYvMigrateState(t("farms.withdrawingFromFarm"));
         await withdrawGauge(gauge);
-        setYvMigrateState("Migrating to yvBOOST pJar...");
+        setYvMigrateState(t("farms.migratingTo", { target: "yvBOOST pJar" }));
         await migrateYvboost();
-        setYvMigrateState("Migrated! Staking in Farm...");
+        setYvMigrateState(t("farms.migrated"));
         await depositYvboost();
         setYvMigrateState(null);
         setSuccess(true);
@@ -225,11 +216,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const handlePickleEthMigrate = async () => {
     if (stakedNum || balanceNum) {
       try {
-        setPickleMigrateState("Withdrawing from Farm...");
+        setPickleMigrateState(t("farms.withdrawingFromFarm"));
         await withdrawGauge(gauge);
-        setPickleMigrateState("Migrating to Sushi LP...");
+        setPickleMigrateState(t("farms.migratingTo", { target: "Sushi LP" }));
         await migratePickleEth();
-        setPickleMigrateState("Migrated! Staking in Sushi MasterChef v2...");
+        setPickleMigrateState(t("farms.migratedMasterchef"));
         await depositPickleEth();
         setPickleMigrateState(null);
         setSuccess(true);
@@ -261,26 +252,26 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
 
       setButtonStatus(
         stakeStatus,
-        "Staking...",
-        approved ? "Stake" : "Approve and Stake",
+        t("farms.staking"),
+        approved ? t("farms.stake") : t("farms.approveAndStake"),
         setStakeButton,
       );
       setButtonStatus(
         unstakeStatus,
-        "Unstaking...",
-        "Unstake",
+        t("farms.unstaking"),
+        t("farms.unstake"),
         setUnstakeButton,
       );
       setButtonStatus(
         harvestStatus,
-        "Harvesting...",
-        "Harvest",
+        t("farms.harvesting"),
+        t("farms.harvest"),
         setHarvestButton,
       );
       setButtonStatus(
         exitStatus,
-        "Exiting...",
-        "Harvest and Exit",
+        t("farms.exiting"),
+        t("farms.harvestAndExit"),
         setExitButton,
       );
     }
@@ -326,17 +317,17 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={balanceNum === 0}>{balanceStr}</Data>
-            <Label>Wallet Balance</Label>
+            <Label>{t("balances.walletBalance")}</Label>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr}
             </Data>
-            <Label>Earned</Label>
+            <Label>{t("balances.earned")}</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={stakedNum * usdPerToken === 0}>${valueStr}</Data>
-            <Label>Deposit Value</Label>
+            <Label>{t("balances.depositValue")}</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <>
@@ -354,7 +345,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                         gaugeData.totalAPY + pickleAPYMin,
                       )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
                 </div>
-                <Label>APY Range</Label>
+                <Label>{t("balances.apyRange")}</Label>
               </Tooltip>
               {Boolean(realAPY) && (
                 <div>
@@ -363,7 +354,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                     style={{ marginTop: 5 }}
                   >
                     <div style={{ display: "flex" }}>
-                      <Label>Your APY: </Label>
+                      <Label>{t("balances.yourApy")}: </Label>
                       <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
                     </div>
                   </Tooltip>
@@ -373,7 +364,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
-            <Label>TVL</Label>
+            <Label>{t("balances.tvl")}</Label>
           </Grid>
         </Grid.Container>
       }
@@ -383,7 +374,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
         <Grid xs={24} md={stakedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              Balance: {balanceStr} {depositTokenName}
+              {t("balances.balance")}: {balanceStr} {depositTokenName}
             </div>
             <Link
               color
@@ -397,7 +388,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 );
               }}
             >
-              Max
+              {t("balances.max")}
             </Link>
           </div>
           <Input
@@ -432,7 +423,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                Staked: {stakedStr} {depositTokenName}
+                {t("balances.staked")}: {stakedStr} {depositTokenName}
               </div>
               <Link
                 color
@@ -444,7 +435,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                   );
                 }}
               >
-                Max
+                {t("balances.max")}
               </Link>
             </div>
             <Input
@@ -529,7 +520,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 onClick={handleYvboostMigrate}
                 style={{ width: "100%", textTransform: "none" }}
               >
-                {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+                {yvMigrateState ||
+                  t("farms.migrateFromTo", {
+                    from: "yveCRV-ETH LP",
+                    to: "yvBOOST-ETH LP",
+                  })}
               </Button>
               <div
                 style={{
@@ -539,27 +534,31 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                   fontSize: "1rem",
                 }}
               >
-                Your tokens will be unstaked and migrated to the yvBOOST pJar
-                and staked in the Farm.
-                <br />
-                This process will require a number of transactions.
-                <br />
-                Learn more about yvBOOST{" "}
-                <a
-                  target="_"
-                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
-                >
-                  here
-                </a>
-                .
-                {isSuccess ? (
+                <Trans i18nKey="farms.yvBOOSTMigration">
+                  Your tokens will be unstaked and migrated to the yvBOOST pJar
+                  and staked in the Farm.
+                  <br />
+                  This process will require a number of transactions.
+                  <br />
+                  Learn more about yvBOOST
+                  <a
+                    target="_"
+                    href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                  >
+                    here
+                  </a>
+                  .
+                </Trans>
+                {isSuccess && (
                   <p style={{ fontWeight: "bold" }}>
-                    Migration completed! See your deposits{" "}
-                    <Link color href="/farms">
-                      here
-                    </Link>
+                    <Trans i18nKey="farms.migrationCompleted">
+                      Migration completed! See your deposits
+                      <Link color href="/farms">
+                        here
+                      </Link>
+                    </Trans>
                   </p>
-                ) : null}
+                )}
               </div>
             </>
           ) : null}
@@ -571,11 +570,11 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 style={{ width: "100%", textTransform: "none" }}
               >
                 {pickleMigrateState || (
-                  <>
-                    Migrate PICKLE-ETH to Sushi for dual&nbsp;
-                    <MiniIcon source={"/pickle.png"} /> &nbsp;and&nbsp;
-                    <MiniIcon source={"/sushiswap.png"} /> &nbsp;rewards&nbsp;
-                  </>
+                  <Trans i18nKey="farms.migrateToSushi">
+                    Migrate PICKLE-ETH to Sushi for dual
+                    <MiniIcon source="/pickle.png" /> and
+                    <MiniIcon source="/sushiswap.png" /> rewards
+                  </Trans>
                 )}
               </Button>
               <div
@@ -586,13 +585,22 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                   fontSize: "1rem",
                 }}
               >
-                Your PICKLE/ETH LP tokens will be unstaked and migrated from
-                Uniswap LP tokens to Sushi LP tokens
-                <br /> and then staked in Sushi's MasterChef v2. This process
-                will require a number of transactions.
-                {isSuccess ? (
-                  <p style={{ fontWeight: "bold" }}>Migration completed!</p>
-                ) : null}
+                <Trans i18nKey="farms.sushiMigration">
+                  Your PICKLE/ETH LP tokens will be unstaked and migrated from
+                  Uniswap LP tokens to Sushi LP tokens
+                  <br /> and then staked in Sushi's MasterChef v2. This process
+                  will require a number of transactions.
+                </Trans>
+                {isSuccess && (
+                  <p style={{ fontWeight: "bold" }}>
+                    <Trans i18nKey="farms.migrationCompleted">
+                      Migration completed! See your deposits
+                      <Link color href="/farms">
+                        here
+                      </Link>
+                    </Trans>
+                  </p>
+                )}
               </div>
             </>
           ) : null}
