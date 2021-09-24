@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
+import { Trans, useTranslation } from "next-i18next";
 
 import { useState, FC, useEffect, ReactNode } from "react";
 import {
@@ -249,6 +250,7 @@ export const JarGaugeCollapsible: FC<{
   } = jarData;
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
+  const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
   const isUsdc =
@@ -334,14 +336,16 @@ export const JarGaugeCollapsible: FC<{
   const difference = totalAPY1 - totalAPR1;
 
   const apyRangeTooltipText = [
-    `Base APRs:`,
+    `${t("farms.baseAPRs")}:`,
     `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
       const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
-    `compounding <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
+    `${t(
+      "farms.compounding",
+    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
       2,
     )}%`,
   ]
@@ -349,7 +353,7 @@ export const JarGaugeCollapsible: FC<{
     .join(` <br/> `);
 
   const yourApyTooltipText = [
-    `Base APRs:`,
+    `${t("farms.baseAPRs")}:`,
     `pickle: ${formatAPY(pickleAPY)}`,
     ...APYs.map((x) => {
       const k = Object.keys(x)[0];
@@ -368,11 +372,11 @@ export const JarGaugeCollapsible: FC<{
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Deposit",
+    text: t("farms.deposit"),
   });
   const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Withdraw",
+    text: t("farms.withdraw"),
   });
 
   const [zapStakeButton, setZapStakeButton] = useState<string | null>(null);
@@ -408,20 +412,19 @@ export const JarGaugeCollapsible: FC<{
 
   const balanceStr = formatValue(balanceNum);
 
-  const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: `Stake Unstaked ${depositedStr} Tokens in Farm`,
+    text: t("farms.stakeUnstaked", { amount: depositedStr }),
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Unstake",
+    text: t("farms.unstake"),
   });
   const [harvestButton, setHarvestButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Harvest",
+    text: t("farms.harevest"),
   });
 
   const [depositStakeButton, setDepositStakeButton] = useState<string | null>(
@@ -458,7 +461,7 @@ export const JarGaugeCollapsible: FC<{
 
   const depositGauge = async () => {
     if (!approved) {
-      setDepositStakeButton("Approving...");
+      setDepositStakeButton(t("farms.approving"));
       const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
       const tx = await Token.approve(
         gaugeData.address,
@@ -466,7 +469,7 @@ export const JarGaugeCollapsible: FC<{
       );
       await tx.wait();
     }
-    setDepositStakeButton("Staking...");
+    setDepositStakeButton(t("farms.staking"));
     const gaugeTx = await gauge.depositAll();
     await gaugeTx.wait();
   };
@@ -474,11 +477,11 @@ export const JarGaugeCollapsible: FC<{
   const handleYvboostMigrate = async () => {
     if (stakedNum || balanceNum) {
       try {
-        setYvMigrateState("Withdrawing from Farm...");
+        setYvMigrateState(t("farms.withdrawingFromFarm"));
         await withdrawGauge(gauge);
-        setYvMigrateState("Migrating to yvBOOST pJar...");
+        setYvMigrateState(t("farms.migratingTo", { target: "yvBOOST pJar" }));
         await migrateYvboost();
-        setYvMigrateState("Migrated! Staking in Farm...");
+        setYvMigrateState(t("farms.migrated"));
         await depositYvboost();
         setYvMigrateState(null);
         setSuccess(true);
@@ -525,10 +528,10 @@ export const JarGaugeCollapsible: FC<{
     if (stakedNum) {
       try {
         setIsExitBatch(true);
-        setExitButton("Unstaking from Farm...");
+        setExitButton(t("farms.unstakingFromFarm"));
         const exitTx = await gauge.exit();
         await exitTx.wait();
-        setExitButton("Withdrawing from Jar...");
+        setExitButton(t("farms.withdrawingFromJar"));
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
         await sleep(10000);
@@ -547,11 +550,11 @@ export const JarGaugeCollapsible: FC<{
     if (depositAmount) {
       {
         try {
-          setZapOnlyButton("Zapping...");
-          setZapStakeButton("Zapping...");
+          setZapOnlyButton(t("zap.zapping"));
+          setZapStakeButton(t("zap.zapping"));
           const zapSuccess = await zapIn();
           if (toFarm && zapSuccess) {
-            setZapStakeButton("Staking...");
+            setZapStakeButton(t("farms.staking"));
             await depositGauge();
           }
           await sleep(10000);
@@ -584,8 +587,18 @@ export const JarGaugeCollapsible: FC<{
         jarContract.address,
       );
 
-      setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
-      setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
+      setButtonStatus(
+        dStatus,
+        t("farms.depositing"),
+        t("farms.deposit"),
+        setDepositButton,
+      );
+      setButtonStatus(
+        wStatus,
+        t("farms.withdrawing"),
+        t("farms.withdraw"),
+        setWithdrawButton,
+      );
     }
     if (gaugeData && !isExitBatch) {
       const stakeStatus = getTransferStatus(
@@ -601,20 +614,20 @@ export const JarGaugeCollapsible: FC<{
 
       setButtonStatus(
         stakeStatus,
-        "Staking...",
-        `Stake Unstaked ${depositedStr} Tokens in Farm`,
+        t("farms.staking"),
+        t("farms.stakeUnstaked", { amount: depositedStr }),
         setStakeButton,
       );
       setButtonStatus(
         unstakeStatus,
-        "Unstaking...",
-        "Unstake",
+        t("farms.unstaking"),
+        t("farms.unstake"),
         setUnstakeButton,
       );
       setButtonStatus(
         harvestStatus,
-        "Harvesting...",
-        "Harvest",
+        t("farms.harvesting"),
+        t("farms.harvest"),
         setHarvestButton,
       );
     }
@@ -638,14 +651,6 @@ export const JarGaugeCollapsible: FC<{
   useEffect(() => {
     getProtocolData().then((info) => setTVLData(info));
   }, []);
-
-  const tooltipText = APYs.map((x) => {
-    const k = Object.keys(x)[0];
-    const v = Object.values(x)[0];
-    return isNaN(v) ? null : `${k}: ${v.toFixed(2)}%`;
-  })
-    .filter((x) => x)
-    .join(" + ");
 
   const tvlNum =
     tvlData &&
@@ -682,19 +687,19 @@ export const JarGaugeCollapsible: FC<{
           </JarName>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={balanceNum === 0}>{balanceStr}</Data>
-            <Label>Wallet Balance</Label>
+            <Label>{t("balances.walletBalance")}</Label>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={harvestableNum === 0}>
               {harvestableStr}{" "}
               {harvestableNum && <MiniIcon source={"/pickle.png"} />}
             </Data>
-            <Label>Earned</Label>
+            <Label>{t("balances.earned")}</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
-              <Label>Deposit Value</Label>
+              <Label>{t("balances.depositValue")}</Label>
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
@@ -709,7 +714,7 @@ export const JarGaugeCollapsible: FC<{
                   style={{ marginLeft: 5 }}
                 />
                 <div>
-                  <span>APY</span>
+                  <span>{t("balances.APY")}</span>
                 </div>
               </Data>
             ) : (
@@ -738,7 +743,7 @@ export const JarGaugeCollapsible: FC<{
                         style={{ marginLeft: 5 }}
                       />
                     </div>
-                    <Label>APY Range</Label>
+                    <Label>{t("balances.apyRange")}</Label>
                   </Tooltip>
                 </div>
                 {Boolean(realAPY) && (
@@ -752,7 +757,7 @@ export const JarGaugeCollapsible: FC<{
                       style={{ marginTop: 5 }}
                     >
                       <div style={{ display: "flex" }}>
-                        <Label>Your APY:&nbsp;</Label>
+                        <Label>{t("balances.yourApy")}:&nbsp;</Label>
                         <div>{!realAPY ? "--%" : `${realAPY.toFixed(2)}%`}</div>
                       </div>
                     </Tooltip>
@@ -763,7 +768,7 @@ export const JarGaugeCollapsible: FC<{
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
-            <Label>TVL</Label>
+            <Label>{t("balances.tvl")}</Label>
           </Grid>
         </Grid.Container>
       }
@@ -776,7 +781,7 @@ export const JarGaugeCollapsible: FC<{
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              Balance:{" "}
+              {t("balances.balance")}:{" "}
               {inputToken === zapInputTokens[0].symbol
                 ? `${balStr} ${depositTokenName}`
                 : `${
@@ -793,7 +798,7 @@ export const JarGaugeCollapsible: FC<{
                 setDepositAmount(formatEther(depositBalance));
               }}
             >
-              Max
+              {t("balances.max")}
             </Link>
           </div>
           <Grid.Container gap={3}>
@@ -849,7 +854,9 @@ export const JarGaugeCollapsible: FC<{
                 disabled={depositButton.disabled || zapOnlyButton}
                 style={{ width: "100%" }}
               >
-                {isZap ? zapOnlyButton || "Zap into Jar" : depositButton.text}
+                {isZap
+                  ? zapOnlyButton || t("zap.zapIntoJar")
+                  : depositButton.text}
                 {isZap && ZapperIcon}
               </Button>
             </Grid>
@@ -864,10 +871,10 @@ export const JarGaugeCollapsible: FC<{
                 style={{ width: "100%" }}
               >
                 {isZap
-                  ? zapStakeButton || "Zap and Stake"
+                  ? zapStakeButton || t("zap.zapAndStake")
                   : isEntryBatch
                   ? depositStakeButton || depositButton.text
-                  : "Deposit and Stake"}
+                  : t("farms.depositAndStake")}
                 {isZap && ZapperIcon}
               </Button>
             </Grid>
@@ -877,7 +884,7 @@ export const JarGaugeCollapsible: FC<{
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                Balance: {depositedStr} (
+                {t("balances.balance")}: {depositedStr} (
                 <Tooltip
                   text={`${
                     deposited && ratio
@@ -905,7 +912,7 @@ export const JarGaugeCollapsible: FC<{
                   );
                 }}
               >
-                Max
+                {t("balances.max")}
               </Link>
             </div>
             <Input
@@ -978,7 +985,7 @@ export const JarGaugeCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  Staked: {stakedStr} {gaugeDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName}
                 </div>
                 <Link
                   color
@@ -990,7 +997,7 @@ export const JarGaugeCollapsible: FC<{
                     );
                   }}
                 >
-                  Max
+                  {t("balances.max")}
                 </Link>
               </div>
               <Input
@@ -1063,7 +1070,7 @@ export const JarGaugeCollapsible: FC<{
                 onClick={exit}
                 style={{ width: "100%" }}
               >
-                {exitButton || "Harvest and Exit"}
+                {exitButton || t("farms.harvestAndExit")}
               </Button>
             </Grid>
           </>
@@ -1075,7 +1082,11 @@ export const JarGaugeCollapsible: FC<{
               onClick={handleYvboostMigrate}
               style={{ width: "100%", textTransform: "none" }}
             >
-              {yvMigrateState || "Migrate yveCRV-ETH LP to yvBOOST-ETH LP"}
+              {yvMigrateState ||
+                t("farms.migrateFromTo", {
+                  from: "yveCRV-ETH LP",
+                  to: "yvBOOST-ETH LP",
+                })}
             </Button>
             <div
               style={{
@@ -1085,25 +1096,29 @@ export const JarGaugeCollapsible: FC<{
                 fontSize: "1rem",
               }}
             >
-              Your tokens will be unstaked and migrated to the yvBOOST pJar and
-              staked in the Farm.
-              <br />
-              This process will require a number of transactions.
-              <br />
-              Learn more about yvBOOST{" "}
-              <a
-                target="_"
-                href="https://twitter.com/iearnfinance/status/1388131568481411077"
-              >
-                here
-              </a>
-              .
+              <Trans i18nKey="farms.yvBOOSTMigration">
+                Your tokens will be unstaked and migrated to the yvBOOST pJar
+                and staked in the Farm.
+                <br />
+                This process will require a number of transactions.
+                <br />
+                Learn more about yvBOOST
+                <a
+                  target="_"
+                  href="https://twitter.com/iearnfinance/status/1388131568481411077"
+                >
+                  here
+                </a>
+                .
+              </Trans>
               {isSuccess ? (
                 <p style={{ fontWeight: "bold" }}>
-                  Migration completed! See your deposits{" "}
-                  <Link color href="/farms">
-                    here
-                  </Link>
+                  <Trans i18nKey="farms.migrationCompleted">
+                    Migration completed! See your deposits
+                    <Link color href="/farms">
+                      here
+                    </Link>
+                  </Trans>
                 </p>
               ) : null}
             </div>
