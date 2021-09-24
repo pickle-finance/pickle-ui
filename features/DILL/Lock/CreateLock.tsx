@@ -5,11 +5,9 @@ import { parseEther, formatEther } from "ethers/lib/utils";
 import { useBalances } from "../../Balances/useBalances";
 import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { DayPicker } from "../../../components/DayPicker";
 import { InputProps } from "@geist-ui/react/dist/input/input";
 import { UseDillOutput } from "../../../containers/Dill";
@@ -26,50 +24,20 @@ import {
 } from "../../../util/dill";
 import { ethers } from "ethers";
 
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
-
 const formatPickles = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 3,
   });
 
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  } else if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  } else {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 const DAY = 86400;
-const WEEK = 7 * 86400;
 
 export const CreateLock: FC<{
   dillStats: UseDillOutput;
 }> = () => {
   const { pickleBalance, pickleBN } = useBalances();
   const [lockAmount, setlockAmount] = useState("");
+  const { setButtonStatus } = useButtonStatus();
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();

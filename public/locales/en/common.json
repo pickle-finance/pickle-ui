@@ -3,16 +3,26 @@
     "ok": "OK"
   },
   "balances": {
+    "apy": "APY",
     "balance": "Balance",
     "depositValue": "Deposit Value",
     "earned": "Earned",
+    "marketCap": "Market Cap",
     "max": "Max",
+    "pending": "Pending",
+    "picklePerBlock": "{{ amount }} PICKLEs are printed every block.",
+    "picklePerSecond": "{{ amount }} PICKLEs are printed every second.",
     "poolSize": "Pool size",
+    "poolSizeTooltip": "Total ETH/PICKLE pool value on Uniswap.",
     "ratio": "Ratio",
     "staked": "Staked",
     "totalApy": "Total APY",
+    "totalSupply": "Total Supply",
+    "totalValueLocked": "Total Value Locked",
     "tvl": "TVL",
-    "walletBalance": "Wallet Balance"
+    "valueStaked": "Value Staked",
+    "walletBalance": "Wallet Balance",
+    "yourBalance": "Your Balance"
   },
   "connection": {
     "blockNumber": "This is the current block number. This page is updated with every new block.",
@@ -20,6 +30,9 @@
     "coinbase": "Coinbase",
     "connect": "Connect Wallet",
     "connectPrompt": "Please connect to MetaMask to use Pickle on Polygon",
+    "connectToContinue": "Please connect wallet to continue",
+    "loading": "Loading...",
+    "polygonRpc": "If you have been waiting more than a few seconds, consider changing to the unified Polygon RPC at 'https://polygon-rpc.com'",
     "metamask": "Metamask",
     "networks": {
       "ethereum": "Ethereum",
@@ -29,16 +42,39 @@
     "walletConnect": "Wallet Connect"
   },
   "farms": {
+    "about": "Farms allow you to earn PICKLEs by staking tokens.",
+    "apy": "Hover over the displayed APY to see where the returns are coming from.",
     "approving": "Approving...",
+    "baseAPRs": "Base APRs",
+    "compounding": "Compounding",
+    "deposit": "Deposit",
+    "depositAndStake": "Deposit and Stake",
+    "depositing": "Depositing...",
     "harvest": "Harvest",
+    "harvestAndExit": "Harvest and Exit",
     "harvesting": "Harvesting...",
+    "inactive": "Inactive",
     "mc2": "SushiSwap MasterChefv2",
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
     "pickleEthSlp": "PICKLE/ETH SLP",
+    "polygon": {
+      "description": "Farms allow you to earn dual PICKLE <1/> and MATIC <3/> rewards by staking tokens. (Note: MATIC rewards end August 23)",
+      "rewards": "Rewards are automatically harvested on staking and unstaking."
+    },
+    "mai": {
+      "description": "A 0.5% fee is charged by Mai Finance upon depositing",
+      "rewardsEnded": "Rewards have ended. Consider depositing in the new QI/MATIC Jar"
+    },
+    "showInactive": "Show Inactive Farms",
     "stake": "Stake",
+    "stakeUnstaked": "Stake Unstaked {{ amount }} Tokens in Farm",
     "staking": "Staking...",
     "unstake": "Unstake",
-    "unstaking": "Unstaking..."
+    "unstaking": "Unstaking...",
+    "unstakingFromFarm": "Unstaking from Farm...",
+    "withdraw": "Withdraw",
+    "withdrawing": "Withdrawing...",
+    "withdrawingFromJar": "Withdrawing from Jar..."
   },
   "meta": {
     "description": "Pickle Finance helps users to maximize their DeFi yields by auto-compounding their rewards, saving them time and gas.",

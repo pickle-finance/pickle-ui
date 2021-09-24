@@ -4,42 +4,10 @@ import { formatEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { Connection } from "../../containers/Connection";
 import { UseDillOutput } from "../../containers/Dill";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import { formatPercent } from "../../util/number";
 import PickleIcon from "../../components/PickleIcon";
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const formatNumber = (num: number, precision?: number) =>
   num &&
@@ -55,6 +23,7 @@ export const Claim: FC<{
   const { blockNum, address, signer } = Connection.useContainer();
   const { feeDistributor } = Contracts.useContainer();
   const [claimable, setClaimable] = useState<number | null>(null);
+  const { setButtonStatus } = useButtonStatus();
 
   const [claimButton, setClaimButton] = useState<ButtonStatus>({
     disabled: claimable ? false : true,

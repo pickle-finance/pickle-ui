@@ -23,6 +23,7 @@ import {
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { Jars } from "../../containers/Jars";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface Weights {
   [key: string]: number;
@@ -35,36 +36,6 @@ const Label = styled.div`
 interface DataProps {
   isZero?: boolean;
 }
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
 
 const Data = styled.div<DataProps>`
   overflow: hidden;
@@ -102,6 +73,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
+  const { setButtonStatus } = useButtonStatus();
 
   const [currWeights, setCurrWeights] = useState(
     gauges.map((x) => x.allocPoint),

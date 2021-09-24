@@ -32,6 +32,8 @@ export const addresses = {
   mim: "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
   tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
+  mpickle: "0x2b88ad57897a8b496595925f43048301c37615da",
+  mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"
 };
 
 interface Token {
@@ -113,6 +115,16 @@ const tru: Token = {
   priceId: "tru",
   decimals: 8,
 };
+const mpickle: Token = {
+  address: addresses.mpickle,
+  priceId: "pickle",
+  decimals: 18,
+};
+const mdai: Token = {
+  address: addresses.mdai,
+  priceId: "dai",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -144,6 +156,7 @@ export const PAIR_INFO: PairMap = {
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": { a: mweth, b: dino },
   "0xfCEAAf9792139BF714a694f868A215493461446D": { a: tru, b: weth },
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
+  "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
 };
 
 function useSushiPairs() {

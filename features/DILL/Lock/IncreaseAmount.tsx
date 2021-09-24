@@ -6,16 +6,9 @@ import { useBalances } from "../../Balances/useBalances";
 import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
 
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { UseDillOutput } from "../../../containers/Dill";
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const formatPickles = (num: number) =>
   num.toLocaleString(undefined, {
@@ -23,42 +16,12 @@ const formatPickles = (num: number) =>
     maximumFractionDigits: 3,
   });
 
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 export const IncreaseAmount: FC<{
   dillStats: UseDillOutput;
 }> = () => {
   const { pickleBalance, pickleBN } = useBalances();
   const [lockAmount, setlockAmount] = useState("");
+  const { setButtonStatus } = useButtonStatus();
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();

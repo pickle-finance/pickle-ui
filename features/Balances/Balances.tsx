@@ -5,9 +5,7 @@ import { useTranslation } from "next-i18next";
 
 import { useBalances } from "./useBalances";
 import { Prices } from "../../containers/Prices";
-import { UniV2Pairs } from "../../containers/UniV2Pairs";
 import { Connection } from "../../containers/Connection";
-import { Jars } from "../../containers/Jars";
 import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
@@ -81,18 +79,23 @@ export const Balances: FC = () => {
       ).then((x) => x.json());
       setMarketCap(res["pickle-finance"].usd_market_cap);
       if (picklePerBlock)
-        setTooltipText(`${picklePerBlock} PICKLEs are printed every block.`);
+        setTooltipText(
+          t("balances.picklePerBlock", { amount: picklePerBlock }),
+        );
       if (picklePerSecond)
-        setTooltipText(`${picklePerSecond} PICKLEs are printed every second.`);
+        setTooltipText(
+          t("balances.picklePerSecond", { amount: picklePerSecond }),
+        );
     };
     updateInfo();
   }, [blockNum]);
+
   return (
     <>
       <Container gap={2}>
         <Grid xs={24} sm={24} md={12}>
           <Card>
-            <h2>Your Balance</h2>
+            <h2>{t("balances.yourBalance")}</h2>
             <DataPoint>
               <span>
                 {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
@@ -108,7 +111,7 @@ export const Balances: FC = () => {
               )}
             </DataPoint>
             <Card.Footer>
-              Pending:&nbsp;
+              {t("balances.pending")}:&nbsp;
               <span>
                 {pendingPickles !== null ? formatPickles(pendingPickles) : "--"}
                 <PickleIcon size={14} margin="0 0 0 0.5rem" />
@@ -127,7 +130,7 @@ export const Balances: FC = () => {
         </Grid>
         <Grid xs={24} sm={12} md={12}>
           <Card>
-            <h2>Market Cap</h2>
+            <h2>{t("balances.marketCap")}</h2>
             <DataPoint>
               <span>
                 {prices?.pickle && totalSupply && marketCap
@@ -142,7 +145,7 @@ export const Balances: FC = () => {
                   style={{ cursor: `help` }}
                   text={tooltipText}
                 >
-                  Total Supply:{" "}
+                  {t("balances.totalSupply")}:{" "}
                   {totalSupply
                     ? formatPickles(marketCap / prices?.pickle)
                     : "--"}
@@ -150,7 +153,7 @@ export const Balances: FC = () => {
                 </Tooltip>
               ) : (
                 <span>
-                  Total Supply: --
+                  {t("balances.totalSupply")}: --
                   <PickleIcon size={14} margin="0 0 0 0.5rem" />
                 </span>
               )}
@@ -159,7 +162,7 @@ export const Balances: FC = () => {
         </Grid>
         <Grid xs={24} sm={12} md={12}>
           <Card>
-            <h2>Total Value Locked</h2>
+            <h2>{t("balances.totalValueLocked")}</h2>
             <DataPoint>
               <span>
                 {protocolInfo ? formatDollars(protocolInfo.totalValue) : "--"}
@@ -168,7 +171,7 @@ export const Balances: FC = () => {
             <Card.Footer>
               <Tooltip
                 placement="bottom"
-                text="Total ETH/PICKLE pool value on Uniswap."
+                text={t("balances.poolSizeTooltip")}
                 style={{ cursor: `help` }}
               >
                 {t("balances.poolSize")}:{" "}

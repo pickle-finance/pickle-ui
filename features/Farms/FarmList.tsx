@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
 
 import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
-import { getFarmData } from "util/api";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -19,13 +19,12 @@ export const FarmList: FC = () => {
   const [showInactive, setShowInactive] = useState<boolean>(
     chainName === NETWORK_NAMES.POLY ? false : true,
   );
+  const { t } = useTranslation("common");
 
-  if (!signer) {
-    return <h2>Please connect wallet to continue</h2>;
-  }
+  if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
   if (!farmData && chainName !== NETWORK_NAMES.POLY) {
-    return <h2>Loading...</h2>;
+    return <h2>{t("connection.loading")}</h2>;
   }
 
   const activeFarms = farmData.filter((x) => x.apy !== 0);
@@ -50,10 +49,9 @@ export const FarmList: FC = () => {
       <Grid.Container gap={1}>
         <Grid md={12}>
           <p>
-            Farms allow you to earn PICKLEs by staking tokens.
+            {t("farms.about")}
             <br />
-            Hover over the displayed APY to see where the returns are coming
-            from.
+            {t("farms.apy")}
           </p>
         </Grid>
         <Grid md={12} style={{ textAlign: "right" }}>
@@ -62,7 +60,7 @@ export const FarmList: FC = () => {
             size="medium"
             onChange={(e) => setShowInactive(e.target.checked)}
           >
-            Show Inactive Farms
+            {t("farms.showInactive")}
           </Checkbox>
         </Grid>
       </Grid.Container>
@@ -78,7 +76,7 @@ export const FarmList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {showInactive && <h2>Inactive</h2>}
+        {showInactive && <h2>{t("farms.inactive")}</h2>}
         {showInactive &&
           inactiveFarms.map((farmData) => (
             <Grid xs={24} key={farmData.poolIndex}>

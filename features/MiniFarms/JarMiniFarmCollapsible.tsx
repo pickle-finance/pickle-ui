@@ -4,14 +4,12 @@ import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
+import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
@@ -19,8 +17,8 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
-import { Balances } from "../../containers/Balances";
 import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
   isZero?: boolean;
@@ -48,19 +46,10 @@ const Data = styled.div<DataProps>`
 const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
 
 const JarName = styled(Grid)({
   display: "flex",
 });
-
-const formatAPY = (apy: number) => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
-  return apy.toFixed(2) + "%";
-};
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -105,37 +94,9 @@ export const FARM_LP_TO_ICON: {
   "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
   ),
-};
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
+  "0x1D35e4348826857eaFb22739d4e494C0337cb427": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{
@@ -195,14 +156,16 @@ export const JarMiniFarmCollapsible: FC<{
   const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
+  const { t } = useTranslation("common");
+  const { setButtonStatus } = useButtonStatus();
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Deposit",
+    text: t("farms.deposit"),
   });
   const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Withdraw",
+    text: t("farms.withdraw"),
   });
 
   const {
@@ -212,7 +175,6 @@ export const JarMiniFarmCollapsible: FC<{
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
-  const { getBalance } = Balances.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
 
@@ -232,15 +194,15 @@ export const JarMiniFarmCollapsible: FC<{
 
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: `Stake Unstaked ${depositedStr} Tokens in Farm`,
+    text: t("farms.stakeUnstaked", { amount: depositedStr }),
   });
   const [unstakeButton, setUnstakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Unstake",
+    text: t("farms.unstake"),
   });
   const [harvestButton, setHarvestButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Harvest",
+    text: t("farms.harvest"),
   });
 
   const [depositStakeButton, setDepositStakeButton] = useState<string | null>(
@@ -274,7 +236,7 @@ export const JarMiniFarmCollapsible: FC<{
         if (!res) throw "Deposit Failed";
         const Token = jar?.attach(farmDepositToken.address).connect(signer);
         if (!approved) {
-          setDepositStakeButton("Approving...");
+          setDepositStakeButton(t("farms.approving"));
           const tx = await Token.approve(
             minichef.address,
             ethers.constants.MaxUint256,
@@ -282,7 +244,7 @@ export const JarMiniFarmCollapsible: FC<{
           await tx.wait();
         }
         const realRatio = await Token.getRatio();
-        setDepositStakeButton("Staking...");
+        setDepositStakeButton(t("farms.staking"));
         const newBalance = getStakeableBalance(realRatio);
         const farmTx = await minichef.deposit(poolIndex, newBalance, address);
         await farmTx.wait();
@@ -309,14 +271,14 @@ export const JarMiniFarmCollapsible: FC<{
     if (stakedNum && minichef && address) {
       try {
         setIsExitBatch(true);
-        setExitButton("Unstaking from Farm...");
+        setExitButton(t("farms.unstakingFromFarm"));
         const exitTx = await minichef.withdrawAndHarvest(
           poolIndex,
           staked,
           address,
         );
         await exitTx.wait();
-        setExitButton("Withdrawing from Jar...");
+        setExitButton(t("farms.withdrawingFromJar"));
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
         await withdrawTx.wait();
         await sleep(10000);
@@ -342,8 +304,18 @@ export const JarMiniFarmCollapsible: FC<{
         jarContract.address,
       );
 
-      setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
-      setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
+      setButtonStatus(
+        dStatus,
+        t("farms.depositing"),
+        t("farms.deposit"),
+        setDepositButton,
+      );
+      setButtonStatus(
+        wStatus,
+        t("farms.withdrawing"),
+        t("farms.withdraw"),
+        setWithdrawButton,
+      );
     }
     if (minichef && !isExitBatch) {
       const stakeStatus = getTransferStatus(
@@ -359,20 +331,20 @@ export const JarMiniFarmCollapsible: FC<{
 
       setButtonStatus(
         stakeStatus,
-        "Staking...",
-        `Stake Unstaked ${depositedStr} Tokens in Farm`,
+        t("farms.staking"),
+        t("farms.stakeUnstaked", { amount: depositedStr }),
         setStakeButton,
       );
       setButtonStatus(
         unstakeStatus,
-        "Unstaking...",
-        "Unstake",
+        t("farms.unstaking"),
+        t("farms.unstake"),
         setUnstakeButton,
       );
       setButtonStatus(
         harvestStatus,
-        "Harvesting...",
-        "Harvest",
+        t("farms.harvesting"),
+        t("farms.harvest"),
         setHarvestButton,
       );
     }
@@ -431,27 +403,27 @@ export const JarMiniFarmCollapsible: FC<{
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={3} lg={3} style={{ textAlign: "center" }}>
             <Data isZero={balanceNum === 0}>{balanceStr}</Data>
             <br />
-            <Label>Wallet Balance</Label>
+            <Label>{t("balances.walletBalance")}</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={4} lg={4} style={{ textAlign: "center" }}>
             <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <br />
               {harvestableMaticStr} <MiniIcon source={"/matic.png"} />
             </Data>
-            <Label>Earned</Label>
+            <Label>{t("balances.earned")}</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={3} lg={3} style={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
               <br />
-              <Label>Deposit Value</Label>
+              <Label>{t("balances.depositValue")}</Label>
             </>
           </Grid>
-          <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
             <Data>
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {totalAPY.toFixed(2) + "%" || "--"}
@@ -462,14 +434,14 @@ export const JarMiniFarmCollapsible: FC<{
                 style={{ marginLeft: 5 }}
               />
               <div>
-                <span>APY</span>
+                <span>{t("balances.apy")}</span>
               </div>
             </Data>
           </Grid>
-          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={4} lg={4} style={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
             <br />
-            <Label>TVL</Label>
+            <Label>{t("balances.tvl")}</Label>
           </Grid>
         </Grid.Container>
       }
@@ -482,7 +454,7 @@ export const JarMiniFarmCollapsible: FC<{
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              Balance: {balStr} {depositTokenName}
+              {t("balances.balance")}: {balStr} {depositTokenName}
             </div>
             <Link
               color
@@ -492,7 +464,7 @@ export const JarMiniFarmCollapsible: FC<{
                 setDepositAmount(formatEther(balance));
               }}
             >
-              Max
+              {t("balances.max")}
             </Link>
           </div>
           <Input
@@ -524,14 +496,9 @@ export const JarMiniFarmCollapsible: FC<{
                 {depositButton.text}
               </Button>
               {isMaiJar ? (
-                <StyledNotice>
-                  A 0.5% fee is charged by Mai Finance upon depositing
-                </StyledNotice>
+                <StyledNotice>{t("farms.mai.description")}</StyledNotice>
               ) : isQiMaiJar ? (
-                <StyledNotice>
-                  Rewards have ended. Consider depositing in the new QI/MATIC
-                  Jar
-                </StyledNotice>
+                <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
               ) : null}
             </Grid>
             <Grid xs={24} md={12}>
@@ -546,7 +513,7 @@ export const JarMiniFarmCollapsible: FC<{
               >
                 {isEntryBatch
                   ? depositStakeButton || depositButton.text
-                  : "Deposit and Stake"}
+                  : t("farms.depositAndStake")}
               </Button>
             </Grid>
           </Grid.Container>
@@ -555,7 +522,7 @@ export const JarMiniFarmCollapsible: FC<{
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                Balance: {depositedStr} (
+                {t("balances.balance")}: {depositedStr} (
                 <Tooltip
                   text={`${
                     deposited && ratio
@@ -575,7 +542,7 @@ export const JarMiniFarmCollapsible: FC<{
                   setWithdrawAmount(formatEther(deposited));
                 }}
               >
-                Max
+                {t("balances.max")}
               </Link>
             </div>
             <Input
@@ -652,7 +619,7 @@ export const JarMiniFarmCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  Staked: {stakedStr} {farmDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName}
                 </div>
                 <Link
                   color
@@ -662,7 +629,7 @@ export const JarMiniFarmCollapsible: FC<{
                     setUnstakeAmount(formatEther(staked));
                   }}
                 >
-                  Max
+                  {t("balances.max")}
                 </Link>
               </div>
               <Input
@@ -737,7 +704,7 @@ export const JarMiniFarmCollapsible: FC<{
                 onClick={exit}
                 style={{ width: "100%" }}
               >
-                {exitButton || "Harvest and Exit"}
+                {exitButton || t("farms.harvestAndExit")}
               </Button>
             </Grid>
           </>
