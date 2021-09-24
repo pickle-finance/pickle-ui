@@ -95,6 +95,6 @@ export const usePBAMM = () => {
     userValue,
     lqtyApr,
     userPendingLqty,
-    tvl
+    tvl,
   };
 };

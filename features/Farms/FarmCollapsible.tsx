@@ -136,6 +136,9 @@ export const FARM_LP_TO_ICON = {
   "0x1d92e1702D7054f74eAC3a9569AeB87FC93e101D": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
   ),
+  "0x0989a227E7c50311f7De61e5e61F7c28Df8936f0": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/rally.jpeg"} />
+  ),
 };
 
 export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({

@@ -18,7 +18,7 @@ function useJars() {
   const { jarsWithAPY: jarsWithAPYPoly } = useJarsWithAPYPoly(
     chainName,
     rawJars,
-    );
+  );
   const { jarsWithTVL } = useJarWithTVL(jarsWithAPYEth || jarsWithAPYPoly);
   if (jarsWithTVL)
     console.log(

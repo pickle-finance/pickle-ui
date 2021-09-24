@@ -40,6 +40,7 @@ import { Contract } from "@ethersproject/contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 import RewarderABI from "../ABIs/rewarder.json";
+import { RallyRewardPools } from "containers/Contracts/RallyRewardPools";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
@@ -79,6 +80,10 @@ const abracadabraIds: PoolId = {
   "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": 0,
   "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": 1,
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": 2,
+};
+
+const rallyIds: PoolId = {
+  "0x27fD0857F0EF224097001E87e61026E39e1B04d1": 0,
 };
 
 export interface JarApy {
@@ -123,7 +128,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     masterchefV2,
     yearnRegistry,
     cvxBooster,
-    feichef
+    feichef,
+    rallyRewardPools,
   } = Contracts.useContainer();
   const { getUniPairDayAPY, uniPairDayData } = useUniPairDayData();
 
@@ -318,6 +324,55 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateRallyApy = async (lpTokenAddress: string) => {
+    if (
+      rallyRewardPools &&
+      prices?.rly &&
+      getUniPairData &&
+      multicallProvider
+    ) {
+      const poolId = rallyIds[lpTokenAddress];
+
+      const multicallRallyRewardPools = new MulticallContract(
+        rallyRewardPools.address,
+        rallyRewardPools.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        rlyPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallRallyRewardPools.rallyPerBlock(),
+        multicallRallyRewardPools.totalAllocPoint(),
+        multicallRallyRewardPools.poolInfo(poolId),
+        lpToken.balanceOf(multicallRallyRewardPools.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rlyPerBlock =
+        (parseFloat(formatEther(rlyPerBlockBN)) * poolInfo.allocPoint) /
+        totalAllocPointBN.toNumber();
+      const { pricePerToken } = await getUniPairData(lpTokenAddress);
+
+      const rlyRewardsPerYear =
+        rlyPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
+      const valueRewardedPerYear = prices.rly * rlyRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const rlyAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [
+        { rally: getCompoundingAPY(rlyAPY * 0.8), apr: rlyAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateSaddleD4APY = async () => {
     const swapFlashLoanAddress = "0xC69DDcd4DFeF25D8a793241834d4cc4b3668EAD6";
     if (communalFarm && multicallProvider && prices) {
@@ -371,12 +426,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateFeiAPY = async (lpTokenAddress: string) => {
-    if (
-      feichef &&
-      prices?.tribe &&
-      getUniPairData &&
-      multicallProvider
-    ) {
+    if (feichef && prices?.tribe && getUniPairData && multicallProvider) {
       const multicallFeichef = new MulticallContract(
         feichef.address,
         feichef.interface.fragments,
@@ -384,12 +434,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
-
       const [
         tribePerBlockBN,
         totalAllocPointBN,
         poolInfo,
-        totalSupplyBN
+        totalSupplyBN,
       ] = await multicallProvider.all([
         multicallFeichef.tribePerBlock(),
         multicallFeichef.totalAllocPoint(),
@@ -406,7 +455,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const { pricePerToken } = await getUniPairData(lpTokenAddress);
 
-      const tribeRewardsPerYear = tribeRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
+      const tribeRewardsPerYear =
+        tribeRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -608,11 +658,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           "X-Requested-With": "XMLHttpRequest",
         }),
       },
-    ).then((x) => x.json())
-    .catch(()=>{ return undefined});
+    )
+      .then((x) => x.json())
+      .catch(() => {
+        return undefined;
+      });
     const fetchResult = await fetchPromise;
-    if( !fetchResult )
-      return [];
+    if (!fetchResult) return [];
     const curveAPY = fetchResult?.apys;
     const cvxPool = convexPools[lpTokenAddress];
     if (
@@ -800,6 +852,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         foxEthApy,
         lqtyEthLusdApy,
         lqtyApy,
+        rlyEthApy,
         saddled4Apy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
@@ -812,6 +865,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateFoxAPY(FOX_ETH_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
         calculateLqtyStakingAPY(),
+        calculateRallyApy(JAR_DEPOSIT_TOKENS.Ethereum.UNIV2_RLY_ETH),
         calculateSaddleD4APY(),
       ]);
 
@@ -1067,6 +1121,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY) {
           APYs = [...lqtyApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_RLY_ETH) {
+          APYs = [
+            ...rlyEthApy,
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_RLY_ETH,
+            ),
+          ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_TRU_ETH) {
