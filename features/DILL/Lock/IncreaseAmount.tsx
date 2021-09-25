@@ -1,6 +1,7 @@
 import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer } from "@geist-ui/react";
 import { parseEther, formatEther } from "ethers/lib/utils";
+import { useTranslation } from "next-i18next";
 
 import { useBalances } from "../../Balances/useBalances";
 import { Contracts } from "../../../containers/Contracts";
@@ -21,6 +22,7 @@ export const IncreaseAmount: FC<{
 }> = () => {
   const { pickleBalance, pickleBN } = useBalances();
   const [lockAmount, setlockAmount] = useState("");
+  const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
   const { blockNum, address, signer } = Connection.useContainer();
@@ -33,7 +35,7 @@ export const IncreaseAmount: FC<{
 
   const [increaseButton, setIncreaseButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Increase Lock Amount",
+    text: t("dill.increaseLockAmount"),
   });
 
   const { dill } = Contracts.useContainer();
@@ -44,8 +46,8 @@ export const IncreaseAmount: FC<{
 
       setButtonStatus(
         increaseStatus,
-        "Locking...",
-        "Increase Lock Amount",
+        t("dill.locking"),
+        t("dill.increaseLockAmount"),
         setIncreaseButton,
       );
     }
@@ -57,7 +59,7 @@ export const IncreaseAmount: FC<{
       <Grid xs={24} md={24}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
-            Balance:{" "}
+            {t("balances.balance")}:{" "}
             {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
           </div>
           <Link
@@ -70,7 +72,7 @@ export const IncreaseAmount: FC<{
               }
             }}
           >
-            Max
+            {t("balances.max")}
           </Link>
         </div>
         <Spacer y={0.5} />
