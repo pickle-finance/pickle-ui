@@ -1,5 +1,7 @@
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
 
@@ -17,11 +19,12 @@ export const Withdraw: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
+  const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
   const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Withdraw",
+    text: t("farms.withdraw"),
   });
 
   const { dill } = Contracts.useContainer();
@@ -32,8 +35,8 @@ export const Withdraw: FC<{
 
       setButtonStatus(
         withdrawStatus,
-        "Withdrawing...",
-        "Withdraw",
+        t("farms.withdrawing"),
+        t("farms.withdraw"),
         setWithdrawButton,
       );
     }
