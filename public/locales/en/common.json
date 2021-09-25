@@ -43,6 +43,11 @@
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"
   },
+  "dill": {
+    "connectionPrompt": "Please switch to Ethereum network to use DILL features.",
+    "dill": "DILL",
+    "description": "Stake your PICKLEs to receive a portion of the profits from PickleJars."
+  },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
     "apy": "Hover over the displayed APY to see where the returns are coming from.",

@@ -1,25 +1,26 @@
 import { FC } from "react";
 import { Page } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { Footer } from "../features/Footer/Footer";
 import { DillFeature } from "../features/DILL/DILL";
 import { Connection } from "../containers/Connection";
+import { NETWORK_NAMES } from "containers/config";
 
 const Dill: FC = () => {
   const { chainName } = Connection.useContainer();
+  const { t } = useTranslation("common");
 
   return (
     <>
       <Page>
         <Page.Content>
           <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-            DILL
+            {t("dill.dill")}
           </h1>
-          <p>
-            Stake your PICKLEs to receive a portion of the profits from
-            PickleJars.
-          </p>
-          {chainName === "Polygon" ? (
-            "Please switch to Ethereum network to use DILL features."
+          <p>{t("dill.description")}</p>
+          {chainName !== NETWORK_NAMES.ETH ? (
+            t("dill.connectionPrompt")
           ) : (
             <DillFeature />
           )}
