@@ -46,7 +46,9 @@
   "dill": {
     "connectionPrompt": "Please switch to Ethereum network to use DILL features.",
     "dill": "DILL",
-    "description": "Stake your PICKLEs to receive a portion of the profits from PickleJars."
+    "description": "Stake your PICKLEs to receive a portion of the profits from PickleJars.",
+    "pickleBalance": "PICKLE Balance",
+    "totalLocked": "Total Locked"
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
