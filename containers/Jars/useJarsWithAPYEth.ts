@@ -17,6 +17,7 @@ import {
   COMMUNAL_FARM,
   FOX_ETH_STAKING_REWARDS,
 } from "../Contracts";
+import { ExtraRewards__factory } from "../../containers/Contracts/factories/ExtraRewards__factory";
 import { Jar } from "./useFetchJars";
 import SwapFlashLoanABI from "../ABIs/swapflashloan.json";
 import CrvRewardsABI from "../ABIs/crv-rewards.json";
@@ -40,7 +41,6 @@ import { Contract } from "@ethersproject/contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 import RewarderABI from "../ABIs/rewarder.json";
-import { RallyRewardPools } from "containers/Contracts/RallyRewardPools";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
@@ -53,7 +53,7 @@ interface PoolInfo {
   [key: string]: {
     poolId: number;
     tokenName: string;
-    rewardName: string;
+    rewardName: any;
     tokenPrice: number;
     rewardPrice: number;
   };
@@ -676,9 +676,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     ) {
       const lpApy = parseFloat(curveAPY[cvxPool.tokenName]?.baseApy);
       const crvApy = parseFloat(curveAPY[cvxPool.tokenName]?.crvApy);
-      const rewardApy = parseFloat(
-        curveAPY[cvxPool.tokenName]?.additionalRewards?.[0].apy,
-      );
 
       const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId);
 
@@ -687,9 +684,14 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         CrvRewardsABI,
       );
 
-      const [depositLocked, duration] = await multicallProvider.all([
+      const [
+        depositLocked,
+        duration,
+        extraAddress,
+      ] = await multicallProvider.all([
         crvRewardsMC.totalSupply(),
         crvRewardsMC.duration(),
+        crvRewardsMC.extraRewards(0),
       ]);
 
       // Work backwards from reported CRV APR
@@ -705,13 +707,26 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const cvxApy = cvxValuePerYear / poolValue;
 
+      const extraRewards = ExtraRewards__factory.connect(
+        extraAddress,
+        provider,
+      );
+
+      const rewardAmount = +formatEther(await extraRewards.currentRewards());
+
+      const rewardValue =
+        (rewardAmount * cvxPool.rewardPrice * ONE_YEAR_SECONDS) /
+        duration.toNumber();
+
+      const rewardApr = rewardValue / poolValue;
+
       return [
         { lp: lpApy },
         { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
         { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
         {
-          [cvxPool.rewardName]: getCompoundingAPY((rewardApy * 0.8) / 100),
-          apr: rewardApy * 0.8,
+          [cvxPool.rewardName]: getCompoundingAPY((rewardApr * 0.8)),
+          apr: rewardApr * 0.8 * 100,
         },
       ];
     }
