@@ -1,12 +1,11 @@
 import { formatEther, parseEther } from "ethers/lib/utils";
-import { ethers } from "ethers";
-import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select, Input } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { Connection } from "../../containers/Connection";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Dill, UseDillOutput } from "../../containers/Dill";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
@@ -16,30 +15,31 @@ export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { gaugeData } = UserGauges.useContainer();
-  const { address, signer, chainName } = Connection.useContainer();
+  const { chainName } = Connection.useContainer();
   const [balance, setBalance] = useState("0");
   const [totalBalance, setTotalBalance] = useState("0");
   const [userChanged, setUserChanged] = useState(false);
   const [dillBalance, setDillBalance] = useState("0");
   const [boostFactor, setBoostFactor] = useState<number>(1);
-  const [dillRequired, setDillRequired] = useState();
+  const [dillRequired, setDillRequired] = useState<number>();
   const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>();
+  const { t } = useTranslation("common");
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
   const dillRatio = dillSupplyNum ? +dillBalance / (dillSupplyNum || 1) : 0;
 
-  const gauges: UserGaugeData = gaugeData?.filter((x) => true);
+  const gauges = gaugeData?.filter((x) => true);
 
   const handleSelect = async (depositToken: string) => {
-    const selectedGauge: UserGaugeData = gauges.find(
+    const selectedGauge = gauges?.find(
       (x) => x.depositTokenName === depositToken,
     );
 
-    const isUsdc =
-      selectedGauge.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pyUSDC.toLowerCase();
-
     if (selectedGauge) {
+      const isUsdc =
+        selectedGauge.depositToken.address.toLowerCase() ===
+        PICKLE_JARS.pyUSDC.toLowerCase();
+
       const balance = +formatEther(
         selectedGauge.balance.add(selectedGauge.staked),
       );
@@ -92,27 +92,27 @@ export const CalcCollapsible: FC<{
       setDillBalance(formatEther(dillStats.balance.toString() || 0));
   }, [dillStats]);
 
-  if (!gaugeData && chainName !== NETWORK_NAMES.POLY) {
-    return <h2>Loading...</h2>;
+  if (!gaugeData && chainName === NETWORK_NAMES.ETH) {
+    return <h2>{t("connection.loading")}</h2>;
   }
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none", flex: 1 }}
       shadow
-      preview={<h2>PICKLE Boost Calculator</h2>}
+      preview={<h2>{t("dill.boostCalculator")}</h2>}
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
         <Grid xs={24} md={12}>
           <Select
-            placeholder="Select Farm"
+            placeholder={t("dill.selectFarm")}
             width="100%"
             onChange={(value) => handleSelect(value as string)}
           >
-            {gauges.map(renderSelectOptions)}
+            {gauges?.map(renderSelectOptions)}
           </Select>
           <Spacer y={0.5} />
-          <div>Your balance ($): </div>
+          <div>{t("balances.yourBalance")} ($): </div>
           <Spacer y={0.5} />
           <Input
             onChange={(e) => setBalance(e.target.value)}
@@ -122,7 +122,7 @@ export const CalcCollapsible: FC<{
             size="large"
           />
           <Spacer y={0.5} />
-          <div>Pool balance ($): </div>
+          <div>{t("balances.poolBalance")} ($): </div>
           <Spacer y={0.5} />
           <Input
             onChange={(e) => setTotalBalance(e.target.value)}
@@ -132,7 +132,7 @@ export const CalcCollapsible: FC<{
             size="large"
           />
           <Spacer y={0.5} />
-          <div>Your DILL: </div>
+          <div>{t("dill.yourDill")}:</div>
           <Spacer y={0.5} />
           <Input
             onChange={(e) => {
@@ -150,21 +150,21 @@ export const CalcCollapsible: FC<{
             onClick={calculateBoost}
             style={{ width: "100%" }}
           >
-            Calculate
+            {t("dill.calculate")}
           </Button>
         </Grid>
         <Grid xs={24} md={12}>
           <div>
-            PICKLE boost factor: <strong>{boostFactor.toFixed(3)}x</strong>
+            {t("dill.boostFactor")}: <strong>{boostFactor.toFixed(3)}x</strong>
           </div>
           <Spacer y={0.5} />
           <div>
-            DILL required for max boost:{" "}
+            {t("dill.dillRequired")}:{" "}
             <strong>{dillRequired?.toFixed(3) || null}</strong>
           </div>
           <Spacer y={0.5} />
           <div>
-            PICKLE APY:{" "}
+            {t("dill.pickleApy")}:{" "}
             <strong>
               {selectedGauge
                 ? formatAPY((selectedGauge.fullApy / 2.5) * boostFactor * 100)
