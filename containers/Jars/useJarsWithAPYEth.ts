@@ -41,8 +41,6 @@ import { Contract } from "@ethersproject/contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 import RewarderABI from "../ABIs/rewarder.json";
-import { RallyRewardPools } from "containers/Contracts/RallyRewardPools";
-import { PriceObject } from "../Prices";
 
 const AVERAGE_BLOCK_TIME = 13.22;
 const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
