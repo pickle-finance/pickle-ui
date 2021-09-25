@@ -1,6 +1,8 @@
 import { useState, FC, useEffect } from "react";
 import { Spacer, Grid, Card, Button } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
+import { useTranslation } from "next-i18next";
+
 import { Contracts } from "../../containers/Contracts";
 import { Connection } from "../../containers/Connection";
 import { UseDillOutput } from "../../containers/Dill";
@@ -24,10 +26,13 @@ export const Claim: FC<{
   const { feeDistributor } = Contracts.useContainer();
   const [claimable, setClaimable] = useState<number | null>(null);
   const { setButtonStatus } = useButtonStatus();
+  const { t } = useTranslation("common");
 
   const [claimButton, setClaimButton] = useState<ButtonStatus>({
     disabled: claimable ? false : true,
-    text: `Claim ${claimable ? formatNumber(claimable, 3) : "0"} PICKLEs`,
+    text: t("dill.claimPickles", {
+      amount: claimable ? formatNumber(claimable, 3) : 0,
+    }),
   });
   const {
     status: transferStatus,
@@ -50,18 +55,24 @@ export const Claim: FC<{
       if (claimable) {
         setClaimButton({
           disabled: false,
-          text: `Claim ${formatNumber(claimable, 3)} PICKLEs`,
+          text: t("dill.claimPickles", {
+            amount: claimable ? formatNumber(claimable, 3) : 0,
+          }),
         });
         setButtonStatus(
           claimStatus,
-          "Claiming...",
-          `Claim ${formatNumber(claimable, 3)} PICKLEs`,
+          t("dill.claiming"),
+          t("dill.claimPickles", {
+            amount: claimable ? formatNumber(claimable, 3) : 0,
+          }),
           setClaimButton,
         );
       } else {
         setClaimButton({
           disabled: true,
-          text: "Claim 0 PICKLEs",
+          text: t("dill.claimPickles", {
+            amount: 0,
+          }),
         });
       }
       setClaimable(claimable);
@@ -72,26 +83,30 @@ export const Claim: FC<{
       <Grid.Container gap={2}>
         <Grid xs={24} sm={24} md={24}>
           <Card>
-            <h2>Claim</h2>
+            <h2>{t("dill.claim")}</h2>
             <div>
-              Weekly protocol revenue: ${formatNumber(dillStats?.weeklyProfit)}
+              {t("dill.weeklyRevenue")}: $
+              {formatNumber(dillStats?.weeklyProfit || 0)}
             </div>
             &nbsp;
             <div>
-              Projected weekly distribution (45% of revenue): $
-              {formatNumber(dillStats?.weeklyDistribution)}
-            </div>
-            &nbsp;
-            <div>DILL holder APY: {formatPercent(dillAPY)}</div>
-            &nbsp;
-            <div>
-              Next distribution: {dillStats.nextDistribution?.toDateString()}
+              {t("dill.projected")}: $
+              {formatNumber(dillStats?.weeklyDistribution || 0)}
             </div>
             &nbsp;
             <div>
-              Last week's distribution: $
-              {formatNumber(dillStats?.lastDistributionValue)} (
-              {formatNumber(dillStats?.lastDistribution)}{" "}
+              {t("dill.apy")}: {formatPercent(dillAPY)}
+            </div>
+            &nbsp;
+            <div>
+              {t("dill.nextDistribution")}:{" "}
+              {dillStats.nextDistribution?.toDateString()}
+            </div>
+            &nbsp;
+            <div>
+              {t("dill.lastDistribution")}: $
+              {formatNumber(dillStats?.lastDistributionValue || 0)} (
+              {formatNumber(dillStats?.lastDistribution || 0)}{" "}
               <PickleIcon size={16} />)
             </div>
             &nbsp;
@@ -110,7 +125,9 @@ export const Claim: FC<{
                       tx.wait(0).then(() =>
                         setClaimButton({
                           disabled: true,
-                          text: "Claim 0 PICKLEs",
+                          text: t("dill.claimPickles", {
+                            amount: 0,
+                          }),
                         }),
                       );
                       return tx;
