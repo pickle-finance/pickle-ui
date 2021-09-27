@@ -200,7 +200,8 @@ export const GaugeList: FC = () => {
         gauges={activeGauges.filter(
           (x) =>
             x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV &&
-            x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM,
+            x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM &&
+            x.depositToken.address != PICKLE_JARS.pMIMETH
         )}
       />
       <div

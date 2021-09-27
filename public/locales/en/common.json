@@ -69,6 +69,9 @@
       "description": "A 0.5% fee is charged by Mai Finance upon depositing",
       "rewardsEnded": "Rewards have ended. Consider depositing in the new QI/MATIC Jar"
     },
+    "abra": {
+      "rewardsEnded": "Note: SPELL rewards have ended for MIM/ETH"
+    },
     "mc2": "SushiSwap MasterChefv2",
     "mc2detail": "PICKLE and SUSHI automatically harvested on staking and unstaking.",
     "migrated": "Migrated! Staking in Farm...",
