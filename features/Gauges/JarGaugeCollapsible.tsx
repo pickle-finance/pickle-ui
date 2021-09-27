@@ -459,6 +459,10 @@ export const JarGaugeCollapsible: FC<{
     depositToken.address.toLowerCase() ===
     JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV.toLowerCase();
 
+  const isMimJar =
+    depositToken.address.toLowerCase() ===
+    JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH.toLowerCase();
+
   const depositGauge = async () => {
     if (!approved) {
       setDepositStakeButton(t("farms.approving"));
@@ -859,6 +863,9 @@ export const JarGaugeCollapsible: FC<{
                   : depositButton.text}
                 {isZap && ZapperIcon}
               </Button>
+              {isMimJar ? (
+                <StyledNotice>{t("farms.abra.rewardsEnded")}</StyledNotice>
+              ) : null}
             </Grid>
             <Grid xs={24} md={12}>
               <Button
@@ -1128,3 +1135,10 @@ export const JarGaugeCollapsible: FC<{
     </Collapse>
   );
 };
+
+const StyledNotice = styled.div`
+  width: "100%";
+  textalign: "center";
+  paddingtop: "6px";
+  fontfamily: "Source Sans Pro";
+`;
