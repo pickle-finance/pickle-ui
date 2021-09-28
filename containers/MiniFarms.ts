@@ -118,7 +118,6 @@ function useFarms() {
   const { rawFarms } = useFetchFarms();
   const { farmsWithReward } = useWithReward(rawFarms);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
-  // console.log(jarFarmWithApy)
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
 
   const jarFarms = jarFarmWithMaticApy
