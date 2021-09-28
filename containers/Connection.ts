@@ -22,25 +22,37 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
+  const switchChainParams : any[] = [];
+  switchChainParams[137] = {
+    chainId: "0x89",
+    chainName: "Polygon",
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
+      decimals: 18,
+    },
+    rpcUrls: ["https://polygon-rpc.com"],
+    blockExplorerUrls: ["https://polygonscan.com/"],
+  };
+  
   const switchChain = async (chainId: number) => {
-    if (chainId !== 137) return false;
+    let method: string;
+    let params: any[];
+    if( chainId === 1 ) {
+      method = "wallet_switchEthereumChain";
+      params = [{chainId: "0x1"}];
+    } else {
+      method = "wallet_addEthereumChain";
+      const param = switchChainParams[chainId];
+      if( param === undefined || param === null )
+        return false;
+      params = [param];
+    }
 
     try {
       await library.provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x89",
-            chainName: "Polygon",
-            nativeCurrency: {
-              name: "MATIC",
-              symbol: "MATIC",
-              decimals: 18,
-            },
-            rpcUrls: ["https://polygon-rpc.com"],
-            blockExplorerUrls: ["https://polygonscan.com/"],
-          },
-        ],
+        method: method,
+        params: params,
       });
       return true;
     } catch (e) {
