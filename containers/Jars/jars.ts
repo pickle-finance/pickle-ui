@@ -70,6 +70,7 @@ export const PICKLE_JARS = {
   pSUSHIMIMETH: "0x94feade0d3d832e4a05d459ebea9350c6cdd3bca",
   pSUSHISPELLETH: "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2",
   pMIM2CRV: "0x973b669ef8c1459f7cb685bf7d7bcd4150977504",
+  pCRVTRICRYPTO: "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C" 
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -139,6 +140,7 @@ export const JAR_DEPOSIT_TOKENS = {
     SUSHI_MIM_ETH: "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959",
     SUSHI_SPELL_ETH: "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8",
     MIM_2CRV: "0x30dF229cefa463e991e29D42DB0bae2e122B2AC7",
+    CRV_TRICRYPTO: "0x8e0B8c8BB9db49a46697F3a5Bb8A308e744821D2"
   },
 };
 
@@ -209,6 +211,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_MIM_ETH: "SLP MIM/ETH",
   SUSHI_SPELL_ETH: "SLP SPELL/ETH",
   MIM_2CRV: "Abracadabra MIM2CRV",
+  CRV_TRICRYPTO: "Curve Tricrypto",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -278,6 +281,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_MIM_ETH]: true,
   [DEPOSIT_TOKENS_NAME.SUSHI_SPELL_ETH]: true,
   [DEPOSIT_TOKENS_NAME.MIM_2CRV]: true,
+  [DEPOSIT_TOKENS_NAME.CRV_TRICRYPTO]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -403,6 +407,7 @@ export const DEPOSIT_TOKENS_LINK = {
   SUSHI_SPELL_ETH:
     "https://app.sushi.com/add/0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af/ETH",
   MIM_2CRV: "https://arbitrum.curve.fi/factory/0/deposit",
+  CRV_TRICRYPTO: "https://arbitrum.curve.fi/tricrypto/deposit",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -477,6 +482,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_MIM_ETH: "arbJar 1a",
   SUSHI_SPELL_ETH: "arbJar 1b",
   MIM_2CRV: "arbJar 1c",
+  CRV_TRICRYPTO: "arbJar 2a",
 };
 
 export const STRATEGY_NAMES = {
@@ -552,6 +558,8 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "eth",
   "0xd4d42f0b6def4ce0383636770ef773390d85c61a": "sushi",
   "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af": "spell",
+  "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9": "usdt",
+  "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f": "wbtc",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

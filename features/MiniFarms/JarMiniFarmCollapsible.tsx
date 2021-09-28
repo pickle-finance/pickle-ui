@@ -135,6 +135,9 @@ export const FARM_LP_TO_ICON: {
   "0x973B669eF8c1459f7cb685bf7D7bCD4150977504": (
     <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/curve.png"} />
   ),
+  "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C": (
+    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/tricrypto.png"} />
+  ),
 };
 
 const setButtonStatus = (

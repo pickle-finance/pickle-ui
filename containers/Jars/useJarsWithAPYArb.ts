@@ -13,13 +13,17 @@ import { NETWORK_NAMES, ChainName } from "containers/config";
 import { Connection } from "../Connection";
 import { SushiPairs } from "../SushiPairs";
 import { Contract as MulticallContract } from "ethers-multicall";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20, { wbtc } from "@studydefi/money-legos/erc20";
 import { Contract } from "@ethersproject/contracts";
 import RewarderABI from "../ABIs/rewarder.json";
+import PoolABI from "../ABIs/pool.json";
 import { CurvePairs } from "containers/CurvePairs";
+import { useCurveRawStats } from "./useCurveRawStats";
 
 const AVERAGE_BLOCK_TIME = 4;
 const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
+
+const swap_abi = ["function balances(uint256) view returns(uint256)"];
 
 export interface JarApy {
   [k: string]: number;
@@ -27,6 +31,21 @@ export interface JarApy {
 
 interface PoolId {
   [key: string]: number;
+}
+export const tricryptoInfo: {
+  swapAddress: string;
+  gauge: string;
+  tokenInfo: {
+    decimals: number[];
+    tokens: string[];
+  } 
+} = {
+  swapAddress: "0x960ea3e3C7FB317332d990873d354E18d7645590",
+  gauge: "0x97E2768e8E73511cA874545DC5Ff8067eB19B787",
+  tokenInfo: {
+    decimals: [1e6, 1e8, 1e18], // USDT, WBTC, WETH
+    tokens: ["usdt", "wbtc", "eth"],
+  }
 }
 
 const sushiPoolIds: PoolId = {
@@ -60,6 +79,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { prices } = Prices.useContainer();
   const { getCurveLpPriceData } = CurvePairs.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
+  const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.ARB);
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
@@ -200,6 +220,50 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateCurveApy = async (lpTokenAddress: string) => {
+    if (multicallProvider && erc20 && prices) {
+      let swapAddress;
+      let gauge;
+      let tokenInfo
+      if (lpTokenAddress === JAR_DEPOSIT_TOKENS.Arbitrum.CRV_TRICRYPTO) {
+        swapAddress = tricryptoInfo.swapAddress;
+        gauge = tricryptoInfo.gauge;
+        tokenInfo = tricryptoInfo.tokenInfo;
+      }
+      const swap = new MulticallContract(swapAddress, swap_abi);
+      const [
+        balance0,
+        balance1,
+        balance2,
+      ] = await multicallProvider.all([
+        swap.balances(0),
+        swap.balances(1),
+        swap.balances(2),
+      ]);
+
+      const scaledBalance0 =
+        (balance0 / tokenInfo.decimals[0]) * prices[tokenInfo.tokens[0]];
+      const scaledBalance1 =
+        (balance1 / tokenInfo.decimals[1]) * prices[tokenInfo.tokens[1]];
+      const scaledBalance2 =
+        (balance2 / tokenInfo.decimals[2]) * prices[tokenInfo.tokens[2]];
+
+      const totalStakedUsd = scaledBalance0 + scaledBalance1 + scaledBalance2;
+
+      const crvRewardsAmount = prices.crv * 3500761; // Approximation of CRV emissions
+
+      const crvAPY = crvRewardsAmount / totalStakedUsd;
+      return [
+        {
+          crv: getCompoundingAPY(crvAPY * 0.8 || 0),
+          apr: crvAPY * 100 * 0.8 || 0,
+        },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars) {
       const [
@@ -208,6 +272,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiSpellEthApy,
         spellEthApy,
         mim2crvApy,
+        tricryptoApy,
       ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH),
         calculateMCv2APY(
@@ -222,6 +287,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           "spell",
         ),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Arbitrum.MIM_2CRV),
+        calculateCurveApy(JAR_DEPOSIT_TOKENS.Arbitrum.CRV_TRICRYPTO),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -234,6 +300,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         }
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_2CRV) {
           APYs = [...mim2crvApy];
+        }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CRV_TRICRYPTO) {
+          APYs = [{lp: (curveRawStats?.tricrypto || 0)}, ...tricryptoApy ];
         }
 
         let apr = 0;

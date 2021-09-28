@@ -108,12 +108,17 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "Abracadabra MIM2CRV",
     poolName: "Abracadabra MIM2CRV",
   },
+  "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C": {
+    tokenName: "Curve Tricrypto",
+    poolName: "Curve Tricrypto",
+  },
 };
 
 function useFarms() {
   const { rawFarms } = useFetchFarms();
   const { farmsWithReward } = useWithReward(rawFarms);
   const { jarFarmWithApy } = useJarFarmApy(farmsWithReward);
+  // console.log(jarFarmWithApy)
   const { jarFarmWithMaticApy } = useMaticJarApy(jarFarmWithApy);
 
   const jarFarms = jarFarmWithMaticApy

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
-import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "./jars";
+import { DEPOSIT_TOKENS_NAME, JAR_DEPOSIT_TOKENS, PICKLE_JARS } from "./jars";
 import { PoolData } from "./usePoolData";
 import { Contracts } from "containers/Contracts";
 import { Prices } from "containers/Prices";
@@ -13,6 +13,7 @@ import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
 import erc20 from "@studydefi/money-legos/erc20";
 import { CurvePairs } from "containers/CurvePairs";
+import { tricryptoInfo } from "./useJarsWithAPYArb";
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
@@ -24,6 +25,9 @@ type Input = Array<JarWithAPY> | null;
 type Output = {
   jarsWithTVL: Array<JarWithTVL> | null;
 };
+
+const pool_abi = ["function get_virtual_price() view returns(uint256)"];
+const swap_abi = ["function balances(uint256) view returns(uint256)"];
 
 const isMStonksJar = (token: string) =>
   token === PICKLE_JARS.pUNIMTSLAUST.toLowerCase() ||
@@ -46,7 +50,10 @@ const isUniPool = (jarName: string): boolean => {
 };
 
 const isCurvePool = (jarName: string): boolean => {
-  return jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_2CRV;
+  return (
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_2CRV ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.CRV_TRICRYPTO
+  );
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
@@ -60,9 +67,7 @@ export const useJarWithTVL = (jars: Input): Output => {
   );
 
   const measureCurveTVL = async (jar: JarWithAPY) => {
-    const pricePerUnderlying = 1;
-
-    if (!multicallProvider || !getCurveLpPriceData) {
+    if (!multicallProvider || !getCurveLpPriceData || !prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 
@@ -79,7 +84,35 @@ export const useJarWithTVL = (jars: Input): Output => {
       ])
     ).map((x) => parseFloat(formatEther(x)));
 
-    const virtualPrice = await getCurveLpPriceData(jar.depositToken.address);
+    let virtualPrice = 1;
+    let pricePerUnderlying = 1;
+    if (jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.MIM_2CRV) {
+      virtualPrice = await getCurveLpPriceData(jar.depositToken.address);
+    } else if (
+      jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.CRV_TRICRYPTO
+    ) {
+      const swapAddress = "0x960ea3e3C7FB317332d990873d354E18d7645590";
+      const pool = new ethers.Contract(swapAddress, pool_abi, signer); // Tricrypto pool - replace when more pools are added
+      virtualPrice = parseFloat(formatEther(await pool.get_virtual_price()));
+
+      const supply = await jar.depositToken["totalSupply()"]();
+
+      const swap = new MulticallContract(swapAddress, swap_abi);
+      const [balance0, balance1, balance2] = await multicallProvider.all([
+        swap.balances(0),
+        swap.balances(1),
+        swap.balances(2),
+      ]);
+      const tokenInfo = tricryptoInfo.tokenInfo;
+      const scaledBalance0 =
+        (balance0 / tokenInfo.decimals[0]) * prices[tokenInfo.tokens[0]];
+      const scaledBalance1 =
+        (balance1 / tokenInfo.decimals[1]) * prices[tokenInfo.tokens[1]];
+      const scaledBalance2 =
+        (balance2 / tokenInfo.decimals[2]) * prices[tokenInfo.tokens[2]];
+      const totalStakedUsd = scaledBalance0 + scaledBalance1 + scaledBalance2;
+      pricePerUnderlying = totalStakedUsd / +formatEther(supply);
+    }
 
     const tvlUSD = balance * virtualPrice * pricePerUnderlying;
 
