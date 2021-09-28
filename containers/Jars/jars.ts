@@ -307,7 +307,7 @@ export const DEPOSIT_TOKENS_LINK = {
   LQTY:
     "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
   SADDLE_D4: "https://saddle.exchange/#/pools/d4/deposit",
-  MIM_3CRV: "https://curve.fi/mim",
+  MIM_3CRV: "https://curve.fi/mim/deposit",
   SPELL_ETH:
     "https://app.sushi.com/add/ETH/0x090185f2135308BaD17527004364eBcC2D37e5F6",
   MIM_ETH:
