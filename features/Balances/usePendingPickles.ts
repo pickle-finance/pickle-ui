@@ -33,7 +33,11 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
       setPendingPickles(totalPendingPickles);
     }
 
-    if (address && minichef && chainName === NETWORK_NAMES.POLY) {
+    if (
+      address &&
+      minichef &&
+      (chainName === NETWORK_NAMES.POLY || chainName === NETWORK_NAMES.ARB)
+    ) {
       const poolLengthBN = await minichef.poolLength();
       const poolLength = poolLengthBN.toNumber();
 

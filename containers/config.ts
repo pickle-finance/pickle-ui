@@ -65,7 +65,7 @@ export const config: Config = {
     },
     Arbitrum: {
       controller: "0x55d5bcef2bfd4921b8790525ff87919c2e26bd03",
-      pickle: "0x0000000000000000000000000000000000000000",
+      pickle: "0x965772e0e9c84b6f359c8597c891108dcf1c5b1a",
       masterChef: "0x7ecc7163469f37b777d7b8f45a667314030ace24",
       minichef: "0x7ecc7163469f37b777d7b8f45a667314030ace24",
       rewarder: "0x0000000000000000000000000000000000000000",

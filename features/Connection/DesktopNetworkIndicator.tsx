@@ -194,7 +194,7 @@ export const DesktopNetworkIndicator: FC = () => {
         <Select.Option value="137">
           {t("connection.networks.polygon")}
         </Select.Option>
-        <Select.Option value="137">
+        <Select.Option value="66">
           {t("connection.networks.okex")}
         </Select.Option>
         <Select.Option value="42161">
