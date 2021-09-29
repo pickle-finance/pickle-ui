@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Card, Tooltip } from "@geist-ui/react";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
+import { Trans, useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../containers/Dill";
 import { formatDate } from "../../util/date";
@@ -33,6 +34,7 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
     lockedAmount,
     balance: dillBalance,
   } = dillStats;
+  const { t } = useTranslation("common");
 
   const unlockTime = new Date();
   unlockTime.setTime(+(lockEndDate?.toString() || 0) * 1000);
@@ -54,12 +56,12 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
       <h2>
         {isLocked ? (
           isExpired ? (
-            <>Expired (since {formatDate(unlockTime)})</>
+            <>{t("dill.expiredSince", { date: formatDate(unlockTime) })}</>
           ) : (
-            <>Locked (until {formatDate(unlockTime)})</>
+            <>{t("dill.lockedUntil", { date: formatDate(unlockTime) })}</>
           )
         ) : (
-          "Unlocked"
+          t("dill.unlocked")
         )}
       </h2>
       <DataPoint>
@@ -72,7 +74,9 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
           <Tooltip
             placement="bottom"
             style={{ cursor: "help" }}
-            text={`${formatPercent(ratio, 1, 5)} of total DILL`}
+            text={t("dill.yourShare", {
+              percentage: formatPercent(ratio, 1, 5),
+            })}
           >
             <span>
               {isFetchingData ? "--" : formatNumber(dillBalanceValue)}
