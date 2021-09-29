@@ -45,6 +45,7 @@
     "walletConnect": "Wallet Connect"
   },
   "dill": {
+    "approveAndCreateLock": "Approve and Create Lock",
     "apy": "DILL holder APY",
     "boostCalculator": "PICKLE Boost Calculator",
     "boostFactor": "PICKLE boost factor",
@@ -53,6 +54,7 @@
     "claiming": "Claiming...",
     "claimPickles": "Claim {{ amount }} PICKLEs",
     "connectionPrompt": "Please switch to Ethereum network to use DILL features.",
+    "createLock": "Create Lock",
     "description": "Stake your PICKLEs to receive a portion of the profits from PickleJars.",
     "dill": "DILL",
     "dillRequired": "DILL required for max boost",
@@ -63,6 +65,7 @@
     "increaseLockAmount": "Increase Lock Amount",
     "lastDistribution": "Last week's distribution",
     "lockExpiration": "Lock will expire in",
+    "lockFor": "Lock for",
     "locking": "Locking...",
     "lockTimeInvalid": "selected lock time exceeds maximum lock time of {{ duration }}",
     "nextDistribution": "Next distribution",
@@ -82,7 +85,8 @@
     "weeklyDillAmount": "Weekly DILL 🔒",
     "weeklyPickleAmount": "Weekly PICKLEs distributed",
     "weeklyRevenue": "Weekly protocol revenue",
-    "yourDill": "Your DILL"
+    "yourDill": "Your DILL",
+    "youWillReceive": "You will receive"
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",

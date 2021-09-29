@@ -1,6 +1,7 @@
 import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
 import { parseEther, formatEther } from "ethers/lib/utils";
+import { Trans, useTranslation } from "next-i18next";
 
 import { useBalances } from "../../Balances/useBalances";
 import { Contracts } from "../../../containers/Contracts";
@@ -38,6 +39,7 @@ export const CreateLock: FC<{
   const { pickleBalance, pickleBN } = useBalances();
   const [lockAmount, setlockAmount] = useState("");
   const { setButtonStatus } = useButtonStatus();
+  const { t } = useTranslation("common");
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
@@ -49,7 +51,7 @@ export const CreateLock: FC<{
 
   const [lockButton, setLockButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Approve and Create Lock",
+    text: t("dill.approveAndCreateLock"),
   });
   const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
@@ -76,8 +78,8 @@ export const CreateLock: FC<{
 
       setButtonStatus(
         lockStatus,
-        "Locking...",
-        approved ? "Create Lock" : "Approve and Create Lock",
+        t("dill.locking"),
+        approved ? t("dill.createLock") : t("dill.approveAndCreateLock"),
         setLockButton,
       );
     }
@@ -87,14 +89,21 @@ export const CreateLock: FC<{
 
   const displayLockTime = () => {
     if (lockingWeeks < 52) {
-      return `${lockingWeeks} week${lockingWeeks > 1 ? "s" : ""}`;
+      return (
+        <Trans i18nKey="time.week" count={lockingWeeks}>
+          {lockingWeeks} weeks
+        </Trans>
+      );
     } else {
-      const years = Number(
-        (+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24,
-      ).toFixed(2);
-      return `${years} ${
-        years === "1.0" ? "year" : "years"
-      } (${lockingWeeks} weeks)`;
+      const years =
+        Math.round(
+          ((+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24) * 100,
+        ) / 100;
+      return (
+        <Trans i18nKey="time.year" count={years}>
+          {years} years
+        </Trans>
+      );
     }
   };
 
@@ -157,7 +166,7 @@ export const CreateLock: FC<{
           <Grid xs={24}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                Balance:{" "}
+                {t("balances.balance")}:{" "}
                 {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
               </div>
               <Link
@@ -170,7 +179,7 @@ export const CreateLock: FC<{
                   }
                 }}
               >
-                Max
+                {t("balances.max")}
               </Link>
             </div>
             <Spacer y={0.5} />
@@ -184,7 +193,7 @@ export const CreateLock: FC<{
           </Grid>
           <Grid xs={24}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              Lock for: {displayLockTime()}
+              {t("dill.lockFor")}: {displayLockTime()}
               <Link
                 color
                 href="#"
@@ -195,7 +204,7 @@ export const CreateLock: FC<{
                   }
                 }}
               >
-                Max
+                {t("balances.max")}
               </Link>
             </div>
             <Spacer y={0.5} />
@@ -222,10 +231,7 @@ export const CreateLock: FC<{
           </Grid>
         </Grid.Container>
         <Spacer y={0.5} />
-        <div>
-          Note: your selected date will be rounded to the nearest weekly DILL
-          epoch
-        </div>
+        <div>{t("dill.roundingNote")}</div>
         <Spacer y={0.5} />
         <Radio.Group
           onChange={(e) => setDateRadioValue(+e.toString())}
@@ -233,26 +239,34 @@ export const CreateLock: FC<{
           useRow
         >
           <Radio value={1}>
-            1 month
+            <Trans i18nKey="time.month" count={1}>
+              1 month
+            </Trans>
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 30).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value={2}>
-            1 year
+            <Trans i18nKey="time.year" count={1}>
+              1 year
+            </Trans>
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value={3}>
-            2 years
+            <Trans i18nKey="time.year" count={2}>
+              2 years
+            </Trans>
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, 2 * DAY * 365).toFixed(4)}{" "}
               DILL
             </Radio.Desc>
           </Radio>
           <Radio value={4}>
-            4 years
+            <Trans i18nKey="time.year" count={4}>
+              4 years
+            </Trans>
             <Radio.Desc style={{ color: "grey" }}>
               1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}
               DILL
@@ -261,7 +275,7 @@ export const CreateLock: FC<{
         </Radio.Group>
         <Spacer y={0.5} />
         <p>
-          You will receive{" "}
+          {t("dill.youWillReceive")}{" "}
           <strong>
             {lockAmount
               ? estimateDillForDate(+lockAmount, unlockTime).toFixed(4)
