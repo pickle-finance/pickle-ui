@@ -47,6 +47,7 @@
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
     "apy": "DILL holder APY",
+    "averageLockDuration": "The average lock duration is currently <1>{{ years }}</1> years (based on {{ dill }} DILL and {{ pickle }} PICKLEs locked).",
     "boostCalculator": "PICKLE Boost Calculator",
     "boostFactor": "PICKLE boost factor",
     "calculate": "Calculate",
