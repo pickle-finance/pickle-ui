@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Card, Tooltip } from "@geist-ui/react";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
-import { Trans, useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../containers/Dill";
 import { formatDate } from "../../util/date";

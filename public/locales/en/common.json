@@ -69,6 +69,7 @@
     "lockedUntil": "Locked (until {{ date }})",
     "lockExpiration": "Lock will expire in",
     "lockFor": "Lock for",
+    "lockForDill": "Lock PICKLEs for DILL",
     "locking": "Locking...",
     "lockTimeInvalid": "selected lock time exceeds maximum lock time of {{ duration }}",
     "nextDistribution": "Next distribution",
