@@ -25,7 +25,8 @@ import { Jars } from "../../containers/Jars";
 import { NETWORK_NAMES } from "containers/config";
 import { UserJarData } from "containers/UserJars";
 import { BigNumber } from "ethers";
-import { Trans, useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
+import { FarmsIntro } from "components/FarmsIntro";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -166,15 +167,7 @@ export const GaugeList: FC = () => {
       <Spacer y={1} />
       <Grid.Container>
         <Grid md={12}>
-          <p>
-            <Trans i18nKey="farms.intro">
-              Jars auto-invest your deposit tokens and Farms earn you{" "}
-              <strong>$PICKLEs</strong>.
-              <br />
-              Deposit & Stake to get into both. Hover over the displayed APY to
-              see where the returns are coming from.
-            </Trans>
-          </p>
+          <FarmsIntro />
         </Grid>
         <Grid md={12} style={{ textAlign: "right" }}>
           <Checkbox
@@ -201,7 +194,7 @@ export const GaugeList: FC = () => {
           (x) =>
             x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV &&
             x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM &&
-            x.depositToken.address != PICKLE_JARS.pMIMETH
+            x.depositToken.address != PICKLE_JARS.pMIMETH,
         )}
       />
       <div
