@@ -19,6 +19,7 @@ import RewarderABI from "../ABIs/rewarder.json";
 import PoolABI from "../ABIs/pool.json";
 import { CurvePairs } from "containers/CurvePairs";
 import { useCurveRawStats } from "./useCurveRawStats";
+import { useSushiPairDayData } from "./useSushiPairDayData";
 
 const AVERAGE_BLOCK_TIME = 4;
 const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
@@ -38,15 +39,15 @@ export const tricryptoInfo: {
   tokenInfo: {
     decimals: number[];
     tokens: string[];
-  } 
+  };
 } = {
   swapAddress: "0x960ea3e3C7FB317332d990873d354E18d7645590",
   gauge: "0x97E2768e8E73511cA874545DC5Ff8067eB19B787",
   tokenInfo: {
     decimals: [1e6, 1e8, 1e18], // USDT, WBTC, WETH
     tokens: ["usdt", "wbtc", "eth"],
-  }
-}
+  },
+};
 
 const sushiPoolIds: PoolId = {
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": 9,
@@ -79,6 +80,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { prices } = Prices.useContainer();
   const { getCurveLpPriceData } = CurvePairs.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
+  const { getSushiPairDayAPY, sushiPairDayData } = useSushiPairDayData();
   const { rawStats: curveRawStats } = useCurveRawStats(NETWORK_NAMES.ARB);
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
@@ -224,18 +226,14 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     if (multicallProvider && erc20 && prices) {
       let swapAddress;
       let gauge;
-      let tokenInfo
+      let tokenInfo;
       if (lpTokenAddress === JAR_DEPOSIT_TOKENS.Arbitrum.CRV_TRICRYPTO) {
         swapAddress = tricryptoInfo.swapAddress;
         gauge = tricryptoInfo.gauge;
         tokenInfo = tricryptoInfo.tokenInfo;
       }
       const swap = new MulticallContract(swapAddress, swap_abi);
-      const [
-        balance0,
-        balance1,
-        balance2,
-      ] = await multicallProvider.all([
+      const [balance0, balance1, balance2] = await multicallProvider.all([
         swap.balances(0),
         swap.balances(1),
         swap.balances(2),
@@ -293,16 +291,24 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         let APYs: Array<JarApy> = [];
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIM_ETH) {
-          APYs = [...sushiMimEthApy, ...spellMimEthApy];
+          APYs = [
+            ...sushiMimEthApy,
+            ...spellMimEthApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.Arbitrum.SUSHI_MIM_ETH),
+          ];
         }
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_SPELL_ETH) {
-          APYs = [...sushiSpellEthApy, ...spellEthApy];
+          APYs = [
+            ...sushiSpellEthApy,
+            ...spellEthApy,
+            ...getSushiPairDayAPY(JAR_DEPOSIT_TOKENS.Arbitrum.SUSHI_SPELL_ETH),
+          ];
         }
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_2CRV) {
           APYs = [...mim2crvApy];
         }
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CRV_TRICRYPTO) {
-          APYs = [{lp: (curveRawStats?.tricrypto || 0)}, ...tricryptoApy ];
+          APYs = [{ lp: curveRawStats?.tricrypto || 0 }, ...tricryptoApy];
         }
 
         let apr = 0;
@@ -337,7 +343,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
   useEffect(() => {
     if (network === NETWORK_NAMES.ARB) calculateAPY();
-  }, [jars?.length, prices, network]);
+  }, [jars?.length, prices, network, sushiPairDayData?.length]);
 
   return { jarsWithAPY };
 };

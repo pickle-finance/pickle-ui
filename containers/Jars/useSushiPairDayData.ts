@@ -34,25 +34,30 @@ const POLY_SUSHI_LP_TOKENS = [
   JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC,
 ];
 
+const ARB_SUSHI_LP_TOKENS = [
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_SPELL_ETH,
+  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH,
+];
+
+const headers = {
+  "User-Agent":
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+  Accept: "*/*",
+  "Accept-Language": "en-US,en;q=0.5",
+  "Content-Type": "application/json",
+};
+
 export const useSushiPairDayData = () => {
   const { signer, chainName } = Connection.useContainer();
 
-  const [sushiPairDayData, setSushiPairDayData] = useState<Array<
-    UniLPAPY
-  > | null>(null);
+  const [sushiPairDayData, setSushiPairDayData] = useState<Array<UniLPAPY>>([]);
 
   const queryTheGraph = async () => {
     const res = await fetch(
       "https://api.thegraph.com/subgraphs/name/sushiswap/exchange",
       {
         credentials: "omit",
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-          Accept: "*/*",
-          "Accept-Language": "en-US,en;q=0.5",
-          "Content-Type": "application/json",
-        },
+        headers,
         referrer:
           "https://thegraph.com/explorer/subgraph/zippoxer/sushiswap-subgraph-fork",
         body: `{"query":"{\\n  pairDayDatas(first: ${
@@ -67,25 +72,40 @@ export const useSushiPairDayData = () => {
     setSushiPairDayData(res?.data?.pairDayDatas);
   };
 
+  const queryTheGraphArb = async () => {
+    const res = await fetch(
+      "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange",
+      {
+        credentials: "omit",
+        headers,
+        referrer:
+          "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange",
+        body: `{"query":"{\\n  pairDayDatas(first: ${
+          ARB_SUSHI_LP_TOKENS.length
+        }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${ARB_SUSHI_LP_TOKENS.join(
+          '\\", \\"',
+        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+        method: "POST",
+        mode: "cors",
+      },
+    ).then((x) => x.json());
+    
+    setSushiPairDayData(res?.data?.pairDayDatas);
+  };
+
   const queryTheGraphPoly = async () => {
     const res = await fetch(
       "https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange",
       {
         credentials: "omit",
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-          Accept: "*/*",
-          "Accept-Language": "en-US,en;q=0.5",
-          "Content-Type": "application/json",
-        },
+        headers,
         referrer:
           "https://thegraph.com/explorer/subgraph/sushiswap/matic-exchange",
         body: `{"query":"{\\n  pairDayDatas(first: ${
           POLY_SUSHI_LP_TOKENS.length
         }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${POLY_SUSHI_LP_TOKENS.join(
           '\\", \\"',
-        )}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },
@@ -100,7 +120,7 @@ export const useSushiPairDayData = () => {
         const pairAddress = x?.pair?.id || x?.pair;
         return pairAddress.toLowerCase() === pair.toLowerCase();
       });
-
+      
       if (filteredPair.length > 0) {
         const selected = filteredPair[0];
 
@@ -116,15 +136,18 @@ export const useSushiPairDayData = () => {
   };
 
   useEffect(() => {
-    if (sushiPairDayData) return;
+    if (sushiPairDayData.length > 0) return;
     if (chainName === NETWORK_NAMES.POLY) {
       queryTheGraphPoly();
+    } else if (chainName === NETWORK_NAMES.ARB) {
+      queryTheGraphArb();
     } else {
       queryTheGraph();
     }
-  }, []);
+  });
 
   return {
     getSushiPairDayAPY,
+    sushiPairDayData,
   };
 };

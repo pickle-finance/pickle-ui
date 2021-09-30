@@ -133,7 +133,6 @@ export const FARM_LP_TO_ICON: {
   ),
 };
 
-
 export const JarMiniFarmCollapsible: FC<{
   jarData: UserJarData;
   farmData: FarmDataWithAPY;
@@ -456,12 +455,12 @@ export const JarMiniFarmCollapsible: FC<{
             >
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <Spacer y={1} />
-              {!isArb && (
+              {/* {!isArb && (
                 <>
                   {harvestableMaticStr}{" "}
                   <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
                 </>
-              )}
+              )} */}
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
