@@ -12,7 +12,7 @@ import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { uncompoundAPY } from "../../util/jars";
 import { NETWORK_NAMES } from "containers/config";
-import { BalFarm } from "../PickleFarms/BalFarm"
+import { BalFarm } from "../PickleFarms/BalFarm";
 import { copySync } from "fs-extra";
 
 const Container = styled.div`
@@ -106,8 +106,12 @@ export const MiniFarmList: FC = () => {
 
   return (
     <Container>
-      <BalFarm />
-      <Spacer y={1} />
+      {chainName === NETWORK_NAMES.ARB && (
+        <>
+          <BalFarm />
+          <Spacer y={1} />
+        </>
+      )}
       <Grid.Container gap={1}>
         <Grid md={16}>
           <p>

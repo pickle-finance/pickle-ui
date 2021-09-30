@@ -136,20 +136,20 @@ export const DesktopNetworkIndicator: FC = () => {
     if (chainName === NETWORK_NAMES.POLY)
       return `https://polygonscan.com/block/${blockNum}`;
     if (chainName === NETWORK_NAMES.OKEX)
-      `https://www.oklink.com/okexchain/block/${blockNum}`;
+      return `https://www.oklink.com/okexchain/block/${blockNum}`;
     if (chainName === NETWORK_NAMES.ARB)
-      `https://arbiscan.io/block/${blockNum}`;
-    return `https://etherscan.io/block/${blockNum}`;
+      return `https://arbiscan.io/block/${blockNum}`;
+    else return `https://etherscan.io/block/${blockNum}`;
   };
 
   const renderAddress = () => {
     if (chainName === NETWORK_NAMES.POLY)
       return `https://polygonscan.com/address/${address}`;
     if (chainName === NETWORK_NAMES.OKEX)
-      `https://www.oklink.com/okexchain/address/${address}`;
+      return `https://www.oklink.com/okexchain/address/${address}`;
     if (chainName === NETWORK_NAMES.ARB)
-      `https://arbiscan.io/address/${address}`;
-    return `https://etherscan.io/address/${address}`;
+      return `https://arbiscan.io/address/${address}`;
+    else return `https://etherscan.io/address/${address}`;
   };
 
   return (
@@ -202,11 +202,7 @@ export const DesktopNetworkIndicator: FC = () => {
         </Select.Option>
       </Select>
       <AddressContainer
-        href={
-          chainName === NETWORK_NAMES.POLY
-            ? `https://explorer-mainnet.maticvigil.com/address/${address}`
-            : `https://etherscan.io/address/${address}`
-        }
+        href={renderAddress()}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -217,11 +213,7 @@ export const DesktopNetworkIndicator: FC = () => {
         <Block>
           <Tooltip text={t("connection.blockNumber")} placement="left">
             <BlockBox
-              href={
-                chainName === NETWORK_NAMES.POLY
-                  ? `https://explorer-mainnet.maticvigil.com/blocks/${blockNum}`
-                  : `https://etherscan.io/block/${blockNum}`
-              }
+              href={renderBlock()}
               target="_blank"
               rel="noopener noreferrer"
             >
