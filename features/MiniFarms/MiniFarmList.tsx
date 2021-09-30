@@ -52,7 +52,6 @@ export const MiniFarmList: FC = () => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },
       ...(isOK ? [{ okt: farm.maticApy * 100 }] : []),
-      ...(isMatic ? [{ matic: farm.maticApy * 100 }] : []),
     ];
 
     const jar =
