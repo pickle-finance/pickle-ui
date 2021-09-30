@@ -222,8 +222,7 @@ export const useJarWithTVL = (jars: Input): Output => {
             jar.depositToken.address.toLowerCase(),
         );
         const tvlUSD =
-          poolInfo[0]?.liquidity_locked *
-          (isMStonksJar(jar.contract.address.toLowerCase()) ? 2 : 1);
+          poolInfo[0]?.liquidity_locked;
         return {
           ...jar,
           tvlUSD,

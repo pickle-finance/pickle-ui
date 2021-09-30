@@ -190,11 +190,7 @@ export default function Earn(props) {
           <EarnRow
             asset={jarInfo ? jarInfo.title : jar.asset}
             earned={getTokens(jar.balance)}
-            value={
-              isMStonksJar(jar.id)
-                ? formatUsd(jar.balanceUsd * 2)
-                : formatUsd(jar.balanceUsd)
-            }
+            value={formatUsd(jar.balanceUsd)}
             icon={`/assets/${jar.asset.toLowerCase()}.png`}
             key={i}
           />
@@ -212,11 +208,7 @@ export default function Earn(props) {
           <EarnRow
             asset={jarInfo ? jarInfo.title : jar.asset}
             earned={getTokens(jar.earned)}
-            value={
-              isMStonksJar(jar.id)
-                ? formatUsd(jar.earnedUsd * 2)
-                : formatUsd(jar.earnedUsd)
-            }
+            value={formatUsd(jar.earnedUsd)}
             icon={`/assets/${jar.asset.toLowerCase()}.png`}
             key={i}
           />
@@ -256,10 +248,7 @@ export default function Earn(props) {
                               accountData.jarData
                                 .filter((jar) => jar.balance > 0)
                                 .reduce((acc, jar) => {
-                                  const jarValue = isMStonksJar(jar.id)
-                                    ? jar.balanceUsd * 2
-                                    : jar.balanceUsd;
-                                  return acc + jarValue;
+                                  return acc + jar.balanceUsd;
                                 }, 0),
                             )
                           : accountData
