@@ -1,15 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
-import {
-  Button,
-  Link,
-  Input,
-  Grid,
-  Spacer,
-  Tooltip,
-  Checkbox,
-} from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
 import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
@@ -17,22 +9,14 @@ import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
-import { NETWORK_NAMES } from "containers/config";
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
   isZero?: boolean;
@@ -152,37 +136,9 @@ export const FARM_LP_TO_ICON = {
   "0x1d92e1702D7054f74eAC3a9569AeB87FC93e101D": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/truefi.jpeg"} />
   ),
-};
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
+  "0x0989a227E7c50311f7De61e5e61F7c28Df8936f0": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/rally.jpeg"} />
+  ),
 };
 
 export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
@@ -253,6 +209,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const [migrateState, setMigrateState] = useState<string | null>(null);
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
+  const { setButtonStatus } = useButtonStatus();
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];

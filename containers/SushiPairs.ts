@@ -47,6 +47,8 @@ export const addresses = {
   asushi: "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
   amim: "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a",
   aspell: "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af",
+  mpickle: "0x2b88ad57897a8b496595925f43048301c37615da",
+  mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
 };
 
 interface Token {
@@ -186,6 +188,16 @@ const aspell: Token = {
   priceId: "spell",
   decimals: 18,
 };
+const mpickle: Token = {
+  address: addresses.mpickle,
+  priceId: "pickle",
+  decimals: 18,
+};
+const mdai: Token = {
+  address: addresses.mdai,
+  priceId: "dai",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -227,6 +239,7 @@ export const PAIR_INFO: PairMap = {
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": { a: amim, b: aweth },
   "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
+  "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
 };
 
 function useSushiPairs() {
@@ -244,11 +257,7 @@ function useSushiPairs() {
     const tokenB = new Contract(b.address, erc20.abi, provider);
     const pair = new Contract(pairAddress, erc20.abi, provider);
 
-    const [
-      numAInPairBN,
-      numBInPairBN,
-      totalSupplyBN,
-    ] = await Promise.all([
+    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
       tokenA.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
       tokenB.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
       pair.totalSupply(),

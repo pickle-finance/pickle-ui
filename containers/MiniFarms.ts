@@ -94,6 +94,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pBLP ETHK/BTCK",
     poolName: "pBLP ETHK/BTCK",
   },
+  "0x1D35e4348826857eaFb22739d4e494C0337cb427": {
+    tokenName: "pSLP PICKLE/DAI",
+    poolName: "pSLP PICKLE/DAI",
+  },
 
   // Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": {

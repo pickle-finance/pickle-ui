@@ -55,6 +55,7 @@ interface PriceObject {
   tru: number;
   bxh: number;
   bal: number;
+  rly: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -115,7 +116,8 @@ function usePrices() {
         "okexchain",
         "truefi",
         "bxh",
-        "balancer"
+        "balancer",
+        "rally-2",
       ],
       vs_currencies: ["usd"],
     });
@@ -172,7 +174,8 @@ function usePrices() {
       btck: response["wrapped-bitcoin"].usd,
       tru: response["truefi"].usd,
       bxh: response["bxh"].usd,
-      bal: response["balancer"].usd
+      bal: response["balancer"].usd,
+      rly: response["rally-2"].usd,
     };
     setPrices(prices);
   };

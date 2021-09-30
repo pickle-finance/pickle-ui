@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { Spacer, Grid, Checkbox } from "@geist-ui/react";
+import { Trans, useTranslation } from "next-i18next";
 
 import { MiniFarmCollapsible } from "../MiniFarms/MiniFarmCollapsible";
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
@@ -14,6 +15,7 @@ import { uncompoundAPY } from "../../util/jars";
 import { NETWORK_NAMES } from "containers/config";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { copySync } from "fs-extra";
+import { pickleWhite } from "util/constants";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -28,15 +30,25 @@ export const MiniFarmList: FC = () => {
   const { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
+  const { t } = useTranslation("common");
 
   const isOK = chainName === NETWORK_NAMES.OKEX;
   const isMatic = chainName === NETWORK_NAMES.POLY;
 
-  if (!signer) {
-    return <h2>Please connect wallet to continue</h2>;
-  }
+  if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
-  if (!jarData || !farmData) return <h2>Loading...</h2>;
+  if ((!jarData || !farmData) && chainName !== NETWORK_NAMES.POLY) {
+    return <h2>{t("connection.loading")}</h2>;
+  } else if ((!jarData || !farmData) && chainName === NETWORK_NAMES.POLY) {
+    return (
+      <>
+        <h2>{t("connection.loading")}</h2>
+        <span style={{ color: pickleWhite }}>
+          {t("connection.polygonRpc")}
+        </span>{" "}
+      </>
+    );
+  }
 
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
@@ -74,13 +86,15 @@ export const MiniFarmList: FC = () => {
     const difference = totalAPY - totalAPR;
 
     const tooltipText = [
-      `Base APRs:`,
+      `${t("farms.baseAPRs")}:`,
       ...uncompounded.map((x) => {
         const k = Object.keys(x)[0];
         const v = Object.values(x)[0];
         return `${k}: ${v.toFixed(2)}%`;
       }),
-      `Compounding <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
+      `${t(
+        "farms.compounding",
+      )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
         2,
       )}%`,
     ]
@@ -115,17 +129,14 @@ export const MiniFarmList: FC = () => {
       <Grid.Container gap={1}>
         <Grid md={16}>
           <p>
-            Farms allow you to earn PICKLE <MiniIcon source="/pickle.png" />
-            {isOK ? (
-              <>
-                and OKT <MiniIcon source="/okex.png" /> rewards by staking
-                tokens.
-              </>
-            ) : null}{" "}
-            {isMatic && `(Note: MATIC rewards ended August 23)`}
+            <Trans i18nKey="farms.polygon.description">
+              Farms allow you to earn dual PICKLE
+              <MiniIcon source="/pickle.png" /> and MATIC
+              <MiniIcon source="/matic.png" /> rewards by staking tokens. (Note:
+              MATIC rewards end August 23)
+            </Trans>
             <br />
-            Hover over the displayed APY to see where the returns are coming
-            from.
+            {t("farms.apy")}
           </p>
         </Grid>
         <Grid md={8} style={{ textAlign: "right" }}>
@@ -134,7 +145,7 @@ export const MiniFarmList: FC = () => {
             size="medium"
             onChange={(e) => setShowInactive(e.target.checked)}
           >
-            Show Inactive Farms
+            {t("farms.showInactive")}
           </Checkbox>
         </Grid>
       </Grid.Container>
@@ -155,7 +166,7 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {showInactive && <h2>Inactive</h2>}
+        {showInactive && <h2>{t("farms.inactive")}</h2>}
         {showInactive &&
           inactiveJars.map((jar) => {
             const farm = farmsWithAPY.find(

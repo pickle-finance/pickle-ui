@@ -17,6 +17,7 @@ import {
   COMMUNAL_FARM,
   FOX_ETH_STAKING_REWARDS,
 } from "../Contracts";
+import { ExtraRewards__factory } from "../../containers/Contracts/factories/ExtraRewards__factory";
 import { Jar } from "./useFetchJars";
 import SwapFlashLoanABI from "../ABIs/swapflashloan.json";
 import CrvRewardsABI from "../ABIs/crv-rewards.json";
@@ -52,7 +53,7 @@ interface PoolInfo {
   [key: string]: {
     poolId: number;
     tokenName: string;
-    rewardName: string;
+    rewardName: any;
     tokenPrice: number;
     rewardPrice: number;
   };
@@ -79,6 +80,10 @@ const abracadabraIds: PoolId = {
   "0xb5De0C3753b6E1B4dBA616Db82767F17513E6d4E": 0,
   "0x5a6A4D54456819380173272A5E8E9B9904BdF41B": 1,
   "0x07D5695a24904CC1B6e3bd57cC7780B90618e3c4": 2,
+};
+
+const rallyIds: PoolId = {
+  "0x27fD0857F0EF224097001E87e61026E39e1B04d1": 0,
 };
 
 export interface JarApy {
@@ -123,7 +128,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     masterchefV2,
     yearnRegistry,
     cvxBooster,
-    feichef
+    feichef,
+    rallyRewardPools,
   } = Contracts.useContainer();
   const { getUniPairDayAPY, uniPairDayData } = useUniPairDayData();
 
@@ -318,6 +324,55 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateRallyApy = async (lpTokenAddress: string) => {
+    if (
+      rallyRewardPools &&
+      prices?.rly &&
+      getUniPairData &&
+      multicallProvider
+    ) {
+      const poolId = rallyIds[lpTokenAddress];
+
+      const multicallRallyRewardPools = new MulticallContract(
+        rallyRewardPools.address,
+        rallyRewardPools.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [
+        rlyPerBlockBN,
+        totalAllocPointBN,
+        poolInfo,
+        totalSupplyBN,
+      ] = await multicallProvider.all([
+        multicallRallyRewardPools.rallyPerBlock(),
+        multicallRallyRewardPools.totalAllocPoint(),
+        multicallRallyRewardPools.poolInfo(poolId),
+        lpToken.balanceOf(multicallRallyRewardPools.address),
+      ]);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const rlyPerBlock =
+        (parseFloat(formatEther(rlyPerBlockBN)) * poolInfo.allocPoint) /
+        totalAllocPointBN.toNumber();
+      const { pricePerToken } = await getUniPairData(lpTokenAddress);
+
+      const rlyRewardsPerYear =
+        rlyPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
+      const valueRewardedPerYear = prices.rly * rlyRewardsPerYear;
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const rlyAPY = valueRewardedPerYear / totalValueStaked;
+
+      // no more UNI being distributed
+      return [
+        { rally: getCompoundingAPY(rlyAPY * 0.8), apr: rlyAPY * 0.8 * 100 },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateSaddleD4APY = async () => {
     const swapFlashLoanAddress = "0xC69DDcd4DFeF25D8a793241834d4cc4b3668EAD6";
     if (communalFarm && multicallProvider && prices) {
@@ -371,12 +426,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateFeiAPY = async (lpTokenAddress: string) => {
-    if (
-      feichef &&
-      prices?.tribe &&
-      getUniPairData &&
-      multicallProvider
-    ) {
+    if (feichef && prices?.tribe && getUniPairData && multicallProvider) {
       const multicallFeichef = new MulticallContract(
         feichef.address,
         feichef.interface.fragments,
@@ -384,12 +434,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
-
       const [
         tribePerBlockBN,
         totalAllocPointBN,
         poolInfo,
-        totalSupplyBN
+        totalSupplyBN,
       ] = await multicallProvider.all([
         multicallFeichef.tribePerBlock(),
         multicallFeichef.totalAllocPoint(),
@@ -406,7 +455,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const { pricePerToken } = await getUniPairData(lpTokenAddress);
 
-      const tribeRewardsPerYear = tribeRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
+      const tribeRewardsPerYear =
+        tribeRewardsPerBlock * (ONE_YEAR_SECONDS / AVERAGE_BLOCK_TIME);
       const valueRewardedPerYear = prices.tribe * tribeRewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
@@ -608,11 +658,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           "X-Requested-With": "XMLHttpRequest",
         }),
       },
-    ).then((x) => x.json())
-    .catch(()=>{ return undefined});
+    )
+      .then((x) => x.json())
+      .catch(() => {
+        return undefined;
+      });
     const fetchResult = await fetchPromise;
-    if( !fetchResult )
-      return [];
+    if (!fetchResult) return [];
     const curveAPY = fetchResult?.apys;
     const cvxPool = convexPools[lpTokenAddress];
     if (
@@ -624,9 +676,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     ) {
       const lpApy = parseFloat(curveAPY[cvxPool.tokenName]?.baseApy);
       const crvApy = parseFloat(curveAPY[cvxPool.tokenName]?.crvApy);
-      const rewardApy = parseFloat(
-        curveAPY[cvxPool.tokenName]?.additionalRewards?.[0].apy,
-      );
 
       const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId);
 
@@ -635,9 +684,14 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         CrvRewardsABI,
       );
 
-      const [depositLocked, duration] = await multicallProvider.all([
+      const [
+        depositLocked,
+        duration,
+        extraAddress,
+      ] = await multicallProvider.all([
         crvRewardsMC.totalSupply(),
         crvRewardsMC.duration(),
+        crvRewardsMC.extraRewards(0),
       ]);
 
       // Work backwards from reported CRV APR
@@ -653,13 +707,26 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const cvxApy = cvxValuePerYear / poolValue;
 
+      const extraRewards = ExtraRewards__factory.connect(
+        extraAddress,
+        provider,
+      );
+
+      const rewardAmount = +formatEther(await extraRewards.currentRewards());
+
+      const rewardValue =
+        (rewardAmount * cvxPool.rewardPrice * ONE_YEAR_SECONDS) /
+        duration.toNumber();
+
+      const rewardApr = rewardValue / poolValue;
+
       return [
         { lp: lpApy },
         { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
         { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
         {
-          [cvxPool.rewardName]: getCompoundingAPY((rewardApy * 0.8) / 100),
-          apr: rewardApy * 0.8,
+          [cvxPool.rewardName]: getCompoundingAPY((rewardApr * 0.8)),
+          apr: rewardApr * 0.8 * 100,
         },
       ];
     }
@@ -800,6 +867,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         foxEthApy,
         lqtyEthLusdApy,
         lqtyApy,
+        rlyEthApy,
         saddled4Apy,
       ] = await Promise.all([
         calculateMirAPY(MIRROR_MIR_UST_STAKING_REWARDS),
@@ -812,6 +880,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateFoxAPY(FOX_ETH_STAKING_REWARDS),
         calculateLqtyAPY(LQTY_LUSD_ETH_STAKING_REWARDS),
         calculateLqtyStakingAPY(),
+        calculateRallyApy(JAR_DEPOSIT_TOKENS.Ethereum.UNIV2_RLY_ETH),
         calculateSaddleD4APY(),
       ]);
 
@@ -1067,6 +1136,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.LQTY) {
           APYs = [...lqtyApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV2_RLY_ETH) {
+          APYs = [
+            ...rlyEthApy,
+            ...getUniPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV2_RLY_ETH,
+            ),
+          ];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_TRU_ETH) {

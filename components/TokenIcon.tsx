@@ -32,6 +32,7 @@ export const MiniIcon = ({ size = "16px", source }) => (
     alt="pickle"
     style={{
       width: size,
+      margin: "0 0.2rem",
       verticalAlign: `text-bottom`,
     }}
   />

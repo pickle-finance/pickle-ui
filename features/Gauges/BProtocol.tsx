@@ -1,13 +1,11 @@
 import { ethers } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import styled from "styled-components";
+import { useTranslation } from "next-i18next";
 
 import { useState, FC, useEffect, ReactNode } from "react";
 import Collapse from "../Collapsible/Collapse";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import { Connection } from "../../containers/Connection";
 import { usePBAMM } from "../../containers/Jars/usePBAMM";
 import { Contracts } from "../../containers/Contracts";
@@ -18,6 +16,7 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { useDuneData } from "../../containers/Jars/useDuneData";
 import { getFormatString } from "./GaugeInfo";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const JarName = styled(Grid)({
   display: "flex",
@@ -47,36 +46,6 @@ const formatString = (num: number) =>
     maximumFractionDigits: num < 1 ? 8 : 4,
   });
 
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  } else if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  } else {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
-
 export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
   const {
     status: erc20TransferStatuses,
@@ -96,9 +65,11 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
     tvl,
   } = usePBAMM();
   const { duneData } = useDuneData();
+  const { setButtonStatus } = useButtonStatus();
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
+  const { t } = useTranslation("common");
 
   const gauge = signer && GaugeFactory.connect(BPAddresses.LQTY_GAUGE, signer);
 
@@ -115,15 +86,15 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Deposit",
+    text: t("farms.deposit"),
   });
   const [withdrawButton, setWithdrawButton] = useState<ButtonStatus>({
     disabled: false,
-    text: "Withdraw",
+    text: t("farms.withdraw"),
   });
   const [stakeButton, setStakeButton] = useState<ButtonStatus>({
     disabled: false,
-    text: `Stake Unstaked ${plqtyStr} Tokens in Farm`,
+    text: t("farms.stakeUnstaked", { amount: plqtyStr }),
   });
 
   useEffect(() => {
@@ -134,12 +105,22 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
       BPAddresses.LQTY_GAUGE,
     );
 
-    setButtonStatus(dStatus, "Depositing...", "Deposit", setDepositButton);
-    setButtonStatus(wStatus, "Withdrawing...", "Withdraw", setWithdrawButton);
+    setButtonStatus(
+      dStatus,
+      t("farms.depositing"),
+      t("farms.deposit"),
+      setDepositButton,
+    );
+    setButtonStatus(
+      wStatus,
+      t("farms.withdrawing"),
+      t("farms.withdraw"),
+      setWithdrawButton,
+    );
     setButtonStatus(
       stakeStatus,
-      "Staking...",
-      `Stake Unstaked ${plqtyStr} pLQTY Tokens in Farm`,
+      t("farms.staking"),
+      t("farms.stakeUnstaked", { amount: plqtyStr }),
       setStakeButton,
     );
   }, [erc20TransferStatuses, plqtyBalance]);
@@ -147,7 +128,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
   if (!pBAMMContract || (showUserJars && !depositedNum)) return <> </>;
   return (
     <>
-      Powered by&nbsp;
+      {t("farms.poweredBy")}&nbsp;
       <a href="https://bprotocol.org/" target="_">
         B.Protocol
       </a>
@@ -177,11 +158,11 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               </JarName>
               <CenteredGrid xs={24} sm={8} md={3} lg={3}>
                 <Data isZero={balNum === 0}>{balStr}</Data>
-                <Label>Wallet Balance</Label>
+                <Label>{t("balances.walletBalance")}</Label>
               </CenteredGrid>
               <CenteredGrid xs={24} sm={8} md={3} lg={3}>
                 <Data isZero={depositedNum === 0}>{depositedStr}</Data>
-                <Label>Deposited</Label>
+                <Label>{t("farms.deposited")}</Label>
               </CenteredGrid>
               <CenteredGrid xs={24} sm={8} md={3} lg={3}>
                 <Data isZero={depositedNum === 0}>
@@ -194,7 +175,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
                     />
                   </Tooltip>
                 </Data>
-                <Label>Deposit Value</Label>
+                <Label>{t("balances.depositValue")}</Label>
               </CenteredGrid>
               <CenteredGrid xs={24} sm={12} md={5} lg={5}>
                 <Data>
@@ -204,18 +185,18 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
                     href="https://docs.liquity.org/faq/stability-pool-and-liquidations"
                     target="_"
                   >
-                    liquidation
+                    {t("farms.bProtocol.liquidation")}
                   </a>
                 </Data>
                 <Data>
                   <div style={{ marginTop: 5 }}>
-                    <Label>APY</Label>
+                    <Label>{t("balances.apy")}</Label>
                   </div>
                 </Data>
               </CenteredGrid>
               <CenteredGrid xs={24} sm={12} md={4} lg={4}>
                 <Data isZero={tvl === 0}>${getFormatString(tvl)}</Data>
-                <Label>TVL</Label>
+                <Label>{t("balances.tvl")}</Label>
               </CenteredGrid>
             </Grid.Container>
           }
@@ -223,7 +204,9 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
           <Grid.Container gap={2}>
             <Grid xs={24} md={12}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>Balance: {balStr}</div>
+                <div>
+                  {t("balances.balance")}: {balStr}
+                </div>
                 <Link
                   color
                   href="#"
@@ -232,7 +215,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
                     setDepositAmount(formatEther(lusdBalance));
                   }}
                 >
-                  Max
+                  {t("balances.max")}
                 </Link>
               </div>
               <Input
@@ -266,7 +249,10 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
             </Grid>
             <Grid xs={24} md={12}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>{`Balance ${depositedStr} (${valueStr} B.Protocol LUSD)`}</div>
+                <div>
+                  {t("balances.balance")}: {depositedStr} ({valueStr} B.Protocol
+                  LUSD)
+                </div>
                 <Link
                   color
                   href="#"
@@ -275,7 +261,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
                     setWithdrawAmount(formatEther(pbammBalance));
                   }}
                 >
-                  Max
+                  {t("balances.max")}
                 </Link>
               </div>
               <Input
@@ -339,11 +325,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
             </Button>
           )}
           <Spacer y={1} />
-          This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations
-          are automatically sold back into users' LUSD positions and all LQTY
-          rewards are staked in the Pickle Jar, which compounds ETH and LUSD
-          rewards. pLQTY is automatically harvested upon withdrawing or
-          depositing.
+          {t("farms.bProtocol.info")}
         </Collapse>
         <Spacer y={1} />
       </Grid>

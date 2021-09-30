@@ -8,22 +8,15 @@ import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";
 import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { useSushiPairDayData } from "../../containers/Jars/useSushiPairDayData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useMC2 } from "../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const PICKLE_PID = 3;
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
 
 interface DataProps {
   isZero?: boolean;
@@ -78,6 +71,7 @@ export const MC2Farm: FC = () => {
   const { masterchefV2 } = Contracts.useContainer();
   const { signer, address } = Connection.useContainer();
   const { t } = useTranslation("common");
+  const { setButtonStatus } = useButtonStatus();
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
@@ -150,37 +144,6 @@ export const MC2Farm: FC = () => {
       );
     }
   }, [erc20TransferStatuses]);
-
-  const setButtonStatus = (
-    status: ERC20TransferStatus,
-    transfering: string,
-    idle: string,
-    setButtonText: (arg0: ButtonStatus) => void,
-  ) => {
-    // Deposit
-    if (status === ERC20TransferStatus.Approving) {
-      setButtonText({
-        disabled: true,
-        text: t("farms.approving"),
-      });
-    }
-    if (status === ERC20TransferStatus.Transfering) {
-      setButtonText({
-        disabled: true,
-        text: transfering,
-      });
-    }
-    if (
-      status === ERC20TransferStatus.Success ||
-      status === ERC20TransferStatus.Failed ||
-      status === ERC20TransferStatus.Cancelled
-    ) {
-      setButtonText({
-        disabled: false,
-        text: idle,
-      });
-    }
-  };
 
   return (
     <Collapse

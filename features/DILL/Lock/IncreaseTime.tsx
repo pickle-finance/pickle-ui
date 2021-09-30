@@ -4,10 +4,7 @@ import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
 import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
 
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../../containers/Erc20Transfer";
+import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { DayPicker } from "../../../components/DayPicker";
 import { InputProps } from "@geist-ui/react/dist/input/input";
 import { UseDillOutput } from "../../../containers/Dill";
@@ -24,42 +21,7 @@ import {
   roundDateByDillEpoch,
   roundDateByDillEpochSeconds,
 } from "../../../util/dill";
-
-interface ButtonStatus {
-  disabled: boolean;
-  text: string;
-}
-
-const setButtonStatus = (
-  status: ERC20TransferStatus,
-  transfering: string,
-  idle: string,
-  setButtonText: (arg0: ButtonStatus) => void,
-) => {
-  // Deposit
-  if (status === ERC20TransferStatus.Approving) {
-    setButtonText({
-      disabled: true,
-      text: "Approving...",
-    });
-  }
-  if (status === ERC20TransferStatus.Transfering) {
-    setButtonText({
-      disabled: true,
-      text: transfering,
-    });
-  }
-  if (
-    status === ERC20TransferStatus.Success ||
-    status === ERC20TransferStatus.Failed ||
-    status === ERC20TransferStatus.Cancelled
-  ) {
-    setButtonText({
-      disabled: false,
-      text: idle,
-    });
-  }
-};
+import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const DAY = 86400;
 const WEEK = 7 * 86400;
@@ -74,6 +36,7 @@ export const IncreaseTime: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
+  const { setButtonStatus } = useButtonStatus();
 
   const [extendButton, setExtendButton] = useState<ButtonStatus>({
     disabled: false,

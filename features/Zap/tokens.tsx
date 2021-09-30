@@ -12,7 +12,7 @@ export const SYMBOL_TO_TOKEN = {
   YFI: "/yfi.png",
   SUSHI: "/sushiswap.png",
   FEI: "/fei.png",
-  FRAX: "/frax.webp"
+  FRAX: "/frax.webp",
 };
 
 export const getTokenLabel = (
