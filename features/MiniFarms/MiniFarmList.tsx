@@ -1,12 +1,10 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { Spacer, Grid, Checkbox } from "@geist-ui/react";
-import { Trans, useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 
-import { MiniFarmCollapsible } from "../MiniFarms/MiniFarmCollapsible";
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
-import { MiniIcon } from "../../components/TokenIcon";
 import { useJarData } from "features/Gauges/useJarData";
 import { JAR_FARM_MAP } from "../../containers/Farms/farms";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
@@ -14,8 +12,8 @@ import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { uncompoundAPY } from "../../util/jars";
 import { NETWORK_NAMES } from "containers/config";
 import { BalFarm } from "../PickleFarms/BalFarm";
-import { copySync } from "fs-extra";
 import { pickleWhite } from "util/constants";
+import { FarmsIntro } from "components/FarmsIntro";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -115,9 +113,6 @@ export const MiniFarmList: FC = () => {
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
 
-  const activeFarms = farmData?.filter((x) => x.maticApy !== 0);
-  const inactiveFarms = farmData?.filter((x) => x.maticApy === 0);
-
   return (
     <Container>
       {chainName === NETWORK_NAMES.ARB && (
@@ -128,16 +123,7 @@ export const MiniFarmList: FC = () => {
       )}
       <Grid.Container gap={1}>
         <Grid md={16}>
-          <p>
-            <Trans i18nKey="farms.polygon.description">
-              Farms allow you to earn dual PICKLE
-              <MiniIcon source="/pickle.png" /> and MATIC
-              <MiniIcon source="/matic.png" /> rewards by staking tokens. (Note:
-              MATIC rewards end August 23)
-            </Trans>
-            <br />
-            {t("farms.apy")}
-          </p>
+          <FarmsIntro />
         </Grid>
         <Grid md={8} style={{ textAlign: "right" }}>
           <Checkbox
