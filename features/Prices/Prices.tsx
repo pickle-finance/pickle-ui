@@ -21,7 +21,7 @@ const Monospace = styled.div`
   font-family: "Source Code Pro", sans-serif;
 `;
 
-const TradeButton = styled.a`
+export const TradeButton = styled.a`
   box-sizing: border-box;
   display: inline-block;
   padding: 0 1.25rem;
