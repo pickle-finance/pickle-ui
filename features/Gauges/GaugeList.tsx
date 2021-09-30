@@ -8,7 +8,7 @@ import { BProtocol } from "./BProtocol";
 import { Connection } from "../../containers/Connection";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
-import { MC2Farm } from "../MasterchefV2/MC2Farm";
+import { MC2Farm } from "../PickleFarms/MC2Farm";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { JAR_ACTIVE, JAR_YEARN } from "../../containers/Jars/jars";
 import { useJarData } from "./useJarData";

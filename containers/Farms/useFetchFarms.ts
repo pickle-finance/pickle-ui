@@ -17,8 +17,11 @@ export interface RawFarm {
 
 export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
   const { blockNum, multicallProvider, chainName } = Connection.useContainer();
-  const { minichef: minichefContract } = Contracts.useContainer();
-  const masterchef = chainName === NETWORK_NAMES.POLY ? minichefContract : null;
+  const {
+    minichef: minichefContract,
+  } = Contracts.useContainer();
+  const masterchef =
+    chainName === NETWORK_NAMES.ETH ? null : minichefContract;
 
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 
@@ -40,7 +43,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
           }),
       );
 
-      if (!farmInfo[0].lpToken) {
+      if (farmInfo.length && !farmInfo[0].lpToken) {
         farmInfo = await Promise.all(
           farmInfo.map(async (x, idx) => {
             const lpToken = await masterchef.lpToken(idx);

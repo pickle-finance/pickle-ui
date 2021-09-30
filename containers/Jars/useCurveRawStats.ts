@@ -5,6 +5,7 @@ import { NETWORK_NAMES } from "containers/config";
 
 const curveAPYsURLEth = "https://stats.curve.fi/raw-stats/apys.json";
 const curveAPYsURLPoly = "https://stats.curve.fi/raw-stats-polygon/apys.json";
+const curveAPYsURLArb = "https://stats.curve.fi/raw-stats-arbitrum/apys.json";
 
 export interface RawStatAPYs {
   compound: number;
@@ -33,7 +34,11 @@ export const useCurveRawStats = (
 
   const getLPAPY = async () => {
     const res = await fetch(
-      network === NETWORK_NAMES.ETH ? curveAPYsURLEth : curveAPYsURLPoly,
+      network === NETWORK_NAMES.ETH
+        ? curveAPYsURLEth
+        : network === NETWORK_NAMES.ARB
+        ? curveAPYsURLArb
+        : curveAPYsURLPoly,
     ).then((x) => x.json());
     const stats = res.apy.day;
 

@@ -6,6 +6,8 @@ import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
+import { useJarWithAPY as useJarsWithAPYOK } from "./Jars/useJarsWithAPYOK";
+import { useJarWithAPY as useJarsWithAPYArb } from "./Jars/useJarsWithAPYArb";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
@@ -19,11 +21,12 @@ function useJars() {
     chainName,
     rawJars,
   );
-  const { jarsWithTVL } = useJarWithTVL(jarsWithAPYEth || jarsWithAPYPoly);
-  if (jarsWithTVL)
-    console.log(
-      `Jars successfully (re)loaded, Jar count: ${jarsWithTVL.length}`,
+  const { jarsWithAPY: jarswithAPYOK } = useJarsWithAPYOK(chainName, rawJars);
+  const { jarsWithAPY: jarswithAPYArb } = useJarsWithAPYArb(chainName, rawJars);
+  const { jarsWithTVL } = useJarWithTVL(
+    jarsWithAPYEth || jarsWithAPYPoly || jarswithAPYOK || jarswithAPYArb,
     );
+
   const { addTokens } = Balances.useContainer();
 
   // Automatically update balance here

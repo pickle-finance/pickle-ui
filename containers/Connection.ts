@@ -5,7 +5,10 @@ import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
 import { config } from "./config";
-import { Provider as MulticallProvider } from "ethers-multicall";
+import {
+  Provider as MulticallProvider,
+  setMulticallAddress,
+} from "ethers-multicall";
 import { useRouter } from "next/router";
 
 type Network = ethers.providers.Network;
@@ -34,7 +37,30 @@ function useConnection() {
     rpcUrls: ["https://polygon-rpc.com"],
     blockExplorerUrls: ["https://polygonscan.com/"],
   };
+
+  switchChainParams[66] = {
+    chainId: "0x42",
+    chainName: "OKEx Chain",
+    nativeCurrency: {
+      name: "OKT",
+      symbol: "OKT",
+      decimals: 18,
+    },
+    rpcUrls: ["https://exchainrpc.okex.org"],
+    blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
+  };
   
+  switchChainParams[42161] = {
+    chainId: "0xA4B1",
+    chainName: "Arbitrum",
+    nativeCurrency: {
+      name: "AETH",
+      symbol: "AETH",
+      decimals: 18,
+    },
+    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://arbiscan.io/"],
+  };
   const switchChain = async (chainId: number) => {
     let method: string;
     let params: any[];
@@ -65,6 +91,8 @@ function useConnection() {
     if (library) {
       library.getNetwork().then((network: any) => setNetwork(network));
 
+      setMulticallAddress(66, "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa");
+      setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
         .init()

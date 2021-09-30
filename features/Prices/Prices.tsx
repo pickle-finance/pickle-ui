@@ -21,7 +21,7 @@ const Monospace = styled.div`
   font-family: "Source Code Pro", sans-serif;
 `;
 
-const TradeButton = styled.a`
+export const TradeButton = styled.a`
   box-sizing: border-box;
   display: inline-block;
   padding: 0 1.25rem;
@@ -61,15 +61,23 @@ const CoinIcon = ({ src }: { src: string }) => (
 export const Prices: FC = () => {
   const { prices } = PricesContainer.useContainer();
   const { chainName } = Connection.useContainer();
+
+  const swapLink = () => {
+    switch (chainName) {
+      case NETWORK_NAMES.POLY:
+        return "https://swap.cometh.io/#/swap?inputCurrency=0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f&outputCurrency=0x2b88ad57897a8b496595925f43048301c37615da";
+      case NETWORK_NAMES.ARB:
+        return "https://arbitrum.balancer.fi/#/trade/ether/0x965772e0E9c84b6f359c8597C891108DcF1c5B1A";
+      case NETWORK_NAMES.ETH:
+      default:
+        return "https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c";
+    }
+  };
   return (
     <Card style={{ height: "169px" }}>
       <Card.Content>
         <TradeButton
-          href={
-            chainName === NETWORK_NAMES.POLY
-              ? "https://swap.cometh.io/#/swap?inputCurrency=0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f&outputCurrency=0x2b88ad57897a8b496595925f43048301c37615da"
-              : "https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c"
-          }
+          href={swapLink()}
           target="_blank"
           rel="noopener noreferrer"
         >

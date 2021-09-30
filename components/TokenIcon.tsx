@@ -18,7 +18,7 @@ export const LpIcon = ({
           position: "absolute",
           right: -3,
           bottom: -3,
-          width: `25px`,
+          width: `30px`,
           borderRadius: "100%",
         }}
       />

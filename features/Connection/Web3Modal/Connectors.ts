@@ -4,11 +4,13 @@ import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
   1: process.env.infura,
-  137: "https://polygon-rpc.com",
+  66: "https://exchainrpc.okex.org",
+  137: "https://rpc-mumbai.matic.today",
+  42161: "https://arb1.arbitrum.io/rpc",
 };
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 137],
+  supportedChainIds: [1, 66, 137, 42161],
 });
 
 export const walletconnect = new WalletConnectConnector({

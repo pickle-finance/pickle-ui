@@ -17,6 +17,8 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
+import { Balances } from "../../containers/Balances";
+import { NETWORK_NAMES } from "containers/config";
 import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
@@ -91,13 +93,46 @@ export const FARM_LP_TO_ICON: {
   "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": (
+    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
+  ),
+  "0xe75c8805f9970c7547255059A22d14001d3D7b94": (
+    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": (
+    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/ethereum.png"} />
+  ),
+  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": (
+    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
+  ),
+  "0x09C22BDC438B69bCC190EFa8F8E3417277E1DD4F": (
+    <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/bxh.png"} />
+  ),
+  "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": (
+    <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
   "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
   ),
   "0x1D35e4348826857eaFb22739d4e494C0337cb427": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
   ),
+
+  //Arbitrum
+  "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/spell.webp"} />
+  ),
+  "0x973B669eF8c1459f7cb685bf7D7bCD4150977504": (
+    <LpIcon swapIconSrc={"/mim.webp"} tokenIconSrc={"/curve.png"} />
+  ),
+  "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C": (
+    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/tricrypto.png"} />
+  ),
 };
+
 
 export const JarMiniFarmCollapsible: FC<{
   jarData: UserJarData;
@@ -115,6 +150,7 @@ export const JarMiniFarmCollapsible: FC<{
     usdPerPToken,
     depositTokenLink,
     apr,
+    tvlUSD,
   } = jarData;
 
   const balNum = parseFloat(formatEther(balance));
@@ -173,7 +209,7 @@ export const JarMiniFarmCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer, address, blockNum } = Connection.useContainer();
+  const { signer, address, blockNum, chainName } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
@@ -353,6 +389,9 @@ export const JarMiniFarmCollapsible: FC<{
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
 
+  const isOK = chainName === NETWORK_NAMES.OKEX;
+  const isArb = chainName === NETWORK_NAMES.ARB;
+
   useEffect(() => {
     const checkAllowance = async () => {
       if (erc20 && address && signer && minichef) {
@@ -375,7 +414,7 @@ export const JarMiniFarmCollapsible: FC<{
     GAUGE_TVL_KEY[depositToken.address] &&
     tvlData[GAUGE_TVL_KEY[depositToken.address]]
       ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      : 0;
+      : tvlUSD;
   const tvlStr = getFormatString(tvlNum);
 
   return (
@@ -408,11 +447,21 @@ export const JarMiniFarmCollapsible: FC<{
             <br />
             <Label>{t("balances.walletBalance")}</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={4} lg={4} style={{ textAlign: "center" }}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+            <Data
+              isZero={
+                +formatEther(harvestableMatic) === 0 &&
+                +formatEther(harvestable) === 0
+              }
+            >
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
-              <br />
-              {harvestableMaticStr} <MiniIcon source={"/matic.png"} />
+              <Spacer y={1} />
+              {!isArb && (
+                <>
+                  {harvestableMaticStr}{" "}
+                  <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+                </>
+              )}
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
@@ -433,6 +482,7 @@ export const JarMiniFarmCollapsible: FC<{
                 width="15px"
                 style={{ marginLeft: 5 }}
               />
+              <Spacer y={1} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>

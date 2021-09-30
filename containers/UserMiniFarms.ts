@@ -8,6 +8,7 @@ import { Connection } from "./Connection";
 import { updateFarmData } from "./UserFarms";
 import { UserFarmData } from "../containers/UserFarms";
 import { ERC20Transfer } from "./Erc20Transfer";
+import { NULL_ADDRESS } from "features/Zap/constants";
 
 export interface UserFarmDataMatic extends UserFarmData {
   harvestableMatic: ethers.BigNumber;
@@ -29,6 +30,18 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
 
   const updateMaticFarmData = async () => {
     if (pickleRewarder && farmData && address) {
+      const hasRewarder = pickleRewarder.address != NULL_ADDRESS;
+      if (!hasRewarder) {
+        const newFarms = farmData.map((farm) => {
+          return {
+            ...farm,
+            maticApy: 0,
+            harvestableMatic: BigNumber.from(0),
+          };
+        });
+        setFarmDataMatic(newFarms);
+        return;
+      }
       const userHarvestableMatic = await Promise.all(
         farmData.map((farm) => {
           if (farm.staked.eq(BN_ZERO)) return Promise.resolve(BN_ZERO);

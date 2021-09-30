@@ -39,7 +39,9 @@
     "metamask": "Metamask",
     "networks": {
       "ethereum": "Ethereum",
-      "polygon": "Polygon"
+      "polygon": "Polygon",
+      "okex": "OKEx",
+      "arbitrum": "Arbitrum"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"

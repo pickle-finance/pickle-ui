@@ -132,6 +132,26 @@ export const DesktopNetworkIndicator: FC = () => {
     }
   };
 
+  const renderBlock = () => {
+    if (chainName === NETWORK_NAMES.POLY)
+      return `https://polygonscan.com/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.OKEX)
+      return `https://www.oklink.com/okexchain/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.ARB)
+      return `https://arbiscan.io/block/${blockNum}`;
+    else return `https://etherscan.io/block/${blockNum}`;
+  };
+
+  const renderAddress = () => {
+    if (chainName === NETWORK_NAMES.POLY)
+      return `https://polygonscan.com/address/${address}`;
+    if (chainName === NETWORK_NAMES.OKEX)
+      return `https://www.oklink.com/okexchain/address/${address}`;
+    if (chainName === NETWORK_NAMES.ARB)
+      return `https://arbiscan.io/address/${address}`;
+    else return `https://etherscan.io/address/${address}`;
+  };
+
   return (
     <Container>
       <Modal
@@ -174,13 +194,15 @@ export const DesktopNetworkIndicator: FC = () => {
         <Select.Option value="137">
           {t("connection.networks.polygon")}
         </Select.Option>
+        {/* <Select.Option value="66">
+          {t("connection.networks.okex")}
+        </Select.Option> */}
+        <Select.Option value="42161">
+          {t("connection.networks.arbitrum")}
+        </Select.Option>
       </Select>
       <AddressContainer
-        href={
-          chainName === NETWORK_NAMES.POLY
-            ? `https://explorer-mainnet.maticvigil.com/address/${address}`
-            : `https://etherscan.io/address/${address}`
-        }
+        href={renderAddress()}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -191,11 +213,7 @@ export const DesktopNetworkIndicator: FC = () => {
         <Block>
           <Tooltip text={t("connection.blockNumber")} placement="left">
             <BlockBox
-              href={
-                chainName === NETWORK_NAMES.POLY
-                  ? `https://explorer-mainnet.maticvigil.com/blocks/${blockNum}`
-                  : `https://etherscan.io/block/${blockNum}`
-              }
+              href={renderBlock()}
               target="_blank"
               rel="noopener noreferrer"
             >

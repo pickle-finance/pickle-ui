@@ -1,5 +1,5 @@
 import { createContainer } from "unstated-next";
-import { ethers, Contract } from "ethers";
+import { ethers, Contract, BigNumber } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 
 import { PriceIds, Prices } from "./Prices";
@@ -32,6 +32,21 @@ export const addresses = {
   mim: "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
   tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
+
+  // OKEx
+  cherry: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
+  wokt: "0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15",
+  okusdc: "0xc946DAf81b08146B1C7A8Da2A851Ddf2B3EAaf85",
+  okusdt: "0x382bb369d343125bfb2117af9c149795c6c65c50",
+  btck: "0x54e4622DC504176b3BB432dCCAf504569699a7fF",
+  ethk: "0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C",
+  bxh: "0x145ad28a42bf334104610f7836d0945dffb6de63",
+
+  // Arbitrum
+  aweth: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+  asushi: "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
+  amim: "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a",
+  aspell: "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af",
   mpickle: "0x2b88ad57897a8b496595925f43048301c37615da",
   mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
 };
@@ -110,10 +125,68 @@ const dino: Token = {
   priceId: "dino",
   decimals: 18,
 };
+const cherry: Token = {
+  address: addresses.cherry,
+  priceId: "cherry",
+  decimals: 18,
+};
+const wokt: Token = {
+  address: addresses.wokt,
+  priceId: "wokt",
+  decimals: 18,
+};
 const tru: Token = {
   address: addresses.tru,
   priceId: "tru",
   decimals: 8,
+};
+const okusdc: Token = {
+  address: addresses.okusdc,
+  priceId: "usdc",
+  decimals: 6,
+};
+const okusdt: Token = {
+  address: addresses.okusdt,
+  priceId: "usdt",
+  decimals: 18,
+};
+const ethk: Token = {
+  address: addresses.ethk,
+  priceId: "eth",
+  decimals: 18,
+};
+const btck: Token = {
+  address: addresses.btck,
+  priceId: "wbtc",
+  decimals: 18,
+};
+const bxh: Token = {
+  address: addresses.bxh,
+  priceId: "bxh",
+  decimals: 18,
+};
+const amim: Token = {
+  address: addresses.amim,
+  priceId: "mim",
+  decimals: 18,
+};
+
+const aweth: Token = {
+  address: addresses.aweth,
+  priceId: "eth",
+  decimals: 18,
+};
+
+const asushi: Token = {
+  address: addresses.asushi,
+  priceId: "sushi",
+  decimals: 18,
+};
+
+const aspell: Token = {
+  address: addresses.spell,
+  priceId: "spell",
+  decimals: 18,
 };
 const mpickle: Token = {
   address: addresses.mpickle,
@@ -155,32 +228,38 @@ export const PAIR_INFO: PairMap = {
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": { a: wusdc, b: dino },
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": { a: mweth, b: dino },
   "0xfCEAAf9792139BF714a694f868A215493461446D": { a: tru, b: weth },
+  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": { a: wokt, b: cherry },
+  "0x089dedbFD12F2aD990c55A2F1061b8Ad986bFF88": { a: okusdt, b: cherry },
+  "0x94E01843825eF85Ee183A711Fa7AE0C5701A731a": { a: btck, b: okusdt },
+  "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": { a: ethk, b: okusdt },
+  "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": { a: wokt, b: okusdt },
+  "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": { a: okusdt, b: okusdc },
+  "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: okusdt, b: bxh },
+  "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": { a: ethk, b: btck },
+  "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": { a: amim, b: aweth },
+  "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
   "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
 };
 
 function useSushiPairs() {
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, provider } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used
-  if (!multicallProvider || !prices)
+  if (!multicallProvider || !prices || !provider)
     return { getPairData: null, getPairDataPrefill: null };
 
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new MulticallContract(a.address, erc20.abi);
-    const tokenB = new MulticallContract(b.address, erc20.abi);
-    const pair = new MulticallContract(pairAddress, erc20.abi);
+    const tokenA = new Contract(a.address, erc20.abi, provider);
+    const tokenB = new Contract(b.address, erc20.abi, provider);
+    const pair = new Contract(pairAddress, erc20.abi, provider);
 
-    const [
-      numAInPairBN,
-      numBInPairBN,
-      totalSupplyBN,
-    ] = await multicallProvider.all([
-      tokenA.balanceOf(pairAddress),
-      tokenB.balanceOf(pairAddress),
+    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
+      tokenA.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
+      tokenB.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
       pair.totalSupply(),
     ]);
 

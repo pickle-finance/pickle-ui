@@ -13,6 +13,8 @@ import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { uncompoundAPY } from "../../util/jars";
 import { NETWORK_NAMES } from "containers/config";
+import { BalFarm } from "../PickleFarms/BalFarm";
+import { copySync } from "fs-extra";
 import { pickleWhite } from "util/constants";
 
 const Container = styled.div`
@@ -29,6 +31,9 @@ export const MiniFarmList: FC = () => {
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const { t } = useTranslation("common");
+
+  const isOK = chainName === NETWORK_NAMES.OKEX;
+  const isMatic = chainName === NETWORK_NAMES.POLY;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
@@ -48,7 +53,8 @@ export const MiniFarmList: FC = () => {
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },
-      ...(farm.maticApy ? [{ matic: farm.maticApy * 100 }] : []),
+      ...(isOK ? [{ okt: farm.maticApy * 100 }] : []),
+      ...(isMatic ? [{ matic: farm.maticApy * 100 }] : []),
     ];
 
     const jar =
@@ -109,11 +115,17 @@ export const MiniFarmList: FC = () => {
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
   );
 
-  const activeFarms = farmData.filter((x) => x.apy !== 0);
-  const inactiveFarms = farmData.filter((x) => x.apy === 0);
+  const activeFarms = farmData?.filter((x) => x.maticApy !== 0);
+  const inactiveFarms = farmData?.filter((x) => x.maticApy === 0);
 
   return (
     <Container>
+      {chainName === NETWORK_NAMES.ARB && (
+        <>
+          <BalFarm />
+          <Spacer y={1} />
+        </>
+      )}
       <Grid.Container gap={1}>
         <Grid md={16}>
           <p>
@@ -170,12 +182,6 @@ export const MiniFarmList: FC = () => {
               </Grid>
             );
           })}
-        {showInactive &&
-          inactiveFarms.map((farm) => (
-            <Grid xs={24} key={farm.poolIndex}>
-              <MiniFarmCollapsible farmData={farm} />
-            </Grid>
-          ))}
       </Grid.Container>
     </Container>
   );

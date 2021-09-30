@@ -50,6 +50,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP QI",
     poolName: "pQLP QI",
   },
+  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": {
+    tokenName: "pQLP QI/MATIC",
+    poolName: "pQLP QI/MATIC",
+  },
   "0xE484Ed97E19F6B649E78db0F37D173C392F7A1D9": {
     tokenName: "IS3USD",
     poolName: "IS3USD",
@@ -62,13 +66,55 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
-  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": {
-    tokenName: "pQLP QI/MATIC",
-    poolName: "pQLP QI/MATIC",
+  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
+    tokenName: "pCLP CHE/OKT",
+    poolName: "pCLP CHE/OKT",
+  },
+  "0xe75c8805f9970c7547255059A22d14001d3D7b94": {
+    tokenName: "pCLP CHE/USDT",
+    poolName: "pCLP CHE/USDT",
+  },
+  "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": {
+    tokenName: "pCLP BTCK/USDT",
+    poolName: "pCLP BTCK/USDT",
+  },
+  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": {
+    tokenName: "pCLP ETHK/USDT",
+    poolName: "pCLP ETHK/USDT",
+  },
+  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": {
+    tokenName: "pCLP OKT/USDT",
+    poolName: "pCLP OKT/USDT",
+  },
+  "0x09C22BDC438B69bCC190EFa8F8E3417277E1DD4F": {
+    tokenName: "pBLP BXH/USDT",
+    poolName: "pBLP BXH/USDT",
+  },
+  "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": {
+    tokenName: "pBLP ETHK/BTCK",
+    poolName: "pBLP ETHK/BTCK",
   },
   "0x1D35e4348826857eaFb22739d4e494C0337cb427": {
     tokenName: "pSLP PICKLE/DAI",
     poolName: "pSLP PICKLE/DAI",
+  },
+
+  // Arbitrum
+  "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": {
+    tokenName: "pSLP MIM/ETH",
+    poolName: "pSLP MIM/ETH",
+  },
+  "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2": {
+    tokenName: "pSLP SPELL/ETH",
+    poolName: "pSLP SPELL/ETH",
+  },
+  "0x973B669eF8c1459f7cb685bf7D7bCD4150977504": {
+    tokenName: "Abracadabra MIM2CRV",
+    poolName: "Abracadabra MIM2CRV",
+  },
+  "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C": {
+    tokenName: "Curve Tricrypto",
+    poolName: "Curve Tricrypto",
   },
 };
 

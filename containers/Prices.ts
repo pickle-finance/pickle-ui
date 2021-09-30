@@ -48,7 +48,13 @@ interface PriceObject {
   spell: number;
   fox: number;
   dino: number;
+  cherry: number;
+  wokt: number;
+  ethk: number;
+  btck: number;
   tru: number;
+  bxh: number;
+  bal: number;
   rly: number;
 }
 
@@ -106,7 +112,11 @@ function usePrices() {
         "iron-finance",
         "shapeshift-fox-token",
         "dinoswap",
+        "cherryswap",
+        "okexchain",
         "truefi",
+        "bxh",
+        "balancer",
         "rally-2",
       ],
       vs_currencies: ["usd"],
@@ -158,7 +168,13 @@ function usePrices() {
       mim: response["magic-internet-money"].usd,
       fox: response["shapeshift-fox-token"].usd,
       dino: response["dinoswap"].usd,
+      cherry: response["cherryswap"].usd,
+      wokt: response["okexchain"].usd,
+      ethk: response.ethereum.usd,
+      btck: response["wrapped-bitcoin"].usd,
       tru: response["truefi"].usd,
+      bxh: response["bxh"].usd,
+      bal: response["balancer"].usd,
       rly: response["rally-2"].usd,
     };
     setPrices(prices);

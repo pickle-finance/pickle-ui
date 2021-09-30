@@ -79,8 +79,12 @@ import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/fact
 import { FossilFarms } from "./Contracts/FossilFarms";
 import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factories/FossilFarms__factory";
 
+import { Cherrychef } from "./Contracts/Cherrychef";
+import { Cherrychef__factory as CherrychefFactory } from "./Contracts/factories/Cherrychef__factory";
 import { CvxBooster } from "./Contracts/CvxBooster";
 import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/CvxBooster__factory";
+import { Bxhchef } from "./Contracts/Bxhchef";
+import { Bxhchef__factory as BxhchefFactory } from "./Contracts/factories/Bxhchef__factory";
 
 import { Feichef } from "./Contracts/Feichef";
 import { Feichef__factory as FeichefFactory } from "./Contracts/factories/Feichef__factory";
@@ -189,12 +193,9 @@ export const COMETH_PICKLE_MUST_REWARDS =
   "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
 export const COMETH_MATIC_MUST_REWARDS =
   "0x2328c83431a29613b1780706E0Af3679E3D04afd";
-export const SUSHI_MINICHEF = "0x0769fd68dFb93167989C6f7254cd0D766Fb2841F";
-export const MINICHEF = "0x20B2a3fc7B13cA0cCf7AF81A68a14CB3116E8749";
 export const FOSSIL_FARMS = "0x1948abc5400aa1d72223882958da3bec643fb4e5";
 export const MATIC_COMPLEX_REWARDER =
   "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
-export const PICKLE_REWARDER = "0xE28287544005094be096301E5eE6E2A6E6Ef5749";
 
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
@@ -206,12 +207,26 @@ export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
 export const PICKLE_SUSHI_REWARDER =
   "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 
+export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
+export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
+
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
-  const addresses =
-    chainName === NETWORK_NAMES.ETH
-      ? config.addresses.Ethereum
-      : config.addresses.Polygon;
+  const getNetworkConfig = (network: string | null) => {
+    switch (network) {
+      case NETWORK_NAMES.OKEX:
+        return config.addresses.OKEx;
+      case NETWORK_NAMES.POLY:
+        return config.addresses.Polygon;
+      case NETWORK_NAMES.ARB:
+        return config.addresses.Arbitrum;
+      case NETWORK_NAMES.ETH:
+      default:
+        return config.addresses.Ethereum;
+    }
+  };
+
+  const addresses = getNetworkConfig(chainName);
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -307,6 +322,8 @@ function useContracts() {
     null,
   );
 
+  const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null);
+  const [bxhchef, setBxhchef] = useState<Bxhchef | null>(null);
   const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
   const [jar, setJar] = useState<Jar | null>(null);
   const [feichef, setFeichef] = useState<Feichef | null>(null);
@@ -359,7 +376,7 @@ function useContracts() {
         CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
       );
       setSorbettiereFarm(
-        SorbettiereFactory.connect(SORBETTIERE_REWARDS, providerOrSigner),
+        SorbettiereFactory.connect(addresses.sorbettiere || ethers.constants.AddressZero, providerOrSigner),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(
@@ -421,14 +438,24 @@ function useContracts() {
 
       setIBPool(PoolFactory.connect(IRONBANK_POOL_ADDR, signer));
 
-      setSushiMinichef(SushiMinichefFactory.connect(SUSHI_MINICHEF, signer));
+      setSushiMinichef(
+        SushiMinichefFactory.connect(
+          addresses.sushiMinichef || ethers.constants.AddressZero,
+          signer,
+        ),
+      );
       setFossilFarms(FossilFarmsFactory.connect(FOSSIL_FARMS, signer));
       setSushiComplexRewarder(
         SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
       );
-      setPickleRewarder(PickleRewarderFactory.connect(PICKLE_REWARDER, signer));
+      setPickleRewarder(
+        PickleRewarderFactory.connect(
+          addresses.rewarder || ethers.constants.AddressZero,
+          signer,
+        ),
+      );
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
-      setMinichef(MinichefFatory.connect(MINICHEF, signer));
+      setMinichef(MinichefFatory.connect(addresses.masterChef, signer));
       setPBAMM(JarFactory.connect(BPAddresses.pBAMM, signer));
       setStabilityPool(
         StabilityPoolFactory.connect(BPAddresses.STABILITY_POOL, signer),
@@ -439,6 +466,9 @@ function useContracts() {
       setPickleSushiRewarder(
         PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer),
       );
+
+      setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
+      setBxhchef(BxhchefFactory.connect(BXHCHEF, signer));
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
       setFeichef(FeichefFactory.connect(FEI_MASTERCHEF, signer));
       setRallyRewardPools(
@@ -499,7 +529,9 @@ function useContracts() {
     ironchef,
     sushiMigrator,
     pickleSushiRewarder,
+    cherrychef,
     cvxBooster,
+    bxhchef,
     jar,
     feichef,
     rallyRewardPools,
