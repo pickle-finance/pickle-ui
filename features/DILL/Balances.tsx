@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Grid, Card } from "@geist-ui/react";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
+import { useTranslation } from "next-i18next";
 
 import { useBalances } from "../Balances/useBalances";
 import { DillStats } from "./DillStats";
@@ -18,12 +19,13 @@ export const Balances: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { pickleBalance } = useBalances();
+  const { t } = useTranslation("common");
 
   return (
     <Grid.Container gap={2}>
       <Grid xs={24} sm={5} md={5}>
         <Card>
-          <h2>PICKLE Balance</h2>
+          <h2>{t("dill.pickleBalance")}</h2>
           <DataPoint>
             <span>
               {pickleBalance !== null
@@ -42,7 +44,7 @@ export const Balances: FC<{
       </Grid>
       <Grid xs={24} sm={9} md={9}>
         <Card>
-          <h2>Total Locked</h2>
+          <h2>{t("dill.totalLocked")}</h2>
           <DataPoint>
             <span>
               {pickleBalance !== null

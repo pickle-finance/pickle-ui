@@ -3,6 +3,7 @@ import { ethers, BigNumber } from "ethers";
 import GaugeChart from "react-gauge-chart";
 import styled from "styled-components";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { Trans, useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../../containers/Dill";
 import { accentColor } from "../../../util/constants";
@@ -24,6 +25,7 @@ const formatNumber = (number: BigNumber) =>
 
 export const LockDurationChart: FC<Props> = ({ dillStats }) => {
   const { totalSupply: dillSupply, totalLocked: pickleLocked } = dillStats;
+  const { t } = useTranslation("common");
 
   if (!dillSupply || !pickleLocked) {
     return (
@@ -61,10 +63,12 @@ export const LockDurationChart: FC<Props> = ({ dillStats }) => {
       </ChartContainer>
 
       <div>
-        The average lock duration is currently{" "}
-        <span style={{ color: accentColor }}>{years}</span> years (based on{" "}
-        {formatNumber(dillSupply)} DILL and {formatNumber(pickleLocked)} PICKLEs
-        locked).
+        <Trans i18nKey="dill.averageLockDuration">
+          The average lock duration is currently
+          <span style={{ color: accentColor }}>{{ years }}</span> years (based
+          on {{ dill: formatNumber(dillSupply) }} DILL and
+          {{ pickle: formatNumber(pickleLocked) }} PICKLEs locked).
+        </Trans>
       </div>
     </>
   );

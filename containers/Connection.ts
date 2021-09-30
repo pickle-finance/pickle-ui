@@ -25,77 +25,65 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
+  const switchChainParams : any[] = [];
+  switchChainParams[137] = {
+    chainId: "0x89",
+    chainName: "Polygon",
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
+      decimals: 18,
+    },
+    rpcUrls: ["https://polygon-rpc.com"],
+    blockExplorerUrls: ["https://polygonscan.com/"],
+  };
+
+  switchChainParams[66] = {
+    chainId: "0x42",
+    chainName: "OKEx Chain",
+    nativeCurrency: {
+      name: "OKT",
+      symbol: "OKT",
+      decimals: 18,
+    },
+    rpcUrls: ["https://exchainrpc.okex.org"],
+    blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
+  };
+  
+  switchChainParams[42161] = {
+    chainId: "0xA4B1",
+    chainName: "Arbitrum",
+    nativeCurrency: {
+      name: "AETH",
+      symbol: "AETH",
+      decimals: 18,
+    },
+    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://arbiscan.io/"],
+  };
   const switchChain = async (chainId: number) => {
-    if (chainId === 1) return false;
-
-    if (chainId === 137)
-      try {
-        await library.provider.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: "0x89",
-              chainName: "Polygon",
-              nativeCurrency: {
-                name: "MATIC",
-                symbol: "MATIC",
-                decimals: 18,
-              },
-              rpcUrls: ["https://polygon-rpc.com"],
-              blockExplorerUrls: ["https://polygonscan.com/"],
-            },
-          ],
-        });
-        return true;
-      } catch (e) {
+    let method: string;
+    let params: any[];
+    if( chainId === 1 ) {
+      method = "wallet_switchEthereumChain";
+      params = [{chainId: "0x1"}];
+    } else {
+      method = "wallet_addEthereumChain";
+      const param = switchChainParams[chainId];
+      if( param === undefined || param === null )
         return false;
-      }
+      params = [param];
+    }
 
-    if (chainId === 66)
-      try {
-        await library.provider.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: "0x42",
-              chainName: "OKEx Chain",
-              nativeCurrency: {
-                name: "OKT",
-                symbol: "OKT",
-                decimals: 18,
-              },
-              rpcUrls: ["https://exchainrpc.okex.org"],
-              blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
-            },
-          ],
-        });
-        return true;
-      } catch (e) {
-        return false;
-      }
-
-    if (chainId === 42161)
-      try {
-        await library.provider.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: "0xA4B1",
-              chainName: "Arbitrum",
-              nativeCurrency: {
-                name: "AETH",
-                symbol: "AETH",
-                decimals: 18,
-              },
-              rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-              blockExplorerUrls: ["https://arbiscan.io/"],
-            },
-          ],
-        });
-        return true;
-      } catch (e) {
-        return false;
-      }
+    try {
+      await library.provider.request({
+        method: method,
+        params: params,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   };
 
   // create observable to stream new blocks

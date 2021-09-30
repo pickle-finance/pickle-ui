@@ -14,6 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { TFunction, useTranslation } from "next-i18next";
 
 import { accentColor, materialBlack } from "../../util/constants";
 import { roundNumber } from "../../util/number";
@@ -44,10 +45,15 @@ const labelFormatter = (time: Date, data: any[]): string | ReactNode => {
   }
 };
 
+interface Entry {
+  payload: FeeDistributionDataPoint;
+}
+
 const tooltipFormatter = (
   value: number,
   name: string,
-  entry: { payload: FeeDistributionDataPoint },
+  entry: Entry,
+  t: TFunction,
 ): [string, string] => {
   const { picklePriceUsd } = entry.payload;
   const amount = value * picklePriceUsd;
@@ -59,34 +65,35 @@ const tooltipFormatter = (
 
   switch (name) {
     case "weeklyPickleAmount":
-      return [formattedDollarValue, "Weekly PICKLEs distributed"];
+      return [formattedDollarValue, t("dill.weeklyPickleAmount")];
     case "totalPickleAmount":
-      return [formattedDollarValue, "Total PICKLEs distributed"];
+      return [formattedDollarValue, t("dill.totalPickleAmount")];
     case "weeklyDillAmount":
-      return [formattedNumber, "Weekly DILL 🔒"];
+      return [formattedNumber, t("dill.weeklyDillAmount")];
     case "totalDillAmount":
-      return [formattedNumber, "Total DILL 🔒"];
+      return [formattedNumber, t("dill.totalDillAmount")];
     case "pickleDillRatio":
       return [
         `${formattedNumber} (${formatDollarValue(amount, 2)})`,
-        "PICKLEs per 1 DILL ratio",
+        t("dill.pickleDillRatio"),
       ];
     default:
       return [formattedNumber, name];
   }
 };
-const legendFormatter = (value: string): string => {
+
+const legendFormatter = (value: string, t: TFunction): string => {
   switch (value) {
     case "weeklyPickleAmount":
-      return "Weekly PICKLEs";
+      return t("dill.weeklyPickleAmount");
     case "totalPickleAmount":
-      return "Total PICKLEs";
+      return t("dill.totalPickleAmount");
     case "weeklyDillAmount":
-      return "Weekly DILL amount";
+      return t("dill.weeklyDillAmount");
     case "totalDillAmount":
-      return "Total DILL amount";
+      return t("dill.totalDillAmount");
     case "pickleDillRatio":
-      return "Distributed PICKLEs per 1 DILL";
+      return t("dill.pickleDillRatio");
     default:
       return value;
   }
@@ -98,6 +105,7 @@ interface FootnoteProps {
 
 const Footnote: FC<FootnoteProps> = ({ series }) => {
   const projectedEntry = series.find((entry) => entry.isProjected);
+  const { t } = useTranslation("common");
 
   if (!projectedEntry) return null;
 
@@ -105,8 +113,10 @@ const Footnote: FC<FootnoteProps> = ({ series }) => {
     <>
       <Spacer y={1} />
       <Text p>
-        * Data for {dateFormatter(projectedEntry.distributionTime)} is
-        projected.
+        *{" "}
+        {t("dill.projectedData", {
+          date: dateFormatter(projectedEntry.distributionTime),
+        })}
       </Text>
     </>
   );
@@ -115,17 +125,18 @@ const Footnote: FC<FootnoteProps> = ({ series }) => {
 export const FeeDistributionsChart: FC = () => {
   const { feeDistributionSeries: dataSeries } = useFeeDistributionSeries();
   const [chartMode, setChartMode] = useState<ChartMode>("weekly");
+  const { t } = useTranslation("common");
 
   return (
     <Card>
-      <h2>Historic distributions of PICKLE</h2>
+      <h2>{t("dill.historic")}</h2>
       <Radio.Group
         value={chartMode}
         useRow
         onChange={(value) => setChartMode(value as ChartMode)}
       >
-        <Radio value="weekly">Weekly</Radio>
-        <Radio value="total">Total</Radio>
+        <Radio value="weekly">{t("dill.weekly")}</Radio>
+        <Radio value="total">{t("dill.total")}</Radio>
       </Radio.Group>
       <Spacer y={1} />
       <div style={{ height: 360 }}>
@@ -143,7 +154,7 @@ export const FeeDistributionsChart: FC = () => {
               />
               <YAxis width={90} padding={{ top: 20 }}>
                 <Label
-                  value="Token amount"
+                  value={t("dill.tokenAmount") as string}
                   position="insideLeft"
                   angle={-90}
                   fill={accentColor}
@@ -157,7 +168,7 @@ export const FeeDistributionsChart: FC = () => {
                 padding={{ top: 20 }}
               >
                 <Label
-                  value="PICKLEs per DILL"
+                  value={t("dill.pickleDillRatio") as string}
                   position="insideRight"
                   angle={-90}
                   fill={accentColor}
@@ -169,13 +180,15 @@ export const FeeDistributionsChart: FC = () => {
                   backgroundColor: materialBlack,
                   borderColor: accentColor,
                 }}
-                formatter={tooltipFormatter}
+                formatter={(value: number, name: string, entry: Entry) =>
+                  tooltipFormatter(value, name, entry, t)
+                }
                 labelFormatter={labelFormatter}
                 labelStyle={{ fontWeight: "bold", color: "#666666" }}
               />
               <Legend
                 align="left"
-                formatter={(value: string) => legendFormatter(value)}
+                formatter={(value: string) => legendFormatter(value, t)}
               />
               <Bar
                 dataKey={
