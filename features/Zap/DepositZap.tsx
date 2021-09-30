@@ -81,10 +81,10 @@ export const DepositZap: FC = () => {
     }
   };
 
-  const isPoly = chainName === NETWORK_NAMES.POLY;
+  const isEth = chainName === NETWORK_NAMES.ETH;
 
   const disableZap = () => {
-    if (isPoly) return true;
+    if (!isEth) return true;
     if (txState !== null) return true;
     if (amount === "0") return true;
     if (amount === "") return true;
@@ -160,7 +160,7 @@ export const DepositZap: FC = () => {
         onClick={handleDeposit}
         disabled={disableZap()}
       >
-        {txState || isPoly ? t("zap.notAvailable") : t("zap.zap")}
+        {txState || !isEth ? t("zap.notAvailable") : t("zap.zap")}
       </Button>
     </Card>
   );
