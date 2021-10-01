@@ -201,6 +201,7 @@
     "monthly": "{{ percent }}% monthly",
     "monthlyApy": "Monthly APY",
     "picklePrice": "Pickle Price",
+    "polyJars": "polyJars",
     "week": "Week",
     "weekly": "{{ percent }}% weekly",
     "weeklyApy": "Weekly APY",

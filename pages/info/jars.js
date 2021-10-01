@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import { Page } from "@geist-ui/react";
+import clsx from "clsx";
+import { useTranslation } from "next-i18next";
+
 import { crvJars, sushiJars, uniJars, polyJars } from "../../util/jars";
 import { getJarChart, getProtocolData } from "../../util/api";
 import { materialBlack } from "../../util/constants";
 import JarValueChart from "../../components/JarValueChart";
-import Grid from "@material-ui/core/Grid";
-import clsx from "clsx";
-import { Page } from "@geist-ui/react";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
@@ -121,12 +123,14 @@ export default function Dashboard() {
     asset: "Pickle Finance",
   };
 
+  const { t } = useTranslation("common");
+
   return (
     <>
       <Page>
         <InfoBar />
         <Grid container spacing={2}>
-          <h1>Total Value Locked</h1>
+          <h1>{t("balances.totalValueLocked")}</h1>
 
           <Grid item xs={12}>
             <JarValueChart jar={tvlJar} />
@@ -137,7 +141,7 @@ export default function Dashboard() {
             xs={12}
             className={clsx(classes.section, classes.separator)}
           >
-            <h1>polyJars</h1>
+            <h1>{t("info.polyJars")}</h1>
           </Grid>
           {dashboardData.polyJars.map((jar) => {
             return (
