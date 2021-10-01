@@ -98,9 +98,16 @@
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
+    "addLiquidity": "Add liquidity",
     "apy": "Hover over the displayed APY to see where the returns are coming from.",
     "approveAndStake": "Approve and Stake",
     "approving": "Approving...",
+    "arbitrum": {
+      "balancer": "Farm PICKLE on Balancer",
+      "balancerApr": "at <1>{{ percent }}%</1> APR",
+      "bridge": "Bridge",
+      "bridgeAssets": "Bridge your Ethereum assets to Arbitrum"
+    },
     "baseAPRs": "Base APRs",
     "bProtocol": {
       "liquidation": "liquidation",
