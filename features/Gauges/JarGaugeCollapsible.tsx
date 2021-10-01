@@ -1018,11 +1018,11 @@ export const JarGaugeCollapsible: FC<{
           )}
         </Grid.Container>
       )}
-      {Boolean(stakedNum) && (
+      {(Boolean(stakedNum) || Boolean(harvestableNum)) && (
         <>
           <Spacer y={0.5} />
           <Grid.Container gap={2}>
-            <Grid xs={24} md={12}>
+            <Grid xs={24} md={stakedNum ? 12 : 24}>
               <Button
                 disabled={harvestButton.disabled}
                 onClick={() => {
@@ -1042,28 +1042,30 @@ export const JarGaugeCollapsible: FC<{
                 {harvestButton.text} {harvestableStr} $PICKLES
               </Button>
             </Grid>
-            <Grid xs={24} md={12}>
-              <Button
-                disabled={unstakeButton.disabled}
-                onClick={() => {
-                  if (gauge && signer) {
-                    transfer({
-                      token: gauge.address,
-                      recipient: gaugeDepositToken.address,
-                      approval: false,
-                      transferCallback: async () => {
-                        return convertDecimals(unstakeAmount).eq(staked)
-                          ? gauge.exit()
-                          : gauge.withdraw(convertDecimals(unstakeAmount));
-                      },
-                    });
-                  }
-                }}
-                style={{ width: "100%" }}
-              >
-                {unstakeButton.text}
-              </Button>
-            </Grid>
+            {Boolean(stakedNum) && (
+              <Grid xs={24} md={12}>
+                <Button
+                  disabled={unstakeButton.disabled}
+                  onClick={() => {
+                    if (gauge && signer) {
+                      transfer({
+                        token: gauge.address,
+                        recipient: gaugeDepositToken.address,
+                        approval: false,
+                        transferCallback: async () => {
+                          return convertDecimals(unstakeAmount).eq(staked)
+                            ? gauge.exit()
+                            : gauge.withdraw(convertDecimals(unstakeAmount));
+                        },
+                      });
+                    }
+                  }}
+                  style={{ width: "100%" }}
+                >
+                  {unstakeButton.text}
+                </Button>
+              </Grid>
+            )}
           </Grid.Container>
         </>
       )}
