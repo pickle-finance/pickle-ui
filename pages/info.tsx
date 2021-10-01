@@ -14,10 +14,10 @@ import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import { Page } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
-import { Jars } from "../containers/Jars";
-import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { cardColor, pickleGreen, materialBlack } from "../util/constants";
 import {
   getProtocolData,
@@ -152,6 +152,7 @@ const DataPoint = styled.div`
 
 const FarmRow = (props) => {
   const classes = useStyles();
+  const { t } = useTranslation("common");
 
   const { farm, item, jar, isFarm = true } = props;
   const farmName = jarOptions.find(
@@ -184,7 +185,13 @@ const FarmRow = (props) => {
         </div>
       </TableCell>
       {isFarm && (
-        <Tooltip title={`${(item.apy * 100).toFixed(2)}% pickle apy`}>
+        <Tooltip
+          title={
+            <span>
+              {t("info.pickleApy", { percent: (item.apy * 100).toFixed(2) })}
+            </span>
+          }
+        >
           <TableCell className={classes.farmTableCell}>
             <div className={clsx(classes.cardTitle, classes.cardContent)}>
               <Avatar
@@ -198,9 +205,15 @@ const FarmRow = (props) => {
         </Tooltip>
       )}
       <Tooltip
-        title={`${((isFarm ? jar.oneDayFarm : jar.oneDay) / 365).toFixed(
-          2,
-        )}% daily`}
+        title={
+          <span>
+            {t("info.daily", {
+              percent: ((isFarm ? jar.oneDayFarm : jar.oneDay) / 365).toFixed(
+                2,
+              ),
+            })}
+          </span>
+        }
       >
         <TableCell className={classes.farmTableCell}>
           <div className={clsx(classes.cardTitle, classes.cardContent)}>
@@ -215,9 +228,15 @@ const FarmRow = (props) => {
         </TableCell>
       </Tooltip>
       <Tooltip
-        title={`${((isFarm ? jar.sevenDayFarm : jar.sevenDay) / 52).toFixed(
-          2,
-        )}% weekly`}
+        title={
+          <span>
+            {t("info.weekly", {
+              percent: (
+                (isFarm ? jar.sevenDayFarm : jar.sevenDay) / 52
+              ).toFixed(2),
+            })}
+          </span>
+        }
       >
         <TableCell className={classes.farmTableCell}>
           <div className={clsx(classes.cardTitle, classes.cardContent)}>
@@ -232,10 +251,16 @@ const FarmRow = (props) => {
         </TableCell>
       </Tooltip>
       <Tooltip
-        title={`${(
-          (isFarm ? jar.thirtyDayFarm : jar.thirtyDay) /
-          (365 / 30)
-        ).toFixed(2)}% monthly`}
+        title={
+          <span>
+            {t("info.monthly", {
+              percent: (
+                (isFarm ? jar.thirtyDayFarm : jar.thirtyDay) /
+                (365 / 30)
+              ).toFixed(2),
+            })}
+          </span>
+        }
       >
         <TableCell className={classes.farmTableCell}>
           <div className={clsx(classes.cardTitle, classes.cardContent)}>
@@ -336,37 +361,71 @@ const SkeletonChart = (props) => {
 const FarmHeader = (props) => {
   const classes = useStyles();
   const { isFarm = true } = props;
+  const { t } = useTranslation("common");
+  const target = isFarm ? t("info.farm") : t("info.jar");
+
   return (
     <TableHead>
       <TableRow>
         <TableCell className={classes.farmTableCell}>
-          <div className={classes.cardTitle}>{isFarm ? "Farm" : "Jar"}</div>
+          <div className={classes.cardTitle}>{target}</div>
         </TableCell>
         <Tooltip
           className={classes.cardTitle}
-          title={`Current deposit token balance in ${isFarm ? "Farm" : "Jar"}`}
+          title={
+            <span>
+              {t("info.currentTokenBalance", {
+                target,
+              })}
+            </span>
+          }
         >
-          <TableCell className={classes.farmTableCell}>Tokens</TableCell>
+          <TableCell className={classes.farmTableCell}>
+            {t("info.tokens")}
+          </TableCell>
         </Tooltip>
         <Tooltip
           className={classes.cardTitle}
-          title={`Current USD value in ${isFarm ? "Farm" : "Jar"}`}
+          title={
+            <span>
+              {t("info.currentUsdValue", {
+                target,
+              })}
+            </span>
+          }
         >
-          <TableCell className={classes.farmTableCell}>Value</TableCell>
+          <TableCell className={classes.farmTableCell}>
+            {t("info.value")}
+          </TableCell>
         </Tooltip>
         {isFarm && (
           <TableCell className={classes.farmTableCell}>
             <div className={classes.cardTitle}>Pickle / $1000</div>
           </TableCell>
         )}
-        <Tooltip className={classes.cardTitle} title="Current day APY">
-          <TableCell className={classes.farmTableCell}>Day</TableCell>
+        <Tooltip
+          className={classes.cardTitle}
+          title={<span>{t("info.dayApy")}</span>}
+        >
+          <TableCell className={classes.farmTableCell}>
+            {t("info.day")}
+          </TableCell>
         </Tooltip>
-        <Tooltip className={classes.cardTitle} title="Weekly APY">
-          <TableCell className={classes.farmTableCell}>Week</TableCell>
+        <Tooltip
+          className={classes.cardTitle}
+          title={<span>{t("info.weeklyApy")}</span>}
+        >
+          <TableCell className={classes.farmTableCell}>
+            {t("info.week")}
+          </TableCell>
         </Tooltip>
-        <Tooltip className={classes.cardTitle} title="Monthly APY">
-          <TableCell className={classes.farmTableCell}>Month</TableCell>
+        <Tooltip
+          className={classes.cardTitle}
+          title={<span>{t("info.monthlyApy")}</span>}
+        >
+          <TableCell className={classes.farmTableCell}>
+            {t("info.month")}
+          </TableCell>
         </Tooltip>
       </TableRow>
     </TableHead>
@@ -394,6 +453,7 @@ export default function Brining() {
   const [stakingInfo, setStakingInfo] = useState(undefined);
   const [protocolInfo, setProtocolInfo] = useState(undefined);
   const [pickleData, setPickleData] = useState(undefined);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
@@ -428,7 +488,7 @@ export default function Brining() {
         <Grid container spacing={5} className={classes.pickleHeader}>
           <Grid item xs={12} sm={6}>
             <Card>
-              <h2>Total Value Locked</h2>
+              <h2>{t("balances.totalValueLocked")}</h2>
               <DataPoint>
                 <span>
                   {protocolInfo ? getUSD(protocolInfo.totalValue) : "--"}
@@ -436,7 +496,9 @@ export default function Brining() {
               </DataPoint>
               <Card.Footer>
                 {protocolInfo
-                  ? `Jar Value Locked: ${getUSD(protocolInfo.jarValue)}`
+                  ? `${t("info.jarValueLocked")}: ${getUSD(
+                      protocolInfo.jarValue,
+                    )}`
                   : "--"}
               </Card.Footer>
             </Card>
@@ -448,7 +510,7 @@ export default function Brining() {
                   src="/pickle.png"
                   style={{ width: "24px", verticalAlign: `text-bottom` }}
                 />{" "}
-                Pickle Price
+                {t("info.picklePrice")}
               </h2>
               <DataPoint>
                 <span>
@@ -459,7 +521,7 @@ export default function Brining() {
               </DataPoint>
               <Card.Footer>
                 {pickleData
-                  ? `Daily Volume: ${getUSD(
+                  ? `${t("info.dailyVolume")}: ${getUSD(
                       pickleData.market_data.total_volume.usd,
                     )}`
                   : undefined}
@@ -467,7 +529,7 @@ export default function Brining() {
             </Card>
           </Grid>
         </Grid>
-        <h1>Farms</h1>
+        <h1>{t("info.farms")}</h1>
         <TableContainer component={Paper} className={classes.farmTable}>
           <Table className={classes.table}>
             <FarmHeader />
@@ -491,15 +553,15 @@ export default function Brining() {
               )}
               <TableRow>
                 <TableCell colSpan={8} className={classes.disclaimer}>
-                  Emission Rate:{" "}
-                  {picklePerBlock ? picklePerBlock.toFixed(4) : "-"} pickle per
-                  block
+                  {t("info.emissionRate", {
+                    count: picklePerBlock ? picklePerBlock.toFixed(4) : "-",
+                  })}
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
-        <h1>Jars</h1>
+        <h1>{t("info.jars")}</h1>
         <TableContainer component={Paper} className={classes.farmTable}>
           <Table className={classes.table}>
             <FarmHeader isFarm={false} />
