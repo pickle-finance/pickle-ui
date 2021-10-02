@@ -206,6 +206,7 @@
     "jar": "Jar",
     "jars": "Jars",
     "jarValueLocked": "Jar Value Locked",
+    "lastUpdated": "Last Updated",
     "lifetimeValue": "Lifetime USD Value",
     "month": "Month",
     "monthly": "{{ percent }}% monthly",
@@ -213,6 +214,7 @@
     "pickleApy": "{{ percent }}% PICKLE APY",
     "picklePerDay": "Pickle per day",
     "picklePrice": "Pickle Price",
+    "picklePulse": "Pickle Pulse",
     "polyJars": "polyJars",
     "tokens": "Tokens",
     "value": "Value",
@@ -243,6 +245,8 @@
     "vote": "Vote"
   },
   "time": {
+    "day": "1 day",
+    "day_plural": "{{ count }} days",
     "month": "1 month",
     "month_plural": "{{ count }} months",
     "week": "1 week",

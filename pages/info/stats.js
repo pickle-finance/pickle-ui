@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import {
-  pickleGreen,
-  cardColor,
-  materialBlack,
-  pickleWhite,
-} from "../../util/constants";
-import JarPerformanceChart from "../../components/JarPerformanceChart";
-import { getPerformanceData, getPerformanceChart } from "../../util/api";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -16,11 +8,16 @@ import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
-import { jars } from "../../util/jars";
 import Grid from "@material-ui/core/Grid";
-import dayjs from "util/dayjs";
 import clsx from "clsx";
 import { Page } from "@geist-ui/react";
+import { Trans, useTranslation } from "next-i18next";
+
+import { pickleGreen, materialBlack, pickleWhite } from "../../util/constants";
+import JarPerformanceChart from "../../components/JarPerformanceChart";
+import { getPerformanceData, getPerformanceChart } from "../../util/api";
+import { jars } from "../../util/jars";
+import dayjs from "util/dayjs";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
 
@@ -65,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Statistics() {
   const classes = useStyles();
+  const { t } = useTranslation("common");
 
   const [performanceData, setPerformanceData] = useState({
     data: [],
@@ -99,7 +97,7 @@ export default function Statistics() {
         <Grid container spacing={2}>
           <Grid item xs={12} className={classes.section}>
             <Typography variant="h4" className={classes.title}>
-              Pickle Pulse
+              {t("info.picklePulse")}
             </Typography>
           </Grid>
           <Grid item xs={12} md={7}>
@@ -110,15 +108,23 @@ export default function Statistics() {
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell className={classes.header}>Asset</TableCell>
-                    <TableCell className={classes.header} align="right">
-                      3 day
+                    <TableCell className={classes.header}>
+                      {t("info.asset")}
                     </TableCell>
                     <TableCell className={classes.header} align="right">
-                      1 week
+                      <Trans i18nKey="time.day" count={3}>
+                        3 day
+                      </Trans>
                     </TableCell>
                     <TableCell className={classes.header} align="right">
-                      1 month
+                      <Trans i18nKey="time.week" count={1}>
+                        1 week
+                      </Trans>
+                    </TableCell>
+                    <TableCell className={classes.header} align="right">
+                      <Trans i18nKey="time.month" count={1}>
+                        1 month
+                      </Trans>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -163,14 +169,14 @@ export default function Statistics() {
                 style={{ color: pickleWhite, padding: "5px" }}
                 className={clsx(classes.header, classes.update)}
               >
-                Last Updated:{" "}
+                {t("info.lastUpdated")}:{" "}
                 {performanceData.performance.length > 0
                   ? dayjs(
                       performanceData.performance[
                         performanceData.performance.length - 1
                       ].x,
                     ).calendar()
-                  : "Loading..."}
+                  : t("connection.loading")}
               </div>
             </TableContainer>
           </Grid>
