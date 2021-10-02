@@ -5,13 +5,13 @@ import {
 } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import CardContent from "@material-ui/core/CardContent";
 import { Page, Input } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+
 import {
   getUserEarnings,
   getCoinData,
@@ -31,14 +31,6 @@ import { jars } from "../../util/jars";
 import { Connection } from "../../containers/Connection";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
-
-const isMStonksJar = (token) =>
-  token === PICKLE_JARS.pUNIMTSLAUST.toLowerCase() ||
-  token === PICKLE_JARS.pUNIMBABAUST.toLowerCase() ||
-  token === PICKLE_JARS.pUNIMSLVUST.toLowerCase() ||
-  token === PICKLE_JARS.pUNIMQQQUST.toLowerCase() ||
-  token === PICKLE_JARS.pUNIMAAPLUST.toLowerCase();
 
 const theme = createMuiTheme({
   palette: {
@@ -105,12 +97,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Earn(props) {
+export default function Earn() {
   const classes = useStyles();
 
   const { address } = Connection.useContainer();
   const [account, setAccount] = useState(address);
   const [accountData, setAccountData] = useState(undefined);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     account ? setAccount(account) : setAccount(address);
@@ -241,7 +234,7 @@ export default function Earn(props) {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={4}>
                     <InfoCardContent
-                      title={"Deposited Balance"}
+                      title={t("info.depositedBalance")}
                       value={
                         accountData
                           ? formatUsd(
@@ -253,27 +246,27 @@ export default function Earn(props) {
                             )
                           : accountData
                       }
-                      subtext="Current USD Value"
+                      subtext={t("info.currentValue")}
                       icon={"/assets/vault.png"}
                     />
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <InfoCardContent
-                      title={"Earnings"}
+                      title={t("info.earnings")}
                       value={
                         accountData
                           ? formatUsd(accountData.earnings)
                           : accountData
                       }
-                      subtext="Lifetime USD Value"
+                      subtext={t("info.lifetimeValue")}
                       icon={"/assets/coin.png"}
                     />
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <InfoCardContent
-                      title={"Daily Emission"}
+                      title={t("info.dailyEmission")}
                       value={accountData ? accountData.earn : accountData}
-                      subtext="Pickle per day"
+                      subtext={t("info.picklePerDay")}
                       icon={"/assets/pickle.png"}
                     />
                   </Grid>
@@ -282,16 +275,20 @@ export default function Earn(props) {
             </Card>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6} className={classes.gridItem}>
-                <h1>Assets</h1>
+                <h1>{t("info.assets")}</h1>
                 <ThemedTable
-                  headers={["Asset", "Tokens", "Value"]}
+                  headers={[t("info.asset"), t("info.tokens"), t("info.value")]}
                   rows={assetRows}
                 />
               </Grid>
               <Grid item xs={12} md={6} className={classes.gridItem}>
-                <h1>Earnings</h1>
+                <h1>{t("info.earnings")}</h1>
                 <ThemedTable
-                  headers={["Asset", "Earned Tokens", "Value"]}
+                  headers={[
+                    t("info.asset"),
+                    t("info.earnedTokens"),
+                    t("info.value"),
+                  ]}
                   rows={earnRows}
                 />
               </Grid>
@@ -300,10 +297,10 @@ export default function Earn(props) {
         )}
         {!account && (
           <div className={classes.address}>
-            How are you brining?
+            {t("info.brining")}
             <Input
               id="account"
-              label="Address"
+              label={t("info.address")}
               variant="outlined"
               className={classes.addressInput}
               onKeyDown={handleAccount}
