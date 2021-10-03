@@ -155,8 +155,9 @@ export const FeeDistributionsChart: FC = () => {
               <YAxis
                 width={90}
                 padding={{ top: 20 }}
-                domain={[-5000, 135000]}
-                tickCount={5}
+                type="number"
+                domain={[-5000, "dataMax"]}
+                tickCount={9}
               >
                 <Label
                   value={t("dill.tokenAmount") as string}

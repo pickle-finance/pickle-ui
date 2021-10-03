@@ -94,7 +94,7 @@ export function useFeeDistributionSeries() {
             ? historicalEntry[1]
             : prices.pickle;
 
-          const totalDillAmount = parseFloat(
+          const totalDillAmount = parseInt(
             ethers.utils.formatEther(dillAmounts[index]),
           );
           const pickleDillRatio = weeklyPickleAmount / totalDillAmount;
