@@ -152,7 +152,12 @@ export const FeeDistributionsChart: FC = () => {
                 interval={0}
                 tickMargin={26}
               />
-              <YAxis width={90} padding={{ top: 20 }}>
+              <YAxis
+                width={90}
+                padding={{ top: 20 }}
+                domain={[-5000, 135000]}
+                tickCount={5}
+              >
                 <Label
                   value={t("dill.tokenAmount") as string}
                   position="insideLeft"
