@@ -244,6 +244,10 @@
     "twitter": "Twitter",
     "vote": "Vote"
   },
+  "oldFarms": {
+    "back": "to new Farms",
+    "disclaimer": "These Farms stopped earning $PICKLEs on Thu, Apr 22, 2021 (12 AM GMT) <br /> To earn $PICKLEs, migrate any tokens here to the new Farms <br /> Expand on any Farm you have tokens, and click <strong>Migrate</strong>"
+  },
   "time": {
     "day": "1 day",
     "day_plural": "{{ count }} days",
