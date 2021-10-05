@@ -131,6 +131,9 @@ export const FARM_LP_TO_ICON: {
   "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C": (
     <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/tricrypto.png"} />
   ),
+  "0x4d622C1f40A83C6FA2c0E441AE393e6dE61E7dD2": (
+    <LpIcon swapIconSrc={"/dodo.png"} tokenIconSrc={"/hundred.jpg"} />
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{

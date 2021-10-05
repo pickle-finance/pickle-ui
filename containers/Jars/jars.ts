@@ -72,7 +72,8 @@ export const PICKLE_JARS = {
   pSUSHIMIMETH: "0x94feade0d3d832e4a05d459ebea9350c6cdd3bca",
   pSUSHISPELLETH: "0x9Cae10143d7316dF417413C43b79Fb5b44Fa85e2",
   pMIM2CRV: "0x973b669ef8c1459f7cb685bf7d7bcd4150977504",
-  pCRVTRICRYPTO: "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C" 
+  pCRVTRICRYPTO: "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C",
+  pDODOHNDETH: "0x4d622C1f40A83C6FA2c0E441AE393e6dE61E7dD2",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -144,7 +145,8 @@ export const JAR_DEPOSIT_TOKENS = {
     SUSHI_MIM_ETH: "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959",
     SUSHI_SPELL_ETH: "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8",
     MIM_2CRV: "0x30dF229cefa463e991e29D42DB0bae2e122B2AC7",
-    CRV_TRICRYPTO: "0x8e0B8c8BB9db49a46697F3a5Bb8A308e744821D2"
+    CRV_TRICRYPTO: "0x8e0B8c8BB9db49a46697F3a5Bb8A308e744821D2",
+    DODO_HND_ETH: "0x65E17c52128396443d4A9A61EaCf0970F05F8a20",
   },
 };
 
@@ -218,6 +220,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SUSHI_SPELL_ETH: "SLP SPELL/ETH",
   MIM_2CRV: "Abracadabra MIM2CRV",
   CRV_TRICRYPTO: "Curve Tricrypto",
+  DODO_HND_ETH: "Dodo HND/ETH",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -290,6 +293,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SUSHI_SPELL_ETH]: true,
   [DEPOSIT_TOKENS_NAME.MIM_2CRV]: true,
   [DEPOSIT_TOKENS_NAME.CRV_TRICRYPTO]: true,
+  [DEPOSIT_TOKENS_NAME.DODO_HND_ETH]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -420,7 +424,9 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af/ETH",
   MIM_2CRV: "https://arbitrum.curve.fi/factory/0/deposit",
   CRV_TRICRYPTO: "https://arbitrum.curve.fi/tricrypto/deposit",
- };
+  DODO_HND_ETH:
+    "https://app.dodoex.io/liquidity?poolAddress=0x65e17c52128396443d4a9a61eacf0970f05f8a20",
+};
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
   sCRV: "pJar 0a",
@@ -482,7 +488,6 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   IRON_3USD: "polyJar 6a",
   POLY_SUSHI_DINO_USDC: "polyJar 7a",
   QUICK_DINO_WETH: "polyJar 7b",
-  QUICK_MATIC_QI: "polyJar 5c",
   POLY_SUSHI_PICKLE_DAI: "polyJar 4c",
 
   // OKEx Jars
@@ -498,6 +503,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   SUSHI_SPELL_ETH: "arbJar 1b",
   MIM_2CRV: "arbJar 1c",
   CRV_TRICRYPTO: "arbJar 2a",
+  DODO_HND_ETH: "arbJar 3a",
 };
 
 export const STRATEGY_NAMES = {
@@ -576,6 +582,8 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af": "spell",
   "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9": "usdt",
   "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f": "wbtc",
+  "0x69eb4fa4a2fbd498c257c57ea8b7655a2559a581": "dodo",
+  "0x10010078a54396f62c96df8532dc2b4847d47ed3": "hnd",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

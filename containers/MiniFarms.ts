@@ -116,6 +116,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "Curve Tricrypto",
     poolName: "Curve Tricrypto",
   },
+  "0x4d622C1f40A83C6FA2c0E441AE393e6dE61E7dD2": {
+    tokenName: "pDodo HND/ETH",
+    poolName: "pDodo HND/ETH",
+  },
 };
 
 function useFarms() {
