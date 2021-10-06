@@ -186,7 +186,7 @@ const asushi: Token = {
 };
 
 const aspell: Token = {
-  address: addresses.spell,
+  address: addresses.aspell,
   priceId: "spell",
   decimals: 18,
 };
