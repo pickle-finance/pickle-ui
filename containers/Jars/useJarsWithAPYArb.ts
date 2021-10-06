@@ -285,7 +285,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const valueRewardedPerYear =
         (prices.hnd * HND_PER_BLOCK + prices.dodo * DODO_PER_BLOCK) *
-        ((365 * 3600 * 24) / 13.3);
+        ((365 * 3600 * 24) / 25.8);
 
       const totalValueStaked = totalSupply * pricePerToken;
       const rewardAPY = valueRewardedPerYear / totalValueStaked;
