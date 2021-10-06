@@ -280,9 +280,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       );
       const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
-      const DODO_PER_BLOCK = 0.2665;
-      const HND_PER_BLOCK = 1.599;
-
       const [hndInfo, dodoInfo, totalSupplyBN] = await multicallProvider.all([
         mcDodoRewards.rewardTokenInfos(0),
         mcDodoRewards.rewardTokenInfos(1),
