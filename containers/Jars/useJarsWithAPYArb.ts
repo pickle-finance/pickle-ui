@@ -274,26 +274,45 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       multicallProvider &&
       getSushiPairData
     ) {
-      const rewards = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6"; // HND-ETH
+      const mcDodoRewards = new MulticallContract(
+        dodoRewards.address,
+        dodoRewards.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
       const DODO_PER_BLOCK = 0.2665;
       const HND_PER_BLOCK = 1.599;
 
-      const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
-      const totalSupplyBN = await lpToken.balanceOf(rewards);
+      const [hndInfo, dodoInfo, totalSupplyBN] = await multicallProvider.all([
+        mcDodoRewards.rewardTokenInfos(0),
+        mcDodoRewards.rewardTokenInfos(1),
+        lpToken.balanceOf(dodoRewards.address),
+      ]);
+
+      const dodoPerBlock = +formatEther(dodoInfo.rewardPerBlock);
+      const hndPerBlock = +formatEther(hndInfo.rewardPerBlock);
+
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
-      const valueRewardedPerYear =
-        (prices.hnd * HND_PER_BLOCK + prices.dodo * DODO_PER_BLOCK) *
-        ((365 * 3600 * 24) / 25.8);
+      const dodoValueRewardedPerYear =
+        prices.dodo * dodoPerBlock * ((365 * 3600 * 24) / 13);
+
+      const hndValueRewardedPerYear =
+        prices.hnd * hndPerBlock * ((365 * 3600 * 24) / 13);
 
       const totalValueStaked = totalSupply * pricePerToken;
-      const rewardAPY = valueRewardedPerYear / totalValueStaked;
+      const dodoAPY = dodoValueRewardedPerYear / totalValueStaked;
+      const hndAPY = hndValueRewardedPerYear / totalValueStaked;
 
       return [
         {
-          dodo: getCompoundingAPY(rewardAPY * 0.8),
-          apr: rewardAPY * 0.8 * 100,
+          dodo: getCompoundingAPY(dodoAPY * 0.8),
+          apr: dodoAPY * 0.8 * 100,
+        },
+        {
+          hnd: getCompoundingAPY(hndAPY * 0.8),
+          apr: hndAPY * 0.8 * 100,
         },
       ];
     }

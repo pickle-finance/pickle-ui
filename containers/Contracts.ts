@@ -213,6 +213,7 @@ export const PICKLE_SUSHI_REWARDER =
 
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
 export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
+export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -490,9 +491,7 @@ function useContracts() {
       setRallyRewardPools(
         RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
       );
-      setDodoRewards(
-        DodoRewardsFactory.connect(ethers.constants.AddressZero, signer),
-      );
+      setDodoRewards(DodoRewardsFactory.connect(DODO_REWARDS, signer));
     }
   };
 
@@ -555,7 +554,7 @@ function useContracts() {
     feichef,
     rallyRewardPools,
     dodoPair,
-    dodoRewards
+    dodoRewards,
   };
 }
 

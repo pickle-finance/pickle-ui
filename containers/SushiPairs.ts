@@ -252,7 +252,7 @@ export const PAIR_INFO: PairMap = {
   "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
   "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
-  "0x65E17c52128396443d4A9A61EaCf0970F05F8a20": { a: hnd, b: dodo },
+  "0x65E17c52128396443d4A9A61EaCf0970F05F8a20": { a: hnd, b: aweth },
 };
 
 function useSushiPairs() {
