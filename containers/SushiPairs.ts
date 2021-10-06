@@ -284,7 +284,7 @@ function useSushiPairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-    const totalValueOfPair = priceA * numAInPair + priceB + numBInPair;
+    const totalValueOfPair = priceA * numAInPair + priceB * numBInPair;
 
     const totalSupply = totalSupplyBN / 1e18; // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
