@@ -90,6 +90,10 @@ import { Feichef } from "./Contracts/Feichef";
 import { Feichef__factory as FeichefFactory } from "./Contracts/factories/Feichef__factory";
 import { RallyRewardPools } from "./Contracts/RallyRewardPools";
 import { RallyRewardPools__factory as RallyRewardPoolsFactory } from "./Contracts/factories/RallyRewardPools__factory";
+import { DodoPair } from "./Contracts/DodoPair";
+import { DodoPair__factory as DodoPairFactory } from "./Contracts/factories/DodoPair__factory";
+import { DodoRewards } from "./Contracts/DodoRewards";
+import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factories/DodoRewards__factory";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -268,6 +272,7 @@ function useContracts() {
   const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
     null,
   );
+  const [dodoPair, setDodoPair] = useState<DodoPair | null>(null);
   const [erc20, setERC20] = useState<Erc20 | null>(null);
   const [strategy, setStrategy] = useState<Strategy | null>(null);
   const [
@@ -328,6 +333,8 @@ function useContracts() {
   const [jar, setJar] = useState<Jar | null>(null);
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
+  const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
+
   const [
     rallyRewardPools,
     setRallyRewardPools,
@@ -376,13 +383,19 @@ function useContracts() {
         CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
       );
       setSorbettiereFarm(
-        SorbettiereFactory.connect(addresses.sorbettiere || ethers.constants.AddressZero, providerOrSigner),
+        SorbettiereFactory.connect(
+          addresses.sorbettiere || ethers.constants.AddressZero,
+          providerOrSigner,
+        ),
       );
       setUniswapv2Pair(
         Uniswapv2PairFactory.connect(
           ethers.constants.AddressZero,
           providerOrSigner,
         ),
+      );
+      setDodoPair(
+        DodoPairFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
       setERC20(
         Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
@@ -474,6 +487,12 @@ function useContracts() {
       setRallyRewardPools(
         RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
       );
+      setRallyRewardPools(
+        RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
+      );
+      setDodoRewards(
+        DodoRewardsFactory.connect(ethers.constants.AddressZero, signer),
+      );
     }
   };
 
@@ -535,6 +554,8 @@ function useContracts() {
     jar,
     feichef,
     rallyRewardPools,
+    dodoPair,
+    dodoRewards
   };
 }
 

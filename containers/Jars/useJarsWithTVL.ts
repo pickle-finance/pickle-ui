@@ -45,7 +45,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIM_ETH ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_SPELL_ETH
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_SPELL_ETH ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_HND_ETH
   );
 };
 
@@ -57,7 +58,7 @@ const isCurvePool = (jarName: string): boolean => {
 };
 
 export const useJarWithTVL = (jars: Input): Output => {
-  const { uniswapv2Pair } = Contracts.useContainer();
+  const { uniswapv2Pair, dodoPair } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { multicallProvider, signer, chainName } = Connection.useContainer();
   const { poolData } = PoolData.useContainer();
@@ -122,21 +123,38 @@ export const useJarWithTVL = (jars: Input): Output => {
   };
 
   const measureUniJarTVL = async (jar: JarWithAPY): Promise<JarWithTVL> => {
-    if (!uniswapv2Pair || !prices || !multicallProvider) {
+    if (!uniswapv2Pair || !prices || !multicallProvider || !dodoPair) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 
-    const uniPairMC = new MulticallContract(
-      jar.depositToken.address,
-      uniswapv2Pair.interface.fragments,
-    );
+    let totalUNI, token0, token1
 
-    const [totalUNI, token0, token1] = await multicallProvider.all([
-      uniPairMC.totalSupply(),
-      uniPairMC.token0(),
-      uniPairMC.token1(),
-    ]);
 
+    if (jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.DODO_HND_ETH) {
+      const dodoPairMC = new MulticallContract(
+        jar.depositToken.address,
+        dodoPair.interface.fragments,
+      );
+
+      [totalUNI, token0, token1] = await multicallProvider.all([
+        dodoPairMC.totalSupply(),
+        dodoPairMC._BASE_TOKEN_(),
+        dodoPairMC._QUOTE_TOKEN_(),
+      ]);
+    } else {
+
+      const uniPairMC = new MulticallContract(
+        jar.depositToken.address,
+        uniswapv2Pair.interface.fragments,
+      );
+  
+      
+      [totalUNI, token0, token1] = await multicallProvider.all([
+        uniPairMC.totalSupply(),
+        uniPairMC.token0(),
+        uniPairMC.token1(),
+      ]);
+    }
     const Token0 = uniswapv2Pair.attach(token0);
     const Token1 = uniswapv2Pair.attach(token1);
 
@@ -158,7 +176,6 @@ export const useJarWithTVL = (jars: Input): Output => {
       Token1.decimals(),
     ]);
 
-    const [] = await Promise.all([]);
     const dec18 = parseEther("1");
 
     const token0PerUni = token0InPool.mul(dec18).div(totalUNI);
@@ -180,12 +197,8 @@ export const useJarWithTVL = (jars: Input): Output => {
     const token0PriceId = getPriceId(token0);
     const token1PriceId = getPriceId(token1);
 
-    let tvlUSD;
-    if (prices[token0PriceId]) {
-      tvlUSD = 2 * token0Bal * prices[token0PriceId];
-    } else {
-      tvlUSD = 2 * token1Bal * prices[token1PriceId];
-    }
+    const tvlUSD =
+      token0Bal * prices[token0PriceId] + token1Bal * prices[token1PriceId];
 
     const usdPerPToken = tvlUSD / parseFloat(formatEther(supply));
 
@@ -221,8 +234,7 @@ export const useJarWithTVL = (jars: Input): Output => {
             pool.tokenAddress.toLowerCase() ===
             jar.depositToken.address.toLowerCase(),
         );
-        const tvlUSD =
-          poolInfo[0]?.liquidity_locked;
+        const tvlUSD = poolInfo[0]?.liquidity_locked;
         return {
           ...jar,
           tvlUSD,

@@ -49,6 +49,8 @@ export const addresses = {
   aspell: "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af",
   mpickle: "0x2b88ad57897a8b496595925f43048301c37615da",
   mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+  hnd: "0x10010078a54396f62c96df8532dc2b4847d47ed3",
+  dodo: "0x69eb4fa4a2fbd498c257c57ea8b7655a2559a581",
 };
 
 interface Token {
@@ -198,6 +200,16 @@ const mdai: Token = {
   priceId: "dai",
   decimals: 18,
 };
+const hnd: Token = {
+  address: addresses.hnd,
+  priceId: "hnd",
+  decimals: 18,
+};
+const dodo: Token = {
+  address: addresses.dodo,
+  priceId: "dodo",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -240,6 +252,7 @@ export const PAIR_INFO: PairMap = {
   "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
   "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
+  "0x65E17c52128396443d4A9A61EaCf0970F05F8a20": { a: hnd, b: dodo },
 };
 
 function useSushiPairs() {
@@ -271,17 +284,11 @@ function useSushiPairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-    let totalValueOfPair;
-    // In case price one token is not listed on coingecko
-    if (priceA) {
-      totalValueOfPair = 2 * priceA * numAInPair;
-    } else {
-      totalValueOfPair = 2 * priceB * numBInPair;
-    }
+    const totalValueOfPair = priceA * numAInPair + priceB + numBInPair;
 
     const totalSupply = totalSupplyBN / 1e18; // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
-
+    
     return { totalValueOfPair, totalSupply, pricePerToken };
   };
 
@@ -306,14 +313,7 @@ function useSushiPairs() {
     const priceA = prices[a.priceId];
     const priceB = prices[b.priceId];
 
-    let totalValueOfPair;
-    // In case price one token is not listed on coingecko
-    if (priceA) {
-      totalValueOfPair = 2 * priceA * numAInPair;
-    } else {
-      totalValueOfPair = 2 * priceB * numBInPair;
-    }
-
+    const totalValueOfPair = priceA * numAInPair + priceB + numBInPair;
     const totalSupply = parseFloat(ethers.utils.formatEther(totalSupplyBN)); // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
 

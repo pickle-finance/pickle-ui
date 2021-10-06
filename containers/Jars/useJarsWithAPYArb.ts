@@ -76,7 +76,11 @@ type Output = {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
-  const { sushiMinichef, sorbettiereFarm } = Contracts.useContainer();
+  const {
+    sushiMinichef,
+    sorbettiereFarm,
+    dodoRewards,
+  } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getCurveLpPriceData } = CurvePairs.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
@@ -262,6 +266,41 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateDodoHndAPY = async (lpTokenAddress: string) => {
+    if (
+      prices &&
+      provider &&
+      dodoRewards &&
+      multicallProvider &&
+      getSushiPairData
+    ) {
+      const rewards = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6"; // HND-ETH
+      const DODO_PER_BLOCK = 0.2665;
+      const HND_PER_BLOCK = 1.599;
+
+      const lpToken = new Contract(lpTokenAddress, erc20.abi, provider);
+      const totalSupplyBN = await lpToken.balanceOf(rewards);
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      const valueRewardedPerYear =
+        (prices.hnd * HND_PER_BLOCK + prices.dodo * DODO_PER_BLOCK) *
+        ((365 * 3600 * 24) / 13.3);
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const rewardAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          dodo: getCompoundingAPY(rewardAPY * 0.8),
+          apr: rewardAPY * 0.8 * 100,
+        },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars) {
       const [
@@ -271,6 +310,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         spellEthApy,
         mim2crvApy,
         tricryptoApy,
+        dodohndApy,
       ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH),
         calculateMCv2APY(
@@ -286,6 +326,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         ),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Arbitrum.MIM_2CRV),
         calculateCurveApy(JAR_DEPOSIT_TOKENS.Arbitrum.CRV_TRICRYPTO),
+        calculateDodoHndAPY(JAR_DEPOSIT_TOKENS.Arbitrum.DODO_HND_ETH),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -309,6 +350,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         }
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CRV_TRICRYPTO) {
           APYs = [{ lp: curveRawStats?.tricrypto || 0 }, ...tricryptoApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_HND_ETH) {
+          APYs = [...dodohndApy];
         }
 
         let apr = 0;
