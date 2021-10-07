@@ -243,7 +243,7 @@ export const useJarWithTVL = (jars: Input): Output => {
         };
       });
 
-      if (chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.ARB) {
+      if (chainName === NETWORK_NAMES.OKEX) {
         const promises: Array<Promise<JarWithTVL>> = jars.map(async (jar) => {
           if (isUniPool(jar.jarName)) return measureUniJarTVL(jar);
           if (isCurvePool(jar.jarName)) return measureCurveTVL(jar);
