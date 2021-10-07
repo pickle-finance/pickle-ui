@@ -57,6 +57,7 @@ interface DinoPoolId {
 const dinoPoolIds: DinoPoolId = {
   "0x3324af8417844e70b81555A6D1568d78f4D4Bf1f": 10,
   "0x9f03309A588e33A239Bf49ed8D68b2D45C7A1F11": 11,
+  "0xAb0454B98dAf4A02EA29292E6A8882FB2C787DD4": 12, // not sure which ID should be assigned to this pool
 };
 
 export interface JarWithAPY extends Jar {
@@ -497,6 +498,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         iron3usdApy,
         dinoUsdcApy,
         dinoWethApy,
+        dinoWorkUsdcApy,
         quickMaticQiApy,
       ] = await Promise.all([
         calculateComethAPY(COMETH_USDC_WETH_REWARDS),
@@ -520,6 +522,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateIronChefAPY(iron3usdJar),
         calculateFossilFarmsAPY(dinoUsdcJar),
         calculateFossilFarmsAPY(dinoWethJar),
+        calculateFossilFarmsApy(dinoWorkUsdcApy),
         calculateMasterChefAPY(qiMaticJar),
       ]);
 
@@ -637,6 +640,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
             ...dinoWethApy,
             ...getQuickPairDayAPY(
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_DINO_WETH,
+            ),
+          ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.POLY_SUSHI_DINO_WORK_USDC) {
+          APYs = [
+            ...dinoWorkUsdcApy,
+            ...getSushiPairDayAPY(
+              JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_WORK_USDC,
             ),
           ];
         }

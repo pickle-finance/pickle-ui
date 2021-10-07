@@ -66,6 +66,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
+  "": { //TODO insert the jar address here
+    tokenName: "pSLP WORK/USDC",
+    poolName: "pSLP WORK/USDC",
+  },
   "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
     tokenName: "pCLP CHE/OKT",
     poolName: "pCLP CHE/OKT",

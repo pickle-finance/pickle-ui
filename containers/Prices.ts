@@ -58,6 +58,7 @@ interface PriceObject {
   rly: number;
   hnd: number;
   dodo: number;
+  work: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -121,7 +122,8 @@ function usePrices() {
         "balancer",
         "rally-2",
         "hundred-finance",
-        "dodo"
+        "dodo",
+        "the-employment-commons-work-token"
       ],
       vs_currencies: ["usd"],
     });
@@ -182,6 +184,7 @@ function usePrices() {
       rly: response["rally-2"].usd,
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
+      work: response["the-employment-commons-work-token"].usd,
     };
     setPrices(prices);
   };
