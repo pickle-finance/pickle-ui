@@ -53,9 +53,9 @@ interface PoolInfo {
   [key: string]: {
     poolId: number;
     tokenName: string;
-    rewardName: any;
-    tokenPrice: number;
-    rewardPrice: number;
+    rewardName: string;
+    tokenPrice: number | undefined;
+    rewardPrice: number | undefined;
   };
 }
 
@@ -179,6 +179,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       rewardName: "spell",
       tokenPrice: prices?.dai,
       rewardPrice: prices?.spell,
+    },
+    "0xF1478A8387C449c55708a3ec11c143c35daf5E74": {
+      poolId: 41,
+      tokenName: "cvxcrv",
+      rewardName: "cvx",
+      tokenPrice: prices?.crv,
+      rewardPrice: prices?.cvx,
     },
   };
 
@@ -725,7 +732,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
         { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
         {
-          [cvxPool.rewardName]: getCompoundingAPY((rewardApr * 0.8)),
+          [cvxPool.rewardName]: getCompoundingAPY(rewardApr * 0.8),
           apr: rewardApr * 0.8 * 100,
         },
       ];
@@ -823,10 +830,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         crvFraxApy,
         crvIBApy,
         alcxEthAlcxApy,
-        cvxEthApy,
-        sushiCvxEthApy,
         truEthApy,
-        steCRVApy,
       ] = await Promise.all([
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
@@ -843,17 +847,25 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           "alcx",
         ),
         calculateMCv2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+          "tru",
+        ),
+      ]);
+      const [
+        cvxEthApy,
+        sushiCvxEthApy,
+        steCRVApy,
+        cvxCRVApy,
+      ] = await Promise.all([
+        calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
           "cvx",
         ),
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
         ),
-        calculateMCv2APY(
-          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
-          "tru",
-        ),
         calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].steCRV),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].cvxCRV),
       ]);
 
       const [
@@ -1097,6 +1109,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_3CRV) {
           APYs = [...mim3crvApy];
         }
+        
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_ETH) {
           APYs = [
             ...mimEthApy,
@@ -1155,6 +1168,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
               JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
             ),
           ];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRV) {
+          APYs = [...cvxCRVApy];
         }
 
         let apr = 0;
