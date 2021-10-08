@@ -528,7 +528,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateIronChefAPY(iron3usdJar),
         calculateFossilFarmsAPY(dinoUsdcJar),
         calculateFossilFarmsAPY(dinoWethJar),
-        calculateFossilFarmsApy(workUsdcJar),
+        calculateFossilFarmsAPY(workUsdcJar),
         calculateMasterChefAPY(qiMaticJar),
       ]);
 
