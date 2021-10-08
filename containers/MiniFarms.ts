@@ -66,7 +66,7 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
-  "": { //TODO insert the jar address here
+  "0xd170f0a8629a6f7a1e330d5fc455d96e54c09675": {
     tokenName: "pSLP WORK/USDC",
     poolName: "pSLP WORK/USDC",
   },
@@ -78,10 +78,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pCLP CHE/USDT",
     poolName: "pCLP CHE/USDT",
   },
-  "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": {
-    tokenName: "pCLP BTCK/USDT",
-    poolName: "pCLP BTCK/USDT",
-  },
+  // "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": {
+  //   tokenName: "pCLP BTCK/USDT",
+  //   poolName: "pCLP BTCK/USDT",
+  // },
   "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": {
     tokenName: "pCLP ETHK/USDT",
     poolName: "pCLP ETHK/USDT",
