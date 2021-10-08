@@ -259,7 +259,7 @@ export const PAIR_INFO: PairMap = {
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
   "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
   "0x65E17c52128396443d4A9A61EaCf0970F05F8a20": { a: hnd, b: aweth },
-  "0xAb0454B98dAf4A02EA29292E6A8882FB2C787DD4": { a: work, b: wusdc},
+  "0xAb0454B98dAf4A02EA29292E6A8882FB2C787DD4": { a: wusdc, b: work },
 };
 
 function useSushiPairs() {
@@ -295,7 +295,7 @@ function useSushiPairs() {
 
     const totalSupply = totalSupplyBN / 1e18; // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
-    
+
     return { totalValueOfPair, totalSupply, pricePerToken };
   };
 
