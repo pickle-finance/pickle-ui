@@ -221,7 +221,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x5282a4ef67d9c33135340fb3289cc1711c13638c": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
   ),
-  "0xF1478A8387C449c55708a3ec11c143c35daf5E74": (
+  "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/curve.png"} />
   ),
 };
@@ -699,7 +699,7 @@ export const JarGaugeCollapsible: FC<{
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={harvestableNum === 0}>
               {harvestableStr}{" "}
-              {harvestableNum && <MiniIcon source={"/pickle.png"} />}
+              {Boolean(harvestableNum) && <MiniIcon source={"/pickle.png"} />}
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>

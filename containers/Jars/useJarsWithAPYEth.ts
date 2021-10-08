@@ -180,7 +180,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       tokenPrice: prices?.dai,
       rewardPrice: prices?.spell,
     },
-    "0xF1478A8387C449c55708a3ec11c143c35daf5E74": {
+    "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8": {
       poolId: 41,
       tokenName: "cvxcrv",
       rewardName: "cvx",
@@ -712,7 +712,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const cvxValuePerYear =
         (cvxReward * prices.cvx * ONE_YEAR_SECONDS) / duration.toNumber();
 
-      const cvxApy = cvxValuePerYear / poolValue;
+      let cvxApy = cvxValuePerYear / poolValue;
+
+      // cvx is treated as the "extra reward"
+      if (lpTokenAddress === "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8")
+        cvxApy = 0;
 
       const extraRewards = ExtraRewards__factory.connect(
         extraAddress,
@@ -1109,7 +1113,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_3CRV) {
           APYs = [...mim3crvApy];
         }
-        
+
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_ETH) {
           APYs = [
             ...mimEthApy,
@@ -1170,7 +1174,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           ];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRV) {
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.cvxCRV) {
           APYs = [...cvxCRVApy];
         }
 

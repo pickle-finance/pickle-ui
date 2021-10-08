@@ -192,7 +192,7 @@ export const DEPOSIT_TOKENS_NAME = {
   SPELL_ETH: "Abracadabra SPELL/ETH",
   MIM_ETH: "Abracadabra MIM/ETH",
   UNIV2_RLY_ETH: "UNI RLY/ETH",
-  CVXCRV: "Curve cvxCRV",
+  cvxCRV: "Curve cvxCRV",
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
@@ -266,7 +266,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SPELL_ETH]: true,
   [DEPOSIT_TOKENS_NAME.MIM_ETH]: true,
   [DEPOSIT_TOKENS_NAME.UNIV2_RLY_ETH]: true,
-  [DEPOSIT_TOKENS_NAME.CVXCRV]: true,
+  [DEPOSIT_TOKENS_NAME.cvxCRV]: true,
 
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
@@ -378,7 +378,7 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.sushi.com/add/ETH/0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
   UNIV2_RLY_ETH:
     "https://app.uniswap.org/#/add/v2/ETH/0xf1f955016ecbcd7321c7266bccfb96c68ea5e49b",
-  CVXCRV: "https://curve.fi/factory/22/deposit",
+  cvxCRV: "https://curve.fi/factory/22/deposit",
 
   // Polygon Jars
   COMETH_USDC_WETH:
@@ -478,7 +478,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   UNIV2_FOX_ETH: "pJar 0.99f1",
   SUSHI_TRU_ETH: "pJar 0.99t",
   UNIV2_RLY_ETH: "pJar 0.99r1",
-  CVXCRV: "pJar 0e",
+  cvxCRV: "pJar 0e",
 
   // Polygon Jars
   COMETH_USDC_WETH: "polyJar 1a",
