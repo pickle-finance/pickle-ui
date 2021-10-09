@@ -25,7 +25,7 @@ function useJars() {
   const { jarsWithAPY: jarswithAPYArb } = useJarsWithAPYArb(chainName, rawJars);
   const { jarsWithTVL } = useJarWithTVL(
     jarsWithAPYEth || jarsWithAPYPoly || jarswithAPYOK || jarswithAPYArb,
-    );
+  );
 
   const { addTokens } = Balances.useContainer();
 

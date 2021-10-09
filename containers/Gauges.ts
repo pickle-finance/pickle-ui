@@ -21,7 +21,7 @@ function useGauges() {
       poolName,
     };
   });
-  
+
   const jarGauges = jarGaugeWithApy?.map((gauge) => {
     const { tokenName, poolName } = GaugeInfo[gauge.token];
     return {

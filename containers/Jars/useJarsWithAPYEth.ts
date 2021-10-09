@@ -725,7 +725,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
         { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
         {
-          [cvxPool.rewardName]: getCompoundingAPY((rewardApr * 0.8)),
+          [cvxPool.rewardName]: getCompoundingAPY(rewardApr * 0.8),
           apr: rewardApr * 0.8 * 100,
         },
       ];

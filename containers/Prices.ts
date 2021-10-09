@@ -123,7 +123,7 @@ function usePrices() {
         "rally-2",
         "hundred-finance",
         "dodo",
-        "the-employment-commons-work-token"
+        "the-employment-commons-work-token",
       ],
       vs_currencies: ["usd"],
     });

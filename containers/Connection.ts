@@ -25,7 +25,7 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const switchChainParams : any[] = [];
+  const switchChainParams: any[] = [];
   switchChainParams[137] = {
     chainId: "0x89",
     chainName: "Polygon",
@@ -49,7 +49,7 @@ function useConnection() {
     rpcUrls: ["https://exchainrpc.okex.org"],
     blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
   };
-  
+
   switchChainParams[42161] = {
     chainId: "0xA4B1",
     chainName: "Arbitrum",
@@ -64,14 +64,13 @@ function useConnection() {
   const switchChain = async (chainId: number) => {
     let method: string;
     let params: any[];
-    if( chainId === 1 ) {
+    if (chainId === 1) {
       method = "wallet_switchEthereumChain";
-      params = [{chainId: "0x1"}];
+      params = [{ chainId: "0x1" }];
     } else {
       method = "wallet_addEthereumChain";
       const param = switchChainParams[chainId];
-      if( param === undefined || param === null )
-        return false;
+      if (param === undefined || param === null) return false;
       params = [param];
     }
 
