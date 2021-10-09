@@ -93,9 +93,12 @@ export const FARM_LP_TO_ICON: {
   "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+<<<<<<< HEAD
   "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
   ),
+=======
+>>>>>>> ce9ebe5 (Minor rearrangement)
   "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
   ),
@@ -119,6 +122,9 @@ export const FARM_LP_TO_ICON: {
   ),
   "0x1D35e4348826857eaFb22739d4e494C0337cb427": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0xd170f0a8629a6f7a1e330d5fc455d96e54c09675": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
   ),
 
   //Arbitrum
