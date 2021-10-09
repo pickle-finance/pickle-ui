@@ -66,10 +66,6 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
-  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": {
-    tokenName: "pSLP WORK/USDC",
-    poolName: "pSLP WORK/USDC",
-  },
   "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
     tokenName: "pCLP CHE/OKT",
     poolName: "pCLP CHE/OKT",
@@ -101,6 +97,10 @@ export const FarmInfo: IFarmInfo = {
   "0x1D35e4348826857eaFb22739d4e494C0337cb427": {
     tokenName: "pSLP PICKLE/DAI",
     poolName: "pSLP PICKLE/DAI",
+  },
+  "0xd170f0a8629a6f7a1e330d5fc455d96e54c09675": {
+    tokenName: "pSLP WORK/USDC",
+    poolName: "pSLP WORK/USDC",
   },
 
   // Arbitrum

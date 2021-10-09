@@ -572,7 +572,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x580a84c73811e1839f75d86d75d88cca0c241ff4": "qi",
   "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef": "ice",
   "0xaa9654becca45b5bdfa5ac646c939c62b527d394": "dino",
-  "0x6002410dDA2Fb88b4D0dc3c1D562F7761191eA80": "work",
+  "0x6002410dda2fb88b4d0dc3c1d562f7761191ea80": "work",
 
   // OKEx
   "0x8179d97eb6488860d816e3ecafe694a4153f216c": "cherry",
