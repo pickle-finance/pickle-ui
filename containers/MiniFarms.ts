@@ -66,7 +66,7 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
-  "0xd170f0a8629a6f7a1e330d5fc455d96e54c09675": {
+  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": {
     tokenName: "pSLP WORK/USDC",
     poolName: "pSLP WORK/USDC",
   },
