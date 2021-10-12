@@ -651,7 +651,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateConvexAPY = async (lpTokenAddress: string) => {
     const fetchPromise = fetch(
-      "https://cors.bridged.cc/https://www.convexfinance.com/api/curve-apys",
+      "https://www.convexfinance.com/api/curve-apys",
       {
         method: "GET",
         headers: new Headers({
