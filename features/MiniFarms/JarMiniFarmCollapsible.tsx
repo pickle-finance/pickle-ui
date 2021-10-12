@@ -117,7 +117,7 @@ export const FARM_LP_TO_ICON: {
   "0x1D35e4348826857eaFb22739d4e494C0337cb427": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
   ),
-  "0xd170f0a8629a6f7a1e330d5fc455d96e54c09675": (
+  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
   ),
 
