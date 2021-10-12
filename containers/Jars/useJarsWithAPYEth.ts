@@ -650,19 +650,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateConvexAPY = async (lpTokenAddress: string) => {
-    const fetchPromise = fetch(
-      "https://cors.bridged.cc/https://www.convexfinance.com/api/curve-apys",
-      {
-        method: "GET",
-        headers: new Headers({
-          "X-Requested-With": "XMLHttpRequest",
-        }),
-      },
-    )
-      .then((x) => x.json())
-      .catch(() => {
-        return undefined;
-      });
+    const fetchPromise = fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.convexfinance.com/api/curve-apys')}`)
+    .then(response => {
+      if (response.ok) return response.json()
+      throw new Error('Network response was not ok.')
+    })
+    .then(data => JSON.parse(data.contents))
+
     const fetchResult = await fetchPromise;
     if (!fetchResult) return [];
     const curveAPY = fetchResult?.apys;
