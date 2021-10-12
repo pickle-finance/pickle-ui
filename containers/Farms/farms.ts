@@ -201,7 +201,7 @@ export const JAR_FARM_MAP: FarmMap = {
     jarName: DEPOSIT_TOKENS_JAR_NAMES.QUICK_MATIC_QI,
   },
   "0xF1478A8387C449c55708a3ec11c143c35daf5E74": {
-    jarName: DEPOSIT_TOKENS_JAR_NAMES.CVXCRV
+    jarName: DEPOSIT_TOKENS_JAR_NAMES.CVXCRVlp
   },
 
   // Arbitrum

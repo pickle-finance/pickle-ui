@@ -714,10 +714,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       let cvxApy = cvxValuePerYear / poolValue;
 
-      // cvx is treated as the "extra reward"
-      if (lpTokenAddress === "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8")
-        cvxApy = 0;
-
       const extraRewards = ExtraRewards__factory.connect(
         extraAddress,
         provider,
@@ -729,12 +725,18 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (rewardAmount * cvxPool.rewardPrice * ONE_YEAR_SECONDS) /
         duration.toNumber();
 
-      const rewardApr = rewardValue / poolValue;
+      let rewardApr = rewardValue / poolValue;
+      // cvx is treated as an additional "extra reward"
+      const isCvxcrv =
+        lpTokenAddress === "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8";
+      if (isCvxcrv) rewardApr += cvxApy;
 
       return [
         { lp: lpApy },
         { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
-        { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
+        ...(isCvxcrv
+          ? []
+          : [{ cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 }]),
         {
           [cvxPool.rewardName]: getCompoundingAPY(rewardApr * 0.8),
           apr: rewardApr * 0.8 * 100,
@@ -859,7 +861,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         cvxEthApy,
         sushiCvxEthApy,
         steCRVApy,
-        cvxCRVApy,
+        cvxCRVlpApy,
       ] = await Promise.all([
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
@@ -869,7 +871,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
         ),
         calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].steCRV),
-        calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].cvxCRV),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].CVXCRVlp),
       ]);
 
       const [
@@ -1174,8 +1176,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           ];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.cvxCRV) {
-          APYs = [...cvxCRVApy];
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRVlp) {
+          APYs = [...cvxCRVlpApy];
         }
 
         let apr = 0;
