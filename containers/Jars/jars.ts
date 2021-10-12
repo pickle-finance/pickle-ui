@@ -261,7 +261,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.SADDLE_D4]: true,
   [DEPOSIT_TOKENS_NAME.MIM_3CRV]: true,
   [DEPOSIT_TOKENS_NAME.SPELL_ETH]: true,
-  [DEPOSIT_TOKENS_NAME.MIM_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.MIM_ETH]: false,
   [DEPOSIT_TOKENS_NAME.UNIV2_RLY_ETH]: true,
 
   // Polygon Jars
