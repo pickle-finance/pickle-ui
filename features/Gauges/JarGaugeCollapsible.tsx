@@ -222,6 +222,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
   ),
   "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8": (
+    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/convex.png"} />
+  ),
+  "0xB245280Fd1795f5068DEf8E8f32DB7846b030b2B": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/curve.png"} />
   ),
 };
