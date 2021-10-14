@@ -51,11 +51,11 @@ interface PoolId {
 
 interface PoolInfo {
   [key: string]: {
-    poolId: number;
+    poolId: number | null;
     tokenName: string;
-    rewardName: any;
-    tokenPrice: number;
-    rewardPrice: number;
+    rewardName: string;
+    tokenPrice: number | undefined;
+    rewardPrice: number | undefined;
   };
 }
 
@@ -179,6 +179,20 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       rewardName: "spell",
       tokenPrice: prices?.dai,
       rewardPrice: prices?.spell,
+    },
+    "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8": {
+      poolId: 41,
+      tokenName: "cvxcrv",
+      rewardName: "cvx",
+      tokenPrice: prices?.crv,
+      rewardPrice: prices?.cvx,
+    },
+    "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7": {
+      poolId: null, // not used
+      tokenName: "cvxcrv",
+      rewardName: "3crv",
+      tokenPrice: prices?.cvxcrv,
+      rewardPrice: prices?.dai,
     },
   };
 
@@ -671,55 +685,57 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const lpApy = parseFloat(curveAPY[cvxPool.tokenName]?.baseApy);
       const crvApy = parseFloat(curveAPY[cvxPool.tokenName]?.crvApy);
 
-      const poolInfo = await cvxBooster.poolInfo(cvxPool.poolId);
+      let crvRewards;
+      if (cvxPool.poolId) {
+        crvRewards = (await cvxBooster.poolInfo(cvxPool.poolId)).crvRewards;
+      } else {
+        crvRewards = "0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e";
+      }
 
-      const crvRewardsMC = new MulticallContract(
-        poolInfo.crvRewards,
-        CrvRewardsABI,
-      );
+      const crvRewardsMC = new MulticallContract(crvRewards, CrvRewardsABI);
 
-      const [
-        depositLocked,
-        duration,
-        extraAddress,
-      ] = await multicallProvider.all([
+     const [crvReward, depositLocked, duration, extraRewardsAddress] = await multicallProvider.all([
+        crvRewardsMC.currentRewards(),
         crvRewardsMC.totalSupply(),
         crvRewardsMC.duration(),
-        crvRewardsMC.extraRewards(0),
-      ]);
+        crvRewardsMC.extraRewards(0)
+      ])
 
-      // Work backwards from reported CRV APR
-      const poolValue =
-        parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
+      const extraRewardsContract = ExtraRewards__factory.connect(
+        extraRewardsAddress,
+        provider,
+      );
+      const rewardRate = +formatEther(await extraRewardsContract.rewardRate())
+      const rewardValuePerYear = rewardRate * cvxPool.rewardPrice * ONE_YEAR_SECONDS;
 
-      const crvRewardPerDuration =
-        (crvApy * poolValue) / (duration.toNumber() * prices.crv);
+      const poolValue = parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
 
-      const cvxReward = await getCvxMint(crvRewardPerDuration * 100);
+      const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)))
       const cvxValuePerYear =
         (cvxReward * prices.cvx * ONE_YEAR_SECONDS) / duration.toNumber();
 
-      const cvxApy = cvxValuePerYear / poolValue;
+      let cvxApy = cvxValuePerYear / poolValue;
 
-      const extraRewards = ExtraRewards__factory.connect(
-        extraAddress,
-        provider,
-      );
-
-      const rewardAmount = +formatEther(await extraRewards.currentRewards());
+      const rewardAmount = +formatEther(await extraRewardsContract.currentRewards());
 
       const rewardValue =
         (rewardAmount * cvxPool.rewardPrice * ONE_YEAR_SECONDS) /
         duration.toNumber();
 
-      const rewardApr = rewardValue / poolValue;
+      let rewardApr = rewardValue / poolValue;
+      // cvx is treated as an additional "extra reward"
+      const isCvxcrv =
+        lpTokenAddress === "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8";
+      if (isCvxcrv) rewardApr += cvxApy;
 
       return [
         { lp: lpApy },
         { crv: getCompoundingAPY((crvApy * 0.8) / 100), apr: crvApy * 0.8 },
-        { cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 },
+        ...(isCvxcrv
+          ? []
+          : [{ cvx: cvxApy * 0.8 * 100, apr: cvxApy * 0.8 * 100 }]),
         {
-          [cvxPool.rewardName]: getCompoundingAPY((rewardApr * 0.8)),
+          [cvxPool.rewardName]: getCompoundingAPY(rewardApr * 0.8),
           apr: rewardApr * 0.8 * 100,
         },
       ];
@@ -817,10 +833,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         crvFraxApy,
         crvIBApy,
         alcxEthAlcxApy,
-        cvxEthApy,
-        sushiCvxEthApy,
         truEthApy,
-        steCRVApy,
       ] = await Promise.all([
         calculateSushiAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
@@ -837,17 +850,27 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           "alcx",
         ),
         calculateMCv2APY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
+          "tru",
+        ),
+      ]);
+      const [
+        cvxEthApy,
+        sushiCvxEthApy,
+        steCRVApy,
+        cvxCRVlpApy,
+        cvxCRVApy
+      ] = await Promise.all([
+        calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
           "cvx",
         ),
         calculateSushiV2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
         ),
-        calculateMCv2APY(
-          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
-          "tru",
-        ),
         calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].steCRV),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].CVXCRVlp),
+        calculateConvexAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].CVXCRV),
       ]);
 
       const [
@@ -1091,6 +1114,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_3CRV) {
           APYs = [...mim3crvApy];
         }
+
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.MIM_ETH) {
           APYs = [
             ...mimEthApy,
@@ -1151,6 +1175,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           ];
         }
 
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRVlp) {
+          APYs = [...cvxCRVlpApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRV) {
+          APYs = [...cvxCRVApy];
+        }
         let apr = 0;
         APYs.map((x) => {
           if (x.apr) {

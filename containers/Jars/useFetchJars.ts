@@ -70,6 +70,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           return multicallController.jars(t.value);
         }),
       );
+
       if (controllerMai && chainName === NETWORK_NAMES.POLY) {
         const multicallControllerMai = new MulticallContract(
           controllerMai.address,

@@ -16,6 +16,7 @@ import { GaugeCollapsible } from "./GaugeCollapsible";
 import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { uncompoundAPY } from "../../util/jars";
 import {
   JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
@@ -31,6 +32,7 @@ import { FarmsIntro } from "components/FarmsIntro";
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
   totalAPY: number;
+  uncompounded: number;
 }
 
 export interface JarApy {
@@ -91,6 +93,16 @@ export const GaugeList: FC = () => {
     ) {
       APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
     }
+    const uncompounded = APYs.map((x) => {
+      const k: string = Object.keys(x)[0];
+      const shouldNotUncompound = k === "pickle" || k === "lp";
+      const v = shouldNotUncompound
+        ? Object.values(x)[0]
+        : uncompoundAPY(Object.values(x)[0]);
+      const ret: JarApy = {};
+      ret[k] = v;
+      return ret;
+    });
 
     const totalAPY = APYs.map((x) => {
       return Object.values(x).reduce(
@@ -103,16 +115,19 @@ export const GaugeList: FC = () => {
       ...gauge,
       APYs,
       totalAPY,
+      uncompounded,
     };
   });
 
   const isDisabledFarm = (depositToken: string) =>
     depositToken === PICKLE_JARS.pUNIETHLUSD;
 
-  const activeJars = jarData.filter(
-    (jar) =>
-      JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
-  );
+  const activeJars = jarData
+    .filter(
+      (jar) =>
+        JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
+    )
+    .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],

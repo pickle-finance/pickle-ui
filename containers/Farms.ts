@@ -218,6 +218,14 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pUNIV2 RLY/ETH",
     poolName: "pUNIV2 RLY/ETH",
   },
+  "0xF1478A8387C449c55708a3ec11c143c35daf5E74": {
+    tokenName: "pCvxCRVlp",
+    poolName: "pCvxCRVlp",
+  },
+  "0xB245280Fd1795f5068DEf8E8f32DB7846b030b2B": {
+    tokenName: "pCvxCRV",
+    poolName: "pCvxCRV",
+  },
 };
 
 function useFarms() {

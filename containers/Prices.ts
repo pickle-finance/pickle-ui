@@ -11,6 +11,7 @@ interface PriceObject {
   usdt: number;
   usdc: number;
   crv: number;
+  cvxcrv: number;
   snx: number;
   uni: number;
   sushi: number;
@@ -75,6 +76,7 @@ function usePrices() {
         "usd-coin",
         "compound-governance-token",
         "curve-dao-token",
+        "convex-crv",
         "tether",
         "uniswap",
         "havven",
@@ -135,6 +137,7 @@ function usePrices() {
       usdt: response.tether.usd,
       usdc: response["usd-coin"].usd,
       crv: response["curve-dao-token"].usd,
+      cvxcrv: response["convex-crv"].usd,
       snx: response["havven"].usd,
       uni: response["uniswap"].usd,
       sushi: response["sushi"].usd,
