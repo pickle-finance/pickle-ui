@@ -694,35 +694,29 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const crvRewardsMC = new MulticallContract(crvRewards, CrvRewardsABI);
 
-      const [
-        depositLocked,
-        duration,
-        extraAddress,
-      ] = await multicallProvider.all([
+     const [crvReward, depositLocked, duration, extraRewardsAddress] = await multicallProvider.all([
+        crvRewardsMC.currentRewards(),
         crvRewardsMC.totalSupply(),
         crvRewardsMC.duration(),
-        crvRewardsMC.extraRewards(0),
-      ]);
+        crvRewardsMC.extraRewards(0)
+      ])
 
-      // Work backwards from reported CRV APR
-      const poolValue =
-        parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
+      const extraRewardsContract = ExtraRewards__factory.connect(
+        extraRewardsAddress,
+        provider,
+      );
+      const rewardRate = +formatEther(await extraRewardsContract.rewardRate())
+      const rewardValuePerYear = rewardRate * cvxPool.rewardPrice * ONE_YEAR_SECONDS;
 
-      const crvRewardPerDuration =
-        (crvApy * poolValue) / (duration.toNumber() * prices.crv);
+      const poolValue = parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
 
-      const cvxReward = await getCvxMint(crvRewardPerDuration * 100);
+      const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)))
       const cvxValuePerYear =
         (cvxReward * prices.cvx * ONE_YEAR_SECONDS) / duration.toNumber();
 
       let cvxApy = cvxValuePerYear / poolValue;
 
-      const extraRewards = ExtraRewards__factory.connect(
-        extraAddress,
-        provider,
-      );
-
-      const rewardAmount = +formatEther(await extraRewards.currentRewards());
+      const rewardAmount = +formatEther(await extraRewardsContract.currentRewards());
 
       const rewardValue =
         (rewardAmount * cvxPool.rewardPrice * ONE_YEAR_SECONDS) /
