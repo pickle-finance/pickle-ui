@@ -27,7 +27,6 @@ import {
   MiniIcon,
 } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
-import { UserGaugeData } from "../../containers/UserGauges";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
@@ -39,7 +38,7 @@ import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
 import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
-import { JarApy } from "./GaugeList";
+import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 interface DataProps {
@@ -221,6 +220,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x5282a4ef67d9c33135340fb3289cc1711c13638c": (
     <LpIcon swapIconSrc={"/yfi.png"} tokenIconSrc="/cream.jpeg" />
   ),
+  "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8": (
+    <LpIcon swapIconSrc={"/curve.png"} tokenIconSrc={"/convex.png"} />
+  ),
+  "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7": (
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/curve.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -231,7 +236,7 @@ function sleep(ms: number) {
 
 export const JarGaugeCollapsible: FC<{
   jarData: UserJarData;
-  gaugeData: UserGaugeData;
+  gaugeData: UserGaugeDataWithAPY;
   isYearnJar?: boolean;
 }> = ({ jarData, gaugeData, isYearnJar = false }) => {
   const {
@@ -280,6 +285,7 @@ export const JarGaugeCollapsible: FC<{
     harvestable,
     depositTokenName: gaugeDepositTokenName,
     fullApy,
+    uncompounded
   } = gaugeData;
 
   const stakedNum = parseFloat(
@@ -311,16 +317,7 @@ export const JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
-  const uncompounded = APYs.map((x) => {
-    const k: string = Object.keys(x)[0];
-    const shouldNotUncompound = k === "pickle" || k === "lp";
-    const v = shouldNotUncompound
-      ? Object.values(x)[0]
-      : uncompoundAPY(Object.values(x)[0]);
-    const ret: JarApy = {};
-    ret[k] = v;
-    return ret;
-  });
+
   const totalAPY1: number = APYs.map((x) => {
     return Object.values(x)
       .filter((x) => !isNaN(x))
@@ -696,7 +693,7 @@ export const JarGaugeCollapsible: FC<{
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={harvestableNum === 0}>
               {harvestableStr}{" "}
-              {harvestableNum && <MiniIcon source={"/pickle.png"} />}
+              {Boolean(harvestableNum) && <MiniIcon source={"/pickle.png"} />}
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
