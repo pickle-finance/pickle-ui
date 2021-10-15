@@ -670,6 +670,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       throw new Error('Network response was not ok.')
     })
     .then(data => JSON.parse(data.contents))
+    .catch(() => {
+      return undefined;
+    });
 
     const fetchResult = await fetchPromise;
     if (!fetchResult) return [];
