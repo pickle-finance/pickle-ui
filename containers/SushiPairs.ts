@@ -32,6 +32,7 @@ export const addresses = {
   mim: "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
   dino: "0xaa9654becca45b5bdfa5ac646c939c62b527d394",
   tru: "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784",
+  work: "0x6002410dDA2Fb88b4D0dc3c1D562F7761191eA80",
 
   // OKEx
   cherry: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
@@ -210,6 +211,11 @@ const dodo: Token = {
   priceId: "dodo",
   decimals: 18,
 };
+const work: Token = {
+  address: addresses.work,
+  priceId: "work",
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };
@@ -253,6 +259,7 @@ export const PAIR_INFO: PairMap = {
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
   "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
   "0x65E17c52128396443d4A9A61EaCf0970F05F8a20": { a: hnd, b: aweth },
+  "0xAb0454B98dAf4A02EA29292E6A8882FB2C787DD4": { a: wusdc, b: work },
 };
 
 function useSushiPairs() {
@@ -288,7 +295,7 @@ function useSushiPairs() {
 
     const totalSupply = totalSupplyBN / 1e18; // Uniswap LP tokens are always 18 decimals
     const pricePerToken = totalValueOfPair / totalSupply;
-    
+
     return { totalValueOfPair, totalSupply, pricePerToken };
   };
 

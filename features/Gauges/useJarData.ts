@@ -34,7 +34,7 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
           totalAPY: jar.totalAPY,
           apr: jar.apr,
           depositTokenLink: jar.depositTokenLink,
-          tvlUSD: jar.tvlUSD
+          tvlUSD: jar.tvlUSD,
         };
       });
 

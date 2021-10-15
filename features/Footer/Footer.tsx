@@ -49,11 +49,7 @@ export const Footer: FC = () => {
 
   return (
     <Container>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href={liquidityLink()}
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href={liquidityLink()}>
         {t("nav.pickleEth")}
       </NavItem>
       <NavItem

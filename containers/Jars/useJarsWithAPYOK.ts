@@ -57,7 +57,7 @@ type Output = {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
-  const { cherrychef, bxhchef, erc20: Erc20} = Contracts.useContainer();
+  const { cherrychef, bxhchef, erc20: Erc20 } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(

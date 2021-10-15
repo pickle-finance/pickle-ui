@@ -224,7 +224,8 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
             <Data isZero={parseFloat(formatEther(harvestableMatic || 0)) === 0}>
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <br />
-              {harvestableMaticStr} <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+              {harvestableMaticStr}{" "}
+              <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>

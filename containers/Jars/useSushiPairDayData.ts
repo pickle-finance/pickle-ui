@@ -89,7 +89,7 @@ export const useSushiPairDayData = () => {
         mode: "cors",
       },
     ).then((x) => x.json());
-    
+
     setSushiPairDayData(res?.data?.pairDayDatas);
   };
 
@@ -120,7 +120,7 @@ export const useSushiPairDayData = () => {
         const pairAddress = x?.pair?.id || x?.pair;
         return pairAddress.toLowerCase() === pair.toLowerCase();
       });
-      
+
       if (filteredPair.length > 0) {
         const selected = filteredPair[0];
 

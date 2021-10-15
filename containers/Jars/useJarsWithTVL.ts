@@ -127,8 +127,7 @@ export const useJarWithTVL = (jars: Input): Output => {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
     }
 
-    let totalUNI, token0, token1
-
+    let totalUNI, token0, token1;
 
     if (jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.DODO_HND_ETH) {
       const dodoPairMC = new MulticallContract(
@@ -142,13 +141,11 @@ export const useJarWithTVL = (jars: Input): Output => {
         dodoPairMC._QUOTE_TOKEN_(),
       ]);
     } else {
-
       const uniPairMC = new MulticallContract(
         jar.depositToken.address,
         uniswapv2Pair.interface.fragments,
       );
-  
-      
+
       [totalUNI, token0, token1] = await multicallProvider.all([
         uniPairMC.totalSupply(),
         uniPairMC.token0(),
