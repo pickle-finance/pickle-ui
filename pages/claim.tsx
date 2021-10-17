@@ -27,6 +27,8 @@ const ClaimBalancer: FC = () => {
         <Claim token="PICKLE" />
         <Spacer />
         <Claim token="BAL" />
+        <Spacer />
+        <Claim token="MCB" />
       </Page.Content>
       <Footer />
     </Page>

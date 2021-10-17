@@ -1,11 +1,9 @@
 import { Signer } from "ethers";
 
 import { BalancerRedeemer__factory as BalancerRedeemerFactory } from "containers/Contracts/factories/BalancerRedeemer__factory";
+import config from "./config";
 
-const pickleRedeemer = "0xe3Fb4f33FDb4ECC874a842c5ca2Ee6a2E547328c";
-const balRedeemer = "0x6bd0B17713aaa29A2d7c9A39dDc120114f9fD809";
-
-export type Token = "PICKLE" | "BAL";
+export type Token = keyof typeof config;
 
 interface Snapshot {
   [address: string]: string;
@@ -31,11 +29,7 @@ const fetchFromIpfs = async (hash: string): Promise<Snapshot> => {
 };
 
 const getSnapshot = async (token: Token): Promise<Snapshot> => {
-  const url =
-    token === "PICKLE"
-      ? "https://raw.githubusercontent.com/balancer-labs/bal-mining-scripts/master/reports/_current-pickle-arbitrum.json"
-      : "https://raw.githubusercontent.com/balancer-labs/bal-mining-scripts/master/reports/_current-arbitrum.json";
-
+  const url = config[token].url;
   const snapshot = await fetch(url);
 
   return await snapshot.json();
@@ -59,7 +53,7 @@ const getClaimStatusByWeek = async (
   signer: Signer,
 ): Promise<ClaimStatusByWeek> => {
   const weeks = Object.keys(claimsByWeek);
-  const contractAddress = token === "PICKLE" ? pickleRedeemer : balRedeemer;
+  const contractAddress = config[token].contract;
   const contract = BalancerRedeemerFactory.connect(contractAddress, signer);
   const statuses = await contract.claimStatus(
     address,

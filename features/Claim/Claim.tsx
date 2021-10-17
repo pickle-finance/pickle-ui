@@ -16,7 +16,7 @@ interface Props {
 
 const Claim: FC<Props> = ({ token }) => {
   const { signer, address } = Connection.useContainer();
-  const [claimableAmount, setClaimableAmount] = useState<number>();
+  const [claimableAmount, setClaimableAmount] = useState<number>(-1);
 
   useEffect(() => {
     if (signer && address) {
@@ -39,11 +39,7 @@ const Claim: FC<Props> = ({ token }) => {
   return (
     <Card>
       <h2>Claim {token}</h2>
-      {claimableAmount ? (
-        <p>
-          Claimable Amount: {claimableAmount} {token}
-        </p>
-      ) : (
+      {claimableAmount < 0 ? (
         <Skeleton
           animation="wave"
           width="180px"
@@ -53,6 +49,10 @@ const Claim: FC<Props> = ({ token }) => {
             opacity: 0.1,
           }}
         />
+      ) : (
+        <p>
+          Claimable Amount: {claimableAmount} {token}
+        </p>
       )}
     </Card>
   );
