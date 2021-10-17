@@ -1,7 +1,9 @@
 import { Signer } from "ethers";
+import { toWei, soliditySha3 } from "web3-utils";
 
 import { BalancerRedeemer__factory as BalancerRedeemerFactory } from "containers/Contracts/factories/BalancerRedeemer__factory";
 import config from "./config";
+import MerkleTree from "./MerkleTree";
 
 export type Token = keyof typeof config;
 
@@ -14,11 +16,17 @@ interface ClaimsByWeek {
 }
 
 interface AmountsByWeek {
-  [week: string]: number;
+  [week: string]: string;
 }
 
 interface ClaimStatusByWeek {
   [week: string]: boolean;
+}
+
+interface Claim {
+  week: number;
+  balance: string;
+  merkleProof: string[];
 }
 
 const fetchFromIpfs = async (hash: string): Promise<Snapshot> => {
@@ -65,7 +73,7 @@ const getClaimStatusByWeek = async (
 };
 
 export const getClaimableAmount = (amountsByWeek: AmountsByWeek): number =>
-  Object.values(amountsByWeek).reduce((a, b) => a + b, 0);
+  Object.values(amountsByWeek).reduce((a, b) => a + parseFloat(b), 0);
 
 export const getUnclaimedAmountsByWeek = async (
   token: Token,
@@ -86,8 +94,50 @@ export const getUnclaimedAmountsByWeek = async (
     if (claimStatusByWeek[week]) continue;
 
     // Anything to claim?
-    if (claims[address]) result[week] = parseFloat(claims[address]);
+    if (claims[address]) result[week] = claims[address];
   }
 
   return result;
+};
+
+export const generateClaim = (
+  merkleTree: MerkleTree,
+  week: string,
+  balance: string,
+  address: string,
+): Claim => {
+  const proof = merkleTree.getHexProof(soliditySha3(address, toWei(balance))!);
+
+  return {
+    week: parseInt(week),
+    balance: toWei(balance),
+    merkleProof: proof,
+  };
+};
+
+export const verifyClaim = async (
+  claim: Claim,
+  address: string,
+  token: Token,
+  signer: Signer,
+): Promise<boolean> => {
+  const contractAddress = config[token].contract;
+  const contract = BalancerRedeemerFactory.connect(contractAddress, signer);
+
+  return await contract.verifyClaim(
+    address,
+    claim.week,
+    claim.balance,
+    claim.merkleProof,
+  );
+};
+
+export const generateMerkleTree = (balances: Snapshot): MerkleTree => {
+  const elements = Object.keys(balances).map((address) => {
+    const balance = toWei(balances[address]);
+
+    return soliditySha3(address, balance)!;
+  });
+
+  return new MerkleTree(elements);
 };

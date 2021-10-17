@@ -3,10 +3,13 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { Card } from "@geist-ui/react";
 
 import {
+  generateClaim,
+  generateMerkleTree,
+  getClaimableAmount,
   getClaimsByWeek,
   getUnclaimedAmountsByWeek,
-  getClaimableAmount,
   Token,
+  verifyClaim,
 } from "features/Claim/utils";
 import { Connection } from "containers/Connection";
 
@@ -18,22 +21,33 @@ const Claim: FC<Props> = ({ token }) => {
   const { signer, address } = Connection.useContainer();
   const [claimableAmount, setClaimableAmount] = useState<number>(-1);
 
-  useEffect(() => {
-    if (signer && address) {
-      const fetchData = async () => {
-        const claimsByWeek = await getClaimsByWeek(token);
-        const unclaimedAmounts = await getUnclaimedAmountsByWeek(
-          token,
-          claimsByWeek,
-          address,
-          signer,
-        );
+  const fetchClaimableAmount = async () => {
+    if (!address) return;
 
-        setClaimableAmount(getClaimableAmount(unclaimedAmounts));
-      };
+    setClaimableAmount(-1);
 
-      fetchData();
+    const claimsByWeek = await getClaimsByWeek(token);
+    const unclaimedAmounts = await getUnclaimedAmountsByWeek(
+      token,
+      claimsByWeek,
+      address,
+      signer,
+    );
+
+    for (const [week, amount] of Object.entries(unclaimedAmounts)) {
+      const merkleTree = generateMerkleTree(claimsByWeek[week]);
+      const claim = generateClaim(merkleTree, week, amount, address);
+      console.log(
+        "============= ",
+        await verifyClaim(claim, address, token, signer),
+      );
     }
+
+    setClaimableAmount(getClaimableAmount(unclaimedAmounts));
+  };
+
+  useEffect(() => {
+    fetchClaimableAmount();
   }, [address]);
 
   return (
