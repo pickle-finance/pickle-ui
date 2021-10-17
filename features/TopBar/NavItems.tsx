@@ -122,6 +122,9 @@ export const NavItems: FC = () => {
             {t("nav.feedback")}
           </NavItem>
         </Link>
+        <Link href="/claim" passHref>
+          <NavItem active={router.pathname.endsWith("claim")}>Claim</NavItem>
+        </Link>
       </NavItemsContainer>
       <LanguageSelectContainer>
         <LanguageSelect type="standalone" />
