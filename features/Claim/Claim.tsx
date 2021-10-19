@@ -2,15 +2,7 @@ import { FC, useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Card } from "@geist-ui/react";
 
-import {
-  generateClaim,
-  generateMerkleTree,
-  getClaimableAmount,
-  getClaimsByWeek,
-  getUnclaimedAmountsByWeek,
-  Token,
-  verifyClaim,
-} from "features/Claim/utils";
+import { BalancerRedeemer, Token } from "features/Claim/BalancerRedeemer";
 import { Connection } from "containers/Connection";
 
 interface Props {
@@ -26,24 +18,15 @@ const Claim: FC<Props> = ({ token }) => {
 
     setClaimableAmount(-1);
 
-    const claimsByWeek = await getClaimsByWeek(token);
-    const unclaimedAmounts = await getUnclaimedAmountsByWeek(
-      token,
-      claimsByWeek,
-      address,
-      signer,
-    );
+    const redeemer = new BalancerRedeemer(token, address, signer);
+    await redeemer.fetchData();
 
-    for (const [week, amount] of Object.entries(unclaimedAmounts)) {
-      const merkleTree = generateMerkleTree(claimsByWeek[week]);
-      const claim = generateClaim(merkleTree, week, amount, address);
-      console.log(
-        "============= ",
-        await verifyClaim(claim, address, token, signer),
-      );
+    for (const week of redeemer.claimableWeeks) {
+      const claim = redeemer.generateClaim(week);
+      console.log("============= ", await redeemer.verifyClaim(claim));
     }
 
-    setClaimableAmount(getClaimableAmount(unclaimedAmounts));
+    setClaimableAmount(redeemer.claimableAmount);
   };
 
   useEffect(() => {
