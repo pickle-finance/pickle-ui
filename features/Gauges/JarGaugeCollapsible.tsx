@@ -796,7 +796,7 @@ export const JarGaugeCollapsible: FC<{
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(formatEther(depositBalance));
+                setDepositAmount(formatEther(isUsdc ? depositBalance.mul(USDC_SCALE) : depositBalance));
               }}
             >
               {t("balances.max")}
