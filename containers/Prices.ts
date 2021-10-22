@@ -60,6 +60,7 @@ interface PriceObject {
   hnd: number;
   dodo: number;
   work: number;
+  rbn: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -126,6 +127,7 @@ function usePrices() {
         "hundred-finance",
         "dodo",
         "the-employment-commons-work-token",
+        "ribbon-finance",
       ],
       vs_currencies: ["usd"],
     });
@@ -188,6 +190,7 @@ function usePrices() {
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
       work: response["the-employment-commons-work-token"].usd,
+      rbn: response["ribbon-finance"].usd
     };
     setPrices(prices);
   };

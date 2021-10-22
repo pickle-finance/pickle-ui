@@ -95,6 +95,9 @@ import { DodoPair__factory as DodoPairFactory } from "./Contracts/factories/Dodo
 import { DodoRewards } from "./Contracts/DodoRewards";
 import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factories/DodoRewards__factory";
 
+import { ControllerUniv3 } from "./Contracts/ControllerUniv3";
+import { ControllerUniv3__factory as ControllerUniv3Factory } from "./Contracts/factories/ControllerUniv3__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -214,6 +217,8 @@ export const PICKLE_SUSHI_REWARDER =
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
 export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
+
+export const CONTROLLER_UNIV3 = "0xD6CA5052Bf7b57f6AEdeE0D259a0E9AA4DCa64c6";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -335,6 +340,10 @@ function useContracts() {
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
   const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
+  const [
+    controllerUniV3,
+    setControllerUniV3,
+  ] = useState<ControllerUniv3 | null>(null);
 
   const [
     rallyRewardPools,
@@ -492,6 +501,10 @@ function useContracts() {
         RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
       );
       setDodoRewards(DodoRewardsFactory.connect(DODO_REWARDS, signer));
+
+      setControllerUniV3(
+        ControllerUniv3Factory.connect(CONTROLLER_UNIV3, signer),
+      );
     }
   };
 
@@ -555,6 +568,7 @@ function useContracts() {
     rallyRewardPools,
     dodoPair,
     dodoRewards,
+    controllerUniV3,
   };
 }
 

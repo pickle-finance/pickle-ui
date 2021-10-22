@@ -39,6 +39,16 @@ import { SushiPairs, addresses } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 import { Contract } from "@ethersproject/contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
+import {
+  findNFTByPool,
+  depositNFT,
+  depositStakeNFT,
+  stakeNFT,
+  claimReward,
+  exitPool,
+  withdrawNFT,
+  getPoolData,
+} from "../../util/univ3";
 
 import RewarderABI from "../ABIs/rewarder.json";
 
@@ -193,6 +203,22 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       rewardName: "3crv",
       tokenPrice: prices?.cvxcrv,
       rewardPrice: prices?.dai,
+    },
+  };
+
+  // UniV3 Incentives
+  const uniV3Info: any = {
+    // RBN-ETH
+    "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a": {
+      incentiveKey: [
+        "0x6123B0049F904d730dB3C36a31167D9d4121fA6B",
+        "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a",
+        1633694400,
+        1638878400,
+        "0xDAEada3d210D2f45874724BeEa03C7d4BBD41674",
+      ],
+      emissions: 10000000,
+      rewardName: "rbn",
     },
   };
 
@@ -664,15 +690,19 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
 
   const calculateConvexAPY = async (lpTokenAddress: string) => {
-    const fetchPromise = fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.convexfinance.com/api/curve-apys')}`)
-    .then(response => {
-      if (response.ok) return response.json()
-      throw new Error('Network response was not ok.')
-    })
-    .then(data => JSON.parse(data.contents))
-    .catch(() => {
-      return undefined;
-    });
+    const fetchPromise = fetch(
+      `https://api.allorigins.win/get?url=${encodeURIComponent(
+        "https://www.convexfinance.com/api/curve-apys",
+      )}`,
+    )
+      .then((response) => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => JSON.parse(data.contents))
+      .catch(() => {
+        return undefined;
+      });
 
     const fetchResult = await fetchPromise;
     if (!fetchResult) return [];
@@ -697,29 +727,38 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const crvRewardsMC = new MulticallContract(crvRewards, CrvRewardsABI);
 
-     const [crvReward, depositLocked, duration, extraRewardsAddress] = await multicallProvider.all([
+      const [
+        crvReward,
+        depositLocked,
+        duration,
+        extraRewardsAddress,
+      ] = await multicallProvider.all([
         crvRewardsMC.currentRewards(),
         crvRewardsMC.totalSupply(),
         crvRewardsMC.duration(),
-        crvRewardsMC.extraRewards(0)
-      ])
+        crvRewardsMC.extraRewards(0),
+      ]);
 
       const extraRewardsContract = ExtraRewards__factory.connect(
         extraRewardsAddress,
         provider,
       );
-      const rewardRate = +formatEther(await extraRewardsContract.rewardRate())
-      const rewardValuePerYear = rewardRate * cvxPool.rewardPrice * ONE_YEAR_SECONDS;
+      const rewardRate = +formatEther(await extraRewardsContract.rewardRate());
+      const rewardValuePerYear =
+        rewardRate * cvxPool.rewardPrice * ONE_YEAR_SECONDS;
 
-      const poolValue = parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
+      const poolValue =
+        parseFloat(formatEther(depositLocked)) * cvxPool.tokenPrice;
 
-      const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)))
+      const cvxReward = await getCvxMint(parseFloat(formatEther(crvReward)));
       const cvxValuePerYear =
         (cvxReward * prices.cvx * ONE_YEAR_SECONDS) / duration.toNumber();
 
       let cvxApy = cvxValuePerYear / poolValue;
 
-      const rewardAmount = +formatEther(await extraRewardsContract.currentRewards());
+      const rewardAmount = +formatEther(
+        await extraRewardsContract.currentRewards(),
+      );
 
       const rewardValue =
         (rewardAmount * cvxPool.rewardPrice * ONE_YEAR_SECONDS) /
@@ -802,6 +841,24 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateUniV3Apy = async (poolTokenAddress: string) => {
+    if (provider) {
+      const { incentiveKey, emissions, rewardName } = uniV3Info[
+        poolTokenAddress
+      ];
+      const data = await getPoolData(incentiveKey[1], incentiveKey[0], provider);
+      const emissionsPerSecond =
+        emissions / (incentiveKey[3] - incentiveKey[2]);
+      const apr =
+        (emissionsPerSecond * data.token * ONE_YEAR_SECONDS) / data.tvl;
+
+      return [
+        { [rewardName]: getCompoundingAPY(apr * 0.8), apr: apr * 0.8 * 100 },
+      ];
+    }
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars && controller && strategy) {
       const [
@@ -862,7 +919,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         sushiCvxEthApy,
         steCRVApy,
         cvxCRVlpApy,
-        cvxCRVApy
+        cvxCRVApy,
       ] = await Promise.all([
         calculateMCv2APY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
@@ -904,10 +961,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateSaddleD4APY(),
       ]);
 
-      const [mim3crvApy, mimEthApy, spellEthApy] = await Promise.all([
+      const [
+        mim3crvApy,
+        mimEthApy,
+        spellEthApy,
+        rbnEthApy,
+      ] = await Promise.all([
         calculateConvexAPY(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
+        calculateUniV3Apy(JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH),
       ]);
 
       const newJarsWithAPY = jars.map((jar) => {
@@ -1185,6 +1248,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRV) {
           APYs = [...cvxCRVApy];
         }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV3_RBN_ETH) {
+          APYs = [...rbnEthApy];
+        }
+
         let apr = 0;
         APYs.map((x) => {
           if (x.apr) {

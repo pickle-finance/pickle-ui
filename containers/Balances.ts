@@ -30,7 +30,6 @@ function useBalances() {
       tokenAddresses.forEach(
         (address, index) => (newTokenBalances[address] = balances[index]),
       );
-
       setTokenBalances(newTokenBalances);
     }
   };

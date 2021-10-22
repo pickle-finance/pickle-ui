@@ -31,6 +31,10 @@ const IsMaiToken = (address: string): boolean => {
   return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI;
 };
 
+const isUniV3 = (address: string): boolean => {
+  return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_RBN_ETH;
+};
+
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
   const {
     blockNum,
@@ -38,12 +42,12 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
     multicallProvider,
     chainName,
   } = Connection.useContainer();
-  const { controller, strategy, controllerMai } = Contracts.useContainer();
+  const { controller, strategy, controllerMai, controllerUniV3 } = Contracts.useContainer();
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
-    if (controller && strategy && multicallProvider && chainName) {
+    if (controller && strategy && multicallProvider && chainName && controllerUniV3) {
       const multicallController = new MulticallContract(
         controller.address,
         controller.interface.fragments,
@@ -59,10 +63,14 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       });
 
       const tokenKV = tokenKVUnfiltered.filter(
-        ({ key, value }) => !IsMaiToken(value),
+        ({ key, value }) => !IsMaiToken(value) && !isUniV3(value),
       );
       const tokenKVMai = tokenKVUnfiltered.filter(({ key, value }) =>
         IsMaiToken(value),
+      );
+
+      const tokenKVUniV3 = tokenKVUnfiltered.filter(({ key, value }) =>
+        isUniV3(value),
       );
 
       let jarAddresses = await multicallProvider.all(
@@ -82,23 +90,38 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
             return multicallControllerMai.jars(t.value);
           }),
         );
+
         jarAddresses = [...jarAddresses, ...maiJarAddresses];
       }
 
+      if (controllerUniV3 && chainName === NETWORK_NAMES.ETH) {
+        const multicallControllerUniV3 = new MulticallContract(
+          controllerUniV3.address,
+          controllerUniV3.interface.fragments,
+        );
+        const uniV3JarAddresses = await multicallProvider.all(
+          tokenKVUniV3.map((t) => {
+            return multicallControllerUniV3.jars(t.value);
+          }),
+        );
+        jarAddresses = [...jarAddresses, ...uniV3JarAddresses];
+      }
+      
       const jarData = tokenKV
-        .concat(tokenKVMai)
-        .map((kv, idx) => {
-          return {
-            [kv.key]: {
-              tokenAddress: kv.value,
-              jarAddress: jarAddresses[idx],
-            },
-          };
-        })
-        .reduce((acc, x) => {
-          return { ...acc, ...x };
-        }, {});
-
+      .concat(tokenKVMai)
+      .concat(tokenKVUniV3)
+      .map((kv, idx) => {
+        return {
+          [kv.key]: {
+            tokenAddress: kv.value,
+            jarAddress: jarAddresses[idx],
+          },
+        };
+      })
+      .reduce((acc, x) => {
+        return { ...acc, ...x };
+      }, {});
+      
       const newJars = await Promise.all(
         Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(
           async ([k, tokenAddress]) => {
