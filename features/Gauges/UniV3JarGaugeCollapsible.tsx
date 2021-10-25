@@ -475,7 +475,8 @@ export const UniV3JarGaugeCollapsible: FC<{
       : 0;
   const tvlStr = getFormatString(tvlNum);
 
-  if (!token0 || !token1 || !jarV3 || Boolean(!proportion.toString())) return <> </>;
+  if (!token0 || !token1 || !jarV3 || Boolean(!proportion.toString()))
+    return <> </>;
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -732,19 +733,24 @@ export const UniV3JarGaugeCollapsible: FC<{
             md={12}
             style={{ display: "flex", flexDirection: "column" }}
           >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "auto",
+              }}
+            >
+              <div>
+                {`${t(
+                  "balances.balance",
+                )}: ${depositedStr} p${depositTokenName}`}
+              </div>
+            </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {t("balances.balance")}: {depositedStr} (
-                <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(formatEther(deposited)) * ratio
-                      : 0
-                  } ${depositTokenName}`}
-                >
-                  {depositedUnderlyingStr}
-                </Tooltip>{" "}
-                {depositTokenName}){" "}
+                {`(5.1 ${getTokenName(token0.address)}, 0.02 ${getTokenName(
+                  token1.address,
+                )})`}
               </div>
               <Link
                 color
@@ -781,7 +787,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                   });
                 }
               }}
-              style={{ width: "100%", marginTop: "auto" }}
+              style={{ width: "100%" }}
             >
               {withdrawButton.text}
             </Button>
