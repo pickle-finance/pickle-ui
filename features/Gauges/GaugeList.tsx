@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
@@ -28,6 +28,8 @@ import { UserJarData } from "containers/UserJars";
 import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
 import { FarmsIntro } from "components/FarmsIntro";
+import { isUniV3 } from "util/univ3";
+import { UniV3JarGaugeCollapsible } from "./UniV3JarGaugeCollapsible";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -125,9 +127,15 @@ export const GaugeList: FC = () => {
   const activeJars = jarData
     .filter(
       (jar) =>
-        JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
+        JAR_ACTIVE[jar.depositTokenName] &&
+        !JAR_YEARN[jar.depositTokenName] &&
+        !isUniV3(jar.depositToken.address.toLowerCase()),
     )
     .sort((a, b) => b.totalAPY - a.totalAPY);
+
+  const uniV3Jars = jarData.filter((jar) =>
+    isUniV3(jar.depositToken.address.toLowerCase()),
+  );
 
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],
@@ -252,6 +260,16 @@ export const GaugeList: FC = () => {
         {showUserJars
           ? gaugesWithAPY[0].staked.gt(BigNumber.from(0)) && PicklePower
           : PicklePower}
+
+        {chainName === NETWORK_NAMES.ETH &&
+          uniV3Jars.map((jar) => {
+            const gauge = {};
+            return (
+              <Grid xs={24} key={jar.name}>
+                <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
+              </Grid>
+            );
+          })}
 
         {(showUserJars ? userJars : activeJars).map((jar) => {
           const gauge = findGauge(jar);

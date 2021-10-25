@@ -39,16 +39,7 @@ import { SushiPairs, addresses } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
 import { Contract } from "@ethersproject/contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
-import {
-  findNFTByPool,
-  depositNFT,
-  depositStakeNFT,
-  stakeNFT,
-  claimReward,
-  exitPool,
-  withdrawNFT,
-  getPoolData,
-} from "../../util/univ3";
+import { getPoolData, uniV3Info } from "../../util/univ3";
 
 import RewarderABI from "../ABIs/rewarder.json";
 
@@ -203,22 +194,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       rewardName: "3crv",
       tokenPrice: prices?.cvxcrv,
       rewardPrice: prices?.dai,
-    },
-  };
-
-  // UniV3 Incentives
-  const uniV3Info: any = {
-    // RBN-ETH
-    "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a": {
-      incentiveKey: [
-        "0x6123B0049F904d730dB3C36a31167D9d4121fA6B",
-        "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a",
-        1633694400,
-        1638878400,
-        "0xDAEada3d210D2f45874724BeEa03C7d4BBD41674",
-      ],
-      emissions: 10000000,
-      rewardName: "rbn",
     },
   };
 
@@ -844,13 +819,17 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const calculateUniV3Apy = async (poolTokenAddress: string) => {
     if (provider) {
       const { incentiveKey, emissions, rewardName } = uniV3Info[
-        poolTokenAddress
+        poolTokenAddress as keyof typeof uniV3Info
       ];
-      const data = await getPoolData(incentiveKey[1], incentiveKey[0], provider);
+      const data = await getPoolData(
+        incentiveKey[1],
+        incentiveKey[0],
+        provider,
+      );
       const emissionsPerSecond =
         emissions / (incentiveKey[3] - incentiveKey[2]);
       const apr =
-        (emissionsPerSecond * data.token * ONE_YEAR_SECONDS) / data.tvl;
+        (emissionsPerSecond * data.tokenPrice * ONE_YEAR_SECONDS) / data.tvl;
 
       return [
         { [rewardName]: getCompoundingAPY(apr * 0.8), apr: apr * 0.8 * 100 },

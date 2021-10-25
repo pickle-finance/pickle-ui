@@ -12,6 +12,7 @@ import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
 import { NETWORK_NAMES } from "./config";
+import { isUniV3, uniV3Info } from "util/univ3";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
@@ -33,9 +34,14 @@ function useJars() {
   // Automatically update balance here
   useEffect(() => {
     if (jarsWithTVL) {
-      const wants = jarsWithTVL.map((x) => x.depositToken.address);
+      const wants = jarsWithTVL
+        .filter((y) => !isUniV3(y.depositToken.address.toLowerCase()))
+        .map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
-      const addedTokens = [...wants, ...pTokens];
+      const uniV3Underlying = Object.keys(uniV3Info)
+        .map((pool) => [uniV3Info[pool].token0, uniV3Info[pool].token1])
+        .flat();
+      const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
       if (chainName === NETWORK_NAMES.ETH)
         addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM);
       addTokens(addedTokens);
