@@ -26,6 +26,8 @@ export interface UserJarData {
   apr: number;
   depositTokenLink: string;
   tvlUSD: number;
+  amount0: number | null;
+  amount1: number | null;
 }
 
 const useUserJars = (): { jarData: UserJarData[] | null } => {
@@ -54,9 +56,10 @@ const useUserJars = (): { jarData: UserJarData[] | null } => {
           totalAPY: jar.totalAPY,
           apr: jar.apr,
           depositTokenLink: jar.depositTokenLink,
+          amount0: jar.amount0,
+          amount1: jar.amount1,
         };
       });
-
       setJarData(data);
     }
   };

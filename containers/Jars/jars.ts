@@ -159,9 +159,7 @@ export const JAR_DEPOSIT_TOKENS = {
 };
 
 export const UNIV3_TOKENS = {
-  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH]: {
-    
-  }
+  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH]: true
 }
 
 export const DEPOSIT_TOKENS_NAME = {

@@ -68,7 +68,7 @@ const formatAPY = (apy: number) => {
 const toNum = (bn: BigNumber) =>
   parseFloat(formatEther(bn ? bn : BigNumber.from(0)));
 
-const formatValue = (num: number) =>
+const formatValue = (num: number) => 
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: num < 1 ? 6 : 4,
@@ -145,7 +145,8 @@ export const UniV3JarGaugeCollapsible: FC<{
     APYs,
     totalAPY,
     depositTokenLink,
-    apr,
+    amount0,
+    amount1,
   } = jarData;
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
@@ -475,7 +476,7 @@ export const UniV3JarGaugeCollapsible: FC<{
       : 0;
   const tvlStr = getFormatString(tvlNum);
 
-  if (!token0 || !token1 || !jarV3 || Boolean(!proportion.toString()))
+  if (!token0 || !token1)
     return <> </>;
   return (
     <Collapse
@@ -748,9 +749,9 @@ export const UniV3JarGaugeCollapsible: FC<{
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {`(5.1 ${getTokenName(token0.address)}, 0.02 ${getTokenName(
-                  token1.address,
-                )})`}
+                {`(${formatValue(Number.parseFloat(amount0))} ${getTokenName(
+                  token0.address,
+                )}, ${formatValue(Number.parseFloat(amount1))} ${getTokenName(token1.address)})`}
               </div>
               <Link
                 color
