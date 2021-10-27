@@ -82,6 +82,7 @@
     "name": "Transfer",
     "type": "event"
   },
+  { "stateMutability": "payable", "type": "fallback" },
   {
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" },
@@ -146,7 +147,7 @@
     ],
     "name": "deposit",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -362,6 +363,13 @@
     "name": "transferFrom",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "weth",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {

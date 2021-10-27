@@ -6,6 +6,8 @@ import erc20 from "@studydefi/money-legos/erc20";
 import { JAR_DEPOSIT_TOKENS } from "../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
 
+export const weth = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+
 // UniV3 Incentives
 export const uniV3Info = {
   // RBN-ETH
@@ -18,7 +20,7 @@ export const uniV3Info = {
       "0xDAEada3d210D2f45874724BeEa03C7d4BBD41674",
     ],
     token0: "0x6123b0049f904d730db3c36a31167d9d4121fa6b",
-    token1: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    token1: weth,
     emissions: 10000000,
     rewardName: "rbn",
   },
@@ -26,7 +28,6 @@ export const uniV3Info = {
 
 // Fetches TVL of a XXX/ETH pool and returns prices
 export const getPoolData = async (pool, token, provider) => {
-  const weth = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 
   const wethPrice = await getWETHPrice(provider);
   const poolContract = new ethers.Contract(pool, v3PoolABI, provider);

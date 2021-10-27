@@ -2,8 +2,16 @@ import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 import { Trans, useTranslation } from "next-i18next";
 
-import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import React, { useState, FC, useEffect, ReactNode } from "react";
+import {
+  Button,
+  Link,
+  Input,
+  Grid,
+  Spacer,
+  Tooltip,
+  Select,
+} from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
@@ -23,16 +31,18 @@ import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { JarV3 } from "containers/Contracts/JarV3";
 import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/JarV3__factory";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
-import { getPoolData, getProportion, uniV3Info } from "../../util/univ3";
+import { getPoolData, getProportion, uniV3Info, weth } from "../../util/univ3";
 import { getPriceId } from "../../containers/Jars/jars";
 import { Balances } from "containers/Balances";
 import erc20 from "@studydefi/money-legos/erc20";
+import { TokenInput } from "./TokenInput";
+
 
 interface DataProps {
   isZero?: boolean;
 }
 
-interface UniV3 {
+export interface UniV3 {
   address: string;
   name: string;
   balance: BigNumber;
@@ -65,10 +75,10 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
-const toNum = (bn: BigNumber) =>
+export const toNum = (bn: BigNumber) =>
   parseFloat(formatEther(bn ? bn : BigNumber.from(0)));
 
-const formatValue = (num: number) => 
+export const formatValue = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: num < 1 ? 6 : 4,
@@ -91,7 +101,7 @@ const getTokenName = (address: string) => {
   return name === "eth" ? "WETH" : name.toUpperCase();
 };
 
-const ApproveButton: FC<{
+export const ApproveButton: FC<{
   depositTokenAddr: string;
   jarAddr: string;
   signer: any;
@@ -305,6 +315,7 @@ export const UniV3JarGaugeCollapsible: FC<{
   const [token0, setToken0] = useState<UniV3 | null>(null);
 
   const [token1, setToken1] = useState<UniV3 | null>(null);
+  const [useEth, setUseEth] = useState<boolean>(true);
 
   const depositGauge = async () => {
     if (!approved) {
@@ -476,8 +487,7 @@ export const UniV3JarGaugeCollapsible: FC<{
       : 0;
   const tvlStr = getFormatString(tvlNum);
 
-  if (!token0 || !token1)
-    return <> </>;
+  if (!token0 || !token1) return <> </>;
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -597,97 +607,30 @@ export const UniV3JarGaugeCollapsible: FC<{
           xs={24}
           md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}
         >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              {t("balances.balance")}: {formatValue(toNum(token0?.balance))}{" "}
-              {token0?.name}
-            </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setDeposit0Amount(formatEther(token0?.balance));
-                setDeposit1Amount(
-                  formatEther(
-                    token0?.balance.mul(proportion).div(parseEther("1")),
-                  ),
-                );
-              }}
-            >
-              {t("balances.max")}
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => {
-              setDeposit0Amount(e.target.value);
-              setDeposit1Amount(
-                formatEther(
-                  parseEther(e.target.value)
-                    .mul(proportion)
-                    .div(parseEther("1")),
-                ),
-              );
-            }}
-            value={deposit0Amount}
-            width="100%"
-            iconRight={
-              <ApproveButton
-                depositTokenAddr={token0.address}
-                jarAddr={jarContract.address}
-                signer={signer}
-                approved={token0.approved}
-                setToken={setToken0}
-              />
-            }
+          <TokenInput
+            token={token0}
+            isToken0={true}
+            setDepositThisAmount={setDeposit0Amount}
+            setDepositOtherAmount={setDeposit1Amount}
+            proportion={proportion}
+            depositAmount={deposit0Amount}
+            jarAddr={jarContract.address}
+            signer={signer}
+            setToken={setToken0}
+            setUseEth={setUseEth}
           />
-          <Spacer y={0.5} />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              {t("balances.balance")}: {formatValue(toNum(token1?.balance))}{" "}
-              {token1?.name}
-            </div>
-            <Link
-              color
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setDeposit1Amount(formatEther(token1?.balance));
-                setDeposit0Amount(
-                  formatEther(
-                    token1?.balance.mul(parseEther("1")).div(proportion),
-                  ),
-                );
-              }}
-            >
-              {t("balances.max")}
-            </Link>
-          </div>
-          <Input
-            onChange={(e) => {
-              setDeposit1Amount(e.target.value);
-              setDeposit0Amount(
-                formatEther(
-                  parseEther(e.target.value)
-                    .mul(parseEther("1"))
-                    .div(proportion),
-                ),
-              );
-            }}
-            value={deposit1Amount}
-            width="100%"
-            iconRight={
-              <ApproveButton
-                depositTokenAddr={token1.address}
-                jarAddr={jarContract.address}
-                signer={signer}
-                approved={token1.approved}
-                setToken={setToken0}
-              />
-            }
+          <TokenInput
+            token={token1}
+            isToken0={false}
+            setDepositThisAmount={setDeposit1Amount}
+            setDepositOtherAmount={setDeposit0Amount}
+            proportion={proportion}
+            depositAmount={deposit1Amount}
+            jarAddr={jarContract.address}
+            signer={signer}
+            setToken={setToken1}
+            setUseEth={setUseEth}
           />
-
-          <Spacer y={0.5} />
           <Grid.Container gap={1}>
             <Grid xs={24} md={12}>
               <Button
@@ -702,7 +645,8 @@ export const UniV3JarGaugeCollapsible: FC<{
                           .connect(signer)
                           .deposit(
                             convertDecimals(deposit0Amount),
-                            convertDecimals(deposit1Amount),
+                            convertDecimals(useEth ? "0" : deposit1Amount),
+                            { value: parseEther(deposit1Amount) },
                           );
                       },
                       approval: false,
@@ -751,7 +695,9 @@ export const UniV3JarGaugeCollapsible: FC<{
               <div>
                 {`(${formatValue(Number.parseFloat(amount0))} ${getTokenName(
                   token0.address,
-                )}, ${formatValue(Number.parseFloat(amount1))} ${getTokenName(token1.address)})`}
+                )}, ${formatValue(Number.parseFloat(amount1))} ${getTokenName(
+                  token1.address,
+                )})`}
               </div>
               <Link
                 color
