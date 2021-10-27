@@ -126,3 +126,7 @@ export const getCoinData = async (coin) => {
     response.json(),
   );
 };
+
+export const getPickleCore = async () => {
+  return await fetch(`${pickleApi}/protocol/pfcore/`).then( (response) => response.json() );
+};
