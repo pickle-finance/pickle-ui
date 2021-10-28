@@ -6,7 +6,7 @@ export const crvJars = [
   "fraxCRV",
   "USDC",
   "IS3USD",
-  "ALETH",
+  //"ALETH",
   "saddled4",
   "MIM3CRV",
 ];
@@ -19,7 +19,7 @@ export const uniJars = [
   "MSLV-UST",
   "MBABA-UST",
   "FEI-TRIBE",
-  "LUSD-ETH",
+  //"LUSD-ETH",
   "FOX-ETH",
 ];
 
@@ -52,6 +52,15 @@ export const polyJars = [
   "IS3USD",
   "DINO-USDC",
   "DINO-WETH",
+];
+
+
+export const arbJars = [
+  "ArbitrumSlpMimEth",
+  "ArbitrumSlpSpellEth",
+  "Mim2CRV",
+  "DodoHndEth",
+  "CrvTricrypto"
 ];
 
 export const powerPool = "PICKLE-ETH";

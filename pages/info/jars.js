@@ -5,7 +5,7 @@ import { Page } from "@geist-ui/react";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import { crvJars, sushiJars, uniJars, polyJars } from "../../util/jars";
+import { crvJars, sushiJars, uniJars, polyJars, arbJars } from "../../util/jars";
 import { getJarChart, getProtocolData } from "../../util/api";
 import { materialBlack } from "../../util/constants";
 import JarValueChart from "../../components/JarValueChart";
@@ -40,6 +40,7 @@ export default function Dashboard() {
     sushiJars: chartSkeletons(sushiJars),
     uniJars: chartSkeletons(uniJars),
     polyJars: chartSkeletons(polyJars),
+    arbJars: chartSkeletons(arbJars),
   });
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function Dashboard() {
         getJarChart(sushiJars),
         getJarChart(uniJars),
         getJarChart(polyJars),
+        getJarChart(arbJars),
       ];
       const dashboardData = await Promise.all(requests);
 
@@ -59,6 +61,7 @@ export default function Dashboard() {
       const sushiData = dashboardData[2];
       const uniData = dashboardData[3];
       const polyData = dashboardData[4];
+      const arbData = dashboardData[5];
       const metrics = {
         date: protocolData.updatedAt,
         jarValue: protocolData.jarValue,
@@ -72,6 +75,7 @@ export default function Dashboard() {
         sushiJars: sushiData,
         uniJars: uniData,
         polyJars: polyData,
+        arbJars: arbData,
       });
     };
     retrieveDashboardData();
@@ -81,12 +85,16 @@ export default function Dashboard() {
   const allJars = dashboardData.sushiJars
     .concat(dashboardData.crvJars)
     .concat(dashboardData.uniJars)
-    .concat(dashboardData.polyJars);
-
-  const assets = allJars.map((d) => d.asset);
+    .concat(dashboardData.polyJars)
+    .concat(dashboardData.arbJars);
+  const assets = allJars.filter((d) => d !== null && d !== undefined ).map((d) => {
+    return d.asset;
+  });
   const blockData = {};
   const mostRecent = {};
   allJars.forEach((item) => {
+    if( !item || !item.data)
+      return;
     item.data.forEach((d) => {
       if (blockData[d.x] === undefined) {
         blockData[d.x] = { x: d.x };
@@ -105,24 +113,17 @@ export default function Dashboard() {
       if (value[asset]) {
         mostRecent[asset] = value[asset];
       }
-      y += mostRecent[asset];
-      point = { ...point, y: y };
+      y += (mostRecent[asset] !== undefined ? mostRecent[asset] : 0);
     }
+    point = { ...point, y: y };
     combinedData.push(point);
   }
-
-  const trimmedData = [];
-  for (let i = 0; i < combinedData.length; i++) {
-    if (i % 50 === 0) {
-      trimmedData.push(combinedData[i]);
-    }
-  }
+  const trimmedData = combinedData;
 
   const tvlJar = {
     data: trimmedData.filter((x) => Object.values(x)[1]),
     asset: "Pickle Finance",
   };
-
   const { t } = useTranslation("common");
 
   return (
@@ -150,6 +151,24 @@ export default function Dashboard() {
               </Grid>
             );
           })}
+
+
+          <Grid
+            item
+            xs={12}
+            className={clsx(classes.section, classes.separator)}
+          >
+            <h1>{t("info.arbJars")}</h1>
+          </Grid>
+          {dashboardData.arbJars.map((jar) => {
+            return (
+              <Grid item xs={12} sm={6} key={jar.asset}>
+                <JarValueChart jar={jar} />
+              </Grid>
+            );
+          })}
+
+
           <Grid
             item
             xs={12}

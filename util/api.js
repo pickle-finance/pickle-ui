@@ -5,12 +5,14 @@ const pickleApi = process.env.apiHost;
 export const getJarChart = async (assets) => {
   const jarData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
-    return {
+    const ret = {
       asset: asset,
       data: await getJarChartData(assetKey),
     };
+    return ret;
   });
-  return await Promise.all(jarData);
+  const waited = await Promise.all(jarData);
+  return waited;
 };
 
 const getJarChartData = async (asset) => {
