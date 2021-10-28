@@ -15,8 +15,6 @@ import {
   DEPOSIT_TOKENS_NAME,
   DEPOSIT_TOKENS_LINK,
 } from "./jars";
-import { Contract } from "@ethersproject/contracts";
-import { networkInterfaces } from "os";
 import { NETWORK_NAMES } from "containers/config";
 
 export type Jar = {
@@ -31,7 +29,7 @@ const IsMaiToken = (address: string): boolean => {
   return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI;
 };
 
-const isUniV3 = (address: string): boolean => {
+export const isUniV3 = (address: string): boolean => {
   return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_RBN_ETH;
 };
 

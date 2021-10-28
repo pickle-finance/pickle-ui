@@ -19,7 +19,7 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { UserJarData } from "../../containers/UserJars";
+import { UserJarData } from "features/Gauges/useJarData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
@@ -34,19 +34,10 @@ import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { getPoolData, getProportion, uniV3Info, weth } from "../../util/univ3";
 import { getPriceId } from "../../containers/Jars/jars";
 import { Balances } from "containers/Balances";
-import erc20 from "@studydefi/money-legos/erc20";
 import { TokenInput } from "./TokenInput";
-
 
 interface DataProps {
   isZero?: boolean;
-}
-
-export interface UniV3 {
-  address: string;
-  name: string;
-  balance: BigNumber;
-  approved: boolean;
 }
 
 const Data = styled.div<DataProps>`
@@ -101,44 +92,6 @@ const getTokenName = (address: string) => {
   return name === "eth" ? "WETH" : name.toUpperCase();
 };
 
-export const ApproveButton: FC<{
-  depositTokenAddr: string;
-  jarAddr: string;
-  signer: any;
-  approved: boolean;
-  setToken: any;
-}> = ({ depositTokenAddr, jarAddr, signer, approved, setToken }) => {
-  const [buttonText, setButtonText] = useState("Approve");
-
-  useEffect(() => {
-    setButtonText(approved ? "Approved" : "Approve");
-  }, [approved]);
-
-  return (
-    <Button
-      style={{
-        lineHeight: "inherit",
-        right: "550%",
-        height: "1.5rem",
-        minWidth: "6.5rem",
-      }}
-      disabled={approved}
-      onClick={async () => {
-        const Token = new ethers.Contract(depositTokenAddr, erc20.abi, signer);
-        const tx = await Token.approve(jarAddr, ethers.constants.MaxUint256);
-        await tx.wait();
-        setToken((prevState) => ({
-          ...prevState,
-          approved: true,
-        }));
-        setButtonText("Approved");
-      }}
-    >
-      {buttonText}
-    </Button>
-  );
-};
-
 export const UniV3JarGaugeCollapsible: FC<{
   jarData: UserJarData;
   gaugeData: UserGaugeDataWithAPY;
@@ -155,10 +108,12 @@ export const UniV3JarGaugeCollapsible: FC<{
     APYs,
     totalAPY,
     depositTokenLink,
-    amount0,
-    amount1,
+    token0,
+    token1,
+    proportion,
+    supply,
   } = jarData;
-
+  
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
@@ -253,7 +208,6 @@ export const UniV3JarGaugeCollapsible: FC<{
 
   const [deposit0Amount, setDeposit0Amount] = useState("");
   const [deposit1Amount, setDeposit1Amount] = useState("");
-  const [proportion, setProportion] = useState(BigNumber.from(0));
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
@@ -310,11 +264,6 @@ export const UniV3JarGaugeCollapsible: FC<{
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
-  // Uni v3 specific
-  const [jarV3, setJarV3] = useState<JarV3 | null>(null);
-  const [token0, setToken0] = useState<UniV3 | null>(null);
-
-  const [token1, setToken1] = useState<UniV3 | null>(null);
   const [useEth, setUseEth] = useState<boolean>(true);
 
   const depositGauge = async () => {
@@ -378,45 +327,8 @@ export const UniV3JarGaugeCollapsible: FC<{
   };
 
   const convertDecimals = (num: string) => ethers.utils.parseEther(num);
-  const fetchUniV3 = async () => {
-    if (signer && erc20 && address) {
-      const { incentiveKey } = uniV3Info[
-        depositToken.address as keyof typeof uniV3Info
-      ];
-
-      const data = await getPoolData(incentiveKey[1], incentiveKey[0], signer);
-      const [bal0, bal1, proportion] = await Promise.all([
-        getBalance(data.token0),
-        getBalance(data.token1),
-        getProportion(jarContract.address, signer),
-      ]);
-      setProportion(proportion);
-
-      // Check token approvals
-      const Token0 = erc20.attach(data.token0).connect(signer);
-      const Token1 = erc20.attach(data.token1).connect(signer);
-      const allowance0 = await Token0.allowance(address, jarContract.address);
-      const allowance1 = await Token1.allowance(address, jarContract.address);
-
-      const jarV3 = JarV3Factory.connect(jarContract.address, signer);
-      setJarV3(jarV3);
-      setToken0({
-        address: data.token0,
-        name: getTokenName(data.token0),
-        balance: bal0,
-        approved: allowance0.gt(ethers.constants.Zero),
-      });
-      setToken1({
-        address: data.token1,
-        name: getTokenName(data.token1),
-        balance: bal1,
-        approved: allowance1.gt(ethers.constants.Zero),
-      });
-    }
-  };
 
   useEffect(() => {
-    fetchUniV3();
     if (jarData && !isExitBatch) {
       const dStatus = getTransferStatus(
         depositToken.address,
@@ -616,7 +528,6 @@ export const UniV3JarGaugeCollapsible: FC<{
             depositAmount={deposit0Amount}
             jarAddr={jarContract.address}
             signer={signer}
-            setToken={setToken0}
             setUseEth={setUseEth}
           />
           <TokenInput
@@ -628,7 +539,6 @@ export const UniV3JarGaugeCollapsible: FC<{
             depositAmount={deposit1Amount}
             jarAddr={jarContract.address}
             signer={signer}
-            setToken={setToken1}
             setUseEth={setUseEth}
           />
           <Grid.Container gap={1}>
@@ -639,9 +549,9 @@ export const UniV3JarGaugeCollapsible: FC<{
                     // Allow Jar to get LP Token
                     transfer({
                       token: depositToken.address,
-                      recipient: jarV3.address,
+                      recipient: jarContract.address,
                       transferCallback: async () => {
-                        return jarV3
+                        return jarContract
                           .connect(signer)
                           .deposit(
                             convertDecimals(deposit0Amount),
@@ -693,11 +603,11 @@ export const UniV3JarGaugeCollapsible: FC<{
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {`(${formatValue(Number.parseFloat(amount0))} ${getTokenName(
-                  token0.address,
-                )}, ${formatValue(Number.parseFloat(amount1))} ${getTokenName(
-                  token1.address,
-                )})`}
+                {`(${formatValue(
+                  (depositedNum * token0.jarAmount) / supply,
+                )} ${getTokenName(token0.address)}, ${formatValue(
+                  (depositedNum * token1.jarAmount) / supply,
+                )} ${getTokenName(token1.address)})`}
               </div>
               <Link
                 color

@@ -3,7 +3,8 @@ import { createContainer } from "unstated-next";
 
 import { Balances } from "./Balances";
 import { Connection } from "./Connection";
-import { useFetchJars } from "./Jars/useFetchJars";
+import { isUniV3, useFetchJars } from "./Jars/useFetchJars";
+import { uniV3Info } from "util/univ3";
 import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
 import { useJarWithAPY as useJarsWithAPYOK } from "./Jars/useJarsWithAPYOK";
@@ -12,7 +13,6 @@ import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
 import { NETWORK_NAMES } from "./config";
-import { isUniV3, uniV3Info } from "util/univ3";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
@@ -35,11 +35,16 @@ function useJars() {
   useEffect(() => {
     if (jarsWithTVL) {
       const wants = jarsWithTVL
-        .filter((y) => !isUniV3(y.depositToken.address.toLowerCase()))
-        .map((x) => x.depositToken.address);
+        .map((x) =>
+          isUniV3(x.depositToken.address) ? null : x.depositToken.address,
+        )
+        .filter((x) => x);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
       const uniV3Underlying = Object.keys(uniV3Info)
-        .map((pool) => [uniV3Info[pool].token0, uniV3Info[pool].token1])
+        .map((pool) => [
+          uniV3Info[pool as keyof typeof uniV3Info].token0,
+          uniV3Info[pool as keyof typeof uniV3Info].token1,
+        ])
         .flat();
       const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
       if (chainName === NETWORK_NAMES.ETH)

@@ -2,18 +2,14 @@ import { BigNumber, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
-import {
-  Link,
-  Input,
-  Grid,
-  Spacer,
-  Select,
-} from "@geist-ui/react";
-import { ApproveButton, UniV3, toNum, formatValue } from "./UniV3JarGaugeCollapsible";
+import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
+import { toNum, formatValue } from "./UniV3JarGaugeCollapsible";
 import { weth } from "util/univ3";
+import { UniV3Token } from "containers/Jars/useJarsWithUniV3";
+import erc20 from "@studydefi/money-legos/erc20";
 
 export const TokenInput: FC<{
-  token: UniV3;
+  token: UniV3Token;
   isToken0: boolean;
   setDepositThisAmount: any;
   setDepositOtherAmount: any;
@@ -21,7 +17,6 @@ export const TokenInput: FC<{
   depositAmount: string;
   jarAddr: string;
   signer: any;
-  setToken: any;
   setUseEth: any;
 }> = ({
   token,
@@ -32,16 +27,16 @@ export const TokenInput: FC<{
   depositAmount,
   jarAddr,
   signer,
-  setToken,
   setUseEth,
 }) => {
   const ethOptions = ["ETH", "WETH"];
   const [inputToken, setInputToken] = useState(ethOptions[0]);
   const [ethBalance, setEthBalance] = useState(BigNumber.from(0));
+  const [userApproved, setUserApproved] = useState(false);
   const { t } = useTranslation("common");
   const isEth = token?.address.toLowerCase() === weth;
   const ethSelected = isEth && inputToken === ethOptions[0];
-  const balanceUsed = ethSelected ? ethBalance : token?.balance;
+  const balanceUsed = ethSelected ? ethBalance : token?.walletBalance;
 
   useEffect(() => {
     const setBalance = async () => setEthBalance(await signer.getBalance());
@@ -75,7 +70,7 @@ export const TokenInput: FC<{
       </div>
       <Grid.Container gap={3}>
         {isEth && (
-          <Grid md={4}>
+          <Grid md={8}>
             <Select
               size="medium"
               width="100%"
@@ -99,7 +94,7 @@ export const TokenInput: FC<{
             </Select>
           </Grid>
         )}
-        <Grid md={isEth ? 20 : 24}>
+        <Grid md={isEth ? 16 : 24}>
           <Input
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
@@ -123,9 +118,11 @@ export const TokenInput: FC<{
                 jarAddr={jarAddr}
                 signer={signer}
                 approved={
-                  (isEth && inputToken === ethOptions[0]) || token.approved
+                  (isEth && inputToken === ethOptions[0]) ||
+                  token.approved ||
+                  userApproved
                 }
-                setToken={setToken}
+                setUserApproved={setUserApproved}
               />
             }
           />
@@ -133,5 +130,40 @@ export const TokenInput: FC<{
       </Grid.Container>
       <Spacer y={0.5} />
     </>
+  );
+};
+
+const ApproveButton: FC<{
+  depositTokenAddr: string;
+  jarAddr: string;
+  signer: any;
+  approved: boolean;
+  setUserApproved: any;
+}> = ({ depositTokenAddr, jarAddr, signer, approved, setUserApproved }) => {
+  const [buttonText, setButtonText] = useState("Approve");
+
+  useEffect(() => {
+    setButtonText(approved ? "Approved" : "Approve");
+  }, [approved]);
+
+  return (
+    <Button
+      style={{
+        lineHeight: "inherit",
+        right: "550%",
+        height: "1.5rem",
+        minWidth: "6.5rem",
+      }}
+      disabled={approved}
+      onClick={async () => {
+        const Token = new ethers.Contract(depositTokenAddr, erc20.abi, signer);
+        const tx = await Token.approve(jarAddr, ethers.constants.MaxUint256);
+        await tx.wait();
+        setUserApproved(true);
+        setButtonText("Approved");
+      }}
+    >
+      {buttonText}
+    </Button>
   );
 };

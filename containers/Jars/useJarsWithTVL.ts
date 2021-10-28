@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
-import {
-  DEPOSIT_TOKENS_NAME,
-  JAR_DEPOSIT_TOKENS,
-  PICKLE_JARS,
-  UNIV3_TOKENS,
-} from "./jars";
+import { DEPOSIT_TOKENS_NAME, JAR_DEPOSIT_TOKENS, PICKLE_JARS } from "./jars";
 import { PoolData } from "./usePoolData";
 import { Contracts } from "containers/Contracts";
 import { Prices } from "containers/Prices";
@@ -19,14 +14,12 @@ import { Contract as MulticallContract } from "ethers-multicall";
 import erc20 from "@studydefi/money-legos/erc20";
 import { CurvePairs } from "containers/CurvePairs";
 import { tricryptoInfo } from "./useJarsWithAPYArb";
-import { useUniV3Data } from "./useUniV3Data";
 
 export interface JarWithTVL extends JarWithAPY {
   tvlUSD: null | number;
   usdPerPToken: null | number;
   ratio: null | number;
-  amount0: null | number;
-  amount1: null | number;
+  supply: number;
 }
 
 type Input = Array<JarWithAPY> | null;
@@ -74,7 +67,7 @@ export const useJarWithTVL = (jars: Input): Output => {
   const [jarsWithTVL, setJarsWithTVL] = useState<Array<JarWithTVL> | null>(
     null,
   );
-  const { getUniV3Data, uniV3Data } = useUniV3Data();
+  
   const measureCurveTVL = async (jar: JarWithAPY) => {
     if (!multicallProvider || !getCurveLpPriceData || !prices) {
       return { ...jar, tvlUSD: null, usdPerPToken: null, ratio: null };
@@ -240,19 +233,12 @@ export const useJarWithTVL = (jars: Input): Output => {
             jar.depositToken.address.toLowerCase(),
         );
         const tvlUSD = poolInfo[0]?.liquidity_locked;
-
-        // UniV3 amount0 and amount1 balances
-        let data;
-        if (UNIV3_TOKENS[jar.depositToken.address]) {
-          data = getUniV3Data(jar.depositToken.address)[0];
-        }
         return {
           ...jar,
           tvlUSD,
+          supply: poolInfo[0]?.tokens,
           usdPerPToken: (tvlUSD * poolInfo[0]?.ratio) / poolInfo[0]?.tokens,
           ratio: poolInfo[0]?.ratio,
-          amount0: data?.amount0, 
-          amount1: data?.amount1 
         };
       });
 
@@ -270,7 +256,7 @@ export const useJarWithTVL = (jars: Input): Output => {
 
   useEffect(() => {
     measureTVL();
-  }, [jars, poolData?.length, uniV3Data]);
+  }, [jars, poolData?.length]);
 
   return {
     jarsWithTVL,

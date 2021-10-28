@@ -40,6 +40,7 @@ export const GAUGE_TVL_KEY = {
   [JAR_DEPOSIT_TOKENS.Ethereum.UNIV2_RLY_ETH]: "rly-eth",
   [JAR_DEPOSIT_TOKENS.Ethereum.CVXCRVlp]: "cvxcrvlp",
   [JAR_DEPOSIT_TOKENS.Ethereum.CVXCRV]: "cvxcrv",
+  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH]: "rbn-eth",
 
   // Polygon
   [JAR_DEPOSIT_TOKENS.Polygon.DAI]: "dai",
