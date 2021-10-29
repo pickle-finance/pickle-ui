@@ -263,7 +263,7 @@ export const GaugeList: FC = () => {
 
         {chainName === NETWORK_NAMES.ETH &&
           uniV3Jars.map((jar) => {
-            const gauge = {};
+            const gauge = findGauge(jar);
             return (
               <Grid xs={24} key={jar.name}>
                 <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />

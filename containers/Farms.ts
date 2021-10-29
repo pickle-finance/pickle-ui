@@ -226,6 +226,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pCvxCRV",
     poolName: "pCvxCRV",
   },
+  "0x506748d736b77f51c5b490e4aC6c26B8c3975b14": {
+    tokenName: "pRBNETH",
+    poolName: "pRBNETH",
+  },
 };
 
 function useFarms() {

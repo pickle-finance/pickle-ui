@@ -21,17 +21,13 @@ import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "features/Gauges/useJarData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
 import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
 import { jars, uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
-import { JarV3 } from "containers/Contracts/JarV3";
-import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/JarV3__factory";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
-import { getPoolData, getProportion, uniV3Info, weth } from "../../util/univ3";
 import { getPriceId } from "../../containers/Jars/jars";
 import { Balances } from "containers/Balances";
 import { TokenInput } from "./TokenInput";
@@ -126,16 +122,15 @@ export const UniV3JarGaugeCollapsible: FC<{
   const depositedUnderlyingStr = formatValue(
     parseFloat(formatEther(deposited)) * ratio,
   );
-
-  // Placeholder data
-  const gaugeDepositToken = jarContract;
-  const gaugeBalance = BigNumber.from(0);
-  const staked = BigNumber.from(0);
-  const harvestable = BigNumber.from(0);
-  const gaugeDepositTokenName = "asdf";
-  const fullApy = 0;
-  const uncompounded = [];
-  const gaugeAddress = "0x08cb0a0ba8e4f143e4e6f7bed65e02b6dfb9a16c";
+  const {
+    depositToken: gaugeDepositToken,
+    balance: gaugeBalance,
+    staked,
+    harvestable,
+    depositTokenName: gaugeDepositTokenName,
+    fullApy,
+    uncompounded,
+  } = gaugeData;
 
   const stakedNum = parseFloat(formatEther(staked));
 
@@ -230,7 +225,7 @@ export const UniV3JarGaugeCollapsible: FC<{
   const { signer, address, blockNum } = Connection.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
 
-  const gauge = signer && GaugeFactory.connect(gaugeAddress, signer);
+  const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
   const stakedStr = formatValue(stakedNum);
 
@@ -270,7 +265,10 @@ export const UniV3JarGaugeCollapsible: FC<{
     if (!approved) {
       setDepositStakeButton(t("farms.approving"));
       const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
-      const tx = await Token.approve(gaugeAddress, ethers.constants.MaxUint256);
+      const tx = await Token.approve(
+        gaugeData.address,
+        ethers.constants.MaxUint256,
+      );
       await tx.wait();
     }
     setDepositStakeButton(t("farms.staking"));
@@ -279,7 +277,7 @@ export const UniV3JarGaugeCollapsible: FC<{
   };
 
   const depositAndStake = async () => {
-    if (balNum) {
+    if (token0?.walletBalance) {
       try {
         setIsEntryBatch(true);
         const res = await transfer({
@@ -288,8 +286,13 @@ export const UniV3JarGaugeCollapsible: FC<{
           transferCallback: async () => {
             return jarContract
               .connect(signer)
-              .deposit(convertDecimals(depositAmount));
+              .deposit(
+                convertDecimals(deposit0Amount),
+                convertDecimals(useEth ? "0" : deposit1Amount),
+                { value: parseEther(deposit1Amount) },
+              );
           },
+          approval: false,
         });
         if (!res) throw "Deposit Failed";
         await depositGauge();
@@ -355,14 +358,14 @@ export const UniV3JarGaugeCollapsible: FC<{
     if (gaugeData && !isExitBatch) {
       const stakeStatus = getTransferStatus(
         gaugeDepositToken.address,
-        gaugeAddress,
+        gaugeData.address,
       );
       const unstakeStatus = getTransferStatus(
-        gaugeAddress,
+        gaugeData.address,
         gaugeDepositToken.address,
       );
-      const harvestStatus = getTransferStatus(gaugeAddress, "harvest");
-      const exitStatus = getTransferStatus(gaugeAddress, "exit");
+      const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
+      const exitStatus = getTransferStatus(gaugeData.address, "exit");
 
       setButtonStatus(
         stakeStatus,
@@ -602,9 +605,9 @@ export const UniV3JarGaugeCollapsible: FC<{
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 {`(${formatValue(
-                  (depositedNum * token0.jarAmount) * ratio / supply,
+                  (depositedNum * token0.jarAmount * ratio) / supply,
                 )} ${getTokenName(token0.address)}, ${formatValue(
-                  (depositedNum * token1.jarAmount) * ratio / supply,
+                  (depositedNum * token1.jarAmount * ratio) / supply,
                 )} ${getTokenName(token1.address)})`}
               </div>
               <Link
