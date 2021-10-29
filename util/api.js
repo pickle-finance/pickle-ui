@@ -15,6 +15,15 @@ export const getJarChart = async (assets) => {
   return waited;
 };
 
+export const getAllJarsChart = async () => {
+  const alljarsData = await getJarChartData("alljars");
+  const jarData = Object.keys(alljarsData).map( (assetName) => {
+    return { asset: assetName, data: alljarsData[assetName] }
+  });
+  
+  return jarData;
+};
+
 const getJarChartData = async (asset) => {
   return await fetch(
     `${pickleApi}/chart/jar/${asset}?count=4400`,
