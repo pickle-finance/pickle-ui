@@ -7,6 +7,7 @@ import { toNum, formatValue } from "./UniV3JarGaugeCollapsible";
 import { weth } from "util/univ3";
 import { UniV3Token } from "containers/Jars/useJarsWithUniV3";
 import erc20 from "@studydefi/money-legos/erc20";
+import { Connection } from "containers/Connection";
 
 export const TokenInput: FC<{
   token: UniV3Token;
@@ -16,7 +17,6 @@ export const TokenInput: FC<{
   proportion: BigNumber;
   depositAmount: string;
   jarAddr: string;
-  signer: any;
   setUseEth: any;
 }> = ({
   token,
@@ -26,9 +26,9 @@ export const TokenInput: FC<{
   proportion,
   depositAmount,
   jarAddr,
-  signer,
   setUseEth,
 }) => {
+  const { signer, address, blockNum } = Connection.useContainer();
   const ethOptions = ["ETH", "WETH"];
   const [inputToken, setInputToken] = useState(ethOptions[0]);
   const [ethBalance, setEthBalance] = useState(BigNumber.from(0));
@@ -41,7 +41,7 @@ export const TokenInput: FC<{
   useEffect(() => {
     const setBalance = async () => setEthBalance(await signer.getBalance());
     setBalance();
-  }, []);
+  }, [address, blockNum]);
 
   return (
     <>

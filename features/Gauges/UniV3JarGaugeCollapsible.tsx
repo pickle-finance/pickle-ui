@@ -113,7 +113,7 @@ export const UniV3JarGaugeCollapsible: FC<{
     proportion,
     supply,
   } = jarData;
-  
+
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
@@ -527,7 +527,6 @@ export const UniV3JarGaugeCollapsible: FC<{
             proportion={proportion}
             depositAmount={deposit0Amount}
             jarAddr={jarContract.address}
-            signer={signer}
             setUseEth={setUseEth}
           />
           <TokenInput
@@ -538,7 +537,6 @@ export const UniV3JarGaugeCollapsible: FC<{
             proportion={proportion}
             depositAmount={deposit1Amount}
             jarAddr={jarContract.address}
-            signer={signer}
             setUseEth={setUseEth}
           />
           <Grid.Container gap={1}>
@@ -604,9 +602,9 @@ export const UniV3JarGaugeCollapsible: FC<{
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 {`(${formatValue(
-                  (depositedNum * token0.jarAmount) / supply,
+                  (depositedNum * token0.jarAmount) * ratio / supply,
                 )} ${getTokenName(token0.address)}, ${formatValue(
-                  (depositedNum * token1.jarAmount) / supply,
+                  (depositedNum * token1.jarAmount) * ratio / supply,
                 )} ${getTokenName(token1.address)})`}
               </div>
               <Link
