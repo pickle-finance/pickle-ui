@@ -1,7 +1,15 @@
 import { FC } from "react";
 
 const Dashboard: FC = () => {
-  return <h1>Hello</h1>;
+  return (
+    <div className="bg-black font-body text-white">
+      <p className="mb-4">
+        <span className="text-xl font-bold">
+          Welcome to the new Pickle Finance
+        </span>
+      </p>
+    </div>
+  );
 };
 
 export { getStaticProps } from "../../util/locales";

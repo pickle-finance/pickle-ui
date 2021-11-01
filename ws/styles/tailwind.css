@@ -1,0 +1,6 @@
+.warp-speed {
+  @tailwind base;
+}
+
+@tailwind components;
+@tailwind utilities;
