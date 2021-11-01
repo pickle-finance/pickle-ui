@@ -45,8 +45,12 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:wght@300&family=VT323&display=swap"
             rel="stylesheet"
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@500&display=swap"
+            rel="stylesheet"
+          />
         </Head>
-        <body>
+        <body className="bg-black">
           <Main />
           <NextScript />
         </body>

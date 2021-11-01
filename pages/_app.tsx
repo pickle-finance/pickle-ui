@@ -11,6 +11,11 @@ import "../styles/reset.css";
 import "../styles/global.scss";
 import "react-day-picker/lib/style.css";
 
+/**
+ * Warp speed styles: Tailwind and custom rules.
+ */
+import "../ws/styles/index.scss";
+
 import Classic from "../layouts/Classic";
 import WarpSpeed from "../layouts/WarpSpeed";
 
