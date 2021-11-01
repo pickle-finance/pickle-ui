@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ["./pages/ws/**/*.tsx", "./ws/components/**/*.tsx"],
+  purge: ["./pages/**/*.tsx", "./ws/components/**/*.tsx"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
@@ -33,7 +33,7 @@ module.exports = {
       colors: {
         black: {
           DEFAULT: "#031316",
-          light: "#101f22",
+          light: "#0f1f22",
         },
         orange: {
           DEFAULT: "#e1562f",
