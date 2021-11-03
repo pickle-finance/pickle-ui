@@ -11,12 +11,13 @@ import { NETWORK_NAMES } from "containers/config";
 const Gauges: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
+  const isOK = chainName === NETWORK_NAMES.OKEX;
 
   return (
     <Page>
       <Page.Content>
         <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-          {t("info.farms")}
+          {isOK ? t("info.jars") : t("info.farms")}
         </h1>
         {chainName === NETWORK_NAMES.ETH ? <GaugeList /> : <MiniFarmList />}
       </Page.Content>
