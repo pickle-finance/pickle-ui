@@ -107,7 +107,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const cherryAPY = valueRewardedPerYear / totalValueStaked;
 
       return [
-        { che: getCompoundingAPY(cherryAPY * 0.8), apr: cherryAPY * 0.8 * 100 },
+        { che: getCompoundingAPY(cherryAPY * 0.9), apr: cherryAPY * 0.9 * 100 },
       ];
     }
     return [];
@@ -157,7 +157,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const jswapAPY = (valueRewardedPerYear * 1.35) / totalValueStaked;
 
       return [
-        { jswap: getCompoundingAPY(jswapAPY * 0.8), apr: jswapAPY * 0.8 * 100 },
+        { jswap: getCompoundingAPY(jswapAPY * 0.9), apr: jswapAPY * 0.9 * 100 },
       ];
     }
     return [];
@@ -239,7 +239,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           }
         });
 
-        const totalAPY = (apr * 100) / 100 + lp;
+        const totalAPY = getCompoundingAPY(apr / 100) + lp;
 
         return {
           ...jar,

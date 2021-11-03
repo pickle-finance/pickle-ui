@@ -103,29 +103,6 @@ export const FARM_LP_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
   ),
 
-  // OKEx
-  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
-  ),
-  "0xe75c8805f9970c7547255059A22d14001d3D7b94": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/usdt.png"} />
-  ),
-  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/ethereum.png"} />
-  ),
-  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
-  ),
-  "0xD120C607911105Bc99B510749d102Dc63a20bbb4": (
-    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/usdt.png"} />
-  ),
-  "0x5be52aDF0C54598F0fA6f433B398492748Ecd588": (
-    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/wbtc.png"} />
-  ),
-  "0x668d30c30Ffb182964516f549528E06633B48295": (
-    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/weth.png"} />
-  ),
-
   //Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/mim.webp"} />
