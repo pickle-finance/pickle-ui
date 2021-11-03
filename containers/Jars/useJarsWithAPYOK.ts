@@ -116,7 +116,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       const lpToken = Erc20.attach(lpTokenAddress);
       const poolInfo = await bxhchef.poolInfo(poolId);
-
+      
       const [
         bxhPerBlockBN,
         totalAllocPointBN,
@@ -126,7 +126,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         bxhchef.totalAllocPoint(),
         lpToken.balanceOf(bxhchef.address),
       ]);
-
+      
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const rewardsPerBlock =
         (parseFloat(formatEther(bxhPerBlockBN)) *

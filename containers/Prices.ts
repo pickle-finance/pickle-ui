@@ -60,6 +60,7 @@ interface PriceObject {
   hnd: number;
   dodo: number;
   work: number;
+  jf: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -188,6 +189,7 @@ function usePrices() {
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
       work: response["the-employment-commons-work-token"].usd,
+      jf: 0 // CG does not provide jf price
     };
     setPrices(prices);
   };

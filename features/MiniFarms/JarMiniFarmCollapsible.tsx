@@ -93,6 +93,17 @@ export const FARM_LP_TO_ICON: {
   "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
+  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
+    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
+  ),
+  "0x1D35e4348826857eaFb22739d4e494C0337cb427": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
+  ),
+
+  // OKEx
   "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
   ),
@@ -111,14 +122,14 @@ export const FARM_LP_TO_ICON: {
   "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": (
     <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/ethbtc.png"} />
   ),
-  "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
-    <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
+  "0xd120c607911105bc99b510749d102dc63a20bbb4": (
+    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/usdt.png"} />
   ),
-  "0x1D35e4348826857eaFb22739d4e494C0337cb427": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />
+  "0x5be52adf0c54598f0fa6f433b398492748ecd588": (
+    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/wbtc.png"} />
   ),
-  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
-    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
+  "0x668d30c30ffb182964516f549528e06633b48295": (
+    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/weth.png"} />
   ),
 
   //Arbitrum

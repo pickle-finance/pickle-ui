@@ -23,7 +23,6 @@ function useJars() {
   );
   const { jarsWithAPY: jarswithAPYOK } = useJarsWithAPYOK(chainName, rawJars);
   const { jarsWithAPY: jarswithAPYArb } = useJarsWithAPYArb(chainName, rawJars);
-
   const { jarsWithTVL } = useJarWithTVL(
     jarsWithAPYEth || jarsWithAPYPoly || jarswithAPYOK || jarswithAPYArb,
   );

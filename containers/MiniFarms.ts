@@ -66,6 +66,16 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
+  "0x1D35e4348826857eaFb22739d4e494C0337cb427": {
+    tokenName: "pSLP PICKLE/DAI",
+    poolName: "pSLP PICKLE/DAI",
+  },
+  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": {
+    tokenName: "pSLP WORK/USDC",
+    poolName: "pSLP WORK/USDC",
+  },
+
+  // OKEx
   "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
     tokenName: "pCLP CHE/OKT",
     poolName: "pCLP CHE/OKT",
@@ -74,10 +84,6 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pCLP CHE/USDT",
     poolName: "pCLP CHE/USDT",
   },
-  // "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": {
-  //   tokenName: "pCLP BTCK/USDT",
-  //   poolName: "pCLP BTCK/USDT",
-  // },
   "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": {
     tokenName: "pCLP ETHK/USDT",
     poolName: "pCLP ETHK/USDT",
@@ -94,15 +100,19 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pBLP ETHK/BTCK",
     poolName: "pBLP ETHK/BTCK",
   },
-  "0x1D35e4348826857eaFb22739d4e494C0337cb427": {
-    tokenName: "pSLP PICKLE/DAI",
-    poolName: "pSLP PICKLE/DAI",
+  "0xd120c607911105bc99b510749d102dc63a20bbb4": {
+    tokenName: "pJLP JF/USDT",
+    poolName: "pJLP JF/USDT",
   },
-  "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": {
-    tokenName: "pSLP WORK/USDC",
-    poolName: "pSLP WORK/USDC",
+  "0x5be52adf0c54598f0fa6f433b398492748ecd588": {
+    tokenName: "pJLP BTCKUSDT",
+    poolName: "pJLP BTCKUSDT",
   },
-
+  "0x668d30c30ffb182964516f549528e06633b48295": {
+    tokenName: "pJLP ETHKUSDT",
+    poolName: "pJLP ETHKUSDT",
+  },
+  
   // Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": {
     tokenName: "pSLP MIM/ETH",
