@@ -25,7 +25,8 @@ const LanguageSelect: FC<Props> = ({ type }) => {
       }}
     >
       <Select.Option value="en">English</Select.Option>
-      {/* <Select.Option value="zh-CN">CN</Select.Option> */}
+      <Select.Option value="zh-Hans">简体中文</Select.Option>
+      <Select.Option value="es">Español</Select.Option>
     </Select>
   );
 };
