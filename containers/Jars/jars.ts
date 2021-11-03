@@ -77,6 +77,7 @@ export const PICKLE_JARS = {
   pMIM2CRV: "0x973b669ef8c1459f7cb685bf7d7bcd4150977504",
   pCRVTRICRYPTO: "0x8E93d85AFa9E6A092676912c3EB00f46C533a07C",
   pDODOHNDETH: "0x4d622C1f40A83C6FA2c0E441AE393e6dE61E7dD2",
+  pDODODODOUSDC: "0x0A9eD9B39613850819a5f80857395bFeA434c22A",
 };
 
 export const JAR_DEPOSIT_TOKENS = {
@@ -153,6 +154,7 @@ export const JAR_DEPOSIT_TOKENS = {
     MIM_2CRV: "0x30dF229cefa463e991e29D42DB0bae2e122B2AC7",
     CRV_TRICRYPTO: "0x8e0B8c8BB9db49a46697F3a5Bb8A308e744821D2",
     DODO_HND_ETH: "0x65E17c52128396443d4A9A61EaCf0970F05F8a20",
+    DODO_DODO_USDC: "0x6a58c68FF5C4e4D90EB6561449CC74A64F818dA5",
   },
 };
 
@@ -230,6 +232,7 @@ export const DEPOSIT_TOKENS_NAME = {
   MIM_2CRV: "Abracadabra MIM2CRV",
   CRV_TRICRYPTO: "Curve Tricrypto",
   DODO_HND_ETH: "Dodo HND/ETH",
+  DODO_DODO_USDC: "Dodo DODO/USDC",
 };
 
 export const JAR_ACTIVE: Record<string, boolean> = {
@@ -306,6 +309,7 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.MIM_2CRV]: true,
   [DEPOSIT_TOKENS_NAME.CRV_TRICRYPTO]: true,
   [DEPOSIT_TOKENS_NAME.DODO_HND_ETH]: true,
+  [DEPOSIT_TOKENS_NAME.DODO_DODO_USDC]: true,
 };
 
 export const JAR_YEARN: Record<string, boolean> = {
@@ -442,6 +446,8 @@ export const DEPOSIT_TOKENS_LINK = {
   CRV_TRICRYPTO: "https://arbitrum.curve.fi/tricrypto/deposit",
   DODO_HND_ETH:
     "https://app.dodoex.io/liquidity?poolAddress=0x65e17c52128396443d4a9a61eacf0970f05f8a20",
+  DODO_DODO_USDC:
+    "https://app.dodoex.io/liquidity?poolAddress=0x6a58c68FF5C4e4D90EB6561449CC74A64F818dA5",
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -523,6 +529,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   MIM_2CRV: "arbJar 1c",
   CRV_TRICRYPTO: "arbJar 2a",
   DODO_HND_ETH: "arbJar 3a",
+  DODO_DODO_USDC: "arbJar 3b",
 };
 
 export const STRATEGY_NAMES = {
@@ -605,6 +612,7 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f": "wbtc",
   "0x69eb4fa4a2fbd498c257c57ea8b7655a2559a581": "dodo",
   "0x10010078a54396f62c96df8532dc2b4847d47ed3": "hnd",
+  "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8": "usdcm",
 };
 
 export const getPriceId = (tokenAddress: string): PriceIds => {

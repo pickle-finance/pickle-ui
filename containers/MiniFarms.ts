@@ -124,6 +124,10 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pDodo HND/ETH",
     poolName: "pDodo HND/ETH",
   },
+  "0x0A9eD9B39613850819a5f80857395bFeA434c22A": {
+    tokenName: "pDodo DODO/USDC",
+    poolName: "pDodo DODO/USDC",
+  },
 };
 
 function useFarms() {

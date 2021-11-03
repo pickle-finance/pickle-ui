@@ -46,7 +46,8 @@ const isUniPool = (jarName: string): boolean => {
     jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_MIM_ETH ||
     jarName === DEPOSIT_TOKENS_JAR_NAMES.SUSHI_SPELL_ETH ||
-    jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_HND_ETH
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_HND_ETH ||
+    jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_DODO_USDC
   );
 };
 
@@ -129,7 +130,9 @@ export const useJarWithTVL = (jars: Input): Output => {
 
     let totalUNI, token0, token1;
 
-    if (jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.DODO_HND_ETH) {
+    if (
+      jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.DODO_HND_ETH ||
+      jar.depositToken.address === JAR_DEPOSIT_TOKENS.Arbitrum.DODO_DODO_USDC) {
       const dodoPairMC = new MulticallContract(
         jar.depositToken.address,
         dodoPair.interface.fragments,

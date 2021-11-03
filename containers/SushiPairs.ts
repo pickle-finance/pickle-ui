@@ -52,6 +52,7 @@ export const addresses = {
   mdai: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
   hnd: "0x10010078a54396f62c96df8532dc2b4847d47ed3",
   dodo: "0x69eb4fa4a2fbd498c257c57ea8b7655a2559a581",
+  usdcm: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
 };
 
 interface Token {
@@ -211,6 +212,11 @@ const dodo: Token = {
   priceId: "dodo",
   decimals: 18,
 };
+const usdcm: Token = {
+  address: addresses.usdcm,
+  priceId: "usdcm",
+  decimals: 6,
+};
 const work: Token = {
   address: addresses.work,
   priceId: "work",
@@ -259,6 +265,7 @@ export const PAIR_INFO: PairMap = {
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },
   "0x57602582eb5e82a197bae4e8b6b80e39abfc94eb": { a: mpickle, b: mdai },
   "0x65E17c52128396443d4A9A61EaCf0970F05F8a20": { a: hnd, b: aweth },
+  "0x6a58c68FF5C4e4D90EB6561449CC74A64F818dA5": { a: dodo, b: usdcm },
   "0xAb0454B98dAf4A02EA29292E6A8882FB2C787DD4": { a: wusdc, b: work },
 };
 

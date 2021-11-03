@@ -59,6 +59,7 @@ interface PriceObject {
   rly: number;
   hnd: number;
   dodo: number;
+  usdcm: number;
   work: number;
 }
 
@@ -125,6 +126,8 @@ function usePrices() {
         "rally-2",
         "hundred-finance",
         "dodo",
+        "mcdex",
+        "usd-coin",
         "the-employment-commons-work-token",
       ],
       vs_currencies: ["usd"],
@@ -187,6 +190,7 @@ function usePrices() {
       rly: response["rally-2"].usd,
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
+      usdcm: response["usd-coin"].usd,
       work: response["the-employment-commons-work-token"].usd,
     };
     setPrices(prices);

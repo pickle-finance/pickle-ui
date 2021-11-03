@@ -79,7 +79,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const {
     sushiMinichef,
     sorbettiereFarm,
-    dodoRewards,
+    dodoHndRewards,
+    dodoDodoRewards,
   } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getCurveLpPriceData } = CurvePairs.useContainer();
@@ -270,20 +271,20 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     if (
       prices &&
       provider &&
-      dodoRewards &&
+      dodoHndRewards &&
       multicallProvider &&
       getSushiPairData
     ) {
       const mcDodoRewards = new MulticallContract(
-        dodoRewards.address,
-        dodoRewards.interface.fragments,
+        dodoHndRewards.address,
+        dodoHndRewards.interface.fragments,
       );
       const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
 
       const [hndInfo, dodoInfo, totalSupplyBN] = await multicallProvider.all([
         mcDodoRewards.rewardTokenInfos(0),
         mcDodoRewards.rewardTokenInfos(1),
-        lpToken.balanceOf(dodoRewards.address),
+        lpToken.balanceOf(dodoHndRewards.address),
       ]);
 
       const dodoPerBlock = +formatEther(dodoInfo.rewardPerBlock);
@@ -317,6 +318,47 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     return [];
   };
 
+  const calculateDodoUsdcAPY = async (lpTokenAddress: string) => {
+    if (
+      prices &&
+      provider &&
+      dodoDodoRewards &&
+      multicallProvider &&
+      getSushiPairData
+    ) {
+      const mcDodoRewards = new MulticallContract(
+        dodoDodoRewards.address,
+        dodoDodoRewards.interface.fragments,
+      );
+      const lpToken = new MulticallContract(lpTokenAddress, erc20.abi);
+
+      const [dodoInfo, totalSupplyBN] = await multicallProvider.all([
+        mcDodoRewards.rewardTokenInfos(0),
+        lpToken.balanceOf(dodoDodoRewards.address),
+      ]);
+
+      const dodoPerBlock = +formatEther(dodoInfo.rewardPerBlock);
+
+      const totalSupply = parseFloat(formatEther(totalSupplyBN));
+      const { pricePerToken } = await getSushiPairData(lpTokenAddress);
+
+      const dodoValueRewardedPerYear =
+        prices.dodo * dodoPerBlock * ((365 * 3600 * 24) / 13);
+
+      const totalValueStaked = totalSupply * pricePerToken;
+      const dodoAPY = dodoValueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          dodo: getCompoundingAPY(dodoAPY * 0.8),
+          apr: dodoAPY * 0.8 * 100,
+        },
+      ];
+    }
+
+    return [];
+  };
+
   const calculateAPY = async () => {
     if (jars) {
       const [
@@ -327,6 +369,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         mim2crvApy,
         tricryptoApy,
         dodohndApy,
+        dodododoApy,
       ] = await Promise.all([
         calculateSushiAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH),
         calculateMCv2APY(
@@ -343,6 +386,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Arbitrum.MIM_2CRV),
         calculateCurveApy(JAR_DEPOSIT_TOKENS.Arbitrum.CRV_TRICRYPTO),
         calculateDodoHndAPY(JAR_DEPOSIT_TOKENS.Arbitrum.DODO_HND_ETH),
+        calculateDodoUsdcAPY(JAR_DEPOSIT_TOKENS.Arbitrum.DODO_DODO_USDC),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -370,6 +414,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_HND_ETH) {
           APYs = [...dodohndApy];
+        }
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.DODO_DODO_USDC) {
+          APYs = [...dodododoApy];
         }
 
         let apr = 0;

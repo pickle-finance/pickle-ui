@@ -213,7 +213,8 @@ export const PICKLE_SUSHI_REWARDER =
 
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
 export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
-export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
+export const DODO_HND_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
+export const DODO_DODO_REWARDS = "0x38Dbb42C4972116c88E27edFacD2451cf1b14255";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -334,7 +335,8 @@ function useContracts() {
   const [jar, setJar] = useState<Jar | null>(null);
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
-  const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
+  const [dodoHndRewards, setDodoHndRewards] = useState<DodoRewards | null>(null);
+  const [dodoDodoRewards, setDodoDodoRewards] = useState<DodoRewards | null>(null);
 
   const [
     rallyRewardPools,
@@ -491,7 +493,8 @@ function useContracts() {
       setRallyRewardPools(
         RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
       );
-      setDodoRewards(DodoRewardsFactory.connect(DODO_REWARDS, signer));
+      setDodoHndRewards(DodoRewardsFactory.connect(DODO_HND_REWARDS, signer));
+      setDodoDodoRewards(DodoRewardsFactory.connect(DODO_DODO_REWARDS, signer));
     }
   };
 
@@ -554,7 +557,8 @@ function useContracts() {
     feichef,
     rallyRewardPools,
     dodoPair,
-    dodoRewards,
+    dodoHndRewards,
+    dodoDodoRewards,
   };
 }
 
