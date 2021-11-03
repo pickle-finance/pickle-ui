@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
+import { Connection } from "./Connection";
 import CoinGecko from "coingecko-api";
+import { fromPairs } from "lodash";
+import { NETWORK_NAMES } from "./config";
 
 interface PriceObject {
   dai: number;
@@ -60,15 +63,18 @@ interface PriceObject {
   hnd: number;
   dodo: number;
   work: number;
-  jf: number;
+  jswap: number;
 }
 
 export type PriceIds = keyof PriceObject;
 
 function usePrices() {
   const [prices, setPrices] = useState<PriceObject | null>(null);
+  const { chainName } = Connection.useContainer();
+  const isOK = chainName === NETWORK_NAMES.OKEX;
 
   const getPrices = async () => {
+    if (!chainName) return;
     const CoinGeckoClient = new CoinGecko();
     const { data: response } = await CoinGeckoClient.simple.price({
       ids: [
@@ -131,6 +137,15 @@ function usePrices() {
       vs_currencies: ["usd"],
     });
 
+    let cmcData;
+    if (isOK) {
+      const cmcRequest = `https://api.allorigins.win/get?url=${encodeURIComponent(
+        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=2ba4867e-b50f-44d7-806d-c0c5fde1a8db&slug=jswap-finance",
+      )}`;
+      const res = await fetch(cmcRequest).then((x) => x.json());
+      cmcData = JSON.parse(res.contents);
+    }
+
     const prices: PriceObject = {
       dai: response.dai.usd,
       comp: response["compound-governance-token"].usd,
@@ -189,7 +204,9 @@ function usePrices() {
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
       work: response["the-employment-commons-work-token"].usd,
-      jf: 0 // CG does not provide jf price
+      jswap: cmcData
+        ? cmcData?.data[Object.keys(cmcData.data)[0]]?.quote?.USD?.price
+        : 0, // CG does not provide jswap price
     };
     setPrices(prices);
   };
@@ -197,7 +214,7 @@ function usePrices() {
   useEffect(() => {
     getPrices();
     setInterval(() => getPrices(), 120000);
-  }, []);
+  }, [chainName]);
 
   return { prices };
 }

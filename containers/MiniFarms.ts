@@ -92,23 +92,15 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pCLP OKT/USDT",
     poolName: "pCLP OKT/USDT",
   },
-  "0x09C22BDC438B69bCC190EFa8F8E3417277E1DD4F": {
-    tokenName: "pBLP BXH/USDT",
-    poolName: "pBLP BXH/USDT",
-  },
-  "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": {
-    tokenName: "pBLP ETHK/BTCK",
-    poolName: "pBLP ETHK/BTCK",
-  },
-  "0xd120c607911105bc99b510749d102dc63a20bbb4": {
+  "0xD120C607911105Bc99B510749d102Dc63a20bbb4": {
     tokenName: "pJLP JF/USDT",
     poolName: "pJLP JF/USDT",
   },
-  "0x5be52adf0c54598f0fa6f433b398492748ecd588": {
+  "0x5be52aDF0C54598F0fA6f433B398492748Ecd588": {
     tokenName: "pJLP BTCKUSDT",
     poolName: "pJLP BTCKUSDT",
   },
-  "0x668d30c30ffb182964516f549528e06633b48295": {
+  "0x668d30c30Ffb182964516f549528E06633B48295": {
     tokenName: "pJLP ETHKUSDT",
     poolName: "pJLP ETHKUSDT",
   },
