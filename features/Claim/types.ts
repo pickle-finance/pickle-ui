@@ -1,0 +1,39 @@
+export interface Snapshot {
+  [address: string]: string;
+}
+
+export interface ClaimsByWeek {
+  [week: string]: Snapshot;
+}
+
+export interface AmountsByWeek {
+  [week: string]: string;
+}
+
+export interface DistributionRootByWeek {
+  [week: string]: string;
+}
+
+export interface ClaimStatusByWeek {
+  [week: string]: boolean;
+}
+
+export interface Claim {
+  week: number;
+  balance: string;
+  merkleProof: string[];
+}
+
+export interface TokenClaimInfo {
+  label: string;
+  distributor: string;
+  token: string;
+  manifest: string;
+  weekStart: number;
+}
+
+/**
+ * distributionId, balance, distributor, tokenIndex, merkleProof
+ * See https://docs.balancer.fi/products/merkle-orchard/claiming-tokens#claiming-from-the-contract-directly
+ */
+export type ClaimProofTuple = [number, string, string, number, string[]];

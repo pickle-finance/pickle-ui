@@ -2,24 +2,21 @@ import { FC, useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Card } from "@geist-ui/react";
 
-import { BalancerRedeemer, Token } from "features/Claim/BalancerRedeemer";
+import { BalancerRedeemer } from "features/Claim/BalancerRedeemer";
 import { Connection } from "containers/Connection";
+import { tokenClaimInfoList } from "./config";
 
-interface Props {
-  token: Token;
-}
-
-const Claim: FC<Props> = ({ token }) => {
+const Claim: FC = () => {
   const { signer, address } = Connection.useContainer();
   const [claimableAmount, setClaimableAmount] = useState<number>(-1);
 
   const fetchClaimableAmount = async () => {
     if (!address) return;
 
-    setClaimableAmount(-1);
-
-    const redeemer = new BalancerRedeemer(token, address, signer);
+    const redeemer = new BalancerRedeemer(tokenClaimInfoList[0], 0, address);
     await redeemer.fetchData();
+
+    console.log("================", redeemer.claimableWeeks);
 
     for (const week of redeemer.claimableWeeks) {
       const claim = redeemer.generateClaim(week);
@@ -35,7 +32,7 @@ const Claim: FC<Props> = ({ token }) => {
 
   return (
     <Card>
-      <h2>Claim {token}</h2>
+      <h2>Claim Balancer rewards</h2>
       {claimableAmount < 0 ? (
         <Skeleton
           animation="wave"
@@ -47,9 +44,7 @@ const Claim: FC<Props> = ({ token }) => {
           }}
         />
       ) : (
-        <p>
-          Claimable Amount: {claimableAmount} {token}
-        </p>
+        <p>Claimable Amount: {claimableAmount} BAL</p>
       )}
     </Card>
   );

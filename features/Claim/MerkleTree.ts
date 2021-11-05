@@ -3,7 +3,7 @@ import { hexToBytes } from "web3-utils";
 
 /**
  * Taken from:
- * https://github.com/balancer-labs/erc20-redeemable/blob/01d42fb7fb4095085343e7b0a1d0089a607d3b9b/client/src/helpers/merkle.ts
+ * https://github.com/balancer-labs/frontend-v2/blob/develop/src/lib/utils/merkle.ts
  *
  * Tried replacing with merkletreejs but failed to get valid proofs.
  */

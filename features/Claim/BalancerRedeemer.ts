@@ -1,33 +1,18 @@
-import { Signer } from "ethers";
+import { ethers } from "ethers";
 import { toWei, soliditySha3 } from "web3-utils";
 
-import { BalancerRedeemer__factory as BalancerRedeemerFactory } from "containers/Contracts/factories/BalancerRedeemer__factory";
-import config from "./config";
 import MerkleTree from "./MerkleTree";
-
-export type Token = keyof typeof config;
-
-interface Snapshot {
-  [address: string]: string;
-}
-
-interface ClaimsByWeek {
-  [week: string]: Snapshot;
-}
-
-interface AmountsByWeek {
-  [week: string]: string;
-}
-
-interface ClaimStatusByWeek {
-  [week: string]: boolean;
-}
-
-interface Claim {
-  week: number;
-  balance: string;
-  merkleProof: string[];
-}
+import { multicallProvider, multicallContract } from "./config";
+import {
+  AmountsByWeek,
+  Claim,
+  ClaimProofTuple,
+  ClaimsByWeek,
+  ClaimStatusByWeek,
+  DistributionRootByWeek,
+  Snapshot,
+  TokenClaimInfo,
+} from "./types";
 
 export class BalancerRedeemer {
   /**
@@ -45,14 +30,14 @@ export class BalancerRedeemer {
   /**
    * Specific amounts (values) we can claim for this signer
    * for specific weeks (keys).
-   * E.g. { 2: "7", 3: "9" }
+   * E.g. { 2: "7.91", 3: "9.08" }
    */
   public unclaimedAmounts: AmountsByWeek = {};
 
   constructor(
-    private token: Token,
+    private tokenClaimInfo: TokenClaimInfo,
+    private tokenIndex: number,
     private address: string,
-    private signer: Signer,
   ) {}
 
   fetchData = async (): Promise<void> => {
@@ -60,8 +45,11 @@ export class BalancerRedeemer {
     this.claimsByWeek = await this.getClaimsByWeek(snapshot);
 
     const claimStatusByWeek = await this.getClaimStatusByWeek();
+    const distributionRootByWeek = await this.getDistributionRootByWeek();
+
     this.unclaimedAmounts = await this.getUnclaimedAmountsByWeek(
       claimStatusByWeek,
+      distributionRootByWeek,
     );
   };
 
@@ -76,7 +64,7 @@ export class BalancerRedeemer {
     return Object.keys(this.unclaimedAmounts);
   }
 
-  generateClaim = (week: string): Claim => {
+  generateClaim = (week: string): ClaimProofTuple => {
     const weeklyBalances = this.claimsByWeek[week];
     const balance = weeklyBalances[this.address];
     const merkleTree = this.generateMerkleTree(week);
@@ -84,37 +72,51 @@ export class BalancerRedeemer {
       soliditySha3(this.address, toWei(balance))!,
     );
 
-    return {
-      week: parseInt(week),
-      balance: toWei(balance),
-      merkleProof: proof,
-    };
+    return [
+      parseInt(week),
+      toWei(balance),
+      this.tokenClaimInfo.distributor,
+      this.tokenIndex,
+      proof,
+    ];
   };
 
-  verifyClaim = async (claim: Claim): Promise<boolean> => {
-    const contractAddress = config[this.token].contract;
-    const contract = BalancerRedeemerFactory.connect(
-      contractAddress,
-      this.signer,
-    );
+  /**
+   * Utility function for debugging, not required by the harvester.
+   *
+   * @param claim Claim tuple
+   * @returns validation result as boolean
+   */
+  verifyClaim = async (claim: ClaimProofTuple): Promise<boolean> => {
+    const calls = [
+      multicallContract.verifyClaim(
+        this.tokenClaimInfo.token,
+        this.tokenClaimInfo.distributor,
+        claim[0],
+        this.address,
+        claim[1],
+        claim[4],
+      ),
+    ];
 
-    return await contract.verifyClaim(
-      this.address,
-      claim.week,
-      claim.balance,
-      claim.merkleProof,
-    );
+    const [result] = await multicallProvider.all<boolean[]>(calls);
+
+    return result;
   };
 
-  // E.g. { 2: "7", 3: "9" }
+  // E.g. { 2: "7.91", 3: "9.08" }
   private getUnclaimedAmountsByWeek = async (
     claimStatusByWeek: ClaimStatusByWeek,
+    distributionRootByWeek: DistributionRootByWeek,
   ): Promise<AmountsByWeek> => {
     const result: AmountsByWeek = {};
 
     for (const [week, claims] of Object.entries(this.claimsByWeek)) {
       // Already claimed, skip.
       if (claimStatusByWeek[week]) continue;
+
+      // Distribution does not exist yet, skip.
+      if (distributionRootByWeek[week] === ethers.constants.HashZero) continue;
 
       // Anything to claim?
       if (claims[this.address]) result[week] = claims[this.address];
@@ -123,21 +125,53 @@ export class BalancerRedeemer {
     return result;
   };
 
-  // E.g. { 1: true, 2: false, 3: false }
-  private getClaimStatusByWeek = async (): Promise<ClaimStatusByWeek> => {
+  /**
+   * It is important to check that a distribution has an existing
+   * distribution root. This keeps us covered in scenarios when
+   * Balancer team uploads reports to Github but a distribution hasn't
+   * been created in MerkleOrchard yet. Consequently, claiming rewards
+   * for that week will fail.
+   *
+   * E.g. { 6: 'roothash', 7: 'roothash', 8: '0x00000...' }
+   */
+  private getDistributionRootByWeek = async (): Promise<
+    DistributionRootByWeek
+  > => {
     const weeks = Object.keys(this.claimsByWeek);
-    const contractAddress = config[this.token].contract;
-    const contract = BalancerRedeemerFactory.connect(
-      contractAddress,
-      this.signer,
-    );
-    const statuses = await contract.claimStatus(
-      this.address,
-      1,
-      parseInt(weeks[weeks.length - 1]),
+
+    const distributionRootCalls = weeks.map((week) =>
+      multicallContract.getDistributionRoot(
+        this.tokenClaimInfo.token,
+        this.tokenClaimInfo.distributor,
+        parseInt(week),
+      ),
     );
 
-    return Object.fromEntries(statuses.map((status, i) => [i + 1, status]));
+    const roots = await multicallProvider.all<string[]>(distributionRootCalls);
+
+    return Object.fromEntries(
+      weeks.map((week, i) => [parseInt(week), roots[i]]),
+    );
+  };
+
+  // E.g. { 6: true, 7: false, 8: false }
+  private getClaimStatusByWeek = async (): Promise<ClaimStatusByWeek> => {
+    const weeks = Object.keys(this.claimsByWeek);
+
+    const claimStatusCalls = weeks.map((week) =>
+      multicallContract.isClaimed(
+        this.tokenClaimInfo.token,
+        this.tokenClaimInfo.distributor,
+        parseInt(week),
+        this.address,
+      ),
+    );
+
+    const statuses = await multicallProvider.all<boolean[]>(claimStatusCalls);
+
+    return Object.fromEntries(
+      weeks.map((week, i) => [parseInt(week), statuses[i]]),
+    );
   };
 
   private getClaimsByWeek = async (
@@ -146,6 +180,9 @@ export class BalancerRedeemer {
     const claimsByWeek: ClaimsByWeek = {};
 
     for (const [week, hash] of Object.entries(snapshot)) {
+      // Ignore distributions managed by the old contract (not MerkleOrchard).
+      if (parseInt(week) < this.tokenClaimInfo.weekStart) continue;
+
       claimsByWeek[week] = await this.fetchFromIpfs(hash);
     }
 
@@ -153,7 +190,7 @@ export class BalancerRedeemer {
   };
 
   private getSnapshot = async (): Promise<Snapshot> => {
-    const url = config[this.token].url;
+    const url = this.tokenClaimInfo.manifest;
     const snapshot = await fetch(url);
 
     return await snapshot.json();

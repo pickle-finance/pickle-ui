@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Page, Spacer } from "@geist-ui/react";
+import { Page } from "@geist-ui/react";
 
 import { Footer } from "../features/Footer/Footer";
 import Claim from "../features/Claim/Claim";
@@ -21,14 +21,7 @@ const ClaimBalancer: FC = () => {
   return (
     <Page>
       <Page.Content>
-        <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-          Claim Balancer Rewards
-        </h1>
-        <Claim token="PICKLE" />
-        <Spacer />
-        <Claim token="BAL" />
-        <Spacer />
-        <Claim token="MCB" />
+        <Claim />
       </Page.Content>
       <Footer />
     </Page>
