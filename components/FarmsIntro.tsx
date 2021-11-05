@@ -29,7 +29,7 @@ export const FarmsIntro: FC = () => {
   if (isOK)
     return (
       <p>
-        <Trans i18nKey="farms.introOK"></Trans>
+        {t("farms.introOK")}
         <br />
         {t("farms.apy")}
       </p>
