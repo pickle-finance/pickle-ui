@@ -42,6 +42,7 @@ export const addresses = {
   btck: "0x54e4622DC504176b3BB432dCCAf504569699a7fF",
   ethk: "0xEF71CA2EE68F45B9Ad6F72fbdb33d707b872315C",
   bxh: "0x145ad28a42bf334104610f7836d0945dffb6de63",
+  jswap: "0x5fac926bf1e638944bb16fb5b787b5ba4bc85b0a",
 
   // Arbitrum
   aweth: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
@@ -217,6 +218,12 @@ const work: Token = {
   decimals: 18,
 };
 
+const jswap: Token = {
+  address: addresses.jswap,
+  priceId: "jswap",
+  decimals: 18
+}
+
 interface PairMap {
   [key: string]: { a: Token; b: Token };
 }
@@ -254,6 +261,9 @@ export const PAIR_INFO: PairMap = {
   "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": { a: okusdt, b: okusdc },
   "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": { a: okusdt, b: bxh },
   "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": { a: ethk, b: btck },
+  "0x838a7a7f3e16117763c109d98c79ddcd69f6fd6e": { a: btck, b: okusdt },
+  "0xeb02a695126b998e625394e43dfd26ca4a75ce2b": { a: ethk, b: okusdt },
+  "0x8009edebbbdeb4a3bb3003c79877fcd98ec7fb45": { a: jswap, b: okusdt },
   "0xb6DD51D5425861C808Fd60827Ab6CFBfFE604959": { a: amim, b: aweth },
   "0x8f93Eaae544e8f5EB077A1e09C1554067d9e2CA8": { a: aweth, b: aspell },
   "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6": { a: qi, b: matic },

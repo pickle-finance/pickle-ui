@@ -10,6 +10,7 @@ export const FarmsIntro: FC = () => {
   const { t } = useTranslation("common");
 
   const isPolygon = chainName === NETWORK_NAMES.POLY;
+  const isOK = chainName === NETWORK_NAMES.OKEX;
 
   if (isPolygon)
     return (
@@ -20,6 +21,15 @@ export const FarmsIntro: FC = () => {
           <MiniIcon source="/matic.png" /> rewards by staking tokens. (Note:
           MATIC rewards end August 23)
         </Trans>
+        <br />
+        {t("farms.apy")}
+      </p>
+    );
+
+  if (isOK)
+    return (
+      <p>
+        {t("farms.introOK")}
         <br />
         {t("farms.apy")}
       </p>

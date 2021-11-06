@@ -66,34 +66,6 @@ export const FarmInfo: IFarmInfo = {
     tokenName: "pQLP DINO/WETH",
     poolName: "pQLP DINO/WETH",
   },
-  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
-    tokenName: "pCLP CHE/OKT",
-    poolName: "pCLP CHE/OKT",
-  },
-  "0xe75c8805f9970c7547255059A22d14001d3D7b94": {
-    tokenName: "pCLP CHE/USDT",
-    poolName: "pCLP CHE/USDT",
-  },
-  // "0x91bcc0BBC2ecA760e3b8A79903CbA53483A7012C": {
-  //   tokenName: "pCLP BTCK/USDT",
-  //   poolName: "pCLP BTCK/USDT",
-  // },
-  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": {
-    tokenName: "pCLP ETHK/USDT",
-    poolName: "pCLP ETHK/USDT",
-  },
-  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": {
-    tokenName: "pCLP OKT/USDT",
-    poolName: "pCLP OKT/USDT",
-  },
-  "0x09C22BDC438B69bCC190EFa8F8E3417277E1DD4F": {
-    tokenName: "pBLP BXH/USDT",
-    poolName: "pBLP BXH/USDT",
-  },
-  "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": {
-    tokenName: "pBLP ETHK/BTCK",
-    poolName: "pBLP ETHK/BTCK",
-  },
   "0x1D35e4348826857eaFb22739d4e494C0337cb427": {
     tokenName: "pSLP PICKLE/DAI",
     poolName: "pSLP PICKLE/DAI",
@@ -103,6 +75,36 @@ export const FarmInfo: IFarmInfo = {
     poolName: "pSLP WORK/USDC",
   },
 
+  // OKEx
+  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": {
+    tokenName: "pCLP CHE/OKT",
+    poolName: "pCLP CHE/OKT",
+  },
+  "0xe75c8805f9970c7547255059A22d14001d3D7b94": {
+    tokenName: "pCLP CHE/USDT",
+    poolName: "pCLP CHE/USDT",
+  },
+  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": {
+    tokenName: "pCLP ETHK/USDT",
+    poolName: "pCLP ETHK/USDT",
+  },
+  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": {
+    tokenName: "pCLP OKT/USDT",
+    poolName: "pCLP OKT/USDT",
+  },
+  "0xD120C607911105Bc99B510749d102Dc63a20bbb4": {
+    tokenName: "pJLP JF/USDT",
+    poolName: "pJLP JF/USDT",
+  },
+  "0x5be52aDF0C54598F0fA6f433B398492748Ecd588": {
+    tokenName: "pJLP BTCKUSDT",
+    poolName: "pJLP BTCKUSDT",
+  },
+  "0x668d30c30Ffb182964516f549528E06633B48295": {
+    tokenName: "pJLP ETHKUSDT",
+    poolName: "pJLP ETHKUSDT",
+  },
+  
   // Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": {
     tokenName: "pSLP MIM/ETH",

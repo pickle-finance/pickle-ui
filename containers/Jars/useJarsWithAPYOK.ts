@@ -34,9 +34,10 @@ const cherryPoolIds: PoolId = {
   "0xb6fCc8CE3389Aa239B2A5450283aE9ea5df9d1A9": 23, // Gone for now
 };
 
-const bxhPoolIds: PoolId = {
-  "0x04b2C23Ca7e29B71fd17655eb9Bd79953fA79faF": 12,
-  "0x3799Fb39b7fA01E23338C1C3d652FB1AB6E7D5BC": 9,
+const jswapPoolIds: PoolId = {
+  "0x838a7a7f3e16117763c109d98c79ddcd69f6fd6e": 0,
+  "0xeb02a695126b998e625394e43dfd26ca4a75ce2b": 1,
+  "0x8009edebbbdeb4a3bb3003c79877fcd98ec7fb45": 4,
 };
 
 const getCompoundingAPY = (apr: number) => {
@@ -57,7 +58,7 @@ type Output = {
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { multicallProvider, provider } = Connection.useContainer();
-  const { cherrychef, bxhchef, erc20: Erc20 } = Contracts.useContainer();
+  const { cherrychef, jswapchef, erc20: Erc20 } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData: getSushiPairData } = SushiPairs.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
@@ -98,52 +99,66 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const rewardsPerYear =
-        rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+        rewardsPerBlock * ((365 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
 
       const valueRewardedPerYear = prices?.cherry * rewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
       const cherryAPY = valueRewardedPerYear / totalValueStaked;
 
-      return [{ che: cherryAPY * 0.8 * 100, apr: cherryAPY * 0.8 * 100 }];
+      return [
+        { che: getCompoundingAPY(cherryAPY * 0.9), apr: cherryAPY * 0.9 * 100 },
+      ];
     }
     return [];
   };
 
-  const calculateBxhAPY = async (lpTokenAddress: string) => {
-    if (bxhchef && getSushiPairData && prices && multicallProvider && Erc20) {
-      const poolId = bxhPoolIds[lpTokenAddress];
+  const calculateJswapAPY = async (lpTokenAddress: string) => {
+    if (
+      jswapchef &&
+      getSushiPairData &&
+      prices &&
+      multicallProvider &&
+      Erc20 &&
+      prices?.jswap
+    ) {
+      const poolId = jswapPoolIds[lpTokenAddress];
 
       const lpToken = Erc20.attach(lpTokenAddress);
-      const poolInfo = await bxhchef.poolInfo(poolId);
 
       const [
-        bxhPerBlockBN,
+        jfPerBlockBN,
         totalAllocPointBN,
+        poolInfo,
         totalSupplyBN,
       ] = await Promise.all([
-        bxhchef.rewardV(poolInfo.lastRewardBlock),
-        bxhchef.totalAllocPoint(),
-        lpToken.balanceOf(bxhchef.address),
+        jswapchef.jfPerBlock(),
+        jswapchef.totalAllocPoint(),
+        jswapchef.poolInfo(poolId),
+        lpToken.balanceOf(jswapchef.address),
       ]);
 
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       const rewardsPerBlock =
-        (parseFloat(formatEther(bxhPerBlockBN)) *
+        (parseFloat(formatEther(jfPerBlockBN)) *
           poolInfo.allocPoint.toNumber()) /
         totalAllocPointBN.toNumber();
 
       const { pricePerToken } = await getSushiPairData(lpTokenAddress);
 
       const rewardsPerYear =
-        rewardsPerBlock * ((360 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
+        rewardsPerBlock * ((365 * 24 * 60 * 60) / AVERAGE_BLOCK_TIME);
 
-      const valueRewardedPerYear = prices?.bxh * rewardsPerYear;
+      const valueRewardedPerYear = prices?.jswap * rewardsPerYear;
 
       const totalValueStaked = totalSupply * pricePerToken;
-      const bxhAPY = valueRewardedPerYear / totalValueStaked;
 
-      return [{ bxh: bxhAPY * 0.8 * 100, apr: bxhAPY * 0.8 * 100 }];
+      // scaling factor applied to achieve same numbers on jswap's site
+      const jswapAPY = (valueRewardedPerYear * 1.35) / totalValueStaked;
+
+      return [
+        { jswap: getCompoundingAPY(jswapAPY * 0.9), apr: jswapAPY * 0.9 * 100 },
+      ];
     }
     return [];
   };
@@ -155,8 +170,9 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         cherryCheUsdtApy,
         cherryEthkUsdtApy,
         cherryOktUsdtApy,
-        bxhUsdtApy,
-        bxhEthBtcApy,
+        jswapJfUsdtApy,
+        jswapEthkUsdtApy,
+        jswapBtckUsdtApy,
       ] = await Promise.all([
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_CHE,
@@ -170,8 +186,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         calculateCherryAPY(
           JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].CHERRY_OKT_USDT,
         ),
-        calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_BXH_USDT),
-        calculateBxhAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].BXH_ETH_BTC),
+        calculateJswapAPY(JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].JSWAP_JF_USDT),
+        calculateJswapAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].JSWAP_BTCK_USDT,
+        ),
+        calculateJswapAPY(
+          JAR_DEPOSIT_TOKENS[NETWORK_NAMES.OKEX].JSWAP_ETHK_USDT,
+        ),
       ]);
       const promises = jars.map(async (jar) => {
         let APYs: Array<JarApy> = [];
@@ -191,13 +212,16 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CHERRY_OKT_USDT) {
           APYs = [...cherryOktUsdtApy];
         }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_BXH_USDT) {
-          APYs = [...bxhUsdtApy];
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.JSWAP_JF_USDT) {
+          APYs = [...jswapJfUsdtApy];
         }
 
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.BXH_ETH_BTC) {
-          APYs = [...bxhEthBtcApy];
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.JSWAP_ETHK_USDT) {
+          APYs = [...jswapEthkUsdtApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.JSWAP_BTCK_USDT) {
+          APYs = [...jswapBtckUsdtApy];
         }
 
         let apr = 0;
@@ -215,7 +239,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           }
         });
 
-        const totalAPY = (apr * 100) / 100 + lp;
+        const totalAPY = getCompoundingAPY(apr / 100) + lp;
 
         return {
           ...jar,
@@ -226,7 +250,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         };
       });
       const newJarsWithAPY = await Promise.all(promises);
-
       setJarsWithAPY(newJarsWithAPY);
     }
   };

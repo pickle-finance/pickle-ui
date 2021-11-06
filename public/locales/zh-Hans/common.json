@@ -124,6 +124,7 @@
     "harvesting": "收获中...",
     "inactive": "非活",
     "intro": "Jar会自动投资您的存款代币，Farm给您赚 <strong>$PICKLEs</strong>.<br />存款质押后两个都加入. 将鼠标悬停在显示的APY上查看退货的来源.",
+    "introOK": "Jar会自动投资您的存款代币",
     "jarsAndFarms": "Jars和Farms",
     "mai": {
       "description": "存款时0.5％的费用将为Mai Finance收取",

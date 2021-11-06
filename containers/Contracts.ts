@@ -81,10 +81,12 @@ import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factorie
 
 import { Cherrychef } from "./Contracts/Cherrychef";
 import { Cherrychef__factory as CherrychefFactory } from "./Contracts/factories/Cherrychef__factory";
+
+import { Jswapchef } from "./Contracts/Jswapchef";
+import { Jswapchef__factory as JswapFactory } from "./Contracts/factories/Jswapchef__factory";
+
 import { CvxBooster } from "./Contracts/CvxBooster";
 import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/CvxBooster__factory";
-import { Bxhchef } from "./Contracts/Bxhchef";
-import { Bxhchef__factory as BxhchefFactory } from "./Contracts/factories/Bxhchef__factory";
 
 import { Feichef } from "./Contracts/Feichef";
 import { Feichef__factory as FeichefFactory } from "./Contracts/factories/Feichef__factory";
@@ -212,7 +214,7 @@ export const PICKLE_SUSHI_REWARDER =
   "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
-export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
+export const JSWAPCHEF = "0x83C35EA2C32293aFb24aeB62a14fFE920C2259ab";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
 
 function useContracts() {
@@ -329,7 +331,8 @@ function useContracts() {
   );
 
   const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null);
-  const [bxhchef, setBxhchef] = useState<Bxhchef | null>(null);
+  const [jswapchef, setJswapchef] = useState<Jswapchef | null>(null);
+
   const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
   const [jar, setJar] = useState<Jar | null>(null);
   const [feichef, setFeichef] = useState<Feichef | null>(null);
@@ -482,7 +485,8 @@ function useContracts() {
       );
 
       setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
-      setBxhchef(BxhchefFactory.connect(BXHCHEF, signer));
+      setJswapchef(JswapFactory.connect(JSWAPCHEF, signer));
+
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
       setFeichef(FeichefFactory.connect(FEI_MASTERCHEF, signer));
       setRallyRewardPools(
@@ -548,8 +552,8 @@ function useContracts() {
     sushiMigrator,
     pickleSushiRewarder,
     cherrychef,
+    jswapchef,
     cvxBooster,
-    bxhchef,
     jar,
     feichef,
     rallyRewardPools,

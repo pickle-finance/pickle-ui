@@ -124,6 +124,7 @@
     "harvesting": "Recogiendo...",
     "inactive": "Inactiva",
     "intro": "Los Frascos invierten automáticamente tus tokens depositados y las Granjas te dan <strong>$PICKLEs</strong>.<br />Deposita e Invierte para ganar ambos. Coloca el ratón sobre la APY para ver de donde proceden las ganancias.",
+    "introOK": "Los Frascos invierten automáticamente tus tokens depositados",
     "jarsAndFarms": "Frascos y Granjas",
     "mai": {
       "description": "Una comisión del 0.5% es recogida por Mai Finance al depositar.",

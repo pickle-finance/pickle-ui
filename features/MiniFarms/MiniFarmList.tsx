@@ -9,6 +9,7 @@ import { useJarData } from "features/Gauges/useJarData";
 import { JAR_FARM_MAP } from "../../containers/Farms/farms";
 import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
+import { JarCollapsible } from "./JarCollapsible";
 import { uncompoundAPY } from "../../util/jars";
 import { NETWORK_NAMES } from "containers/config";
 import { BalFarm } from "../PickleFarms/BalFarm";
@@ -144,7 +145,8 @@ export const MiniFarmList: FC = () => {
           );
           return (
             <Grid xs={24} key={jar.name}>
-              {farm && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
+              {farm && !isOK && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
+              {isOK && <JarCollapsible jarData={jar} />}
             </Grid>
           );
         })}
