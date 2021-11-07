@@ -60,6 +60,7 @@ interface PriceObject {
   hnd: number;
   dodo: number;
   work: number;
+  [token: string]: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -98,7 +99,7 @@ function usePrices() {
         "mirrored-ishares-silver-trust",
         "mirrored-alibaba",
         "vecrv-dao-yvault",
-        "fei-protocol",
+        "fei-usd",
         "tribe-2",
         "liquity-usd",
         "liquity",
@@ -118,7 +119,7 @@ function usePrices() {
         "shapeshift-fox-token",
         "dinoswap",
         "cherryswap",
-        "okexchain",
+        "oec-token",
         "truefi",
         "bxh",
         "balancer",
@@ -158,7 +159,7 @@ function usePrices() {
       mqqq: response["mirrored-invesco-qqq-trust"].usd,
       mslv: response["mirrored-ishares-silver-trust"].usd,
       mbaba: response["mirrored-alibaba"].usd,
-      fei: response["fei-protocol"].usd,
+      fei: response["fei-usd"].usd,
       tribe: response["tribe-2"].usd,
       lusd: response["liquity-usd"].usd,
       lqty: response["liquity"].usd,
@@ -178,7 +179,7 @@ function usePrices() {
       fox: response["shapeshift-fox-token"].usd,
       dino: response["dinoswap"].usd,
       cherry: response["cherryswap"].usd,
-      wokt: response["okexchain"].usd,
+      wokt: response["oec-token"].usd,
       ethk: response.ethereum.usd,
       btck: response["wrapped-bitcoin"].usd,
       tru: response["truefi"].usd,

@@ -18,18 +18,25 @@ export interface ClaimStatusByWeek {
   [week: string]: boolean;
 }
 
-export interface Claim {
-  week: number;
-  balance: string;
-  merkleProof: string[];
-}
-
 export interface TokenClaimInfo {
   label: string;
   distributor: string;
   token: string;
   manifest: string;
   weekStart: number;
+}
+
+export interface Prices {
+  bal: number;
+  pickle: number;
+  [token: string]: number;
+}
+
+export interface ClaimableAmounts {
+  [token: string]: {
+    [token: string]: number;
+    usd: number;
+  };
 }
 
 /**

@@ -21,6 +21,7 @@ export const multicallContract = new MulticallContract(
   MerkleOrchardFactory.abi,
 );
 
+// See https://github.com/balancer-labs/frontend-v2/blob/develop/src/services/claim/MultiTokenClaim.json
 export const tokenClaimInfoList: TokenClaimInfo[] = [
   {
     label: "BAL",
@@ -29,5 +30,13 @@ export const tokenClaimInfoList: TokenClaimInfo[] = [
     manifest:
       "https://raw.githubusercontent.com/balancer-labs/bal-mining-scripts/master/reports/_current-arbitrum.json",
     weekStart: 6,
+  },
+  {
+    label: "PICKLE",
+    distributor: "0xf02CeB58d549E4b403e8F85FBBaEe4c5dfA47c01",
+    token: "0x965772e0e9c84b6f359c8597c891108dcf1c5b1a",
+    manifest:
+      "https://raw.githubusercontent.com/balancer-labs/bal-mining-scripts/master/reports/_current-pickle-arbitrum.json",
+    weekStart: 4,
   },
 ];

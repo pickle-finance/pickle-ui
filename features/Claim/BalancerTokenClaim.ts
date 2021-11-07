@@ -5,7 +5,6 @@ import MerkleTree from "./MerkleTree";
 import { multicallProvider, multicallContract } from "./config";
 import {
   AmountsByWeek,
-  Claim,
   ClaimProofTuple,
   ClaimsByWeek,
   ClaimStatusByWeek,
@@ -14,7 +13,7 @@ import {
   TokenClaimInfo,
 } from "./types";
 
-export class BalancerRedeemer {
+export class BalancerTokenClaim {
   /**
    * All the data we have fetched from IPFS in the
    * following format:
@@ -35,7 +34,7 @@ export class BalancerRedeemer {
   public unclaimedAmounts: AmountsByWeek = {};
 
   constructor(
-    private tokenClaimInfo: TokenClaimInfo,
+    public tokenClaimInfo: TokenClaimInfo,
     private tokenIndex: number,
     private address: string,
   ) {}
@@ -60,11 +59,13 @@ export class BalancerRedeemer {
     );
   }
 
-  get claimableWeeks(): string[] {
-    return Object.keys(this.unclaimedAmounts);
+  get claims(): ClaimProofTuple[] {
+    const weeks = Object.keys(this.unclaimedAmounts);
+
+    return weeks.map((week) => this.generateClaim(week));
   }
 
-  generateClaim = (week: string): ClaimProofTuple => {
+  private generateClaim = (week: string): ClaimProofTuple => {
     const weeklyBalances = this.claimsByWeek[week];
     const balance = weeklyBalances[this.address];
     const merkleTree = this.generateMerkleTree(week);

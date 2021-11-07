@@ -2,38 +2,48 @@ import { FC, useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Card } from "@geist-ui/react";
 
-import { BalancerRedeemer } from "features/Claim/BalancerRedeemer";
 import { Connection } from "containers/Connection";
-import { tokenClaimInfoList } from "./config";
+import { Prices } from "containers/Prices";
+import { BalancerClaimsManager } from "features/Claim/BalancerClaimsManager";
+import { ClaimableAmounts } from "./types";
 
 const Claim: FC = () => {
-  const { signer, address } = Connection.useContainer();
-  const [claimableAmount, setClaimableAmount] = useState<number>(-1);
+  const { address } = Connection.useContainer();
+  const { prices } = Prices.useContainer();
+  const [claimsManager, setClaimsManager] = useState<BalancerClaimsManager>();
 
-  const fetchClaimableAmount = async () => {
+  const refreshClaimsManager = async () => {
     if (!address) return;
+    if (!prices) return;
 
-    const redeemer = new BalancerRedeemer(tokenClaimInfoList[0], 0, address);
-    await redeemer.fetchData();
+    const manager = new BalancerClaimsManager(address, prices);
+    await manager.fetchData();
 
-    console.log("================", redeemer.claimableWeeks);
+    setClaimsManager(manager);
+  };
 
-    for (const week of redeemer.claimableWeeks) {
-      const claim = redeemer.generateClaim(week);
-      console.log("============= ", await redeemer.verifyClaim(claim));
-    }
+  const claimableAmountsList = () => {
+    if (!claimsManager) return null;
 
-    setClaimableAmount(redeemer.claimableAmount);
+    return Object.entries(claimsManager.claimableAmounts).map(
+      ([token, amounts]) => {
+        return (
+          <p key={token}>
+            Claimable Amount: {amounts[token]} {token}
+          </p>
+        );
+      },
+    );
   };
 
   useEffect(() => {
-    fetchClaimableAmount();
-  }, [address]);
+    refreshClaimsManager();
+  }, [address, !!prices]);
 
   return (
     <Card>
       <h2>Claim Balancer rewards</h2>
-      {claimableAmount < 0 ? (
+      {!claimsManager ? (
         <Skeleton
           animation="wave"
           width="180px"
@@ -44,7 +54,12 @@ const Claim: FC = () => {
           }}
         />
       ) : (
-        <p>Claimable Amount: {claimableAmount} BAL</p>
+        <>
+          {claimableAmountsList()}
+          {claimsManager.claimableAmountUsd >= 0 && (
+            <p>Total Claimable Amount: ${claimsManager.claimableAmountUsd}</p>
+          )}
+        </>
       )}
     </Card>
   );
