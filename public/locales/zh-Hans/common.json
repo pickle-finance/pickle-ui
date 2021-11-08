@@ -40,7 +40,7 @@
     "networks": {
       "ethereum": "Ethereum",
       "polygon": "Polygon",
-      "okex": "OKEx",
+      "okex": "OEC",
       "arbitrum": "Arbitrum"
     },
     "switchPrompt": "请更改到{{ network }}联网",
