@@ -789,7 +789,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (x) => x.address.toLowerCase() === vault.toLowerCase(),
       );
       if (vaultData) {
-        const apr = vaultData.apy?.data?.netApy || 0;
+        const apr = vaultData.apy?.net_apy || 0;
         return [
           {
             yearn: apr * 100,

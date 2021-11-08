@@ -6,6 +6,7 @@ interface YearnVault {
   address: string;
   apy: {
     description: string;
+    net_apy: number;
     data: {
       baseApr: number;
       boostedApr: number;
