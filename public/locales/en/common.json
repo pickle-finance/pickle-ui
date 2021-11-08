@@ -40,7 +40,7 @@
     "networks": {
       "ethereum": "Ethereum",
       "polygon": "Polygon",
-      "okex": "OKEx",
+      "okex": "OEC",
       "arbitrum": "Arbitrum"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
