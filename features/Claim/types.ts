@@ -1,3 +1,5 @@
+import { BigNumberish } from "ethers";
+
 export interface Snapshot {
   [address: string]: string;
 }
@@ -43,4 +45,10 @@ export interface ClaimableAmounts {
  * distributionId, balance, distributor, tokenIndex, merkleProof
  * See https://docs.balancer.fi/products/merkle-orchard/claiming-tokens#claiming-from-the-contract-directly
  */
-export type ClaimProofTuple = [number, string, string, number, string[]];
+export type ClaimProof = {
+  distributionId: number;
+  balance: BigNumberish;
+  distributor: string;
+  tokenIndex: number;
+  merkleProof: string[];
+};

@@ -1,14 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { Card } from "@geist-ui/react";
+import { Card, Button } from "@geist-ui/react";
 
 import { Connection } from "containers/Connection";
 import { Prices } from "containers/Prices";
 import { BalancerClaimsManager } from "features/Claim/BalancerClaimsManager";
-import { ClaimableAmounts } from "./types";
 
 const Claim: FC = () => {
-  const { address } = Connection.useContainer();
+  const { address, signer } = Connection.useContainer();
   const { prices } = Prices.useContainer();
   const [claimsManager, setClaimsManager] = useState<BalancerClaimsManager>();
 
@@ -16,7 +15,7 @@ const Claim: FC = () => {
     if (!address) return;
     if (!prices) return;
 
-    const manager = new BalancerClaimsManager(address, prices);
+    const manager = new BalancerClaimsManager(address, signer, prices);
     await manager.fetchData();
 
     setClaimsManager(manager);
@@ -57,7 +56,12 @@ const Claim: FC = () => {
         <>
           {claimableAmountsList()}
           {claimsManager.claimableAmountUsd >= 0 && (
-            <p>Total Claimable Amount: ${claimsManager.claimableAmountUsd}</p>
+            <>
+              <p>Total Claimable Amount: ${claimsManager.claimableAmountUsd}</p>
+              <Button disabled={false} onClick={() => {}}>
+                Claim
+              </Button>
+            </>
           )}
         </>
       )}

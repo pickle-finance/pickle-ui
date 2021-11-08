@@ -5,7 +5,7 @@ import MerkleTree from "./MerkleTree";
 import { multicallProvider, multicallContract } from "./config";
 import {
   AmountsByWeek,
-  ClaimProofTuple,
+  ClaimProof,
   ClaimsByWeek,
   ClaimStatusByWeek,
   DistributionRootByWeek,
@@ -59,13 +59,13 @@ export class BalancerTokenClaim {
     );
   }
 
-  get claims(): ClaimProofTuple[] {
+  get claims(): ClaimProof[] {
     const weeks = Object.keys(this.unclaimedAmounts);
 
     return weeks.map((week) => this.generateClaim(week));
   }
 
-  private generateClaim = (week: string): ClaimProofTuple => {
+  private generateClaim = (week: string): ClaimProof => {
     const weeklyBalances = this.claimsByWeek[week];
     const balance = weeklyBalances[this.address];
     const merkleTree = this.generateMerkleTree(week);
@@ -73,13 +73,13 @@ export class BalancerTokenClaim {
       soliditySha3(this.address, toWei(balance))!,
     );
 
-    return [
-      parseInt(week),
-      toWei(balance),
-      this.tokenClaimInfo.distributor,
-      this.tokenIndex,
-      proof,
-    ];
+    return {
+      distributionId: parseInt(week),
+      balance: toWei(balance),
+      distributor: this.tokenClaimInfo.distributor,
+      tokenIndex: this.tokenIndex,
+      merkleProof: proof,
+    };
   };
 
   /**
@@ -88,15 +88,15 @@ export class BalancerTokenClaim {
    * @param claim Claim tuple
    * @returns validation result as boolean
    */
-  verifyClaim = async (claim: ClaimProofTuple): Promise<boolean> => {
+  verifyClaim = async (claim: ClaimProof): Promise<boolean> => {
     const calls = [
       multicallContract.verifyClaim(
         this.tokenClaimInfo.token,
         this.tokenClaimInfo.distributor,
-        claim[0],
+        claim.distributionId,
         this.address,
-        claim[1],
-        claim[4],
+        claim.balance,
+        claim.merkleProof,
       ),
     ];
 
