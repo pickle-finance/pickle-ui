@@ -6,7 +6,9 @@ import { PICKLE_ETH_SLP } from "../Contracts";
 import { NETWORK_NAMES } from "containers/config";
 
 export interface UniLPAPY {
-  pair: string;
+  pair: {
+    id: string;
+  };
   reserveUSD: number;
   volumeUSD: number;
 }
@@ -48,32 +50,31 @@ const headers = {
 };
 
 export const useSushiPairDayData = () => {
-  const { signer, chainName } = Connection.useContainer();
+  const { chainName } = Connection.useContainer();
 
   const [sushiPairDayData, setSushiPairDayData] = useState<Array<UniLPAPY>>([]);
 
-  const queryTheGraph = async () => {
-    const res = await fetch(
-      "https://api.thegraph.com/subgraphs/name/sushiswap/exchange",
-      {
-        credentials: "omit",
-        headers,
-        referrer:
-          "https://thegraph.com/explorer/subgraph/zippoxer/sushiswap-subgraph-fork",
-        body: `{"query":"{\\n  pairDayDatas(first: ${
-          SUSHI_LP_TOKENS.length
-        }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${SUSHI_LP_TOKENS.join(
-          '\\", \\"',
-        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
-        method: "POST",
-        mode: "cors",
-      },
-    ).then((x) => x.json());
-    setSushiPairDayData(res?.data?.pairDayDatas);
+  const queryTheGraph = () => {
+    fetch("https://api.thegraph.com/subgraphs/name/sushiswap/exchange", {
+      credentials: "omit",
+      headers,
+      referrer:
+        "https://thegraph.com/explorer/subgraph/zippoxer/sushiswap-subgraph-fork",
+      body: `{"query":"{\\n  pairDayDatas(first: ${
+        SUSHI_LP_TOKENS.length
+      }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${SUSHI_LP_TOKENS.join(
+        '\\", \\"',
+      ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+      method: "POST",
+      mode: "cors",
+    })
+      .then((res) => res.json())
+      .then((data) => setSushiPairDayData(data.data?.pairDayDatas))
+      .catch(() => setSushiPairDayData([]));
   };
 
-  const queryTheGraphArb = async () => {
-    const res = await fetch(
+  const queryTheGraphArb = () => {
+    fetch(
       "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange",
       {
         credentials: "omit",
@@ -88,36 +89,35 @@ export const useSushiPairDayData = () => {
         method: "POST",
         mode: "cors",
       },
-    ).then((x) => x.json());
-
-    setSushiPairDayData(res?.data?.pairDayDatas);
+    )
+      .then((res) => res.json())
+      .then((data) => setSushiPairDayData(data.data?.pairDayDatas))
+      .catch(() => setSushiPairDayData([]));
   };
 
-  const queryTheGraphPoly = async () => {
-    const res = await fetch(
-      "https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange",
-      {
-        credentials: "omit",
-        headers,
-        referrer:
-          "https://thegraph.com/explorer/subgraph/sushiswap/matic-exchange",
-        body: `{"query":"{\\n  pairDayDatas(first: ${
-          POLY_SUSHI_LP_TOKENS.length
-        }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${POLY_SUSHI_LP_TOKENS.join(
-          '\\", \\"',
-        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
-        method: "POST",
-        mode: "cors",
-      },
-    ).then((x) => x.json());
-
-    setSushiPairDayData(res?.data?.pairDayDatas);
+  const queryTheGraphPoly = () => {
+    fetch("https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange", {
+      credentials: "omit",
+      headers,
+      referrer:
+        "https://thegraph.com/explorer/subgraph/sushiswap/matic-exchange",
+      body: `{"query":"{\\n  pairDayDatas(first: ${
+        POLY_SUSHI_LP_TOKENS.length
+      }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${POLY_SUSHI_LP_TOKENS.join(
+        '\\", \\"',
+      ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+      method: "POST",
+      mode: "cors",
+    })
+      .then((res) => res.json())
+      .then((data) => setSushiPairDayData(data.data?.pairDayDatas))
+      .catch(() => setSushiPairDayData([]));
   };
 
   const getSushiPairDayAPY = (pair: string) => {
     if (sushiPairDayData) {
       const filteredPair = sushiPairDayData.filter((x) => {
-        const pairAddress = x?.pair?.id || x?.pair;
+        const pairAddress = x?.pair?.id;
         return pairAddress.toLowerCase() === pair.toLowerCase();
       });
 
@@ -137,6 +137,7 @@ export const useSushiPairDayData = () => {
 
   useEffect(() => {
     if (sushiPairDayData.length > 0) return;
+
     if (chainName === NETWORK_NAMES.POLY) {
       queryTheGraphPoly();
     } else if (chainName === NETWORK_NAMES.ARB) {
