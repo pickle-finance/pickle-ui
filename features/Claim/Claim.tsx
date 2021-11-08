@@ -11,6 +11,10 @@ const Claim: FC = () => {
   const { prices } = Prices.useContainer();
   const [claimsManager, setClaimsManager] = useState<BalancerClaimsManager>();
 
+  // Transaction state trackers
+  const [isInProgress, setIsInProgress] = useState<boolean>(false);
+  const [receipt, setReceipt] = useState<any>();
+
   const refreshClaimsManager = async () => {
     if (!address) return;
     if (!prices) return;
@@ -18,7 +22,41 @@ const Claim: FC = () => {
     const manager = new BalancerClaimsManager(address, signer, prices);
     await manager.fetchData();
 
+    // Debug:
+    // for (let i = 0; i < manager.claims.length; i++) {
+    //   const claim = manager.claims[i];
+    //   const tokenClaim = manager.tokenClaims[claim.tokenIndex];
+    //   console.log(
+    //     "=============== verifying claim",
+    //     claim,
+    //     await tokenClaim.verifyClaim(claim),
+    //   );
+    // }
+
     setClaimsManager(manager);
+  };
+
+  useEffect(() => {
+    refreshClaimsManager();
+  }, [address, !!prices, receipt]);
+
+  const claim = async () => {
+    if (!claimsManager) return null;
+
+    setIsInProgress(true);
+
+    try {
+      const result = await claimsManager.claimDistributions();
+      const receipt = await result.wait();
+      setReceipt(receipt);
+    } catch {
+      setReceipt("failed");
+      setIsInProgress(false);
+    }
+
+    // Refresh balances.
+    setClaimsManager(undefined);
+    setIsInProgress(false);
   };
 
   const claimableAmountsList = () => {
@@ -34,10 +72,6 @@ const Claim: FC = () => {
       },
     );
   };
-
-  useEffect(() => {
-    refreshClaimsManager();
-  }, [address, !!prices]);
 
   return (
     <Card>
@@ -58,7 +92,7 @@ const Claim: FC = () => {
           {claimsManager.claimableAmountUsd >= 0 && (
             <>
               <p>Total Claimable Amount: ${claimsManager.claimableAmountUsd}</p>
-              <Button disabled={false} onClick={() => {}}>
+              <Button disabled={isInProgress} onClick={claim}>
                 Claim
               </Button>
             </>
