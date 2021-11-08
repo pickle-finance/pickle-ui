@@ -25,7 +25,7 @@ export const useYearnData = () => {
   const [yearnData, setYearnData] = useState<YearnVaultsResponse | null>(null);
 
   const fetchYearnData = async () =>
-    setYearnData(await fetch(YEARN_API).then((x) => x.json()));
+    setYearnData(await fetch(YEARN_API).then((x) => x.json()).catch(()=>[]));
 
   useEffect(() => {
     fetchYearnData();
