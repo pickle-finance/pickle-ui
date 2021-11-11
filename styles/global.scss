@@ -31,6 +31,20 @@ body.classic {
     color: var(--accent-color);
     text-shadow: var(--accent-shadow);
     margin: 1rem 0;
+    line-height: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  img {
+    display: inline;
   }
 
   p {
