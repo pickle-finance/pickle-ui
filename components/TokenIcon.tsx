@@ -11,7 +11,7 @@ export const LpIcon = ({
 }) => {
   return (
     <div className={className} css={{ position: "relative" }}>
-      <img src={swapIconSrc} css={{ width: `50px` }} />
+      <img src={swapIconSrc} css={{ "max-width": "50px", width: `50px` }} />
       <img
         src={tokenIconSrc}
         css={{
