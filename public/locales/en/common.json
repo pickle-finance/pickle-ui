@@ -46,6 +46,11 @@
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"
   },
+  "frax": {
+    "connectionPrompt": "Please switch to Ethereum network to use FRAX features.",
+    "description": "Convert your FXS to pveFXS and earn FXS fee distribution rewards plus a shared of boosted FXS rewards",
+    "frax": "Frax Backscratcher"
+  },
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
     "apy": "DILL holder APY",
@@ -233,6 +238,7 @@
     "docs": "Docs",
     "feedback": "Feedback",
     "forum": "Forum",
+    "frax": "Frax",
     "github": "Github",
     "info": "Info",
     "jars": "Jars",
