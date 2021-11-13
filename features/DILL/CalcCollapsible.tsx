@@ -10,12 +10,16 @@ import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "../../containers/config";
+import { PickleCore } from "./../../containers/Jars/usePickleCore";
+import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import { values } from "lodash";
 
 export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { gaugeData } = UserGauges.useContainer();
   const { chainName } = Connection.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
   const [balance, setBalance] = useState("0");
   const [totalBalance, setTotalBalance] = useState("0");
   const [userChanged, setUserChanged] = useState(false);
@@ -23,6 +27,7 @@ export const CalcCollapsible: FC<{
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState<number>();
   const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>();
+  
   const { t } = useTranslation("common");
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
@@ -77,15 +82,39 @@ export const CalcCollapsible: FC<{
     setDillRequired(dillRequired);
   };
 
-  const renderSelectOptions = (gauge: UserGaugeData) => (
-    <Select.Option
-      key={gauge.address}
-      style={{ color: pickleWhite }}
-      value={gauge.depositTokenName}
-    >
-      {gauge.depositTokenName}
-    </Select.Option>
-  );
+  const visibleNameForGauge = (gauge: UserGaugeData) : string => {
+    let votable : PickleAsset[] = [];
+    if( pickleCore && pickleCore.assets && pickleCore.assets.jars) {
+      votable = votable.concat(pickleCore.assets.jars);
+    }
+    if( pickleCore && pickleCore.assets && pickleCore.assets.standaloneFarms) {
+      votable = votable.concat(pickleCore.assets.standaloneFarms);
+    }
+    const depositTokenAddr : string = gauge.depositToken.address.toLowerCase();
+    let val = gauge.depositTokenName;
+    const findFarm = votable.find((x)=>x.depositToken.addr.toLowerCase() === depositTokenAddr);
+    if(findFarm !== undefined) {
+      val = val + " (" + findFarm.id + ")";
+    } else {
+      const findJar = votable.find((x)=>x.contract.toLowerCase() === depositTokenAddr);
+      if( findJar !== undefined ) {
+        val = val + " (" + findJar.id + ")";
+      }
+    }
+    return val;
+  }
+  const renderSelectOptions = (gauge: UserGaugeData) => {
+    const visibleName = visibleNameForGauge(gauge);
+    return (
+      <Select.Option
+        key={gauge.address}
+        style={{ color: pickleWhite }}
+        value={gauge.depositTokenName}
+      >
+        {visibleName}
+      </Select.Option>
+    );
+    }
 
   useEffect(() => {
     if (!userChanged && dillStats && dillStats.balance)
