@@ -270,5 +270,17 @@
     "zapIntoJar": "Zap into Jar",
     "zapTo": "Zap to yvBOOST",
     "zapping": "Zapping..."
+  },
+  "ws": {
+    "nav": {
+      "close": "Close panel",
+      "dashboard": "Dashboard",
+      "dill": "DILL",
+      "faq": "F.A.Q.",
+      "feedback": "Feedback",
+      "jarsAndFarms": "Jars & Farms",
+      "openMenu": "Open main menu",
+      "stats": "Stats"
+    }
   }
 }

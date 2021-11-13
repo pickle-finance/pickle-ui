@@ -1,21 +1,37 @@
+import { FC, HTMLAttributes, ComponentProps } from "react";
 import Link from "next/link";
-import { FC, HTMLAttributes } from "react";
+import { useRouter } from "next/router";
+import { classNames } from "ws/utils";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   href: string;
+  Icon: (props: ComponentProps<"svg">) => JSX.Element;
 }
 
-const NavItem: FC<Props> = ({ href, children, className }) => {
+const NavItem: FC<Props> = ({ href, children, className, Icon }) => {
   const extraClasses = className ? className : "";
+  const router = useRouter();
+  const current = router.pathname.endsWith(href);
 
   return (
     <div className="flex items-center">
       <Link href={href}>
         <a
-          className={`text-white px-3 text-sm font-bold hover:text-green-light transition duration-300 ease-in-out ${extraClasses}`}
-          target="_blank"
-          rel="noopener"
+          href={href}
+          className={classNames(
+            current ? "bg-black-light text-green-light" : "",
+            `group flex flex-grow items-center px-4 py-2 text-white text-sm rounded-lg font-bold hover:text-green-light transition duration-300 ease-in-out ${extraClasses}`,
+          )}
         >
+          <Icon
+            className={classNames(
+              current
+                ? "text-green-light"
+                : "text-white group-hover:text-green-light",
+              "mr-2 flex-shrink-0 h-6 w-6",
+            )}
+            aria-hidden="true"
+          />
           {children}
         </a>
       </Link>

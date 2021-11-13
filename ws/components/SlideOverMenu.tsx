@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon, MenuIcon } from "@heroicons/react/outline";
 import { useTranslation } from "next-i18next";
 
-import NavItem from "./NavItem";
+import NavItems from "./NavItems";
 
 const SlideOverMenu: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -14,7 +14,7 @@ const SlideOverMenu: FC = () => {
       {/* Mobile menu button */}
       <div className="-mr-2 flex sm:hidden">
         <div className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-          <span className="sr-only">{t("navbar.openMenu")}</span>
+          <span className="sr-only">{t("ws.nav.openMenu")}</span>
           <MenuIcon
             onClick={() => setIsOpen(true)}
             className="block h-6 w-6"
@@ -67,45 +67,14 @@ const SlideOverMenu: FC = () => {
                         className="rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-light"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="sr-only">{t("navbar.close")}</span>
+                        <span className="sr-only">{t("ws.nav.close")}</span>
                         <XIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="h-full flex flex-col py-8 bg-black-light shadow-xl overflow-y-scroll">
-                    <div className="relative flex-1 px-4 sm:px-6">
-                      <div className="px-2 pt-2 pb-6 space-y-4">
-                        <NavItem
-                          href="https://forum.pickle.finance/"
-                          className="px-4"
-                        >
-                          {t("links.forum")}
-                        </NavItem>
-                        <NavItem
-                          href="https://docs.pickle.finance/"
-                          className="px-4"
-                        >
-                          {t("links.docs")}
-                        </NavItem>
-                        <NavItem
-                          href="https://github.com/pickle-finance"
-                          className="px-4"
-                        >
-                          {t("links.github")}
-                        </NavItem>
-                        <NavItem
-                          href="https://twitter.com/picklefinance"
-                          className="px-4"
-                        >
-                          {t("links.twitter")}
-                        </NavItem>
-                        <NavItem
-                          href="https://discord.com/invite/uG6WhYkM8n"
-                          className="px-4"
-                        >
-                          {t("links.discord")}
-                        </NavItem>
-                      </div>
+                  <div className="h-full flex py-8 bg-black shadow-xl overflow-y-scroll">
+                    <div className="flex-1 flex overflow-y-auto">
+                      <NavItems />
                     </div>
                   </div>
                 </div>
