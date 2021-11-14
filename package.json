@@ -71,6 +71,7 @@
     "rxjs": "^6.6.3",
     "sass": "^1.26.11",
     "styled-components": "^5.2.0",
+    "swr": "^1.0.1",
     "unstated-next": "^1.1.0"
   },
   "devDependencies": {
