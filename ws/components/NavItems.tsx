@@ -24,7 +24,7 @@ const NavItems: FC = () => {
   ];
 
   return (
-    <nav className="flex-1 space-y-2 px-10">
+    <nav className="flex-1 space-y-2">
       {navigation.map((item) => (
         <NavItem key={item.name} Icon={item.icon} href={item.href}>
           {item.name}
