@@ -6,6 +6,7 @@ import { useTranslation } from "next-i18next";
 import pickleLogo from "public/pickle-logo.png";
 import NavItems from "./NavItems";
 import NavItem from "./NavItem";
+import PicklePriceIndicator from "./PicklePriceIndicator";
 
 const Navbar: FC = () => {
   const { t } = useTranslation("common");
@@ -36,6 +37,7 @@ const Navbar: FC = () => {
             <NavItems />
           </div>
           <div className="flex flex-col overflow-y-auto">
+            <PicklePriceIndicator />
             <NavItem
               isExternal
               href="https://etherscan.io/address/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
