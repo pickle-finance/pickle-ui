@@ -6,8 +6,7 @@ import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
 import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
-import { useJarWithAPY as useJarsWithAPYOK } from "./Jars/useJarsWithAPYOK";
-import { useJarWithAPY as useJarsWithAPYArb } from "./Jars/useJarsWithAPYArb";
+import { useJarWithAPY as useJarsWithAPYPFCore } from "./Jars/useJarsWithAPYPFCore";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
@@ -21,10 +20,9 @@ function useJars() {
     chainName,
     rawJars,
   );
-  const { jarsWithAPY: jarswithAPYOK } = useJarsWithAPYOK(chainName, rawJars);
-  const { jarsWithAPY: jarswithAPYArb } = useJarsWithAPYArb(chainName, rawJars);
+  const { jarsWithAPY: jarsWithAPYPFCore } = useJarsWithAPYPFCore(chainName, rawJars);
   const { jarsWithTVL } = useJarWithTVL(
-    jarsWithAPYEth || jarsWithAPYPoly || jarswithAPYOK || jarswithAPYArb,
+    jarsWithAPYEth || jarsWithAPYPoly || jarsWithAPYPFCore,
   );
 
   const { addTokens } = Balances.useContainer();
