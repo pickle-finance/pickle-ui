@@ -4,8 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 
-import pickleLogo from "../../public/pickle-logo.png";
-
 const ImageContainer = styled.div`
   position: relative;
   width: 8rem;
@@ -25,14 +23,13 @@ export const Logo: FC = () => {
       <Link href="/">
         <a aria-label={t("meta.title")}>
           <Image
-            src={pickleLogo}
-            width={500}
-            height={191}
-            priority
+            src="/pickle.svg"
+            width={158}
+            height={60}
             layout="responsive"
             alt={t("meta.titleFull")}
             title={t("meta.titleFull")}
-            placeholder="blur"
+            priority
           />
         </a>
       </Link>

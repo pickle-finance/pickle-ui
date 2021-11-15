@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 
-import pickleLogo from "public/pickle-logo.png";
 import NavItems from "./NavItems";
 import NavItem from "./NavItem";
 import PicklePriceIndicator from "./PicklePriceIndicator";
@@ -19,14 +18,13 @@ const Navbar: FC = () => {
             <Link href="/ws">
               <a aria-label="Pickle Finance home">
                 <Image
-                  src={pickleLogo}
-                  width={500}
-                  height={191}
-                  priority
+                  src="/pickle.svg"
+                  width={158}
+                  height={60}
                   layout="responsive"
-                  alt="Pickle Finance home"
-                  title="Pickle Finance home"
-                  placeholder="blur"
+                  alt={t("meta.titleFull")}
+                  title={t("meta.titleFull")}
+                  priority
                 />
               </a>
             </Link>

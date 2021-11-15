@@ -27,15 +27,14 @@ const PicklePriceIndicatorBody: FC = () => {
 
 const PicklePriceIndicator: FC = () => (
   <div className="flex items-center px-4 py-2 mb-2 text-white text-sm font-bold">
-    <div className="w-10 p-2 bg-black-light rounded-3xl mr-2">
+    <div className="w-11 p-2 bg-black-light rounded-3xl mr-2">
       <Image
-        src={logo}
-        width={80}
-        height={80}
+        src="/pickle-icon.svg"
+        width={200}
+        height={200}
         layout="responsive"
         alt="Pickle Finance"
         title="Pickle Finance"
-        placeholder="blur"
       />
     </div>
     <PicklePriceIndicatorBody />
