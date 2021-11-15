@@ -7,7 +7,7 @@ import NavItems from "./NavItems";
 import NavItem from "./NavItem";
 import PicklePriceIndicator from "./PicklePriceIndicator";
 
-const Navbar: FC = () => {
+const LeftNavbar: FC = () => {
   const { t } = useTranslation("common");
 
   return (
@@ -55,4 +55,4 @@ const Navbar: FC = () => {
   );
 };
 
-export default Navbar;
+export default LeftNavbar;

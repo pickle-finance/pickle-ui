@@ -52,7 +52,7 @@ const SlideOverMenu: FC = () => {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <div className="relative w-screen max-w-md">
+                <div className="relative w-screen max-w-lg">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-500"

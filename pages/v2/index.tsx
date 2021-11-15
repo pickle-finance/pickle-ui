@@ -1,12 +1,12 @@
 import { FC } from "react";
 
-import Navbar from "v2/components/Navbar";
+import LeftNavbar from "v2/components/LeftNavbar";
 import Dashboard from "v2/components/Dashboard";
 import NavbarMobile from "v2/components/NavbarMobile";
 
 const Root: FC = () => (
   <>
-    <Navbar />
+    <LeftNavbar />
     <NavbarMobile />
     <Dashboard />
   </>

@@ -272,6 +272,10 @@
     "zapping": "Zapping..."
   },
   "v2": {
+    "dashboard": {
+      "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
+      "pickleTitle": "Pickle Finance"
+    },
     "nav": {
       "close": "Close panel",
       "dashboard": "Dashboard",
