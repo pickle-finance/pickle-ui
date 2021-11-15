@@ -14,7 +14,7 @@ import "react-day-picker/lib/style.css";
 /**
  * Warp speed styles: Tailwind and custom rules.
  */
-import "../ws/styles/index.scss";
+import "v2/styles/index.scss";
 
 import Classic from "../layouts/Classic";
 import WarpSpeed from "../layouts/WarpSpeed";
@@ -24,7 +24,7 @@ import useTranslationsHMR from "../hooks/useTranslationsHMR";
 import config from "../next-i18next.config";
 
 const Body: FC<AppProps> = (props) => {
-  if (props.router.pathname.startsWith("/ws")) {
+  if (props.router.pathname.startsWith("/v2")) {
     return <WarpSpeed {...props} />;
   }
 

@@ -8,7 +8,7 @@ const NavbarMobile: FC = () => (
   <div className="block sm:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="flex items-center justify-between">
       <div className="flex-shrink-0 py-8 w-36 sm:w-44">
-        <Link href="/ws">
+        <Link href="/v2">
           <a>
             <Image
               src="/pickle.svg"
