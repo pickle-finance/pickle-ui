@@ -3,27 +3,9 @@ import { Jar } from "./useFetchJars";
 import { NETWORK_NAMES, ChainName } from "containers/config";
 import { PickleCore } from "./usePickleCore";
 
-
 export interface JarApy {
   [k: string]: number;
 }
-
-export const tricryptoInfo: {
-  swapAddress: string;
-  gauge: string;
-  tokenInfo: {
-    decimals: number[];
-    tokens: string[];
-  };
-} = {
-  swapAddress: "0x960ea3e3C7FB317332d990873d354E18d7645590",
-  gauge: "0x97E2768e8E73511cA874545DC5Ff8067eB19B787",
-  tokenInfo: {
-    decimals: [1e6, 1e8, 1e18], // USDT, WBTC, WETH
-    tokens: ["usdt", "wbtc", "eth"],
-  },
-};
-
 
 const getCompoundingAPY = (apr: number) => {
   return 100 * (Math.pow(1 + apr / 365, 365) - 1);
@@ -47,12 +29,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   );
   const { pickleCore } = PickleCore.useContainer();
 
-
   const calculateJarAPYs = (jarName: string) => {
     if (pickleCore) {
       const aprStats = pickleCore.assets.jars.filter(
-        (jar) =>
-          jarName.toLowerCase() === jar.depositToken.addr.toLowerCase(),
+        (jar) => jarName.toLowerCase() === jar.depositToken.addr.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
       const componentsAPYs: JarApy[] = aprStats!.components.map((component) => {
@@ -82,13 +62,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     if (jars && pickleCore) {
       const promises = jars.map((jar) => {
         interface JarData {
-          APYs: JarApy[],
-          apr: number,
-          totalAPY: number,
-          lp: number,
+          APYs: JarApy[];
+          apr: number;
+          totalAPY: number;
+          lp: number;
         }
-        const jarData: JarData = <JarData>calculateJarAPYs(jar.depositToken.address);
-        
+        const jarData: JarData = <JarData>(
+          calculateJarAPYs(jar.depositToken.address)
+        );
+
         return {
           ...jar,
           ...jarData,
@@ -99,7 +81,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     }
   };
   useEffect(() => {
-    if (network === NETWORK_NAMES.ARB) calculateAPY();
+    if (network === NETWORK_NAMES.ARB || network === NETWORK_NAMES.OKEX)
+      calculateAPY();
   }, [jars?.length, network, pickleCore]);
 
   return { jarsWithAPY };
