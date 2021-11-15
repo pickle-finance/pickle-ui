@@ -98,6 +98,9 @@ import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factorie
 import { ControllerUniv3 } from "./Contracts/ControllerUniv3";
 import { ControllerUniv3__factory as ControllerUniv3Factory } from "./Contracts/factories/ControllerUniv3__factory";
 
+import { VefxsVault } from "./Contracts/VefxsVault";
+import { VefxsVault__factory as VefxsVaultFactory } from "./Contracts/factories/VefxsVault__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -220,6 +223,7 @@ export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
 
 export const CONTROLLER_UNIV3 = "0xD6CA5052Bf7b57f6AEdeE0D259a0E9AA4DCa64c6";
+export const VEFXS_VAULT = "0x3158bc6935dA5EE7bAa8c8e9Be45A1130d6b115b";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
@@ -350,6 +354,8 @@ function useContracts() {
     rallyRewardPools,
     setRallyRewardPools,
   ] = useState<RallyRewardPools | null>(null);
+
+  const [vefxsVault, setVefxsVault] = useState<VefxsVault | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -506,6 +512,10 @@ function useContracts() {
       setControllerUniV3(
         ControllerUniv3Factory.connect(CONTROLLER_UNIV3, signer),
       );
+
+      setVefxsVault(
+        VefxsVaultFactory.connect(VEFXS_VAULT, signer)
+      )
     }
   };
 
@@ -570,6 +580,7 @@ function useContracts() {
     dodoPair,
     dodoRewards,
     controllerUniV3,
+    vefxsVault
   };
 }
 
