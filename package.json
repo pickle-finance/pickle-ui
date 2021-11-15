@@ -4,6 +4,10 @@
   "main": "index.js",
   "author": "BigBrainBriner <bigbrainbriner@protonmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "^14.13.0",
+    "yarn": ">=1.9.0"
+  },
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "dev": "yarn typechain && next",

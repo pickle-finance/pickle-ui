@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 
-import { classNames } from "ws/utils";
+import { classNames } from "../utils";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   href: string;

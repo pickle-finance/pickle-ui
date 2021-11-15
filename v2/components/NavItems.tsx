@@ -15,12 +15,12 @@ const NavItems: FC = () => {
   const { t } = useTranslation("common");
 
   const navigation = [
-    { name: t("ws.nav.dashboard"), href: "/ws", icon: TemplateIcon },
-    { name: t("ws.nav.jarsAndFarms"), href: "#", icon: LightningBoltIcon },
-    { name: t("ws.nav.dill"), href: "#", icon: UserGroupIcon },
-    { name: t("ws.nav.stats"), href: "#", icon: ChartBarIcon },
-    { name: t("ws.nav.faq"), href: "#", icon: QuestionMarkCircleIcon },
-    { name: t("ws.nav.feedback"), href: "#", icon: SpeakerphoneIcon },
+    { name: t("v2.nav.dashboard"), href: "/v2", icon: TemplateIcon },
+    { name: t("v2.nav.jarsAndFarms"), href: "#", icon: LightningBoltIcon },
+    { name: t("v2.nav.dill"), href: "#", icon: UserGroupIcon },
+    { name: t("v2.nav.stats"), href: "#", icon: ChartBarIcon },
+    { name: t("v2.nav.faq"), href: "#", icon: QuestionMarkCircleIcon },
+    { name: t("v2.nav.feedback"), href: "#", icon: SpeakerphoneIcon },
   ];
 
   return (

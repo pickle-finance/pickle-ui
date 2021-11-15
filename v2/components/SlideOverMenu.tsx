@@ -14,7 +14,7 @@ const SlideOverMenu: FC = () => {
       {/* Mobile menu button */}
       <div className="-mr-2 flex sm:hidden">
         <div className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-          <span className="sr-only">{t("ws.nav.openMenu")}</span>
+          <span className="sr-only">{t("v2.nav.openMenu")}</span>
           <MenuIcon
             onClick={() => setIsOpen(true)}
             className="block h-6 w-6"
@@ -67,7 +67,7 @@ const SlideOverMenu: FC = () => {
                         className="rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-light"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="sr-only">{t("ws.nav.close")}</span>
+                        <span className="sr-only">{t("v2.nav.close")}</span>
                         <XIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
                     </div>
