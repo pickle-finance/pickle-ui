@@ -31,7 +31,6 @@ const IsMaiToken = (address: string): boolean => {
 
 export const isUniV3 = (address: string): boolean => {
   return (
-    address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_RBN_ETH ||
     address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_FRAX_DAI
   );
 };

@@ -991,13 +991,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         mim3crvApy,
         mimEthApy,
         spellEthApy,
-        rbnEthApy,
         fraxDaiApy,
       ] = await Promise.all([
         calculateConvexAPY(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
-        calculateUniV3Apy(JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH),
         calculateFraxUniv3APY(PICKLE_JARS.pUNIFRAXDAI),
       ]);
 
@@ -1275,10 +1273,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.CVXCRV) {
           APYs = [...cvxCRVApy];
-        }
-
-        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV3_RBN_ETH) {
-          APYs = [...rbnEthApy];
         }
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV3_FRAX_DAI) {

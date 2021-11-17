@@ -28,8 +28,8 @@ import { UserJarData } from "features/Gauges/useJarData";
 import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
 import { FarmsIntro } from "components/FarmsIntro";
-import { isUniV3 } from "util/univ3";
 import { UniV3JarGaugeCollapsible } from "./UniV3JarGaugeCollapsible";
+import { isUniV3 } from "containers/Jars/useFetchJars";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -129,12 +129,12 @@ export const GaugeList: FC = () => {
       (jar) =>
         JAR_ACTIVE[jar.depositTokenName] &&
         !JAR_YEARN[jar.depositTokenName] &&
-        !isUniV3(jar.depositToken.address.toLowerCase()),
+        !isUniV3(jar.depositToken.address),
     )
     .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const uniV3Jars = jarData.filter((jar) =>
-    isUniV3(jar.depositToken.address.toLowerCase()),
+    isUniV3(jar.depositToken.address),
   );
 
   const inactiveJars = jarData.filter(

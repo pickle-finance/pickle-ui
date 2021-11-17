@@ -44,7 +44,6 @@ export const PICKLE_JARS = {
   pRLYETH: "0x0989a227E7c50311f7De61e5e61F7c28Df8936f0",
   pCVXCRVlp: "0xF1478A8387C449c55708a3ec11c143c35daf5E74",
   pCVXCRV: "0xB245280Fd1795f5068DEf8E8f32DB7846b030b2B",
-  pUNIRBNETH: "0x506748d736b77f51c5b490e4aC6c26B8c3975b14",
   pUNIFRAXDAI: "0xbd70000c8bE439BDE1F358DF2507694d747cE9c4",
 
   // Polygon Jars
@@ -123,7 +122,6 @@ export const JAR_DEPOSIT_TOKENS = {
     UNIV2_RLY_ETH: "0x27fD0857F0EF224097001E87e61026E39e1B04d1",
     CVXCRVlp: "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8",
     CVXCRV: "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
-    UNIV3_RBN_ETH: "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a",
     UNIV3_FRAX_DAI: "0x97e7d56A0408570bA1a7852De36350f7713906ec"
   },
   [NETWORK_NAMES.POLY]: {
@@ -161,7 +159,6 @@ export const JAR_DEPOSIT_TOKENS = {
 };
 
 export const UNIV3_TOKENS = {
-  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH]: true,
   [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_FRAX_DAI]: true
 }
 
@@ -207,7 +204,7 @@ export const DEPOSIT_TOKENS_NAME = {
   UNIV2_RLY_ETH: "UNI RLY/ETH",
   CVXCRVlp: "Curve cvxCRV",
   CVXCRV: "cvxCRV",
-  UNIV3_RBN_ETH: "Uni V3 RBN/ETH",  
+  UNIV3_FRAX_DAI: "Uni V3 FRAX/DAI",  
 
   // Polygon Jars
   COMETH_USDC_WETH: "COMETH USDC/WETH",
@@ -284,7 +281,6 @@ export const JAR_ACTIVE: Record<string, boolean> = {
   [DEPOSIT_TOKENS_NAME.UNIV2_RLY_ETH]: true,
   [DEPOSIT_TOKENS_NAME.CVXCRVlp]: true,
   [DEPOSIT_TOKENS_NAME.CVXCRV]: true,
-  [DEPOSIT_TOKENS_NAME.UNIV3_RBN_ETH]: true,
   
   // Polygon Jars
   [DEPOSIT_TOKENS_NAME.COMETH_USDC_WETH]: true,
@@ -399,7 +395,6 @@ export const DEPOSIT_TOKENS_LINK = {
     "https://app.uniswap.org/#/add/v2/ETH/0xf1f955016ecbcd7321c7266bccfb96c68ea5e49b",
   CVXCRVlp: "https://curve.fi/factory/22/deposit",
   CVXCRV: "https://www.convexfinance.com/stake",
-  UNIV3_RBN_ETH: "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6123b0049f904d730db3c36a31167d9d4121fa6b",
   UNIV3_FRAX_DAI: "https://app.uniswap.org/#/add/0x853d955aCEf822Db058eb8505911ED77F175b99e/0x6B175474E89094C44Da98b954EedeAC495271d0F/500",
 
   // Polygon Jars
@@ -505,7 +500,6 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   UNIV2_RLY_ETH: "pJar 0.99r1",
   CVXCRVlp: "pJar 0e",
   CVXCRV: "pJar 0f",
-  UNIV3_RBN_ETH: "pJar U3a",
   UNIV3_FRAX_DAI: "pJar F-1",
 
   // Polygon Jars
@@ -587,7 +581,6 @@ const PRICE_IDS: Record<string, PriceIds> = {
   "0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784": "tru",
   "0xf1f955016ecbcd7321c7266bccfb96c68ea5e49b": "rly",
   "0x62b9c7356a2dc64a1969e19c23e4f579f9810aa7": "cvxcrv",
-  "0x6123b0049f904d730db3c36a31167d9d4121fa6b": "rbn",
 
   // Polygon
   "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": "usdc",

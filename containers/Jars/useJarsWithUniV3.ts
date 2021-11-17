@@ -74,6 +74,7 @@ export const useJarsWithUniV3 = (
           signer,
         );
 
+
         const positionData = await getPosition(info, jarV3Contract, signer)
 
         return {

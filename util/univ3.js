@@ -34,7 +34,7 @@ export const uniV3Info = {
 
   // FRAX-DAI
   "0x97e7d56A0408570bA1a7852De36350f7713906ec": {
-    incentiveKey: [tokenInfo.DAI, tokenInfo.FRAX, -50, 50, tokenInfo.ETH],
+    incentiveKey: [null, "0x97e7d56A0408570bA1a7852De36350f7713906ec", -50, 50, tokenInfo.ETH],
     tickLower: -50,
     tickUpper: 50,
     fee: 500,
@@ -120,7 +120,6 @@ const jarV3Abi = ["function getProportion() view returns(uint256)"];
 
 export const getProportion = async (jarAddress, signer) => {
   const jarV3 = new ethers.Contract(jarAddress, jarV3Abi, signer);
-  console.log(jarV3)
   return await jarV3.getProportion();
 };
 
@@ -130,11 +129,4 @@ export const getWETHPrice = async (provider) => {
   const data = await poolContract.slot0();
   const ratio = univ3prices([6, 18], data.sqrtPriceX96).toAuto(); // [] token decimals
   return ratio;
-};
-
-export const isUniV3 = (address) => {
-  return (
-    address ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_RBN_ETH.toLowerCase()
-  );
 };
