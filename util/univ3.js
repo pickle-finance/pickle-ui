@@ -4,6 +4,7 @@ import v3PoolABI from "../containers/ABIs/univ3Pool.json";
 import univ3prices from "@thanpolas/univ3prices";
 import erc20 from "@studydefi/money-legos/erc20";
 import { JAR_DEPOSIT_TOKENS } from "../containers/Jars/jars";
+import { tokenInfo } from "features/Zap/useBalance";
 import { NETWORK_NAMES } from "containers/config";
 import { Token } from "@uniswap/sdk-core";
 import { Pool, Position } from "@uniswap/v3-sdk";
@@ -29,6 +30,16 @@ export const uniV3Info = {
     token1: weth,
     emissions: 10000000,
     rewardName: "rbn",
+  },
+
+  // FRAX-DAI
+  "0x97e7d56A0408570bA1a7852De36350f7713906ec": {
+    incentiveKey: [tokenInfo.DAI, tokenInfo.FRAX, -50, 50, tokenInfo.ETH],
+    tickLower: -50,
+    tickUpper: 50,
+    fee: 500,
+    token0: tokenInfo.DAI,
+    token1: tokenInfo.FRAX,
   },
 };
 
@@ -96,7 +107,12 @@ export const getPosition = async (info, jarV3, provider) => {
     totalLiquidity,
     data.tick,
   );
-  const position = new Position({ pool, liquidity: jarLiquidity, tickLower: info.tickLower, tickUpper: info.tickUpper });
+  const position = new Position({
+    pool,
+    liquidity: jarLiquidity,
+    tickLower: info.tickLower,
+    tickUpper: info.tickUpper,
+  });
   return position;
 };
 
@@ -104,6 +120,7 @@ const jarV3Abi = ["function getProportion() view returns(uint256)"];
 
 export const getProportion = async (jarAddress, signer) => {
   const jarV3 = new ethers.Contract(jarAddress, jarV3Abi, signer);
+  console.log(jarV3)
   return await jarV3.getProportion();
 };
 

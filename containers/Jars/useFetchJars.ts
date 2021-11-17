@@ -30,7 +30,10 @@ const IsMaiToken = (address: string): boolean => {
 };
 
 export const isUniV3 = (address: string): boolean => {
-  return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_RBN_ETH;
+  return (
+    address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_RBN_ETH ||
+    address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].UNIV3_FRAX_DAI
+  );
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -40,12 +43,23 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
     multicallProvider,
     chainName,
   } = Connection.useContainer();
-  const { controller, strategy, controllerMai, controllerUniV3 } = Contracts.useContainer();
+  const {
+    controller,
+    strategy,
+    controllerMai,
+    controllerUniV3,
+  } = Contracts.useContainer();
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
-    if (controller && strategy && multicallProvider && chainName && controllerUniV3) {
+    if (
+      controller &&
+      strategy &&
+      multicallProvider &&
+      chainName &&
+      controllerUniV3
+    ) {
       const multicallController = new MulticallContract(
         controller.address,
         controller.interface.fragments,
@@ -104,22 +118,22 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         );
         jarAddresses = [...jarAddresses, ...uniV3JarAddresses];
       }
-      
+
       const jarData = tokenKV
-      .concat(tokenKVMai)
-      .concat(tokenKVUniV3)
-      .map((kv, idx) => {
-        return {
-          [kv.key]: {
-            tokenAddress: kv.value,
-            jarAddress: jarAddresses[idx],
-          },
-        };
-      })
-      .reduce((acc, x) => {
-        return { ...acc, ...x };
-      }, {});
-      
+        .concat(tokenKVMai)
+        .concat(tokenKVUniV3)
+        .map((kv, idx) => {
+          return {
+            [kv.key]: {
+              tokenAddress: kv.value,
+              jarAddress: jarAddresses[idx],
+            },
+          };
+        })
+        .reduce((acc, x) => {
+          return { ...acc, ...x };
+        }, {});
+
       const newJars = await Promise.all(
         Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(
           async ([k, tokenAddress]) => {

@@ -82,7 +82,6 @@
     "name": "Transfer",
     "type": "event"
   },
-  { "stateMutability": "payable", "type": "fallback" },
   {
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" },
@@ -147,7 +146,7 @@
     ],
     "name": "deposit",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -161,6 +160,18 @@
     "inputs": [],
     "name": "earnAfterDeposit",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint128", "name": "_liquidity", "type": "uint128" }
+    ],
+    "name": "getAmountsForLiquidity",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -363,13 +374,6 @@
     "name": "transferFrom",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "weth",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
     "type": "function"
   },
   {

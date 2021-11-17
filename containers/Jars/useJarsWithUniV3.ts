@@ -50,21 +50,16 @@ export const useJarsWithUniV3 = (
         const info = uniV3Info[
           jar.depositToken.address as keyof typeof uniV3Info
         ];
-        const poolData = await getPoolData(
-          info.incentiveKey[1],
-          info.incentiveKey[0],
-          signer,
-        );
 
         const [bal0, bal1, proportion] = await Promise.all([
-          getBalance(poolData.token0),
-          getBalance(poolData.token1),
+          getBalance(info.token0),
+          getBalance(info.token1),
           getProportion(jar.contract.address, signer),
         ]);
 
         // Check token approvals
-        const Token0 = erc20.attach(poolData.token0).connect(signer);
-        const Token1 = erc20.attach(poolData.token1).connect(signer);
+        const Token0 = erc20.attach(info.token0).connect(signer);
+        const Token1 = erc20.attach(info.token1).connect(signer);
         const allowance0 = await Token0.allowance(
           address,
           jar.contract.address,
@@ -85,18 +80,18 @@ export const useJarsWithUniV3 = (
           ...jar,
           contract: jarV3Contract,
           token0: {
-            address: poolData.token0,
+            address: info.token0,
             walletBalance: bal0,
             jarAmount: positionData.amount0.toExact(),
             approved: allowance0.gt(ethers.constants.Zero),
-            name: getPriceId(poolData.token0),
+            name: getPriceId(info.token0),
           },
           token1: {
-            address: poolData.token1,
+            address: info.token1,
             walletBalance: bal1,
             jarAmount: positionData.amount1.toExact(),
             approved: allowance1.gt(ethers.constants.Zero),
-            name: getPriceId(poolData.token1),
+            name: getPriceId(info.token1),
           },
           proportion,
         };

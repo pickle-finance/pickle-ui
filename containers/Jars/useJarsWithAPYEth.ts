@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { DEPOSIT_TOKENS_JAR_NAMES, JAR_DEPOSIT_TOKENS } from "./jars";
+import {
+  DEPOSIT_TOKENS_JAR_NAMES,
+  JAR_DEPOSIT_TOKENS,
+  PICKLE_JARS,
+} from "./jars";
 import { ChainName, NETWORK_NAMES } from "containers/config";
 import { PriceIds, Prices } from "../Prices";
 import {
@@ -37,9 +41,10 @@ import erc20 from "@studydefi/money-legos/erc20";
 import { Connection } from "../Connection";
 import { SushiPairs, addresses } from "../SushiPairs";
 import { useCurveLdoAPY } from "./useCurveLdoAPY";
-import { Contract } from "@ethersproject/contracts";
+import { BigNumber, Contract, ethers } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
 import { getPoolData, uniV3Info } from "../../util/univ3";
+import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/JarV3__factory";
 
 import RewarderABI from "../ABIs/rewarder.json";
 
@@ -385,6 +390,48 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       ];
     }
 
+    return [];
+  };
+
+  const calculateFraxUniv3APY = async (jarAddress: string) => {
+    if (provider && prices) {
+      // short form interfaces
+      const FRAX_UNIV3_INTERFACE = [
+        "function rewardRate0() view returns(uint256)",
+        "function totalLiquidityLocked() view returns(uint256)",
+      ];
+
+      const FRAX_DAI_UNIV3_FARM = "0xF22471AC2156B489CC4a59092c56713F813ff53e";
+      const fraxUniv3Farm = new Contract(
+        FRAX_DAI_UNIV3_FARM,
+        FRAX_UNIV3_INTERFACE,
+        provider,
+      );
+
+      const jarV3Contract = JarV3Factory.connect(jarAddress, provider);
+
+      const [fxsRateBN, totalLiquidityBN] = await Promise.all([
+        fraxUniv3Farm.rewardRate0(),
+        fraxUniv3Farm.totalLiquidityLocked(),
+      ]);
+
+      const valueRewardedPerYear =
+        prices.fxs * parseFloat(formatEther(fxsRateBN)) * ONE_YEAR_SECONDS;
+
+      const [numDai, numFrax] = await jarV3Contract.getAmountsForLiquidity(
+        totalLiquidityBN,
+      );
+
+      const totalValueStaked = parseFloat(formatEther(numDai)) * prices.dai + parseFloat(formatEther(numFrax)) * prices.frax 
+      const fxsAPY = valueRewardedPerYear / totalValueStaked;
+
+      return [
+        {
+          fxs: getCompoundingAPY(fxsAPY * 0.8),
+          apr: fxsAPY * 0.8 * 100,
+        },
+      ];
+    }
     return [];
   };
 
@@ -945,11 +992,13 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         mimEthApy,
         spellEthApy,
         rbnEthApy,
+        fraxDaiApy,
       ] = await Promise.all([
         calculateConvexAPY(JAR_DEPOSIT_TOKENS.Ethereum.MIM_3CRV),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH),
         calculateAbradabraApy(JAR_DEPOSIT_TOKENS.Ethereum.SPELL_ETH),
         calculateUniV3Apy(JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH),
+        calculateFraxUniv3APY(PICKLE_JARS.pUNIFRAXDAI),
       ]);
 
       const newJarsWithAPY = jars.map((jar) => {
@@ -1230,6 +1279,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
         if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV3_RBN_ETH) {
           APYs = [...rbnEthApy];
+        }
+
+        if (jar.jarName === DEPOSIT_TOKENS_JAR_NAMES.UNIV3_FRAX_DAI) {
+          APYs = [...fraxDaiApy];
         }
 
         let apr = 0;

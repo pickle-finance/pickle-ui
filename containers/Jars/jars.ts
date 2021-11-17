@@ -45,6 +45,7 @@ export const PICKLE_JARS = {
   pCVXCRVlp: "0xF1478A8387C449c55708a3ec11c143c35daf5E74",
   pCVXCRV: "0xB245280Fd1795f5068DEf8E8f32DB7846b030b2B",
   pUNIRBNETH: "0x506748d736b77f51c5b490e4aC6c26B8c3975b14",
+  pUNIFRAXDAI: "0xbd70000c8bE439BDE1F358DF2507694d747cE9c4",
 
   // Polygon Jars
   pCOMETHUSDCWETH: "0x9eD7e3590F2fB9EEE382dfC55c71F9d3DF12556c",
@@ -123,6 +124,7 @@ export const JAR_DEPOSIT_TOKENS = {
     CVXCRVlp: "0x9D0464996170c6B9e75eED71c68B99dDEDf279e8",
     CVXCRV: "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
     UNIV3_RBN_ETH: "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a",
+    UNIV3_FRAX_DAI: "0x97e7d56A0408570bA1a7852De36350f7713906ec"
   },
   [NETWORK_NAMES.POLY]: {
     COMETH_USDC_WETH: "0x1Edb2D8f791D2a51D56979bf3A25673D6E783232",
@@ -159,7 +161,8 @@ export const JAR_DEPOSIT_TOKENS = {
 };
 
 export const UNIV3_TOKENS = {
-  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH]: true
+  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_RBN_ETH]: true,
+  [JAR_DEPOSIT_TOKENS.Ethereum.UNIV3_FRAX_DAI]: true
 }
 
 export const DEPOSIT_TOKENS_NAME = {
@@ -397,6 +400,7 @@ export const DEPOSIT_TOKENS_LINK = {
   CVXCRVlp: "https://curve.fi/factory/22/deposit",
   CVXCRV: "https://www.convexfinance.com/stake",
   UNIV3_RBN_ETH: "https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x6123b0049f904d730db3c36a31167d9d4121fa6b",
+  UNIV3_FRAX_DAI: "https://app.uniswap.org/#/add/0x853d955aCEf822Db058eb8505911ED77F175b99e/0x6B175474E89094C44Da98b954EedeAC495271d0F/500",
 
   // Polygon Jars
   COMETH_USDC_WETH:
@@ -451,6 +455,7 @@ export const DEPOSIT_TOKENS_LINK = {
   CRV_TRICRYPTO: "https://arbitrum.curve.fi/tricrypto/deposit",
   DODO_HND_ETH:
     "https://app.dodoex.io/liquidity?poolAddress=0x65e17c52128396443d4a9a61eacf0970f05f8a20",
+    
 };
 
 export const DEPOSIT_TOKENS_JAR_NAMES = {
@@ -501,6 +506,7 @@ export const DEPOSIT_TOKENS_JAR_NAMES = {
   CVXCRVlp: "pJar 0e",
   CVXCRV: "pJar 0f",
   UNIV3_RBN_ETH: "pJar U3a",
+  UNIV3_FRAX_DAI: "pJar F-1",
 
   // Polygon Jars
   COMETH_USDC_WETH: "polyJar 1a",
