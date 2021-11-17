@@ -214,7 +214,6 @@ export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
 export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b";
 export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
-export const FXS = "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0";
 export const PICKLE_SUSHI_REWARDER =
   "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 

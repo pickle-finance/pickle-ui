@@ -10,8 +10,8 @@ import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
 import { useJarWithAPY as useJarsWithAPYOK } from "./Jars/useJarsWithAPYOK";
 import { useJarWithAPY as useJarsWithAPYArb } from "./Jars/useJarsWithAPYArb";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
-import { BPAddresses } from "./config";
-import { FXS, PICKLE_ETH_SLP } from "./Contracts";
+import { BPAddresses, FraxAddresses } from "./config";
+import { PICKLE_ETH_SLP } from "./Contracts";
 import { NETWORK_NAMES } from "./config";
 
 function useJars() {
@@ -48,7 +48,8 @@ function useJars() {
         .flat();
       const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
       if (chainName === NETWORK_NAMES.ETH)
-        addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM, FXS);
+        addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM, FraxAddresses.FXS);
+      addTokens(addedTokens);
     }
   }, [jarsWithTVL]);
 

@@ -80,6 +80,14 @@ export const config: Config = {
   },
 };
 
+export const FraxAddresses = {
+  FXS: "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0",
+  FXSDistribution: "0xed2647Bbf875b2936AAF95a3F5bbc82819e3d3FE",
+  veFXS: "0xc8418af6358ffdda74e09ca9cc3fe03ca6adc5b0",
+  veFXSVault: "0x3158bc6935dA5EE7bAa8c8e9Be45A1130d6b115b"
+};
+
+
 export const BPAddresses = {
   LUSD: "0x5f98805a4e8be255a32880fdec7f6728c6568ba0",
   pBAMM: "0x54bC9113f1f55cdBDf221daf798dc73614f6D972",

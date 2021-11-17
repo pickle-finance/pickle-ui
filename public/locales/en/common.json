@@ -49,7 +49,14 @@
   "frax": {
     "connectionPrompt": "Please switch to Ethereum network to use FRAX features.",
     "description": "Convert your FXS to pveFXS and earn FXS fee distribution rewards plus a shared of boosted FXS rewards",
-    "frax": "Frax Backscratcher"
+    "frax": "Frax Backscratcher",
+    "deposit": "This vault accepts FXS in exchange for a perpetual claim on Frax protocol fees. Your initially locked FXS cannot be redeemed, but a receipt token pveFXS is issued to represent your proportionate share of locked FXS",
+    "apy": "FXS APR",
+    "locked": "FXS locked with Pickle",
+    "tvl": "FXS value locked with Pickle",
+    "info": "Info",
+    "userLocked": "Your locked FXS",
+    "lockFxs": "Lock FXS"
   },
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
