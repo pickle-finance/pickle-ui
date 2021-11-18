@@ -208,9 +208,7 @@ const FarmRow = (props) => {
         title={
           <span>
             {t("info.daily", {
-              percent: ((isFarm ? jar.oneDayFarm : jar.oneDay) / 365).toFixed(
-                2,
-              ),
+              percent: `${((isFarm ? jar.oneDayFarm : jar.oneDay) / 365).toFixed(2)}`,
             })}
           </span>
         }
@@ -219,10 +217,10 @@ const FarmRow = (props) => {
           <div className={clsx(classes.cardTitle, classes.cardContent)}>
             {isFarm
               ? jar.oneDayFarm
-                ? `${jar.oneDayFarm}%`
+                ? `${jar.oneDayFarm.toFixed(2)}%`
                 : "-"
               : jar.oneDay
-              ? `${jar.oneDay}%`
+              ? `${jar.oneDay.toFixed(2)}%`
               : "-"}
           </div>
         </TableCell>
@@ -232,8 +230,7 @@ const FarmRow = (props) => {
           <span>
             {t("info.weekly", {
               percent: (
-                (isFarm ? jar.sevenDayFarm : jar.sevenDay) / 52
-              ).toFixed(2),
+                (isFarm ? jar.sevenDayFarm : jar.sevenDay) / 52).toFixed(2),
             })}
           </span>
         }
@@ -242,10 +239,10 @@ const FarmRow = (props) => {
           <div className={clsx(classes.cardTitle, classes.cardContent)}>
             {isFarm
               ? jar.sevenDayFarm
-                ? `${jar.sevenDayFarm}%`
+                ? `${jar.sevenDayFarm.toFixed(2)}%`
                 : "-"
               : jar.sevenDay
-              ? `${jar.sevenDay}%`
+              ? `${jar.sevenDay.toFixed(2)}%`
               : "-"}
           </div>
         </TableCell>
@@ -255,8 +252,7 @@ const FarmRow = (props) => {
           <span>
             {t("info.monthly", {
               percent: (
-                (isFarm ? jar.thirtyDayFarm : jar.thirtyDay) /
-                (365 / 30)
+                (isFarm ? jar.thirtyDayFarm : jar.thirtyDay) / (365 / 30)
               ).toFixed(2),
             })}
           </span>
@@ -266,10 +262,10 @@ const FarmRow = (props) => {
           <div className={clsx(classes.cardTitle, classes.cardContent)}>
             {isFarm
               ? jar.thirtyDayFarm
-                ? `${jar.thirtyDayFarm}%`
+                ? `${jar.thirtyDayFarm.toFixed(2)}%`
                 : "-"
               : jar.thirtyDay
-              ? `${jar.thirtyDay}%`
+              ? `${jar.thirtyDay.toFixed(2)}%`
               : "-"}
           </div>
         </TableCell>
@@ -443,7 +439,6 @@ const formatNumber = (value: number) => {
 const getUSD = (value: number) => {
   return `$${formatNumber(value)}`;
 };
-
 export default function Brining() {
   const classes = useStyles();
 
