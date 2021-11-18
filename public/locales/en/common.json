@@ -270,5 +270,23 @@
     "zapIntoJar": "Zap into Jar",
     "zapTo": "Zap to yvBOOST",
     "zapping": "Zapping..."
+  },
+  "v2": {
+    "dashboard": {
+      "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
+      "pickleTitle": "Pickle Finance"
+    },
+    "nav": {
+      "close": "Close panel",
+      "dashboard": "Dashboard",
+      "dill": "DILL",
+      "dillAddress": "DILL address",
+      "faq": "F.A.Q.",
+      "feedback": "Feedback",
+      "jarsAndFarms": "Jars & Farms",
+      "openMenu": "Open main menu",
+      "stats": "Stats",
+      "tokenAddress": "Token address"
+    }
   }
 }

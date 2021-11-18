@@ -11,7 +11,7 @@ const usePickleCore = () => {
 
     useEffect(() => {
         fetchPickleCore();
-    }, [, blockNum]);   // TODO: should be changed to something less frequent
+    }, [ blockNum, ]);   // TODO: should be changed to something less frequent
     
     return { pickleCore, };
 };

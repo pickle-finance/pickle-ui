@@ -68,6 +68,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xeb02a695126b998e625394e43dfd26ca4a75ce2b": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/weth.png"} />
   ),
+  "0xE9313b7dea9cbaBd2df710C25bef44A748Ab38a9": (
+    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/dai.png"} />
+  ),
+  "0xa25E1C05c58EDE088159cc3cD24f49445d0BE4b2": (
+    <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/usdc.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
