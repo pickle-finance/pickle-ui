@@ -112,6 +112,7 @@ export const UniV3JarGaugeCollapsible: FC<{
     proportion,
     supply,
   } = jarData;
+  console.log(jarData)
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
@@ -262,12 +263,10 @@ export const UniV3JarGaugeCollapsible: FC<{
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
-  const [useEth, setUseEth] = useState<boolean>(true);
-
   const depositGauge = async () => {
-    if (!approved) {
+    if (!approved && erc20) {
       setDepositStakeButton(t("farms.approving"));
-      const Token = erc20?.attach(gaugeDepositToken.address).connect(signer);
+      const Token = erc20.attach(gaugeDepositToken.address).connect(signer);
       const tx = await Token.approve(
         gaugeData.address,
         ethers.constants.MaxUint256,
@@ -291,8 +290,7 @@ export const UniV3JarGaugeCollapsible: FC<{
               .connect(signer)
               .deposit(
                 convertDecimals(deposit0Amount),
-                convertDecimals(useEth ? "0" : deposit1Amount),
-                { value: parseEther(deposit1Amount) },
+                convertDecimals(deposit1Amount),
               );
           },
           approval: false,
@@ -530,20 +528,18 @@ export const UniV3JarGaugeCollapsible: FC<{
             isToken0={true}
             setDepositThisAmount={setDeposit0Amount}
             setDepositOtherAmount={setDeposit1Amount}
-            proportion={proportion}
+            proportion={proportion!}
             depositAmount={deposit0Amount}
             jarAddr={jarContract.address}
-            setUseEth={setUseEth}
           />
           <TokenInput
             token={token1}
             isToken0={false}
             setDepositThisAmount={setDeposit1Amount}
             setDepositOtherAmount={setDeposit0Amount}
-            proportion={proportion}
+            proportion={proportion!}
             depositAmount={deposit1Amount}
             jarAddr={jarContract.address}
-            setUseEth={setUseEth}
           />
           <Grid.Container gap={1}>
             <Grid xs={24} md={12}>
@@ -559,8 +555,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                           .connect(signer)
                           .deposit(
                             convertDecimals(deposit0Amount),
-                            convertDecimals(useEth ? "0" : deposit1Amount),
-                            { value: parseEther(deposit1Amount) },
+                            convertDecimals(deposit1Amount),
                           );
                       },
                       approval: false,

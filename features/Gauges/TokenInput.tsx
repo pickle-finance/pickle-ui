@@ -17,7 +17,6 @@ export const TokenInput: FC<{
   proportion: BigNumber;
   depositAmount: string;
   jarAddr: string;
-  setUseEth: any;
 }> = ({
   token,
   isToken0,
@@ -26,7 +25,6 @@ export const TokenInput: FC<{
   proportion,
   depositAmount,
   jarAddr,
-  setUseEth,
 }) => {
   const { signer, address, blockNum } = Connection.useContainer();
   const ethOptions = ["ETH", "WETH"];
@@ -77,7 +75,6 @@ export const TokenInput: FC<{
               value={inputToken}
               onChange={(e) => {
                 setInputToken(e.toString());
-                setUseEth(ethSelected);
               }}
             >
               {ethOptions.map((token) => (
