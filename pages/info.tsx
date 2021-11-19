@@ -149,6 +149,84 @@ const DataPoint = styled.div`
   display: flex;
   align-items: center;
 `;
+const PicklePerDayCell = (props) => {
+  const { t } = useTranslation("common");
+  const classes = useStyles();
+  const { val, precision} = props;
+
+  return (
+    <TableCell className={classes.farmTableCell}>
+    <div className={clsx(classes.cardTitle, classes.cardContent)}>
+      <Avatar
+        variant="square"
+        src="./assets/pickle.png"
+        className={classes.emissionIcon}
+      />
+      {`RobTest: ${val.toFixed(precision)}`} / day
+    </div>
+  </TableCell>
+  );
+};
+
+const DayApyCell = (props) => {
+  const { t } = useTranslation("common");
+  const classes = useStyles();
+  const { val, isFarm, precision } = props;
+
+  return (
+    <TableCell className={classes.farmTableCell}>
+          <div className={clsx(classes.cardTitle, classes.cardContent)}>
+            {isFarm
+              ? val.oneDayFarm
+                ? `farm-one-day ${val.oneDayFarm.toFixed(2)}%`
+                : "-"
+              : val.oneDay
+              ? `jar-one-day ${val.oneDay.toFixed(2)}%`
+              : "-"}
+          </div>
+        </TableCell>
+  );
+}
+
+const WeekApyCell = (props) => {
+  const { t } = useTranslation("common");
+  const classes = useStyles();
+  const { val, isFarm, precision } = props;
+
+  return (
+    <TableCell className={classes.farmTableCell}>
+          <div className={clsx(classes.cardTitle, classes.cardContent)}>
+            {isFarm
+              ? val.sevenDayFarm
+                ? `farm-week-${val.sevenDayFarm.toFixed(2)}%`
+                : "-"
+              : val.sevenDay
+              ? `jar-week-${val.sevenDay.toFixed(2)}%`
+              : "-"}
+          </div>
+        </TableCell>
+  );
+};
+
+const MonthApyCell = (props) => {
+  const { t } = useTranslation("common");
+  const classes = useStyles();
+  const { val, isFarm, precision } = props;
+  
+  return (
+    <TableCell className={classes.farmTableCell}>
+          <div className={clsx(classes.cardTitle, classes.cardContent)}>
+            {isFarm
+              ? val.thirtyDayFarm
+                ? `farm-month ${val.thirtyDayFarm.toFixed(2)}%`
+                : "-"
+              : val.thirtyDay
+              ? `jar-month ${val.thirtyDay.toFixed(2)}%`
+              : "-"}
+          </div>
+    </TableCell>
+  );
+};
 
 const FarmRow = (props) => {
   const classes = useStyles();
@@ -192,16 +270,7 @@ const FarmRow = (props) => {
             </span>
           }
         >
-          <TableCell className={classes.farmTableCell}>
-            <div className={clsx(classes.cardTitle, classes.cardContent)}>
-              <Avatar
-                variant="square"
-                src="./assets/pickle.png"
-                className={classes.emissionIcon}
-              />
-              {`${picklePerDay.toFixed(3)}`} / day
-            </div>
-          </TableCell>
+         <PicklePerDayCell val={picklePerDay} precision="3"/>
         </Tooltip>
       )}
       <Tooltip
@@ -213,17 +282,7 @@ const FarmRow = (props) => {
           </span>
         }
       >
-        <TableCell className={classes.farmTableCell}>
-          <div className={clsx(classes.cardTitle, classes.cardContent)}>
-            {isFarm
-              ? jar.oneDayFarm
-                ? `${jar.oneDayFarm.toFixed(2)}%`
-                : "-"
-              : jar.oneDay
-              ? `${jar.oneDay.toFixed(2)}%`
-              : "-"}
-          </div>
-        </TableCell>
+        <DayApyCell val={jar} isFarm={isFarm} precision="2"/>
       </Tooltip>
       <Tooltip
         title={
@@ -235,17 +294,7 @@ const FarmRow = (props) => {
           </span>
         }
       >
-        <TableCell className={classes.farmTableCell}>
-          <div className={clsx(classes.cardTitle, classes.cardContent)}>
-            {isFarm
-              ? jar.sevenDayFarm
-                ? `${jar.sevenDayFarm.toFixed(2)}%`
-                : "-"
-              : jar.sevenDay
-              ? `${jar.sevenDay.toFixed(2)}%`
-              : "-"}
-          </div>
-        </TableCell>
+        <WeekApyCell val={jar} isFarm={isFarm} precision="2"/>
       </Tooltip>
       <Tooltip
         title={
@@ -258,17 +307,7 @@ const FarmRow = (props) => {
           </span>
         }
       >
-        <TableCell className={classes.farmTableCell}>
-          <div className={clsx(classes.cardTitle, classes.cardContent)}>
-            {isFarm
-              ? jar.thirtyDayFarm
-                ? `${jar.thirtyDayFarm.toFixed(2)}%`
-                : "-"
-              : jar.thirtyDay
-              ? `${jar.thirtyDay.toFixed(2)}%`
-              : "-"}
-          </div>
-        </TableCell>
+        <MonthApyCell val={jar} isFarm={isFarm} precision="2"/>
       </Tooltip>
     </TableRow>
   );
