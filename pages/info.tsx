@@ -153,19 +153,27 @@ const DataPoint = styled.div`
 const PicklePerDayCell = (props: any) => {
   const { t } = useTranslation("common");
   const classes = useStyles();
-  const { val, precision} = props;
+  const { val, precision, apy} = props;
 
   return (
-    <TableCell className={classes.farmTableCell}>
-      <div className={clsx(classes.cardTitle, classes.cardContent)}>
-        <Avatar
-          variant="square"
-          src="./assets/pickle.png"
-          className={classes.emissionIcon}
-        />
-        {val.toFixed(precision)} / day
-      </div>
-    </TableCell>
+    <Tooltip
+    title={
+      <span>
+        {t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}
+      </span>
+    }
+    >
+        <TableCell className={classes.farmTableCell}>
+          <div className={clsx(classes.cardTitle, classes.cardContent)}>
+            <Avatar
+              variant="square"
+              src="./assets/pickle.png"
+              className={classes.emissionIcon}
+            />
+            {val.toFixed(precision)} / day
+          </div>
+        </TableCell>
+    </Tooltip>
   );
 };
 
@@ -244,15 +252,7 @@ const FarmRow = (props: any) => {
         </div>
       </TableCell>
       {isFarm && (
-        <Tooltip
-          title={
-            <span>
-              {t("info.pickleApy", { percent: (item.apy * 100).toFixed(2) })}
-            </span>
-          }
-        >
-         <PicklePerDayCell val={picklePerDay} precision="3"/>
-        </Tooltip>
+         <PicklePerDayCell apy={item.apy} val={picklePerDay} precision="3"/>
       )}
       <TooltipAndApyCell val={jar} frequency="info.daily" jarIndex="oneDay" farmIndex="oneDayFarm" 
           isFarm={isFarm} Ndays="1" precision="2" />
@@ -440,12 +440,8 @@ export default function Brining() {
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>
-                <Image
-                  src="/pickle.png"
-                  alt="Image unavailable"
-                  width="24px" 
-                  height="24px"
-                  verticalAlign="text-bottom"
+                <img src="/pickle.png"
+                  style={{ width: "24px", verticalAlign: `text-bottom` }}
                 />{" "}
                 {t("info.picklePrice")}
               </h2>
@@ -505,13 +501,13 @@ export default function Brining() {
             <TableBody>
               {protocolInfo && farmInfo && jarInfo ? (
                 jarInfo
-                  .filter((jar) => jar.asset.toLowerCase() !== "pickle-eth")
-                  .sort((a, b) => {
+                  .filter((jar: any) => jar.asset.toLowerCase() !== "pickle-eth")
+                  .sort((a: any, b: any) => {
                     const aBalance = protocolInfo[a.asset.toLowerCase()];
                     const bBalance = protocolInfo[b.asset.toLowerCase()];
                     return bBalance - aBalance;
                   })
-                  .map((jar, i) => {
+                  .map((jar: any, i: any) => {
                     const key = jar.asset.toLowerCase();
                     const itemTokenBalance = protocolInfo[key + "Tokens"];
                     const itemBalance = protocolInfo[key];
