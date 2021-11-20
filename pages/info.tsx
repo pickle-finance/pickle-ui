@@ -15,7 +15,6 @@ import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
-import Image from 'next/image'
 
 import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
@@ -464,7 +463,7 @@ export default function Brining() {
         </Grid>
         <h1>{t("info.farms")}</h1>
         <TableContainer component={Paper} className={classes.farmTable}>
-          <Table className={classes.table}>
+          <Table>
             <FarmHeader />
             <TableBody>
               {farmInfo && jarInfo ? (
@@ -496,7 +495,7 @@ export default function Brining() {
         </TableContainer>
         <h1>{t("info.jars")}</h1>
         <TableContainer component={Paper} className={classes.farmTable}>
-          <Table className={classes.table}>
+          <Table>
             <FarmHeader isFarm={false} />
             <TableBody>
               {protocolInfo && farmInfo && jarInfo ? (
