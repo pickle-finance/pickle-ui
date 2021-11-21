@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import LanguageToggle from "./LanguageToggle";
+import GasPriceIndicator from "./GasPriceIndicator";
 
 const LeftNavbar: FC = () => {
   const { t } = useTranslation("common");
@@ -16,8 +17,9 @@ const LeftNavbar: FC = () => {
           {t("v2.dashboard.pickleSubtitle")}
         </h1>
       </div>
-      <div className="flex flex-grow justify-end self-center">
+      <div className="flex-grow justify-end self-center hidden sm:flex">
         <LanguageToggle />
+        <GasPriceIndicator />
       </div>
     </div>
   );
