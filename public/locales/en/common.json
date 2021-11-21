@@ -276,6 +276,11 @@
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pickleTitle": "Pickle Finance"
     },
+    "gasPrices": {
+      "fast": "Fast",
+      "slow": "Slow",
+      "standard": "Standard"
+    },
     "nav": {
       "close": "Close panel",
       "dashboard": "Dashboard",

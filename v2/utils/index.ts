@@ -18,3 +18,10 @@ export interface PicklePriceResponse {
     usd: number;
   };
 }
+
+export interface EthGasStationResponse {
+  fast: number;
+  fastest: number;
+  safeLow: number;
+  average: number;
+}

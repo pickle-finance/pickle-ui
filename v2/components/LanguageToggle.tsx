@@ -44,11 +44,11 @@ export const LanguageToggle: FC = () => {
     <Popover className="relative">
       {({ open }) => (
         <>
-          <Popover.Button className="group rounded-md inline-flex items-center text-sm text-gray-200 font-bold hover:bg-black-light hover:text-gray-300 transition duration-300 ease-in-out focus:outline-none px-4 py-2">
+          <Popover.Button className="group rounded-md inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <span>{languageNameFromLocale(locale)}</span>
             <ChevronDownIcon
               className={classNames(
-                open ? "text-orange" : "text-gray-400",
+                open ? "text-orange" : "text-gray-lighter",
                 "ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"

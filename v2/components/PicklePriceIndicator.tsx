@@ -3,7 +3,6 @@ import Image from "next/image";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useSWR from "swr";
 
-import logo from "../../public/pickle.png";
 import { fetcher, PicklePriceResponse } from "../utils";
 
 const PicklePriceIndicatorBody: FC = () => {

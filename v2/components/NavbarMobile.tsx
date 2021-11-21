@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SlideOverMenu from "./SlideOverMenu";
+import LanguageToggle from "./LanguageToggle";
 
 const NavbarMobile: FC = () => (
   <div className="block sm:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,6 +22,7 @@ const NavbarMobile: FC = () => (
           </a>
         </Link>
       </div>
+      <LanguageToggle />
       <SlideOverMenu />
     </div>
   </div>
