@@ -78,7 +78,7 @@ export const LanguageToggle: FC = () => {
                           {language.name}
                         </span>
                         {languageNameFromLocale(locale) === language.name && (
-                          <CheckCircleIcon className="text-green-light w-5" />
+                          <CheckCircleIcon className="text-green-light w-5 h-5" />
                         )}
                       </a>
                     </Link>
