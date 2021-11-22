@@ -10,23 +10,27 @@ import { useTranslation } from "next-i18next";
 
 import { classNames } from "../utils";
 import SelectTransition from "./SelectTransition";
+import arbitrum from "public/arbitrum.svg";
+import ethereum from "public/ethereum.svg";
+import oec from "public/oec.svg";
+import matic from "public/matic.svg";
 
 const networks = [
   {
     name: "Arbitrum",
-    iconSrc: "/arbitrum.svg",
+    icon: arbitrum,
   },
   {
     name: "Ethereum",
-    iconSrc: "/ethereum.svg",
+    icon: ethereum,
   },
   {
     name: "OEC",
-    iconSrc: "/oec.svg",
+    icon: oec,
   },
   {
     name: "Polygon",
-    iconSrc: "/matic.svg",
+    icon: matic,
   },
 ];
 
@@ -59,12 +63,13 @@ const NetworkToggle: FC = () => {
                   {networks.map((network) => (
                     <a
                       key={network.name}
+                      href="#"
                       className="flex justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out"
                     >
                       <div className="flex">
                         <div className="w-5 h-5 mr-3">
                           <Image
-                            src={network.iconSrc}
+                            src={network.icon}
                             width={200}
                             height={200}
                             layout="responsive"
