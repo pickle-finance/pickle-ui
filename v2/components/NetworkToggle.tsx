@@ -64,7 +64,7 @@ const NetworkToggle: FC = () => {
                     <a
                       key={network.name}
                       href="#"
-                      className="flex justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out"
+                      className="flex group justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out"
                     >
                       <div className="flex">
                         <div className="w-5 h-5 mr-3">
@@ -79,7 +79,7 @@ const NetworkToggle: FC = () => {
                             priority
                           />
                         </div>
-                        <span className="text-white hover:text-green-light text-sm font-bold">
+                        <span className="text-white group-hover:text-green-light text-sm font-bold">
                           {network.name}
                         </span>
                       </div>
