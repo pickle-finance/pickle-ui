@@ -1,4 +1,4 @@
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
@@ -9,9 +9,6 @@ import { JAR_FARM_MAP } from "./farms";
 import { FarmWithApy } from "./useUniV2Apy";
 import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
-
-import mlErc20 from "@studydefi/money-legos/erc20";
-import { Contract as MulticallContract } from "ethers-multicall";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;

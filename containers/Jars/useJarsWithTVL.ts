@@ -1,17 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { JarWithAPY } from "./useJarsWithAPYEth";
-import { DEPOSIT_TOKENS_NAME, JAR_DEPOSIT_TOKENS, PICKLE_JARS } from "./jars";
 import { PoolData } from "./usePoolData";
-import { Contracts } from "containers/Contracts";
-import { Prices } from "containers/Prices";
-import { Connection } from "containers/Connection";
-import { ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
-import { STRATEGY_NAMES, DEPOSIT_TOKENS_JAR_NAMES, getPriceId } from "./jars";
-import { NETWORK_NAMES } from "containers/config";
-import { Contract as MulticallContract } from "ethers-multicall";
-import erc20 from "@studydefi/money-legos/erc20";
 import { CurvePairs } from "containers/CurvePairs";
 
 export interface JarWithTVL extends JarWithAPY {

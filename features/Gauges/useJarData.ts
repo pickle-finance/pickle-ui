@@ -6,7 +6,6 @@ import { Jars } from "../../containers/Jars";
 import { Balances } from "../../containers/Balances";
 import { Connection } from "../../containers/Connection";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
-import { DEPOSIT_TOKENS_JAR_NAMES } from "../../containers/Jars/jars";
 
 export const useJarData = (): { jarData: UserJarData[] | null } => {
   const { blockNum } = Connection.useContainer();
@@ -18,9 +17,9 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
 
   const updateJarData = async () => {
     if (jars) {
-      const promises = jars?.map(async (jar) => {
-        const balance = await getBalance(jar.depositToken.address);
-        const deposited = await getBalance(jar.contract.address);
+      const promises = jars?.map((jar) : UserJarData => {
+        const balance = getBalance(jar.depositToken.address);
+        const deposited = getBalance(jar.contract.address);
         return {
           name: jar.jarName,
           jarContract: jar.contract,
@@ -34,7 +33,7 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
           totalAPY: jar.totalAPY,
           apr: jar.apr,
           depositTokenLink: jar.depositTokenLink,
-          tvlUSD: jar.tvlUSD,
+          tvlUSD: jar.tvlUSD || 0,
         };
       });
 

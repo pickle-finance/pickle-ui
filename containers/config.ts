@@ -1,3 +1,5 @@
+import { ChainNetwork } from "picklefinance-core";
+
 interface Addresses {
   pickle: string;
   masterChef: string;
@@ -16,6 +18,14 @@ export enum NETWORK_NAMES {
   OKEX = "OKEx",
   ARB = "Arbitrum",
 }
+
+
+export const NETWORK_NAMES_PFCORE_MAP : any = {
+  "Ethereum": ChainNetwork.Ethereum,
+  "Polygon": ChainNetwork.Polygon,
+  "OKEx": ChainNetwork.OKEx,
+  "Arbitrum": ChainNetwork.Arbitrum,
+};
 
 export type ChainName =
   | NETWORK_NAMES.ETH
