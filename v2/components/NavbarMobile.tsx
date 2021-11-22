@@ -22,8 +22,10 @@ const NavbarMobile: FC = () => (
           </a>
         </Link>
       </div>
-      <LanguageToggle />
-      <SlideOverMenu />
+      <div className="flex items-center">
+        <LanguageToggle />
+        <SlideOverMenu />
+      </div>
     </div>
   </div>
 );
