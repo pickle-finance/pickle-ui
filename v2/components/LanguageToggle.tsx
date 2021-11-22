@@ -3,8 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, CheckCircleIcon } from "@heroicons/react/solid";
+import { TranslateIcon } from "@heroicons/react/outline";
 
 import { classNames } from "../utils";
+import SelectTransition from "./SelectTransition";
 
 const languages = [
   {
@@ -37,15 +39,15 @@ const languageNameFromLocale = (locale: string | undefined): string => {
   }
 };
 
-export const LanguageToggle: FC = () => {
+const LanguageToggle: FC = () => {
   const { locale } = useRouter();
 
   return (
-    <Popover className="relative">
+    <Popover className="relative mr-3">
       {({ open }) => (
         <>
           <Popover.Button className="group rounded-md inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
-            <span>{languageNameFromLocale(locale)}</span>
+            <TranslateIcon className="h-5 w-5" />
             <ChevronDownIcon
               className={classNames(
                 open ? "text-orange" : "text-gray-lighter",
@@ -55,15 +57,7 @@ export const LanguageToggle: FC = () => {
             />
           </Popover.Button>
 
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-200"
-            enterFrom="opacity-0 -translate-y-8"
-            enterTo="opacity-100 translate-y-0"
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 translate-y-0"
-            leaveTo="opacity-0 -translate-y-4"
-          >
+          <SelectTransition>
             <Popover.Panel className="absolute z-0 left-1/2 transform -translate-x-1/2 mt-2 px-2 w-36 max-w-screen-sm sm:px-0">
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden">
                 <div className="relative grid gap-1 bg-black-light p-2">
@@ -73,12 +67,12 @@ export const LanguageToggle: FC = () => {
                       href={`/${language.locale}/v2`}
                       locale={language.locale}
                     >
-                      <a className="flex justify-between hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out">
+                      <a className="flex justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out">
                         <span className="text-white hover:text-green-light text-sm font-bold">
                           {language.name}
                         </span>
                         {languageNameFromLocale(locale) === language.name && (
-                          <CheckCircleIcon className="text-green-light w-5 h-5" />
+                          <CheckCircleIcon className="text-green-light w-4 h-4" />
                         )}
                       </a>
                     </Link>
@@ -86,7 +80,7 @@ export const LanguageToggle: FC = () => {
                 </div>
               </div>
             </Popover.Panel>
-          </Transition>
+          </SelectTransition>
         </>
       )}
     </Popover>

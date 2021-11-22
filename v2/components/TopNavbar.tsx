@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 
 import LanguageToggle from "./LanguageToggle";
 import GasPriceIndicator from "./GasPriceIndicator";
+import NetworkToggle from "./NetworkToggle";
 
 const LeftNavbar: FC = () => {
   const { t } = useTranslation("common");
@@ -19,6 +20,7 @@ const LeftNavbar: FC = () => {
       </div>
       <div className="flex-grow justify-end self-center hidden sm:flex">
         <LanguageToggle />
+        <NetworkToggle />
         <GasPriceIndicator />
       </div>
     </div>

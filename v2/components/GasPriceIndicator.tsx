@@ -6,6 +6,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import GasPumpIcon from "./icons/GasPump";
 import { fetcher, EthGasStationResponse } from "../utils";
+import SelectTransition from "./SelectTransition";
 
 const GasPriceIndicatorButtonLabel: FC<{
   data: EthGasStationResponse | undefined;
@@ -63,12 +64,12 @@ const GasPriceIndicatorOptions: FC<{
   );
 };
 
-export const GasPriceIndicator: FC = () => {
+const GasPriceIndicator: FC = () => {
   const endpoint = "https://ethgasstation.info/api/ethgasAPI.json";
   const { data } = useSWR<EthGasStationResponse>(endpoint, fetcher);
 
   return (
-    <Popover className="relative mr-3">
+    <Popover className="relative">
       {() => (
         <>
           <Popover.Button
@@ -79,15 +80,7 @@ export const GasPriceIndicator: FC = () => {
             <GasPriceIndicatorButtonLabel data={data} />
           </Popover.Button>
 
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-200"
-            enterFrom="opacity-0 -translate-y-8"
-            enterTo="opacity-100 translate-y-0"
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 translate-y-0"
-            leaveTo="opacity-0 -translate-y-4"
-          >
+          <SelectTransition>
             <Popover.Panel className="absolute z-0 left-1/2 transform -translate-x-1/2 mt-2 px-2 w-28 max-w-screen-sm sm:px-0">
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden text-white">
                 <div className="relative grid gap-1 bg-black-light p-2">
@@ -95,7 +88,7 @@ export const GasPriceIndicator: FC = () => {
                 </div>
               </div>
             </Popover.Panel>
-          </Transition>
+          </SelectTransition>
         </>
       )}
     </Popover>
