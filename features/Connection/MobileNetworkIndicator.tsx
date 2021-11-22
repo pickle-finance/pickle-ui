@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 import { Connection } from "../../containers/Connection";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { Jazzicon } from "@ukstv/jazzicon-react";
 import { config } from "../../containers/config";
 
 const Container = styled.div`
@@ -75,7 +75,9 @@ export const MobileNetworkIndicator: FC = () => {
   return (
     <Container>
       <Left>
-        <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
+        <div style={{ width: 16 }}>
+          {address && <Jazzicon address={address} />}
+        </div>
         <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
       </Left>
       <ConnectContainer>

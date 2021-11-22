@@ -68,8 +68,8 @@ const NetworkToggle: FC = () => {
                             width={200}
                             height={200}
                             layout="responsive"
-                            alt={t("meta.titleFull")}
-                            title={t("meta.titleFull")}
+                            alt={network.name}
+                            title={network.name}
                             className="rounded-full"
                             priority
                           />

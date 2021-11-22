@@ -69,7 +69,7 @@ const GasPriceIndicator: FC = () => {
   const { data } = useSWR<EthGasStationResponse>(endpoint, fetcher);
 
   return (
-    <Popover className="relative">
+    <Popover className="relative mr-3">
       {() => (
         <>
           <Popover.Button
