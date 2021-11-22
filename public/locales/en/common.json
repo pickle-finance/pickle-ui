@@ -293,6 +293,10 @@
       "openMenu": "Open main menu",
       "stats": "Stats",
       "tokenAddress": "Token address"
+    },
+    "wallet": {
+      "exit": "Exit",
+      "switch": "Switch wallet"
     }
   }
 }

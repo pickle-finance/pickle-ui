@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { Jazzicon } from "@ukstv/jazzicon-react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useTranslation } from "next-i18next";
 
@@ -208,7 +208,9 @@ export const DesktopNetworkIndicator: FC = () => {
       >
         <Address>
           <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
-          <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
+          <div style={{ width: 16 }}>
+            {address && <Jazzicon address={address} />}
+          </div>
         </Address>
         <Block>
           <Tooltip text={t("connection.blockNumber")} placement="left">

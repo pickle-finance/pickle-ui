@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import LanguageToggle from "./LanguageToggle";
 import GasPriceIndicator from "./GasPriceIndicator";
 import NetworkToggle from "./NetworkToggle";
+import WalletToggle from "./WalletToggle";
 
 const LeftNavbar: FC = () => {
   const { t } = useTranslation("common");
@@ -18,10 +19,11 @@ const LeftNavbar: FC = () => {
           {t("v2.dashboard.pickleSubtitle")}
         </h1>
       </div>
-      <div className="flex-grow justify-end self-center hidden sm:flex">
+      <div className="flex-grow justify-end items-center hidden sm:flex">
         <LanguageToggle />
         <NetworkToggle />
         <GasPriceIndicator />
+        <WalletToggle />
       </div>
     </div>
   );
