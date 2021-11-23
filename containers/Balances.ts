@@ -19,6 +19,7 @@ function useBalances() {
 
   const updateBalances = async () => {
     if (erc20 && address && multicallProvider) {
+      console.log("updateBalances: " + JSON.stringify(tokenAddresses));
       const balances: BigNumber[] = await multicallProvider.all(
         tokenAddresses.map((x) => {
           const c = new MulticallContract(x, erc20.interface.fragments);

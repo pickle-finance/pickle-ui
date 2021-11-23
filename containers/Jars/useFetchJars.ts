@@ -90,8 +90,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       }
 
       const chainJars : JarDefinition[] = allJars.filter((x)=>x.chain === pfcoreChainName && 
-          x.enablement !== AssetEnablement.PERMANENTLY_DISABLED);
-      console.log("Jars for current chain: " + chainJars ? chainJars.length : 0);
+          x.enablement !== AssetEnablement.PERMANENTLY_DISABLED &&  x.enablement !== AssetEnablement.DEV);
       const possibleJars : (Jar|undefined)[] = chainJars.map((x)=>{
         const z : Jar = {
           depositToken: Erc20Factory.connect(x.depositToken.addr, provider),

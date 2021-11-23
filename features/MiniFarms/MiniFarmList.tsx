@@ -49,6 +49,7 @@ export const MiniFarmList: FC = () => {
     );
   }
 
+  console.log("\n\n\n\nFarm data size: " + farmData.length + "\n\n\n\n");
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },

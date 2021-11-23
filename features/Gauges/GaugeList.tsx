@@ -28,6 +28,8 @@ import { UserJarData } from "containers/UserJars";
 import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
 import { FarmsIntro } from "components/FarmsIntro";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { AssetEnablement, AssetProtocol, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -64,6 +66,7 @@ export const GaugeList: FC = () => {
   const [showInactive, setShowInactive] = useState(false);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
   const { getUniPairDayAPY } = useUniPairDayData();
+  const { pickleCore } = PickleCore.useContainer();
   const { jars } = Jars.useContainer();
   const { t } = useTranslation("common");
 
@@ -122,21 +125,22 @@ export const GaugeList: FC = () => {
   const isDisabledFarm = (depositToken: string) =>
     depositToken === PICKLE_JARS.pUNIETHLUSD;
 
-  const activeJars = jarData
-    .filter(
-      (jar) =>
-        JAR_ACTIVE[jar.depositTokenName] && !JAR_YEARN[jar.depositTokenName],
-    )
+  const activeJars = jarData.filter((jar) => {
+      const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
+      return foundJar && foundJar.enablement === AssetEnablement.ENABLED;
+    })
     .sort((a, b) => b.totalAPY - a.totalAPY);
 
-  const inactiveJars = jarData.filter(
-    (jar) => !JAR_ACTIVE[jar.depositTokenName],
-  );
+  const inactiveJars = jarData.filter((jar) => {
+    const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
+    return foundJar && foundJar.enablement === AssetEnablement.DISABLED;
+  });
 
   const yearnJars = jarData.filter((jar) => {
+    const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
     const gauge = findGauge(jar);
-    const activeAndYearn =
-      JAR_ACTIVE[jar.depositTokenName] && JAR_YEARN[jar.depositTokenName];
+    const activeAndYearn = foundJar && foundJar.enablement === AssetEnablement.ENABLED
+      && foundJar.protocol === AssetProtocol.YEARN;
     return showUserJars
       ? activeAndYearn &&
           (parseFloat(formatEther(jar.deposited)) ||
