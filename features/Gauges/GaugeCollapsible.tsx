@@ -16,9 +16,9 @@ import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/facto
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
-import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
-import { UserGaugeDataWithAPY } from "./GaugeList";
-import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { isUsdcToken, isYveCrvEthJarToken } from "../../containers/Jars/jars";
+import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
+import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
@@ -59,9 +59,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     usdPerToken,
     fullApy,
   } = gaugeData;
-  const isUsdcJar = isUsdc(
-    depositToken.address.toLowerCase());
+  const isUsdcJar = isUsdcToken(depositToken.address.toLowerCase());
 
+  const { pickleCore } = PickleCore.useContainer();
   const { t } = useTranslation("common");
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(
