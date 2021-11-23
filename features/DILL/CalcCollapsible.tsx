@@ -8,7 +8,7 @@ import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { isUsdc } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "../../containers/config";
 import { PickleCore } from "./../../containers/Jars/usePickleCore";
 import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
@@ -41,9 +41,7 @@ export const CalcCollapsible: FC<{
     );
 
     if (selectedGauge) {
-      const isUsdc =
-        selectedGauge.depositToken.address.toLowerCase() ===
-        PICKLE_JARS.pyUSDC.toLowerCase();
+      const isUsdcJar = isUsdc(selectedGauge.depositToken.address.toLowerCase());
 
       const balance = +formatEther(
         selectedGauge.balance.add(selectedGauge.staked),
@@ -51,14 +49,14 @@ export const CalcCollapsible: FC<{
       const balanceUSD = (
         balance *
         selectedGauge.usdPerToken *
-        (isUsdc ? 1e12 : 1)
+        (isUsdcJar ? 1e12 : 1)
       ).toFixed(2);
 
       setBalance(balanceUSD);
       setTotalBalance(
         (
           (selectedGauge.totalSupply * selectedGauge.usdPerToken) /
-          (isUsdc ? 1e6 : 1e18)
+          (isUsdcJar ? 1e6 : 1e18)
         ).toFixed(2),
       );
       setSelectedGauge(selectedGauge);

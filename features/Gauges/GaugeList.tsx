@@ -152,7 +152,6 @@ export const GaugeList: FC = () => {
   });
 
   const activeGauges = gaugesWithAPY
-    .filter((x) => !isDisabledFarm(x.depositToken.address))
     .sort((a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy));
 
   const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
