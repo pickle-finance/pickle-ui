@@ -14,6 +14,10 @@ export const isUsdcToken = (depositTokenAddress: string) => {
     return depositTokenAddress.toLowerCase() === "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48".toLowerCase();
 };
 
+export const isyveCrvEthJarToken = (jarTokenAddress: string) => {
+    return jarTokenAddress.toLowerCase() === "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48".toLowerCase();
+}
+
 export const isJarEnabled = (jarContractAddress: string, pfcore: PickleModelJson.PickleModelJson | null) => {
   if( !pfcore ) 
     return false;

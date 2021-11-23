@@ -204,9 +204,9 @@ export const GaugeList: FC = () => {
       <VoteCollapsible
         gauges={activeGauges.filter(
           (x) =>
-            x.depositToken.address != PICKLE_JARS.pSUSHIETHYVECRV &&
+            x.depositToken.address != "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48" && // pSUSHIETHYVECRV
             x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM &&
-            x.depositToken.address != PICKLE_JARS.pMIMETH,
+            x.depositToken.address != "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C", // pMIMETH
         )}
       />
       <div

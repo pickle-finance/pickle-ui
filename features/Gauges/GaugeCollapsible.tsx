@@ -16,7 +16,7 @@ import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/facto
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { isyveCrvEthJarToken } from "../../containers/Jars/jars";
 import { UserGaugeDataWithAPY } from "./GaugeList";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
@@ -185,9 +185,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     .filter((x) => x)
     .join(" + ");
 
-  const isyveCRVFarm =
-    depositToken.address.toLowerCase() ===
-    PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
+  const isyveCRVFarm = isyveCrvEthJarToken(depositToken.address);
 
   const isPickleFarm = depositToken.address.toLowerCase() === PICKLE_ETH_FARM;
 
