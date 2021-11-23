@@ -60,7 +60,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           depositTokenLink: x.depositToken.link,
           contract: JarFactory.connect(x.contract, provider),
         };
-        console.log("Created jar struct for: " + x.details.apiKey);
 
         return z;
       });

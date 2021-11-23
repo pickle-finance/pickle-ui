@@ -144,10 +144,11 @@ export const GaugeList: FC = () => {
 
   const userJars = jarData.filter((jar) => {
     const gauge = findGauge(jar);
+    const pfCoreJarDef : JarDefinition | undefined = pickleCore?.assets.jars.find((x)=>jar.depositToken.address.toLowerCase() === x.depositToken.addr.toLowerCase());
     return (
       (parseFloat(formatEther(jar.deposited)) ||
         parseFloat(formatEther(gauge?.staked || 0))) &&
-      !JAR_YEARN[jar.depositTokenName]
+        pfCoreJarDef && pfCoreJarDef.protocol === AssetProtocol.YEARN
     );
   });
 

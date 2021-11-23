@@ -115,8 +115,7 @@ export const MiniFarmList: FC = () => {
 
   const inactiveJars = !jarData ? [] : jarData.filter((jar) => {
     const foundJar = pickleCore?.assets.jars.find((x) => x.contract.toLowerCase() === jar.jarContract.address.toLowerCase());
-    return inactive === undefined || foundJar.enablement === AssetEnablement.
-    !pickleCore?.assets.jars.JAR_ACTIVE[jar.depositTokenName],
+    return foundJar === undefined || foundJar.enablement === AssetEnablement.DISABLED;
   });
 
   return (
