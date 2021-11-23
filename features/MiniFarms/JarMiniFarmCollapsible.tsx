@@ -1,11 +1,9 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
-
 import { Connection } from "../../containers/Connection";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
@@ -14,15 +12,12 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
-import { getProtocolData } from "../../util/api";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
-import { Balances } from "../../containers/Balances";
 import { NETWORK_NAMES } from "containers/config";
+import { isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
-import { isQuickMimaticQiJarDepositToken, isQuickMimaticUsdcJarDepositToken } from "containers/Jars/jars";
-
 interface DataProps {
   isZero?: boolean;
 }
@@ -235,9 +230,9 @@ export const JarMiniFarmCollapsible: FC<{
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
-  const isQiMaiJar = isQuickMimaticQiJarDepositToken(depositToken.address.toLowerCase());
-  const isMaiJar = isQiMaiJar || isQuickMimaticUsdcJarDepositToken(depositToken.address.toLowerCase());
+  const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
+  const isQiMaiJar = isQlpQiToken(depositToken.address);
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {

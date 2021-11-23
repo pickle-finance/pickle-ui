@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Connection } from "../Connection";
 import { NETWORK_NAMES } from "containers/config";
 import { PickleCore } from "./usePickleCore";

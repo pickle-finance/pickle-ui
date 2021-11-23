@@ -17,7 +17,7 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "./UseMigrate";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { isyveCrvEthJarToken } from "containers/Jars/jars";
+import { isYveCrvEthJarToken } from "containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -238,7 +238,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
 
-  const isyveCRVFarm = isyveCrvEthJarToken(depositToken.address);
+  const isyveCRVFarm = isYveCrvEthJarToken(depositToken.address);
 
   const handleMigrate = async () => {
     if (stakedNum) {

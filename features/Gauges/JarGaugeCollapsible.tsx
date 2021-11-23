@@ -26,7 +26,7 @@ import {
   ZapperIcon,
   MiniIcon,
 } from "../../components/TokenIcon";
-import { isUsdcToken, isyveCrvEthJarToken, isMainnetMimEthJar } from "../../containers/Jars/jars";
+import { isUsdcToken, isYveCrvEthJarToken, isMainnetMimEthJarDepositToken } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
@@ -451,7 +451,7 @@ export const JarGaugeCollapsible: FC<{
 
   const isZap = inputToken != zapInputTokens[0].symbol;
 
-  const isyveCRVFarm = isyveCrvEthJarToken(depositToken.address.toLowerCase());
+  const isyveCRVFarm = isYveCrvEthJarToken(depositToken.address.toLowerCase());
 
   const isMimJar = isMainnetMimEthJarDepositToken(depositToken.address.toLowerCase());
 

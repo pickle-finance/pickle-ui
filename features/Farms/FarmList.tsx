@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
-import { isyveCrvEthJarToken } from "../../containers/Jars/jars";
+import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
 import { NETWORK_NAMES } from "containers/config";
 
 const Container = styled.div`
@@ -31,7 +31,7 @@ export const FarmList: FC = () => {
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
   const indexofYvecrv = inactiveFarms.findIndex(
-    (x) => isyveCrvEthJarToken(x.depositToken.address)
+    (x) => isYveCrvEthJarToken(x.depositToken.address)
   );
 
   const moveInArray = (arr: UserFarmData[], from: number, to: number) => {

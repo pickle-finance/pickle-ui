@@ -15,7 +15,6 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { getFormatString } from "../Gauges/GaugeInfo";
-import { NETWORK_NAMES } from "containers/config";
 import { uncompoundAPY } from "util/jars";
 import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
@@ -130,7 +129,7 @@ export const JarCollapsible: FC<{
   } = jarData;
   const { t } = useTranslation("common");
 
-  const isUsdc = isUsdcToken(depositToken.address.toLowerCase());
+  const isUsdc = isUsdcToken(depositToken.address);
 
   const uncompounded = APYs.map((x) => {
     const k: string = Object.keys(x)[0];

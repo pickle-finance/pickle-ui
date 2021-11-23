@@ -13,20 +13,21 @@ export const isUsdcToken = (depositTokenAddress: string) => {
     return depositTokenAddress.toLowerCase() === "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48".toLowerCase();
 };
 
-export const isyveCrvEthJarToken = (jarTokenAddress: string) => {
+export const isYveCrvEthJarToken = (jarTokenAddress: string) => {
     return jarTokenAddress.toLowerCase() === "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48".toLowerCase();
-}
+};
+
+export const isQlpQiToken = (depositTokenAddress: string) => {
+    return depositTokenAddress.toLowerCase() === "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397".toLowerCase();
+};
+
+export const isQlpQiMaticOrUsdcToken = (depositTokenAddress: string) => {
+    return (depositTokenAddress.toLowerCase() === "0x9A8b2601760814019B7E6eE0052E25f1C623D1E6".toLowerCase() ||
+    depositTokenAddress.toLowerCase() === "0x160532d2536175d65c03b97b0630a9802c274dad".toLowerCase())
+};
 
 export const isMainnetMimEthJarDepositToken = (depositToken: string) => {
   return depositToken.toLowerCase() === "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C".toLowerCase();
-}
-
-export const isQuickMimaticQiJarDepositToken = (qlpToken: string) => {
-  return qlpToken.toLowerCase() === "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397".toLowerCase();
-}
-
-export const isQuickMimaticUsdcJarDepositToken = (qlpToken: string) => {
-  return qlpToken.toLowerCase() === "0x160532d2536175d65c03b97b0630a9802c274dad".toLowerCase();
 }
 
 export const isJarEnabled = (jarContractAddress: string, pfcore: PickleModelJson.PickleModelJson | null) => {
