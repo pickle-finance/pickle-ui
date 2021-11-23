@@ -15,12 +15,13 @@ import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getProtocolData } from "../../util/api";
-import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
+import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { Balances } from "../../containers/Balances";
 import { NETWORK_NAMES } from "containers/config";
 import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;
@@ -176,7 +177,6 @@ export const JarMiniFarmCollapsible: FC<{
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
   const { t } = useTranslation("common");
@@ -198,6 +198,8 @@ export const JarMiniFarmCollapsible: FC<{
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum, chainName } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
+
 
   const stakedStr = formatNumber(stakedNum);
 
@@ -392,16 +394,11 @@ export const JarMiniFarmCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  useEffect(() => {
-    getProtocolData().then((info) => setTVLData(info));
-  }, []);
-
+  const tvlJarData = pickleCore?.assets.jars.filter( x => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase() )[0];
   const tvlNum =
-    tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      : tvlUSD;
+    tvlJarData &&
+    tvlJarData.details.harvestStats ? tvlJarData.details.harvestStats.balanceUSD: tvlUSD;
+
   const tvlStr = getFormatString(tvlNum);
 
   return (

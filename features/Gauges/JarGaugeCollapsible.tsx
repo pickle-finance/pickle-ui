@@ -26,12 +26,12 @@ import {
   ZapperIcon,
   MiniIcon,
 } from "../../components/TokenIcon";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { isUsdcToken, JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
-import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
+import { getFormatString } from "./GaugeInfo";
 import { zapDefaultTokens } from "../Zap/tokens";
 import { tokenInfo, useBalance } from "../Zap/useBalance";
 import { DEFAULT_SLIPPAGE } from "../Zap/constants";
@@ -40,6 +40,7 @@ import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;
@@ -258,9 +259,7 @@ export const JarGaugeCollapsible: FC<{
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
-  const isUsdc =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
+  const isUsdc = isUsdcToken(depositToken.address);
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -363,7 +362,6 @@ export const JarGaugeCollapsible: FC<{
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
 
@@ -385,6 +383,7 @@ export const JarGaugeCollapsible: FC<{
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum } = Connection.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
@@ -649,16 +648,10 @@ export const JarGaugeCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  useEffect(() => {
-    getProtocolData().then((info) => setTVLData(info));
-  }, []);
-
+  const tvlJarData = pickleCore?.assets.jars.filter( x => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase() )[0];
   const tvlNum =
-    tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      : 0;
+    tvlJarData &&
+    tvlJarData.details.harvestStats ? tvlJarData.details.harvestStats.balanceUSD: 0;
   const tvlStr = getFormatString(tvlNum);
 
   return (

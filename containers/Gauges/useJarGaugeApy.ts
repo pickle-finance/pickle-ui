@@ -6,6 +6,7 @@ import { Jars } from "../Jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getFarmData } from "../../util/api";
 import { getJarFarmMap } from "containers/Farms/farms";
+import { isPUsdcToken } from "../Jars/jars";
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;
@@ -45,12 +46,10 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         (farm) => farm.address === gauge.token,
       );
       // calculate APY
-      const usdcJarAddress = pickleCore?.assets.jars.filter( x => x.details.apiKey === "USDC")[0].contract
-      const isUsdc = gauge.token.toLowerCase() === usdcJarAddress?.toLowerCase();
       const valueStakedInGauge = farmInfo.valueBalance;
       const fullApy = gaugeingJar.usdPerPToken
         ? (gauge.rewardRatePerYear * prices.pickle) /
-          (gaugeingJar.usdPerPToken * (isUsdc ? 1e12 : 1))
+          (gaugeingJar.usdPerPToken * (isPUsdcToken(gauge.token) ? 1e12 : 1))
         : 0;
       return {
         ...gauge,
