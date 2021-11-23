@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-
 import { Prices } from "../Prices";
 import { JAR_GAUGE_MAP } from "./gauges";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
+import { PickleCore } from "containers/Jars/usePickleCore";
 import { getFarmData } from "../../util/api";
 
 // what comes in and goes out of this function
@@ -15,6 +14,7 @@ type Output = { jarGaugeWithApy: GaugeWithApy[] | null };
 export const useJarGaugeApy = (inputGauges: Input): Output => {
   const { jars } = Jars.useContainer();
   const { prices } = Prices.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
 
   const [farmData, setFarmData] = useState<any | null>(null);
 
@@ -45,8 +45,8 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         (farm) => farm.address === gauge.token,
       );
       // calculate APY
-      const isUsdc =
-        gauge.token.toLowerCase() === PICKLE_JARS.pyUSDC.toLowerCase();
+      const usdcJarAddress = pickleCore?.assets.jars.filter( x => x.details.apiKey === "USDC")[0].contract
+      const isUsdc = gauge.token.toLowerCase() === usdcJarAddress?.toLowerCase();
       const valueStakedInGauge = farmInfo.valueBalance;
       const fullApy = gaugeingJar.usdPerPToken
         ? (gauge.rewardRatePerYear * prices.pickle) /
