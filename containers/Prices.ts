@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { Connection } from "./Connection";
 import CoinGecko from "coingecko-api";
-import { fromPairs } from "lodash";
 import { NETWORK_NAMES } from "./config";
 
 interface PriceObject {
@@ -67,6 +66,33 @@ interface PriceObject {
 }
 
 export type PriceIds = keyof PriceObject;
+
+interface CMCResponse {
+  data?: {
+    [id: string]: {
+      quote: {
+        USD: {
+          price: number;
+        };
+      };
+    };
+  };
+}
+
+const jswapPrice = async (isOEC: boolean): Promise<number> => {
+  if (!isOEC) return 0;
+
+  const cmcRequest = `https://api.allorigins.win/get?url=${encodeURIComponent(
+    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=2ba4867e-b50f-44d7-806d-c0c5fde1a8db&slug=jswap-finance",
+  )}`;
+  const data = await fetch(cmcRequest).then((body) => body.json());
+
+  const cmcData: CMCResponse = JSON.parse(data.contents);
+
+  if (!cmcData.data) return 0;
+
+  return cmcData?.data[Object.keys(cmcData.data)[0]].quote.USD.price;
+};
 
 function usePrices() {
   const [prices, setPrices] = useState<PriceObject | null>(null);
@@ -137,15 +163,6 @@ function usePrices() {
       vs_currencies: ["usd"],
     });
 
-    let cmcData;
-    if (isOK) {
-      const cmcRequest = `https://api.allorigins.win/get?url=${encodeURIComponent(
-        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=2ba4867e-b50f-44d7-806d-c0c5fde1a8db&slug=jswap-finance",
-      )}`;
-      const res = await fetch(cmcRequest).then((x) => x.json());
-      cmcData = JSON.parse(res.contents);
-    }
-
     const prices: PriceObject = {
       dai: response.dai.usd,
       comp: response["compound-governance-token"].usd,
@@ -204,9 +221,7 @@ function usePrices() {
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
       work: response["the-employment-commons-work-token"].usd,
-      jswap: cmcData
-        ? cmcData?.data[Object.keys(cmcData.data)[0]]?.quote?.USD?.price
-        : 0, // CG does not provide jswap price
+      jswap: await jswapPrice(isOK),
     };
     setPrices(prices);
   };
