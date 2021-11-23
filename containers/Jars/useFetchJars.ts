@@ -9,14 +9,6 @@ import { Contract as MulticallContract } from "ethers-multicall";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
-import {
-  JAR_DEPOSIT_TOKENS,
-  DEPOSIT_TOKENS_JAR_NAMES,
-  DEPOSIT_TOKENS_NAME,
-  DEPOSIT_TOKENS_LINK,
-} from "./jars";
-import { Contract } from "@ethersproject/contracts";
-import { networkInterfaces } from "os";
 import { NETWORK_NAMES, NETWORK_NAMES_PFCORE_MAP } from "containers/config";
 import { ChainNetwork } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
@@ -49,33 +41,8 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   const getJars = async () => {
     // I want to use r2, but it breaks the site. Find out why
-    const r1 : Jar[] = await getJarsOldImpl();
     const r2 : Jar[] = await getJarsPfcoreImpl();
-
-    const stringOnly = (x:Jar) => {
-      return {
-        depositToken: x.depositToken.address,
-        depositTokenName: x.depositTokenName,
-        depositTokenLink: x.depositTokenLink,
-        jarName: x.jarName,
-        contract: x.contract.address,
-      }
-    }
-    const r1a = r1.map((x)=>stringOnly((x)));
-    const r2a = r2.map((x)=>stringOnly((x)));
-    
-    console.log("\n\n\n" + JSON.stringify(r1.map((x)=>stringOnly((x)))));
-    console.log("\n\n\n" + JSON.stringify(r2.map((x)=>stringOnly((x)))));
-    
-    console.log("Lengths:  original: " + r1a.length + ", new: " + r2a.length);
-    for( let i = 0; i < r1a.length; i++ ) {
-      const matchingR2 = r2a.find((x)=>x.depositToken.toLowerCase() === r1a[i].depositToken.toLowerCase());
-      console.log("Index " + i);
-      console.log("Original: " + JSON.stringify(r1a[i]));
-      console.log("New: " + JSON.stringify(matchingR2 || "nothinghere"));
-      
-    }
-    setJars(r1);
+    setJars(r2);
   }
 
 
@@ -109,87 +76,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           jarsOnly.push(possibleJars[i] as Jar);
       }
       return jarsOnly;
-    }
-    return [];
-  };
-
-  const getJarsOldImpl = async () : Promise<Jar[]> => {
-    if (controller && strategy && multicallProvider && chainName) {
-      const multicallController = new MulticallContract(
-        controller.address,
-        controller.interface.fragments,
-      );
-
-      const tokenKVUnfiltered = Object.entries(
-        JAR_DEPOSIT_TOKENS[chainName],
-      ).map(([k, tokenAddress]) => {
-        return {
-          key: k,
-          value: tokenAddress,
-        };
-      });
-
-      const tokenKV = tokenKVUnfiltered.filter(
-        ({ key, value }) => !IsMaiToken(value),
-      );
-      const tokenKVMai = tokenKVUnfiltered.filter(({ key, value }) =>
-        IsMaiToken(value),
-      );
-
-      let jarAddresses = await multicallProvider.all(
-        tokenKV.map((t) => {
-          return multicallController.jars(t.value);
-        }),
-      );
-
-      if (controllerMai && chainName === NETWORK_NAMES.POLY) {
-        const multicallControllerMai = new MulticallContract(
-          controllerMai.address,
-          controllerMai.interface.fragments,
-        );
-
-        const maiJarAddresses = await multicallProvider.all(
-          tokenKVMai.map((t) => {
-            return multicallControllerMai.jars(t.value);
-          }),
-        );
-        jarAddresses = [...jarAddresses, ...maiJarAddresses];
-      }
-
-      const jarData = tokenKV
-        .concat(tokenKVMai)
-        .map((kv, idx) => {
-          return {
-            [kv.key]: {
-              tokenAddress: kv.value,
-              jarAddress: jarAddresses[idx],
-            },
-          };
-        })
-        .reduce((acc, x) => {
-          return { ...acc, ...x };
-        }, {});
-
-      const newJars = await Promise.all(
-        Object.entries(JAR_DEPOSIT_TOKENS[chainName]).map(
-          async ([k, tokenAddress]) => {
-            const { jarAddress } = jarData[k];
-            return {
-              depositToken: Erc20Factory.connect(tokenAddress, provider),
-              depositTokenName:
-                DEPOSIT_TOKENS_NAME[k as keyof typeof DEPOSIT_TOKENS_NAME],
-              jarName:
-                DEPOSIT_TOKENS_JAR_NAMES[
-                  k as keyof typeof DEPOSIT_TOKENS_JAR_NAMES
-                ],
-              depositTokenLink:
-                DEPOSIT_TOKENS_LINK[k as keyof typeof DEPOSIT_TOKENS_LINK],
-              contract: JarFactory.connect(jarAddress, provider),
-            };
-          },
-        ),
-      );
-      return newJars;
     }
     return [];
   };
