@@ -21,6 +21,7 @@ import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;
