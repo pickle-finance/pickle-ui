@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { Strategy as StrategyContract } from "../Contracts/Strategy";
 import { Jar as JarContract } from "../Contracts/Jar";
 import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory";
 import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
 import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__factory";
-import { Contract as MulticallContract } from "ethers-multicall";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
-import { NETWORK_NAMES, NETWORK_NAMES_PFCORE_MAP } from "containers/config";
+import { NETWORK_NAMES_PFCORE_MAP } from "containers/config";
 import { ChainNetwork } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleCore } from "./usePickleCore";
@@ -20,10 +18,6 @@ export type Jar = {
   depositTokenLink: string;
   jarName: string;
   contract: JarContract;
-};
-
-const IsMaiToken = (address: string): boolean => {
-  return address === JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].QUICK_MIMATIC_QI;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
