@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Prices } from "../Prices";
-import { JAR_GAUGE_MAP } from "./gauges";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getFarmData } from "../../util/api";
+import { getJarFarmMap } from "containers/Farms/farms";
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;
@@ -24,10 +24,10 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
     if (!inputGauges || !prices || !jars || !farmData) {
       return;
     }
-    const jarGauges = inputGauges.filter((gauge) => JAR_GAUGE_MAP[gauge.token]);
+    const jarGauges = inputGauges.filter((gauge) => getJarFarmMap(pickleCore)[gauge.token]);
 
     const res = jarGauges.map((gauge, idx) => {
-      const { jarName } = JAR_GAUGE_MAP[gauge.token];
+      const { jarName } = getJarFarmMap(pickleCore)[gauge.token];
       const gaugeingJar = jars.filter((x) => x.jarName === jarName)[0];
       // early return for gauges based on deactivated jars
       if (!gaugeingJar) {

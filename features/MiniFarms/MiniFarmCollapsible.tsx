@@ -5,7 +5,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { getJarFarmMap, JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { getJarFarmMap } from "../../containers/Farms/farms";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";

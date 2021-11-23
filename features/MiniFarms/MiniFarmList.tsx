@@ -15,6 +15,8 @@ import { pickleWhite } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
+import { AssetEnablement } from "picklefinance-core/lib/model/PickleModelJson";
+import { isJarEnabled } from "containers/Jars/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -60,7 +62,7 @@ export const MiniFarmList: FC = () => {
     const jar =
     getJarFarmMap(pickleCore)[farm.depositToken.address];
     if (jar) {
-      const farmingJar = jarData.filter((x) => x.name === jar.jarName)[0];
+      const farmingJar = jarData ? jarData.filter((x) => x.name === jar.jarName)[0] : undefined;
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
     }
 
@@ -109,11 +111,13 @@ export const MiniFarmList: FC = () => {
     };
   });
 
-  const activeJars = jarData.filter((jar) => getJarFarmMap(pickleCore)[jar.depositTokenName]);
+  const activeJars = !jarData ? [] : jarData.filter((jar) => isJarEnabled(jar.depositTokenName, pickleCore));
 
-  const inactiveJars = jarData.filter(
-    (jar) => !JAR_ACTIVE[jar.depositTokenName],
-  );
+  const inactiveJars = !jarData ? [] : jarData.filter((jar) => {
+    const foundJar = pickleCore?.assets.jars.find((x) => x.contract.toLowerCase() === jar.jarContract.address.toLowerCase());
+    return inactive === undefined || foundJar.enablement === AssetEnablement.
+    !pickleCore?.assets.jars.JAR_ACTIVE[jar.depositTokenName],
+  });
 
   return (
     <Container>

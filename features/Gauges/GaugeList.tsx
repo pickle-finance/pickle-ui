@@ -13,10 +13,9 @@ import { useJarData } from "./useJarData";
 import { GaugeCollapsible } from "./GaugeCollapsible";
 import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
-import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { uncompoundAPY } from "../../util/jars";
 import {
-  JAR_GAUGE_MAP,
   PICKLE_ETH_GAUGE,
 } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
@@ -82,7 +81,7 @@ export const GaugeList: FC = () => {
   const gaugesWithAPY = gaugeData.map((gauge) => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
-    const maybeJar = JAR_GAUGE_MAP[gauge.depositToken.address];
+    const maybeJar = getJarFarmMap(pickleCore)[gauge.depositToken.address];
     if (jars && maybeJar) {
       const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
@@ -119,9 +118,6 @@ export const GaugeList: FC = () => {
       uncompounded,
     };
   });
-
-  const isDisabledFarm = (depositToken: string) =>
-    depositToken === PICKLE_JARS.pUNIETHLUSD;
 
   const activeJars = jarData.filter((jar) => {
       const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());

@@ -5,8 +5,6 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import { Trans, useTranslation } from "next-i18next";
 
-import { JAR_GAUGE_MAP } from "../../containers/Gauges/gauges";
-
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
@@ -148,7 +146,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const pickleAPYMax = fullApy * 100;
 
   const maybeJar =
-    JAR_GAUGE_MAP[depositToken.address as keyof typeof JAR_GAUGE_MAP];
+    getJarFarmMap(pickleCore)[depositToken.address];
   if (jars && maybeJar) {
     const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
