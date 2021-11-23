@@ -6,7 +6,6 @@ import { useTranslation } from "next-i18next";
 import { useBalances } from "./useBalances";
 import { Prices } from "../../containers/Prices";
 import { Connection } from "../../containers/Connection";
-import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
 import { getProtocolData } from "util/api";
@@ -48,20 +47,6 @@ export const Balances: FC = () => {
     picklePerBlock,
     picklePerSecond,
   } = useBalances();
-
-  const { WETHRewards } = PickleStaking.useContainer();
-
-  let earned = ethers.constants.Zero;
-  let staked = ethers.constants.Zero;
-
-  if (WETHRewards) {
-    const { staked: stakedWETH, earned: earnedWETH } = WETHRewards;
-
-    if (stakedWETH && earnedWETH) {
-      earned = earned.add(earnedWETH);
-      staked = staked.add(stakedWETH);
-    }
-  }
 
   const { blockNum } = Connection.useContainer();
   const { prices } = Prices.useContainer();

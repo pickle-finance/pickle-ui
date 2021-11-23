@@ -41,7 +41,7 @@ export function useFeeDistributionSeries() {
     ) {
       const contract = new MulticallContract(
         feeDistributor.address,
-        feeDistributor.interface.fragments,
+        [...feeDistributor.interface.fragments],
       );
 
       // Ignore initial negligible distributions that distort
