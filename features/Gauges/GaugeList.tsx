@@ -148,7 +148,7 @@ export const GaugeList: FC = () => {
     return (
       (parseFloat(formatEther(jar.deposited)) ||
         parseFloat(formatEther(gauge?.staked || 0))) &&
-        pfCoreJarDef && pfCoreJarDef.protocol === AssetProtocol.YEARN
+        pfCoreJarDef && pfCoreJarDef.protocol !== AssetProtocol.YEARN
     );
   });
 
