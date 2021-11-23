@@ -2,7 +2,6 @@ export const GET_FUCKED = "not here anymore";
 
 import { PickleModelJson } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-import { PickleCore } from "./usePickleCore";
 
 // pUSDC jar token
 export const isPUsdcToken = (jarTokenAddress: string) => {
@@ -16,6 +15,18 @@ export const isUsdcToken = (depositTokenAddress: string) => {
 
 export const isyveCrvEthJarToken = (jarTokenAddress: string) => {
     return jarTokenAddress.toLowerCase() === "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48".toLowerCase();
+}
+
+export const isMainnetMimEthJarDepositToken = (depositToken: string) => {
+  return depositToken.toLowerCase() === "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C".toLowerCase();
+}
+
+export const isQuickMimaticQiJarDepositToken = (qlpToken: string) => {
+  return qlpToken.toLowerCase() === "0x7AfcF11F3e2f01e71B7Cc6b8B5e707E42e6Ea397".toLowerCase();
+}
+
+export const isQuickMimaticUsdcJarDepositToken = (qlpToken: string) => {
+  return qlpToken.toLowerCase() === "0x160532d2536175d65c03b97b0630a9802c274dad".toLowerCase();
 }
 
 export const isJarEnabled = (jarContractAddress: string, pfcore: PickleModelJson.PickleModelJson | null) => {

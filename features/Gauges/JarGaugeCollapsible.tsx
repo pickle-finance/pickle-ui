@@ -26,7 +26,7 @@ import {
   ZapperIcon,
   MiniIcon,
 } from "../../components/TokenIcon";
-import { isUsdcToken, JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import { isUsdcToken, isyveCrvEthJarToken, isMainnetMimEthJar } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
@@ -451,13 +451,9 @@ export const JarGaugeCollapsible: FC<{
 
   const isZap = inputToken != zapInputTokens[0].symbol;
 
-  const isyveCRVFarm =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV.toLowerCase();
+  const isyveCRVFarm = isyveCrvEthJarToken(depositToken.address.toLowerCase());
 
-  const isMimJar =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH.toLowerCase();
+  const isMimJar = isMainnetMimEthJarDepositToken(depositToken.address.toLowerCase());
 
   const depositGauge = async () => {
     if (!approved) {

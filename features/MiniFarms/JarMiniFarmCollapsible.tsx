@@ -19,9 +19,9 @@ import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { Balances } from "../../containers/Balances";
 import { NETWORK_NAMES } from "containers/config";
-import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
+import { isQuickMimaticQiJarDepositToken, isQuickMimaticUsdcJarDepositToken } from "containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -235,15 +235,9 @@ export const JarMiniFarmCollapsible: FC<{
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
-  const isMaiJar =
-    depositToken.address.toLowerCase() ===
-      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_USDC.toLowerCase() ||
-    depositToken.address.toLowerCase() ===
-      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MATIC_QI.toLowerCase();
+  const isQiMaiJar = isQuickMimaticQiJarDepositToken(depositToken.address.toLowerCase());
+  const isMaiJar = isQiMaiJar || isQuickMimaticUsdcJarDepositToken(depositToken.address.toLowerCase());
 
-  const isQiMaiJar =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_QI.toLowerCase();
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
