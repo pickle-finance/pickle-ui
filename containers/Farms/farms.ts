@@ -15,8 +15,8 @@ export const getJarFarmMap = (pfcore: PickleModelJson.PickleModelJson | null) : 
   const ret : FarmMap = {};
   for( let i = 0; i < pfcore.assets.jars.length; i++ ) {
     if( pfcore.assets.jars[i].id !== undefined && pfcore.assets.jars[i].contract !== undefined ) {
-      ret[pfcore.assets.jars[i].id] = {
-        jarName: pfcore.assets.jars[i].contract
+      ret[pfcore.assets.jars[i].contract] = {
+        jarName: pfcore.assets.jars[i].id
       }
     }
   }
