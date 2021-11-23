@@ -72,7 +72,7 @@ export const useMC2 = () => {
       // APY calc - SUSHI
       const multicallMC2 = new MulticallContract(
         masterchefV2.address,
-        masterchefV2.interface.fragments,
+        [...masterchefV2.interface.fragments],
       );
 
       const [

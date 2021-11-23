@@ -6,8 +6,6 @@ import { useTranslation } from "next-i18next";
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { useJarData } from "features/Gauges/useJarData";
-import { JAR_FARM_MAP } from "../../containers/Farms/farms";
-import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
 import { uncompoundAPY } from "../../util/jars";
@@ -15,6 +13,8 @@ import { NETWORK_NAMES } from "containers/config";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { pickleWhite } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { getJarFarmMap } from "containers/Farms/farms";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -30,7 +30,8 @@ export const MiniFarmList: FC = () => {
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const { t } = useTranslation("common");
-
+  const { pickleCore } = PickleCore.useContainer();
+  
   const isOK = chainName === NETWORK_NAMES.OKEX;
   const isMatic = chainName === NETWORK_NAMES.POLY;
 
@@ -49,7 +50,7 @@ export const MiniFarmList: FC = () => {
     );
   }
 
-  console.log("\n\n\n\nFarm data size: " + farmData.length + "\n\n\n\n");
+  console.log("\n\n\n\nFarm data size: " + farmData?.length + "\n\n\n\n");
   const farmsWithAPY = farmData.map((farm) => {
     let APYs: JarApy[] = [
       { pickle: farm.apy * 100 },
@@ -57,7 +58,7 @@ export const MiniFarmList: FC = () => {
     ];
 
     const jar =
-      JAR_FARM_MAP[farm.depositToken.address as keyof typeof JAR_FARM_MAP];
+    getJarFarmMap(pickleCore)[farm.depositToken.address];
     if (jar) {
       const farmingJar = jarData.filter((x) => x.name === jar.jarName)[0];
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
@@ -108,7 +109,7 @@ export const MiniFarmList: FC = () => {
     };
   });
 
-  const activeJars = jarData.filter((jar) => JAR_ACTIVE[jar.depositTokenName]);
+  const activeJars = jarData.filter((jar) => getJarFarmMap(pickleCore)[jar.depositTokenName]);
 
   const inactiveJars = jarData.filter(
     (jar) => !JAR_ACTIVE[jar.depositTokenName],

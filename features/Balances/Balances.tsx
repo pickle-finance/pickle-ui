@@ -51,7 +51,7 @@ export const Balances: FC = () => {
   const { blockNum } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
-  const [protocolInfo, setProtocolInfo] = useState(undefined);
+  const [protocolInfo, setProtocolInfo] = useState<any>(undefined);
   const [marketCap, setMarketCap] = useState<number | null>(null);
   const [tooltipText, setTooltipText] = useState<string | null>("");
   const { t } = useTranslation("common");
@@ -131,7 +131,7 @@ export const Balances: FC = () => {
                   text={tooltipText}
                 >
                   {t("balances.totalSupply")}:{" "}
-                  {totalSupply
+                  {totalSupply && prices?.pickle 
                     ? formatPickles(marketCap / prices?.pickle)
                     : "--"}
                   <PickleIcon size={14} />

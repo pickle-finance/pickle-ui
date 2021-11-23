@@ -4,7 +4,7 @@ import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
-import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -14,9 +14,9 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;
@@ -210,12 +210,13 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
   const { setButtonStatus } = useButtonStatus();
+  const { pickleCore } = PickleCore.useContainer();
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
 
   const maybeJar =
-    JAR_FARM_MAP[depositToken.address as keyof typeof JAR_FARM_MAP];
+    getJarFarmMap(pickleCore)[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
