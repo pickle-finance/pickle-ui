@@ -4,11 +4,12 @@ import { useFetchGauges } from "./Gauges/useFetchGauges";
 import { useWithReward } from "./Gauges/useWithReward";
 import { useUniV2Apy } from "./Gauges/useUniV2Apy";
 import { useJarGaugeApy } from "./Gauges/useJarGaugeApy";
-import { FarmInfo } from "./Farms";
-
-export const GaugeInfo = FarmInfo;
+import { PickleCore } from "./Jars/usePickleCore";
+import { createIFarmInfo } from "./Farms";
 
 function useGauges() {
+  const { pickleCore } = PickleCore.useContainer();
+
   console.log("useGauges 1");
   const { rawGauges } = useFetchGauges();
   console.log("useGauges 2: " + rawGauges);
@@ -18,8 +19,9 @@ function useGauges() {
   console.log("useGauges 4: " + uniV2GaugesWithApy);
   const { jarGaugeWithApy } = useJarGaugeApy(gaugesWithReward);
   console.log("useGauges 5: " + jarGaugeWithApy);
+  const ifarmInfo = createIFarmInfo(pickleCore);
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
-    const { tokenName, poolName } = GaugeInfo[gauge.token];
+    const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
     return {
       ...gauge,
       tokenName,
@@ -34,15 +36,15 @@ function useGauges() {
   const jarGauges2 = jarGaugeWithApy?.map((gauge) => {
     console.log("Gauge Token: " + gauge.token);
     if( gauge.token ) {
-      if( GaugeInfo[gauge.token] ) {
-        const { tokenName, poolName } = GaugeInfo[gauge.token];
+      if( ifarmInfo[gauge.token.toLowerCase()] ) {
+        const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
         return {
           ...gauge,
           tokenName,
           poolName,
         };
       } else {
-        console.log("FIXME: token " + gauge.token + " MISSING in gaugeInfo");
+        console.log("FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo");
         return undefined;
       }
     }
