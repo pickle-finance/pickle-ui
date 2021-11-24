@@ -29,7 +29,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
 
       const mcMasterchef = new MulticallContract(
         masterchef.address,
-        masterchef.interface.fragments,
+        [...masterchef.interface.fragments],
       );
 
       let farmInfo = await multicallProvider.all(

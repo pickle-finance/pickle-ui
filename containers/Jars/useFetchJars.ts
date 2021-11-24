@@ -9,8 +9,9 @@ import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { NETWORK_NAMES_PFCORE_MAP } from "containers/config";
 import { ChainNetwork } from "picklefinance-core";
-import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleCore } from "./usePickleCore";
+import { isJarEnabled } from "./jars";
 
 export type Jar = {
   depositToken: Erc20Contract;
@@ -27,7 +28,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
     multicallProvider,
     chainName,
   } = Connection.useContainer();
-  const { controller, strategy, controllerMai } = Contracts.useContainer();
+  const { controller, strategy } = Contracts.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
 
@@ -50,8 +51,8 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
         return [];
       }
 
-      const chainJars : JarDefinition[] = allJars.filter((x)=>x.chain === pfcoreChainName && 
-          x.enablement !== AssetEnablement.PERMANENTLY_DISABLED &&  x.enablement !== AssetEnablement.DEV);
+      const chainJars : JarDefinition[] = allJars.filter((x)=>
+          x.chain === pfcoreChainName && isJarEnabled(x.contract, pickleCore));
       const possibleJars : (Jar|undefined)[] = chainJars.map((x)=>{
         const z : Jar = {
           depositToken: Erc20Factory.connect(x.depositToken.addr, provider),

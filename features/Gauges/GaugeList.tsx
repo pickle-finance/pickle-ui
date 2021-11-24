@@ -27,6 +27,7 @@ import { useTranslation } from "next-i18next";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { AssetEnablement, AssetProtocol, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { isJarDisabled, isJarEnabled } from "containers/Jars/jars";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -79,6 +80,7 @@ export const GaugeList: FC = () => {
     );
 
   const gaugesWithAPY = gaugeData.map((gauge) => {
+
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
     const maybeJar = getJarFarmMap(pickleCore)[gauge.depositToken.address];
@@ -93,6 +95,7 @@ export const GaugeList: FC = () => {
     ) {
       APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
     }
+
     const uncompounded = APYs.map((x) => {
       const k: string = Object.keys(x)[0];
       const shouldNotUncompound = k === "pickle" || k === "lp";
@@ -121,20 +124,19 @@ export const GaugeList: FC = () => {
 
   const activeJars = jarData.filter((jar) => {
       const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
-      return foundJar && foundJar.enablement === AssetEnablement.ENABLED;
+      return foundJar && isJarEnabled(foundJar.contract, pickleCore);
     })
     .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const inactiveJars = jarData.filter((jar) => {
     const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
-    return foundJar && foundJar.enablement === AssetEnablement.DISABLED;
+    return foundJar && isJarDisabled(foundJar.contract, pickleCore);
   });
 
   const yearnJars = jarData.filter((jar) => {
     const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
     const gauge = findGauge(jar);
-    const activeAndYearn = foundJar && foundJar.enablement === AssetEnablement.ENABLED
-      && foundJar.protocol === AssetProtocol.YEARN;
+    const activeAndYearn = foundJar && isJarEnabled(foundJar.contract, pickleCore) && foundJar.protocol === AssetProtocol.YEARN;
     return showUserJars
       ? activeAndYearn &&
           (parseFloat(formatEther(jar.deposited)) ||
