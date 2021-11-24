@@ -10,6 +10,7 @@ import { FarmWithApy } from "./useUniV2Apy";
 import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
+import { getAddress } from "@ethersproject/address";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;
@@ -27,10 +28,10 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
   const calculateApy = async () => {
     if (inputFarms && masterchef && jars && prices && multicallProvider) {
-      const jarAddresses = jars.map((x) => x.contract.address);
+      const jarAddresses = jars.map((x) => getAddress(x.contract.address));
       const jarFarms = inputFarms
         .filter(
-          (farm) => getJarFarmMap(pickleCore)[farm.lpToken],
+          (farm) => getJarFarmMap(pickleCore)[getAddress(farm.lpToken)],
         )
         .filter((x) => jarAddresses.includes(x.lpToken))
         .reduce((p, c) => {
