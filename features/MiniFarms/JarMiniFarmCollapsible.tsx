@@ -279,7 +279,8 @@ export const JarMiniFarmCollapsible: FC<{
     parseEther(depositAmount)
       .mul(ethers.utils.parseUnits("1", 18))
       .div(realRatio)
-      .add(deposited);
+      .add(deposited)
+      .sub("1");
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
