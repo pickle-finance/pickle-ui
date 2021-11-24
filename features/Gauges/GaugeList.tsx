@@ -121,7 +121,7 @@ export const GaugeList: FC = () => {
 
   const activeJars = jarData.filter((jar) => {
       const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
-      return foundJar && foundJar.enablement === AssetEnablement.ENABLED;
+      return foundJar && foundJar.enablement === AssetEnablement.ENABLED && !(foundJar.protocol === AssetProtocol.YEARN);
     })
     .sort((a, b) => b.totalAPY - a.totalAPY);
 
