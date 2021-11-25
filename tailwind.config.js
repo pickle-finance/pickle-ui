@@ -44,6 +44,7 @@ module.exports = {
         gray: {
           light: "#c0c4c5",
           lighter: "#e0e1e2",
+          outline: "#2b383b",
           dark: "#1f2d30",
         },
         green: {
@@ -53,6 +54,9 @@ module.exports = {
       },
       scale: {
         "-1": "-1",
+      },
+      borderWidth: {
+        3: "3px",
       },
     },
   },

@@ -1,11 +1,16 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { CashIcon, DatabaseIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
+import HarvestModal from "./HarvestModal";
 
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
+  let [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   return (
     <div className="bg-black-light rounded-2xl border border-gray-dark shadow">
@@ -43,7 +48,10 @@ const PerformanceCard: FC = () => {
         </div>
       </div>
       <div className="relative px-6 py-4 sm:px-8 sm:py-6">
-        <Button href="#">{t("v2.dashboard.harvestRewards")}</Button>
+        <Button handleClick={openModal} size="normal">
+          {t("v2.dashboard.harvestRewards")}
+        </Button>
+        <HarvestModal isOpen={isOpen} closeModal={closeModal} />
       </div>
     </div>
   );
