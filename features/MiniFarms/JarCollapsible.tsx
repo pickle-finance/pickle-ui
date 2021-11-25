@@ -46,16 +46,17 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
   // OKEx
-  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": (
+  // Please ensure addresses are lowercased
+  "0x8e68c0216562bcea5523b27ec6b9b6e1cccbbf88": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
   ),
-  "0x089dedbFD12F2aD990c55A2F1061b8Ad986bFF88": (
+  "0x089dedbfd12f2ad990c55a2f1061b8ad986bff88": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/usdt.png"} />
   ),
-  "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": (
+  "0x407f7a2f61e5bab199f7b9de0ca330527175da93": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/ethereum.png"} />
   ),
-  "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": (
+  "0xf3098211d012ff5380a03d80f150ac6e5753caa8": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
   ),
   "0x8009edebbbdeb4a3bb3003c79877fcd98ec7fb45": (
@@ -67,10 +68,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xeb02a695126b998e625394e43dfd26ca4a75ce2b": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/weth.png"} />
   ),
-  "0xE9313b7dea9cbaBd2df710C25bef44A748Ab38a9": (
+  "0xe9313b7dea9cbabd2df710c25bef44a748ab38a9": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/dai.png"} />
   ),
-  "0xa25E1C05c58EDE088159cc3cD24f49445d0BE4b2": (
+  "0xa25e1c05c58ede088159cc3cd24f49445d0be4b2": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
 };
@@ -232,7 +233,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
