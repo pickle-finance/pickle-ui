@@ -9,9 +9,9 @@ import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { NETWORK_NAMES_PFCORE_MAP } from "containers/config";
 import { ChainNetwork } from "picklefinance-core";
-import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleCore } from "./usePickleCore";
-import { isJarEnabled, shouldJarBeInUi } from "./jars";
+import { shouldJarBeInUi } from "./jars";
 
 export type Jar = {
   depositToken: Erc20Contract;
@@ -28,34 +28,35 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
     multicallProvider,
     chainName,
   } = Connection.useContainer();
-  const { controller, strategy, controllerMai } = Contracts.useContainer();
+  const { controller, strategy } = Contracts.useContainer();
   const { pickleCore } = PickleCore.useContainer();
-
 
   const [jars, setJars] = useState<Array<Jar> | null>(null);
 
   const getJars = async () => {
     // I want to use r2, but it breaks the site. Find out why
-    const r2 : Jar[] = await getJarsPfcoreImpl();
+    const r2: Jar[] = await getJarsPfcoreImpl();
     setJars(r2);
-  }
+  };
 
-
-  const getJarsPfcoreImpl = async () : Promise<Jar[]> => {
+  const getJarsPfcoreImpl = async (): Promise<Jar[]> => {
     if (controller && strategy && multicallProvider && chainName) {
-      const pfcoreChainName : ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName];
-      const allJars : JarDefinition[] | undefined = pickleCore?.assets.jars;
-      if( !allJars ) {
+      const pfcoreChainName: ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName];
+      const allJars: JarDefinition[] | undefined = pickleCore?.assets.jars;
+      if (!allJars) {
         // Time to return, dead
         console.log("This shit is dead, cant even find jars");
         return [];
       }
 
-      const chainJars : JarDefinition[] = allJars.filter((x)=>x.chain === pfcoreChainName && 
-        shouldJarBeInUi(x.contract, pickleCore));
+      const chainJars: JarDefinition[] = allJars.filter(
+        (x) =>
+          x.chain === pfcoreChainName &&
+          shouldJarBeInUi(x.contract, pickleCore),
+      );
 
-      const possibleJars : (Jar|undefined)[] = chainJars.map((x)=>{
-        const z : Jar = {
+      const possibleJars: (Jar | undefined)[] = chainJars.map((x) => {
+        const z: Jar = {
           depositToken: Erc20Factory.connect(x.depositToken.addr, provider),
           depositTokenName: x.depositToken.name,
           jarName: x.id,
@@ -65,9 +66,9 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
         return z;
       });
-      const jarsOnly : Jar[] = [];
-      for( let i = 0; i < possibleJars.length; i++ ) {
-        if( possibleJars[i] !== undefined ) 
+      const jarsOnly: Jar[] = [];
+      for (let i = 0; i < possibleJars.length; i++) {
+        if (possibleJars[i] !== undefined)
           jarsOnly.push(possibleJars[i] as Jar);
       }
       return jarsOnly;
@@ -77,7 +78,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   useEffect(() => {
     getJars();
-  }, [chainName, multicallProvider, controller, blockNum]);
+  }, [pickleCore, chainName, multicallProvider, controller, blockNum]);
 
   return { jars };
 };
