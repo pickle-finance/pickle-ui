@@ -74,7 +74,7 @@ const GasPriceIndicator: FC = () => {
         <>
           <Popover.Button
             disabled={!data}
-            className="group rounded-md inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2"
+            className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2"
           >
             <GasPumpIcon className="h-5 w-5 mr-2 fill-current" />
             <GasPriceIndicatorButtonLabel data={data} />

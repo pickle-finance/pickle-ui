@@ -280,6 +280,10 @@
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
     },
+    "farms": {
+      "harvest": "Harvest",
+      "harvestRewards": "Harvest rewards"
+    },
     "gasPrices": {
       "fast": "Fast",
       "slow": "Slow",
