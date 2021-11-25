@@ -74,6 +74,11 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xa25e1c05c58ede088159cc3cd24f49445d0be4b2": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
+
+  // Moonriver
+  "0x7eda899b3522683636746a2f3a7814e6ffca75e1": (
+    <LpIcon swapIconSrc={"/moonriver.png"} tokenIconSrc={"/solar.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

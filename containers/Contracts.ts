@@ -227,6 +227,8 @@ function useContracts() {
         return config.addresses.Polygon;
       case NETWORK_NAMES.ARB:
         return config.addresses.Arbitrum;
+      case NETWORK_NAMES.MOONRIVER:
+        return config.addresses.Moonriver;
       case NETWORK_NAMES.ETH:
       default:
         return config.addresses.Ethereum;

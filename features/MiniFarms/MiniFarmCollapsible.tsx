@@ -139,8 +139,6 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     text: t("farms.harvest"),
   });
 
-  const isOK = chainName === NETWORK_NAMES.OKEX;
-
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }, { matic: maticApy * 100 }];
 
@@ -226,7 +224,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <br />
               {harvestableMaticStr}{" "}
-              <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+              <MiniIcon source={"/matic.png"} />
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>

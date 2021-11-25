@@ -10,6 +10,7 @@ const blocksPerMinute: Record<number,number> = {
     42161: 20,      // arb
     66: 20,         // oec
     1666600000: 30, // harmony
+    1285: 4.3,      // moonriver
 };
 
 const usePickleCore = () => {

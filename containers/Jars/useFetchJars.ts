@@ -41,7 +41,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   const getJarsPfcoreImpl = async (): Promise<Jar[]> => {
     if (controller && strategy && multicallProvider && chainName) {
-      const pfcoreChainName: ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName];
+      const pfcoreChainName: ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName]
       const allJars: JarDefinition[] | undefined = pickleCore?.assets.jars;
       if (!allJars) {
         // Time to return, dead

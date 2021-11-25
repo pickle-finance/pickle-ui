@@ -7,10 +7,11 @@ const RPC_URLS = {
   66: "https://exchainrpc.okex.org",
   137: "https://rpc-mumbai.matic.today",
   42161: "https://arb1.arbitrum.io/rpc",
+  1285: "https://rpc.moonriver.moonbeam.network",
 };
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 66, 137, 42161],
+  supportedChainIds: [1, 66, 137, 42161, 1285],
 });
 
 export const walletconnect = new WalletConnectConnector({

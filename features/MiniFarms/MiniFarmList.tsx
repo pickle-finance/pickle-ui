@@ -28,14 +28,15 @@ export interface JarApy {
 
 export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
-  const { farmData } = UserMiniFarms.useContainer();
+  let { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
-  
-  const isOK = chainName === NETWORK_NAMES.OKEX;
-  const isMatic = chainName === NETWORK_NAMES.POLY;
+
+  const noFarm =
+    chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+  farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
@@ -52,15 +53,13 @@ export const MiniFarmList: FC = () => {
     );
   }
   const farmsWithAPY = farmData.map((farm) => {
-    let APYs: JarApy[] = [
-      { pickle: farm.apy * 100 },
-      ...(isOK ? [{ okt: farm.maticApy * 100 }] : []),
-    ];
+    let APYs: JarApy[] = [{ pickle: farm.apy * 100 }];
 
-    const jar =
-    getJarFarmMap(pickleCore)[farm.depositToken.address];
+    const jar = getJarFarmMap(pickleCore)[farm.depositToken.address];
     if (jar) {
-      const farmingJar = jarData ? jarData.filter((x) => x.name === jar.jarName)[0] : undefined;
+      const farmingJar = jarData
+        ? jarData.filter((x) => x.name === jar.jarName)[0]
+        : undefined;
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
     }
 
@@ -109,12 +108,24 @@ export const MiniFarmList: FC = () => {
     };
   });
 
-  const activeJars = !jarData ? [] : jarData.filter((jar) => isJarEnabled(jar.jarContract.address, pickleCore));
+  const activeJars = !jarData
+    ? []
+    : jarData.filter((jar) =>
+        isJarEnabled(jar.jarContract.address, pickleCore),
+      );
 
-  const inactiveJars = !jarData ? [] : jarData.filter((jar) => {
-    const foundJar = pickleCore?.assets.jars.find((x) => x.contract.toLowerCase() === jar.jarContract.address.toLowerCase());
-    return foundJar === undefined || foundJar.enablement === AssetEnablement.DISABLED;
-  });
+  const inactiveJars = !jarData
+    ? []
+    : jarData.filter((jar) => {
+        const foundJar = pickleCore?.assets.jars.find(
+          (x) =>
+            x.contract.toLowerCase() === jar.jarContract.address.toLowerCase(),
+        );
+        return (
+          foundJar === undefined ||
+          foundJar.enablement === AssetEnablement.DISABLED
+        );
+      });
 
   return (
     <Container>
@@ -148,8 +159,10 @@ export const MiniFarmList: FC = () => {
           );
           return (
             <Grid xs={24} key={jar.name}>
-              {farm && !isOK && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
-              {isOK && <JarCollapsible jarData={jar} />}
+              {farm && !noFarm && (
+                <JarMiniFarmCollapsible farmData={farm} jarData={jar} />
+              )}
+              {noFarm && <JarCollapsible jarData={jar} />}
             </Grid>
           );
         })}

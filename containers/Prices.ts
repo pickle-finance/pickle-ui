@@ -64,6 +64,8 @@ interface PriceObject {
   dodo: number;
   work: number;
   jswap: number;
+  movr: number;
+  solar: number;
 }
 
 export type PriceIds = keyof PriceObject;
@@ -133,6 +135,8 @@ function usePrices() {
         "hundred-finance",
         "dodo",
         "the-employment-commons-work-token",
+        "moonriver",
+        "solarbeam"
       ],
       vs_currencies: ["usd"],
     });
@@ -204,6 +208,8 @@ function usePrices() {
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
       work: response["the-employment-commons-work-token"].usd,
+      movr: response["moonriver"].usd,
+      solar: response["solarbeam"].usd,
       jswap: cmcData
         ? cmcData?.data[Object.keys(cmcData.data)[0]]?.quote?.USD?.price
         : 0, // CG does not provide jswap price

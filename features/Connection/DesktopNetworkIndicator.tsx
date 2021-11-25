@@ -139,6 +139,8 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://www.oklink.com/okexchain/block/${blockNum}`;
     if (chainName === NETWORK_NAMES.ARB)
       return `https://arbiscan.io/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.MOONRIVER)
+      return `https://moonriver.moonscan.io/block/${blockNum}`;
     else return `https://etherscan.io/block/${blockNum}`;
   };
 
@@ -149,6 +151,8 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://www.oklink.com/okexchain/address/${address}`;
     if (chainName === NETWORK_NAMES.ARB)
       return `https://arbiscan.io/address/${address}`;
+    if (chainName === NETWORK_NAMES.MOONRIVER)
+      return `https://moonriver.moonscan.io/address/${address}`;
     else return `https://etherscan.io/address/${address}`;
   };
 
@@ -199,6 +203,9 @@ export const DesktopNetworkIndicator: FC = () => {
         </Select.Option>
         <Select.Option value="42161">
           {t("connection.networks.arbitrum")}
+        </Select.Option>
+        <Select.Option value="1285">
+          {t("connection.networks.moonriver")}
         </Select.Option>
       </Select>
       <AddressContainer
