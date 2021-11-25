@@ -18,9 +18,7 @@ import {
   ERC20Transfer,
   Status as ERC20TransferStatus,
 } from "../../containers/Erc20Transfer";
-import {
-  PICKLE_ETH_GAUGE,
-} from "../../containers/Gauges/gauges";
+import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { Jars } from "../../containers/Jars";
@@ -253,8 +251,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     const pickleAPYMin = fullApy * 100 * 0.4;
     const pickleAPYMax = fullApy * 100;
 
-    const maybeJar =
-      getJarFarmMap(pickleCore)[depositToken.address];
+    const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
     if (jars && maybeJar) {
       const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;

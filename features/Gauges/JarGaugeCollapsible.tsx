@@ -26,7 +26,11 @@ import {
   ZapperIcon,
   MiniIcon,
 } from "../../components/TokenIcon";
-import { isUsdcToken, isYveCrvEthJarToken, isMainnetMimEthJarDepositToken } from "../../containers/Jars/jars";
+import {
+  isUsdcToken,
+  isYveCrvEthJarToken,
+  isMainnetMimEthJarDepositToken,
+} from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
@@ -284,7 +288,7 @@ export const JarGaugeCollapsible: FC<{
     harvestable,
     depositTokenName: gaugeDepositTokenName,
     fullApy,
-    uncompounded
+    uncompounded,
   } = gaugeData;
 
   const stakedNum = parseFloat(
@@ -315,7 +319,6 @@ export const JarGaugeCollapsible: FC<{
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
 
   const realAPY = totalAPY + pickleAPY;
-
 
   const totalAPY1: number = APYs.map((x) => {
     return Object.values(x)
@@ -453,7 +456,9 @@ export const JarGaugeCollapsible: FC<{
 
   const isyveCRVFarm = isYveCrvEthJarToken(depositToken.address.toLowerCase());
 
-  const isMimJar = isMainnetMimEthJarDepositToken(depositToken.address.toLowerCase());
+  const isMimJar = isMainnetMimEthJarDepositToken(
+    depositToken.address.toLowerCase(),
+  );
 
   const depositGauge = async () => {
     if (!approved) {
@@ -644,10 +649,14 @@ export const JarGaugeCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  const tvlJarData = pickleCore?.assets.jars.filter( x => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase() )[0];
+  const tvlJarData = pickleCore?.assets.jars.filter(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )[0];
   const tvlNum =
-    tvlJarData &&
-    tvlJarData.details.harvestStats ? tvlJarData.details.harvestStats.balanceUSD: 0;
+    tvlJarData && tvlJarData.details.harvestStats
+      ? tvlJarData.details.harvestStats.balanceUSD
+      : 0;
   const tvlStr = getFormatString(tvlNum);
 
   return (
@@ -785,7 +794,11 @@ export const JarGaugeCollapsible: FC<{
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(formatEther(isUsdc ? depositBalance.mul(USDC_SCALE) : depositBalance));
+                setDepositAmount(
+                  formatEther(
+                    isUsdc ? depositBalance.mul(USDC_SCALE) : depositBalance,
+                  ),
+                );
               }}
             >
               {t("balances.max")}

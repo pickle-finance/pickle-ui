@@ -92,7 +92,7 @@ function useConnection() {
 
       setMulticallAddress(66, "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa");
       setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
-      
+
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
         .init()

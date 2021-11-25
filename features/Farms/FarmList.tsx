@@ -30,8 +30,8 @@ export const FarmList: FC = () => {
   const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
-  const indexofYvecrv = inactiveFarms.findIndex(
-    (x) => isYveCrvEthJarToken(x.depositToken.address)
+  const indexofYvecrv = inactiveFarms.findIndex((x) =>
+    isYveCrvEthJarToken(x.depositToken.address),
   );
 
   const moveInArray = (arr: UserFarmData[], from: number, to: number) => {

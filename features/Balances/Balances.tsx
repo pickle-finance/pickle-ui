@@ -131,7 +131,7 @@ export const Balances: FC = () => {
                   text={tooltipText}
                 >
                   {t("balances.totalSupply")}:{" "}
-                  {totalSupply && prices?.pickle 
+                  {totalSupply && prices?.pickle
                     ? formatPickles(marketCap / prices?.pickle)
                     : "--"}
                   <PickleIcon size={14} />

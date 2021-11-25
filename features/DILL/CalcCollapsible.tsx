@@ -27,7 +27,7 @@ export const CalcCollapsible: FC<{
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState<number>();
   const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>();
-  
+
   const { t } = useTranslation("common");
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
@@ -80,27 +80,31 @@ export const CalcCollapsible: FC<{
     setDillRequired(dillRequired);
   };
 
-  const visibleNameForGauge = (gauge: UserGaugeData) : string => {
-    let votable : PickleAsset[] = [];
-    if( pickleCore && pickleCore.assets && pickleCore.assets.jars) {
+  const visibleNameForGauge = (gauge: UserGaugeData): string => {
+    let votable: PickleAsset[] = [];
+    if (pickleCore && pickleCore.assets && pickleCore.assets.jars) {
       votable = votable.concat(pickleCore.assets.jars);
     }
-    if( pickleCore && pickleCore.assets && pickleCore.assets.standaloneFarms) {
+    if (pickleCore && pickleCore.assets && pickleCore.assets.standaloneFarms) {
       votable = votable.concat(pickleCore.assets.standaloneFarms);
     }
-    const depositTokenAddr : string = gauge.depositToken.address.toLowerCase();
+    const depositTokenAddr: string = gauge.depositToken.address.toLowerCase();
     let val = gauge.depositTokenName;
-    const findFarm = votable.find((x)=>x.depositToken.addr.toLowerCase() === depositTokenAddr);
-    if(findFarm !== undefined) {
+    const findFarm = votable.find(
+      (x) => x.depositToken.addr.toLowerCase() === depositTokenAddr,
+    );
+    if (findFarm !== undefined) {
       val = val + " (" + findFarm.id + ")";
     } else {
-      const findJar = votable.find((x)=>x.contract.toLowerCase() === depositTokenAddr);
-      if( findJar !== undefined ) {
+      const findJar = votable.find(
+        (x) => x.contract.toLowerCase() === depositTokenAddr,
+      );
+      if (findJar !== undefined) {
         val = val + " (" + findJar.id + ")";
       }
     }
     return val;
-  }
+  };
   const renderSelectOptions = (gauge: UserGaugeData) => {
     const visibleName = visibleNameForGauge(gauge);
     return (
@@ -112,7 +116,7 @@ export const CalcCollapsible: FC<{
         {visibleName}
       </Select.Option>
     );
-    }
+  };
 
   useEffect(() => {
     if (!userChanged && dillStats && dillStats.balance)

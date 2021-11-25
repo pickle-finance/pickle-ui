@@ -4,7 +4,6 @@ import { Prices } from "../Prices";
 import { Jar } from "./useFetchJars";
 import { PickleCore } from "./usePickleCore";
 
-
 export interface JarApy {
   [k: string]: number;
 }
@@ -27,7 +26,9 @@ const getCompoundingAPY = (apr: number) => {
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { pickleCore } = PickleCore.useContainer();
   const { prices } = Prices.useContainer();
-  const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(null);
+  const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
+    null,
+  );
 
   const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {

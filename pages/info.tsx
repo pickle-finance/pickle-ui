@@ -208,7 +208,9 @@ const FarmRow = (props) => {
         title={
           <span>
             {t("info.daily", {
-              percent: `${((isFarm ? jar.oneDayFarm : jar.oneDay) / 365).toFixed(2)}`,
+              percent: `${(
+                (isFarm ? jar.oneDayFarm : jar.oneDay) / 365
+              ).toFixed(2)}`,
             })}
           </span>
         }
@@ -230,7 +232,8 @@ const FarmRow = (props) => {
           <span>
             {t("info.weekly", {
               percent: (
-                (isFarm ? jar.sevenDayFarm : jar.sevenDay) / 52).toFixed(2),
+                (isFarm ? jar.sevenDayFarm : jar.sevenDay) / 52
+              ).toFixed(2),
             })}
           </span>
         }
@@ -252,7 +255,8 @@ const FarmRow = (props) => {
           <span>
             {t("info.monthly", {
               percent: (
-                (isFarm ? jar.thirtyDayFarm : jar.thirtyDay) / (365 / 30)
+                (isFarm ? jar.thirtyDayFarm : jar.thirtyDay) /
+                (365 / 30)
               ).toFixed(2),
             })}
           </span>

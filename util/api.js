@@ -17,10 +17,10 @@ export const getJarChart = async (assets) => {
 
 export const getAllJarsChart = async () => {
   const alljarsData = await getJarChartData("alljars");
-  const jarData = Object.keys(alljarsData).map( (assetName) => {
-    return { asset: assetName, data: alljarsData[assetName] }
+  const jarData = Object.keys(alljarsData).map((assetName) => {
+    return { asset: assetName, data: alljarsData[assetName] };
   });
-  
+
   return jarData;
 };
 
@@ -137,5 +137,7 @@ export const getCoinData = async (coin) => {
 };
 
 export const getPickleCore = async () => {
-  return await fetch(`${pickleApi}/protocol/pfcore/`).then( (response) => response.json() );
+  return await fetch(`${pickleApi}/protocol/pfcore/`).then((response) =>
+    response.json(),
+  );
 };

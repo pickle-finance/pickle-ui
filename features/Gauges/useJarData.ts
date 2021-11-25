@@ -17,25 +17,27 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
 
   const updateJarData = async () => {
     if (jars) {
-      const promises = jars?.map((jar) : UserJarData => {
-        const balance = getBalance(jar.depositToken.address);
-        const deposited = getBalance(jar.contract.address);
-        return {
-          name: jar.jarName,
-          jarContract: jar.contract,
-          depositToken: jar.depositToken,
-          depositTokenName: jar.depositTokenName,
-          ratio: jar.ratio || 0,
-          balance: balance || 0,
-          deposited: deposited || 0,
-          usdPerPToken: jar.usdPerPToken || 0,
-          APYs: jar.APYs,
-          totalAPY: jar.totalAPY,
-          apr: jar.apr,
-          depositTokenLink: jar.depositTokenLink,
-          tvlUSD: jar.tvlUSD || 0,
-        };
-      });
+      const promises = jars?.map(
+        (jar): UserJarData => {
+          const balance = getBalance(jar.depositToken.address);
+          const deposited = getBalance(jar.contract.address);
+          return {
+            name: jar.jarName,
+            jarContract: jar.contract,
+            depositToken: jar.depositToken,
+            depositTokenName: jar.depositTokenName,
+            ratio: jar.ratio || 0,
+            balance: balance || 0,
+            deposited: deposited || 0,
+            usdPerPToken: jar.usdPerPToken || 0,
+            APYs: jar.APYs,
+            totalAPY: jar.totalAPY,
+            apr: jar.apr,
+            depositTokenLink: jar.depositTokenLink,
+            tvlUSD: jar.tvlUSD || 0,
+          };
+        },
+      );
 
       const newJarData = await Promise.all(promises);
 

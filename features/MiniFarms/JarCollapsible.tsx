@@ -219,8 +219,18 @@ export const JarCollapsible: FC<{
     );
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
-    setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
-    setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
+    setButtonStatus(
+      dStatus,
+      t("farms.depositing"),
+      t("farms.deposit"),
+      setDepositButton,
+    );
+    setButtonStatus(
+      wStatus,
+      t("farms.withdrawing"),
+      t("farms.withdraw"),
+      setWithdrawButton,
+    );
   }, [erc20TransferStatuses]);
 
   return (
@@ -288,7 +298,7 @@ export const JarCollapsible: FC<{
         <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-            {t("balances.balance")}: {balStr} {depositTokenName}
+              {t("balances.balance")}: {balStr} {depositTokenName}
             </div>
             <Link
               color

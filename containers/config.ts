@@ -19,12 +19,11 @@ export enum NETWORK_NAMES {
   ARB = "Arbitrum",
 }
 
-
-export const NETWORK_NAMES_PFCORE_MAP : any = {
-  "Ethereum": ChainNetwork.Ethereum,
-  "Polygon": ChainNetwork.Polygon,
-  "OKEx": ChainNetwork.OKEx,
-  "Arbitrum": ChainNetwork.Arbitrum,
+export const NETWORK_NAMES_PFCORE_MAP: any = {
+  Ethereum: ChainNetwork.Ethereum,
+  Polygon: ChainNetwork.Polygon,
+  OKEx: ChainNetwork.OKEx,
+  Arbitrum: ChainNetwork.Arbitrum,
 };
 
 export type ChainName =

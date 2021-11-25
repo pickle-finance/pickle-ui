@@ -26,10 +26,9 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
       const tokens = await gaugeProxy.tokens();
       const totalWeight = await gaugeProxy.totalWeight();
 
-      const mcGaugeProxy = new MulticallContract(
-        gaugeProxy.address,
-        [...gaugeProxy.interface.fragments],
-      );
+      const mcGaugeProxy = new MulticallContract(gaugeProxy.address, [
+        ...gaugeProxy.interface.fragments,
+      ]);
 
       const gaugeAddresses = await multicallProvider.all(
         tokens.map((token) => {
@@ -45,28 +44,25 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
 
       const gaugeRewardRates = await multicallProvider.all(
         tokens.map((token, index) => {
-          return new MulticallContract(
-            gaugeAddresses[index],
-            [...gauge.interface.fragments],
-          ).rewardRate();
+          return new MulticallContract(gaugeAddresses[index], [
+            ...gauge.interface.fragments,
+          ]).rewardRate();
         }),
       );
 
       const derivedSupplies = await multicallProvider.all(
         tokens.map((token, index) => {
-          return new MulticallContract(
-            gaugeAddresses[index],
-            [...gauge.interface.fragments],
-          ).derivedSupply();
+          return new MulticallContract(gaugeAddresses[index], [
+            ...gauge.interface.fragments,
+          ]).derivedSupply();
         }),
       );
 
       const totalSupplies = await multicallProvider.all(
         tokens.map((token, index) => {
-          return new MulticallContract(
-            gaugeAddresses[index],
-            [...gauge.interface.fragments],
-          ).totalSupply();
+          return new MulticallContract(gaugeAddresses[index], [
+            ...gauge.interface.fragments,
+          ]).totalSupply();
         }),
       );
 

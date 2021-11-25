@@ -11,17 +11,22 @@ interface IFarmInfo {
   [key: string]: { tokenName: string; poolName: string };
 }
 
-export const createIFarmInfo = (pfcore: PickleModelJson.PickleModelJson | null) : IFarmInfo => {
-  if( !pfcore) {
+export const createIFarmInfo = (
+  pfcore: PickleModelJson.PickleModelJson | null,
+): IFarmInfo => {
+  if (!pfcore) {
     return {};
   }
-  
-  const ret : IFarmInfo = {};
-  for( let i = 0; i < pfcore.assets.jars.length; i++ ) {
-    if( pfcore.assets.jars[i].id !== undefined && pfcore.assets.jars[i].contract !== undefined ) {
+
+  const ret: IFarmInfo = {};
+  for (let i = 0; i < pfcore.assets.jars.length; i++) {
+    if (
+      pfcore.assets.jars[i].id !== undefined &&
+      pfcore.assets.jars[i].contract !== undefined
+    ) {
       const r = {
         tokenName: pfcore.assets.jars[i].depositToken.name,
-        poolName: pfcore.assets.jars[i].depositToken.name
+        poolName: pfcore.assets.jars[i].depositToken.name,
       };
       ret[pfcore.assets.jars[i].depositToken.addr.toLowerCase()] = r;
       ret[pfcore.assets.jars[i].contract.toLowerCase()] = r;
@@ -30,9 +35,9 @@ export const createIFarmInfo = (pfcore: PickleModelJson.PickleModelJson | null) 
   ret["0xdc98556Ce24f007A5eF6dC1CE96322d65832A819".toLowerCase()] = {
     tokenName: "UNI PICKLE/ETH",
     poolName: "Pickle Power",
-  }
+  };
   return ret;
-}
+};
 
 function useFarms() {
   const { rawFarms } = useFetchFarms();

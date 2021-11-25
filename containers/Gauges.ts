@@ -23,8 +23,8 @@ function useGauges() {
     };
   });
   const jarGauges2 = jarGaugeWithApy?.map((gauge) => {
-    if( gauge.token ) {
-      if( ifarmInfo[gauge.token.toLowerCase()] ) {
+    if (gauge.token) {
+      if (ifarmInfo[gauge.token.toLowerCase()]) {
         const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
         return {
           ...gauge,
@@ -32,12 +32,16 @@ function useGauges() {
           poolName,
         };
       } else {
-        console.log("FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo");
+        console.log(
+          "FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo",
+        );
         return undefined;
       }
     }
   });
-  const jarGauges = jarGauges2 ? jarGauges2.filter((x) => x !== undefined && x !== null) : [];
+  const jarGauges = jarGauges2
+    ? jarGauges2.filter((x) => x !== undefined && x !== null)
+    : [];
   const gauges = uniGauges && jarGauges ? [...uniGauges, ...jarGauges] : null;
 
   return {
