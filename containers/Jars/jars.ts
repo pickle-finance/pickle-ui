@@ -30,6 +30,10 @@ export const isMainnetMimEthJarDepositToken = (depositToken: string) => {
   return depositToken.toLowerCase() === "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C".toLowerCase();
 }
 
+export const shouldJarBeInUi = (jarContractAddress: string, pfcore: PickleModelJson.PickleModelJson | null) => {
+  return isJarEnabled(jarContractAddress, pfcore) || isJarDisabled(jarContractAddress, pfcore);
+}
+
 export const isJarEnabled = (jarContractAddress: string, pfcore: PickleModelJson.PickleModelJson | null) => {
   if( !pfcore ) 
     return false;
@@ -52,7 +56,6 @@ export const isJarDisabled = (jarContractAddress: string, pfcore: PickleModelJso
   }
   const found : JarDefinition | undefined = pfcore.assets.jars.find((x)=>x.contract.toLowerCase() === jarContractAddress.toLowerCase());
   if( found ) {
-    // TODO if you want to test dev-mode jars, change that here to include dev!
     if( found.enablement === AssetEnablement.DISABLED) {
       return true;
     }
