@@ -5,11 +5,12 @@ import { Contracts } from "../Contracts";
 
 export const usePicklePerBlock = (): { picklePerBlock: number | null } => {
   const { blockNum } = Connection.useContainer();
+  const { chainId } = Connection.useContainer();
   const { masterchef } = Contracts.useContainer();
   const [picklePerBlock, setPicklePerBlock] = useState<number | null>(null);
 
   const getData = async () => {
-    if (masterchef && blockNum) {
+    if (masterchef && blockNum && chainId === 1) {
       // queue up the promises
       const promises = [
         masterchef.picklePerBlock(),
