@@ -15,28 +15,28 @@ function useGauges() {
   const { jarGaugeWithApy } = useJarGaugeApy(gaugesWithReward);
   const ifarmInfo = createIFarmInfo(pickleCore);
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
-    const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
-    return {
-      ...gauge,
-      tokenName,
-      poolName,
-    };
+    if (ifarmInfo[gauge?.token.toLowerCase()]) {
+      const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
+      return {
+        ...gauge,
+        tokenName,
+        poolName,
+      };
+    }
   });
   const jarGauges2 = jarGaugeWithApy?.map((gauge) => {
-    if (gauge.token) {
-      if (ifarmInfo[gauge.token.toLowerCase()]) {
-        const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
-        return {
-          ...gauge,
-          tokenName,
-          poolName,
-        };
-      } else {
-        console.log(
-          "FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo",
-        );
-        return undefined;
-      }
+    if (ifarmInfo[gauge?.token.toLowerCase()]) {
+      const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
+      return {
+        ...gauge,
+        tokenName,
+        poolName,
+      };
+    } else {
+      console.log(
+        "FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo",
+      );
+      return undefined;
     }
   });
   const jarGauges = jarGauges2
