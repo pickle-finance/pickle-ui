@@ -277,14 +277,21 @@
       "dillAmount": "DILL amount",
       "picklesInWallet": "PICKLEs in wallet",
       "harvestRewards": "Harvest rewards",
+      "joinedFarms": "Joined Farms & Jars",
       "performance": "Performance",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
     },
     "farms": {
+      "apy": "APY",
+      "asset": "Asset",
+      "deposited": "Deposited",
+      "earned": "Earned",
+      "expand": "Expand",
       "harvest": "Harvest",
-      "harvestRewards": "Harvest rewards"
+      "harvestRewards": "Harvest rewards",
+      "liquidity": "Liquidity"
     },
     "gasPrices": {
       "fast": "Fast",
