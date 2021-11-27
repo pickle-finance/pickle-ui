@@ -22,7 +22,7 @@ const GasPriceIndicatorButtonLabel: FC<{
       />
     );
 
-  return <span>{data.average / 10}</span>;
+  return <span className="w-7">{data.average / 10}</span>;
 };
 
 const GasPriceIndicatorOptions: FC<{

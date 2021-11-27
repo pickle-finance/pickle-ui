@@ -66,7 +66,7 @@ const HarvestModal: FC<Props> = ({ isOpen, closeModal }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 z-10 transition-all bg-black-light bg-opacity-60" />
+            <Dialog.Overlay className="fixed inset-0 z-10 transition-all bg-black-light bg-opacity-50 backdrop-filter backdrop-blur-sm" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}

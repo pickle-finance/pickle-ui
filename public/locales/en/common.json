@@ -274,6 +274,8 @@
   "v2": {
     "dashboard": {
       "balance": "Balance",
+      "dillAmount": "DILL amount",
+      "picklesInWallet": "PICKLEs in wallet",
       "harvestRewards": "Harvest rewards",
       "performance": "Performance",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
