@@ -15,9 +15,7 @@ import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
 import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { uncompoundAPY } from "../../util/jars";
-import {
-  PICKLE_ETH_GAUGE,
-} from "../../containers/Gauges/gauges";
+import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
 import { NETWORK_NAMES } from "containers/config";
@@ -26,7 +24,11 @@ import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { AssetEnablement, AssetProtocol, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  AssetEnablement,
+  AssetProtocol,
+  JarDefinition,
+} from "picklefinance-core/lib/model/PickleModelJson";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -119,22 +121,41 @@ export const GaugeList: FC = () => {
     };
   });
 
-  const activeJars = jarData.filter((jar) => {
-      const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
-      return foundJar && foundJar.enablement === AssetEnablement.ENABLED && !(foundJar.protocol === AssetProtocol.YEARN);
+  const activeJars = jarData
+    .filter((jar) => {
+      const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+        (x) =>
+          x.depositToken.addr.toLowerCase() ===
+          jar.depositToken.address.toLowerCase(),
+      );
+      return (
+        foundJar &&
+        foundJar.enablement === AssetEnablement.ENABLED &&
+        !(foundJar.protocol === AssetProtocol.YEARN)
+      );
     })
     .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const inactiveJars = jarData.filter((jar) => {
-    const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
+    const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+      (x) =>
+        x.depositToken.addr.toLowerCase() ===
+        jar.depositToken.address.toLowerCase(),
+    );
     return foundJar && foundJar.enablement === AssetEnablement.DISABLED;
   });
 
   const yearnJars = jarData.filter((jar) => {
-    const foundJar : JarDefinition | undefined = pickleCore?.assets.jars.find((x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase());
+    const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+      (x) =>
+        x.depositToken.addr.toLowerCase() ===
+        jar.depositToken.address.toLowerCase(),
+    );
     const gauge = findGauge(jar);
-    const activeAndYearn = foundJar && foundJar.enablement === AssetEnablement.ENABLED
-      && foundJar.protocol === AssetProtocol.YEARN;
+    const activeAndYearn =
+      foundJar &&
+      foundJar.enablement === AssetEnablement.ENABLED &&
+      foundJar.protocol === AssetProtocol.YEARN;
     return showUserJars
       ? activeAndYearn &&
           (parseFloat(formatEther(jar.deposited)) ||
@@ -144,16 +165,24 @@ export const GaugeList: FC = () => {
 
   const userJars = jarData.filter((jar) => {
     const gauge = findGauge(jar);
-    const pfCoreJarDef : JarDefinition | undefined = pickleCore?.assets.jars.find((x)=>jar.depositToken.address.toLowerCase() === x.depositToken.addr.toLowerCase());
+    const pfCoreJarDef:
+      | JarDefinition
+      | undefined = pickleCore?.assets.jars.find(
+      (x) =>
+        jar.depositToken.address.toLowerCase() ===
+        x.depositToken.addr.toLowerCase(),
+    );
     return (
       (parseFloat(formatEther(jar.deposited)) ||
         parseFloat(formatEther(gauge?.staked || 0))) &&
-        pfCoreJarDef && pfCoreJarDef.protocol !== AssetProtocol.YEARN
+      pfCoreJarDef &&
+      pfCoreJarDef.protocol !== AssetProtocol.YEARN
     );
   });
 
-  const activeGauges = gaugesWithAPY
-    .sort((a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy));
+  const activeGauges = gaugesWithAPY.sort(
+    (a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy),
+  );
 
   const moveInArray = (arr: UserGaugeData[], from: number, to: number) => {
     var item = arr.splice(from, 1);
@@ -205,9 +234,11 @@ export const GaugeList: FC = () => {
       <VoteCollapsible
         gauges={activeGauges.filter(
           (x) =>
-            x.depositToken.address != "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48" && // pSUSHIETHYVECRV
+            x.depositToken.address !=
+              "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48" && // pSUSHIETHYVECRV
             x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM &&
-            x.depositToken.address != "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C", // pMIMETH
+            x.depositToken.address !=
+              "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C", // pMIMETH
         )}
       />
       <div

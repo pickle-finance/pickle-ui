@@ -30,9 +30,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
     if (inputFarms && masterchef && jars && prices && multicallProvider) {
       const jarAddresses = jars.map((x) => getAddress(x.contract.address));
       const jarFarms = inputFarms
-        .filter(
-          (farm) => getJarFarmMap(pickleCore)[getAddress(farm.lpToken)],
-        )
+        .filter((farm) => getJarFarmMap(pickleCore)[getAddress(farm.lpToken)])
         .filter((x) => jarAddresses.includes(x.lpToken))
         .reduce((p, c) => {
           if (!p.some((el) => el.lpToken === c.lpToken)) p.push(c);
@@ -41,8 +39,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
       const farmingJarsMCContracts = jarFarms
         .map((farm) => {
-          const { jarName } = getJarFarmMap(pickleCore)[
-            farm.lpToken];
+          const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
 
           const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
@@ -61,8 +58,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
       );
 
       const res = jarFarms.map((farm, idx) => {
-        const { jarName } = getJarFarmMap(pickleCore)[
-          farm.lpToken];
+        const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
 
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 

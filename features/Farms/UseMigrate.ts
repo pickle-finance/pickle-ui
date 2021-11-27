@@ -110,7 +110,8 @@ export const useMigrate = (
   const migrateYvboost = async () => {
     if (!yvBoostMigrator || !signer || !address || !erc20) return;
 
-    const pSushiEthYveCrvTokenAddress = "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48";
+    const pSushiEthYveCrvTokenAddress =
+      "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48";
     const pYvcrvContract = erc20.attach(pSushiEthYveCrvTokenAddress);
     const pYvcrvBalance = await pYvcrvContract.balanceOf(address);
 

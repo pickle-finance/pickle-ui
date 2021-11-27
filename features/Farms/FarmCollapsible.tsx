@@ -216,8 +216,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
 
-  const maybeJar =
-    getJarFarmMap(pickleCore)[depositToken.address];
+  const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;

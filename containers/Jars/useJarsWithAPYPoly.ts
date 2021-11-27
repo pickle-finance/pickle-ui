@@ -32,8 +32,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {
       const aprStats = pickleCore.assets.jars.filter(
-        (jar) =>
-          jarAddr.toLowerCase() === jar.contract.toLowerCase(),
+        (jar) => jarAddr.toLowerCase() === jar.contract.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
       const componentsAPYs: JarApy[] = aprStats?.components.map((component) => {
@@ -49,8 +48,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
       return {
         APYs: componentsAPYs,
-        apr: aprStats? aprStats.apr: 0,
-        totalAPY: aprStats? aprStats.apy: 0,
+        apr: aprStats ? aprStats.apr : 0,
+        totalAPY: aprStats ? aprStats.apy : 0,
         lp: lp,
       };
     }
@@ -60,22 +59,24 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateAPY = async () => {
     if (jars && pickleCore) {
-      const results = jars.map( (jar) => {
+      const results = jars.map((jar) => {
         interface JarData {
-          APYs: JarApy[],
-          apr: number,
-          totalAPY: number,
-          lp: number,
+          APYs: JarApy[];
+          apr: number;
+          totalAPY: number;
+          lp: number;
         }
 
-        const jarData: JarData = <JarData>calculateJarAPYs(jar.contract.address);
-        
+        const jarData: JarData = <JarData>(
+          calculateJarAPYs(jar.contract.address)
+        );
+
         return {
           ...jar,
           ...jarData,
-        }
+        };
       });
-        
+
       setJarsWithAPY(results);
     }
   };

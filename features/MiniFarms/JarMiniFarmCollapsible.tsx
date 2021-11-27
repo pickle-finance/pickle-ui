@@ -195,7 +195,6 @@ export const JarMiniFarmCollapsible: FC<{
   const { minichef, jar } = Contracts.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
-
   const stakedStr = formatNumber(stakedNum);
 
   const harvestableStr = formatNumber(
@@ -384,10 +383,14 @@ export const JarMiniFarmCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  const tvlJarData = pickleCore?.assets.jars.filter( x => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase() )[0];
+  const tvlJarData = pickleCore?.assets.jars.filter(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )[0];
   const tvlNum =
-    tvlJarData &&
-    tvlJarData.details.harvestStats ? tvlJarData.details.harvestStats.balanceUSD: tvlUSD;
+    tvlJarData && tvlJarData.details.harvestStats
+      ? tvlJarData.details.harvestStats.balanceUSD
+      : tvlUSD;
 
   const tvlStr = getFormatString(tvlNum);
 

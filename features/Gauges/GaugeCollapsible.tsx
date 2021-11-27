@@ -146,8 +146,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
-  const maybeJar =
-    getJarFarmMap(pickleCore)[depositToken.address];
+  const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
   if (jars && maybeJar) {
     const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
@@ -453,7 +452,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                     approval: false,
                     transferCallback: async () => {
                       return gauge.withdraw(
-                        ethers.utils.parseUnits(unstakeAmount, isUsdcJar ? 6 : 18),
+                        ethers.utils.parseUnits(
+                          unstakeAmount,
+                          isUsdcJar ? 6 : 18,
+                        ),
                       );
                     },
                   });

@@ -20,7 +20,10 @@ function useJars() {
     chainName,
     rawJars,
   );
-  const { jarsWithAPY: jarsWithAPYPFCore } = useJarsWithAPYPFCore(chainName, rawJars);
+  const { jarsWithAPY: jarsWithAPYPFCore } = useJarsWithAPYPFCore(
+    chainName,
+    rawJars,
+  );
   const { jarsWithTVL } = useJarWithTVL(
     jarsWithAPYEth || jarsWithAPYPoly || jarsWithAPYPFCore,
   );

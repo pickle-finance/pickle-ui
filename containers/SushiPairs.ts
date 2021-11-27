@@ -221,8 +221,8 @@ const work: Token = {
 const jswap: Token = {
   address: addresses.jswap,
   priceId: "jswap",
-  decimals: 18
-}
+  decimals: 18,
+};
 
 interface PairMap {
   [key: string]: { a: Token; b: Token };

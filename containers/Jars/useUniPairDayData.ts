@@ -16,20 +16,26 @@ export const useUniPairDayData = () => {
 
   const fillUniLpTokens = () => {
     const eth: string[] = [];
-    pickleCore?.assets.jars.forEach( x => {
-      if (x.protocol === "uniswap") {eth.push(x.depositToken.addr)};
+    pickleCore?.assets.jars.forEach((x) => {
+      if (x.protocol === "uniswap") {
+        eth.push(x.depositToken.addr);
+      }
     });
-    pickleCore?.assets.standaloneFarms.forEach( x => {
-      if (x.protocol === "uniswap") {eth.push(x.depositToken.addr)};
+    pickleCore?.assets.standaloneFarms.forEach((x) => {
+      if (x.protocol === "uniswap") {
+        eth.push(x.depositToken.addr);
+      }
     });
 
     // This is currently useless
-    pickleCore?.assets.external.forEach( x => {
-      if (x.protocol === "uniswap") {eth.push(x.depositToken.addr)};
+    pickleCore?.assets.external.forEach((x) => {
+      if (x.protocol === "uniswap") {
+        eth.push(x.depositToken.addr);
+      }
     });
 
-    setUniLpTokens(eth)
-  }
+    setUniLpTokens(eth);
+  };
 
   const queryTheGraph = async () => {
     const res = await fetch(
@@ -44,9 +50,9 @@ export const useUniPairDayData = () => {
           "Content-Type": "application/json",
         },
         referrer: "https://thegraph.com/explorer/subgraph/uniswap/uniswap-v2",
-        body: `{"query":"{\\n  pairDayDatas(first: ${uniLpTokens?.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${uniLpTokens?.join(
-          '\\", \\"',
-        ).toLowerCase()}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
+        body: `{"query":"{\\n  pairDayDatas(first: ${uniLpTokens?.length.toString()}, skip: 1, orderBy: date, orderDirection: desc, where: {pairAddress_in: [\\"${uniLpTokens
+          ?.join('\\", \\"')
+          .toLowerCase()}\\"]}) {\\n    pairAddress\\n    reserveUSD\\n    dailyVolumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },
@@ -76,9 +82,13 @@ export const useUniPairDayData = () => {
   useEffect(() => {
     if (uniPairDayData) return;
 
-    if (!uniLpTokens) { fillUniLpTokens() }
+    if (!uniLpTokens) {
+      fillUniLpTokens();
+    }
 
-    if (uniLpTokens){ queryTheGraph() }
+    if (uniLpTokens) {
+      queryTheGraph();
+    }
   }, []);
 
   return {

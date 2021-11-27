@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getPickleCore } from "../../util/api";
 import { createContainer } from "unstated-next";
-import { Connection } from "../Connection"
+import { Connection } from "../Connection";
 import { PickleModelJson } from "picklefinance-core";
 
 const blocksPerMinute: Record<number,number> = {
@@ -14,25 +14,27 @@ const blocksPerMinute: Record<number,number> = {
 };
 
 const usePickleCore = () => {
-    const [pickleCore, setPickleCore] = useState<PickleModelJson.PickleModelJson | null>(null);
-    const { blockNum, chainId } = Connection.useContainer();
-    const [lastFetchBlockNum, setLastFetchBlockNum] = useState<number>(0);
+  const [
+    pickleCore,
+    setPickleCore,
+  ] = useState<PickleModelJson.PickleModelJson | null>(null);
+  const { blockNum, chainId } = Connection.useContainer();
+  const [lastFetchBlockNum, setLastFetchBlockNum] = useState<number>(0);
 
-    const fetchPickleCore = async() =>{
-        if (chainId) {
-            if ( (blockNum || 0) > lastFetchBlockNum + 3*blocksPerMinute[chainId]) {
-                setLastFetchBlockNum(blockNum!);
-                setPickleCore(<PickleModelJson.PickleModelJson>await getPickleCore());
-            }
-        }
+  const fetchPickleCore = async () => {
+    if (chainId) {
+      if ((blockNum || 0) > lastFetchBlockNum + 3 * blocksPerMinute[chainId]) {
+        setLastFetchBlockNum(blockNum!);
+        setPickleCore(<PickleModelJson.PickleModelJson>await getPickleCore());
+      }
     }
+  };
 
-    useEffect(() => {
-        fetchPickleCore();
-    }, [ blockNum, ]);
-    
-    return { pickleCore, };
+  useEffect(() => {
+    fetchPickleCore();
+  }, [blockNum]);
+
+  return { pickleCore };
 };
 
 export const PickleCore = createContainer(usePickleCore);
-
