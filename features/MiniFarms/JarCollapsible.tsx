@@ -77,7 +77,55 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
 
   // Moonriver
   "0x7eda899b3522683636746a2f3a7814e6ffca75e1": (
-    <LpIcon swapIconSrc={"/moonriver.png"} tokenIconSrc={"/solar.png"} />
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/moonriver.png"} />
+  ),
+  "0xfe1b71bdaee495dca331d28f5779e87bd32fbe53": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/daiusdc.png"} />
+  ),
+  "0xe537f70a8b62204832b8ba91940b77d3f79aeb81": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/usdcmovr.png"} />
+  ),
+  "0xdb66be1005f5fe1d2f486e75ce3c50b52535f886": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x2a44696ddc050f14429bd8a4a05c750c6582bf3b": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x384704557f73fbfae6e9297fd1e6075fc340dbe5": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/busd.png"} />
+  ),
+  "0xa0d8dfb2cc9dfe6905edd5b71c56ba92ad09a3dc": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xfb1d0d6141fc3305c63f189e39cc2f2f7e58f4c2": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/bnb.png"} />
+  ),
+  "0x83d7a3fc841038e8c8f46e6192bbcca8b19ee4e7": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/wbtc.png"} />
+  ),
+  "0xb9a61ac826196abc69a3c66ad77c563d6c5bdd7b": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/avax.png"} />
+  ),
+  "0x55ee073b38bf1069d5f1ed0aa6858062ba42f5a9": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0x9051fb701d6d880800e397e5b5d46fddfadc7056": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x1eebed8f28a6865a76d91189fd6fc45f4f774d67": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/fantom.png"} />
+  ),
+  "0x9e0d90ebb44c22303ee3d331c0e4a19667012433": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/relay.png"} />
+  ),
+  "0xf9b7495b833804e4d894fc5f7b39c10016e0a911": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/rib.png"} />
+  ),
+  "0x9f9a7a3f8f56afb1a2059dae1e978165816cea44": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/pets.png"} />
+  ),
+  "0x0acdb54e610dabc82b8fa454b21ad425ae460df9": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/rib.png"} />
   ),
 };
 
