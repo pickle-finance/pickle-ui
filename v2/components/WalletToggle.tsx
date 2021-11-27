@@ -54,7 +54,7 @@ const WalletToggle: FC = () => {
           </Popover.Button>
 
           <SelectTransition>
-            <Popover.Panel className="absolute z-0 w-full left-1/2 transform -translate-x-1/2 mt-2 px-2 sm:px-0">
+            <Popover.Panel className="absolute z-10 w-full left-1/2 transform -translate-x-1/2 mt-2 px-2 sm:px-0">
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   <WalletToggleOptions />
