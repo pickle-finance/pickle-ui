@@ -8,7 +8,7 @@ const JoinedFarms: FC = () => {
 
   return (
     <>
-      <h2 className="font-body font-bold text-xl mb-7">
+      <h2 className="font-body font-bold text-xl mb-6">
         {t("v2.dashboard.joinedFarms")}
       </h2>
       <FarmsTable />

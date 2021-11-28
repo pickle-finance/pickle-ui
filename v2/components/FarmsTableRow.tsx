@@ -1,11 +1,12 @@
 import { FC, HTMLAttributes } from "react";
+import Image from "next/image";
 
-import { classNames } from "../utils";
+import { classNames, formatDollars } from "../utils";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
     className={classNames(
-      "bg-black-light p-4 whitespace-nowrap text-sm text-white sm:p-6",
+      "bg-black-light p-4 whitespace-nowrap text-sm text-white sm:p-6 group-hover:bg-black-lighter transition duration-300 ease-in-out",
       className,
     )}
   >
@@ -16,6 +17,7 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
 interface Props {
   farm: {
     asset: string;
+    iconSrc: string;
     earned: number;
     deposited: number;
     apy: string;
@@ -25,12 +27,46 @@ interface Props {
 
 const FarmsTableRow: FC<Props> = ({ farm }) => {
   return (
-    <tr>
-      <RowCell className="rounded-l-xl">{farm.asset}</RowCell>
-      <RowCell>{farm.earned}</RowCell>
-      <RowCell>{farm.deposited}</RowCell>
-      <RowCell>{farm.apy}</RowCell>
-      <RowCell className="rounded-r-xl">{farm.liquidity}</RowCell>
+    <tr className="cursor-pointer group">
+      <RowCell className="flex items-center rounded-l-xl">
+        <div className="w-9 h-9 rounded-full border-3 border-gray-outline mr-3">
+          <Image
+            src={farm.iconSrc}
+            className="rounded-full"
+            width={200}
+            height={200}
+            layout="responsive"
+            alt="DAI-ETH"
+            title="DAI-ETH"
+          />
+        </div>
+        <div>
+          <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
+            {farm.asset}
+          </p>
+          <p className="italic font-normal text-xs text-gray-light">Uniswap</p>
+        </div>
+      </RowCell>
+      <RowCell>
+        <p className="font-title font-medium text-base leading-5">
+          {formatDollars(farm.earned, 1)}
+        </p>
+        <p className="font-normal text-xs text-gray-light">9.3 PICKLEs</p>
+      </RowCell>
+      <RowCell>
+        <p className="font-title font-medium text-base leading-5">
+          {formatDollars(farm.deposited)}
+        </p>
+        <p className="font-normal text-xs text-gray-light">10.33 LP</p>
+      </RowCell>
+      <RowCell>
+        <p className="font-title font-medium text-base leading-5">{farm.apy}</p>
+      </RowCell>
+      <RowCell className="rounded-r-xl">
+        <p className="font-title font-medium text-base leading-5">
+          {formatDollars(farm.liquidity)}
+        </p>
+      </RowCell>
     </tr>
   );
 };
