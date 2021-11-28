@@ -2,6 +2,7 @@ import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 
 import { classNames, formatDollars } from "../utils";
+import FarmsBadge from "./FarmsBadge";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -54,10 +55,15 @@ const FarmsTableRow: FC<Props> = ({ farm }) => {
         <p className="font-normal text-xs text-gray-light">9.3 PICKLEs</p>
       </RowCell>
       <RowCell>
-        <p className="font-title font-medium text-base leading-5">
-          {formatDollars(farm.deposited)}
-        </p>
-        <p className="font-normal text-xs text-gray-light">10.33 LP</p>
+        <div className="flex items-center">
+          <FarmsBadge active />
+          <div className="ml-2">
+            <p className="font-title font-medium text-base leading-5">
+              {formatDollars(farm.deposited)}
+            </p>
+            <p className="font-normal text-xs text-gray-light">10.33 LP</p>
+          </div>
+        </div>
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">{farm.apy}</p>
