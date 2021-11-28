@@ -5,6 +5,20 @@ export const classNames = (...classes: any[]) =>
   classes.filter(Boolean).join(" ");
 
 /**
+ * Formatting
+ */
+export const formatDollars = (value: number, precision = 0): string => {
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  });
+
+  return formatter.format(value);
+};
+
+/**
  * SWR
  */
 export const fetcher = (...args: [string]) =>
