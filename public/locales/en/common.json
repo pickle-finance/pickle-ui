@@ -275,10 +275,12 @@
     "dashboard": {
       "balance": "Balance",
       "dillAmount": "DILL amount",
-      "picklesInWallet": "PICKLEs in wallet",
+      "earnUpTo": "Earn up to <1>{{ percent }}</1> APY",
+      "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",
       "performance": "Performance",
+      "picklesInWallet": "PICKLEs in wallet",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"

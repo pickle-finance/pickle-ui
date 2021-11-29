@@ -5,6 +5,7 @@ import PerformanceCard from "./PerformanceCard";
 import PickleBalanceCard from "./PickleBalanceCard";
 import DillBalanceCard from "./DillBalanceCard";
 import JoinedFarms from "./JoinedFarms";
+import DashboardCalloutCard from "./DashboardCalloutCard";
 
 const Dashboard: FC = () => (
   <main className="sm:pl-64">
@@ -20,6 +21,9 @@ const Dashboard: FC = () => (
         </div>
       </div>
       <JoinedFarms />
+      <div className="mt-4">
+        <DashboardCalloutCard />
+      </div>
     </div>
   </main>
 );
