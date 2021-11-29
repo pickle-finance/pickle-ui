@@ -1,3 +1,7 @@
+::selection {
+  background: #48c248;
+}
+
 .bg-gradient {
   background: radial-gradient(
     97.8% 63.1% at 2.1999999999999997% 0%,

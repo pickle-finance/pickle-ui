@@ -16,7 +16,11 @@ const NavItems: FC = () => {
 
   const navigation = [
     { name: t("v2.nav.dashboard"), href: "/v2", icon: TemplateIcon },
-    { name: t("v2.nav.jarsAndFarms"), href: "#", icon: LightningBoltIcon },
+    {
+      name: t("v2.nav.jarsAndFarms"),
+      href: "/v2/farms",
+      icon: LightningBoltIcon,
+    },
     { name: t("v2.nav.dill"), href: "#", icon: UserGroupIcon },
     { name: t("v2.nav.stats"), href: "#", icon: ChartBarIcon },
     { name: t("v2.nav.faq"), href: "#", icon: QuestionMarkCircleIcon },
