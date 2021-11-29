@@ -18,6 +18,13 @@ export const formatDollars = (value: number, precision = 0): string => {
   return formatter.format(value);
 };
 
+export const formatPercentage = (value: number, precision = 0): string =>
+  value.toLocaleString("en-US", {
+    style: "percent",
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  });
+
 /**
  * SWR
  */
