@@ -269,5 +269,10 @@
     "zapIntoJar": "Zap到Jar",
     "zapTo": "Zap到yvBOOST",
     "zapping": "Zap中..."
+  },
+  "v2": {
+    "nav": {
+      "jarsAndFarms": "Jars和Farms"
+    }
   }
 }

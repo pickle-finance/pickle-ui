@@ -40,7 +40,7 @@ const languageNameFromLocale = (locale: string | undefined): string => {
 };
 
 const LanguageToggle: FC = () => {
-  const { locale } = useRouter();
+  const { locale, asPath } = useRouter();
 
   return (
     <Popover className="relative mr-3">
@@ -64,7 +64,7 @@ const LanguageToggle: FC = () => {
                   {languages.map((language) => (
                     <Link
                       key={language.name}
-                      href={`/${language.locale}/v2`}
+                      href={`/${language.locale}${asPath}`}
                       locale={language.locale}
                     >
                       <a className="flex group justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out">
