@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { JarWithAPY } from "./useJarsWithAPYEth";
+import { JarWithAPY } from "./useJarsWithAPYPFCore";
 import { PoolData } from "./usePoolData";
 import { CurvePairs } from "containers/CurvePairs";
 

@@ -12,7 +12,7 @@ import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";

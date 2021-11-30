@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 
-import { JarApy } from "./Jars/useJarsWithAPYEth";
+import { JarApy } from "./Jars/useJarsWithAPYPFCore";
 
 import { Jars } from "./Jars";
 import { Balances } from "./Balances";

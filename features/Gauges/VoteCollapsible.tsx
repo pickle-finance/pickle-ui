@@ -20,7 +20,7 @@ import {
 } from "../../containers/Erc20Transfer";
 import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
-import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { Jars } from "../../containers/Jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { getJarFarmMap } from "containers/Farms/farms";

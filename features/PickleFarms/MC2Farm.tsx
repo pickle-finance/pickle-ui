@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
 import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
-import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { useSushiPairDayData } from "../../containers/Jars/useSushiPairDayData";
