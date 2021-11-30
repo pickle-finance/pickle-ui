@@ -110,9 +110,9 @@ export const MiniFarmList: FC = () => {
 
   const activeJars = !jarData
     ? []
-    : jarData.filter((jar) =>
-        isJarEnabled(jar.jarContract.address, pickleCore),
-      );
+    : jarData
+        .filter((jar) => isJarEnabled(jar.jarContract.address, pickleCore))
+        .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const inactiveJars = !jarData
     ? []
