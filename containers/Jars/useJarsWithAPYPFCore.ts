@@ -35,24 +35,25 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (jar) => jarName.toLowerCase() === jar.depositToken.addr.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
-      const componentsAPYs: JarApy[] = aprStats!.components.map((component) => {
-        // TODO: there is probably a better workaround to force no undefined type other than (!)
-        if (component.name.toLowerCase() === "lp") {
-          lp = component.apr;
-        }
-        return {
-          [component.name]: component.compoundable
-            ? getCompoundingAPY(component.apr / 100)
-            : component.apr,
-        };
-      });
+      if (aprStats !== undefined) {
+        const componentsAPYs: JarApy[] = aprStats.components.map((component) => {
+          if (component.name.toLowerCase() === "lp") {
+            lp = component.apr;
+          }
+          return {
+            [component.name]: component.compoundable
+              ? getCompoundingAPY(component.apr / 100)
+              : component.apr,
+          };
+        });
 
-      return {
-        APYs: componentsAPYs,
-        apr: aprStats.apr,
-        totalAPY: aprStats.apy,
-        lp: lp,
-      };
+        return {
+          APYs: componentsAPYs,
+          apr: aprStats.apr,
+          totalAPY: aprStats.apy,
+          lp: lp,
+        };
+      }
     }
 
     return [];
@@ -81,7 +82,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     }
   };
   useEffect(() => {
-    if (network === NETWORK_NAMES.ARB || network === NETWORK_NAMES.OKEX)
+    if (
+      network === NETWORK_NAMES.ETH || 
+      network === NETWORK_NAMES.POLY || 
+      network === NETWORK_NAMES.ARB || 
+      network === NETWORK_NAMES.OKEX
+    )
       calculateAPY();
   }, [jars?.length, network, pickleCore]);
 

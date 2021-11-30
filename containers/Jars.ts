@@ -4,8 +4,6 @@ import { createContainer } from "unstated-next";
 import { Balances } from "./Balances";
 import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
-import { useJarWithAPY as useJarsWithAPYEth } from "./Jars/useJarsWithAPYEth";
-import { useJarWithAPY as useJarsWithAPYPoly } from "./Jars/useJarsWithAPYPoly";
 import { useJarWithAPY as useJarsWithAPYPFCore } from "./Jars/useJarsWithAPYPFCore";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
@@ -15,16 +13,8 @@ import { NETWORK_NAMES } from "./config";
 function useJars() {
   const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
-  const { jarsWithAPY: jarsWithAPYEth } = useJarsWithAPYEth(chainName, rawJars);
-  const { jarsWithAPY: jarsWithAPYPoly } = useJarsWithAPYPoly(
-    chainName,
-    rawJars,
-  );
   const { jarsWithAPY: jarsWithAPYPFCore } = useJarsWithAPYPFCore(chainName, rawJars);
-  const { jarsWithTVL } = useJarWithTVL(
-    jarsWithAPYEth || jarsWithAPYPoly || jarsWithAPYPFCore,
-  );
-
+  const { jarsWithTVL } = useJarWithTVL( jarsWithAPYPFCore );
   const { addTokens } = Balances.useContainer();
 
   // Automatically update balance here

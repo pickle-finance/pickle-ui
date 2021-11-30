@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { JarWithAPY } from "./useJarsWithAPYEth";
+import { JarWithAPY } from "./useJarsWithAPYPFCore";
 import { DEPOSIT_TOKENS_NAME, JAR_DEPOSIT_TOKENS, PICKLE_JARS } from "./jars";
 import { PoolData } from "./usePoolData";
 import { Contracts } from "containers/Contracts";
