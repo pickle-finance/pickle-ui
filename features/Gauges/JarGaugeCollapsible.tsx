@@ -316,50 +316,58 @@ export const JarGaugeCollapsible: FC<{
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
 
   const realAPY = totalAPY + pickleAPY;
-
-
-  const totalAPY1: number = APYs.map((x) => {
-    return Object.values(x)
-      .filter((x) => !isNaN(x))
-      .reduce((acc, y) => acc + y, 0);
-  }).reduce((acc, x) => acc + x, 0);
-  const totalAPR1: number = uncompounded
-    .map((x) => {
+  
+  let difference = 0;
+  if (APYs !== undefined) {
+    const totalAPY1: number = APYs.map((x) => {
       return Object.values(x)
         .filter((x) => !isNaN(x))
         .reduce((acc, y) => acc + y, 0);
-    })
-    .reduce((acc, x) => acc + x, 0);
-  const difference = totalAPY1 - totalAPR1;
+    }).reduce((acc, x) => acc + x, 0);
+    const totalAPR1: number = uncompounded
+      .map((x) => {
+        return Object.values(x)
+          .filter((x) => !isNaN(x))
+          .reduce((acc, y) => acc + y, 0);
+      })
+      .reduce((acc, x) => acc + x, 0);
+    difference = totalAPY1 - totalAPR1;
+  }
 
-  const apyRangeTooltipText = [
-    `${t("farms.baseAPRs")}:`,
-    `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
-    ...APYs.map((x) => {
-      const k = Object.keys(x)[0];
-      const v = uncompoundAPY(Object.values(x)[0]);
-      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
-    }),
-    `${t(
-      "farms.compounding",
-    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
-      2,
-    )}%`,
-  ]
-    .filter((x) => x)
-    .join(` <br/> `);
+  let apyRangeTooltipText = 'APY Range Unavailable.';
+  if (APYs !== undefined) {
+    apyRangeTooltipText = [
+      `${t("farms.baseAPRs")}:`,
+      `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = uncompoundAPY(Object.values(x)[0]);
+        return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
+      }),
+      `${t(
+        "farms.compounding",
+      )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
+        2,
+      )}%`,
+    ]
+      .filter((x) => x)
+      .join(` <br/> `);
+  }
 
-  const yourApyTooltipText = [
-    `${t("farms.baseAPRs")}:`,
-    `pickle: ${formatAPY(pickleAPY)}`,
-    ...APYs.map((x) => {
-      const k = Object.keys(x)[0];
-      const v = uncompoundAPY(Object.values(x)[0]);
-      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
-    }),
-  ]
-    .filter((x) => x)
-    .join(` <br/> `);
+  let yourApyTooltipText = "Your APY is unavailable.";
+  if (APYs !== undefined) {
+    yourApyTooltipText = [
+      `${t("farms.baseAPRs")}:`,
+      `pickle: ${formatAPY(pickleAPY)}`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = uncompoundAPY(Object.values(x)[0]);
+        return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
+      }),
+    ]
+      .filter((x) => x)
+      .join(` <br/> `);
+  }
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
