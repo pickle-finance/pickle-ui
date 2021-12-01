@@ -127,6 +127,19 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x0acdb54e610dabc82b8fa454b21ad425ae460df9": (
     <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/rib.png"} />
   ),
+  "0x9432b25fbd8a37e5a1300e36a96bd14e1e6f5c90": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x2cc54b4a3878e36e1c754871438113c1117a3ad7": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  "0xbe2abe58edaae96b4303f194d2fad5233bad3d87": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/bnb.png"} />
+  ),
+  "0x0d171b55fc8d3bddf17e376fdb2d90485f900888": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
+  ),
+
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
