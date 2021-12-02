@@ -26,7 +26,13 @@ const shadeColor = (color: string, percent: number) => {
   return "#" + RR + GG + BB;
 };
 
-const formatter = (val: number) => (val * 100).toFixed(2) + "%";
+const formatter = (val: number) => {
+  const pct = (val * 100);
+  if( pct < .01 && pct > 0 ) {
+    return "~0.00%";
+  }
+  return pct.toFixed(2) + "%";
+}
 
 const TableContainer = styled.div`
   display: flex;
