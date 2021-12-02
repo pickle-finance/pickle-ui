@@ -7,6 +7,7 @@ import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
 import { config, NETWORK_NAMES } from "../../containers/config";
+import { MiniIcon } from "../../components/TokenIcon"
 import LanguageSelect from "./LanguageSelect";
 
 const Container = styled.div`
@@ -193,19 +194,24 @@ export const DesktopNetworkIndicator: FC = () => {
         }}
       >
         <Select.Option value="1">
-          {t("connection.networks.ethereum")}
+          {t("connection.networks.ethereum")}{" "}
+          <MiniIcon source="/weth.png"/>
         </Select.Option>
         <Select.Option value="137">
-          {t("connection.networks.polygon")}
+          {t("connection.networks.polygon")}{" "}
+          <MiniIcon source="/matic.png"/>
         </Select.Option>
         <Select.Option value="66">
-          {t("connection.networks.okex")}
+          {t("connection.networks.okex")}{" "}
+          <MiniIcon source="/okex.png"/>
         </Select.Option>
         <Select.Option value="42161">
-          {t("connection.networks.arbitrum")}
+          {t("connection.networks.arbitrum")}{" "}
+          <MiniIcon source="/arbitrum.svg"/>
         </Select.Option>
         <Select.Option value="1285">
-          {t("connection.networks.moonriver")}
+          {t("connection.networks.moonriver")}{" "}
+          <MiniIcon source="/moonriver.png"/>
         </Select.Option>
       </Select>
       <AddressContainer

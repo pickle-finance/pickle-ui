@@ -320,7 +320,7 @@ export const JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
-  const totalAPY1: number = APYs.map((x) => {
+  const totalAPY1: number = APYs?.map((x) => {
     return Object.values(x)
       .filter((x) => !isNaN(x))
       .reduce((acc, y) => acc + y, 0);

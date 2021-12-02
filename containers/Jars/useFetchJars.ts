@@ -45,7 +45,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       const allJars: JarDefinition[] | undefined = pickleCore?.assets.jars;
       if (!allJars) {
         // Time to return, dead
-        console.log("This shit is dead, cant even find jars");
         return [];
       }
 
