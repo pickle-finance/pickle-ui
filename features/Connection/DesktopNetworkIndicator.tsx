@@ -194,24 +194,24 @@ export const DesktopNetworkIndicator: FC = () => {
         }}
       >
         <Select.Option value="1">
-          {t("connection.networks.ethereum")}{" "}
-          <MiniIcon source="/weth.png"/>
+          <MiniIcon source="/weth.png"/>{" "}
+          {t("connection.networks.ethereum")}
         </Select.Option>
         <Select.Option value="137">
-          {t("connection.networks.polygon")}{" "}
-          <MiniIcon source="/matic.png"/>
+          <MiniIcon source="/matic.png"/>{" "}
+          {t("connection.networks.polygon")}
         </Select.Option>
         <Select.Option value="66">
-          {t("connection.networks.okex")}{" "}
-          <MiniIcon source="/okex.png"/>
+          <MiniIcon source="/okex.png"/>{" "}
+          {t("connection.networks.okex")}
         </Select.Option>
         <Select.Option value="42161">
-          {t("connection.networks.arbitrum")}{" "}
-          <MiniIcon source="/arbitrum.svg"/>
+          <MiniIcon source="/arbitrum.svg"/>{" "}
+          {t("connection.networks.arbitrum")}
         </Select.Option>
         <Select.Option value="1285">
-          {t("connection.networks.moonriver")}{" "}
-          <MiniIcon source="/moonriver.png"/>
+          <MiniIcon source="/moonriver.png"/>{" "}
+          {t("connection.networks.moonriver")}
         </Select.Option>
       </Select>
       <AddressContainer
