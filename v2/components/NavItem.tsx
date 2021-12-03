@@ -29,7 +29,7 @@ const NavItem: FC<Props> = ({
         <a
           href={href}
           className={classNames(
-            isCurrent ? "bg-black-light text-green-light" : "",
+            isCurrent && "bg-black-light text-green-light",
             `group flex flex-grow items-center px-4 py-2 text-white text-sm rounded-lg font-bold hover:text-green-light transition duration-300 ease-in-out ${extraClasses}`,
           )}
           {...linkProps}

@@ -41,7 +41,7 @@ const NetworkToggle: FC = () => {
     <Popover className="relative mr-3">
       {({ open }) => (
         <>
-          <Popover.Button className="group rounded-md inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
+          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <CubeIcon
               className="text-gray-lighter mr-2 h-5 w-5 transition duration-300 ease-in-out"
               aria-hidden="true"
@@ -57,7 +57,7 @@ const NetworkToggle: FC = () => {
           </Popover.Button>
 
           <SelectTransition>
-            <Popover.Panel className="absolute z-0 w-full left-1/2 transform -translate-x-1/2 mt-2 px-2 sm:px-0">
+            <Popover.Panel className="absolute z-10 w-full left-1/2 transform -translate-x-1/2 mt-2 px-2 sm:px-0">
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   {networks.map((network) => (

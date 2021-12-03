@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ["./pages/**/*.tsx", "./v2/components/**/*.tsx"],
+  purge: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/components/**/*.tsx"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
@@ -44,6 +44,8 @@ module.exports = {
         gray: {
           light: "#c0c4c5",
           lighter: "#e0e1e2",
+          outline: "#2b383b",
+          "outline-light": "#869498",
           dark: "#1f2d30",
         },
         green: {
@@ -53,6 +55,9 @@ module.exports = {
       },
       scale: {
         "-1": "-1",
+      },
+      borderWidth: {
+        3: "3px",
       },
     },
   },
