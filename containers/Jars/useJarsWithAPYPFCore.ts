@@ -81,7 +81,11 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     }
   };
   useEffect(() => {
-    if (network === NETWORK_NAMES.ARB || network === NETWORK_NAMES.OKEX)
+    if (
+      network === NETWORK_NAMES.ARB ||
+      network === NETWORK_NAMES.OKEX ||
+      network === NETWORK_NAMES.MOONRIVER
+    )
       calculateAPY();
   }, [jars?.length, network, pickleCore]);
 

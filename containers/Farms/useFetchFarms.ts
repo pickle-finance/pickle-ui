@@ -6,6 +6,7 @@ import { Contracts } from "../Contracts";
 import { NETWORK_NAMES } from "containers/config";
 import { X } from "@geist-ui/react-icons";
 import { Contract as MulticallContract } from "ethers-multicall";
+import { NULL_ADDRESS } from "picklefinance-core/lib/model/PickleModel";
 
 export interface RawFarm {
   lpToken: string;
@@ -23,8 +24,9 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 
   const getFarms = async () => {
-    if (masterchef && multicallProvider) {
-      const poolLengthBN = (await masterchef.poolLength()) as BigNumber;
+    if (masterchef && masterchef?.address != NULL_ADDRESS && multicallProvider) {
+      const poolLengthBN = (await masterchef?.poolLength()) as BigNumber;
+      console.log({ masterchef, poolLengthBN });
       const poolLength = parseInt(poolLengthBN.toString());
 
       const mcMasterchef = new MulticallContract(

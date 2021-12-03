@@ -27,7 +27,7 @@ export interface UserJarData {
   depositTokenLink: string;
   tvlUSD: number;
 }
-
+const convertJarToJarData = (jar): UserJarData => {};
 const useUserJars = (): { jarData: UserJarData[] | null } => {
   const { blockNum, chainName } = Connection.useContainer();
   const { jars } = Jars.useContainer();
@@ -38,24 +38,27 @@ const useUserJars = (): { jarData: UserJarData[] | null } => {
 
   const updateJarData = () => {
     if (jars) {
-      const data: UserJarData[] = jars.map((jar) => {
-        const balance = getBalance(jar.depositToken.address) || 0;
-        const deposited = getBalance(jar.contract.address) || 0;
-        return {
-          name: jar.jarName,
-          jarContract: jar.contract,
-          depositToken: jar.depositToken,
-          depositTokenName: jar.depositTokenName,
-          ratio: jar.ratio || 0,
-          balance,
-          deposited,
-          usdPerPToken: jar.usdPerPToken || 0,
-          APYs: jar.APYs,
-          totalAPY: jar.totalAPY,
-          apr: jar.apr,
-          depositTokenLink: jar.depositTokenLink,
-        };
-      });
+      const data: UserJarData[] = jars?.map(
+        (jar): UserJarData => {
+          const balance = getBalance(jar.depositToken.address) || 0;
+          const deposited = getBalance(jar.contract.address) || 0;
+          return {
+            name: jar.jarName,
+            jarContract: jar.contract,
+            depositToken: jar.depositToken,
+            depositTokenName: jar.depositTokenName,
+            ratio: jar.ratio || 0,
+            balance,
+            deposited,
+            usdPerPToken: jar.usdPerPToken || 0,
+            APYs: jar.APYs,
+            totalAPY: jar.totalAPY,
+            apr: jar.apr,
+            depositTokenLink: jar.depositTokenLink,
+            tvlUSD: jar.tvlUSD || 0,
+          };
+        },
+      );
 
       setJarData(data);
     }

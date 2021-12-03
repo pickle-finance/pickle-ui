@@ -70,10 +70,9 @@ export const useMC2 = () => {
       setPricePerToken(pricePerToken);
 
       // APY calc - SUSHI
-      const multicallMC2 = new MulticallContract(
-        masterchefV2.address,
-        masterchefV2.interface.fragments,
-      );
+      const multicallMC2 = new MulticallContract(masterchefV2.address, [
+        ...masterchefV2.interface.fragments,
+      ]);
 
       const [
         sushiPerBlockBN,

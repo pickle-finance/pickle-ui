@@ -21,7 +21,7 @@ function useBalances() {
     if (erc20 && address && multicallProvider) {
       const balances: BigNumber[] = await multicallProvider.all(
         tokenAddresses.map((x) => {
-          const c = new MulticallContract(x, erc20.interface.fragments);
+          const c = new MulticallContract(x, [...erc20.interface.fragments]);
           return c.balanceOf(address);
         }),
       );

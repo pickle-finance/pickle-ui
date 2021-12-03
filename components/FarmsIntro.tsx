@@ -10,7 +10,7 @@ export const FarmsIntro: FC = () => {
   const { t } = useTranslation("common");
 
   const isPolygon = chainName === NETWORK_NAMES.POLY;
-  const isOK = chainName === NETWORK_NAMES.OKEX;
+  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
 
   if (isPolygon)
     return (
@@ -26,7 +26,7 @@ export const FarmsIntro: FC = () => {
       </p>
     );
 
-  if (isOK)
+  if (noFarm)
     return (
       <p>
         {t("farms.introOK")}

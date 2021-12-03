@@ -4,7 +4,6 @@ import { Connection } from "../../containers/Connection";
 import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { Erc20 } from "../../containers/Contracts/Erc20";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
 import { getStats } from "../../features/Zap/useZapper";
 import { Gauge } from "../../containers/Contracts/Gauge";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
@@ -111,7 +110,9 @@ export const useMigrate = (
   const migrateYvboost = async () => {
     if (!yvBoostMigrator || !signer || !address || !erc20) return;
 
-    const pYvcrvContract = erc20.attach(PICKLE_JARS.pSUSHIETHYVECRV);
+    const pSushiEthYveCrvTokenAddress =
+      "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48";
+    const pYvcrvContract = erc20.attach(pSushiEthYveCrvTokenAddress);
     const pYvcrvBalance = await pYvcrvContract.balanceOf(address);
 
     const allowance = await pYvcrvContract.allowance(
@@ -152,7 +153,9 @@ export const useMigrate = (
 
   const depositYvboost = async () => {
     if (!erc20 || !address) return null;
-    const pYvboostContract = erc20.attach(PICKLE_JARS.pyvBOOSTETH);
+
+    const pYvBoostEthAddress = "0xCeD67a187b923F0E5ebcc77C7f2F7da20099e378";
+    const pYvboostContract = erc20.attach(pYvBoostEthAddress);
     const pYvboostBalance = await pYvboostContract.balanceOf(address);
 
     const gauge = signer && GaugeFactory.connect(YVBOOST_GAUGE, signer);

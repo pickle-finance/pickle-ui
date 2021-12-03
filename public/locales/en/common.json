@@ -41,7 +41,8 @@
       "ethereum": "Ethereum",
       "polygon": "Polygon",
       "okex": "OEC",
-      "arbitrum": "Arbitrum"
+      "arbitrum": "Arbitrum",
+      "moonriver": "Moonriver"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"

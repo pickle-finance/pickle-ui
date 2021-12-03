@@ -61,6 +61,18 @@ function useConnection() {
     rpcUrls: ["https://arb1.arbitrum.io/rpc"],
     blockExplorerUrls: ["https://arbiscan.io/"],
   };
+
+  switchChainParams[1285] = {
+    chainId: "0x505",
+    chainName: "Moonriver",
+    nativeCurrency: {
+      name: "MOVR",
+      symbol: "MOVR",
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc.moonriver.moonbeam.network"],
+    blockExplorerUrls: ["https://moonriver.moonscan.io/"],
+  };
   const switchChain = async (chainId: number) => {
     let method: string;
     let params: any[];
@@ -92,6 +104,8 @@ function useConnection() {
 
       setMulticallAddress(66, "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa");
       setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
+      setMulticallAddress(1285, "0x4c4a5d20f1ee40eaacb6a7787d20d16b7997363b");
+      
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
         .init()

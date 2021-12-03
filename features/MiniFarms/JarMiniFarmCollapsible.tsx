@@ -1,11 +1,9 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
-
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
-
 import { Connection } from "../../containers/Connection";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
@@ -14,14 +12,12 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
-import { getProtocolData } from "../../util/api";
-import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
+import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
-import { Balances } from "../../containers/Balances";
 import { NETWORK_NAMES } from "containers/config";
-import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
+import { isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
-
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 interface DataProps {
   isZero?: boolean;
 }
@@ -176,7 +172,6 @@ export const JarMiniFarmCollapsible: FC<{
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
   const { t } = useTranslation("common");
@@ -198,6 +193,7 @@ export const JarMiniFarmCollapsible: FC<{
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum, chainName } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
 
@@ -233,15 +229,9 @@ export const JarMiniFarmCollapsible: FC<{
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
-  const isMaiJar =
-    depositToken.address.toLowerCase() ===
-      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_USDC.toLowerCase() ||
-    depositToken.address.toLowerCase() ===
-      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MATIC_QI.toLowerCase();
+  const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
-  const isQiMaiJar =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_QI.toLowerCase();
+  const isQiMaiJar = isQlpQiToken(depositToken.address);
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -288,7 +278,8 @@ export const JarMiniFarmCollapsible: FC<{
     parseEther(depositAmount)
       .mul(ethers.utils.parseUnits("1", 18))
       .div(realRatio)
-      .add(deposited);
+      .add(deposited)
+      .sub("1");
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
@@ -392,16 +383,15 @@ export const JarMiniFarmCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  useEffect(() => {
-    getProtocolData().then((info) => setTVLData(info));
-  }, []);
-
+  const tvlJarData = pickleCore?.assets.jars.filter(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )[0];
   const tvlNum =
-    tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+    tvlJarData && tvlJarData.details.harvestStats
+      ? tvlJarData.details.harvestStats.balanceUSD
       : tvlUSD;
+
   const tvlStr = getFormatString(tvlNum);
 
   return (

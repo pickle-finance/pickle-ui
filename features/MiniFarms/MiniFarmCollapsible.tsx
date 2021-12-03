@@ -5,7 +5,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { getJarFarmMap } from "../../containers/Farms/farms";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -15,6 +15,7 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;
@@ -74,6 +75,7 @@ export const FARM_LP_TO_ICON: {
 export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
   farmData,
 }) => {
+  const { pickleCore } = PickleCore.useContainer();
   const { jars } = Jars.useContainer();
   const { t } = useTranslation("common");
 
@@ -137,13 +139,10 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     text: t("farms.harvest"),
   });
 
-  const isOK = chainName === NETWORK_NAMES.OKEX;
-
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }, { matic: maticApy * 100 }];
 
-  const maybeJar =
-    JAR_FARM_MAP[depositToken.address as keyof typeof JAR_FARM_MAP];
+  const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
@@ -225,7 +224,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
               {harvestableStr} <MiniIcon source={"/pickle.png"} />
               <br />
               {harvestableMaticStr}{" "}
-              <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+              <MiniIcon source={"/matic.png"} />
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>

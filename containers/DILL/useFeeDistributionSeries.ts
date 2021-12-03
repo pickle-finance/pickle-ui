@@ -39,10 +39,9 @@ export function useFeeDistributionSeries() {
       prices &&
       weeklyDistributionUsd
     ) {
-      const contract = new MulticallContract(
-        feeDistributor.address,
-        feeDistributor.interface.fragments,
-      );
+      const contract = new MulticallContract(feeDistributor.address, [
+        ...feeDistributor.interface.fragments,
+      ]);
 
       // Ignore initial negligible distributions that distort
       // PICKLE/DILL ratio range.

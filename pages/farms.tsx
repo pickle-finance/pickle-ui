@@ -11,13 +11,13 @@ import { NETWORK_NAMES } from "containers/config";
 const Gauges: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
-  const isOK = chainName === NETWORK_NAMES.OKEX;
+  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
 
   return (
     <Page>
       <Page.Content>
         <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-          {isOK ? t("info.jars") : t("info.farms")}
+          {noFarm ? t("info.jars") : t("info.farms")}
         </h1>
         {chainName === NETWORK_NAMES.ETH ? <GaugeList /> : <MiniFarmList />}
       </Page.Content>

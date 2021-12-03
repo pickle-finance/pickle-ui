@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-
 import { Connection } from "../Connection";
-import { JAR_DEPOSIT_TOKENS } from "./jars";
-import { PICKLE_ETH_SLP } from "../Contracts";
 import { NETWORK_NAMES } from "containers/config";
+import { PickleCore } from "./usePickleCore";
 
 export interface UniLPAPY {
   pair: {
@@ -12,34 +10,6 @@ export interface UniLPAPY {
   reserveUSD: number;
   volumeUSD: number;
 }
-
-const SUSHI_LP_TOKENS = [
-  PICKLE_ETH_SLP,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_DAI,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDC,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_USDT,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_WBTC,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YFI,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVBOOST,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_ALCX,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_CVX_ETH,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_TRU_ETH,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SPELL_ETH,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].MIM_ETH,
-];
-
-const POLY_SUSHI_LP_TOKENS = [
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_ETH_USDT,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_MATIC_ETH,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.POLY].POLY_SUSHI_DINO_USDC,
-];
-
-const ARB_SUSHI_LP_TOKENS = [
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_SPELL_ETH,
-  JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ARB].SUSHI_MIM_ETH,
-];
 
 const headers = {
   "User-Agent":
@@ -51,8 +21,61 @@ const headers = {
 
 export const useSushiPairDayData = () => {
   const { chainName } = Connection.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
+
+  interface SushiLpAddresses {
+    eth: string[];
+    arb: string[];
+    poly: string[];
+  }
 
   const [sushiPairDayData, setSushiPairDayData] = useState<Array<UniLPAPY>>([]);
+  const [sushiLpTokens, setSushiLpTokens] = useState<SushiLpAddresses>();
+
+  const fillSushiLpTokens = () => {
+    const eth: string[] = [];
+    const poly: string[] = [];
+    const arb: string[] = [];
+    pickleCore?.assets.jars.forEach((x) => {
+      if (x.protocol === "sushiswap") {
+        eth.push(x.depositToken.addr);
+      }
+      if (x.protocol === "sushiswap_polygon") {
+        poly.push(x.depositToken.addr);
+      }
+      if (x.protocol === "sushiswap_arbitrum") {
+        arb.push(x.depositToken.addr);
+      }
+    });
+    pickleCore?.assets.standaloneFarms.forEach((x) => {
+      if (x.protocol === "sushiswap") {
+        eth.push(x.depositToken.addr);
+      }
+      if (x.protocol === "sushiswap_polygon") {
+        poly.push(x.depositToken.addr);
+      }
+      if (x.protocol === "sushiswap_arbitrum") {
+        arb.push(x.depositToken.addr);
+      }
+    });
+    pickleCore?.assets.external.forEach((x) => {
+      if (x.protocol === "sushiswap") {
+        eth.push(x.depositToken.addr);
+      }
+      if (x.protocol === "sushiswap_polygon") {
+        poly.push(x.depositToken.addr);
+      }
+      if (x.protocol === "sushiswap_arbitrum") {
+        arb.push(x.depositToken.addr);
+      }
+    });
+
+    setSushiLpTokens({
+      eth: eth,
+      poly: poly,
+      arb: arb,
+    });
+  };
 
   const queryTheGraph = () => {
     fetch("https://api.thegraph.com/subgraphs/name/sushiswap/exchange", {
@@ -61,10 +84,10 @@ export const useSushiPairDayData = () => {
       referrer:
         "https://thegraph.com/explorer/subgraph/zippoxer/sushiswap-subgraph-fork",
       body: `{"query":"{\\n  pairDayDatas(first: ${
-        SUSHI_LP_TOKENS.length
-      }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${SUSHI_LP_TOKENS.join(
-        '\\", \\"',
-      ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+        sushiLpTokens?.eth.length
+      }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${sushiLpTokens?.eth
+        .join('\\", \\"')
+        .toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
       method: "POST",
       mode: "cors",
     })
@@ -82,10 +105,10 @@ export const useSushiPairDayData = () => {
         referrer:
           "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-exchange",
         body: `{"query":"{\\n  pairDayDatas(first: ${
-          ARB_SUSHI_LP_TOKENS.length
-        }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${ARB_SUSHI_LP_TOKENS.join(
-          '\\", \\"',
-        ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+          sushiLpTokens?.arb.length
+        }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${sushiLpTokens?.arb
+          .join('\\", \\"')
+          .toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
         method: "POST",
         mode: "cors",
       },
@@ -102,10 +125,10 @@ export const useSushiPairDayData = () => {
       referrer:
         "https://thegraph.com/explorer/subgraph/sushiswap/matic-exchange",
       body: `{"query":"{\\n  pairDayDatas(first: ${
-        POLY_SUSHI_LP_TOKENS.length
-      }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${POLY_SUSHI_LP_TOKENS.join(
-        '\\", \\"',
-      ).toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
+        sushiLpTokens?.poly.length
+      }, skip: 1, orderBy: date, orderDirection: desc, where: {pair_in: [\\"${sushiLpTokens?.poly
+        .join('\\", \\"')
+        .toLowerCase()}\\"]}) {\\n    pair{ id }\\n    reserveUSD\\n    volumeUSD\\n  }\\n}\\n","variables":null}`,
       method: "POST",
       mode: "cors",
     })
@@ -138,12 +161,18 @@ export const useSushiPairDayData = () => {
   useEffect(() => {
     if (sushiPairDayData.length > 0) return;
 
-    if (chainName === NETWORK_NAMES.POLY) {
-      queryTheGraphPoly();
-    } else if (chainName === NETWORK_NAMES.ARB) {
-      queryTheGraphArb();
-    } else {
-      queryTheGraph();
+    if (!sushiLpTokens) {
+      fillSushiLpTokens();
+    }
+
+    if (sushiLpTokens) {
+      if (chainName === NETWORK_NAMES.POLY) {
+        queryTheGraphPoly();
+      } else if (chainName === NETWORK_NAMES.ARB) {
+        queryTheGraphArb();
+      } else {
+        queryTheGraph();
+      }
     }
   });
 

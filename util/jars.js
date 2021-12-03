@@ -54,13 +54,12 @@ export const polyJars = [
   "DINO-WETH",
 ];
 
-
 export const arbJars = [
   "ArbitrumSlpMimEth",
   "ArbitrumSlpSpellEth",
   "Mim2CRV",
   "DodoHndEth",
-  "CrvTricrypto"
+  "CrvTricrypto",
 ];
 
 export const powerPool = "PICKLE-ETH";

@@ -15,11 +15,10 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { getFormatString } from "../Gauges/GaugeInfo";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "containers/config";
 import { uncompoundAPY } from "util/jars";
 import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
+import { isUsdcToken } from "containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -47,16 +46,17 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
   // OKEx
-  "0x8E68C0216562BCEA5523b27ec6B9B6e1cCcBbf88": (
+  // Please ensure addresses are lowercased
+  "0x8e68c0216562bcea5523b27ec6b9b6e1cccbbf88": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
   ),
-  "0x089dedbFD12F2aD990c55A2F1061b8Ad986bFF88": (
+  "0x089dedbfd12f2ad990c55a2f1061b8ad986bff88": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/usdt.png"} />
   ),
-  "0x407F7a2F61E5bAB199F7b9de0Ca330527175Da93": (
+  "0x407f7a2f61e5bab199f7b9de0ca330527175da93": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/ethereum.png"} />
   ),
-  "0xF3098211d012fF5380A03D80f150Ac6E5753caA8": (
+  "0xf3098211d012ff5380a03d80f150ac6e5753caa8": (
     <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
   ),
   "0x8009edebbbdeb4a3bb3003c79877fcd98ec7fb45": (
@@ -68,12 +68,78 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xeb02a695126b998e625394e43dfd26ca4a75ce2b": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/weth.png"} />
   ),
-  "0xE9313b7dea9cbaBd2df710C25bef44A748Ab38a9": (
+  "0xe9313b7dea9cbabd2df710c25bef44a748ab38a9": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/dai.png"} />
   ),
-  "0xa25E1C05c58EDE088159cc3cD24f49445d0BE4b2": (
+  "0xa25e1c05c58ede088159cc3cd24f49445d0be4b2": (
     <LpIcon swapIconSrc={"/jswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
+
+  // Moonriver
+  "0x7eda899b3522683636746a2f3a7814e6ffca75e1": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/moonriver.png"} />
+  ),
+  "0xfe1b71bdaee495dca331d28f5779e87bd32fbe53": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/daiusdc.png"} />
+  ),
+  "0xe537f70a8b62204832b8ba91940b77d3f79aeb81": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/usdcmovr.png"} />
+  ),
+  "0xdb66be1005f5fe1d2f486e75ce3c50b52535f886": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x2a44696ddc050f14429bd8a4a05c750c6582bf3b": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x384704557f73fbfae6e9297fd1e6075fc340dbe5": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/busd.png"} />
+  ),
+  "0xa0d8dfb2cc9dfe6905edd5b71c56ba92ad09a3dc": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xfb1d0d6141fc3305c63f189e39cc2f2f7e58f4c2": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/bnb.png"} />
+  ),
+  "0x83d7a3fc841038e8c8f46e6192bbcca8b19ee4e7": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/wbtc.png"} />
+  ),
+  "0xb9a61ac826196abc69a3c66ad77c563d6c5bdd7b": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/avax.png"} />
+  ),
+  "0x55ee073b38bf1069d5f1ed0aa6858062ba42f5a9": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/mimatic.png"} />
+  ),
+  "0x9051fb701d6d880800e397e5b5d46fddfadc7056": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x1eebed8f28a6865a76d91189fd6fc45f4f774d67": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/fantom.png"} />
+  ),
+  "0x9e0d90ebb44c22303ee3d331c0e4a19667012433": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/relay.png"} />
+  ),
+  "0xf9b7495b833804e4d894fc5f7b39c10016e0a911": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/rib.png"} />
+  ),
+  "0x9f9a7a3f8f56afb1a2059dae1e978165816cea44": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/pets.png"} />
+  ),
+  "0x0acdb54e610dabc82b8fa454b21ad425ae460df9": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/rib.png"} />
+  ),
+  "0x9432b25fbd8a37e5a1300e36a96bd14e1e6f5c90": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/mim.webp"} />
+  ),
+  "0x2cc54b4a3878e36e1c754871438113c1117a3ad7": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  "0xbe2abe58edaae96b4303f194d2fad5233bad3d87": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/bnb.png"} />
+  ),
+  "0x0d171b55fc8d3bddf17e376fdb2d90485f900888": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
+  ),
+
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -130,9 +196,7 @@ export const JarCollapsible: FC<{
   } = jarData;
   const { t } = useTranslation("common");
 
-  const isUsdc =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
+  const isUsdc = isUsdcToken(depositToken.address);
 
   const uncompounded = APYs.map((x) => {
     const k: string = Object.keys(x)[0];
@@ -221,8 +285,18 @@ export const JarCollapsible: FC<{
     );
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
-    setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
-    setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
+    setButtonStatus(
+      dStatus,
+      t("farms.depositing"),
+      t("farms.deposit"),
+      setDepositButton,
+    );
+    setButtonStatus(
+      wStatus,
+      t("farms.withdrawing"),
+      t("farms.withdraw"),
+      setWithdrawButton,
+    );
   }, [erc20TransferStatuses]);
 
   return (
@@ -235,7 +309,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -290,7 +364,7 @@ export const JarCollapsible: FC<{
         <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-            {t("balances.balance")}: {balStr} {depositTokenName}
+              {t("balances.balance")}: {balStr} {depositTokenName}
             </div>
             <Link
               color

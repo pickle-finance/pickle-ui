@@ -6,8 +6,6 @@ import { useTranslation } from "next-i18next";
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { useJarData } from "features/Gauges/useJarData";
-import { JAR_FARM_MAP } from "../../containers/Farms/farms";
-import { JAR_ACTIVE } from "../../containers/Jars/jars";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
 import { uncompoundAPY } from "../../util/jars";
@@ -15,6 +13,10 @@ import { NETWORK_NAMES } from "containers/config";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { pickleWhite } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { getJarFarmMap } from "containers/Farms/farms";
+import { AssetEnablement } from "picklefinance-core/lib/model/PickleModelJson";
+import { isJarEnabled } from "containers/Jars/jars";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -26,13 +28,15 @@ export interface JarApy {
 
 export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
-  const { farmData } = UserMiniFarms.useContainer();
+  let { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const { t } = useTranslation("common");
+  const { pickleCore } = PickleCore.useContainer();
 
-  const isOK = chainName === NETWORK_NAMES.OKEX;
-  const isMatic = chainName === NETWORK_NAMES.POLY;
+  const noFarm =
+    chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+  farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
@@ -48,17 +52,14 @@ export const MiniFarmList: FC = () => {
       </>
     );
   }
-
   const farmsWithAPY = farmData.map((farm) => {
-    let APYs: JarApy[] = [
-      { pickle: farm.apy * 100 },
-      ...(isOK ? [{ okt: farm.maticApy * 100 }] : []),
-    ];
+    let APYs: JarApy[] = [{ pickle: farm.apy * 100 }];
 
-    const jar =
-      JAR_FARM_MAP[farm.depositToken.address as keyof typeof JAR_FARM_MAP];
+    const jar = getJarFarmMap(pickleCore)[farm.depositToken.address];
     if (jar) {
-      const farmingJar = jarData.filter((x) => x.name === jar.jarName)[0];
+      const farmingJar = jarData
+        ? jarData.filter((x) => x.name === jar.jarName)[0]
+        : undefined;
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
     }
 
@@ -107,11 +108,24 @@ export const MiniFarmList: FC = () => {
     };
   });
 
-  const activeJars = jarData.filter((jar) => JAR_ACTIVE[jar.depositTokenName]);
+  const activeJars = !jarData
+    ? []
+    : jarData
+        .filter((jar) => isJarEnabled(jar.jarContract.address, pickleCore))
+        .sort((a, b) => b.totalAPY - a.totalAPY);
 
-  const inactiveJars = jarData.filter(
-    (jar) => !JAR_ACTIVE[jar.depositTokenName],
-  );
+  const inactiveJars = !jarData
+    ? []
+    : jarData.filter((jar) => {
+        const foundJar = pickleCore?.assets.jars.find(
+          (x) =>
+            x.contract.toLowerCase() === jar.jarContract.address.toLowerCase(),
+        );
+        return (
+          foundJar === undefined ||
+          foundJar.enablement === AssetEnablement.DISABLED
+        );
+      });
 
   return (
     <Container>
@@ -145,8 +159,10 @@ export const MiniFarmList: FC = () => {
           );
           return (
             <Grid xs={24} key={jar.name}>
-              {farm && !isOK && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
-              {isOK && <JarCollapsible jarData={jar} />}
+              {farm && !noFarm && (
+                <JarMiniFarmCollapsible farmData={farm} jarData={jar} />
+              )}
+              {noFarm && <JarCollapsible jarData={jar} />}
             </Grid>
           );
         })}

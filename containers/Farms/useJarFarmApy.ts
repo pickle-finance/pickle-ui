@@ -1,17 +1,16 @@
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { Prices } from "../Prices";
 
-import { JAR_FARM_MAP } from "./farms";
+import { getJarFarmMap } from "./farms";
 import { FarmWithApy } from "./useUniV2Apy";
 import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
-
-import mlErc20 from "@studydefi/money-legos/erc20";
-import { Contract as MulticallContract } from "ethers-multicall";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { getAddress } from "@ethersproject/address";
 
 // what comes in and goes out of this function
 type Input = FarmWithReward[] | null;
@@ -23,16 +22,15 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
   const { multicallProvider } = Connection.useContainer();
 
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
+  const { pickleCore } = PickleCore.useContainer();
 
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
     if (inputFarms && masterchef && jars && prices && multicallProvider) {
-      const jarAddresses = jars.map((x) => x.contract.address);
+      const jarAddresses = jars.map((x) => getAddress(x.contract.address));
       const jarFarms = inputFarms
-        .filter(
-          (farm) => JAR_FARM_MAP[farm.lpToken as keyof typeof JAR_FARM_MAP],
-        )
+        .filter((farm) => getJarFarmMap(pickleCore)[getAddress(farm.lpToken)])
         .filter((x) => jarAddresses.includes(x.lpToken))
         .reduce((p, c) => {
           if (!p.some((el) => el.lpToken === c.lpToken)) p.push(c);
@@ -41,9 +39,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
       const farmingJarsMCContracts = jarFarms
         .map((farm) => {
-          const { jarName } = JAR_FARM_MAP[
-            farm.lpToken as keyof typeof JAR_FARM_MAP
-          ];
+          const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
 
           const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
@@ -62,9 +58,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
       );
 
       const res = jarFarms.map((farm, idx) => {
-        const { jarName } = JAR_FARM_MAP[
-          farm.lpToken as keyof typeof JAR_FARM_MAP
-        ];
+        const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
 
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 

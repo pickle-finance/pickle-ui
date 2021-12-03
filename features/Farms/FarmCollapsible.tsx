@@ -4,7 +4,7 @@ import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
-import { JAR_FARM_MAP, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -14,9 +14,10 @@ import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
-import { DEPOSIT_TOKENS_NAME, PICKLE_JARS } from "../../containers/Jars/jars";
 import { useMigrate } from "./UseMigrate";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { isYveCrvEthJarToken } from "containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;
@@ -210,12 +211,12 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
   const { setButtonStatus } = useButtonStatus();
+  const { pickleCore } = PickleCore.useContainer();
 
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
 
-  const maybeJar =
-    JAR_FARM_MAP[depositToken.address as keyof typeof JAR_FARM_MAP];
+  const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
@@ -236,9 +237,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     return Object.values(x).reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
 
-  const isyveCRVFarm =
-    depositToken.address.toLowerCase() ===
-    PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase();
+  const isyveCRVFarm = isYveCrvEthJarToken(depositToken.address);
 
   const handleMigrate = async () => {
     if (stakedNum) {
