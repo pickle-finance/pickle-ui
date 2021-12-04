@@ -60,6 +60,7 @@ export const arbJars = [
   "Mim2CRV",
   "DodoHndEth",
   "CrvTricrypto",
+  "BalTricrypto",
 ];
 
 export const powerPool = "PICKLE-ETH";

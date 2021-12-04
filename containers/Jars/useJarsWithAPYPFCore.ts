@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Jar } from "./useFetchJars";
 import { ChainName } from "containers/config";
 import { PickleCore } from "./usePickleCore";
+import { BalancerPool, BALANCER_POOLS_INFO } from "containers/Balancer";
 
 export interface JarApy {
   [k: string]: number;
@@ -28,6 +29,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     null,
   );
   const { pickleCore } = PickleCore.useContainer();
+  const { calculateBalPoolAPRs } = BalancerPool.useContainer();
 
   const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {
@@ -37,13 +39,14 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       let lp = 0;
       if (aprStats !== undefined) {
         const componentsAPYs: JarApy[] = aprStats.components.map((component) => {
+          const apr = !isNaN(component.apr)? +component.apr: 0  // protect against non-numeric values
           if (component.name.toLowerCase() === "lp") {
-            lp = component.apr;
+            lp = apr;
           }
           return {
             [component.name]: component.compoundable
               ? getCompoundingAPY(component.apr / 100)
-              : component.apr,
+              : apr,
           };
         });
 
@@ -61,7 +64,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateAPY = async () => {
     if (jars && pickleCore) {
-      const promises = jars.map((jar) => {
+      const promises = jars.map(async (jar) => {
         interface JarData {
           APYs: JarApy[];
           apr: number;
@@ -71,6 +74,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         const jarData: JarData = <JarData>(
           calculateJarAPYs(jar.contract.address)
         );
+        
 
         return {
           ...jar,
@@ -78,7 +82,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         };
       });
 
-      setJarsWithAPY(promises);
+      const data = await Promise.all(promises);
+      setJarsWithAPY(data);
     }
   };
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { Contract as MulticallContract } from "ethers-multicall";
 import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
@@ -18,6 +19,11 @@ import { NETWORK_NAMES } from "containers/config";
 import { isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
+import { BALANCER_POOLS_INFO } from "../../containers/Balancer";
+import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
+import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
+
+
 interface DataProps {
   isZero?: boolean;
 }
@@ -197,7 +203,7 @@ export const JarMiniFarmCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer, address, blockNum, chainName } = Connection.useContainer();
+  const { signer, address, blockNum, chainName, multicallProvider } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
@@ -238,6 +244,8 @@ export const JarMiniFarmCollapsible: FC<{
   const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
   const isQiMaiJar = isQlpQiToken(depositToken.address);
+
+  const isBalancerJar = !!BALANCER_POOLS_INFO[depositToken.address.toLowerCase()];
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -393,6 +401,42 @@ export const JarMiniFarmCollapsible: FC<{
     (x) =>
       x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   )[0];
+
+  const [balancerTimerProps, setBalancerTimerProps] = useState<BalancerJarTimerProps|null>(null);
+
+  useEffect(() => {
+    const checkCooldown = async () => {
+      if (isBalancerJar && signer && multicallProvider) {
+        const jarMulticall = new MulticallContract(jarContract.address, jarTimelockABI);
+        const [
+          cdStartTimeRes,
+          cdTimeRes,
+          initialWFRes, 
+          initialWFMaxRes,
+        ] = await multicallProvider.all([
+          jarMulticall.cooldownStartTime(address),
+          jarMulticall.cooldownTime(),
+          jarMulticall.initialWithdrawalFee(), 
+          jarMulticall.initialWithdrawalFeeMax(),
+        ]);
+        const cdStartTime = parseFloat(ethers.utils.formatUnits(cdStartTimeRes, 0));
+        const cdTime = parseFloat(ethers.utils.formatUnits(cdTimeRes, 0));
+        const initialWF = parseFloat(ethers.utils.formatUnits(initialWFRes, 0)); 
+        const initialWFMax = parseFloat(ethers.utils.formatUnits(initialWFMaxRes, 0));
+        const endTime = cdStartTime + cdTime;
+        const timerProps: BalancerJarTimerProps = {
+          endTime: endTime,
+          timeLockLength: cdTime,
+          initialExitFee: initialWF,
+          initialExitFeeMax: initialWFMax,
+        }
+        console.log(timerProps)
+        setBalancerTimerProps(timerProps);
+      }
+    }
+    checkCooldown();
+  }, [blockNum])
+
   const tvlNum =
     tvlJarData && tvlJarData.details.harvestStats
       ? tvlJarData.details.harvestStats.balanceUSD
@@ -532,6 +576,8 @@ export const JarMiniFarmCollapsible: FC<{
                 <StyledNotice>{t("farms.mai.description")}</StyledNotice>
               ) : isQiMaiJar ? (
                 <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
+              ) : isBalancerJar ? (
+                <StyledNotice>{"This jar has a 7 days cooldown period. Withdrawing within that period will incur an early exit fee."}</StyledNotice>
               ) : null}
             </Grid>
             <Grid xs={24} md={12}>
@@ -548,6 +594,7 @@ export const JarMiniFarmCollapsible: FC<{
                   ? depositStakeButton || depositButton.text
                   : t("farms.depositAndStake")}
               </Button>
+              
             </Grid>
           </Grid.Container>
         </Grid>
@@ -606,6 +653,9 @@ export const JarMiniFarmCollapsible: FC<{
             >
               {withdrawButton.text}
             </Button>
+            {isBalancerJar && balancerTimerProps? (
+                <BalancerJarTimer {...balancerTimerProps}/>
+              ) : null}
           </Grid>
         )}
       </Grid.Container>

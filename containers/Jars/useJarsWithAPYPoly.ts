@@ -29,20 +29,22 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     null,
   );
 
-  const calculateJarAPYs = (jarAddr: string) => {
+  const calculateJarAPYs = (jarWantAddr: string) => {
     if (pickleCore) {
       const aprStats = pickleCore.assets.jars.filter(
-        (jar) => jarAddr.toLowerCase() === jar.contract.toLowerCase(),
+        (jar) =>
+          jarWantAddr.toLowerCase() === jar.depositToken.addr.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
       const componentsAPYs: JarApy[] = aprStats?.components.map((component) => {
+        const apr = !isNaN(component.apr)? +component.apr: 0  // protect against non-numeric values
         if (component.name.toLowerCase() === "lp") {
-          lp = component.apr;
+          lp = apr;
         }
         return {
           [component.name]: component.compoundable
-            ? getCompoundingAPY(component.apr / 100)
-            : component.apr,
+            ? getCompoundingAPY(apr / 100)
+            : apr,
         };
       });
 
