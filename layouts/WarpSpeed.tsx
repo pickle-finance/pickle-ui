@@ -7,7 +7,7 @@ import LeftNavbar from "v2/components/LeftNavbar";
 import TopNavbar from "v2/components/TopNavbar";
 
 type Page<P = {}> = NextPage<P> & {
-  PageTitle: FC;
+  PageTitle?: FC;
 };
 
 type Props = AppProps & {

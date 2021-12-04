@@ -14,6 +14,7 @@ import arbitrum from "public/arbitrum.svg";
 import ethereum from "public/ethereum.svg";
 import oec from "public/oec.svg";
 import matic from "public/matic.svg";
+import moonriver from "public/moonriver.svg";
 
 const networks = [
   {
@@ -23,6 +24,10 @@ const networks = [
   {
     name: "Ethereum",
     icon: ethereum,
+  },
+  {
+    name: "Moonriver",
+    icon: moonriver,
   },
   {
     name: "OEC",

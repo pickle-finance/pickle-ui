@@ -16,6 +16,7 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
 );
 
 interface Props {
+  simple?: boolean;
   farm: {
     asset: string;
     iconSrc: string;
@@ -26,9 +27,9 @@ interface Props {
   };
 }
 
-const FarmsTableRow: FC<Props> = ({ farm }) => {
+const FarmsTableRow: FC<Props> = ({ farm, simple }) => {
   return (
-    <tr className="cursor-pointer group">
+    <tr className={classNames(!simple && "cursor-pointer", "group")}>
       <RowCell className="flex items-center rounded-l-xl">
         <div className="w-9 h-9 rounded-full border-3 border-gray-outline mr-3">
           <Image
