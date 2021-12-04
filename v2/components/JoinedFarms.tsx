@@ -11,7 +11,7 @@ const JoinedFarms: FC = () => {
       <h2 className="font-body font-bold text-xl mb-6">
         {t("v2.dashboard.joinedFarms")}
       </h2>
-      <FarmsTable />
+      <FarmsTable simple />
     </>
   );
 };

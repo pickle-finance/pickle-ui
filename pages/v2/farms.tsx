@@ -2,7 +2,13 @@ import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import type { PickleFinancePage } from "v2/types";
+import JoinedFarms from "v2/components/JoinedFarms";
 
+const Farms: PickleFinancePage = () => (
+  <div className="block mb-8 sm:mb-10">
+    <JoinedFarms />
+  </div>
+);
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
 
@@ -12,8 +18,6 @@ const PageTitle: FC = () => {
     </h1>
   );
 };
-
-const Farms: PickleFinancePage = () => <></>;
 
 Farms.PageTitle = PageTitle;
 

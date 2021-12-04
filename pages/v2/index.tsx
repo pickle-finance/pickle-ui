@@ -2,7 +2,29 @@ import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import type { PickleFinancePage } from "v2/types";
-import Dashboard from "v2/components/Dashboard";
+import PerformanceCard from "v2/components/PerformanceCard";
+import PickleBalanceCard from "v2/components/PickleBalanceCard";
+import DillBalanceCard from "v2/components/DillBalanceCard";
+import JoinedFarms from "v2/components/JoinedFarms";
+import DashboardCalloutCard from "v2/components/DashboardCalloutCard";
+
+const Dashboard: PickleFinancePage = () => (
+  <>
+    <div className="block lg:flex mb-8 sm:mb-10">
+      <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0">
+        <PerformanceCard />
+      </div>
+      <div className="flex flex-col justify-between">
+        <PickleBalanceCard />
+        <DillBalanceCard />
+      </div>
+    </div>
+    <JoinedFarms />
+    <div className="mt-4">
+      <DashboardCalloutCard />
+    </div>
+  </>
+);
 
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
@@ -19,10 +41,8 @@ const PageTitle: FC = () => {
   );
 };
 
-const Root: PickleFinancePage = () => <Dashboard />;
-
-Root.PageTitle = PageTitle;
+Dashboard.PageTitle = PageTitle;
 
 export { getStaticProps } from "../../util/locales";
 
-export default Root;
+export default Dashboard;

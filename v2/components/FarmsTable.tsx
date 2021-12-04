@@ -30,7 +30,11 @@ const FarmsTableHeaderCell: FC = ({ children }) => (
   </th>
 );
 
-const FarmsTable: FC = () => {
+interface Props {
+  simple?: boolean;
+}
+
+const FarmsTable: FC<Props> = ({ simple }) => {
   const { t } = useTranslation("common");
 
   return (
@@ -53,11 +57,16 @@ const FarmsTable: FC = () => {
                 <FarmsTableHeaderCell>
                   {t("v2.farms.liquidity")}
                 </FarmsTableHeaderCell>
+                {!simple && (
+                  <FarmsTableHeaderCell>
+                    <span className="sr-only">{t("v2.farms.expand")}</span>
+                  </FarmsTableHeaderCell>
+                )}
               </tr>
             </thead>
             <tbody className="text-white">
               {farms.map((farm) => (
-                <FarmsTableRow key={farm.asset} farm={farm} />
+                <FarmsTableRow key={farm.asset} farm={farm} simple={simple} />
               ))}
             </tbody>
           </table>
