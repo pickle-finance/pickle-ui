@@ -62,11 +62,8 @@ const FarmsTable: FC<Props> = ({ simple, title }) => {
                   <FarmsTableHeaderCell>
                     {t("v2.farms.liquidity")}
                   </FarmsTableHeaderCell>
-                  {!simple && (
-                    <FarmsTableHeaderCell>
-                      <span className="sr-only">{t("v2.farms.expand")}</span>
-                    </FarmsTableHeaderCell>
-                  )}
+                  {/* Chevron down/up column */}
+                  {!simple && <FarmsTableHeaderCell></FarmsTableHeaderCell>}
                 </tr>
               </thead>
               <tbody className="text-white">
