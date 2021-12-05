@@ -5,26 +5,30 @@ import type { PickleFinancePage } from "v2/types";
 import PerformanceCard from "v2/components/PerformanceCard";
 import PickleBalanceCard from "v2/components/PickleBalanceCard";
 import DillBalanceCard from "v2/components/DillBalanceCard";
-import JoinedFarms from "v2/components/JoinedFarms";
+import FarmsTable from "v2/components/FarmsTable";
 import DashboardCalloutCard from "v2/components/DashboardCalloutCard";
 
-const Dashboard: PickleFinancePage = () => (
-  <>
-    <div className="block lg:flex mb-8 sm:mb-10">
-      <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0">
-        <PerformanceCard />
+const Dashboard: PickleFinancePage = () => {
+  const { t } = useTranslation("common");
+
+  return (
+    <>
+      <div className="block lg:flex mb-8 sm:mb-10">
+        <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0">
+          <PerformanceCard />
+        </div>
+        <div className="flex flex-col justify-between">
+          <PickleBalanceCard />
+          <DillBalanceCard />
+        </div>
       </div>
-      <div className="flex flex-col justify-between">
-        <PickleBalanceCard />
-        <DillBalanceCard />
+      <FarmsTable title={t("v2.dashboard.joinedFarms")} simple />
+      <div className="mt-4">
+        <DashboardCalloutCard />
       </div>
-    </div>
-    <JoinedFarms />
-    <div className="mt-4">
-      <DashboardCalloutCard />
-    </div>
-  </>
-);
+    </>
+  );
+};
 
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");

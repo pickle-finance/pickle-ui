@@ -2,13 +2,14 @@ import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import type { PickleFinancePage } from "v2/types";
-import JoinedFarms from "v2/components/JoinedFarms";
+import FarmsTable from "v2/components/FarmsTable";
 
-const Farms: PickleFinancePage = () => (
-  <div className="block mb-8 sm:mb-10">
-    <JoinedFarms />
-  </div>
-);
+const Farms: PickleFinancePage = () => {
+  const { t } = useTranslation("common");
+
+  return <FarmsTable title={t("v2.dashboard.joinedFarms")} />;
+};
+
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
 
