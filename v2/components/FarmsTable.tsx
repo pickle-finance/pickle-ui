@@ -32,47 +32,53 @@ const FarmsTableHeaderCell: FC = ({ children }) => (
 
 interface Props {
   simple?: boolean;
+  title: string;
 }
 
-const FarmsTable: FC<Props> = ({ simple }) => {
+const FarmsTable: FC<Props> = ({ simple, title }) => {
   const { t } = useTranslation("common");
 
   return (
-    <div className="flex flex-col">
-      <div className="-my-2 overflow-x-auto">
-        <div className="py-2 align-middle inline-block min-w-full">
-          <table className="min-w-full border-separate border-spacing-2">
-            <thead className="bg-black uppercase">
-              <tr>
-                <FarmsTableHeaderCell>
-                  {t("v2.farms.asset")}
-                </FarmsTableHeaderCell>
-                <FarmsTableHeaderCell>
-                  {t("v2.farms.earned")}
-                </FarmsTableHeaderCell>
-                <FarmsTableHeaderCell>
-                  {t("v2.farms.deposited")}
-                </FarmsTableHeaderCell>
-                <FarmsTableHeaderCell>{t("v2.farms.apy")}</FarmsTableHeaderCell>
-                <FarmsTableHeaderCell>
-                  {t("v2.farms.liquidity")}
-                </FarmsTableHeaderCell>
-                {!simple && (
+    <>
+      <h2 className="font-body font-bold text-xl mb-6">{title}</h2>
+      <div className="flex flex-col">
+        <div className="-my-2 overflow-x-auto">
+          <div className="py-2 align-middle inline-block min-w-full">
+            <table className="min-w-full table-auto border-separate border-spacing-2">
+              <thead className="bg-black uppercase">
+                <tr>
                   <FarmsTableHeaderCell>
-                    <span className="sr-only">{t("v2.farms.expand")}</span>
+                    {t("v2.farms.asset")}
                   </FarmsTableHeaderCell>
-                )}
-              </tr>
-            </thead>
-            <tbody className="text-white">
-              {farms.map((farm) => (
-                <FarmsTableRow key={farm.asset} farm={farm} simple={simple} />
-              ))}
-            </tbody>
-          </table>
+                  <FarmsTableHeaderCell>
+                    {t("v2.farms.earned")}
+                  </FarmsTableHeaderCell>
+                  <FarmsTableHeaderCell>
+                    {t("v2.farms.deposited")}
+                  </FarmsTableHeaderCell>
+                  <FarmsTableHeaderCell>
+                    {t("v2.farms.apy")}
+                  </FarmsTableHeaderCell>
+                  <FarmsTableHeaderCell>
+                    {t("v2.farms.liquidity")}
+                  </FarmsTableHeaderCell>
+                  {!simple && (
+                    <FarmsTableHeaderCell>
+                      <span className="sr-only">{t("v2.farms.expand")}</span>
+                    </FarmsTableHeaderCell>
+                  )}
+                </tr>
+              </thead>
+              <tbody className="text-white">
+                {farms.map((farm) => (
+                  <FarmsTableRow key={farm.asset} farm={farm} simple={simple} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

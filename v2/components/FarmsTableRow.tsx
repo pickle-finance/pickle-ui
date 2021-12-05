@@ -1,5 +1,6 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
+import { ChevronDownIcon } from "@heroicons/react/solid";
 
 import { classNames, formatDollars } from "../utils";
 import FarmsBadge from "./FarmsBadge";
@@ -69,11 +70,21 @@ const FarmsTableRow: FC<Props> = ({ farm, simple }) => {
       <RowCell>
         <p className="font-title font-medium text-base leading-5">{farm.apy}</p>
       </RowCell>
-      <RowCell className="rounded-r-xl">
+      <RowCell className={classNames(simple && "rounded-r-xl")}>
         <p className="font-title font-medium text-base leading-5">
           {formatDollars(farm.liquidity)}
         </p>
       </RowCell>
+      {!simple && (
+        <RowCell className="rounded-r-xl">
+          <div className="flex justify-end pr-3">
+            <ChevronDownIcon
+              className="text-white ml-2 h-5 w-5"
+              aria-hidden="true"
+            />
+          </div>
+        </RowCell>
+      )}
     </tr>
   );
 };
