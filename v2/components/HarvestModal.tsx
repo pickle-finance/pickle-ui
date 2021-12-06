@@ -38,7 +38,7 @@ const RewardRow: FC = () => {
         </div>
       </div>
       <div className="flex items-center">
-        <Button type="secondary" size="small" handleClick={() => {}}>
+        <Button type="secondary" size="small">
           {t("v2.farms.harvest")}
         </Button>
       </div>

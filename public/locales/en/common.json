@@ -273,8 +273,10 @@
     "zapping": "Zapping..."
   },
   "v2": {
+    "balances": {
+      "balance": "Balance"
+    },
     "dashboard": {
-      "balance": "Balance",
       "dillAmount": "DILL amount",
       "earnUpTo": "Earn up to <1>{{ percent }}</1> APY",
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
@@ -290,11 +292,16 @@
       "apy": "APY",
       "asset": "Asset",
       "deposited": "Deposited",
+      "depositedToken": "{{ token }} deposited",
       "earned": "Earned",
+      "earnedToken": "{{ token }} earned",
+      "enable": "Enable",
       "expand": "Expand",
+      "getToken": "Get {{ token }}",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
-      "liquidity": "Liquidity"
+      "liquidity": "Liquidity",
+      "stakedToken": "{{ token }} staked"
     },
     "gasPrices": {
       "fast": "Fast",

@@ -28,7 +28,7 @@ const PerformanceCard: FC = () => {
                 $9,888.99
               </p>
               <p className="text-gray-light text-sm">
-                {t("v2.dashboard.balance")}
+                {t("v2.balances.balance")}
               </p>
             </div>
           </div>
@@ -48,7 +48,7 @@ const PerformanceCard: FC = () => {
         </div>
       </div>
       <div className="relative px-6 py-4 sm:px-8 sm:py-6">
-        <Button handleClick={openModal} size="normal">
+        <Button onClick={openModal} size="normal">
           {t("v2.dashboard.harvestRewards")}
         </Button>
         <HarvestModal isOpen={isOpen} closeModal={closeModal} />
