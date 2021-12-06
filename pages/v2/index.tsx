@@ -5,7 +5,7 @@ import type { PickleFinancePage } from "v2/types";
 import PerformanceCard from "v2/components/PerformanceCard";
 import PickleBalanceCard from "v2/components/PickleBalanceCard";
 import DillBalanceCard from "v2/components/DillBalanceCard";
-import FarmsTable from "v2/components/FarmsTable";
+import FarmsTable from "v2/features/farms/FarmsTable";
 import DashboardCalloutCard from "v2/components/DashboardCalloutCard";
 
 const Dashboard: PickleFinancePage = () => {

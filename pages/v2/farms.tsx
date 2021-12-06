@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import type { PickleFinancePage } from "v2/types";
-import FarmsTable from "v2/components/FarmsTable";
+import FarmsTable from "v2/features/farms/FarmsTable";
 
 const Farms: PickleFinancePage = () => {
   const { t } = useTranslation("common");
