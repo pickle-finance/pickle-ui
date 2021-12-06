@@ -8,7 +8,10 @@ interface Props {
 
 const FarmsTableRowBody: FC<Props> = () => {
   return (
-    <td colSpan={6} className="bg-black-light rounded-b-xl">
+    <td
+      colSpan={6}
+      className="bg-black-light rounded-b-xl p-6 border-t border-gray-dark"
+    >
       Disclosure panel body
     </td>
   );
