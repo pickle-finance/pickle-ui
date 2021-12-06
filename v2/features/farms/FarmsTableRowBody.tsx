@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { Farm } from "v2/types";
 import Link from "v2/components/Link";
 import Button from "v2/components/Button";
+import MoreInfo from "v2/components/MoreInfo";
 
 interface Props {
   farm: Farm;
@@ -34,6 +35,7 @@ const FarmsTableRowBody: FC<Props> = () => {
         <div className="p-4 flex-grow border border-gray-dark rounded-xl mb-2 sm:mb-0 sm:mr-6">
           <p className="font-title text-gray-light font-medium text-base leading-5 mb-2">
             {t("v2.farms.depositedToken", { token: "DAI-ETH" })}
+            <MoreInfo text="More info" />
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-green font-medium text-base leading-5">
@@ -45,6 +47,7 @@ const FarmsTableRowBody: FC<Props> = () => {
         <div className="p-4 flex-grow border border-gray-dark rounded-xl mb-2 sm:mb-0 sm:mr-6">
           <p className="font-title text-gray-light font-medium text-base leading-5 mb-2">
             {t("v2.farms.stakedToken", { token: "DAI-ETH" })}
+            <MoreInfo text="More info" />
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-green font-medium text-base leading-5">
