@@ -44,7 +44,7 @@ const FarmsTable: FC<Props> = ({ simple, title }) => {
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
-            <table className="min-w-full table-auto border-separate border-spacing-2">
+            <table className="min-w-full table-auto border-collapse">
               <thead className="bg-black uppercase">
                 <tr>
                   <FarmsTableHeaderCell>

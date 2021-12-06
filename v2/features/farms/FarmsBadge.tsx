@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { classNames } from "../utils";
+import { classNames } from "v2/utils";
 
 interface Props {
   active?: boolean;
