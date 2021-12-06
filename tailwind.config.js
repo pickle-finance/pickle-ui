@@ -37,7 +37,7 @@ module.exports = {
           lighter: "#172628",
         },
         orange: {
-          DEFAULT: "#e1562f",
+          DEFAULT: "#e1552f",
           light: "#ff9375",
           lightest: "#ff807533",
         },

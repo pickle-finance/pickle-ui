@@ -37,14 +37,14 @@ const LeftNavbar: FC = () => {
           <div className="flex flex-col overflow-y-auto">
             <PicklePriceIndicator />
             <NavItem
-              isExternal
               href="https://etherscan.io/address/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
+              external
             >
               {t("v2.nav.tokenAddress")}
             </NavItem>
             <NavItem
-              isExternal
               href="https://etherscan.io/address/0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf"
+              external
             >
               {t("v2.nav.dillAddress")}
             </NavItem>
