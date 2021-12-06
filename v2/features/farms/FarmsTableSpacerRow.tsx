@@ -7,7 +7,11 @@ import { FC } from "react";
  * is no margin between expandable row header and its body).
  */
 const FarmsTableSpacerRow: FC = () => {
-  return <td colSpan={6} className="bg-black p-1"></td>;
+  return (
+    <tr>
+      <td colSpan={6} className="bg-black p-1"></td>
+    </tr>
+  );
 };
 
 export default FarmsTableSpacerRow;
