@@ -50,24 +50,27 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
     ) {
       const balancesUserInfosHarvestables = await multicallProvider.all(
         gauges.flatMap((x) => {
-          const c = new MulticallContract(x.token, [
-            ...erc20.interface.fragments,
-          ]);
-          const gaugeContract = new MulticallContract(x.gaugeAddress, [
-            ...gauge.interface.fragments,
-          ]);
+          if (x?.token && x?.gaugeAddress) {
+            const c = new MulticallContract(x.token, [
+              ...erc20.interface.fragments,
+            ]);
+            const gaugeContract = new MulticallContract(x.gaugeAddress, [
+              ...gauge.interface.fragments,
+            ]);
 
-          const gaugeProxyContract = new MulticallContract(gaugeProxy.address, [
-            ...gaugeProxy.interface.fragments,
-          ]);
+            const gaugeProxyContract = new MulticallContract(
+              gaugeProxy.address,
+              [...gaugeProxy.interface.fragments],
+            );
 
-          return [
-            c.balanceOf(address),
-            gaugeContract.balanceOf(address),
-            gaugeContract.earned(address),
-            gaugeProxyContract.votes(address, x.token),
-            gaugeProxyContract.usedWeights(address),
-          ];
+            return [
+              c.balanceOf(address),
+              gaugeContract.balanceOf(address),
+              gaugeContract.earned(address),
+              gaugeProxyContract.votes(address, x.token),
+              gaugeProxyContract.usedWeights(address),
+            ];
+          }
         }),
       );
 

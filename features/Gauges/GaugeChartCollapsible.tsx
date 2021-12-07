@@ -27,12 +27,12 @@ const shadeColor = (color: string, percent: number) => {
 };
 
 const formatter = (val: number) => {
-  const pct = (val * 100);
-  if( pct < .01 && pct > 0 ) {
+  const pct = val * 100;
+  if (pct < 0.01 && pct > 0) {
     return "~0.00%";
   }
   return pct.toFixed(2) + "%";
-}
+};
 
 const TableContainer = styled.div`
   display: flex;
@@ -57,12 +57,12 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const dataForChart = gaugeChartData.filter((x) => x.allocPoint > 0.02);
   const dataForTable = gaugeChartData.filter((x) => !dataForChart.includes(x));
 
-  const smallFarmsData = dataForTable.reduce((acc, cur) => {
+  const smallFarmsData = dataForTable?.reduce((acc, cur) => {
     return {
       allocPoint: acc.allocPoint + cur.allocPoint,
       depositTokenName: t("gauges.other"),
     };
-  });
+  }, {allocPoint: 0, depositTokenName: t("gauges.other")});
 
   dataForChart.push(smallFarmsData);
 
