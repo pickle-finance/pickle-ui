@@ -24,6 +24,7 @@ import { JarApy } from "../../containers/Jars/useJarsWithAPYEth";
 import { Jars } from "../../containers/Jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { getJarFarmMap } from "containers/Farms/farms";
+import { PickleCore } from "containers/Jars/usePickleCore";
 
 interface Weights {
   [key: string]: number;
@@ -58,6 +59,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
 }) => {
   const { balance: dillBalanceBN } = Dill.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
   const [votingFarms, setVotingFarms] = useState();
   const { vote } = useGaugeProxy();
   const { gaugeProxy } = Contracts.useContainer();
@@ -241,88 +243,94 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       allocPoint,
       address,
     } = gauge;
-    let APYs: JarApy[] = [];
+    if (pickleCore) {
+      let APYs: JarApy[] = [];
 
-    if (depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()) {
-      APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
+      if (
+        depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()
+      ) {
+        APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
+      }
+
+      // Get Jar APY (if its from a Jar)
+      const pickleAPYMin = fullApy * 100 * 0.4;
+      const pickleAPYMax = fullApy * 100;
+
+      const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
+      if (jars && maybeJar) {
+        const gaugeingJar = jars.filter(
+          (x) => x.jarName === maybeJar.jarName,
+        )[0];
+        APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
+      }
+
+      const totalAPY = APYs.map((x) => {
+        return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
+      }).reduce((acc, x) => acc + x, 0);
+
+      const newWeightMaybe = newWeights?.find(
+        (x: UserGaugeData) => x[address] >= 0,
+      );
+      const newWeight = newWeightMaybe ? newWeightMaybe[address] : null;
+
+      return (
+        <Grid.Container
+          style={{ width: "100%", paddingBottom: "10px" }}
+          key={address}
+        >
+          <Grid xs={24} sm={12} md={6} lg={6}>
+            <TokenIcon
+              src={
+                GAUGE_LP_TO_ICON[
+                  depositToken.address as keyof typeof GAUGE_LP_TO_ICON
+                ]
+              }
+            />
+            <div style={{ width: "100%" }}>
+              <div style={{ fontSize: `1rem` }}>{poolName}</div>
+              <Label style={{ fontSize: `0.85rem` }}>{depositTokenName}</Label>
+            </div>
+          </Grid>
+          <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
+            <Data isZero={fullApy === 0}>
+              {formatAPY(totalAPY + pickleAPYMin)}~
+              {formatAPY(totalAPY + pickleAPYMax)}
+            </Data>
+            <Label>{t("gauges.totalApyRange")}</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
+            <Data isZero={fullApy === 0}>
+              {formatAPY(pickleAPYMin)}~{formatAPY(pickleAPYMax)}
+            </Data>
+            <Label>{t("gauges.pickleApy")}</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
+            <Data>
+              {formatPercent(allocPoint)}%{" "}
+              {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
+            </Data>
+            <Label>{t("gauges.currentWeight")}</Label>
+          </Grid>
+          <Grid xs={24} sm={6} md={3} lg={3} style={{ textAlign: "center" }}>
+            <PercentageInput
+              placeholder="0%"
+              css={{
+                width: "60px !important",
+                minWidth: 0,
+                margin: "auto",
+              }}
+              value={voteWeights[address] ? voteWeights[address] : 0}
+              onValueChange={async ({ floatValue }) => {
+                setVoteWeights({
+                  ...voteWeights,
+                  [address]: floatValue,
+                });
+              }}
+            />
+          </Grid>
+        </Grid.Container>
+      );
     }
-
-    // Get Jar APY (if its from a Jar)
-    const pickleAPYMin = fullApy * 100 * 0.4;
-    const pickleAPYMax = fullApy * 100;
-
-    const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
-    if (jars && maybeJar) {
-      const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
-      APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
-    }
-
-    const totalAPY = APYs.map((x) => {
-      return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
-    }).reduce((acc, x) => acc + x, 0);
-
-    const newWeightMaybe = newWeights?.find(
-      (x: UserGaugeData) => x[address] >= 0,
-    );
-    const newWeight = newWeightMaybe ? newWeightMaybe[address] : null;
-
-    return (
-      <Grid.Container
-        style={{ width: "100%", paddingBottom: "10px" }}
-        key={address}
-      >
-        <Grid xs={24} sm={12} md={6} lg={6}>
-          <TokenIcon
-            src={
-              GAUGE_LP_TO_ICON[
-                depositToken.address as keyof typeof GAUGE_LP_TO_ICON
-              ]
-            }
-          />
-          <div style={{ width: "100%" }}>
-            <div style={{ fontSize: `1rem` }}>{poolName}</div>
-            <Label style={{ fontSize: `0.85rem` }}>{depositTokenName}</Label>
-          </div>
-        </Grid>
-        <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
-          <Data isZero={fullApy === 0}>
-            {formatAPY(totalAPY + pickleAPYMin)}~
-            {formatAPY(totalAPY + pickleAPYMax)}
-          </Data>
-          <Label>{t("gauges.totalApyRange")}</Label>
-        </Grid>
-        <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
-          <Data isZero={fullApy === 0}>
-            {formatAPY(pickleAPYMin)}~{formatAPY(pickleAPYMax)}
-          </Data>
-          <Label>{t("gauges.pickleApy")}</Label>
-        </Grid>
-        <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
-          <Data>
-            {formatPercent(allocPoint)}%{" "}
-            {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
-          </Data>
-          <Label>{t("gauges.currentWeight")}</Label>
-        </Grid>
-        <Grid xs={24} sm={6} md={3} lg={3} style={{ textAlign: "center" }}>
-          <PercentageInput
-            placeholder="0%"
-            css={{
-              width: "60px !important",
-              minWidth: 0,
-              margin: "auto",
-            }}
-            value={voteWeights[address] ? voteWeights[address] : 0}
-            onValueChange={async ({ floatValue }) => {
-              setVoteWeights({
-                ...voteWeights,
-                [address]: floatValue,
-              });
-            }}
-          />
-        </Grid>
-      </Grid.Container>
-    );
   };
 
   return (
