@@ -12,8 +12,13 @@ import { NETWORK_NAMES } from "./config";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
-  const { jars: rawJars } = useFetchJars();  const { jarsWithAPY: jarsWithAPYPFCore } = useJarsWithAPYPFCore(chainName, rawJars);
-  const { jarsWithTVL } = useJarWithTVL( jarsWithAPYPFCore );
+  const { jars: rawJars } = useFetchJars();
+  const { jarsWithAPY } = useJarsWithAPYPFCore(
+    chainName,
+    rawJars,
+  );
+  const { jarsWithTVL } = useJarWithTVL(jarsWithAPY);
+
   const { addTokens } = Balances.useContainer();
 
   // Automatically update balance here

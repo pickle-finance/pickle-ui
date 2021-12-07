@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { useTranslation } from "next-i18next";
 
 export interface BalancerJarTimerProps {
   endTime: number;
@@ -16,6 +17,8 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
   const Ref = useRef<number | null>(null);
 
   const [timer, setTimer] = useState<string | null>(null);
+
+  const { t } = useTranslation("common");
 
   const getWithdrawalFee = () => {
     const currentTime = Date.parse(Date()) / 1000;
@@ -78,8 +81,8 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
 
   return (
     <StyledNotice>
-      <h2>{"Cooldown Time Left: (" + timer + ")"}</h2>
-      <h2>{`Current Exit Fee: ${getWithdrawalFee().toFixed(2)}%`}</h2>
+      <h2>{t("farms.balancer.cooldown") + `: (${timer})`}</h2>
+      <h2>{t("farms.balancer.exit") + `: ${getWithdrawalFee().toFixed(2)}%`}</h2>
     </StyledNotice>
   );
 };

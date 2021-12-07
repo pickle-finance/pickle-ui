@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Jar } from "./useFetchJars";
 import { ChainName } from "containers/config";
 import { PickleCore } from "./usePickleCore";
-import { BalancerPool, BALANCER_POOLS_INFO } from "containers/Balancer";
+import { Prices } from "../Prices";
 
 export interface JarApy {
   [k: string]: number;
@@ -25,11 +25,12 @@ type Output = {
 };
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
+  const { pickleCore } = PickleCore.useContainer();
+  const { prices } = Prices.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  const { pickleCore } = PickleCore.useContainer();
-  const { calculateBalPoolAPRs } = BalancerPool.useContainer();
+  
 
   const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {
@@ -64,17 +65,24 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateAPY = async () => {
     if (jars && pickleCore) {
-      const promises = jars.map(async (jar) => {
+      const results = jars.map((jar) => {
         interface JarData {
           APYs: JarApy[];
           apr: number;
           totalAPY: number;
           lp: number;
         }
+<<<<<<< HEAD
         const jarData: JarData = <JarData>(
           calculateJarAPYs(jar.contract.address)
         );
         
+=======
+
+        const jarData: JarData = <JarData>(
+          calculateJarAPYs(jar.depositToken.address)
+        );
+>>>>>>> -Removed useJarsWithAPYPoly. -Removed useJarsWithAPYEth. -Removed redundant Balancer code. - minor improvements and refactorings.
 
         return {
           ...jar,
@@ -82,8 +90,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         };
       });
 
-      const data = await Promise.all(promises);
-      setJarsWithAPY(data);
+      setJarsWithAPY(results);
     }
   };
   useEffect(() => {

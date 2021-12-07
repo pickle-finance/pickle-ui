@@ -28,7 +28,6 @@ import { ComethPairs } from "../containers/ComethPairs";
 import { PoolData } from "../containers/Jars/usePoolData";
 import { TopBar } from "../features/TopBar/TopBar";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { BalancerPool } from "containers/Balancer";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -46,35 +45,33 @@ const WithContainers: FC = ({ children }) => (
                   <Pickles.Provider>
                     <MiniPickles.Provider>
                       <PickleStaking.Provider>
-                        <BalancerPool.Provider>
-                          <CurvePairs.Provider>
-                            <UniV2Pairs.Provider>
-                              <ComethPairs.Provider>
-                                <Dill.Provider>
-                                  <SushiPairs.Provider>
-                                    <Jars.Provider>
-                                      <Farms.Provider>
-                                        <Gauges.Provider>
-                                          <MiniFarms.Provider>
-                                            <UserJars.Provider>
-                                              <UserFarms.Provider>
-                                                <UserGauges.Provider>
-                                                  <UserMiniFarms.Provider>
-                                                    {children}
-                                                  </UserMiniFarms.Provider>
-                                                </UserGauges.Provider>
-                                              </UserFarms.Provider>
-                                            </UserJars.Provider>
-                                          </MiniFarms.Provider>
-                                        </Gauges.Provider>
-                                      </Farms.Provider>
-                                    </Jars.Provider>
-                                  </SushiPairs.Provider>
-                                </Dill.Provider>
-                              </ComethPairs.Provider>
-                            </UniV2Pairs.Provider>
-                          </CurvePairs.Provider>
-                        </BalancerPool.Provider>
+                        <CurvePairs.Provider>
+                          <UniV2Pairs.Provider>
+                            <ComethPairs.Provider>
+                              <Dill.Provider>
+                                <SushiPairs.Provider>
+                                  <Jars.Provider>
+                                    <Farms.Provider>
+                                      <Gauges.Provider>
+                                        <MiniFarms.Provider>
+                                          <UserJars.Provider>
+                                            <UserFarms.Provider>
+                                              <UserGauges.Provider>
+                                                <UserMiniFarms.Provider>
+                                                  {children}
+                                                </UserMiniFarms.Provider>
+                                              </UserGauges.Provider>
+                                            </UserFarms.Provider>
+                                          </UserJars.Provider>
+                                        </MiniFarms.Provider>
+                                      </Gauges.Provider>
+                                    </Farms.Provider>
+                                  </Jars.Provider>
+                                </SushiPairs.Provider>
+                              </Dill.Provider>
+                            </ComethPairs.Provider>
+                          </UniV2Pairs.Provider>
+                        </CurvePairs.Provider>
                       </PickleStaking.Provider>
                     </MiniPickles.Provider>
                   </Pickles.Provider>

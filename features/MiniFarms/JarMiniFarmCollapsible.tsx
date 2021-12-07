@@ -19,7 +19,7 @@ import { NETWORK_NAMES } from "containers/config";
 import { isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
-import { BALANCER_POOLS_INFO } from "../../containers/Balancer";
+import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 
@@ -245,7 +245,7 @@ export const JarMiniFarmCollapsible: FC<{
 
   const isQiMaiJar = isQlpQiToken(depositToken.address);
 
-  const isBalancerJar = !!BALANCER_POOLS_INFO[depositToken.address.toLowerCase()];
+  const isBalancerJar = isBalancerPool(depositToken.address);
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -430,7 +430,6 @@ export const JarMiniFarmCollapsible: FC<{
           initialExitFee: initialWF,
           initialExitFeeMax: initialWFMax,
         }
-        console.log(timerProps)
         setBalancerTimerProps(timerProps);
       }
     }
@@ -576,8 +575,6 @@ export const JarMiniFarmCollapsible: FC<{
                 <StyledNotice>{t("farms.mai.description")}</StyledNotice>
               ) : isQiMaiJar ? (
                 <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
-              ) : isBalancerJar ? (
-                <StyledNotice>{"This jar has a 7 days cooldown period. Withdrawing within that period will incur an early exit fee."}</StyledNotice>
               ) : null}
             </Grid>
             <Grid xs={24} md={12}>
@@ -597,6 +594,8 @@ export const JarMiniFarmCollapsible: FC<{
               
             </Grid>
           </Grid.Container>
+          <Spacer y={1} />
+          {isBalancerJar ? t("farms.balancer.info") : null}
         </Grid>
         {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
           <Grid xs={24} md={12}>

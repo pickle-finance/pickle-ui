@@ -109,6 +109,11 @@
       "bridge": "Bridge",
       "bridgeAssets": "Bridge your Ethereum assets to Arbitrum"
     },
+    "balancer": {
+      "info": "This jar has a 7 days cooldown period. Withdrawing within that period will incur an early exit fee.",
+      "exit": "Current Exit Fee",
+      "cooldown": "Cooldown Time Left"
+    },
     "baseAPRs": "Base APRs",
     "bProtocol": {
       "liquidation": "liquidation",
