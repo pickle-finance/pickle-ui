@@ -23,7 +23,6 @@ import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 
-
 interface DataProps {
   isZero?: boolean;
 }
@@ -203,7 +202,13 @@ export const JarMiniFarmCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer, address, blockNum, chainName, multicallProvider } = Connection.useContainer();
+  const {
+    signer,
+    address,
+    blockNum,
+    chainName,
+    multicallProvider,
+  } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
@@ -402,39 +407,49 @@ export const JarMiniFarmCollapsible: FC<{
       x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   )[0];
 
-  const [balancerTimerProps, setBalancerTimerProps] = useState<BalancerJarTimerProps|null>(null);
+  const [
+    balancerTimerProps,
+    setBalancerTimerProps,
+  ] = useState<BalancerJarTimerProps | null>(null);
 
   useEffect(() => {
     const checkCooldown = async () => {
       if (isBalancerJar && signer && multicallProvider) {
-        const jarMulticall = new MulticallContract(jarContract.address, jarTimelockABI);
+        const jarMulticall = new MulticallContract(
+          jarContract.address,
+          jarTimelockABI,
+        );
         const [
           cdStartTimeRes,
           cdTimeRes,
-          initialWFRes, 
+          initialWFRes,
           initialWFMaxRes,
         ] = await multicallProvider.all([
           jarMulticall.cooldownStartTime(address),
           jarMulticall.cooldownTime(),
-          jarMulticall.initialWithdrawalFee(), 
+          jarMulticall.initialWithdrawalFee(),
           jarMulticall.initialWithdrawalFeeMax(),
         ]);
-        const cdStartTime = parseFloat(ethers.utils.formatUnits(cdStartTimeRes, 0));
+        const cdStartTime = parseFloat(
+          ethers.utils.formatUnits(cdStartTimeRes, 0),
+        );
         const cdTime = parseFloat(ethers.utils.formatUnits(cdTimeRes, 0));
-        const initialWF = parseFloat(ethers.utils.formatUnits(initialWFRes, 0)); 
-        const initialWFMax = parseFloat(ethers.utils.formatUnits(initialWFMaxRes, 0));
+        const initialWF = parseFloat(ethers.utils.formatUnits(initialWFRes, 0));
+        const initialWFMax = parseFloat(
+          ethers.utils.formatUnits(initialWFMaxRes, 0),
+        );
         const endTime = cdStartTime + cdTime;
         const timerProps: BalancerJarTimerProps = {
           endTime: endTime,
           timeLockLength: cdTime,
           initialExitFee: initialWF,
           initialExitFeeMax: initialWFMax,
-        }
+        };
         setBalancerTimerProps(timerProps);
       }
-    }
+    };
     checkCooldown();
-  }, [blockNum])
+  }, [blockNum]);
 
   const tvlNum =
     tvlJarData && tvlJarData.details.harvestStats
@@ -591,7 +606,6 @@ export const JarMiniFarmCollapsible: FC<{
                   ? depositStakeButton || depositButton.text
                   : t("farms.depositAndStake")}
               </Button>
-              
             </Grid>
           </Grid.Container>
           <Spacer y={1} />
@@ -652,9 +666,9 @@ export const JarMiniFarmCollapsible: FC<{
             >
               {withdrawButton.text}
             </Button>
-            {isBalancerJar && balancerTimerProps? (
-                <BalancerJarTimer {...balancerTimerProps}/>
-              ) : null}
+            {isBalancerJar && balancerTimerProps ? (
+              <BalancerJarTimer {...balancerTimerProps} />
+            ) : null}
           </Grid>
         )}
       </Grid.Container>

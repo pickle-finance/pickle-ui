@@ -23,8 +23,9 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
   const getWithdrawalFee = () => {
     const currentTime = Date.parse(Date()) / 1000;
     const timeDiff = endTime - currentTime;
-    const exitFeePercentage = initialExitFee * timeDiff / timeLockLength / initialExitFeeMax * 100;
-    return exitFeePercentage>0? exitFeePercentage:0;
+    const exitFeePercentage =
+      ((initialExitFee * timeDiff) / timeLockLength / initialExitFeeMax) * 100;
+    return exitFeePercentage > 0 ? exitFeePercentage : 0;
   };
 
   const getTimeRemaining = (cooldownEndTime: number) => {
@@ -82,7 +83,9 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
   return (
     <StyledNotice>
       <h2>{t("farms.balancer.cooldown") + `: (${timer})`}</h2>
-      <h2>{t("farms.balancer.exit") + `: ${getWithdrawalFee().toFixed(2)}%`}</h2>
+      <h2>
+        {t("farms.balancer.exit") + `: ${getWithdrawalFee().toFixed(2)}%`}
+      </h2>
     </StyledNotice>
   );
 };

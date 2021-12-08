@@ -30,7 +30,6 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  
 
   const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {
@@ -38,23 +37,25 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (jar) => jarAddr.toLowerCase() === jar.contract.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
-      if (aprStats !== undefined) {
-        const componentsAPYs: JarApy[] = aprStats.components.map((component) => {
-          const apr = !isNaN(component.apr)? +component.apr: 0  // protect against non-numeric values
-          if (component.name.toLowerCase() === "lp") {
-            lp = apr;
-          }
-          return {
-            [component.name]: component.compoundable
-              ? getCompoundingAPY(component.apr / 100)
-              : apr,
-          };
-        });
+      if (aprStats) {
+        const componentsAPYs: JarApy[] = aprStats.components.map(
+          (component) => {
+            const apr = !isNaN(component.apr) ? +component.apr : 0; // protect against non-numeric values
+            if (component.name.toLowerCase() === "lp") {
+              lp = apr;
+            }
+            return {
+              [component.name]: component.compoundable
+                ? getCompoundingAPY(component.apr / 100)
+                : apr,
+            };
+          },
+        );
 
         return {
           APYs: componentsAPYs,
-          apr: aprStats.apr,
-          totalAPY: aprStats.apy,
+          apr: aprStats ? aprStats.apr : 0,
+          totalAPY: aprStats? aprStats.apy: 0,
           lp: lp,
         };
       }
@@ -72,17 +73,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           totalAPY: number;
           lp: number;
         }
-<<<<<<< HEAD
         const jarData: JarData = <JarData>(
           calculateJarAPYs(jar.contract.address)
         );
         
-=======
-
-        const jarData: JarData = <JarData>(
-          calculateJarAPYs(jar.depositToken.address)
-        );
->>>>>>> -Removed useJarsWithAPYPoly. -Removed useJarsWithAPYEth. -Removed redundant Balancer code. - minor improvements and refactorings.
 
         return {
           ...jar,
@@ -95,7 +89,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   };
   useEffect(() => {
     calculateAPY();
-  }, [jars?.length, network, pickleCore]);
+  }, [jars?.length, network, pickleCore, prices]);
 
   return { jarsWithAPY };
 };
