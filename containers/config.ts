@@ -17,9 +17,9 @@ export enum NETWORK_NAMES {
   POLY = "Polygon",
   OKEX = "OKEx",
   ARB = "Arbitrum",
-  MOONRIVER = "Moonriver"
+  MOONRIVER = "Moonriver",
+  CRONOS = "Cronos"
 }
-
 
 export const NETWORK_NAMES_PFCORE_MAP : any = {
   "Ethereum": ChainNetwork.Ethereum,
@@ -27,6 +27,7 @@ export const NETWORK_NAMES_PFCORE_MAP : any = {
   "OKEx": ChainNetwork.OKEx,
   "Arbitrum": ChainNetwork.Arbitrum,
   "Moonriver": ChainNetwork.Moonriver,
+  "Cronos": ChainNetwork.Cronos,
 };
 
 export type ChainName =
@@ -35,6 +36,7 @@ export type ChainName =
   | NETWORK_NAMES.OKEX
   | NETWORK_NAMES.ARB
   | NETWORK_NAMES.MOONRIVER
+  | NETWORK_NAMES.CRONOS
   | null;
 
 interface Config {
@@ -58,6 +60,9 @@ export const config: Config = {
     },
     1285: {
       name: NETWORK_NAMES.MOONRIVER,
+    },
+    25: {
+      name: NETWORK_NAMES.CRONOS,
     },
   },
   addresses: {
@@ -95,6 +100,13 @@ export const config: Config = {
     },
     Moonriver: {
       controller: "0xc3f393fb40f8cc499c1fe7fa5781495dc6fac9e9",
+      pickle: "0x0000000000000000000000000000000000000000",
+      masterChef: "0x0000000000000000000000000000000000000000",
+      minichef: "0x0000000000000000000000000000000000000000",
+      rewarder: "0x0000000000000000000000000000000000000000",
+    },
+    Cronos: {
+      controller: "0xFa3Ad976c0bdeAdDe81482F5Fa8191aE1e7d84C0",
       pickle: "0x0000000000000000000000000000000000000000",
       masterChef: "0x0000000000000000000000000000000000000000",
       minichef: "0x0000000000000000000000000000000000000000",

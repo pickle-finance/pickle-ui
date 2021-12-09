@@ -140,6 +140,40 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
   ),
 
+  // Cronos
+  "0x1803e360393a472bec6e1a688bdf7048d3076b1a": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/beefy.png"} />
+  ),
+  "0x3eb9ff92e19b73235a393000c176c8bb150f1b20": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/dai.png"} />
+  ),
+  "0xc9ea98736dbc94faa91abf9f4ad1eb41e7fb40f4": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/shib.png"} />
+  ),
+  "0xe61db569e231b3f5530168aa2c9d50246525b6d6": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0x3d2180db9e1b909f35c398bc39ef36108c0fc8c3": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0x814920d1b8007207db6cb5a2dd92bf0b082bdba1": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x280acad550b2d3ba63c8cbff51b503ea41a1c61b": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xbf62c67ea509e86f07c8c69d0286c0636c50270b": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0x8f09fff247b8fdb80461e5cf5e82dd1ae2ebd6d7": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/wbtc.png"} />
+  ),
+  "0x39cc0e14795a8e6e9d02a21091b81fe0d61d82f9": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0xa111c17f8b8303280d3eb01bbcd61000aa7f39f9": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/weth.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

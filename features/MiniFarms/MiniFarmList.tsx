@@ -35,7 +35,7 @@ export const MiniFarmList: FC = () => {
   const { pickleCore } = PickleCore.useContainer();
 
   const noFarm =
-    chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+    chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER || chainName === NETWORK_NAMES.CRONOS;
   farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;

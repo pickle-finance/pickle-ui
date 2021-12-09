@@ -42,7 +42,8 @@
       "polygon": "Polygon",
       "okex": "OEC",
       "arbitrum": "Arbitrum",
-      "moonriver": "Moonriver"
+      "moonriver": "Moonriver",
+      "cronos": "Cronos"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"

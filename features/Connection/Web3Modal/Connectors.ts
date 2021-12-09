@@ -8,10 +8,11 @@ const RPC_URLS = {
   137: "https://rpc-mumbai.matic.today",
   42161: "https://arb1.arbitrum.io/rpc",
   1285: "https://rpc.moonriver.moonbeam.network",
+  25: "https://evm-cronos.crypto.org",
 };
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 66, 137, 42161, 1285],
+  supportedChainIds: [1, 66, 137, 42161, 1285, 25],
 });
 
 export const walletconnect = new WalletConnectConnector({

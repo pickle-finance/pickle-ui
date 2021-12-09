@@ -11,7 +11,7 @@ import { NETWORK_NAMES } from "containers/config";
 const Gauges: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
-  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER || chainName === NETWORK_NAMES.CRONOS;
 
   return (
     <Page>

@@ -10,7 +10,7 @@ export const FarmsIntro: FC = () => {
   const { t } = useTranslation("common");
 
   const isPolygon = chainName === NETWORK_NAMES.POLY;
-  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER || chainName === NETWORK_NAMES.CRONOS;
 
   if (isPolygon)
     return (
