@@ -32,7 +32,7 @@
     "changeNetwork": "Change Network",
     "coinbase": "Coinbase",
     "connect": "Connect Wallet",
-    "connectPrompt": "Please connect to MetaMask to use Pickle on Polygon",
+    "connectPrompt": "Please connect to MetaMask to use Pickle on this chain.",
     "connectToContinue": "Please connect wallet to continue",
     "loading": "Loading...",
     "polygonRpc": "If you have been waiting more than a few seconds, consider changing to the unified Polygon RPC at 'https://polygon-rpc.com'",
@@ -112,7 +112,8 @@
     "baseAPRs": "Base APRs",
     "bProtocol": {
       "liquidation": "liquidation",
-      "info": "This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are automatically sold back into users' LUSD positions and all LQTY rewards are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing."
+      "info": "This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are automatically sold back into users' LUSD positions and all LQTY rewards are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing.",
+      "feeNote": "This jar has no fees and kickback rate for LQTY is 100%"
     },
     "compounding": "compounding",
     "deposit": "Deposit",

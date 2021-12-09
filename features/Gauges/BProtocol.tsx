@@ -61,6 +61,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
     plqtyBalance,
     userValue,
     lqtyApr,
+    userPendingPLqty,
     userPendingLqty,
     tvl,
   } = usePBAMM();
@@ -79,8 +80,8 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
   const depositedStr = formatString(depositedNum);
   const valueStr = formatString(userValue);
   const plqtyStr = formatString(+formatEther(plqtyBalance));
-  const pendingLqtyNum = +formatEther(userPendingLqty);
-  const pendingLqtyStr = formatString(pendingLqtyNum);
+  const pendingPLqtyStr = formatString(userPendingPLqty);
+  const pendingLqtyStr = formatString(userPendingLqty);
   const liquidationApy =
     duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
 
@@ -132,7 +133,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
       <a href="https://bprotocol.org/" target="_">
         B.Protocol
       </a>
-      &nbsp;⚡
+      &nbsp;⚡ {`(${t("farms.bProtocol.feeNote")})`}
       <Grid xs={24}>
         <Collapse
           style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -166,8 +167,8 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               </CenteredGrid>
               <CenteredGrid xs={24} sm={8} md={3} lg={3}>
                 <Data isZero={depositedNum === 0}>
-                  <Tooltip text={`${valueStr} LUSD + ${pendingLqtyStr} pLQTY`}>
-                    ${formatString(userValue + pendingLqtyNum * prices?.lqty)}
+                  <Tooltip text={`${valueStr} LUSD + ${pendingPLqtyStr} pLQTY`}>
+                    ${formatString((userValue + +pendingLqtyStr * prices?.lqty).toFixed(2))}
                     <img
                       src="./question.svg"
                       width="15px"
@@ -248,10 +249,11 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.balance")}: {depositedStr} ({valueStr} B.Protocol
-                  LUSD)
+                  {t("balances.balance")}: {depositedStr} ({valueStr} LUSD + {pendingPLqtyStr} pLQTY)
                 </div>
                 <Link
                   color

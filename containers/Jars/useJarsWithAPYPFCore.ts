@@ -29,10 +29,10 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   );
   const { pickleCore } = PickleCore.useContainer();
 
-  const calculateJarAPYs = (jarName: string) => {
+  const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {
       const aprStats = pickleCore.assets.jars.filter(
-        (jar) => jarName.toLowerCase() === jar.depositToken.addr.toLowerCase(),
+        (jar) => jarAddr.toLowerCase() === jar.contract.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
       if (aprStats !== undefined) {
@@ -69,7 +69,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           lp: number;
         }
         const jarData: JarData = <JarData>(
-          calculateJarAPYs(jar.depositToken.address)
+          calculateJarAPYs(jar.contract.address)
         );
 
         return {

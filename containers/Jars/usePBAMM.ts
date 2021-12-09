@@ -9,6 +9,8 @@ import { Contracts } from "../Contracts";
 import { PriceIds, Prices } from "../Prices";
 import erc20 from "@studydefi/money-legos/erc20";
 import BLensABI from "../ABIs/blens.json";
+import { Jar__factory as JarFactory } from "../../containers/Contracts/factories/Jar__factory";
+
 
 export const usePBAMM = () => {
   const { signer, provider, address } = Connection.useContainer();
@@ -28,9 +30,8 @@ export const usePBAMM = () => {
   const [pricePerToken, setPricePerToken] = useState<number>(0);
   const [userValue, setUserValue] = useState<number>(0);
   const [lqtyApr, setLqtyApr] = useState<number>(0);
-  const [userPendingLqty, setUserPendingLqty] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
+  const [userPendingPLqty, setUserPendingPLqty] = useState<number>(0);
+  const [userPendingLqty, setUserPendingLqty] = useState<number>(0);
   const [tvl, setTvl] = useState<number>(0);
 
   const lusdToken = new Contract(BPAddresses.LUSD, erc20.abi, provider);
@@ -39,6 +40,7 @@ export const usePBAMM = () => {
     BLensABI,
     provider,
   );
+  const pLQTYContract = provider && JarFactory.connect(BPAddresses.pLQTY, provider);
 
   const updateData = async () => {
     if (stabilityPool && pBAMM && prices && address) {
@@ -74,11 +76,18 @@ export const usePBAMM = () => {
       setLqtyApr(lqtyApr * 100);
 
       // Pending pLQTY
-      const userLqty = await bLens.callStatic.getUnclaimedLqty(
+      const userPLqtyRes = await bLens.callStatic.getUnclaimedLqty(
         address,
         BPAddresses.pBAMM,
         BPAddresses.pLQTY,
       );
+      const ratioRes = await pLQTYContract.getRatio();
+      const ratio = +formatEther(ratioRes);
+      // const userPLqty = +formatEther(userPendingPLqty);
+      const userPLqty = 100
+      const userLqty = ratio * userPLqty;
+
+      setUserPendingPLqty(userPLqty);
       setUserPendingLqty(userLqty);
     }
   };
@@ -94,6 +103,7 @@ export const usePBAMM = () => {
     pricePerToken,
     userValue,
     lqtyApr,
+    userPendingPLqty,
     userPendingLqty,
     tvl,
   };
