@@ -17,6 +17,7 @@ import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
 import { AssetEnablement } from "picklefinance-core/lib/model/PickleModelJson";
 import { isJarEnabled } from "containers/Jars/jars";
+import { noFarms } from "util/constants"
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -34,8 +35,7 @@ export const MiniFarmList: FC = () => {
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
 
-  const noFarm =
-    chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER || chainName === NETWORK_NAMES.CRONOS;
+  const noFarm = noFarms(chainName)
   farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;

@@ -1,0 +1,70 @@
+/* 
+  Localizable.strings
+  FMPFeedbackForm
+
+  Created by Anton Barkov on 30.03.2020.
+  Copyright © 2020 MacPaw. All rights reserved.
+*/
+
+/* Invalid email error text. */
+"Incorrect email" = "Niepoprawny E-mail";
+
+/* System profile checkbox title. */
+"Send anonymous system profile" = "Wyślij anonimowy profil systemu";
+
+/* Send feedback button caption. */
+"Send Feedback" = "Wyślij opinię";
+
+/* Send feedback button caption. */
+"Sending..." = "Wysyłanie...";
+
+/* Tab title in system profile pop-up */
+"System" = "System";
+
+/* Tab title in system profile pop-up */
+"Console" = "Konsola";
+
+/* Tab title in system profile pop-up */
+"Preferences" = "Preferencje";
+
+/* Attach file button caption. */
+"Attach File..." = "Dołącz Plik...";
+
+/* Feedback form title. */
+"Provide Feedback" = "Raportuj błąd";
+
+/* Feedback form description. */
+"Please provide a detailed description of your problem, suggestion, bug-report or question so that we have a clear picture of your request and react to it with maximum effectiveness." = "Proszę podać szczegółowy opis problemu, sugestię, raport lub pytanie w taki sposób, aby mogliśmy uzyskać jasny obraz żądania i maksymalnie skutecznie zreagować na niego.";
+
+/* Feedback subject option. */
+"Feedback" = "Opinie";
+
+/* Feedback subject option. */
+"Support Request" = "Prośba o wsparcie";
+
+/* Feedback subject option. */
+"Bug Report" = "Zgłoś błąd";
+
+/* Customer name field placeholder. Any generic name and surname specific to the language, nothing too funny though. */
+"John Appleseed" = "John Appleseed";
+
+/* Feedback details field placeholder. */
+"Write your message here..." = "Napisz wiadomość tutaj...";
+
+/* Internet connection error title. */
+"Report could not be sent due to a connection problem." = "Wysłanie raportu nie powiodło się przez problem z połączeniem.";
+
+/* Internet connection error text. */
+"Please check your Internet connection or Firewall settings and try again." = "Sprawdż ustawienia zapory siecowej lub połączenie z Internetem i spróbuj ponownie.";
+
+/* Generic error title. */
+"An error occurred while sending report." = "Podczas wysyłania powiadomienia wystąpił błąd.";
+
+/* Generic error text. */
+"Please make sure you've filled the form correctly and try again (error code: %@)." = "Upewnij się, że forma jest wypełniona poprawnie i wyślij ponownie (kod błędu: %@).";
+
+/* Successful feedback send message title. */
+"Feedback successfully sent!" = "Opinia wysłana!";
+
+/* Successful feedback send message text. */
+"Every user report gets carefully analyzed, however, not all requests will be answered directly.\nThank you for helping us make our products better!" = "Każdy raport zostanie zanalizowany, lecz nie wszystkie ządania dostaną bezpośrednią odpowiedź.\nDziękujemy za pomoc w ulepszaniu naszych produktów!";

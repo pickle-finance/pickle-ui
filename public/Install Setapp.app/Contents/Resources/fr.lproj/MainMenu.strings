@@ -1,0 +1,45 @@
+/* Class = "NSMenuItem"; title = "Install Setapp"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "Installer Setapp";
+
+/* Class = "NSMenuItem"; title = "Quit Install Setapp"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Quitter le programme d'installation de Setapp";
+
+/* Class = "NSMenuItem"; title = "About Install Setapp"; ObjectID = "5kV-Vb-QxS"; */
+"5kV-Vb-QxS.title" = "À propos du programme d'installation de Setapp";
+
+/* Class = "NSMenuItem"; title = "Window"; ObjectID = "aUF-d1-5bR"; */
+"aUF-d1-5bR.title" = "Fenêtre";
+
+/* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
+"AYu-sK-qS6.title" = "Menu principal";
+
+/* Class = "NSMenu"; title = "Services"; ObjectID = "hz9-B4-Xy5"; */
+"hz9-B4-Xy5.title" = "Services";
+
+/* Class = "NSMenuItem"; title = "Show All"; ObjectID = "Kd2-mp-pUS"; */
+"Kd2-mp-pUS.title" = "Tout afficher";
+
+/* Class = "NSMenuItem"; title = "Bring All to Front"; ObjectID = "LE2-aR-0XJ"; */
+"LE2-aR-0XJ.title" = "Tout ramener au premier plan";
+
+/* Class = "NSMenuItem"; title = "Services"; ObjectID = "NMo-om-nkz"; */
+"NMo-om-nkz.title" = "Services";
+
+/* Class = "NSMenuItem"; title = "Hide Install Setapp"; ObjectID = "Olw-nP-bQN"; */
+"Olw-nP-bQN.title" = "Masquer le programme d'installation de Setapp";
+
+/* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "OY7-WF-poV"; */
+"OY7-WF-poV.title" = "Placer dans le Dock";
+
+/* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "R4o-n2-Eq4"; */
+"R4o-n2-Eq4.title" = "Réduire/Agrandir";
+
+/* Class = "NSMenu"; title = "Window"; ObjectID = "Td7-aD-5lo"; */
+"Td7-aD-5lo.title" = "Fenêtre";
+
+/* Class = "NSMenu"; title = "Install Setapp"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "Installer Setapp";
+
+/* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
+"Vdr-fp-XzO.title" = "Masquer les autres";
+

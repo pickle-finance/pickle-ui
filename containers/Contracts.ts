@@ -231,6 +231,8 @@ function useContracts() {
         return config.addresses.Moonriver;
       case NETWORK_NAMES.CRONOS:
         return config.addresses.Cronos;
+      case NETWORK_NAMES.AURORA:
+        return config.addresses.Aurora;
       case NETWORK_NAMES.ETH:
       default:
         return config.addresses.Ethereum;

@@ -1,0 +1,9 @@
+/* Class = "NSTextFieldCell"; title = "Downloading…"; ObjectID = "d4D-D8-HPx"; */
+"d4D-D8-HPx.title" = "Herunterladen …";
+
+/* Class = "NSButtonCell"; title = "Stop"; ObjectID = "fSt-qV-nRU"; */
+"fSt-qV-nRU.title" = "Stoppen";
+
+/* Class = "NSButtonCell"; title = "Launch"; ObjectID = "h5V-qN-GhR"; */
+"h5V-qN-GhR.title" = "Starten";
+

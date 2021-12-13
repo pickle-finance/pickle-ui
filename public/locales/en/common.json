@@ -43,7 +43,8 @@
       "okex": "OEC",
       "arbitrum": "Arbitrum",
       "moonriver": "Moonriver",
-      "cronos": "Cronos"
+      "cronos": "Cronos",
+      "aurora": "Aurora"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect"

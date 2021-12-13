@@ -144,6 +144,8 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://moonriver.moonscan.io/block/${blockNum}`;
     if (chainName === NETWORK_NAMES.CRONOS)
       return `https://cronos.crypto.org/explorer/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.AURORA)
+      return `https://explorer.mainnet.aurora.dev/block/${blockNum}`;
     else return `https://etherscan.io/block/${blockNum}`;
   };
 
@@ -158,6 +160,8 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://moonriver.moonscan.io/address/${address}`;
     if (chainName === NETWORK_NAMES.CRONOS)
       return `https://cronos.crypto.org/explorer/address/${address}`;
+    if (chainName === NETWORK_NAMES.AURORA)
+      return `https://explorer.mainnet.aurora.dev/${address}`;
     else return `https://etherscan.io/address/${address}`;
   };
 
@@ -215,8 +219,10 @@ export const DesktopNetworkIndicator: FC = () => {
           {t("connection.networks.moonriver")}
         </Select.Option>
         <Select.Option value="25">
-          <MiniIcon source="/cronos.png" />{" "}
-          {t("connection.networks.cronos")}
+          <MiniIcon source="/cronos.png" /> {t("connection.networks.cronos")}
+        </Select.Option>
+        <Select.Option value="1313161554">
+          <MiniIcon source="/aurora.png" /> {t("connection.networks.aurora")}
         </Select.Option>
       </Select>
       <AddressContainer

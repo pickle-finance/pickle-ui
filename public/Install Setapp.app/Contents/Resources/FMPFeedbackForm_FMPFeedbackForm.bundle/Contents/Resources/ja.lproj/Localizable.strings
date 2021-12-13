@@ -1,0 +1,70 @@
+/* 
+  Localizable.strings
+  FMPFeedbackForm
+
+  Created by Anton Barkov on 30.03.2020.
+  Copyright © 2020 MacPaw. All rights reserved.
+*/
+
+/* Invalid email error text. */
+"Incorrect email" = "不正なEメール";
+
+/* System profile checkbox title. */
+"Send anonymous system profile" = "匿名のシステムプロファイルを送信する";
+
+/* Send feedback button caption. */
+"Send Feedback" = "フィードバックを送信";
+
+/* Send feedback button caption. */
+"Sending..." = "送信中…";
+
+/* Tab title in system profile pop-up */
+"System" = "システム";
+
+/* Tab title in system profile pop-up */
+"Console" = "コンソール";
+
+/* Tab title in system profile pop-up */
+"Preferences" = "環境設定";
+
+/* Attach file button caption. */
+"Attach File..." = "ファイルを添付...";
+
+/* Feedback form title. */
+"Provide Feedback" = "フィードバックを送信";
+
+/* Feedback form description. */
+"Please provide a detailed description of your problem, suggestion, bug-report or question so that we have a clear picture of your request and react to it with maximum effectiveness." = "問題、提案、エラーレポートまたは質問の詳しい説明をお送りください。いただいた情報を確認し、対処方法をご案内させていただきます。";
+
+/* Feedback subject option. */
+"Feedback" = "フィードバック";
+
+/* Feedback subject option. */
+"Support Request" = "サポート";
+
+/* Feedback subject option. */
+"Bug Report" = "バグ報告";
+
+/* Customer name field placeholder. Any generic name and surname specific to the language, nothing too funny though. */
+"John Appleseed" = "John Appleseed";
+
+/* Feedback details field placeholder. */
+"Write your message here..." = "メッセージをご記入ください...";
+
+/* Internet connection error title. */
+"Report could not be sent due to a connection problem." = "接続問題のため、エラーレポートが送信できません。";
+
+/* Internet connection error text. */
+"Please check your Internet connection or Firewall settings and try again." = "インターネット接続またはファイアウォール設定を確認し、もう一度お試しください。";
+
+/* Generic error title. */
+"An error occurred while sending report." = "報告を送信中にエラーが起きました。";
+
+/* Generic error text. */
+"Please make sure you've filled the form correctly and try again (error code: %@)." = "フォームが正しく入力されているか確認してからやり直してください (エラーコード: %@)。";
+
+/* Successful feedback send message title. */
+"Feedback successfully sent!" = "フィードバックが正常に送信されました!";
+
+/* Successful feedback send message text. */
+"Every user report gets carefully analyzed, however, not all requests will be answered directly.\nThank you for helping us make our products better!" = "すべてのユーザーのレポートが慎重に解析され、しかしすべての要求に直接お答えできないことがありますので、予めご了承ください。当社の製品の改善にご協力いただきありがとうございました!";

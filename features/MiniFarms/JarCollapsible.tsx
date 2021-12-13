@@ -174,6 +174,11 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xa111c17f8b8303280d3eb01bbcd61000aa7f39f9": (
     <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/weth.png"} />
   ),
+
+  // Aurora
+  "0x20f8aefb5697b77e0bb835a8518be70775cda1b0": (
+    <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/nearusdc.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

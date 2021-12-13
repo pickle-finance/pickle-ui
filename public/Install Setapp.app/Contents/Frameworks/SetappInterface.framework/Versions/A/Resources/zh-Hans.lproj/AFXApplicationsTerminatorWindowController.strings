@@ -1,0 +1,24 @@
+/* Class = "NSTextFieldCell"; title = "App"; ObjectID = "3bb-el-x83"; */
+"3bb-el-x83.title" = "应用程序";
+
+/* Class = "NSButtonCell"; title = "Quit"; ObjectID = "3Jg-dx-jbP"; */
+"3Jg-dx-jbP.title" = "退出";
+
+/* Class = "NSTextFieldCell"; title = "Informative text"; ObjectID = "COI-ZR-GHz"; */
+"COI-ZR-GHz.title" = "介绍文本";
+
+/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "GyL-yv-c0s"; */
+"GyL-yv-c0s.title" = "文本单元格";
+
+/* Class = "NSButtonCell"; title = "Quit All"; ObjectID = "JZe-j5-Xgb"; */
+"JZe-j5-Xgb.title" = "全部退出";
+
+/* Class = "NSWindow"; title = "Quit Setapp Applications"; ObjectID = "pse-9K-5h3"; */
+"pse-9K-5h3.title" = "退出 Setapp 应用程序";
+
+/* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "QIO-mx-cHD"; */
+"QIO-mx-cHD.title" = "取消";
+
+/* Class = "NSTextFieldCell"; title = "Title Text"; ObjectID = "Ya5-xY-dCj"; */
+"Ya5-xY-dCj.title" = "标题文本";
+

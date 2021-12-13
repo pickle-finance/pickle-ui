@@ -1,0 +1,70 @@
+/* 
+  Localizable.strings
+  FMPFeedbackForm
+
+  Created by Anton Barkov on 30.03.2020.
+  Copyright © 2020 MacPaw. All rights reserved.
+*/
+
+/* Invalid email error text. */
+"Incorrect email" = "Невірний email";
+
+/* System profile checkbox title. */
+"Send anonymous system profile" = "Надіслати анонімний профіль системи";
+
+/* Send feedback button caption. */
+"Send Feedback" = "Надіслати відгук";
+
+/* Send feedback button caption. */
+"Sending..." = "Надсилання...";
+
+/* Tab title in system profile pop-up */
+"System" = "Система";
+
+/* Tab title in system profile pop-up */
+"Console" = "Консоль";
+
+/* Tab title in system profile pop-up */
+"Preferences" = "Параметри";
+
+/* Attach file button caption. */
+"Attach File..." = "Вкласти файл...";
+
+/* Feedback form title. */
+"Provide Feedback" = "Надати відгук";
+
+/* Feedback form description. */
+"Please provide a detailed description of your problem, suggestion, bug-report or question so that we have a clear picture of your request and react to it with maximum effectiveness." = "Просимо надати детальний опис проблеми, пропозиції, звіту про помилку або запитання, щоб ми мали якомога ширшу картину вашого запиту і зреагували на нього максимально ефективно.";
+
+/* Feedback subject option. */
+"Feedback" = "Відгук";
+
+/* Feedback subject option. */
+"Support Request" = "Запит підтримки";
+
+/* Feedback subject option. */
+"Bug Report" = "Звіт про помилку";
+
+/* Customer name field placeholder. Any generic name and surname specific to the language, nothing too funny though. */
+"John Appleseed" = "Іван Яблучко";
+
+/* Feedback details field placeholder. */
+"Write your message here..." = "Введіть ваше повідомлення...";
+
+/* Internet connection error title. */
+"Report could not be sent due to a connection problem." = "Запит не може бути надіслано через помилку з'єднання.";
+
+/* Internet connection error text. */
+"Please check your Internet connection or Firewall settings and try again." = "Будь ласка, перевірте своє з'єднання з Інтернет або налаштування брандмауера та спробуйте ще раз.";
+
+/* Generic error title. */
+"An error occurred while sending report." = "Виникла помилка надсилання звіту.";
+
+/* Generic error text. */
+"Please make sure you've filled the form correctly and try again (error code: %@)." = "Будь ласка, впевніться, що форму заповнено коректно та спробуйте ще раз (код помилки: %@).";
+
+/* Successful feedback send message title. */
+"Feedback successfully sent!" = "Відгук надіслано!";
+
+/* Successful feedback send message text. */
+"Every user report gets carefully analyzed, however, not all requests will be answered directly.\nThank you for helping us make our products better!" = "Кожен запит ретельно аналізується, однак, не на всі запити буде надіслана відповідь. Дякуємо, що допомагаєте нам робити кращі продукти!";
