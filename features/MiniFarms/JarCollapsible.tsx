@@ -179,6 +179,21 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x20f8aefb5697b77e0bb835a8518be70775cda1b0": (
     <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/nearusdc.png"} />
   ),
+  "0x63da4db6ef4e7c62168ab03982399f9588fcd198": (
+    <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xbc8a244e8fb683ec1fd6f88f3cc6e565082174eb": (
+    <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x03b666f3488a7992b2385b12df7f35156d7b29cd": (
+    <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x84b123875f0f36b966d0b6ca14b31121bd9676ad": (
+    <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/near.png"} />
+  ),
+  "0x2fe064b6c7d274082aa5d2624709bc9ae7d16c77": (
+    <LpIcon swapIconSrc={"/trisolaris.webp"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

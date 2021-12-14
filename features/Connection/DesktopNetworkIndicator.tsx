@@ -218,9 +218,9 @@ export const DesktopNetworkIndicator: FC = () => {
           <MiniIcon source="/moonriver.png" />{" "}
           {t("connection.networks.moonriver")}
         </Select.Option>
-        <Select.Option value="25">
+        {/* <Select.Option value="25">
           <MiniIcon source="/cronos.png" /> {t("connection.networks.cronos")}
-        </Select.Option>
+        </Select.Option> */}
         <Select.Option value="1313161554">
           <MiniIcon source="/aurora.png" /> {t("connection.networks.aurora")}
         </Select.Option>
