@@ -27,7 +27,6 @@ export interface UserJarData {
   depositTokenLink: string;
   tvlUSD: number;
 }
-const convertJarToJarData = (jar): UserJarData => {};
 const useUserJars = (): { jarData: UserJarData[] | null } => {
   const { blockNum, chainName } = Connection.useContainer();
   const { jars } = Jars.useContainer();

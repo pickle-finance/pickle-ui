@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Jar } from "./useFetchJars";
 import { ChainName } from "containers/config";
 import { PickleCore } from "./usePickleCore";
+import { Prices } from "../Prices";
 
 export interface JarApy {
   [k: string]: number;
@@ -24,10 +25,11 @@ type Output = {
 };
 
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
+  const { pickleCore } = PickleCore.useContainer();
+  const { prices } = Prices.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
     null,
   );
-  const { pickleCore } = PickleCore.useContainer();
 
   const calculateJarAPYs = (jarAddr: string) => {
     if (pickleCore) {
@@ -35,22 +37,25 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         (jar) => jarAddr.toLowerCase() === jar.contract.toLowerCase(),
       )[0].aprStats!;
       let lp = 0;
-      if (aprStats !== undefined) {
-        const componentsAPYs: JarApy[] = aprStats.components.map((component) => {
-          if (component.name.toLowerCase() === "lp") {
-            lp = component.apr;
-          }
-          return {
-            [component.name]: component.compoundable
-              ? getCompoundingAPY(component.apr / 100)
-              : component.apr,
-          };
-        });
+      if (aprStats) {
+        const componentsAPYs: JarApy[] = aprStats.components.map(
+          (component) => {
+            const apr = !isNaN(component.apr) ? +component.apr : 0; // protect against non-numeric values
+            if (component.name.toLowerCase() === "lp") {
+              lp = apr;
+            }
+            return {
+              [component.name]: component.compoundable
+                ? getCompoundingAPY(component.apr / 100)
+                : apr,
+            };
+          },
+        );
 
         return {
           APYs: componentsAPYs,
-          apr: aprStats.apr,
-          totalAPY: aprStats.apy,
+          apr: aprStats ? aprStats.apr : 0,
+          totalAPY: aprStats? aprStats.apy: 0,
           lp: lp,
         };
       }
@@ -61,7 +66,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
 
   const calculateAPY = async () => {
     if (jars && pickleCore) {
-      const promises = jars.map((jar) => {
+      const results = jars.map((jar) => {
         interface JarData {
           APYs: JarApy[];
           apr: number;
@@ -71,6 +76,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         const jarData: JarData = <JarData>(
           calculateJarAPYs(jar.contract.address)
         );
+        
 
         return {
           ...jar,
@@ -78,12 +84,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         };
       });
 
-      setJarsWithAPY(promises);
+      setJarsWithAPY(results);
     }
   };
   useEffect(() => {
     calculateAPY();
-  }, [jars?.length, network, pickleCore]);
+  }, [jars?.length, network, pickleCore, prices]);
 
   return { jarsWithAPY };
 };
