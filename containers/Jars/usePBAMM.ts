@@ -83,7 +83,7 @@ export const usePBAMM = () => {
       );
       const ratioRes = await pLQTYContract.getRatio();
       const ratio = +formatEther(ratioRes);
-      const userPLqty = +formatEther(userPendingPLqty);
+      const userPLqty = +formatEther(userPLqtyRes);
       const userLqty = ratio * userPLqty;
 
       setUserPendingPLqty(userPLqty);
