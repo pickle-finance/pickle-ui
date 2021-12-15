@@ -62,23 +62,23 @@ export const isMainnetMimEthJarDepositToken = (depositToken: string) => {
 };
 
 export const shouldJarBeInUi = (
-  jarContractAddress: string,
+  jar: JarDefinition,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
   return (
-    isJarEnabled(jarContractAddress, pfcore) ||
-    isJarDisabled(jarContractAddress, pfcore)
+    isJarEnabled(jar.details.apiKey, pfcore) ||
+    isJarDisabled(jar.details.apiKey, pfcore)
   );
 };
 
 export const isJarEnabled = (
-  jarContractAddress: string,
+  jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
   if (!pfcore) return false;
 
   const found: JarDefinition | undefined = pfcore.assets.jars.find(
-    (x) => x.contract.toLowerCase() === jarContractAddress.toLowerCase(),
+    (x) => x.details.apiKey === jarApiKey,
   );
   if (found) {
     // TODO if you want to test dev-mode jars, change that here to include dev!
@@ -91,14 +91,14 @@ export const isJarEnabled = (
 
 // This will not show permanently-disabled jars
 export const isJarDisabled = (
-  jarContractAddress: string,
+  jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
   if (!pfcore) {
     return true;
   }
   const found: JarDefinition | undefined = pfcore.assets.jars.find(
-    (x) => x.contract.toLowerCase() === jarContractAddress.toLowerCase(),
+    (x) => x.details.apiKey === jarApiKey,
   );
   if (found) {
     if (found.enablement === AssetEnablement.DISABLED) {
