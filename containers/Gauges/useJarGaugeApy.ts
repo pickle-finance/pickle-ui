@@ -53,6 +53,8 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         ? (gauge.rewardRatePerYear * prices.pickle) /
           (gaugeingJar.usdPerPToken * (isPUsdcToken(gauge.token) ? 1e12 : 1))
         : 0;
+
+        console.log(gaugeingJar.depositToken, fullApy)
       return {
         ...gauge,
         fullApy,
