@@ -203,9 +203,43 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xbf9eef63139b67fd0abf22bd5504acb0519a4212": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
   ),
+  "0xca461686c711aeaadf0b516f9c2ad9d9b645a940": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x523fae29d7ff6fd38842c8f271edf2ebd3150435": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x7e9ea10e5984a09d19d05f31ca3cb65bb7df359d": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  "0x2e02bea8e9118f7d2ccada1d402286cc6d54bd67": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0xbf560771b6002a58477efbcdd6774a5a1947587b": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0xbf58062d23f869a90c6eb04b9655f0dfca345947": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0xe6c47b036f6fd0684b109b484ac46094e633af2e": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neardai.png"} />
+  ),
+  "0x256d03607eee0156b8a2ab84da1d5b283219fe97": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xf56997948d4235514dcc50fc0ea7c0e110ec255d": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  "0x3502eac6fa27beebdc5cd3615b7cb0784b0ce48f": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+
+
+
   "0xa188d79d6bdbc1120a662de9eb72384e238af104": (
     <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/nearwbtc.png"} />
   )
+  
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
