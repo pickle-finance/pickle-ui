@@ -28,7 +28,6 @@ export interface UserJarData {
   tvlUSD: number;
   protocol: string;
 }
-const convertJarToJarData = (jar): UserJarData => {};
 const useUserJars = (): { jarData: UserJarData[] | null } => {
   const { blockNum, chainName } = Connection.useContainer();
   const { jars } = Jars.useContainer();

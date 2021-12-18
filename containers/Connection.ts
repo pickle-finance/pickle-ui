@@ -121,6 +121,8 @@ function useConnection() {
     }
   };
 
+  const supportedChains = switchChainParams;
+
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
@@ -170,6 +172,7 @@ function useConnection() {
     chainId,
     chainName,
     switchChain,
+    supportedChains,
   };
 }
 
