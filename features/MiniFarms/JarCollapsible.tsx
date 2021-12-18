@@ -234,10 +234,23 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
 
-
-
   "0xa188d79d6bdbc1120a662de9eb72384e238af104": (
     <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x73155e476d6b857fe7722aefebad50f9f8bd0b38": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x1fd6cbbfc0363aa394bd77fc74f64009bf54a7e9": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x63b4a0538ce8d90876b201af1020d13308a8b253": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xc374776cf5c497adeef6b505588b00cb298531fd": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xb53bc2537e641c37c7b7a8d33aba1b30283cda2f": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
   )
   
 };
