@@ -114,7 +114,7 @@ export const MiniFarmList: FC = () => {
   const activeJars = !jarData
     ? []
     : jarData
-        .filter((jar) => isJarEnabled(jar.jarContract.address, pickleCore))
+        .filter((jar) => isJarEnabled(jar.apiKey, pickleCore))
         .sort((a, b) => b.totalAPY - a.totalAPY);
 
   const protocolJars = activeJars.filter(jar => jar.protocol === selectedProtocol)

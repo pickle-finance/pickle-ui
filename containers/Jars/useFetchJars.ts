@@ -20,6 +20,8 @@ export type Jar = {
   jarName: string;
   contract: JarContract;
   protocol: string;
+  chain: ChainNetwork;
+  apiKey: string;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -52,7 +54,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       const chainJars: JarDefinition[] = allJars.filter(
         (x) =>
           x.chain === pfcoreChainName &&
-          shouldJarBeInUi(x.contract, pickleCore),
+          shouldJarBeInUi(x, pickleCore),
       );
 
       const possibleJars: (Jar | undefined)[] = chainJars.map((x) => {
@@ -62,7 +64,9 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           jarName: x.id,
           depositTokenLink: x.depositToken.link,
           contract: JarFactory.connect(x.contract, provider),
-          protocol: x.protocol
+          protocol: x.protocol,
+          chain: x.chain,
+          apiKey: x.details.apiKey,
         };
 
         return z;
