@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import styled from "styled-components";
-import { Spacer, Grid, Checkbox } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
 import { UserMiniFarms } from "../../containers/UserMiniFarms";
@@ -17,6 +17,7 @@ import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
 import { AssetEnablement } from "picklefinance-core/lib/model/PickleModelJson";
 import { isJarEnabled } from "containers/Jars/jars";
+import { noFarms } from "util/constants";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -31,11 +32,11 @@ export const MiniFarmList: FC = () => {
   let { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
+  const [selectedProtocol, setSelectedProtocol] = useState<string | null>(null);
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
 
-  const noFarm =
-    chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+  const noFarm = noFarms(chainName);
   farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
@@ -108,11 +109,15 @@ export const MiniFarmList: FC = () => {
     };
   });
 
+  const protocolList = [...new Set(jarData?.map((x) => x.protocol))];
+
   const activeJars = !jarData
     ? []
     : jarData
         .filter((jar) => isJarEnabled(jar.apiKey, pickleCore))
         .sort((a, b) => b.totalAPY - a.totalAPY);
+
+  const protocolJars = activeJars.filter(jar => jar.protocol === selectedProtocol)
 
   const inactiveJars = !jarData
     ? []
@@ -149,9 +154,25 @@ export const MiniFarmList: FC = () => {
           </Checkbox>
         </Grid>
       </Grid.Container>
-      <Spacer y={0.5} />
+      <Grid.Container gap={1} justify="center">
+        <Grid md={6}>
+          <Button onClick={() => setSelectedProtocol(null)}>
+            All
+          </Button>
+        </Grid>
+        {protocolList.map((protocol) => {
+          return (
+            <Grid md={6}>
+              <Button onClick={() => setSelectedProtocol(protocol)}>
+                {protocol}
+              </Button>
+            </Grid>
+          );
+        })}
+      </Grid.Container>
+      <Spacer y={1} />
       <Grid.Container gap={1}>
-        {activeJars.map((jar) => {
+        {(selectedProtocol ? protocolJars : activeJars).map((jar) => {
           const farm = farmsWithAPY.find(
             (x) =>
               x.depositToken.address.toLowerCase() ===

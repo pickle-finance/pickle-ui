@@ -140,6 +140,119 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
   ),
 
+  // Cronos
+  "0x1803e360393a472bec6e1a688bdf7048d3076b1a": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/beefy.png"} />
+  ),
+  "0x3eb9ff92e19b73235a393000c176c8bb150f1b20": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/dai.png"} />
+  ),
+  "0xc9ea98736dbc94faa91abf9f4ad1eb41e7fb40f4": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/shib.png"} />
+  ),
+  "0xe61db569e231b3f5530168aa2c9d50246525b6d6": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0x3d2180db9e1b909f35c398bc39ef36108c0fc8c3": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0x814920d1b8007207db6cb5a2dd92bf0b082bdba1": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x280acad550b2d3ba63c8cbff51b503ea41a1c61b": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xbf62c67ea509e86f07c8c69d0286c0636c50270b": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0x8f09fff247b8fdb80461e5cf5e82dd1ae2ebd6d7": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/wbtc.png"} />
+  ),
+  "0x39cc0e14795a8e6e9d02a21091b81fe0d61d82f9": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+  "0xa111c17f8b8303280d3eb01bbcd61000aa7f39f9": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/weth.png"} />
+  ),
+
+  // Aurora
+  "0x20f8aefb5697b77e0bb835a8518be70775cda1b0": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0x63da4db6ef4e7c62168ab03982399f9588fcd198": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xbc8a244e8fb683ec1fd6f88f3cc6e565082174eb": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x03b666f3488a7992b2385b12df7f35156d7b29cd": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x84b123875f0f36b966d0b6ca14b31121bd9676ad": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0x2fe064b6c7d274082aa5d2624709bc9ae7d16c77": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0xd1654a7713617d41a8c9530fb9b948d00e162194": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroratri.png"} />
+  ),
+  "0x5eec60f348cb1d661e4a5122cf4638c7db7a886e": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroraeth.png"} />
+  ),
+  "0xbf9eef63139b67fd0abf22bd5504acb0519a4212": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xca461686c711aeaadf0b516f9c2ad9d9b645a940": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x523fae29d7ff6fd38842c8f271edf2ebd3150435": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x7e9ea10e5984a09d19d05f31ca3cb65bb7df359d": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  "0x2e02bea8e9118f7d2ccada1d402286cc6d54bd67": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0xbf560771b6002a58477efbcdd6774a5a1947587b": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0xbf58062d23f869a90c6eb04b9655f0dfca345947": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0xe6c47b036f6fd0684b109b484ac46094e633af2e": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neardai.png"} />
+  ),
+  "0x256d03607eee0156b8a2ab84da1d5b283219fe97": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xf56997948d4235514dcc50fc0ea7c0e110ec255d": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  "0x3502eac6fa27beebdc5cd3615b7cb0784b0ce48f": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+
+  "0xa188d79d6bdbc1120a662de9eb72384e238af104": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x73155e476d6b857fe7722aefebad50f9f8bd0b38": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x1fd6cbbfc0363aa394bd77fc74f64009bf54a7e9": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x63b4a0538ce8d90876b201af1020d13308a8b253": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xc374776cf5c497adeef6b505588b00cb298531fd": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xb53bc2537e641c37c7b7a8d33aba1b30283cda2f": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
+  )
+  
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);

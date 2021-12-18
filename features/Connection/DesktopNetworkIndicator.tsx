@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
 import { config, NETWORK_NAMES } from "../../containers/config";
-import { MiniIcon } from "../../components/TokenIcon"
+import { MiniIcon } from "../../components/TokenIcon";
 import LanguageSelect from "./LanguageSelect";
 
 const Container = styled.div`
@@ -142,6 +142,10 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://arbiscan.io/block/${blockNum}`;
     if (chainName === NETWORK_NAMES.MOONRIVER)
       return `https://moonriver.moonscan.io/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.CRONOS)
+      return `https://cronos.crypto.org/explorer/block/${blockNum}`;
+    if (chainName === NETWORK_NAMES.AURORA)
+      return `https://explorer.mainnet.aurora.dev/block/${blockNum}`;
     else return `https://etherscan.io/block/${blockNum}`;
   };
 
@@ -154,6 +158,10 @@ export const DesktopNetworkIndicator: FC = () => {
       return `https://arbiscan.io/address/${address}`;
     if (chainName === NETWORK_NAMES.MOONRIVER)
       return `https://moonriver.moonscan.io/address/${address}`;
+    if (chainName === NETWORK_NAMES.CRONOS)
+      return `https://cronos.crypto.org/explorer/address/${address}`;
+    if (chainName === NETWORK_NAMES.AURORA)
+      return `https://explorer.mainnet.aurora.dev/${address}`;
     else return `https://etherscan.io/address/${address}`;
   };
 
@@ -194,24 +202,27 @@ export const DesktopNetworkIndicator: FC = () => {
         }}
       >
         <Select.Option value="1">
-          <MiniIcon source="/weth.png"/>{" "}
-          {t("connection.networks.ethereum")}
+          <MiniIcon source="/weth.png" /> {t("connection.networks.ethereum")}
         </Select.Option>
         <Select.Option value="137">
-          <MiniIcon source="/matic.png"/>{" "}
-          {t("connection.networks.polygon")}
+          <MiniIcon source="/matic.png" /> {t("connection.networks.polygon")}
         </Select.Option>
         <Select.Option value="66">
-          <MiniIcon source="/okex.png"/>{" "}
-          {t("connection.networks.okex")}
+          <MiniIcon source="/okex.png" /> {t("connection.networks.okex")}
         </Select.Option>
         <Select.Option value="42161">
-          <MiniIcon source="/arbitrum.svg"/>{" "}
+          <MiniIcon source="/arbitrum.svg" />{" "}
           {t("connection.networks.arbitrum")}
         </Select.Option>
         <Select.Option value="1285">
-          <MiniIcon source="/moonriver.png"/>{" "}
+          <MiniIcon source="/moonriver.png" />{" "}
           {t("connection.networks.moonriver")}
+        </Select.Option>
+        {/* <Select.Option value="25">
+          <MiniIcon source="/cronos.png" /> {t("connection.networks.cronos")}
+        </Select.Option> */}
+        <Select.Option value="1313161554">
+          <MiniIcon source="/aurora.png" /> {t("connection.networks.aurora")}
         </Select.Option>
       </Select>
       <AddressContainer

@@ -4,14 +4,13 @@ import { Trans, useTranslation } from "next-i18next";
 import { Connection } from "../containers/Connection";
 import { NETWORK_NAMES } from "containers/config";
 import { MiniIcon } from "../components/TokenIcon";
+import { noFarms } from "util/constants";
 
 export const FarmsIntro: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
 
   const isPolygon = chainName === NETWORK_NAMES.POLY;
-  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
-
   if (isPolygon)
     return (
       <p>
@@ -26,7 +25,7 @@ export const FarmsIntro: FC = () => {
       </p>
     );
 
-  if (noFarm)
+  if (noFarms(chainName))
     return (
       <p>
         {t("farms.introOK")}

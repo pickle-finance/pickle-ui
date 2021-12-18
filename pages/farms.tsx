@@ -7,11 +7,12 @@ import { GaugeList } from "../features/Gauges/GaugeList";
 import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
 import { Connection } from "../containers/Connection";
 import { NETWORK_NAMES } from "containers/config";
+import { noFarms } from "util/constants";
 
 const Gauges: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
-  const noFarm = chainName === NETWORK_NAMES.OKEX || chainName === NETWORK_NAMES.MOONRIVER;
+  const noFarm = noFarms(chainName)
 
   return (
     <Page>
