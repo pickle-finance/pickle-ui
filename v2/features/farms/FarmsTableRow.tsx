@@ -1,23 +1,23 @@
 import { FC, Fragment } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { classNames } from "v2/utils";
-import { Farm } from "v2/types";
 import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
 
 interface Props {
   simple?: boolean;
-  farm: Farm;
+  jar: JarDefinition;
 }
 
-const FarmsTableRow: FC<Props> = ({ farm, simple }) => {
+const FarmsTableRow: FC<Props> = ({ jar, simple }) => {
   if (simple)
     return (
       <>
         <tr className="group">
-          <FarmsTableRowHeader open={false} simple={simple} farm={farm} />
+          <FarmsTableRowHeader open={false} simple={simple} jar={jar} />
         </tr>
         <FarmsTableSpacerRow />
       </>
@@ -36,7 +36,7 @@ const FarmsTableRow: FC<Props> = ({ farm, simple }) => {
                 !simple && "cursor-pointer",
               )}
             >
-              <FarmsTableRowHeader open={open} simple={simple} farm={farm} />
+              <FarmsTableRowHeader open={open} simple={simple} jar={jar} />
             </Disclosure.Button>
 
             <Transition
@@ -49,7 +49,7 @@ const FarmsTableRow: FC<Props> = ({ farm, simple }) => {
               leaveTo="transform opacity-0"
             >
               <Disclosure.Panel as="tr">
-                <FarmsTableRowBody farm={farm} />
+                <FarmsTableRowBody jar={jar} />
               </Disclosure.Panel>
             </Transition>
           </>

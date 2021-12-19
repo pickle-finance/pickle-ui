@@ -1,25 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import FarmsTableRow from "./FarmsTableRow";
 
-const farms = [
-  {
-    asset: "DAI-ETH",
-    iconSrc: "/dai.png",
-    earned: 520.2,
-    deposited: 1300,
-    apy: "40-99%",
-    liquidity: 1890789,
-  },
-  {
-    asset: "ALCX-ETH",
-    iconSrc: "/alchemix.png",
-    earned: 520.2,
-    deposited: 1300,
-    apy: "40-99%",
-    liquidity: 1890789,
-  },
-];
+import FarmsTableBody from "./FarmsTableBody";
 
 const FarmsTableHeaderCell: FC = ({ children }) => (
   <th
@@ -67,9 +49,7 @@ const FarmsTable: FC<Props> = ({ simple, title }) => {
                 </tr>
               </thead>
               <tbody className="text-white">
-                {farms.map((farm) => (
-                  <FarmsTableRow key={farm.asset} farm={farm} simple={simple} />
-                ))}
+                <FarmsTableBody />
               </tbody>
             </table>
           </div>
