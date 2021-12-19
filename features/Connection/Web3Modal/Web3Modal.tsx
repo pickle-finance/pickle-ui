@@ -8,7 +8,7 @@ import { useTranslation } from "next-i18next";
 
 import { injected, walletconnect, walletlink } from "./Connectors";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
-import { Connection } from "containers/Connection";
+import { config as supportedChains } from "../../../containers/config";
 
 interface Web3ModalProps {
   setVisible: Function;
@@ -46,8 +46,6 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     chainId,
   } = useWeb3React<providers.Web3Provider>();
 
-  const {supportedChains} = Connection.useContainer();
-
   useEffect(() => {
     if (chainId && chainId !== 1) {
       deactivate();
@@ -58,17 +56,15 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     if (connector === web3connector) {
       deactivate();
     } else {
-      var connectedChain:number;
-      try {connectedChain = await web3connector.getChainId();} catch {connectedChain = 1}
-      if (connectedChain == 1 || supportedChains[connectedChain]) {
+      let connectedChain:number;
+      try {connectedChain = +(await web3connector.getChainId())} catch {connectedChain = 1} // Failing assumes a wallet other than MetaMask is used
+      if (connectedChain == 1 || supportedChains.chains[connectedChain]) {
         setActivatingConnector(web3connector);
         activate(web3connector);
         setVisible(false);
       } else {
         setIsSupportedChain(false);
       }
-      
-      console.log(supportedChains[connectedChain])
     }
   };
 
@@ -126,10 +122,9 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
           </Grid.Container>
           ): (
             <div>
-              <h1>Please Connect to one of the following supported chains:</h1>
+              <h1>{t("connection.unsupportedNetwork")}</h1>
               <ul>
-              <h2>- Ethereum.</h2>
-              {supportedChains.map(chain => (<h2>- {chain.chainName}.</h2>))}
+              {Object.keys(supportedChains.chains).map(chain => (<h2>- {supportedChains.chains[+chain].name}.</h2>))}
               </ul>
               <Button onClick={() => {setVisible(false); setIsSupportedChain(true);}}>Close</Button>
             </div>
