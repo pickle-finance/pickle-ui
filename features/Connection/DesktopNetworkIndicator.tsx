@@ -9,6 +9,7 @@ import { Modal, Select, Tooltip } from "@geist-ui/react";
 import { config, NETWORK_NAMES } from "../../containers/config";
 import { MiniIcon } from "../../components/TokenIcon";
 import LanguageSelect from "./LanguageSelect";
+import useENS from "hooks/useENS";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -117,6 +118,7 @@ export const DesktopNetworkIndicator: FC = () => {
   const [switchChainName, setSwitchChainName] = useState("");
   const [reset, setReset] = useState(0);
   const { t } = useTranslation("common");
+  const { ensName } = useENS(address);
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
@@ -231,7 +233,9 @@ export const DesktopNetworkIndicator: FC = () => {
         rel="noopener noreferrer"
       >
         <Address>
-          <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
+          <AddressLabel title={address || ""}>
+            {ensName || shortAddress}
+          </AddressLabel>
           <div style={{ width: 16 }}>
             {address && <Jazzicon address={address} />}
           </div>
