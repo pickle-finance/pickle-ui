@@ -47,7 +47,8 @@
       "aurora": "Aurora"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
-    "walletConnect": "Wallet Connect"
+    "walletConnect": "Wallet Connect",
+    "unsupportedNetwork": "Please Connect to one of the following supported chains:"
   },
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
