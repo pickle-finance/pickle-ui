@@ -13,6 +13,24 @@ import { useRouter } from "next/router";
 
 type Network = ethers.providers.Network;
 
+// See https://eips.ethereum.org/EIPS/eip-3085
+interface AddEthereumChainParameter {
+  chainId: string;
+  blockExplorerUrls?: string[];
+  chainName?: string;
+  iconUrls?: string[];
+  nativeCurrency?: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls?: string[];
+}
+
+interface SwitchChainParams {
+  [chainId: number]: AddEthereumChainParameter;
+}
+
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
   const router = useRouter();
@@ -25,7 +43,7 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const switchChainParams: any[] = [];
+  const switchChainParams: SwitchChainParams = [];
   switchChainParams[137] = {
     chainId: "0x89",
     chainName: "Polygon",
@@ -97,6 +115,7 @@ function useConnection() {
     rpcUrls: ["https://mainnet.aurora.dev"],
     blockExplorerUrls: ["https://explorer.mainnet.aurora.dev/"],
   };
+
   const switchChain = async (chainId: number) => {
     let method: string;
     let params: any[];
@@ -132,14 +151,17 @@ function useConnection() {
       setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
       setMulticallAddress(1285, "0x4c4a5d20f1ee40eaacb6a7787d20d16b7997363b");
       setMulticallAddress(25, "0x0fA4d452693F2f45D28c4EC4d20b236C4010dA74");
-      setMulticallAddress(1313161554, "0x60Ad579Fb20c8896b7b98E800cBA9e196E6eaA44");
-      
+      setMulticallAddress(
+        1313161554,
+        "0x60Ad579Fb20c8896b7b98E800cBA9e196E6eaA44",
+      );
+
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
         .init()
         .then(() => setMulticallProvider(_multicallProvider));
 
-      const { ethereum } = window;
+      const { ethereum } = window as any;
       ethereum?.on("chainChanged", () => router.reload());
 
       const observable = new Observable<number>((subscriber) => {
