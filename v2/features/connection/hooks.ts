@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 
-import { injected } from "./Connectors";
+import { injected } from "./connectors";
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
@@ -18,7 +18,7 @@ export function useEagerConnect() {
         setTried(true);
       }
     });
-  }, [activate]); // intentionally only running on mount (make sure it's only mounted once :))
+  }, []); // intentionally only running on mount (make sure it's only mounted once :))
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
@@ -33,9 +33,8 @@ export function useEagerConnect() {
 export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3React();
 
-  useEffect(() => {
-    const { ethereum } = window;
-    if (!ethereum) return;
+  useEffect((): any => {
+    const { ethereum } = window as any;
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         activate(injected);
@@ -43,7 +42,7 @@ export function useInactiveListener(suppress = false) {
       const handleChainChanged = () => {
         activate(injected);
       };
-      const handleAccountsChanged = (accounts) => {
+      const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
           activate(injected);
         }
