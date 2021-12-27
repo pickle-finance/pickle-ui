@@ -8,8 +8,8 @@ import {
 } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
 
-import { classNames } from "../utils";
-import SelectTransition from "./SelectTransition";
+import { classNames } from "../../utils";
+import SelectTransition from "../../components/SelectTransition";
 import arbitrum from "public/arbitrum.svg";
 import ethereum from "public/ethereum.svg";
 import oec from "public/oec.svg";

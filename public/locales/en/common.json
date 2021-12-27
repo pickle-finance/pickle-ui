@@ -288,6 +288,9 @@
     "balances": {
       "balance": "Balance"
     },
+    "connection": {
+      "connectWallet": "Connect wallet"
+    },
     "dashboard": {
       "dillAmount": "DILL amount",
       "earnUpTo": "Earn up to <1>{{ percent }}</1> APY",
