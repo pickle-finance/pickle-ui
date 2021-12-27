@@ -26,7 +26,7 @@ export const useWithReward = (rawGauges: Input): Output => {
           ...gauge,
           rewardRatePerYear: gauge.derivedSupply
             ? (gauge.rewardRate / gauge.derivedSupply) * 3600 * 24 * 365
-            : Number.POSITIVE_INFINITY,
+            : 0,
         };
       });
       setGauges(newGauges);

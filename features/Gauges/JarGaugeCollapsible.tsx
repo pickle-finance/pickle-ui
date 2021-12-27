@@ -233,6 +233,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0xEd4064f376cB8d68F770FB1Ff088a3d0F3FF5c4d": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/crveth.png"} />
+  ),
+  "0x3A283D9c08E8b55966afb64C515f5143cf907611": (
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/weth.png"} />
   )
 };
 
