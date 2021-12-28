@@ -132,6 +132,84 @@ export const FARM_LP_TO_ICON: {
   "0xEcAf3149fdA215E46e792C65dc0aB7399C2eA78B": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
   ),
+
+
+  // Aurora
+  "0xbD59171dA1c3a2624D60421bcb6c3c3270111656": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0xF623c32828B40c89D5cf114A7186c6B8b25De4Ed": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xF49803dB604E118f3aFCF44beB0012f3c6684F05": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0xfc258cF7f1bf3739A04992D1c790aF20d60f44E9": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x1E686d65031Ac75754Cd6AeAb5B71ac2257c6a9D": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0x023d4874f30292b24512b969dC8dc8A3227d2012": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x6494DcFa6Af36cE89A990Ca13911365f006898ae": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroratri.png"} />
+  ),
+  "0x4add83C7a0aEd64468A149dA583f1b92d1aCa6AA": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroraeth.png"} />
+  ),
+  "0x4550B283D30F96a8B56Fe16EB576f6d5033adDF7": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xECDA075c31c20449f89Dc4467CF70d5F98e657D2": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x6791325D64318BbCe35392da6BdFf94840c4A4B5": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xB87C8a9c77e3C98AdcA0E24Dce5D9F43E2b698BB": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  "0x7b659258a57A5F4DB9C4049d01B6D8AaF6400a25": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x6379F3801cC2004C6CeaD7d766f5d4279E178953": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0x4DdaC2BfF3746aDAC32E355f1855FD67Cc6FAa2B": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x90e28D422AeaC1011e03713125Fb9Ba6b4276fc8": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neardai.png"} />
+  ),
+  "0x639a02651557fFC1C7F233334248c4E7D416D60B": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xCb7f715c4CaB533b245c070b58628b4d6a4019E0": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  "0xC6c7481d7e030aC3acbFD53f98797E32824A7B70": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x4D2FE5BcC9d3d252383D32E1ffF3B3C279eB4E85": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x86950b9668804154BD385AE0E228099c4375fEEA": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xcf59208abbAE8457F39f961eAb6293bdef1E5F1e": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x4F83d6ae3401f6859B579D840a5E38862a889282": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x6401Ded5D808eE824791dBfc23aA8769b585EB37": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xc773eF9aE52fF43031DD2Db439966ef4cb55bd79": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{
