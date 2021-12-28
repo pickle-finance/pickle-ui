@@ -35,7 +35,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
     if (pickleCore) {
       const aprStats = pickleCore.assets.jars.filter(
         (pFJar) => jar.apiKey === pFJar.details.apiKey,
-      )[0].aprStats;
+      )[0]?.aprStats;
       let lp = 0;
       if (aprStats) {
         const componentsAPYs: JarApy[] = aprStats.components.map(
@@ -55,7 +55,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         return {
           APYs: componentsAPYs,
           apr: aprStats ? aprStats.apr : 0,
-          totalAPY: aprStats? aprStats.apy: 0,
+          totalAPY: aprStats ? aprStats.apy : 0,
           lp: lp,
         };
       }
@@ -73,9 +73,7 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           totalAPY: number;
           lp: number;
         }
-        const jarData: JarData = <JarData>(
-          calculateJarAPYs(jar)
-        );
+        const jarData: JarData = <JarData>calculateJarAPYs(jar);
 
         return {
           ...jar,
