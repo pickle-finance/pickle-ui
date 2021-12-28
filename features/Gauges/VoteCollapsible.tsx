@@ -4,14 +4,13 @@ import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { TransactionStatus, useGaugeProxy } from "../../hooks/useGaugeProxy";
 import { Connection } from "../../containers/Connection";
 import { PercentageInput } from "../../components/PercentageInput";
-import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
+import { UserGaugeData } from "../../containers/UserGauges";
 import { Contracts } from "../../containers/Contracts";
 import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
-import { Dill, UseDillOutput } from "../../containers/Dill";
-import { LpIcon, TokenIcon } from "../../components/TokenIcon";
+import { Dill } from "../../containers/Dill";
+import { TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import {
@@ -60,12 +59,11 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 }) => {
   const { balance: dillBalanceBN } = Dill.useContainer();
   const { pickleCore } = PickleCore.useContainer();
-  const [votingFarms, setVotingFarms] = useState();
-  const { vote } = useGaugeProxy();
+  const [votingFarms, setVotingFarms] = useState<UserGaugeData[]>([]);
   const { gaugeProxy } = Contracts.useContainer();
-  const { blockNum, address, signer } = Connection.useContainer();
+  const { signer } = Connection.useContainer();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
-  const [newWeights, setNewWeights] = useState(null);
+  const [newWeights, setNewWeights] = useState<number[]>([]);
   const { t } = useTranslation("common");
   const [voteButton, setVoteButton] = useState<ButtonStatus>({
     disabled: false,
@@ -103,20 +101,13 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     </Select.Option>
   );
 
-  const compare = (otherArray) => {
-    return (current) => {
-      return (
-        otherArray.filter((other) => {
-          return other.address == current.address;
-        }).length == 0
-      );
-    };
-  };
+  const compare = (otherArray: UserGaugeData[]) => (current: UserGaugeData) =>
+    otherArray.filter((other) => other.address == current.address).length == 0;
 
-  const handleSelect = async (depositTokens: string | string[]) => {
+  const handleSelect = (depositTokens: string | string[]) => {
     const selectedFarms = Array.isArray(depositTokens)
-      ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x))
-      : null;
+      ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x)!)
+      : [];
 
     const absentGauges = gauges.filter(compare(selectedFarms));
 
@@ -126,7 +117,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         [curr.address]: 0,
       };
     }, voteWeights);
-    setNewWeights(null);
+    setNewWeights([]);
     setVoteWeights(newVoteWeights);
     setVotingFarms(selectedFarms);
   };
@@ -139,7 +130,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     const tokens: string[] = [];
     const weights: number[] = [];
 
-    if (!gauges || !weightsValid) return;
+    if (!gauges || !weightsValid) return { tokens, weights };
+
     for (let i = 0; i < gauges.length; i++) {
       tokens.push(gauges[i].depositToken.address);
       weights.push(voteWeights[gauges[i].address]);
@@ -167,17 +159,18 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 
           return { [gauge.address]: estimatedWeight };
         } else {
-          return null;
+          return [];
         }
       });
       setNewWeights(newWeights);
     } else {
-      setNewWeights(null);
+      setNewWeights([]);
     }
   };
 
-  const initialize = async () => {
+  const initialize = () => {
     const newWeights = gauges.map((x) => x.allocPoint);
+
     if (JSON.stringify(newWeights) != JSON.stringify(currWeights)) {
       const initialWeights = gauges.reduce((acc, curr) => {
         return {
@@ -187,12 +180,12 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       }, {});
 
       const updatedFarms = votingFarms
-        ? votingFarms.map((x) => gauges.find((y) => y.address === x.address))
-        : null;
+        ? votingFarms.map((x) => gauges.find((y) => y.address === x.address)!)
+        : [];
 
       setVoteWeights(initialWeights);
       setVotingFarms(updatedFarms);
-      setNewWeights(null);
+      setNewWeights([]);
       setCurrWeights(newWeights);
     }
   };
@@ -320,7 +313,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 margin: "auto",
               }}
               value={voteWeights[address] ? voteWeights[address] : 0}
-              onValueChange={async ({ floatValue }) => {
+              onValueChange={({ floatValue }) => {
                 setVoteWeights({
                   ...voteWeights,
                   [address]: floatValue,
@@ -366,7 +359,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       </div>
       <Spacer y={0.5} />
       <h3>{t("gauges.selectedFarms")}</h3>
-      {votingFarms?.length ? (
+      {votingFarms.length ? (
         <>
           {votingFarms.map(renderVotingOption)}
 
@@ -381,12 +374,12 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 onClick={() => {
                   const { tokens, weights } = handleBoost();
                   if (gaugeProxy) {
-                    let newWeights = [];
-                    let newTokens = [];
-                    for (var it = 0; it < weights.length; it++) {
-                      if (weights[it] !== 0) {
-                        newWeights.push(weights[it]);
-                        newTokens.push(tokens[it]);
+                    let newWeights: number[] = [];
+                    let newTokens: string[] = [];
+                    for (let i = 0; i < weights.length; i++) {
+                      if (weights[i] > 0) {
+                        newWeights.push(weights[i]);
+                        newTokens.push(tokens[i]);
                       }
                     }
                     transfer({
