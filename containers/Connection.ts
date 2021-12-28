@@ -13,7 +13,8 @@ import { useRouter } from "next/router";
 
 type Network = ethers.providers.Network;
 
-// See https://eips.ethereum.org/EIPS/eip-3085
+// See https://eips.ethereum.org/EIPS/eip-3085 and
+// https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
 interface AddEthereumChainParameter {
   chainId: string;
   blockExplorerUrls?: string[];
@@ -25,10 +26,6 @@ interface AddEthereumChainParameter {
     decimals: number;
   };
   rpcUrls?: string[];
-}
-
-interface SwitchChainParams {
-  [chainId: number]: AddEthereumChainParameter;
 }
 
 function useConnection() {
@@ -43,7 +40,8 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const switchChainParams: SwitchChainParams = [];
+  const switchChainParams: AddEthereumChainParameter[] = [];
+
   switchChainParams[137] = {
     chainId: "0x89",
     chainName: "Polygon",
