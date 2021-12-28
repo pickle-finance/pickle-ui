@@ -126,6 +126,12 @@ export const FARM_LP_TO_ICON: {
   "0x0be790c83648c28eD285fee5E0BD79D1d57AAe69": (
     <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/bal-tricrypto.png"} />
   ),
+  "0x6779EB2838f44300CB6025d17DEB9F2E27CC9540": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/gohm.png"} />
+  ),
+  "0xEcAf3149fdA215E46e792C65dc0aB7399C2eA78B": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
+  ),
 
 
   // Aurora
@@ -203,7 +209,7 @@ export const FARM_LP_TO_ICON: {
   ),
   "0xc773eF9aE52fF43031DD2Db439966ef4cb55bd79": (
     <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
-  )
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{
