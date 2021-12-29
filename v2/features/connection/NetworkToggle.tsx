@@ -114,8 +114,8 @@ const NetworkToggle: FC = () => {
           </Popover.Button>
 
           <SelectTransition>
-            <Popover.Panel className="absolute z-10 w-full left-1/2 transform -translate-x-1/2 mt-2 px-2 sm:px-0">
-              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden">
+            <Popover.Panel className="absolute z-10 left-1/2 transform -translate-x-1/2 mt-2 px-2 sm:px-0">
+              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   {networks.map((network) => (
                     <a
@@ -140,8 +140,10 @@ const NetworkToggle: FC = () => {
                           {network.name}
                         </span>
                       </div>
-                      {network.chainId === chainId && (
+                      {network.chainId === chainId ? (
                         <CheckCircleIcon className="text-green-light w-4 h-4" />
+                      ) : (
+                        <div className="w-5">&nbsp;</div>
                       )}
                     </a>
                   ))}
