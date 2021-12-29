@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Popover } from "@headlessui/react";
-import { SwitchHorizontalIcon, LogoutIcon } from "@heroicons/react/solid";
+import { LogoutIcon } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
 import Davatar from "@davatar/react";
 import { useWeb3React } from "@web3-react/core";
@@ -13,10 +13,6 @@ const WalletToggleOptions: FC = () => {
   const { t } = useTranslation("common");
 
   const options = [
-    {
-      name: t("v2.wallet.switch"),
-      icon: SwitchHorizontalIcon,
-    },
     {
       name: t("v2.wallet.exit"),
       icon: LogoutIcon,
