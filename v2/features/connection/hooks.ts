@@ -1,69 +1,77 @@
-import { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
+import { useEffect, useState } from "react";
 
 import { injected } from "./connectors";
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
-
   const [tried, setTried] = useState(false);
 
   useEffect(() => {
-    injected.isAuthorized().then((isAuthorized) => {
-      if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
+    if (!active) {
+      injected.isAuthorized().then((isAuthorized) => {
+        if (isAuthorized) {
+          // Prevent a race condition on window load by putting activation
+          // into the event loop, see https://github.com/NoahZinsmeister/web3-react/issues/78#issuecomment-937923978
+          setTimeout(
+            () =>
+              activate(injected, undefined, true).catch(() => {
+                setTried(true);
+              }),
+            100,
+          );
+        } else {
           setTried(true);
-        });
-      } else {
-        setTried(true);
-      }
-    });
-  }, []); // intentionally only running on mount (make sure it's only mounted once :))
+        }
+      });
+    }
+  }, [active]);
 
-  // if the connection worked, wait until we get confirmation of that to flip the flag
+  // Wait until we get confirmation of a connection to flip the flag
   useEffect(() => {
-    if (!tried && active) {
+    if (active) {
       setTried(true);
     }
-  }, [tried, active]);
+  }, [active]);
 
   return tried;
 }
 
+/**
+ * Triggered when none of the MM accounts are connected.
+ */
 export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3React();
 
-  useEffect((): any => {
+  useEffect(() => {
     const { ethereum } = window as any;
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
-      const handleConnect = () => {
-        activate(injected);
-      };
+
+    if (ethereum?.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
-        activate(injected);
-      };
-      const handleAccountsChanged = (accounts: string[]) => {
-        if (accounts.length > 0) {
-          activate(injected);
-        }
-      };
-      const handleNetworkChanged = () => {
-        activate(injected);
+        activate(injected, undefined, true).catch((error) => {
+          console.error("Failed to activate after chain changed", error);
+        });
       };
 
-      ethereum.on("connect", handleConnect);
+      const handleAccountsChanged = (accounts: string[]) => {
+        if (accounts.length > 0) {
+          activate(injected, undefined, true).catch((error) => {
+            console.error("Failed to activate after accounts changed", error);
+          });
+        }
+      };
+
       ethereum.on("chainChanged", handleChainChanged);
       ethereum.on("accountsChanged", handleAccountsChanged);
-      ethereum.on("networkChanged", handleNetworkChanged);
 
       return () => {
         if (ethereum.removeListener) {
-          ethereum.removeListener("connect", handleConnect);
           ethereum.removeListener("chainChanged", handleChainChanged);
           ethereum.removeListener("accountsChanged", handleAccountsChanged);
-          ethereum.removeListener("networkChanged", handleNetworkChanged);
         }
       };
     }
+
+    return undefined;
   }, [active, error, suppress, activate]);
 }
