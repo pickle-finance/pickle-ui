@@ -7,6 +7,7 @@ import {
   CubeIcon,
 } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
+import { useWeb3React } from "@web3-react/core";
 
 import { classNames } from "../../utils";
 import SelectTransition from "../../components/SelectTransition";
@@ -17,46 +18,92 @@ import oec from "public/oec.svg";
 import matic from "public/matic.svg";
 import moonriver from "public/moonriver.svg";
 
-const networks = [
+type Network = {
+  name: string;
+  icon: any;
+  chainId: number;
+};
+
+const networks: Network[] = [
   {
     name: "Arbitrum",
     icon: arbitrum,
+    chainId: 42161,
   },
   {
     name: "Aurora",
     icon: aurora,
+    chainId: 1313161554,
   },
   {
     name: "Ethereum",
     icon: ethereum,
+    chainId: 1,
   },
   {
     name: "Moonriver",
     icon: moonriver,
+    chainId: 1285,
   },
   {
     name: "OEC",
     icon: oec,
+    chainId: 66,
   },
   {
     name: "Polygon",
     icon: matic,
+    chainId: 137,
   },
 ];
 
-const NetworkToggle: FC = () => {
+interface NetworkToggleLabelProps {}
+
+const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
   const { t } = useTranslation("common");
+  const { chainId } = useWeb3React();
+
+  const activeChain = networks.find((network) => network.chainId === chainId);
+
+  if (activeChain)
+    return (
+      <div className="flex">
+        <div className="w-5 h-5 mr-3">
+          <Image
+            src={activeChain.icon}
+            width={200}
+            height={200}
+            layout="responsive"
+            alt={activeChain.name}
+            title={activeChain.name}
+            className="rounded-full"
+            priority
+          />
+        </div>
+        <span className="text-white text-sm font-bold">{activeChain.name}</span>
+      </div>
+    );
+
+  return (
+    <>
+      <CubeIcon
+        className="text-gray-lighter mr-2 h-5 w-5 transition duration-300 ease-in-out"
+        aria-hidden="true"
+      />
+      <span>{t("v2.nav.networkSettings")}</span>
+    </>
+  );
+};
+
+const NetworkToggle: FC = () => {
+  const { chainId } = useWeb3React();
 
   return (
     <Popover className="relative mr-3">
       {({ open }) => (
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
-            <CubeIcon
-              className="text-gray-lighter mr-2 h-5 w-5 transition duration-300 ease-in-out"
-              aria-hidden="true"
-            />
-            <span>{t("v2.nav.networkSettings")}</span>
+            <NetworkToggleLabel />
             <ChevronDownIcon
               className={classNames(
                 open ? "text-orange" : "text-gray-lighter",
@@ -89,11 +136,11 @@ const NetworkToggle: FC = () => {
                             priority
                           />
                         </div>
-                        <span className="text-white group-hover:text-green-light text-sm font-bold">
+                        <span className="text-white group-hover:text-green-light text-sm font-bold pr-4">
                           {network.name}
                         </span>
                       </div>
-                      {network.name === "Ethereum" && (
+                      {network.chainId === chainId && (
                         <CheckCircleIcon className="text-green-light w-4 h-4" />
                       )}
                     </a>
