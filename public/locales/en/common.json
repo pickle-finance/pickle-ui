@@ -292,7 +292,7 @@
       "connectWallet": "Connect wallet",
       "errorTitle": "Uh oh, we're in a pickle here",
       "unauthorized": "Please <1>authorize</1> Pickle Finance to access your Ethereum account.",
-      "unsupportedNetwork": "You're connected to an unsupported network."
+      "unsupportedNetwork": "You're connected to an unsupported network. Please switch to one of the following:"
     },
     "dashboard": {
       "dillAmount": "DILL amount",

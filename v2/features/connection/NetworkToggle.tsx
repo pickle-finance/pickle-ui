@@ -9,53 +9,9 @@ import {
 import { useTranslation } from "next-i18next";
 import { useWeb3React } from "@web3-react/core";
 
-import { classNames } from "../../utils";
-import SelectTransition from "../../components/SelectTransition";
-import arbitrum from "public/arbitrum.svg";
-import aurora from "public/aurora.svg";
-import ethereum from "public/ethereum.svg";
-import oec from "public/oec.svg";
-import matic from "public/matic.svg";
-import moonriver from "public/moonriver.svg";
-
-type Network = {
-  name: string;
-  icon: any;
-  chainId: number;
-};
-
-const networks: Network[] = [
-  {
-    name: "Arbitrum",
-    icon: arbitrum,
-    chainId: 42161,
-  },
-  {
-    name: "Aurora",
-    icon: aurora,
-    chainId: 1313161554,
-  },
-  {
-    name: "Ethereum",
-    icon: ethereum,
-    chainId: 1,
-  },
-  {
-    name: "Moonriver",
-    icon: moonriver,
-    chainId: 1285,
-  },
-  {
-    name: "OEC",
-    icon: oec,
-    chainId: 66,
-  },
-  {
-    name: "Polygon",
-    icon: matic,
-    chainId: 137,
-  },
-];
+import { classNames } from "v2/utils";
+import SelectTransition from "v2/components/SelectTransition";
+import { networks } from "./networks";
 
 interface NetworkToggleLabelProps {}
 
