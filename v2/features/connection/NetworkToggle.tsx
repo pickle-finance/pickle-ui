@@ -96,7 +96,9 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
 };
 
 const NetworkToggle: FC = () => {
-  const { chainId } = useWeb3React();
+  const { chainId, active } = useWeb3React();
+
+  if (!active) return null;
 
   return (
     <Popover className="relative mr-3">
