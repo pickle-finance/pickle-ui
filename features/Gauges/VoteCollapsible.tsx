@@ -1,7 +1,9 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
-import { Button, Grid, Spacer, Select } from "@geist-ui/react";
+import { Button, Grid, Spacer } from "@geist-ui/react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
@@ -43,16 +45,31 @@ const Data = styled.div<DataProps>`
   color: ${(props) => (props.isZero ? "#444" : "unset")};
 `;
 
-const formatPercent = (decimal: number) => {
+const formatPercent = (decimal: number): string => {
   if (decimal) {
     return (decimal * 100).toFixed(2);
   }
 };
 
-const formatAPY = (apy: number) => {
+const formatAPY = (apy: number): string => {
   if (apy === Number.POSITIVE_INFINITY) return "∞%";
   return apy.toFixed(2) + "%";
 };
+
+const renderSelectOptions = (gauge: UserGaugeData) => (
+  {label: gauge.depositTokenName, value: gauge.address}
+  // <Select.Option
+  //   key={gauge.address}
+  //   style={{ color: pickleWhite }}
+  //   value={gauge.depositTokenName}
+  // >
+  //   {gauge.depositTokenName}
+  // </Select.Option>
+);
+
+const compare = (otherArray: UserGaugeData[]) => (current: UserGaugeData) => {
+    otherArray.filter((other) => other.address == current.address).length == 0;
+}
 
 export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
@@ -65,20 +82,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState<number[]>([]);
   const { t } = useTranslation("common");
-  const [voteButton, setVoteButton] = useState<ButtonStatus>({
-    disabled: false,
-    text: t("gauges.submitVote"),
-  });
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const [voteButton, setVoteButton] = useState<ButtonStatus>({ disabled: false, text: t("gauges.submitVote") });
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
   const { setButtonStatus } = useButtonStatus();
-
-  const [currWeights, setCurrWeights] = useState(
-    gauges.map((x) => x.allocPoint),
-  );
+  const [currWeights, setCurrWeights] = useState(gauges.map((x) => x.allocPoint));
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -90,19 +97,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   if (!gauges) {
     return null;
   }
-
-  const renderSelectOptions = (gauge: UserGaugeData) => (
-    <Select.Option
-      key={gauge.address}
-      style={{ color: pickleWhite }}
-      value={gauge.depositTokenName}
-    >
-      {gauge.depositTokenName}
-    </Select.Option>
-  );
-
-  const compare = (otherArray: UserGaugeData[]) => (current: UserGaugeData) =>
-    otherArray.filter((other) => other.address == current.address).length == 0;
 
   const handleSelect = (depositTokens: string | string[]) => {
     const selectedFarms = Array.isArray(depositTokens)
@@ -334,15 +328,49 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     >
       <Spacer y={1} />
       <div style={{ display: "flex" }}>
-        <Select
+        <Select 
+          styles={{
+            input: base => ({
+              ...base,
+              color: "pickleWhite"
+            }),
+            control: base => ({
+              ...base,
+              width: 900,
+              backgroundColor: "#0e1d15",
+              borderWidth: "1px",
+              borderColor: "#26ff91",
+              
+            }),
+            menu: (provided, state) => ({
+              ...provided,
+              top: 0,
+              position: "relative",
+              maxHeight: 350,
+              width: "100%",
+              backgroundColor: '#0e1d15',
+              color: "pickleWhite",
+              padding: 20,
+            }),
+          }}
           placeholder={t("gauges.selectBoost")}
-          multiple
-          width="100%"
-          onChange={(value) => handleSelect(value)}
-        >
-          {gauges.map(renderSelectOptions)}
-        </Select>
-        <Button
+          closeMenuOnSelect={false}
+          isMulti
+          theme={(theme) => ({
+            ...theme,
+            borderRadius: 5,
+            colors: {
+            ...theme.colors,
+              text: 'black',
+              primary: 'pickleWhite',
+              primary25: 'black',
+              primary50: 'black'
+            },
+          })}
+          onChange={(value) => handleSelect(value.map((x) => x.label))} 
+          options={gauges.map(renderSelectOptions)}
+        />
+        {/* <Button
           size="large"
           css={{
             height: "unset !important",
@@ -355,7 +383,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           onClick={handleSelectAll}
         >
           {t("gauges.selectAll")}
-        </Button>
+        </Button> */}
       </div>
       <Spacer y={0.5} />
       <h3>{t("gauges.selectedFarms")}</h3>
