@@ -2,10 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 
 import coreReducer from "./core";
+import connectionReducer from "./connection";
 
 export const store = configureStore({
   reducer: {
     core: coreReducer,
+    connection: connectionReducer,
   },
 });
 

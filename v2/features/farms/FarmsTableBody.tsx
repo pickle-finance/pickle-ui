@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 
 import FarmsTableRow from "./FarmsTableRow";
-import { Selectors as CoreSelectors } from "v2/store/core";
+import { CoreSelectors } from "v2/store/core";
 
 interface Props {
   simple?: boolean;

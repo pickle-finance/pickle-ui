@@ -52,7 +52,7 @@ const selectEnabledJars = (state: RootState) => {
 
 const selectLoadingState = (state: RootState) => state.core.loading;
 
-export const Selectors = {
+export const CoreSelectors = {
   selectEnabledJars,
   selectLoadingState,
 };

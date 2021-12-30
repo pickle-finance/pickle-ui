@@ -95,9 +95,9 @@ const ConnectionStatus: FC = () => {
         <FireIcon className="text-orange w-5 h-5 mr-2" />
         {t("v2.connection.errorTitle")}
       </div>
-      <p className="text-gray-light">
+      <div className="text-gray-light">
         <ErrorMessage error={error} />
-      </p>
+      </div>
     </div>
   );
 };
