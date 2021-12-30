@@ -10,6 +10,7 @@ import { store } from "v2/store";
 import CoreProvider from "v2/providers/CoreProvider";
 import Web3Provider from "v2/providers/Web3Provider";
 import ConnectionStatus from "v2/features/connection/ConnectionStatus";
+import BlockNumber from "v2/features/connection/BlockNumber";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -33,6 +34,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
               <TopNavbar PageTitle={PageTitle} />
               <ConnectionStatus />
               <Component {...pageProps} />
+              <BlockNumber />
             </div>
           </main>
         </Web3Provider>
