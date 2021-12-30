@@ -9,6 +9,7 @@ import TopNavbar from "v2/components/TopNavbar";
 import { store } from "v2/store";
 import CoreProvider from "v2/providers/CoreProvider";
 import Web3Provider from "v2/providers/Web3Provider";
+import ConnectionStatus from "v2/features/connection/ConnectionStatus";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -30,6 +31,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
           <main className="sm:pl-64">
             <div className="px-4 py-2 sm:px-10 sm:py-10 text-white">
               <TopNavbar PageTitle={PageTitle} />
+              <ConnectionStatus />
               <Component {...pageProps} />
             </div>
           </main>

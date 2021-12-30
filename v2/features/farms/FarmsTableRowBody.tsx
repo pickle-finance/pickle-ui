@@ -24,7 +24,12 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           <p className="font-normal text-xs text-gray-light mb-6">
             {t("v2.balances.balance")}
           </p>
-          <Link href={jar.depositToken.link} external primary>
+          <Link
+            href={jar.depositToken.link}
+            className="font-bold"
+            external
+            primary
+          >
             {t("v2.farms.getToken", { token: jar.depositToken.name })}
           </Link>
         </div>

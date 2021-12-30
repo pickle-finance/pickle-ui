@@ -21,7 +21,7 @@ const AppWeb3Provider: FC = ({ children }) => {
     if (triedEager && !active && !error && !active) {
       activate(injected);
     }
-  }, [triedEager, active, error, active]);
+  }, [triedEager, error, active]);
 
   // When there's no account connected, react to logins (broadly speaking) on the injected provider, if it exists
   useInactiveListener(!triedEager);
