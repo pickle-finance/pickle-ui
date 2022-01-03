@@ -53,7 +53,7 @@ const formatPercent = (decimal: number): string => {
   if (decimal) {
     return (decimal * 100).toFixed(2);
   }
-  return '0.00'
+  return "0.00";
 };
 
 const formatAPY = (apy: number): string => {
@@ -61,13 +61,14 @@ const formatAPY = (apy: number): string => {
   return apy.toFixed(2) + "%";
 };
 
-const renderSelectOptions = (gauge: UserGaugeData) => (
-  {label: gauge.depositTokenName, value: gauge.address}
-);
+const renderSelectOptions = (gauge: UserGaugeData) => ({
+  label: gauge.depositTokenName,
+  value: gauge.address,
+});
 
 const compare = (otherArray: UserGaugeData[]) => (current: UserGaugeData) => {
-    otherArray.filter((other) => other.address == current.address).length == 0;
-}
+  otherArray.filter((other) => other.address == current.address).length == 0;
+};
 
 export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   gauges,
@@ -80,10 +81,19 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState<Weights[]>([]);
   const { t } = useTranslation("common");
-  const [voteButton, setVoteButton] = useState<ButtonStatus>({ disabled: false, text: t("gauges.submitVote") });
-  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
+  const [voteButton, setVoteButton] = useState<ButtonStatus>({
+    disabled: false,
+    text: t("gauges.submitVote"),
+  });
+  const {
+    status: transferStatus,
+    transfer,
+    getTransferStatus,
+  } = ERC20Transfer.useContainer();
   const { setButtonStatus } = useButtonStatus();
-  const [currWeights, setCurrWeights] = useState(gauges.map((x) => x.allocPoint));
+  const [currWeights, setCurrWeights] = useState(
+    gauges.map((x) => x.allocPoint),
+  );
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -92,11 +102,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 
   const weightsValid = totalGaugeWeight === 100;
 
-  if (!gauges) {
-    return null;
-  }
+  // if (!gauges) {
+  //   return null;
+  // }
 
-  const handleSelect = (depositTokens: string | string[]) => {
+  const handleSelect = (depositTokens: string | string[]): void => {
+    if (!gauges) {
+      return;
+    }
     const selectedFarms = Array.isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x)!)
       : [];
@@ -114,10 +127,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     setVotingFarms(selectedFarms);
   };
 
-  const handleSelectAll = () => {
-    handleSelect(gauges.map((gauge) => gauge.depositTokenName));
-  };
-
   const handleBoost = (): HandleBoostReturn => {
     const tokens: string[] = [];
     const weights: number[] = [];
@@ -132,7 +141,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     return { tokens, weights };
   };
 
-  const singleNewWeightMapping = (x: Weights) : Weights | undefined => {
+  const singleNewWeightMapping = (x: Weights): Weights | undefined => {
     const gaugeAddress = Object.keys(x)[0];
     const gauge = gauges.find((gauge) => gauge.address === gaugeAddress);
     if (gauge && dillBalanceBN) {
@@ -148,7 +157,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     } else {
       return undefined;
     }
-  }
+  };
 
   const calculateNewWeights = (): void => {
     if (weightsValid) {
@@ -156,18 +165,18 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         [e[0]]: e[1],
       }));
 
-      const tmpWeights: (Weights|undefined)[] = voteArray.map((x) => {
+      const tmpWeights: (Weights | undefined)[] = voteArray.map((x) => {
         const oneNewWeight = singleNewWeightMapping(x);
         return oneNewWeight;
       });
       const internalNewWeights: Weights[] = [];
-      for( let i = 0; i < tmpWeights.length; i++ ) {
+      for (let i = 0; i < tmpWeights.length; i++) {
         const t = tmpWeights[i];
-        if( t !== undefined ) {
+        if (t !== undefined) {
           internalNewWeights.push(t);
         }
       }
-      if( internalNewWeights ) {
+      if (internalNewWeights) {
         setNewWeights(internalNewWeights);
       } else {
         setNewWeights([]);
@@ -200,12 +209,12 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   useEffect(() => {
-    initialize();
-  }, [gauges]);
+    gauges && initialize();
+  }, [gauges]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    calculateNewWeights();
-  }, [weightsValid]);
+    gauges && calculateNewWeights();
+  }, [weightsValid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (gaugeProxy) {
@@ -231,7 +240,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         });
       }
     }
-  }, [transferStatus, weightsValid]);
+  }, [transferStatus, weightsValid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { getUniPairDayAPY } = useUniPairDayData();
   const { jars } = Jars.useContainer();
@@ -270,9 +279,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
       }).reduce((acc, x) => acc + x, 0);
 
-      const newWeightMaybe = newWeights?.find(
-        (x: Weights) => x[address] >= 0,
-      );
+      const newWeightMaybe = newWeights?.find((x: Weights) => x[address] >= 0);
       const newWeight = newWeightMaybe ? newWeightMaybe[address] : null;
 
       return (
@@ -326,8 +333,8 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 console.log(floatValue);
                 setVoteWeights({
                   ...voteWeights,
-                  [address]: floatValue ? floatValue : 0
-                })
+                  [address]: floatValue ? floatValue : 0,
+                });
                 console.log(voteWeights);
               }}
             />
@@ -345,19 +352,18 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     >
       <Spacer y={1} />
       <div style={{ display: "flex" }}>
-        <Select 
+        <Select
           styles={{
-            input: base => ({
+            input: (base) => ({
               ...base,
-              color: pickleWhite
+              color: pickleWhite,
             }),
-            control: base => ({
+            control: (base) => ({
               ...base,
               width: 900,
               backgroundColor: "#0e1d15",
               borderWidth: "1px",
               borderColor: "#26ff91",
-              
             }),
             menu: (provided, state) => ({
               ...provided,
@@ -365,7 +371,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               position: "relative",
               maxHeight: 350,
               width: "100%",
-              backgroundColor: '#0e1d15',
+              backgroundColor: "#0e1d15",
               color: pickleWhite,
               padding: 20,
             }),
@@ -377,14 +383,14 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
             ...theme,
             borderRadius: 5,
             colors: {
-            ...theme.colors,
-              text: 'black',
+              ...theme.colors,
+              text: "black",
               primary: pickleWhite,
-              primary25: 'black',
-              primary50: 'black'
+              primary25: "black",
+              primary50: "black",
             },
           })}
-          onChange={(value) => handleSelect(value.map((x) => x.label))} 
+          onChange={(value) => handleSelect(value.map((x) => x.label))}
           options={gauges.map(renderSelectOptions)}
         />
       </div>
