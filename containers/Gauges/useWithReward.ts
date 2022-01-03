@@ -24,7 +24,8 @@ export const useWithReward = (rawGauges: Input): Output => {
       const newGauges = rawGauges.map((gauge) => {
         return {
           ...gauge,
-          rewardRatePerYear: gauge.derivedSupply
+          rewardRatePerYear: gauge.allocPoint === 0 ? 0 : 
+            gauge.derivedSupply
             ? (gauge.rewardRate / gauge.derivedSupply) * 3600 * 24 * 365
             : 0,
         };
