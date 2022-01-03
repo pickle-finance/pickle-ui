@@ -22,7 +22,7 @@ interface ConnectorProps {
 const Connector: FC<ConnectorProps> = ({ connector }) => (
   <a
     href="#"
-    className="flex bg-black-lighter rounded-xl py-4 px-6 hover:bg-gray-dark text-white text-xl hover:text-green-light transition duration-300 ease-in-out"
+    className="flex group outline-none bg-black-lighter rounded-xl py-4 px-6 hover:bg-gray-dark transition-colors duration-300 ease-in-out"
   >
     <div className="w-12 p-1 bg-gray-outline rounded-full mr-4">
       <Image
@@ -36,7 +36,9 @@ const Connector: FC<ConnectorProps> = ({ connector }) => (
       />
     </div>
     <div className="flex flex-col text-left justify-center">
-      <p>{connector.title}</p>
+      <p className="text-white text-xl group-hover:text-green-light transition-colors duration-300 ease-in-out">
+        {connector.title}
+      </p>
     </div>
   </a>
 );
