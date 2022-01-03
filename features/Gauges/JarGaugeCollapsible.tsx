@@ -521,6 +521,7 @@ export const JarGaugeCollapsible: FC<{
         const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
+          approvalAmountRequired: convertDecimals(depositAmount),
           transferCallback: async () => {
             return jarContract
               .connect(signer)
@@ -858,6 +859,7 @@ export const JarGaugeCollapsible: FC<{
                     transfer({
                       token: depositToken.address,
                       recipient: jarContract.address,
+                      approvalAmountRequired: convertDecimals(depositAmount),
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)

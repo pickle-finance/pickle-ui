@@ -343,6 +343,7 @@ export const JarMiniFarmCollapsible: FC<{
         const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
+          approvalAmountRequired: parseEther(depositAmount),
           transferCallback: async () => {
             return jarContract
               .connect(signer)
@@ -657,6 +658,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transfer({
                       token: depositToken.address,
                       recipient: jarContract.address,
+                      approvalAmountRequired: parseEther(depositAmount),
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)
@@ -772,6 +774,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transfer({
                       token: farmDepositToken.address,
                       recipient: minichef.address,
+                      approvalAmountRequired: farmBalance,
                       transferCallback: async () => {
                         return minichef.deposit(
                           poolIndex,
