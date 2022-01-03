@@ -279,6 +279,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
                 transfer({
                   token: depositToken.address,
                   recipient: minichef.address,
+                  approvalAmountRequired: ethers.utils.parseEther(stakeAmount),
                   transferCallback: async () => {
                     return minichef
                       .connect(signer)

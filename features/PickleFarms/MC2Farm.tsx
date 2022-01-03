@@ -241,6 +241,7 @@ export const MC2Farm: FC = () => {
                 transfer({
                   token: PICKLE_ETH_SLP,
                   recipient: masterchefV2.address,
+                  approvalAmountRequired: ethers.utils.parseEther(stakeAmount),
                   transferCallback: async () => {
                     return masterchefV2
                       .connect(signer)

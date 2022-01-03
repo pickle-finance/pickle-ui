@@ -504,15 +504,15 @@ export const JarCollapsible: FC<{
             onClick={() => {
               if (signer) {
                 // Allow Jar to get LP Token
+                const depositAmt = ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18);
                 transfer({
                   token: depositToken.address,
                   recipient: jarContract.address,
+                  approvalAmountRequired: depositAmt ,
                   transferCallback: async () => {
                     return jarContract
                       .connect(signer)
-                      .deposit(
-                        ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18),
-                      );
+                      .deposit(depositAmt);
                   },
                 });
               }
