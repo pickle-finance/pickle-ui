@@ -7,7 +7,7 @@ import { useWeb3React } from "@web3-react/core";
 import type { Web3Provider } from "@ethersproject/providers";
 
 import SelectTransition from "v2/components/SelectTransition";
-import Button from "v2/components/Button";
+import ConnectWalletButton from "./ConnectWalletButton";
 
 const WalletToggleOptions: FC = () => {
   const { t } = useTranslation("common");
@@ -40,11 +40,9 @@ const WalletToggleOptions: FC = () => {
 };
 
 const WalletToggle: FC = () => {
-  const { t } = useTranslation("common");
   const { active } = useWeb3React<Web3Provider>();
 
-  if (!active)
-    return <Button size="normal">{t("v2.connection.connectWallet")}</Button>;
+  if (!active) return <ConnectWalletButton />;
 
   return (
     <Popover className="relative">
