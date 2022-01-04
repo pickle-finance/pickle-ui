@@ -23,6 +23,7 @@
     "trailingComma": "all"
   },
   "dependencies": {
+    "@davatar/react": "^1.8.1",
     "@ethersproject/abstract-provider": "^5.0.4",
     "@ethersproject/providers": "^5.1.0",
     "@geist-ui/react": "^2.0.2",
@@ -39,7 +40,6 @@
     "@studydefi/money-legos": "^2.3.7",
     "@tippyjs/react": "^4.2.6",
     "@types/date-fns": "^2.6.0",
-    "@ukstv/jazzicon-react": "^1.0.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.1.9",
