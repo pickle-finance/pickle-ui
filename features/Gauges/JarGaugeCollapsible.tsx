@@ -877,7 +877,7 @@ export const JarGaugeCollapsible: FC<{
                     handleZap();
                   }
                 }}
-                disabled={depositButton.disabled || zapOnlyButton}
+                disabled={depositButton.disabled || isClosingOnly || zapOnlyButton}
                 style={{ width: "100%" }}
               >
                 {isZap
@@ -888,6 +888,10 @@ export const JarGaugeCollapsible: FC<{
               {isMimJar ? (
                 <StyledNotice>{t("farms.abra.rewardsEnded")}</StyledNotice>
               ) : null}
+              {isClosingOnly ? (
+                <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
+              ) : null}
+
             </Grid>
             <Grid xs={24} md={12}>
               <Button

@@ -123,6 +123,7 @@
       "info": "This jar deposits into B.Protocol's Backstop AMM. All ETH liquidations are automatically sold back into users' LUSD positions and all LQTY rewards are staked in the Pickle Jar, which compounds ETH and LUSD rewards. pLQTY is automatically harvested upon withdrawing or depositing.",
       "feeNote": "This jar has no fees and kickback rate for LQTY is 100%"
     },
+    "closingOnly": "This jar is in withdraw-only mode.",
     "compounding": "compounding",
     "deposit": "Deposit",
     "deposited": "Deposited",
