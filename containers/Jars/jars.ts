@@ -90,8 +90,7 @@ export const isJarWithdrawOnly = (
   jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
-  return jarApiKey.toLowerCase() === "fei-tribe" || 
-  checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
+  return checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
 };
 
 
