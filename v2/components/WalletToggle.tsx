@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Popover } from "@headlessui/react";
 import { SwitchHorizontalIcon, LogoutIcon } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
-import { Jazzicon } from "@ukstv/jazzicon-react";
+import Davatar from "@davatar/react";
 
 import SelectTransition from "./SelectTransition";
 
@@ -29,7 +29,7 @@ const WalletToggleOptions: FC = () => {
           <a
             key={option.name}
             href="#"
-            className="flex group hover:bg-black-lighter hover:text-green-light p-2 rounded-lg transition duration-300 ease-in-out"
+            className="flex p-2 transition duration-300 ease-in-out rounded-lg group hover:bg-black-lighter hover:text-green-light"
           >
             <Icon className="w-5 h-5 mr-3" />
             <span className="text-sm font-bold">{option.name}</span>
@@ -47,9 +47,10 @@ const WalletToggle: FC = () => {
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-white font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <span className="block mr-2">0x19bd...849f</span>
-            <Jazzicon
+            <Davatar
+              size={32}
               address="0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
-              className="w-8 h-8"
+              generatedAvatarType="jazzicon"
             />
           </Popover.Button>
 
