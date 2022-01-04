@@ -66,31 +66,50 @@ export const shouldJarBeInUi = (
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
   return (
-    isJarEnabled(jar.details.apiKey, pfcore) ||
+    isJarActive(jar.details.apiKey, pfcore) ||
     isJarDisabled(jar.details.apiKey, pfcore)
   );
 };
 
-export const isJarEnabled = (
+/**
+ * Should this jar appear in the 'enabled' section of the UI
+ * @param jarApiKey 
+ * @param pfcore 
+ * @returns 
+ */
+export const isJarActive = (
   jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
-  if (!pfcore) return false;
-
-  const found: JarDefinition | undefined = pfcore.assets.jars.find(
-    (x) => x.details.apiKey === jarApiKey,
-  );
-  if (found) {
-    // TODO if you want to test dev-mode jars, change that here to include dev!
-    if (found.enablement === AssetEnablement.ENABLED) {
-      return true;
-    }
-  }
-  return false;
+  return checkJarEnablement(AssetEnablement.ENABLED, jarApiKey, pfcore) || 
+          checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
 };
 
-// This will not show permanently-disabled jars
+
+export const isJarWithdrawOnly = (
+  jarApiKey: string,
+  pfcore: PickleModelJson.PickleModelJson | null,
+) => {
+  return checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
+};
+
+
+/**
+ * Should this jar appear in the 'Inactive Jars' section of the UI
+ * This will not show permanently-disabled jars
+ * @param jarApiKey 
+ * @param pfcore 
+ * @returns 
+ */
 export const isJarDisabled = (
+  jarApiKey: string,
+  pfcore: PickleModelJson.PickleModelJson | null,
+) => {
+  return checkJarEnablement(AssetEnablement.DISABLED, jarApiKey, pfcore);
+};
+
+export const checkJarEnablement = (
+  desired: AssetEnablement,
   jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
@@ -101,7 +120,7 @@ export const isJarDisabled = (
     (x) => x.details.apiKey === jarApiKey,
   );
   if (found) {
-    if (found.enablement === AssetEnablement.DISABLED) {
+    if (found.enablement === desired) {
       return true;
     }
   }
