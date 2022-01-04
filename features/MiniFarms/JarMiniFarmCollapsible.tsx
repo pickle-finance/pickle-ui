@@ -672,7 +672,7 @@ export const JarMiniFarmCollapsible: FC<{
                     });
                   }
                 }}
-                disabled={depositButton.disabled || isQiMaiJar}
+                disabled={depositButton.disabled || isClosingOnly || isQiMaiJar}
                 style={{ width: "100%" }}
               >
                 {depositButton.text}
@@ -682,6 +682,10 @@ export const JarMiniFarmCollapsible: FC<{
               ) : isQiMaiJar ? (
                 <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
               ) : null}
+              {isClosingOnly ? (
+                <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
+              ) : null}
+
             </Grid>
             <Grid xs={24} md={12}>
               <Button
