@@ -29,7 +29,7 @@ const WalletToggleOptions: FC = () => {
           <a
             key={option.name}
             href="#"
-            className="flex p-2 transition duration-300 ease-in-out rounded-lg group hover:bg-black-lighter hover:text-green-light"
+            className="flex group hover:bg-black-lighter hover:text-green-light p-2 rounded-lg transition duration-300 ease-in-out"
           >
             <Icon className="w-5 h-5 mr-3" />
             <span className="text-sm font-bold">{option.name}</span>
