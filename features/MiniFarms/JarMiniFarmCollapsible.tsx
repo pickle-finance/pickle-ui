@@ -16,12 +16,13 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { NETWORK_NAMES } from "containers/config";
-import { isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
+import { isJarWithdrawOnly, isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 interface DataProps {
   isZero?: boolean;
@@ -333,6 +334,12 @@ export const JarMiniFarmCollapsible: FC<{
   const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
   const isQiMaiJar = isQlpQiToken(depositToken.address);
+  const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+    (x) =>
+      x.depositToken.addr.toLowerCase() ===
+      depositToken.address.toLowerCase()
+  );
+  const isClosingOnly = foundJar ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore) : false;
 
   const isBalancerJar = isBalancerPool(depositToken.address);
 
@@ -682,7 +689,7 @@ export const JarMiniFarmCollapsible: FC<{
                 disabled={
                   Boolean(depositStakeButton) ||
                   depositButton.disabled ||
-                  isQiMaiJar
+                  isQiMaiJar || isClosingOnly
                 }
                 style={{ width: "100%" }}
               >

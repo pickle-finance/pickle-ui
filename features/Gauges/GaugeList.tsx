@@ -29,6 +29,7 @@ import {
   AssetProtocol,
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
+import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -130,7 +131,7 @@ export const GaugeList: FC = () => {
       );
       return (
         foundJar &&
-        foundJar.enablement === AssetEnablement.ENABLED &&
+        isJarActive(foundJar.details.apiKey, pickleCore) &&
         !(foundJar.protocol === AssetProtocol.YEARN)
       );
     })
@@ -142,7 +143,7 @@ export const GaugeList: FC = () => {
         x.depositToken.addr.toLowerCase() ===
         jar.depositToken.address.toLowerCase(),
     );
-    return foundJar && foundJar.enablement === AssetEnablement.DISABLED;
+    return foundJar && isJarDisabled(foundJar.details.apiKey, pickleCore);
   });
 
   const yearnJars = jarData.filter((jar) => {
@@ -154,7 +155,7 @@ export const GaugeList: FC = () => {
     const gauge = findGauge(jar);
     const activeAndYearn =
       foundJar &&
-      foundJar.enablement === AssetEnablement.ENABLED &&
+      isJarActive(foundJar.details.apiKey, pickleCore) &&
       foundJar.protocol === AssetProtocol.YEARN;
     return showUserJars
       ? activeAndYearn &&

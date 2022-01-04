@@ -30,6 +30,7 @@ import {
   isUsdcToken,
   isYveCrvEthJarToken,
   isMainnetMimEthJarDepositToken,
+  isJarWithdrawOnly,
 } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
@@ -45,6 +46,7 @@ import { uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 interface DataProps {
   isZero?: boolean;
@@ -673,6 +675,12 @@ export const JarGaugeCollapsible: FC<{
       ? tvlJarData.details.harvestStats.balanceUSD
       : 0;
   const tvlStr = getFormatString(tvlNum);
+  const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+    (x) =>
+      x.depositToken.addr.toLowerCase() ===
+      depositToken.address.toLowerCase()
+  );
+  const isClosingOnly = foundJar ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore) : false;
 
   return (
     <Collapse
@@ -887,6 +895,7 @@ export const JarGaugeCollapsible: FC<{
                 disabled={
                   Boolean(depositStakeButton) ||
                   Boolean(zapStakeButton) ||
+                  isClosingOnly ||
                   depositButton.disabled
                 }
                 style={{ width: "100%" }}
