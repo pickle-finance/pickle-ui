@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 import { Connection } from "../../containers/Connection";
-import { Jazzicon } from "@ukstv/jazzicon-react";
+import Davatar from "@davatar/react";
 import { config } from "../../containers/config";
 
 const Container = styled.div`
@@ -75,8 +75,14 @@ export const MobileNetworkIndicator: FC = () => {
   return (
     <Container>
       <Left>
-        <div style={{ width: 16 }}>
-          {address && <Jazzicon address={address} />}
+        <div>
+          {address && (
+            <Davatar
+              size={16}
+              address={address}
+              generatedAvatarType="jazzicon"
+            />
+          )}
         </div>
         <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
       </Left>
