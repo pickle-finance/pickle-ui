@@ -266,6 +266,7 @@ export const JarGaugeCollapsible: FC<{
     depositTokenLink,
     apr,
   } = jarData;
+  const { pickleCore } = PickleCore.useContainer();
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
@@ -303,13 +304,33 @@ export const JarGaugeCollapsible: FC<{
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  );
+  const toLocaleNdigits = (val:number, digits:number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+  
+    });
+  }
+
+  const valueStr = toLocaleNdigits(usdPerPToken * (depositedNum + stakedNum), 2);
+  let valueStrExplained = undefined;
+  let userSharePendingStr = undefined;
+  if( (usdPerPToken * (depositedNum + stakedNum)) !== 0 ) {
+    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
+    const jarAddress = jarContract.address;
+    const jar = pickleCore?.assets.jars.find((x)=>x.contract.toLowerCase() === jarAddress.toLowerCase());
+    if( jar ) {
+      const totalPtokens = jar.details.tokenBalance;
+      if( totalPtokens ) {
+        const userShare = (depositedNum + stakedNum)/totalPtokens;
+        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+        if( pendingHarvest ) {
+          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+          userSharePendingStr = t("farms.pending") + ": $" + toLocaleNdigits(userShareHarvestUsd, 2);
+        }
+      }
+    }
+  }
 
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
@@ -403,7 +424,6 @@ export const JarGaugeCollapsible: FC<{
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { signer, address, blockNum } = Connection.useContainer();
-  const { pickleCore } = PickleCore.useContainer();
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
@@ -723,6 +743,10 @@ export const JarGaugeCollapsible: FC<{
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
               <Label>{t("balances.depositValue")}</Label>
+              {Boolean(valueStrExplained !== undefined) && (
+                <Label>{valueStrExplained}</Label>)}
+              {Boolean(userSharePendingStr !== undefined) && (
+                <Label>{userSharePendingStr}</Label>)}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
