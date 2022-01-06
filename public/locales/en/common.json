@@ -153,6 +153,7 @@
     "migratingTo": "Migrating to {{ target }}...",
     "migrationCompleted": "Migration completed! See your deposits <1>here</1>.",
     "noneActive": "There are no active Farms",
+    "pending": "Pending",
     "pickleEthSlp": "PICKLE/ETH SLP",
     "picklePower": "Pickle Power",
     "polygon": {
@@ -160,6 +161,7 @@
       "rewards": "Rewards are automatically harvested on staking and unstaking."
     },
     "poweredBy": "Powered by",
+    "ratio": "Ratio",
     "showInactive": "Show Inactive Farms",
     "showMyJars": "Show My Jars",
     "stake": "Stake",
