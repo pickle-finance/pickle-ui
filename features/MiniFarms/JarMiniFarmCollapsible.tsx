@@ -257,15 +257,6 @@ export const JarMiniFarmCollapsible: FC<{
   } = farmData;
 
   const stakedNum = parseFloat(formatEther(staked));
-
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  );
-
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
@@ -550,6 +541,34 @@ export const JarMiniFarmCollapsible: FC<{
 
   const tvlStr = getFormatString(tvlNum);
 
+  const toLocaleNdigits = (val:number, digits:number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+  
+    });
+  }
+
+  const valueStr = toLocaleNdigits(usdPerPToken * (depositedNum + stakedNum), 2);
+  let valueStrExplained = undefined;
+  let userSharePendingStr = undefined;
+  if( (usdPerPToken * (depositedNum + stakedNum)) !== 0 ) {
+    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
+    const jarAddress = jarContract.address;
+    const jar = pickleCore?.assets.jars.find((x)=>x.contract.toLowerCase() === jarAddress.toLowerCase());
+    if( jar ) {
+      const totalPtokens = jar.details.tokenBalance;
+      if( totalPtokens ) {
+        const userShare = (depositedNum + stakedNum)/totalPtokens;
+        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+        if( pendingHarvest ) {
+          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+          userSharePendingStr = t("farms.pending") + ": $" + toLocaleNdigits(userShareHarvestUsd, 2);
+        }
+      }
+    }
+  }
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -601,8 +620,11 @@ export const JarMiniFarmCollapsible: FC<{
           <Grid xs={24} sm={12} md={3} lg={3} style={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
-              <br />
               <Label>{t("balances.depositValue")}</Label>
+              {Boolean(valueStrExplained !== undefined) && (
+                <Label>{valueStrExplained}</Label>)}
+              {Boolean(userSharePendingStr !== undefined) && (
+                <Label>{userSharePendingStr}</Label>)}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
