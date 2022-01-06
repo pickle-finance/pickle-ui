@@ -22,6 +22,7 @@ export type Jar = {
   protocol: string;
   chain: ChainNetwork;
   apiKey: string;
+  isErc20: boolean;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -67,6 +68,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           protocol: x.protocol,
           chain: x.chain,
           apiKey: x.details.apiKey,
+          isErc20: x.depositToken.style?.erc20?? true, 
         };
 
         return z;

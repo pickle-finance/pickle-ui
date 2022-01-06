@@ -24,7 +24,9 @@ function useJars() {
   // Automatically update balance here
   useEffect(() => {
     if (jarsWithTVL) {
-      const wants = jarsWithTVL.map((x) => x.depositToken.address);
+      const wants = jarsWithTVL
+      .filter(x => x.isErc20)
+      .map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
       const addedTokens = [...wants, ...pTokens];
       if (chainName === NETWORK_NAMES.ETH)
