@@ -16,7 +16,9 @@ import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
+import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
 import { noFarms } from "util/constants";
+import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -113,10 +115,20 @@ export const MiniFarmList: FC = () => {
   const activeJars = !jarData
     ? []
     : jarData
-        .filter((jar) => isJarActive(jar.apiKey, pickleCore))
+        .filter(
+          (jar) =>
+            isJarActive(jar.apiKey, pickleCore) &&
+            jar.protocol != AssetProtocol.UNISWAP_V3,
+        )
         .sort((a, b) => b.totalAPY - a.totalAPY);
 
-  const protocolJars = activeJars.filter(jar => jar.protocol === selectedProtocol)
+  const uniV3Jars = jarData?.filter(
+    (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
+  );
+
+  const protocolJars = activeJars.filter(
+    (jar) => jar.protocol === selectedProtocol,
+  );
 
   const inactiveJars = !jarData
     ? []
@@ -127,7 +139,8 @@ export const MiniFarmList: FC = () => {
         );
         return (
           foundJar === undefined ||
-          isJarDisabled(foundJar.details.apiKey, pickleCore));
+          isJarDisabled(foundJar.details.apiKey, pickleCore)
+        );
       });
 
   return (
@@ -154,9 +167,7 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Grid.Container gap={1} justify="center">
         <Grid md={6}>
-          <Button onClick={() => setSelectedProtocol(null)}>
-            All
-          </Button>
+          <Button onClick={() => setSelectedProtocol(null)}>All</Button>
         </Grid>
         {protocolList.map((protocol) => {
           return (
@@ -170,6 +181,18 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
+        {uniV3Jars?.map((jar) => {
+          const farm = farmsWithAPY.find(
+            (x) =>
+              x.depositToken.address.toLowerCase() ===
+              jar.jarContract.address.toLowerCase(),
+          );
+          return (
+            <Grid xs={24} key={jar.name}>
+              <UniV3JarMiniFarmCollapsible jarData={jar} farmData={farm} />
+            </Grid>
+          );
+        })}
         {(selectedProtocol ? protocolJars : activeJars).map((jar) => {
           const farm = farmsWithAPY.find(
             (x) =>

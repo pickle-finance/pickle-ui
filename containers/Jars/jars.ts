@@ -82,7 +82,8 @@ export const isJarActive = (
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
   return checkJarEnablement(AssetEnablement.ENABLED, jarApiKey, pfcore) || 
-          checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
+          checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore) ||
+          checkJarEnablement(AssetEnablement.DEV, jarApiKey, pfcore); // REMOVE BEFORE MERGING
 };
 
 
