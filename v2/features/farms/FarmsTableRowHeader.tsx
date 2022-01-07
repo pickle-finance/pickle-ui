@@ -1,12 +1,9 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import {
-  JarDefinition,
-  AssetProtocol,
-} from "picklefinance-core/lib/model/PickleModelJson";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
-import { classNames, formatDollars, protocolIdToName } from "v2/utils";
+import { classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
@@ -51,7 +48,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             {jar.depositToken.name}
           </p>
           <p className="italic font-normal text-xs text-gray-light">
-            {protocolIdToName(jar.protocol as AssetProtocol)}
+            {jar.protocol}
           </p>
         </div>
       </RowCell>
