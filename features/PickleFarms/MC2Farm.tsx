@@ -10,11 +10,12 @@ import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { useSushiPairDayData } from "../../containers/Jars/useSushiPairDayData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useMC2 } from "../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { AssetProjectedApr, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 
 const PICKLE_PID = 3;
 
@@ -52,6 +53,7 @@ export const MC2Farm: FC = () => {
     pendingSushi,
     tvl,
   } = useMC2();
+  const { pickleCore } = PickleCore.useContainer();
 
   const balNum = parseFloat(formatEther(slpBalance));
   const balStr = formatString(balNum);
@@ -88,26 +90,26 @@ export const MC2Farm: FC = () => {
     disabled: false,
     text: t("farms.harvest"),
   });
-
-  // Get Jar APY (if its from a Jar)
-  let APYs: JarApy[] = [
-    { pickle: (apy?.pickle || 0) * 100 },
-    { sushi: (apy?.sushi || 0) * 100 },
-  ];
-
-  const { getSushiPairDayAPY } = useSushiPairDayData();
-
-  APYs = [...APYs, ...getSushiPairDayAPY(PICKLE_ETH_SLP)];
-
+  
+  let APYs =  [];
+  let totalAPY = 0;
+  const pickleEthSlp: PickleAsset | undefined = 
+    pickleCore?.assets.external.find((x) => 
+    x.depositToken.addr.toLowerCase() === PICKLE_ETH_SLP.toLowerCase());
+  if( pickleEthSlp !== undefined && pickleEthSlp.aprStats !== undefined && pickleEthSlp.aprStats.components !== undefined ) {
+    const aprStats: AssetProjectedApr = pickleEthSlp.aprStats;
+    totalAPY = aprStats.apy;
+    // hard code it to save time
+    const sushiYield = aprStats.components.find((x)=>x.name === "sushi");
+    const lpYield = aprStats.components.find((x)=>x.name === "lp");
+    APYs.push({sushi: sushiYield ? sushiYield.apr : 0});
+    APYs.push({lp: lpYield ? lpYield.apr : 0});
+  }
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
     return `${k}: ${v.toFixed(2)}%`;
   }).join(" + ");
-
-  const totalAPY = APYs.map((x) => {
-    return Object.values(x).reduce((acc, y) => acc + y, 0);
-  }).reduce((acc, x) => acc + x, 0);
 
   useEffect(() => {
     if (masterchefV2) {
