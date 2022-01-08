@@ -8,14 +8,23 @@ import type { Web3Provider } from "@ethersproject/providers";
 
 import SelectTransition from "v2/components/SelectTransition";
 import ConnectWalletButton from "./ConnectWalletButton";
+import { shortenAddress } from "v2/utils";
+import { useAppDispatch } from "v2/store";
+import { setIsManuallyDeactivated } from "v2/store/connection";
 
 const WalletToggleOptions: FC = () => {
+  const { deactivate } = useWeb3React<Web3Provider>();
   const { t } = useTranslation("common");
+  const dispatch = useAppDispatch();
 
   const options = [
     {
       name: t("v2.wallet.exit"),
       icon: LogoutIcon,
+      action: () => {
+        deactivate();
+        dispatch(setIsManuallyDeactivated());
+      },
     },
   ];
 
@@ -27,6 +36,7 @@ const WalletToggleOptions: FC = () => {
         return (
           <a
             key={option.name}
+            onClick={option.action}
             href="#"
             className="flex group hover:bg-black-lighter hover:text-green-light p-2 rounded-lg transition duration-300 ease-in-out"
           >
@@ -40,16 +50,16 @@ const WalletToggleOptions: FC = () => {
 };
 
 const WalletToggle: FC = () => {
-  const { active } = useWeb3React<Web3Provider>();
+  const { active, account } = useWeb3React<Web3Provider>();
 
-  if (!active) return <ConnectWalletButton />;
+  if (!active || !account) return <ConnectWalletButton />;
 
   return (
     <Popover className="relative">
       {() => (
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-white font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
-            <span className="block mr-2">0x19bd...849f</span>
+            <span className="block mr-2">{shortenAddress(account)}</span>
             <Davatar
               size={32}
               address="0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"

@@ -1,5 +1,7 @@
 export * from "./format";
 
+export const noop = () => {};
+
 /**
  * Tailwind
  */
