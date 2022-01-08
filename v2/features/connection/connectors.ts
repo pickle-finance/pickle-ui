@@ -1,6 +1,14 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+
+export interface Connector {
+  id: Connectors;
+  icon: any;
+  title: string;
+  connector: AbstractConnector;
+}
 
 export enum Connectors {
   Metamask,
