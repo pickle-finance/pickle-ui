@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import Image from "next/image";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { NoEthereumProviderError } from "@web3-react/injected-connector";
 import type { Web3Provider } from "@ethersproject/providers";
 
@@ -33,22 +33,31 @@ const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({
       alt={connector.title}
       title={connector.title}
     />
+    {/* This is centered given the absolute width of the wrapping div */}
     {isLoading && <Spinner className="absolute top-2 left-2 w-8 h-8" />}
   </div>
 );
 
 const ConnectorItem: FC<Props> = ({ connector }) => {
-  const { error } = useWeb3React<Web3Provider>();
+  const { error, activate } = useWeb3React<Web3Provider>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const disabled =
     connector.id === Connectors.Metamask &&
-    error instanceof NoEthereumProviderError;
+    (error instanceof NoEthereumProviderError ||
+      error instanceof UnsupportedChainIdError);
+
+  const handleClick = () => {
+    if (disabled) return;
+
+    activate(connector.connector);
+    setIsLoading(true);
+  };
 
   return (
     <a
       href="#"
-      onClick={() => setIsLoading(true)}
+      onClick={handleClick}
       aria-disabled={disabled}
       className={classNames(
         "flex group outline-none bg-black-lighter rounded-xl py-4 px-6 hover:bg-gray-dark transition-colors duration-300 ease-in-out",

@@ -15,3 +15,6 @@ export const formatPercentage = (value: number, precision = 0): string =>
     minimumFractionDigits: precision,
     maximumFractionDigits: precision,
   });
+
+export const shortenAddress = (address: string): string =>
+  `${address.substring(0, 5)}…${address.substring(address.length - 4)}`;

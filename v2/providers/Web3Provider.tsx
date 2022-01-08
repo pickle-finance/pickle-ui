@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
+import { useSelector } from "react-redux";
 import { Web3Provider } from "@ethersproject/providers";
 import { useRouter } from "next/router";
 
@@ -10,11 +11,15 @@ import {
   useInactiveListener,
 } from "v2/features/connection/hooks";
 import { injected } from "v2/features/connection/connectors";
+import { ConnectionSelectors } from "v2/store/connection";
 
 const getLibrary = (provider: any) => new Web3Provider(provider);
 
 const AppWeb3Provider: FC = ({ children }) => {
   const { active, error, activate, library } = useWeb3React<Web3Provider>();
+  const isManuallyDeactivated = useSelector(
+    ConnectionSelectors.selectIsManuallyDeactivated,
+  );
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -23,7 +28,7 @@ const AppWeb3Provider: FC = ({ children }) => {
 
   // After eagerly trying injected, if the network connect ever isn't active or in an error state, activate it
   useEffect(() => {
-    if (triedEager && !active && !error && !active) {
+    if (triedEager && !error && !active && !isManuallyDeactivated) {
       activate(injected);
     }
   }, [triedEager, error, active]);

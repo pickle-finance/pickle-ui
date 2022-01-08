@@ -1,11 +1,9 @@
 import { HTMLAttributes, FC, MouseEventHandler } from "react";
 
-import { classNames } from "../utils";
+import { classNames, noop } from "../utils";
 
 type Size = "small" | "normal" | "large";
 type Type = "primary" | "secondary" | "disabled";
-
-const noop = () => {};
 
 interface Props extends HTMLAttributes<HTMLElement> {
   onClick?: MouseEventHandler<HTMLAnchorElement>;
