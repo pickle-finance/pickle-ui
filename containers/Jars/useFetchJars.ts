@@ -22,6 +22,7 @@ export type Jar = {
   protocol: string;
   chain: ChainNetwork;
   apiKey: string;
+  supply: number;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -67,6 +68,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           protocol: x.protocol,
           chain: x.chain,
           apiKey: x.details.apiKey,
+          supply: x.details.totalSupply || 0
         };
 
         return z;

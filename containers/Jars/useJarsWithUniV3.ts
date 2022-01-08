@@ -19,6 +19,7 @@ export interface UniV3Token {
   jarAmount: number;
   approved: boolean;
   name: string;
+  decimals: number;
 }
 
 export interface JarV3 extends JarWithTVL {
@@ -64,28 +65,31 @@ export const useJarsWithUniV3 = (
         const token0 = found.depositToken.componentAddresses[0];
         const token1 = found.depositToken.componentAddresses[1];
 
-        const [bal0, bal1, proportion] = await Promise.all([
-          getBalance(token0),
-          getBalance(token1),
-          jarV3.getProportion(),
-        ]);
-
-        // Check token approvals
         const Token0 = erc20.attach(token0).connect(signer);
         const Token1 = erc20.attach(token1).connect(signer);
-        const allowance0 = await Token0.allowance(
-          address,
-          jar.contract.address,
-        );
-        const allowance1 = await Token1.allowance(
-          address,
-          jar.contract.address,
-        );
 
         const jarV3Contract = JarV3Factory.connect(
           jar.contract.address,
           signer,
         );
+
+        const [
+          bal0,
+          bal1,
+          allowance0,
+          allowance1,
+          token0Decimals,
+          token1Decimals,
+          proportion,
+        ] = await Promise.all([
+          getBalance(token0),
+          getBalance(token1),
+          Token0.allowance(address, jar.contract.address),
+          Token1.allowance(address, jar.contract.address),
+          Token0.decimals(),
+          Token1.decimals(),
+          jarV3.getProportion(),
+        ]);
 
         return {
           ...jar,
@@ -96,6 +100,7 @@ export const useJarsWithUniV3 = (
             jarAmount: found.depositToken.componentTokens[0],
             approved: allowance0.gt(ethers.constants.Zero),
             name: found.depositToken.components[0],
+            decimals: token0Decimals,
           },
           token1: {
             address: token1,
@@ -103,6 +108,7 @@ export const useJarsWithUniV3 = (
             jarAmount: found.depositToken.componentTokens[1],
             approved: allowance1.gt(ethers.constants.Zero),
             name: found.depositToken.components[1],
+            decimals: token1Decimals,
           },
           proportion,
         };

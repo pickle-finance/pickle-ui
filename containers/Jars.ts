@@ -25,7 +25,13 @@ function useJars() {
   // Automatically update balance here
   useEffect(() => {
     if (jarsWithTVL && chainName) {
-      const wants = jarsWithTVL.map((x) => x.depositToken.address);
+      const wants = jarsWithTVL
+        .map((x) =>
+          x.protocol === AssetProtocol.UNISWAP_V3
+            ? null
+            : x.depositToken.address,
+        )
+        .filter((x) => x);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
 
       const uniV3Jars = pickleCore?.assets.jars.filter(
@@ -36,7 +42,7 @@ function useJars() {
       const uniV3Underlying = uniV3Jars
         ?.map((x) => x.depositToken.componentAddresses)
         .flat();
-      const addedTokens = [...wants, ...pTokens, ];
+      const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
       if (chainName === NETWORK_NAMES.ETH)
         addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM);
       addTokens(addedTokens);

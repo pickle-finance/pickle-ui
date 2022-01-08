@@ -15,15 +15,11 @@ import {
 import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { useDill } from "../../containers/Dill";
-import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
-import { getProtocolData } from "../../util/api";
-import { jars, uncompoundAPY } from "../../util/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { Balances } from "containers/Balances";
 import { TokenInput } from "./TokenInput";
@@ -68,9 +64,6 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
-export const toNum = (bn: BigNumber) =>
-  parseFloat(formatEther(bn ? bn : BigNumber.from(0)));
-
 export const formatValue = (num: number) =>
   num.toLocaleString(undefined, {
     minimumFractionDigits: 0,
@@ -102,13 +95,12 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     balance,
     deposited,
     usdPerPToken,
-    APYs,
     depositTokenLink,
     token0,
     token1,
     proportion,
-    supply,
     tvlUSD,
+    supply,
   } = jarData;
 
   const { t } = useTranslation("common");
@@ -128,7 +120,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     balance: farmBalance,
     staked,
     harvestable,
-    harvestableMatic,
     depositTokenName: farmDepositTokenName,
     poolIndex,
     tooltipText,
@@ -278,7 +269,8 @@ export const UniV3JarMiniFarmCollapsible: FC<{
       }
     }
   };
-  const convertDecimals = (num: string) => ethers.utils.parseEther(num);
+  const convertDecimals = (num: string, decimals: number) =>
+    ethers.utils.parseUnits(num, decimals);
 
   useEffect(() => {
     if (jarData && !isExitBatch) {
@@ -392,7 +384,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                 width="15px"
                 style={{ marginLeft: 5 }}
               />
-              <Spacer y={1} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>
@@ -413,6 +404,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
         >
           <TokenInput
             token={token0}
+            otherToken={token1}
             isToken0={true}
             setDepositThisAmount={setDeposit0Amount}
             setDepositOtherAmount={setDeposit1Amount}
@@ -422,6 +414,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
           />
           <TokenInput
             token={token1}
+            otherToken={token0}
             isToken0={false}
             setDepositThisAmount={setDeposit1Amount}
             setDepositOtherAmount={setDeposit0Amount}
@@ -442,8 +435,8 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                         return jarContract
                           .connect(signer)
                           .deposit(
-                            convertDecimals(deposit0Amount),
-                            convertDecimals(deposit1Amount),
+                            convertDecimals(deposit0Amount, token0.decimals),
+                            convertDecimals(deposit1Amount, token1.decimals),
                           );
                       },
                       approval: false,
@@ -490,7 +483,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {`(${formatValue(
+                {!stakedNum && `(${formatValue(
                   (depositedNum * token0.jarAmount * ratio) / supply,
                 )} ${token0.name.toUpperCase()}, ${formatValue(
                   (depositedNum * token1.jarAmount * ratio) / supply,
@@ -582,7 +575,16 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} p{farmDepositTokenName}
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  {`(${formatValue(
+                    (stakedNum * token0.jarAmount * ratio) / supply,
+                  )} ${token0.name.toUpperCase()}, ${formatValue(
+                    (stakedNum * token1.jarAmount * ratio) / supply,
+                  )} ${token1.name.toUpperCase()})`}
                 </div>
                 <Link
                   color

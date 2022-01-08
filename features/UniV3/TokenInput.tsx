@@ -1,15 +1,16 @@
 import { BigNumber, ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatUnits, parseEther } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
 import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
-import { toNum, formatValue } from "./UniV3JarMiniFarmCollapsible";
+import { formatValue } from "./UniV3JarMiniFarmCollapsible";
 import { UniV3Token } from "containers/Jars/useJarsWithUniV3";
 import erc20 from "@studydefi/money-legos/erc20";
 import { Connection } from "containers/Connection";
 
 export const TokenInput: FC<{
   token: UniV3Token;
+  otherToken: UniV3Token;
   isToken0: boolean;
   setDepositThisAmount: any;
   setDepositOtherAmount: any;
@@ -18,6 +19,7 @@ export const TokenInput: FC<{
   jarAddr: string;
 }> = ({
   token,
+  otherToken,
   isToken0,
   setDepositThisAmount,
   setDepositOtherAmount,
@@ -30,19 +32,11 @@ export const TokenInput: FC<{
   const { t } = useTranslation("common");
   const balanceUsed = token?.walletBalance;
 
-  console.log({  token,
-    isToken0,
-    setDepositThisAmount,
-    setDepositOtherAmount,
-    proportion,
-    depositAmount,
-    jarAddr,})
-
-  return (
+return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
-          {t("balances.balance")}: {formatValue(toNum(balanceUsed))}{" "}
+          {t("balances.balance")}: {formatValue(parseFloat(formatUnits(balanceUsed, token.decimals)))}{" "}
           {token.name.toUpperCase()}
         </div>
         <Link
@@ -50,12 +44,13 @@ export const TokenInput: FC<{
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            setDepositThisAmount(formatEther(balanceUsed));
+            setDepositThisAmount(formatUnits(balanceUsed, token.decimals));
             setDepositOtherAmount(
-              formatEther(
+              formatUnits(
                 isToken0
                   ? balanceUsed.mul(proportion).div(parseEther("1"))
                   : balanceUsed.mul(parseEther("1")).div(proportion),
+                otherToken.decimals,
               ),
             );
           }}
@@ -69,15 +64,15 @@ export const TokenInput: FC<{
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
               setDepositOtherAmount(
-                formatEther(
+                formatUnits(
                   isToken0
-                    ? parseEther(e.target.value)
+                  ? parseEther(e.target.value)
                         .mul(proportion)
                         .div(parseEther("1"))
                     : parseEther(e.target.value)
                         .mul(parseEther("1"))
                         .div(proportion),
-                ),
+                ), otherToken.decimals
               );
             }}
             value={depositAmount}
@@ -87,10 +82,7 @@ export const TokenInput: FC<{
                 depositTokenAddr={token.address}
                 jarAddr={jarAddr}
                 signer={signer}
-                approved={
-                  token.approved ||
-                  userApproved
-                }
+                approved={token.approved || userApproved}
                 setUserApproved={setUserApproved}
               />
             }
