@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { NoEthereumProviderError } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import type { Web3Provider } from "@ethersproject/providers";
 
 import { Connectors, Connector } from "./connectors";
@@ -47,11 +48,21 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
     (error instanceof NoEthereumProviderError ||
       error instanceof UnsupportedChainIdError);
 
+  // Manually reset WalletConnect connector if the user previously closed the
+  // connection modal. See:
+  // https://github.com/Uniswap/interface/blob/8975086a691ccac35fc76af21e3b2e6f39469fe5/src/components/WalletModal/index.tsx#L183-L186
+  if (
+    connector.connector instanceof WalletConnectConnector &&
+    connector.connector.walletConnectProvider?.wc?.uri
+  ) {
+    connector.connector.walletConnectProvider = undefined;
+  }
+
   const handleClick = () => {
     if (disabled) return;
 
-    activate(connector.connector);
     setIsLoading(true);
+    activate(connector.connector).finally(() => setIsLoading(false));
   };
 
   return (
