@@ -114,6 +114,7 @@ export const DesktopNetworkIndicator: FC = () => {
     chainId,
     switchChain,
     chainName,
+    provider,
   } = Connection.useContainer();
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
@@ -243,6 +244,7 @@ export const DesktopNetworkIndicator: FC = () => {
                 size={16}
                 address={address}
                 generatedAvatarType="jazzicon"
+                provider={provider}
               />
             )}
           </div>
