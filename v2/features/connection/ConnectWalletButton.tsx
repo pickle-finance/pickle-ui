@@ -1,22 +1,26 @@
-import { FC, useState } from "react";
+import { FC } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 
 import Button from "v2/components/Button";
 import ConnectWalletModal from "./ConnectWalletModal";
+import { ConnectionSelectors, setIsModalOpen } from "v2/store/connection";
+import { useAppDispatch } from "v2/store";
 
 const ConnectWalletButton: FC = () => {
   const { t } = useTranslation("common");
-  let [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const isModalOpen = useSelector(ConnectionSelectors.selectIsModalOpen);
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = () => dispatch(setIsModalOpen(true));
+  const closeModal = () => dispatch(setIsModalOpen(false));
 
   return (
     <>
       <Button size="normal" onClick={openModal}>
         {t("v2.connection.connectWallet")}
       </Button>
-      <ConnectWalletModal isOpen={isOpen} closeModal={closeModal} />
+      <ConnectWalletModal isOpen={isModalOpen} closeModal={closeModal} />
     </>
   );
 };

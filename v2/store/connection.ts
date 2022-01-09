@@ -7,12 +7,14 @@ interface ConnectionState {
   blockNumber: number | undefined;
   network: ChainNetwork | undefined;
   isManuallyDeactivated: boolean;
+  isModalOpen: boolean;
 }
 
 const initialState: ConnectionState = {
   blockNumber: undefined,
   network: undefined,
   isManuallyDeactivated: false,
+  isModalOpen: false,
 };
 
 const connectionSlice = createSlice({
@@ -25,12 +27,16 @@ const connectionSlice = createSlice({
     setIsManuallyDeactivated: (state) => {
       state.isManuallyDeactivated = true;
     },
+    setIsModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isModalOpen = action.payload;
+    },
   },
 });
 
 export const {
   updateBlockNumber,
   setIsManuallyDeactivated,
+  setIsModalOpen,
 } = connectionSlice.actions;
 
 /**
@@ -39,10 +45,12 @@ export const {
 const selectBlockNumber = (state: RootState) => state.connection.blockNumber;
 const selectIsManuallyDeactivated = (state: RootState) =>
   state.connection.isManuallyDeactivated;
+const selectIsModalOpen = (state: RootState) => state.connection.isModalOpen;
 
 export const ConnectionSelectors = {
   selectBlockNumber,
   selectIsManuallyDeactivated,
+  selectIsModalOpen,
 };
 
 export default connectionSlice.reducer;

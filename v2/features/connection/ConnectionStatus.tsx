@@ -10,6 +10,7 @@ import { FireIcon } from "@heroicons/react/solid";
 import Link from "v2/components/Link";
 import { injected } from "v2/features/connection/connectors";
 import { networks } from "./networks";
+import { resetWalletConnectState } from "./utils";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (
@@ -25,7 +26,9 @@ const isRelevantError = (error: Error | undefined): boolean => {
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
-  const { activate } = useWeb3React<Web3Provider>();
+  const { activate, connector } = useWeb3React<Web3Provider>();
+
+  resetWalletConnectState(connector);
 
   if (error instanceof UnsupportedChainIdError) {
     return (
@@ -70,7 +73,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
         <Link
           href="#"
           className="text-lg"
-          onClick={() => activate(injected)}
+          onClick={() => activate(connector || injected)}
           primary
         >
           authorize
