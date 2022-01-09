@@ -211,6 +211,63 @@ export const FARM_LP_TO_ICON: {
   "0xc773eF9aE52fF43031DD2Db439966ef4cb55bd79": (
     <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
   ),
+  "0xE0df9e3a0595989D6Ada23AF1C0df876e8742941": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/auroranear.png"} /> // nearJar 5a Auroraswap AURORA/NEAR
+  ),
+  "0xf4A06eBe93847f2D822fAc255eB01416545709C6": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/avax.png"} /> // nearJar 5b Auroraswap AVAX/NEAR
+  ),
+  "0xEc84AF3108c76bFBbf9652A2F39F7dC7005D70a4": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/aurora.png"} /> // nearJar 5d Auroraswap BRL/AURORA
+  ),
+  "0x25a7f48587DD37eD194d1e6DCF3b2DDC48D83cAf": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ethereum.png"} /> // nearJar 5e Auroraswap BRL/ETH
+  ),
+  "0x3d1E5f81101de37463775a5Be13C2eEe066a0D63": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/near.png"} /> // nearJar 5f AuroraSwap BRL/NEAR
+  ),
+  "0x544c6bab8Fd668B6888D9a1c0bb1BE0c9009fce0": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/busd.png"} /> // nearJar 5g AuroraSwap BUSD/NEAR
+  ),
+  "0x6bcd59972Af5b6C27e7Df3FA49787B5Fb578E083": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ethbtc.png"} /> // nearJar 5h AuroraSwap ETH/BTC
+  ),
+  "0x506f103Dbef428426A8ABD31B3F7c7AbfeB5F681": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/matic.png"} /> // nearJar 5i AuroraSwap MATIC/NEAR
+  ),
+  "0xA80751447B89dE8601bacB876Ff0096E2FF77c71": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearwbtc.png"} /> // nearJar 5j AuroraSwap NEAR/BTC
+  ),
+  "0x8Bc0684beF765B1b0dAf266A82c9f26699Ee0d2A": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/neareth.png"} /> // nearJar 5k AuroraSwap NEAR/ETH
+  ),
+  "0x5583D1E47884ba3bbe7E66B564782151114f5ddE": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/luna.webp"} /> // nearJar 5l AuroraSwap NEAR/LUNA
+  ),
+  "0xcd71713171fe53Fc1D9EF4C034052669Eb978c20": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearusdc.png"} /> // nearJar 5m AuroraSwap NEAR/USDC
+  ),
+  "0xD06Bfe30e9AD42Bb92bab8930300BBE98BBe12B7": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearusdt.png"} /> // nearJar 5n AuroraSwap NEAR/USDT
+  ),
+  "0x4F5bd36925e1a141Ebb34f94Be00bdc4A3fc7034": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/usdcusdt.png"} /> // nearJar 5o AuroraSwap USDT/USDC
+  ),
+  "0xD701e3E627f30458ee24dBeeDf11BDAA20B96dAe": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ust.png"} /> // nearJar 5p AuroaSwap UST/NEAR
+  ),
+  "0x820980948220115Ccc64C66Ef71E65c2b7239664": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdt.png"} /> // trisolaris TRI-USDT 
+  ),
+  "0x59384A541cEF5f604d39C5AaF0CD98170EEb15D2": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/luna.webp"} /> // trisolaris NEAR-LUNA 
+  ),
+  "0xC7201D4BA106F524AafBB93aBeac648016E17A06": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/ust.png"} /> // trisolaris UST-NEAR
+  ),
+  "0xf3EbeC4D691Bc5Ea7B0158228feCfC3de2aE3910": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/wanna.png"} /> // wannaswap WANNA-AURORA
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{
