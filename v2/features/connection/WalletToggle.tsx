@@ -50,9 +50,9 @@ const WalletToggleOptions: FC = () => {
 };
 
 const WalletToggle: FC = () => {
-  const { active, account } = useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
 
-  if (!active || !account) return <ConnectWalletButton />;
+  if (!account) return <ConnectWalletButton />;
 
   return (
     <Popover className="relative">
@@ -62,8 +62,9 @@ const WalletToggle: FC = () => {
             <span className="block mr-2">{shortenAddress(account)}</span>
             <Davatar
               size={32}
-              address="0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
+              address={account}
               generatedAvatarType="jazzicon"
+              provider={library}
             />
           </Popover.Button>
 

@@ -27,6 +27,7 @@ const AppWeb3Provider: FC = ({ children }) => {
   const triedEager = useEagerConnect();
 
   // After eagerly trying injected, if the network connect ever isn't active or in an error state, activate it
+  // but only if the user hasn't manually deactivated the connection (clicked Exit)
   useEffect(() => {
     if (triedEager && !error && !active && !isManuallyDeactivated) {
       activate(injected);
