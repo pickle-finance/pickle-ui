@@ -48,8 +48,16 @@ return (
             setDepositOtherAmount(
               formatUnits(
                 isToken0
-                  ? balanceUsed.mul(proportion).div(parseEther("1"))
-                  : balanceUsed.mul(parseEther("1")).div(proportion),
+                  ? balanceUsed
+                       .mul(proportion)
+                       .mul(BigNumber.from(10).pow(token.decimals))
+                       .div(BigNumber.from(10).pow(otherToken.decimals))
+                  : balanceUsed
+                       .mul(parseEther("1"))
+                       .mul(parseEther("1"))
+                       .mul(BigNumber.from(10).pow(token.decimals))
+                       .div(BigNumber.from(10).pow(otherToken.decimals))
+                       .div(proportion),
                 otherToken.decimals,
               ),
             );
