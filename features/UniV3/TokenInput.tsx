@@ -66,13 +66,17 @@ return (
               setDepositOtherAmount(
                 formatUnits(
                   isToken0
-                  ? parseEther(e.target.value)
+                  ? BigNumber.from(e.target.value)
                         .mul(proportion)
-                        .div(parseEther("1"))
-                    : parseEther(e.target.value)
+                        .mul(BigNumber.from(10).pow(token.decimals))
+                        .div(BigNumber.from(10).pow(otherToken.decimals))
+                    : BigNumber.from(e.target.value)
                         .mul(parseEther("1"))
-                        .div(proportion),
-                ), otherToken.decimals
+                        .mul(parseEther("1"))
+                        .mul(BigNumber.from(10).pow(token.decimals))
+                        .div(BigNumber.from(10).pow(otherToken.decimals))
+                        .div(proportion)
+                  ), otherToken.decimals
               );
             }}
             value={depositAmount}
