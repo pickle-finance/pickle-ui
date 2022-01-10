@@ -12,7 +12,9 @@ const apiHost = process.env.apiHost;
 export const fetchCore = createAsyncThunk<PickleModelJson>(
   "core/fetch",
   async () => {
+    console.log("Core test 1");
     const response = await fetch(`${apiHost}/protocol/pfcore`);
+    console.log("Core test 2");
     return await response.json();
   },
 );
