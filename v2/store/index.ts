@@ -3,11 +3,13 @@ import { useDispatch } from "react-redux";
 
 import coreReducer from "./core";
 import connectionReducer from "./connection";
+import userReducer from "./user";
 
 export const store = configureStore({
   reducer: {
     core: coreReducer,
     connection: connectionReducer,
+    user: userReducer,
   },
 });
 

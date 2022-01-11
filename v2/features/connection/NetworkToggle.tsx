@@ -56,7 +56,7 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
 
 const NetworkToggle: FC = () => {
   const { chainId, active, library } = useWeb3React();
-  const allCore = useSelector(CoreSelectors.selectCoreComplete);
+  const allCore = useSelector(CoreSelectors.selectCore);
 
   if (!active) return null;
 
