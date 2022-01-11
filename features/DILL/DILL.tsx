@@ -13,6 +13,8 @@ export const DillFeature: FC = () => {
 
   return (
     <>
+      <h1>gjgj</h1>
+
       <Spacer />
       <Balances dillStats={dillStats} />
       <Spacer />

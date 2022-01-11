@@ -9,3 +9,19 @@
     rgb(16, 31, 34) 100%
   );
 }
+
+.dill__value {
+  margin-bottom: -7px !important;
+  font-size: 1.5rem;
+}
+
+.dill__title {
+  margin-bottom: 0 !important;
+  color: #b3b8b9;
+}
+
+.read_more {
+  color: tomato;
+  font-weight: bold;
+  cursor: pointer;
+}
