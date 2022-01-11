@@ -291,10 +291,10 @@
     "connection": {
       "coinbase": "Coinbase",
       "connectWallet": "Connect wallet",
-      "errorTitle": "Uh oh, we're in a pickle here",
+      "errorTitle": "Uh oh, we're in a pickle here!",
       "metamask": "Metamask",
       "unauthorized": "Please <1>authorize</1> Pickle Finance to access your Ethereum account.",
-      "unsupportedNetwork": "You're connected to an unsupported network. Please switch to one of the following:",
+      "unsupportedNetwork": "You're connected to an unsupported network. Please switch to one of the following networks using your wallet: ",
       "walletConnect": "Wallet Connect"
     },
     "dashboard": {

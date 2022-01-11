@@ -12,6 +12,9 @@ import { useWeb3React } from "@web3-react/core";
 import { classNames } from "v2/utils";
 import SelectTransition from "v2/components/SelectTransition";
 import { networks } from "./networks";
+import { switchChain } from "./ConnectionStatus";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
 
 interface NetworkToggleLabelProps {}
 
@@ -52,7 +55,8 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
 };
 
 const NetworkToggle: FC = () => {
-  const { chainId, active } = useWeb3React();
+  const { chainId, active, library } = useWeb3React();
+  const allCore = useSelector(CoreSelectors.selectCoreComplete);
 
   if (!active) return null;
 
@@ -94,7 +98,10 @@ const NetworkToggle: FC = () => {
                             priority
                           />
                         </div>
-                        <span className="text-white group-hover:text-green-light text-sm font-bold pr-4">
+                        <span 
+                          className="text-white group-hover:text-green-light text-sm font-bold pr-4"
+                          onClick={() => {switchChain(library, network.chainId, allCore)}}
+                        >
                           {network.name}
                         </span>
                       </div>
