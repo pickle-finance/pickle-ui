@@ -11,8 +11,6 @@ import Link from "v2/components/Link";
 import { injected } from "v2/features/connection/connectors";
 import { networks } from "./networks";
 import { resetWalletConnectState } from "./utils";
-import { CoreSelectors } from "v2/store/core";
-import { useSelector } from "react-redux";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain } from "picklefinance-core/lib/chain/Chains";
 
@@ -83,8 +81,7 @@ export const switchChain = async (
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
-  const { activate, connector, library } = useWeb3React<Web3Provider>();
-  const allCore = useSelector(CoreSelectors.selectCoreComplete);
+  const { activate, connector } = useWeb3React<Web3Provider>();
 
   resetWalletConnectState(connector);
 
@@ -96,7 +93,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
           {networks.map((network) => (
             <div
               key={network.name}
-              className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2 flex"
+              className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2"
             >
               <div className="w-5 h-5 mr-3">
                 <Image

@@ -9,6 +9,7 @@ import TopNavbar from "v2/components/TopNavbar";
 import { store } from "v2/store";
 import CoreProvider from "v2/providers/CoreProvider";
 import Web3Provider from "v2/providers/Web3Provider";
+import UserModelProvider from "v2/providers/UserModelProvider";
 import ConnectionStatus from "v2/features/connection/ConnectionStatus";
 import BlockNumber from "v2/features/connection/BlockNumber";
 
@@ -25,20 +26,20 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
 
   return (
     <Provider store={store}>
-      <CoreProvider>
-        <Web3Provider>
-          <NavbarMobile />
-          <LeftNavbar />
-          <main className="sm:pl-64">
-            <div className="px-4 py-2 sm:px-10 sm:py-10 text-white">
-              <TopNavbar PageTitle={PageTitle} />
-              <ConnectionStatus />
-              <Component {...pageProps} />
-              <BlockNumber />
-            </div>
-          </main>
-        </Web3Provider>
-      </CoreProvider>
+      <Web3Provider>
+        <NavbarMobile />
+        <LeftNavbar />
+        <main className="sm:pl-64">
+          <div className="px-4 py-2 sm:px-10 sm:py-10 text-white">
+            <TopNavbar PageTitle={PageTitle} />
+            <ConnectionStatus />
+            <Component {...pageProps} />
+            <BlockNumber />
+          </div>
+        </main>
+        <CoreProvider />
+        <UserModelProvider />
+      </Web3Provider>
     </Provider>
   );
 };
