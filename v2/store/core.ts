@@ -51,10 +51,12 @@ const selectEnabledJars = (state: RootState) => {
 };
 
 const selectLoadingState = (state: RootState) => state.core.loading;
+const selectCoreComplete = (state: RootState) => state.core.data;
 
 export const CoreSelectors = {
   selectEnabledJars,
   selectLoadingState,
+  selectCoreComplete,
 };
 
 export default coreSlice.reducer;

@@ -11,6 +11,10 @@ import Link from "v2/components/Link";
 import { injected } from "v2/features/connection/connectors";
 import { networks } from "./networks";
 import { resetWalletConnectState } from "./utils";
+import { CoreSelectors } from "v2/store/core";
+import { useSelector } from "react-redux";
+import { PickleModelJson } from "picklefinance-core";
+import { RawChain } from "picklefinance-core/lib/chain/Chains";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (
@@ -24,9 +28,55 @@ const isRelevantError = (error: Error | undefined): boolean => {
   return false;
 };
 
+const chainToChainParams = (chain: RawChain | undefined) => {
+  if( !chain )
+    return undefined;
+  return {
+    chainId: "0x" + chain.chainId.toString(16),
+    chainName: chain.networkVisible,
+    nativeCurrency: {
+      name: chain.gasToken.toUpperCase(),
+      symbol: chain.gasToken.toUpperCase(),
+      decimals: 18,
+    },
+    rpcUrls: chain.rpcs,
+    blockExplorerUrls: [chain.explorer],
+  }
+}
+
+export const switchChain = async (library: Web3Provider | undefined, chainId: number, 
+  pfcore: PickleModelJson.PickleModelJson | undefined): Promise<boolean> => {
+  console.log(library === undefined);
+  if( pfcore && library && library.provider !== undefined && library.provider.request !== undefined) {
+    let method: string;
+    let params: any[];
+    if (chainId === 1) {
+      method = "wallet_switchEthereumChain";
+      params = [{ chainId: "0x1" }];
+    } else {
+      method = "wallet_addEthereumChain";
+      const param = chainToChainParams(pfcore.chains.find((x)=>x.chainId === chainId));
+      if (param === undefined || param === null) return false;
+      params = [param];
+    }
+    try {
+      await library.provider.request({
+        method: method,
+        params: params,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }  
+  }
+  return false;
+};
+
+
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
-  const { activate, connector } = useWeb3React<Web3Provider>();
+  const { activate, connector, library } = useWeb3React<Web3Provider>();
+  const allCore = useSelector(CoreSelectors.selectCoreComplete);
 
   resetWalletConnectState(connector);
 
@@ -36,12 +86,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
         <p>{t("v2.connection.unsupportedNetwork")}</p>
         <div className="mt-4">
           {networks.map((network) => (
-            <a
-              key={network.name}
-              href="#"
-              className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2"
-            >
-              <div className="flex">
+              <div key={network.name} className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2 flex">
                 <div className="w-5 h-5 mr-3">
                   <Image
                     src={network.icon}
@@ -58,7 +103,6 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                   {network.name}
                 </span>
               </div>
-            </a>
           ))}
         </div>
       </>
