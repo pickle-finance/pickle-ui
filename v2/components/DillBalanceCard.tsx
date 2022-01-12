@@ -10,10 +10,12 @@ const DillBalanceCard: FC = () => {
   const { t } = useTranslation("common");
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   let val = "0.00";
-  // TODO this specific logic of dividing by 1e18 but then getting 3 decimals seems common. 
+  // TODO this specific logic of dividing by 1e18 but then getting 3 decimals seems common.
   // Might want to extract to a utility
-  if( userModel && userModel.dill && userModel.dill.balance) {
-    val = (BigNumber.from(userModel.dill.balance).div(1e10).div(1e5).toNumber()/1e3).toString();
+  if (userModel && userModel.dill && userModel.dill.balance) {
+    val = (
+      BigNumber.from(userModel.dill.balance).div(1e10).div(1e5).toNumber() / 1e3
+    ).toString();
   }
 
   return (
