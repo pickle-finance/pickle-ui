@@ -44,12 +44,10 @@ const AppWeb3Provider: FC = ({ children }) => {
       library.on("block", (blockNumber: number) =>
         dispatch(updateBlockNumber(blockNumber)),
       );
-
-      // Do we need to reload entire page every time wallet chain is changed?
-      // Page refresh is abrupt and upsetting, best to avoid if possible.
-      // if (ethereum?.on) {
-      //   ethereum.on("chainChanged", router.reload);
-      // }
+      
+      if (ethereum?.on) {
+        ethereum.on("chainChanged", router.reload);
+      }
 
       return () => {
         if (ethereum?.removeListener) {
