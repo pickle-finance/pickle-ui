@@ -13,10 +13,7 @@ import { NETWORK_NAMES } from "./config";
 function useJars() {
   const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
-  const { jarsWithAPY } = useJarsWithAPYPFCore(
-    chainName,
-    rawJars,
-  );
+  const { jarsWithAPY } = useJarsWithAPYPFCore(chainName, rawJars);
   const { jarsWithTVL } = useJarWithTVL(jarsWithAPY);
 
   const { addTokens } = Balances.useContainer();
@@ -25,8 +22,8 @@ function useJars() {
   useEffect(() => {
     if (jarsWithTVL) {
       const wants = jarsWithTVL
-      .filter(x => x.isErc20)
-      .map((x) => x.depositToken.address);
+        .filter((x) => x.isErc20)
+        .map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
       const addedTokens = [...wants, ...pTokens];
       if (chainName === NETWORK_NAMES.ETH)

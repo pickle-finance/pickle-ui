@@ -116,7 +116,9 @@ export const MiniFarmList: FC = () => {
         .filter((jar) => isJarActive(jar.apiKey, pickleCore))
         .sort((a, b) => b.totalAPY - a.totalAPY);
 
-  const protocolJars = activeJars.filter(jar => jar.protocol === selectedProtocol)
+  const protocolJars = activeJars.filter(
+    (jar) => jar.protocol === selectedProtocol,
+  );
 
   const inactiveJars = !jarData
     ? []
@@ -127,7 +129,8 @@ export const MiniFarmList: FC = () => {
         );
         return (
           foundJar === undefined ||
-          isJarDisabled(foundJar.details.apiKey, pickleCore));
+          isJarDisabled(foundJar.details.apiKey, pickleCore)
+        );
       });
 
   return (
@@ -154,9 +157,7 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Grid.Container gap={1} justify="center">
         <Grid md={6}>
-          <Button onClick={() => setSelectedProtocol(null)}>
-            All
-          </Button>
+          <Button onClick={() => setSelectedProtocol(null)}>All</Button>
         </Grid>
         {protocolList.map((protocol) => {
           return (

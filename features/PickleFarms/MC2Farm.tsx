@@ -15,7 +15,10 @@ import { useMC2 } from "../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { AssetProjectedApr, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  AssetProjectedApr,
+  PickleAsset,
+} from "picklefinance-core/lib/model/PickleModelJson";
 
 const PICKLE_PID = 3;
 
@@ -90,20 +93,26 @@ export const MC2Farm: FC = () => {
     disabled: false,
     text: t("farms.harvest"),
   });
-  
-  let APYs =  [];
+
+  let APYs = [];
   let totalAPY = 0;
-  const pickleEthSlp: PickleAsset | undefined = 
-    pickleCore?.assets.external.find((x) => 
-    x.depositToken.addr.toLowerCase() === PICKLE_ETH_SLP.toLowerCase());
-  if( pickleEthSlp !== undefined && pickleEthSlp.aprStats !== undefined && pickleEthSlp.aprStats.components !== undefined ) {
+  const pickleEthSlp:
+    | PickleAsset
+    | undefined = pickleCore?.assets.external.find(
+    (x) => x.depositToken.addr.toLowerCase() === PICKLE_ETH_SLP.toLowerCase(),
+  );
+  if (
+    pickleEthSlp !== undefined &&
+    pickleEthSlp.aprStats !== undefined &&
+    pickleEthSlp.aprStats.components !== undefined
+  ) {
     const aprStats: AssetProjectedApr = pickleEthSlp.aprStats;
     totalAPY = aprStats.apy;
     // hard code it to save time
-    const sushiYield = aprStats.components.find((x)=>x.name === "sushi");
-    const lpYield = aprStats.components.find((x)=>x.name === "lp");
-    APYs.push({sushi: sushiYield ? sushiYield.apr : 0});
-    APYs.push({lp: lpYield ? lpYield.apr : 0});
+    const sushiYield = aprStats.components.find((x) => x.name === "sushi");
+    const lpYield = aprStats.components.find((x) => x.name === "lp");
+    APYs.push({ sushi: sushiYield ? sushiYield.apr : 0 });
+    APYs.push({ lp: lpYield ? lpYield.apr : 0 });
   }
   const tooltipText = APYs.map((x) => {
     const k = Object.keys(x)[0];

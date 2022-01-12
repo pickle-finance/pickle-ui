@@ -98,9 +98,11 @@ const NetworkToggle: FC = () => {
                             priority
                           />
                         </div>
-                        <span 
+                        <span
                           className="text-white group-hover:text-green-light text-sm font-bold pr-4"
-                          onClick={() => {switchChain(library, network.chainId, allCore)}}
+                          onClick={() => {
+                            switchChain(library, network.chainId, allCore);
+                          }}
                         >
                           {network.name}
                         </span>

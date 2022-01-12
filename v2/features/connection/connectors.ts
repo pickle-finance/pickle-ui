@@ -29,7 +29,7 @@ const RPC_URLS = {
 };
 
 export const injected = new InjectedConnector({
-  supportedChainIds: Chains.list().map((x)=>Chains.get(x).id),
+  supportedChainIds: Chains.list().map((x) => Chains.get(x).id),
 });
 
 export const walletconnect = new WalletConnectConnector({

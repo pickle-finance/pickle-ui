@@ -238,7 +238,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0x3A283D9c08E8b55966afb64C515f5143cf907611": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/weth.png"} />
-  )
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -304,29 +304,36 @@ export const JarGaugeCollapsible: FC<{
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
-  const toLocaleNdigits = (val:number, digits:number) => {
+  const toLocaleNdigits = (val: number, digits: number) => {
     return val.toLocaleString(undefined, {
       minimumFractionDigits: digits,
       maximumFractionDigits: digits,
-  
     });
-  }
+  };
 
-  const valueStr = toLocaleNdigits(usdPerPToken * (depositedNum + stakedNum), 2);
+  const valueStr = toLocaleNdigits(
+    usdPerPToken * (depositedNum + stakedNum),
+    2,
+  );
   let valueStrExplained = undefined;
   let userSharePendingStr = undefined;
-  if( (usdPerPToken * (depositedNum + stakedNum)) !== 0 ) {
+  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
     valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
     const jarAddress = jarContract.address;
-    const jar = pickleCore?.assets.jars.find((x)=>x.contract.toLowerCase() === jarAddress.toLowerCase());
-    if( jar ) {
+    const jar = pickleCore?.assets.jars.find(
+      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
+    );
+    if (jar) {
       const totalPtokens = jar.details.tokenBalance;
-      if( totalPtokens ) {
-        const userShare = (depositedNum + stakedNum)/totalPtokens;
+      if (totalPtokens) {
+        const userShare = (depositedNum + stakedNum) / totalPtokens;
         const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
-        if( pendingHarvest ) {
+        if (pendingHarvest) {
           const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
-          userSharePendingStr = t("farms.pending") + ": $" + toLocaleNdigits(userShareHarvestUsd, 2);
+          userSharePendingStr =
+            t("farms.pending") +
+            ": $" +
+            toLocaleNdigits(userShareHarvestUsd, 2);
         }
       }
     }
@@ -348,7 +355,7 @@ export const JarGaugeCollapsible: FC<{
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
 
   const realAPY = totalAPY + pickleAPY;
-  
+
   let difference = 0;
   if (APYs !== undefined) {
     const totalAPY1: number = APYs?.map((x) => {
@@ -366,7 +373,7 @@ export const JarGaugeCollapsible: FC<{
     difference = totalAPY1 - totalAPR1;
   }
 
-  let apyRangeTooltipText = 'APY Range Unavailable.';
+  let apyRangeTooltipText = "APY Range Unavailable.";
   if (APYs !== undefined) {
     apyRangeTooltipText = [
       `${t("farms.baseAPRs")}:`,
@@ -698,10 +705,11 @@ export const JarGaugeCollapsible: FC<{
   const tvlStr = getFormatString(tvlNum);
   const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
     (x) =>
-      x.depositToken.addr.toLowerCase() ===
-      depositToken.address.toLowerCase()
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   );
-  const isClosingOnly = foundJar ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore) : false;
+  const isClosingOnly = foundJar
+    ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
+    : false;
 
   return (
     <Collapse
@@ -744,9 +752,11 @@ export const JarGaugeCollapsible: FC<{
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
               <Label>{t("balances.depositValue")}</Label>
               {Boolean(valueStrExplained !== undefined) && (
-                <Label>{valueStrExplained}</Label>)}
+                <Label>{valueStrExplained}</Label>
+              )}
               {Boolean(userSharePendingStr !== undefined) && (
-                <Label>{userSharePendingStr}</Label>)}
+                <Label>{userSharePendingStr}</Label>
+              )}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
@@ -903,7 +913,9 @@ export const JarGaugeCollapsible: FC<{
                     handleZap();
                   }
                 }}
-                disabled={depositButton.disabled || isClosingOnly || zapOnlyButton}
+                disabled={
+                  depositButton.disabled || isClosingOnly || zapOnlyButton
+                }
                 style={{ width: "100%" }}
               >
                 {isZap
@@ -917,7 +929,6 @@ export const JarGaugeCollapsible: FC<{
               {isClosingOnly ? (
                 <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
               ) : null}
-
             </Grid>
             <Grid xs={24} md={12}>
               <Button
