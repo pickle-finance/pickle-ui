@@ -1,20 +1,19 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
+import { Chains } from "picklefinance-core";
 const POLLING_INTERVAL = 12000;
-const RPC_URLS = {
-  1: process.env.infura,
-  66: "https://exchainrpc.okex.org",
-  137: "https://rpc-mumbai.matic.today",
-  42161: "https://arb1.arbitrum.io/rpc",
-  1285: "https://rpc.moonriver.moonbeam.network",
-  25: "https://evm-cronos.crypto.org",
-  1313161554: "https://mainnet.aurora.dev",
-};
+const RPC_URLS = Chains.list().map((x)=> {
+  const id = Chains.get(x).id;
+  const val = Chains.get(x).rpcProviderUrls[0];
+  const ret:any = {};
+  ret[id] = val;
+  return ret;
+}).reduce((prev,current) => {return {...prev, ...current}});
+RPC_URLS[1] = process.env.infura;
 
-// REMEMBER TO UPDATE THIS. LARRY FORGETS IT EVERYTIME.
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 66, 137, 42161, 1285, 25, 1313161554],
+  supportedChainIds: Chains.list().map((x)=>Chains.get(x).id),
 });
 
 export const walletconnect = new WalletConnectConnector({

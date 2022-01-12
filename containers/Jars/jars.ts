@@ -13,7 +13,7 @@ const BALANCER_POOLS = [
 
 export const isBalancerPool = (depositTokenAddress: string) => {
   return BALANCER_POOLS.includes(depositTokenAddress.toLowerCase());
-}
+};
 
 // pUSDC jar token
 export const isPUsdcToken = (jarTokenAddress: string) => {
@@ -73,18 +73,19 @@ export const shouldJarBeInUi = (
 
 /**
  * Should this jar appear in the 'enabled' section of the UI
- * @param jarApiKey 
- * @param pfcore 
- * @returns 
+ * @param jarApiKey
+ * @param pfcore
+ * @returns
  */
 export const isJarActive = (
   jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
-  return checkJarEnablement(AssetEnablement.ENABLED, jarApiKey, pfcore) || 
-          checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
+  return (
+    checkJarEnablement(AssetEnablement.ENABLED, jarApiKey, pfcore) ||
+    checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore)
+  );
 };
-
 
 export const isJarWithdrawOnly = (
   jarApiKey: string,
@@ -93,13 +94,12 @@ export const isJarWithdrawOnly = (
   return checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
 };
 
-
 /**
  * Should this jar appear in the 'Inactive Jars' section of the UI
  * This will not show permanently-disabled jars
- * @param jarApiKey 
- * @param pfcore 
- * @returns 
+ * @param jarApiKey
+ * @param pfcore
+ * @returns
  */
 export const isJarDisabled = (
   jarApiKey: string,

@@ -42,6 +42,7 @@ const coreSlice = createSlice({
 /**
  * Selectors
  */
+const selectCore = (state: RootState) => state.core.data;
 const selectEnabledJars = (state: RootState) => {
   if (state.core.data === undefined) return [];
 
@@ -51,10 +52,13 @@ const selectEnabledJars = (state: RootState) => {
 };
 
 const selectLoadingState = (state: RootState) => state.core.loading;
+const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
 export const CoreSelectors = {
+  selectCore,
   selectEnabledJars,
   selectLoadingState,
+  selectTimestamp,
 };
 
 export default coreSlice.reducer;
