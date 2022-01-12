@@ -44,7 +44,7 @@ const AppWeb3Provider: FC = ({ children }) => {
       library.on("block", (blockNumber: number) =>
         dispatch(updateBlockNumber(blockNumber)),
       );
-
+      
       if (ethereum?.on) {
         ethereum.on("chainChanged", router.reload);
       }
