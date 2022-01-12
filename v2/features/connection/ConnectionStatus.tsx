@@ -12,7 +12,7 @@ import { injected } from "v2/features/connection/connectors";
 import { networks } from "./networks";
 import { resetWalletConnectState } from "./utils";
 import { PickleModelJson } from "picklefinance-core";
-import { RawChain } from "picklefinance-core/lib/chain/Chains";
+import { RawChain, Chains } from "picklefinance-core/lib/chain/Chains";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (
@@ -46,7 +46,6 @@ export const switchChain = async (
   chainId: number,
   pfcore: PickleModelJson.PickleModelJson | undefined,
 ): Promise<boolean> => {
-  console.log(library === undefined);
   if (
     pfcore &&
     library &&
@@ -107,7 +106,10 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                   priority
                 />
               </div>
-              <span className="text-white group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out">
+              <span
+                className="text-white cursor-pointer group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
+                onClick={() => switchChain(library, network.chainId, allCore)}
+              >
                 {network.name}
               </span>
             </div>
@@ -140,10 +142,20 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
 
 const ConnectionStatus: FC = () => {
   const { t } = useTranslation("common");
-  const { error } = useWeb3React<Web3Provider>();
+  let { error, chainId } = useWeb3React<Web3Provider>();
+  const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!isRelevantError(error)) return null;
-
+  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
+    return null;
+  if (!error && !(chainId && supportedChains.includes(chainId))) {
+    // App will function with all known chains
+    // supportedChains contains all chains Pickle supports
+    // we want error if Chain is not in supportedChains
+    error = new UnsupportedChainIdError(
+      chainId ? chainId : -1,
+      supportedChains,
+    );
+  } else return null;
   return (
     <div className="bg-black-lighter px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-gray-dark">
       <div className="flex font-title mb-2 text-lg items-center">
