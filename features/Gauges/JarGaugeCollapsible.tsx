@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 import { Trans, useTranslation } from "next-i18next";
 
@@ -289,11 +289,12 @@ export const JarGaugeCollapsible: FC<{
 
   const depositedStr = formatValue(depositedNum);
 
-  const depositedUnderlyingStr = formatValue(
-    parseFloat(
-      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-    ) * ratio,
-  );
+  const underlyingStr = (num:BigNumber): string => {
+    return formatValue(parseFloat(
+        formatEther(isUsdc && num ? num.mul(USDC_SCALE) : num),
+      ) * ratio);
+  }
+  const depositedUnderlyingStr = underlyingStr(deposited);
   const {
     depositToken: gaugeDepositToken,
     balance: gaugeBalance,
@@ -303,7 +304,7 @@ export const JarGaugeCollapsible: FC<{
     fullApy,
     uncompounded,
   } = gaugeData;
-
+  const stakedUnderlyingStr = underlyingStr(staked);
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
@@ -959,23 +960,8 @@ export const JarGaugeCollapsible: FC<{
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {t("balances.balance")}: {depositedStr} (
-                <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
-                >
-                  {depositedUnderlyingStr}
-                </Tooltip>{" "}
-                {depositTokenName}){" "}
+                {t("balances.balance")}: {depositedStr} ({depositedUnderlyingStr}
+                {" "}{depositTokenName}){" "}
               </div>
               <Link
                 color
@@ -1060,7 +1046,8 @@ export const JarGaugeCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName}{" "}
+                  ({stakedUnderlyingStr}{" "}{depositTokenName}){" "}
                 </div>
                 <Link
                   color

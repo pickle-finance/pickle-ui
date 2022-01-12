@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
 import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
@@ -317,10 +317,11 @@ export const JarMiniFarmCollapsible: FC<{
   const balStr = formatNumber(balNum);
 
   const depositedStr = formatNumber(depositedNum);
+  const underlyingStr = (num:BigNumber): string => {
+    return formatNumber(parseFloat(formatEther(num)) * ratio);
+  }
 
-  const depositedUnderlyingStr = formatNumber(
-    parseFloat(formatEther(deposited)) * ratio,
-  );
+  const depositedUnderlyingStr = underlyingStr(deposited);
 
   // Farm info
   const {
@@ -334,6 +335,7 @@ export const JarMiniFarmCollapsible: FC<{
     tooltipText,
     totalAPY,
   } = farmData;
+  const stakedUnderlyingStr = underlyingStr(staked);
 
   const stakedNum = parseFloat(formatEther(staked));
   const [depositAmount, setDepositAmount] = useState("");
@@ -924,7 +926,8 @@ export const JarMiniFarmCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName}
+                {t("balances.staked")}: {stakedStr} {farmDepositTokenName}{" "}
+                  ({stakedUnderlyingStr}{" "}{depositTokenName}){" "}
                 </div>
                 <Link
                   color
