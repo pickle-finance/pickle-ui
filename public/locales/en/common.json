@@ -305,7 +305,7 @@
       "joinedFarms": "Joined Farms & Jars",
       "performance": "Performance",
       "picklesInWalletZeroOrOne": "PICKLEs in wallet",
-      "picklesInWallet": "PICKLEs in wallet on {{ chains }} chains",
+      "picklesInWallet": "PICKLEs on {{ chains }} chains",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
