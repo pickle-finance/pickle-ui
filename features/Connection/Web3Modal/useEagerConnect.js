@@ -40,7 +40,7 @@ export function useInactiveListener(suppress = false) {
       const handleConnect = () => {
         activate(injected);
       };
-      const handleChainChanged = (chainId) => {
+      const handleChainChanged = () => {
         activate(injected);
       };
       const handleAccountsChanged = (accounts) => {
@@ -48,7 +48,7 @@ export function useInactiveListener(suppress = false) {
           activate(injected);
         }
       };
-      const handleNetworkChanged = (networkId) => {
+      const handleNetworkChanged = () => {
         activate(injected);
       };
 

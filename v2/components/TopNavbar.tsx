@@ -2,8 +2,8 @@ import { FC } from "react";
 
 import LanguageToggle from "./LanguageToggle";
 import GasPriceIndicator from "./GasPriceIndicator";
-import NetworkToggle from "./NetworkToggle";
-import WalletToggle from "./WalletToggle";
+import NetworkToggle from "v2/features/connection/NetworkToggle";
+import WalletToggle from "v2/features/connection/WalletToggle";
 
 interface Props {
   PageTitle: FC;

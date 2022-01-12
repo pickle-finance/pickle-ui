@@ -15,8 +15,7 @@ import { pickleWhite } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
-import { AssetEnablement } from "picklefinance-core/lib/model/PickleModelJson";
-import { isJarEnabled } from "containers/Jars/jars";
+import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 import { noFarms } from "util/constants";
 
 const Container = styled.div`
@@ -53,7 +52,7 @@ export const MiniFarmList: FC = () => {
       </>
     );
   }
-  const farmsWithAPY = farmData.map((farm) => {
+  const farmsWithAPY = (farmData ? farmData : []).map((farm) => {
     let APYs: JarApy[] = [{ pickle: farm.apy * 100 }];
 
     const jar = getJarFarmMap(pickleCore)[farm.depositToken.address];
@@ -114,10 +113,12 @@ export const MiniFarmList: FC = () => {
   const activeJars = !jarData
     ? []
     : jarData
-        .filter((jar) => isJarEnabled(jar.apiKey, pickleCore))
+        .filter((jar) => isJarActive(jar.apiKey, pickleCore))
         .sort((a, b) => b.totalAPY - a.totalAPY);
 
-  const protocolJars = activeJars.filter(jar => jar.protocol === selectedProtocol)
+  const protocolJars = activeJars.filter(
+    (jar) => jar.protocol === selectedProtocol,
+  );
 
   const inactiveJars = !jarData
     ? []
@@ -128,7 +129,7 @@ export const MiniFarmList: FC = () => {
         );
         return (
           foundJar === undefined ||
-          foundJar.enablement === AssetEnablement.DISABLED
+          isJarDisabled(foundJar.details.apiKey, pickleCore)
         );
       });
 
@@ -156,9 +157,7 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Grid.Container gap={1} justify="center">
         <Grid md={6}>
-          <Button onClick={() => setSelectedProtocol(null)}>
-            All
-          </Button>
+          <Button onClick={() => setSelectedProtocol(null)}>All</Button>
         </Grid>
         {protocolList.map((protocol) => {
           return (

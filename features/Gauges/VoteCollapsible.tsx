@@ -101,11 +101,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }
 
   const weightsValid = totalGaugeWeight === 100;
-
-  // if (!gauges) {
-  //   return null;
-  // }
-
   const handleSelect = (depositTokens: string | string[]): void => {
     if (!gauges) {
       return;
@@ -330,12 +325,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
               }}
               value={voteWeights[address]}
               onValueChange={({ floatValue }) => {
-                console.log(floatValue);
                 setVoteWeights({
                   ...voteWeights,
                   [address]: floatValue ? floatValue : 0,
                 });
-                console.log(voteWeights);
               }}
             />
           </Grid>

@@ -56,8 +56,12 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     if (connector === web3connector) {
       deactivate();
     } else {
-      let connectedChain:number;
-      try {connectedChain = +(await web3connector.getChainId())} catch {connectedChain = 1} // Failing assumes a wallet other than MetaMask is used
+      let connectedChain: number;
+      try {
+        connectedChain = +(await web3connector.getChainId());
+      } catch {
+        connectedChain = 1;
+      } // Failing assumes a wallet other than MetaMask is used
       if (connectedChain == 1 || supportedChains.chains[connectedChain]) {
         setActivatingConnector(web3connector);
         activate(web3connector);
@@ -88,7 +92,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   }, [activatingConnector, connector, setVisible, deactivate, error]);
 
   useEffect(() => {
-    const { ethereum } = window;
+    const { ethereum } = window as any;
     setEthereum(ethereum);
   }, []);
 
@@ -99,37 +103,45 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     <Modal width="500px" {...rest}>
       <Modal.Title>{t("connection.connect")}</Modal.Title>
       <Modal.Content>
-        {
-          isSupportedChain?
-          (
-            <Grid.Container gap={2}>
-            {itemList.map(({ icon, title, connector: web3connector }, index) => {
-              const currentConnector = web3connector;
-              const activating = currentConnector === activatingConnector;
+        {isSupportedChain ? (
+          <Grid.Container gap={2}>
+            {itemList.map(
+              ({ icon, title, connector: web3connector }, index) => {
+                const currentConnector = web3connector;
+                const activating = currentConnector === activatingConnector;
 
-              return (
-                <Grid xs={12} key={index}>
-                  <ConnectorItem
-                    icon={icon}
-                    disabled={title === t("connection.metamask") && !ethereum}
-                    title={title}
-                    loading={activating}
-                    onClick={() => onConnectClick(web3connector)}
-                  />
-                </Grid>
-              );
-            })}
+                return (
+                  <Grid xs={12} key={index}>
+                    <ConnectorItem
+                      icon={icon}
+                      disabled={title === t("connection.metamask") && !ethereum}
+                      title={title}
+                      loading={activating}
+                      onClick={() => onConnectClick(web3connector)}
+                    />
+                  </Grid>
+                );
+              },
+            )}
           </Grid.Container>
-          ): (
-            <div>
-              <h1>{t("connection.unsupportedNetwork")}</h1>
-              <ul>
-              {Object.keys(supportedChains.chains).map(chain => (<h2>- {supportedChains.chains[+chain].name}.</h2>))}
-              </ul>
-              <Button onClick={() => {setVisible(false); setIsSupportedChain(true);}}>Close</Button>
-            </div>
-          )
-        }
+        ) : (
+          <div>
+            <h1>{t("connection.unsupportedNetwork")}</h1>
+            <ul>
+              {Object.keys(supportedChains.chains).map((chain) => (
+                <h2>- {supportedChains.chains[+chain].name}.</h2>
+              ))}
+            </ul>
+            <Button
+              onClick={() => {
+                setVisible(false);
+                setIsSupportedChain(true);
+              }}
+            >
+              Close
+            </Button>
+          </div>
+        )}
       </Modal.Content>
     </Modal>
   );

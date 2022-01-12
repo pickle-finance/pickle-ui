@@ -1,22 +1,30 @@
 import { FC } from "react";
 import { Popover } from "@headlessui/react";
-import { SwitchHorizontalIcon, LogoutIcon } from "@heroicons/react/solid";
+import { LogoutIcon } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
-import { Jazzicon } from "@ukstv/jazzicon-react";
+import Davatar from "@davatar/react";
+import { useWeb3React } from "@web3-react/core";
+import type { Web3Provider } from "@ethersproject/providers";
 
-import SelectTransition from "./SelectTransition";
+import SelectTransition from "v2/components/SelectTransition";
+import ConnectWalletButton from "./ConnectWalletButton";
+import { shortenAddress } from "v2/utils";
+import { useAppDispatch } from "v2/store";
+import { setIsManuallyDeactivated } from "v2/store/connection";
 
 const WalletToggleOptions: FC = () => {
+  const { deactivate } = useWeb3React<Web3Provider>();
   const { t } = useTranslation("common");
+  const dispatch = useAppDispatch();
 
   const options = [
     {
-      name: t("v2.wallet.switch"),
-      icon: SwitchHorizontalIcon,
-    },
-    {
       name: t("v2.wallet.exit"),
       icon: LogoutIcon,
+      action: () => {
+        deactivate();
+        dispatch(setIsManuallyDeactivated());
+      },
     },
   ];
 
@@ -28,6 +36,7 @@ const WalletToggleOptions: FC = () => {
         return (
           <a
             key={option.name}
+            onClick={option.action}
             href="#"
             className="flex group hover:bg-black-lighter hover:text-green-light p-2 rounded-lg transition duration-300 ease-in-out"
           >
@@ -41,15 +50,21 @@ const WalletToggleOptions: FC = () => {
 };
 
 const WalletToggle: FC = () => {
+  const { account, library } = useWeb3React<Web3Provider>();
+
+  if (!account) return <ConnectWalletButton />;
+
   return (
     <Popover className="relative">
       {() => (
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-white font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
-            <span className="block mr-2">0x19bd...849f</span>
-            <Jazzicon
-              address="0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
-              className="w-8 h-8"
+            <span className="block mr-2">{shortenAddress(account)}</span>
+            <Davatar
+              size={32}
+              address={account}
+              generatedAvatarType="jazzicon"
+              provider={library}
             />
           </Popover.Button>
 

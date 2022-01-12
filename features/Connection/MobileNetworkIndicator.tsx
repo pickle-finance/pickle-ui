@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 import { Connection } from "../../containers/Connection";
-import { Jazzicon } from "@ukstv/jazzicon-react";
+import Davatar from "@davatar/react";
 import { config } from "../../containers/config";
 
 const Container = styled.div`
@@ -69,14 +69,21 @@ const ConnectContainer = styled.div`
 `;
 
 export const MobileNetworkIndicator: FC = () => {
-  const { address, chainId } = Connection.useContainer();
+  const { address, chainId, provider } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
   const networkName = chainId ? config.chains[chainId].name : "";
   return (
     <Container>
       <Left>
-        <div style={{ width: 16 }}>
-          {address && <Jazzicon address={address} />}
+        <div>
+          {address && (
+            <Davatar
+              size={16}
+              address={address}
+              generatedAvatarType="jazzicon"
+              provider={provider}
+            />
+          )}
         </div>
         <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
       </Left>

@@ -16,12 +16,17 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { NETWORK_NAMES } from "containers/config";
-import { isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
+import {
+  isJarWithdrawOnly,
+  isQlpQiMaticOrUsdcToken,
+  isQlpQiToken,
+} from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 interface DataProps {
   isZero?: boolean;
@@ -132,6 +137,159 @@ export const FARM_LP_TO_ICON: {
   "0xEcAf3149fdA215E46e792C65dc0aB7399C2eA78B": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
   ),
+
+  // Aurora
+  "0xbD59171dA1c3a2624D60421bcb6c3c3270111656": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0xF623c32828B40c89D5cf114A7186c6B8b25De4Ed": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xF49803dB604E118f3aFCF44beB0012f3c6684F05": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0xfc258cF7f1bf3739A04992D1c790aF20d60f44E9": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x1E686d65031Ac75754Cd6AeAb5B71ac2257c6a9D": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0x023d4874f30292b24512b969dC8dc8A3227d2012": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x6494DcFa6Af36cE89A990Ca13911365f006898ae": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroratri.png"} />
+  ),
+  "0x4add83C7a0aEd64468A149dA583f1b92d1aCa6AA": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroraeth.png"} />
+  ),
+  "0x4550B283D30F96a8B56Fe16EB576f6d5033adDF7": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xECDA075c31c20449f89Dc4467CF70d5F98e657D2": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x6791325D64318BbCe35392da6BdFf94840c4A4B5": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xB87C8a9c77e3C98AdcA0E24Dce5D9F43E2b698BB": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  "0x7b659258a57A5F4DB9C4049d01B6D8AaF6400a25": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x6379F3801cC2004C6CeaD7d766f5d4279E178953": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0x4DdaC2BfF3746aDAC32E355f1855FD67Cc6FAa2B": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x90e28D422AeaC1011e03713125Fb9Ba6b4276fc8": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neardai.png"} />
+  ),
+  "0x639a02651557fFC1C7F233334248c4E7D416D60B": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xCb7f715c4CaB533b245c070b58628b4d6a4019E0": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  "0xC6c7481d7e030aC3acbFD53f98797E32824A7B70": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x4D2FE5BcC9d3d252383D32E1ffF3B3C279eB4E85": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x86950b9668804154BD385AE0E228099c4375fEEA": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xcf59208abbAE8457F39f961eAb6293bdef1E5F1e": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x4F83d6ae3401f6859B579D840a5E38862a889282": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x6401Ded5D808eE824791dBfc23aA8769b585EB37": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xc773eF9aE52fF43031DD2Db439966ef4cb55bd79": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  // nearJar 5a Auroraswap AURORA/NEAR
+  "0xE0df9e3a0595989D6Ada23AF1C0df876e8742941": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  // nearJar 5b Auroraswap AVAX/NEAR
+  "0xf4A06eBe93847f2D822fAc255eB01416545709C6": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/avax.png"} />
+  ),
+  // nearJar 5d Auroraswap BRL/AURORA
+  "0xEc84AF3108c76bFBbf9652A2F39F7dC7005D70a4": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/aurora.png"} />
+  ),
+  // nearJar 5e Auroraswap BRL/ETH
+  "0x25a7f48587DD37eD194d1e6DCF3b2DDC48D83cAf": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ethereum.png"} />
+  ),
+  // nearJar 5f AuroraSwap BRL/NEAR
+  "0x3d1E5f81101de37463775a5Be13C2eEe066a0D63": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/near.png"} />
+  ),
+  // nearJar 5g AuroraSwap BUSD/NEAR
+  "0x544c6bab8Fd668B6888D9a1c0bb1BE0c9009fce0": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/busd.png"} />
+  ),
+  // nearJar 5h AuroraSwap ETH/BTC
+  "0x6bcd59972Af5b6C27e7Df3FA49787B5Fb578E083": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  // nearJar 5i AuroraSwap MATIC/NEAR
+  "0x506f103Dbef428426A8ABD31B3F7c7AbfeB5F681": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  // nearJar 5j AuroraSwap NEAR/BTC
+  "0xA80751447B89dE8601bacB876Ff0096E2FF77c71": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  // nearJar 5k AuroraSwap NEAR/ETH
+  "0x8Bc0684beF765B1b0dAf266A82c9f26699Ee0d2A": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  // nearJar 5l AuroraSwap NEAR/LUNA
+  "0x5583D1E47884ba3bbe7E66B564782151114f5ddE": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/luna.webp"} />
+  ),
+  // nearJar 5m AuroraSwap NEAR/USDC
+  "0xcd71713171fe53Fc1D9EF4C034052669Eb978c20": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  // nearJar 5n AuroraSwap NEAR/USDT
+  "0xD06Bfe30e9AD42Bb92bab8930300BBE98BBe12B7": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  // nearJar 5o AuroraSwap USDT/USDC
+  "0x4F5bd36925e1a141Ebb34f94Be00bdc4A3fc7034": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  // nearJar 5p AuroaSwap UST/NEAR
+  "0xD701e3E627f30458ee24dBeeDf11BDAA20B96dAe": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ust.png"} />
+  ),
+  // trisolaris TRI-USDT
+  "0x820980948220115Ccc64C66Ef71E65c2b7239664": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  // trisolaris NEAR-LUNA
+  "0x59384A541cEF5f604d39C5AaF0CD98170EEb15D2": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/luna.webp"} />
+  ),
+  // trisolaris UST-NEAR
+  "0xC7201D4BA106F524AafBB93aBeac648016E17A06": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/ust.png"} />
+  ),
+  // wannaswap WANNA-AURORA
+  "0xf3EbeC4D691Bc5Ea7B0158228feCfC3de2aE3910": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/wanna.png"} />
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{
@@ -178,15 +336,6 @@ export const JarMiniFarmCollapsible: FC<{
   } = farmData;
 
   const stakedNum = parseFloat(formatEther(staked));
-
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  );
-
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
@@ -255,6 +404,13 @@ export const JarMiniFarmCollapsible: FC<{
   const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
   const isQiMaiJar = isQlpQiToken(depositToken.address);
+  const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  );
+  const isClosingOnly = foundJar
+    ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
+    : false;
 
   const isBalancerJar = isBalancerPool(depositToken.address);
 
@@ -265,6 +421,7 @@ export const JarMiniFarmCollapsible: FC<{
         const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
+          approvalAmountRequired: parseEther(depositAmount),
           transferCallback: async () => {
             return jarContract
               .connect(signer)
@@ -464,6 +621,41 @@ export const JarMiniFarmCollapsible: FC<{
 
   const tvlStr = getFormatString(tvlNum);
 
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  const valueStr = toLocaleNdigits(
+    usdPerPToken * (depositedNum + stakedNum),
+    2,
+  );
+  let valueStrExplained = undefined;
+  let userSharePendingStr = undefined;
+  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
+    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
+    const jarAddress = jarContract.address;
+    const jar = pickleCore?.assets.jars.find(
+      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
+    );
+    if (jar) {
+      const totalPtokens = jar.details.tokenBalance;
+      if (totalPtokens) {
+        const userShare = (depositedNum + stakedNum) / totalPtokens;
+        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+        if (pendingHarvest) {
+          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+          userSharePendingStr =
+            t("farms.pending") +
+            ": $" +
+            toLocaleNdigits(userShareHarvestUsd, 2);
+        }
+      }
+    }
+  }
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -515,8 +707,13 @@ export const JarMiniFarmCollapsible: FC<{
           <Grid xs={24} sm={12} md={3} lg={3} style={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
-              <br />
               <Label>{t("balances.depositValue")}</Label>
+              {Boolean(valueStrExplained !== undefined) && (
+                <Label>{valueStrExplained}</Label>
+              )}
+              {Boolean(userSharePendingStr !== undefined) && (
+                <Label>{userSharePendingStr}</Label>
+              )}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
@@ -579,6 +776,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transfer({
                       token: depositToken.address,
                       recipient: jarContract.address,
+                      approvalAmountRequired: parseEther(depositAmount),
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)
@@ -587,7 +785,7 @@ export const JarMiniFarmCollapsible: FC<{
                     });
                   }
                 }}
-                disabled={depositButton.disabled || isQiMaiJar}
+                disabled={depositButton.disabled || isClosingOnly || isQiMaiJar}
                 style={{ width: "100%" }}
               >
                 {depositButton.text}
@@ -597,6 +795,9 @@ export const JarMiniFarmCollapsible: FC<{
               ) : isQiMaiJar ? (
                 <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
               ) : null}
+              {isClosingOnly ? (
+                <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
+              ) : null}
             </Grid>
             <Grid xs={24} md={12}>
               <Button
@@ -604,7 +805,8 @@ export const JarMiniFarmCollapsible: FC<{
                 disabled={
                   Boolean(depositStakeButton) ||
                   depositButton.disabled ||
-                  isQiMaiJar
+                  isQiMaiJar ||
+                  isClosingOnly
                 }
                 style={{ width: "100%" }}
               >
@@ -694,6 +896,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transfer({
                       token: farmDepositToken.address,
                       recipient: minichef.address,
+                      approvalAmountRequired: farmBalance,
                       transferCallback: async () => {
                         return minichef.deposit(
                           poolIndex,

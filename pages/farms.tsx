@@ -12,7 +12,7 @@ import { noFarms } from "util/constants";
 const Gauges: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
-  const noFarm = noFarms(chainName)
+  const noFarm = noFarms(chainName);
 
   return (
     <Page>

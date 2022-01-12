@@ -20,7 +20,7 @@ const NavItem: FC<Props> = ({ href, children, className, Icon, external }) => {
         href={href}
         external={external}
         active={isCurrent}
-        className={classNames("px-4 py-2", className)}
+        className={classNames("px-4 py-2 font-bold", className)}
       >
         {Icon && (
           <Icon

@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { Jazzicon } from "@ukstv/jazzicon-react";
+import Davatar from "@davatar/react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useTranslation } from "next-i18next";
 
@@ -45,6 +45,7 @@ const AddressContainer = styled.a`
 const Address = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const AddressLabel = styled.div`
@@ -113,6 +114,7 @@ export const DesktopNetworkIndicator: FC = () => {
     chainId,
     switchChain,
     chainName,
+    provider,
   } = Connection.useContainer();
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
@@ -236,8 +238,15 @@ export const DesktopNetworkIndicator: FC = () => {
           <AddressLabel title={address || ""}>
             {ensName || shortAddress}
           </AddressLabel>
-          <div style={{ width: 16 }}>
-            {address && <Jazzicon address={address} />}
+          <div>
+            {address && (
+              <Davatar
+                size={16}
+                address={address}
+                generatedAvatarType="jazzicon"
+                provider={provider}
+              />
+            )}
           </div>
         </Address>
         <Block>

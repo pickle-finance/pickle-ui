@@ -18,15 +18,17 @@ const AppLink: FC<Props> = ({
   external,
   href,
   primary,
+  onClick,
 }) => {
   return (
     <Link href={href}>
       <a
         href={href}
+        onClick={onClick}
         className={classNames(
           active && "bg-black-light text-green-light",
           primary ? "text-orange" : "text-white",
-          "group flex flex-grow items-center text-sm rounded-lg font-bold hover:text-green-light transition duration-300 ease-in-out",
+          "group inline-flex flex-grow items-center text-sm rounded-lg hover:text-green-light transition duration-300 ease-in-out",
           className,
         )}
         {...(external && { target: "_blank", rel: "noopener" })}

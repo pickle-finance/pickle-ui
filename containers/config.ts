@@ -19,17 +19,17 @@ export enum NETWORK_NAMES {
   ARB = "Arbitrum",
   MOONRIVER = "Moonriver",
   CRONOS = "Cronos",
-  AURORA = "Aurora"
+  AURORA = "Aurora",
 }
 
-export const NETWORK_NAMES_PFCORE_MAP : any = {
-  "Ethereum": ChainNetwork.Ethereum,
-  "Polygon": ChainNetwork.Polygon,
-  "OKEx": ChainNetwork.OKEx,
-  "Arbitrum": ChainNetwork.Arbitrum,
-  "Moonriver": ChainNetwork.Moonriver,
-  "Cronos": ChainNetwork.Cronos,
-  "Aurora": ChainNetwork.Aurora, 
+export const NETWORK_NAMES_PFCORE_MAP: any = {
+  Ethereum: ChainNetwork.Ethereum,
+  Polygon: ChainNetwork.Polygon,
+  OKEx: ChainNetwork.OKEx,
+  Arbitrum: ChainNetwork.Arbitrum,
+  Moonriver: ChainNetwork.Moonriver,
+  Cronos: ChainNetwork.Cronos,
+  Aurora: ChainNetwork.Aurora,
 };
 
 export type ChainName =
@@ -68,8 +68,8 @@ export const config: Config = {
       name: NETWORK_NAMES.CRONOS,
     },
     1313161554: {
-      name: NETWORK_NAMES.AURORA
-    }
+      name: NETWORK_NAMES.AURORA,
+    },
   },
   addresses: {
     Ethereum: {
@@ -120,9 +120,9 @@ export const config: Config = {
     },
     Aurora: {
       controller: "0xdc954e7399e9ADA2661cdddb8D4C19c19E070A8E",
-      pickle: "0x0000000000000000000000000000000000000000",
-      masterChef: "0x0000000000000000000000000000000000000000",
-      minichef: "0x0000000000000000000000000000000000000000",
+      pickle: "0x291c8fceaca3342b29cc36171deb98106f712c66",
+      masterChef: "0x13cc0A2644f4f727db23f5B9dB3eBd72134085b7",
+      minichef: "0x13cc0A2644f4f727db23f5B9dB3eBd72134085b7",
       rewarder: "0x0000000000000000000000000000000000000000",
     },
   },
