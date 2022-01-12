@@ -29,8 +29,7 @@ const isRelevantError = (error: Error | undefined): boolean => {
 };
 
 const chainToChainParams = (chain: RawChain | undefined) => {
-  if( !chain )
-    return undefined;
+  if (!chain) return undefined;
   return {
     chainId: "0x" + chain.chainId.toString(16),
     chainName: chain.networkVisible,
@@ -41,13 +40,21 @@ const chainToChainParams = (chain: RawChain | undefined) => {
     },
     rpcUrls: chain.rpcs,
     blockExplorerUrls: [chain.explorer],
-  }
-}
+  };
+};
 
-export const switchChain = async (library: Web3Provider | undefined, chainId: number, 
-  pfcore: PickleModelJson.PickleModelJson | undefined): Promise<boolean> => {
+export const switchChain = async (
+  library: Web3Provider | undefined,
+  chainId: number,
+  pfcore: PickleModelJson.PickleModelJson | undefined,
+): Promise<boolean> => {
   console.log(library === undefined);
-  if( pfcore && library && library.provider !== undefined && library.provider.request !== undefined) {
+  if (
+    pfcore &&
+    library &&
+    library.provider !== undefined &&
+    library.provider.request !== undefined
+  ) {
     let method: string;
     let params: any[];
     if (chainId === 1) {
@@ -55,7 +62,9 @@ export const switchChain = async (library: Web3Provider | undefined, chainId: nu
       params = [{ chainId: "0x1" }];
     } else {
       method = "wallet_addEthereumChain";
-      const param = chainToChainParams(pfcore.chains.find((x)=>x.chainId === chainId));
+      const param = chainToChainParams(
+        pfcore.chains.find((x) => x.chainId === chainId),
+      );
       if (param === undefined || param === null) return false;
       params = [param];
     }
@@ -67,11 +76,10 @@ export const switchChain = async (library: Web3Provider | undefined, chainId: nu
       return true;
     } catch (e) {
       return false;
-    }  
+    }
   }
   return false;
 };
-
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
@@ -86,23 +94,26 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
         <p>{t("v2.connection.unsupportedNetwork")}</p>
         <div className="mt-4">
           {networks.map((network) => (
-              <div key={network.name} className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2 flex">
-                <div className="w-5 h-5 mr-3">
-                  <Image
-                    src={network.icon}
-                    width={200}
-                    height={200}
-                    layout="responsive"
-                    alt={network.name}
-                    title={network.name}
-                    className="rounded-full"
-                    priority
-                  />
-                </div>
-                <span className="text-white group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out">
-                  {network.name}
-                </span>
+            <div
+              key={network.name}
+              className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2 flex"
+            >
+              <div className="w-5 h-5 mr-3">
+                <Image
+                  src={network.icon}
+                  width={200}
+                  height={200}
+                  layout="responsive"
+                  alt={network.name}
+                  title={network.name}
+                  className="rounded-full"
+                  priority
+                />
               </div>
+              <span className="text-white group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out">
+                {network.name}
+              </span>
+            </div>
           ))}
         </div>
       </>

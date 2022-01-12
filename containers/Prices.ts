@@ -162,7 +162,7 @@ function usePrices() {
         "dodo",
         "the-employment-commons-work-token",
         "moonriver",
-        "solarbeam"
+        "solarbeam",
       ],
       vs_currencies: ["usd"],
     });
