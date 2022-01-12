@@ -15,9 +15,10 @@ const FarmsTableHeaderCell: FC = ({ children }) => (
 interface Props {
   simple?: boolean;
   title: string;
+  dashboard: boolean;
 }
 
-const FarmsTable: FC<Props> = ({ simple, title }) => {
+const FarmsTable: FC<Props> = ({ simple, title, dashboard }) => {
   const { t } = useTranslation("common");
 
   return (
@@ -49,7 +50,7 @@ const FarmsTable: FC<Props> = ({ simple, title }) => {
                 </tr>
               </thead>
               <tbody className="text-white">
-                <FarmsTableBody simple={simple} />
+                <FarmsTableBody simple={simple} dashboard={dashboard}/>
               </tbody>
             </table>
           </div>
