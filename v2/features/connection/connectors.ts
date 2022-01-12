@@ -3,7 +3,7 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Chains } from "picklefinance-core";
-import chains from "./chainIds.json"
+import chains from "./chainIds.json";
 
 export interface Connector {
   id: Connectors;

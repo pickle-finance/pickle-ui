@@ -109,7 +109,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                   priority
                 />
               </div>
-              <span 
+              <span
                 className="text-white cursor-pointer group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
                 onClick={() => switchChain(library, network.chainId, allCore)}
               >
@@ -146,14 +146,18 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
 const ConnectionStatus: FC = () => {
   const { t } = useTranslation("common");
   let { error, chainId } = useWeb3React<Web3Provider>();
-  const supportedChains: number[] = Chains.list().map((x)=>Chains.get(x).id);
+  const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId)) return null;
+  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
+    return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {
     // App will function with all known chains
     // supportedChains contains all chains Pickle supports
     // we want error if Chain is not in supportedChains
-    error = new UnsupportedChainIdError(chainId ? chainId : -1, supportedChains);
+    error = new UnsupportedChainIdError(
+      chainId ? chainId : -1,
+      supportedChains,
+    );
   } else return null;
   return (
     <div className="bg-black-lighter px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-gray-dark">
