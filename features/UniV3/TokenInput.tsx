@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import { formatUnits, parseEther } from "ethers/lib/utils";
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
 import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
@@ -32,11 +32,12 @@ export const TokenInput: FC<{
   const { t } = useTranslation("common");
   const balanceUsed = token?.walletBalance;
 
-return (
+  return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
-          {t("balances.balance")}: {formatValue(parseFloat(formatUnits(balanceUsed, token.decimals)))}{" "}
+          {t("balances.balance")}:{" "}
+          {formatValue(parseFloat(formatUnits(balanceUsed, token.decimals)))}{" "}
           {token.name.toUpperCase()}
         </div>
         <Link
@@ -48,16 +49,8 @@ return (
             setDepositOtherAmount(
               formatUnits(
                 isToken0
-                  ? balanceUsed
-                       .mul(proportion)
-                       .mul(BigNumber.from(10).pow(token.decimals))
-                       .div(BigNumber.from(10).pow(otherToken.decimals))
-                  : balanceUsed
-                       .mul(parseEther("1"))
-                       .mul(parseEther("1"))
-                       .mul(BigNumber.from(10).pow(token.decimals))
-                       .div(BigNumber.from(10).pow(otherToken.decimals))
-                       .div(proportion),
+                  ? balanceUsed.mul(proportion).div(parseEther("1"))
+                  : balanceUsed.mul(parseEther("1")).div(proportion),
                 otherToken.decimals,
               ),
             );
@@ -74,17 +67,16 @@ return (
               setDepositOtherAmount(
                 formatUnits(
                   isToken0
-                  ? BigNumber.from(e.target.value)
+                    ? parseUnits(e.target.value, token.decimals)
                         .mul(proportion)
-                        .mul(BigNumber.from(10).pow(token.decimals))
                         .div(BigNumber.from(10).pow(otherToken.decimals))
-                    : BigNumber.from(e.target.value)
+                    : parseUnits(e.target.value, token.decimals)
                         .mul(parseEther("1"))
                         .mul(parseEther("1"))
-                        .mul(BigNumber.from(10).pow(token.decimals))
                         .div(BigNumber.from(10).pow(otherToken.decimals))
-                        .div(proportion)
-                  ), otherToken.decimals
+                        .div(proportion),
+                ),
+                otherToken.decimals,
               );
             }}
             value={depositAmount}
