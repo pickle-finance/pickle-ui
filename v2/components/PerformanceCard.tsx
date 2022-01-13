@@ -4,11 +4,58 @@ import { CashIcon, DatabaseIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
 import HarvestModal from "./HarvestModal";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
+import { UserSelectors } from "v2/store/user";
+import { PickleModelJson } from "picklefinance-core";
+import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/features/farms/FarmsTableRowHeader";
+import { BigNumber } from "ethers";
+import { formatUsd } from "util/api";
 
+
+export const getTotalBalances = (core: PickleModelJson.PickleModelJson, userdata: UserData): string => {
+  let runningUsd = 0;
+  for( let i = 0; i < userdata.tokens.length; i++ ) {
+    const key = userdata.tokens[i].assetKey;
+    const jar = core.assets.jars.find((x)=>x.details.apiKey === key);
+    if( jar ) {
+      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
+      if( data ) {
+        runningUsd += (data.depositTokensInJar.tokensUSD || 0);
+        runningUsd += (data.depositTokensInFarm.tokensUSD || 0);
+      }
+    }
+  }
+  return formatUsd(runningUsd);
+}
+
+export const getPendingRewardsUsd = (core: PickleModelJson.PickleModelJson, userdata: UserData): string => {
+  let runningUsd = 0;
+  for( let i = 0; i < userdata.tokens.length; i++ ) {
+    const key = userdata.tokens[i].assetKey;
+    const jar = core.assets.jars.find((x)=>x.details.apiKey === key);
+    if( jar ) {
+      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
+      if( data ) {
+        runningUsd += (data.earnedPickles.tokensUSD || 0);
+      }
+    }
+  }
+  if( userdata.dill && userdata.dill.claimable ) {
+    const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
+    const dillRewardUsd = wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
+    runningUsd += dillRewardUsd;
+  }
+  return formatUsd(runningUsd);
+}
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
   let [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+  const allCore = useSelector(CoreSelectors.selectCore);
+  const userTotalBalance = (allCore && userModel) ? getTotalBalances(allCore, userModel) : 0
+  const unclaimedRewards = (allCore && userModel) ? getPendingRewardsUsd(allCore, userModel) : 0;
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
@@ -25,7 +72,7 @@ const PerformanceCard: FC = () => {
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
-                $9,888.99
+              {userTotalBalance}
               </p>
               <p className="text-gray-light text-sm">
                 {t("v2.balances.balance")}
@@ -38,7 +85,7 @@ const PerformanceCard: FC = () => {
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
-                $777.89
+                {unclaimedRewards}
               </p>
               <p className="text-gray-light text-sm">
                 {t("v2.dashboard.unclaimedRewards")}
