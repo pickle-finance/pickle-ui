@@ -10,7 +10,7 @@ const BlockNumber: FC = () => {
   if (!blockNumber) return null;
 
   return (
-    <div className="flex justify-end bg-black text-gray-outline-light text-sm my-10">
+    <div className="flex text-gray-outline-light text-sm">
       <CubeIcon className="w-5 h-5 text-gray-outline-light text mr-2" />
       {blockNumber}
     </div>
