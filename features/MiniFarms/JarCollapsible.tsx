@@ -258,22 +258,22 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/metis.webp"} />
   ),
   "0x3bf77b9192579826f260bc48f2214dfba840fce5": ( // NET BNB/NETT
-    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/bnbnett.png"} />
   ),
   "0x59051b5f5172b69e66869048dc69d35db0b3610d": ( // NET ETH/METIS
-    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/ethmetis.png"} />
   ),
   "0xc8ae82a0ab6ada2062b812827e1556c0fa448dd0": ( // NET ETH/NETT
     <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/ethereum.png"} />
   ),
   "0xf5988809ac97c65121e2c34f5d49558e3d12c253": ( // NET ETH/USDC
-    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/ethusdc.png"} />
   ),
   "0x4db4ce7f5b43a6b455d3c3057b63a083b09b8376": ( // NET ETH/USDT
-    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/ethusdt.png"} />
   ),
   "0x5ae3ee7fbb3cb28c17e7adc3a6ae605ae2465091": ( // NET METIS/USDC
-    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/metisusdc.png"} />
   ),
   "0x0724d37522585e87d27c802728e824862dc72861": ( // NET NETT/USDC
     <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/usdc.png"} />
@@ -282,7 +282,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/usdt.png"} />
   ),
   "0x3d60afecf67e6ba950b499137a72478b2ca7c5a1": ( // NET USDT/METIS
-    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/metisusdt.png"} />
   ),
   "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": ( // NET USDT/USDC
     <LpIcon swapIconSrc={"/netswap.jpeg"} tokenIconSrc={"/usdcusdt.png"} />
@@ -291,13 +291,13 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/metis.webp"} />
   ),
   "0xee5adb5b0dfc51029aca5ad4bc684ad676b307f7": ( // TETHYS ETH/METIS
-    <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/ethmetis.png"} />
   ),
   "0xdd7df3522a49e6e1127bf1a1d3baea3bc100583b": ( // TETHYS METIS/USDC
-    <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/metisusdc.png"} />
   ),
   "0x8121113eb9952086dec3113690af0538bb5506fd": ( // TETHYS USDT/METIS
-    <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/"} />
+    <LpIcon swapIconSrc={"/tethys.jpeg"} tokenIconSrc={"/metisusdt.png"} />
   )
 };
 
