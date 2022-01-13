@@ -289,11 +289,12 @@ export const JarGaugeCollapsible: FC<{
 
   const depositedStr = formatValue(depositedNum);
 
-  const underlyingStr = (num:BigNumber): string => {
-    return formatValue(parseFloat(
-        formatEther(isUsdc && num ? num.mul(USDC_SCALE) : num),
-      ) * ratio);
-  }
+  const underlyingStr = (num: BigNumber): string => {
+    return formatValue(
+      parseFloat(formatEther(isUsdc && num ? num.mul(USDC_SCALE) : num)) *
+        ratio,
+    );
+  };
   const depositedUnderlyingStr = underlyingStr(deposited);
   const {
     depositToken: gaugeDepositToken,
@@ -960,8 +961,8 @@ export const JarGaugeCollapsible: FC<{
           <Grid xs={24} md={12}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {t("balances.balance")}: {depositedStr} ({depositedUnderlyingStr}
-                {" "}{depositTokenName}){" "}
+                {t("balances.balance")}: {depositedStr} (
+                {depositedUnderlyingStr} {depositTokenName}){" "}
               </div>
               <Link
                 color
@@ -1046,8 +1047,8 @@ export const JarGaugeCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName}{" "}
-                  ({stakedUnderlyingStr}{" "}{depositTokenName}){" "}
+                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName} (
+                  {stakedUnderlyingStr} {depositTokenName}){" "}
                 </div>
                 <Link
                   color

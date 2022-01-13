@@ -317,9 +317,9 @@ export const JarMiniFarmCollapsible: FC<{
   const balStr = formatNumber(balNum);
 
   const depositedStr = formatNumber(depositedNum);
-  const underlyingStr = (num:BigNumber): string => {
+  const underlyingStr = (num: BigNumber): string => {
     return formatNumber(parseFloat(formatEther(num)) * ratio);
-  }
+  };
 
   const depositedUnderlyingStr = underlyingStr(deposited);
 
@@ -926,8 +926,8 @@ export const JarMiniFarmCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                {t("balances.staked")}: {stakedStr} {farmDepositTokenName}{" "}
-                  ({stakedUnderlyingStr}{" "}{depositTokenName}){" "}
+                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName} (
+                  {stakedUnderlyingStr} {depositTokenName}){" "}
                 </div>
                 <Link
                   color

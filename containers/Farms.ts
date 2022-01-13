@@ -24,9 +24,9 @@ export const createIFarmInfo = (
       pfcore.assets.jars[i].id !== undefined &&
       pfcore.assets.jars[i].contract !== undefined
     ) {
-      const tName = pfcore.assets.jars[i].farm ? 
-        pfcore.assets.jars[i].farm!.farmDepositTokenName :
-        pfcore.assets.jars[i].depositToken.name;
+      const tName = pfcore.assets.jars[i].farm
+        ? pfcore.assets.jars[i].farm!.farmDepositTokenName
+        : pfcore.assets.jars[i].depositToken.name;
       const r = {
         tokenName: tName,
         poolName: pfcore.assets.jars[i].depositToken.name,
