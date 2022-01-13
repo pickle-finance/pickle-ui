@@ -7414,7 +7414,7 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-raf@^3.4.0:
+raf@^3.4.0, raf@^3.4.1:
   version "3.4.1"
   resolved "https://registry.npmjs.org/raf/-/raf-3.4.1.tgz"
   integrity sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==
@@ -7913,6 +7913,14 @@ rollup-plugin-copy@^3.3.0:
     fs-extra "^8.1.0"
     globby "10.0.1"
     is-plain-object "^3.0.0"
+
+rooks@^5.8.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/rooks/-/rooks-5.8.0.tgz#eb4612975f47d89283bb4376251595766024c6da"
+  integrity sha512-NCtqne2d6IRvxBjCJRls0DUrgQP5UOGFr8WrKFlnhtIdneZBuNaPRYK6RKYI+bDQvHYxml/M1TsS87yVzcLfVQ==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    raf "^3.4.1"
 
 run-parallel@^1.1.9:
   version "1.1.9"

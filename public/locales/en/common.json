@@ -286,7 +286,9 @@
   },
   "v2": {
     "balances": {
-      "balance": "Balance"
+      "balance": "Balance",
+      "fetching": "Fetching your balances",
+      "lastUpdated": "Your balances updated <1 /> ago."
     },
     "connection": {
       "coinbase": "Coinbase",
@@ -343,6 +345,23 @@
       "openMenu": "Open main menu",
       "stats": "Stats",
       "tokenAddress": "Token address"
+    },
+    "time": {
+      "day": "1 day",
+      "day_plural": "{{ count }} days",
+      "hour": "1 hour",
+      "hour_plural": "{{ count }} hours",
+      "minute": "1 minute",
+      "minute_plural": "{{ count }} minutes",
+      "moment": "just a moment",
+      "month": "1 month",
+      "month_plural": "{{ count }} months",
+      "second": "1 second",
+      "second_plural": "{{ count }} seconds",
+      "week": "1 week",
+      "week_plural": "{{ count }} weeks",
+      "year": "1 year",
+      "year_plural": "{{ count }} years"
     },
     "wallet": {
       "exit": "Exit",
