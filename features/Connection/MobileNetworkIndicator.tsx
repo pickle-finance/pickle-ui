@@ -69,7 +69,7 @@ const ConnectContainer = styled.div`
 `;
 
 export const MobileNetworkIndicator: FC = () => {
-  const { address, chainId } = Connection.useContainer();
+  const { address, chainId, provider } = Connection.useContainer();
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
   const networkName = chainId ? config.chains[chainId].name : "";
   return (
@@ -81,6 +81,7 @@ export const MobileNetworkIndicator: FC = () => {
               size={16}
               address={address}
               generatedAvatarType="jazzicon"
+              provider={provider}
             />
           )}
         </div>

@@ -1918,9 +1918,9 @@
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
 "@uniswap/v3-periphery@^1.0.1", "@uniswap/v3-periphery@^1.1.1":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.3.0.tgz#37f0a1ef6025221722e50e9f3f2009c2d5d6e4ec"
-  integrity sha512-HjHdI5RkjBl8zz3bqHShrbULFoZSrjbbrRHoO2vbzn+WRzTa6xY4PWphZv2Tlcb38YEKfKHp6NPl5hVedac8uw==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.4.0.tgz#9abb733fc596916718070c688b5f426fd8d01fe3"
+  integrity sha512-OXikenS40UIEa2XxQ+TyGpFFcTOfSW8eH3Ngy7sGOYp+7yr6uGU2UzomeTsqzagBEAXUDTwxqkk9oUS1KtWTUw==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/lib" "^4.0.1-alpha"
@@ -1930,9 +1930,9 @@
     hardhat-watcher "^2.1.1"
 
 "@uniswap/v3-sdk@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.6.3.tgz#f2fca86cfde1450976581028195fc0ee4b11036d"
-  integrity sha512-nepNTZMpM1uwLJAlQaUUEDMFrSujS1sOqyVD739zoPWsVHAUPvqVAKQN0GlgZcLXOqeCMKjO3lteaNHEXef1XA==
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.8.1.tgz#111f50a5da32ae3827d9ef500a29dcb38c7e2e43"
+  integrity sha512-Fn+h9zNVzgX8DE0hTWqMyXNF1AhT1ovmzE2dpSsTZmJkxVbc70+DzENeuknTfA+nmemtB915mq4vHrJL3lZGjA==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
@@ -2676,6 +2676,11 @@ big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
+
+bignumber.js@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.2.tgz#71c6c6bed38de64e24a65ebe16cfcf23ae693673"
+  integrity sha512-GAcQvbpsM0pUb0zw1EI0KhQEZ+lRwR5fYaAp3vPOYuP7aDvGy6cVN6XHLauvF8SOga2y0dcLcjt3iQDTSEliyw==
 
 binary-extensions@^2.0.0:
   version "2.1.0"
@@ -7065,10 +7070,10 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.2.78:
-  version "0.2.78"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.2.78.tgz#fbef51bf772971e1272966fbe7259bca268d32ca"
-  integrity sha512-/4prcdUWg4eRJAiTVjADGZQxouNUyuYpj1RzVjGLRerCuAZ9Ds2B+gdXBvogL3EuHlGXGE1n4fbDyDE8j7gn+Q==
+picklefinance-core@^0.2.86:
+  version "0.2.86"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.2.86.tgz#25cd841974201eeecd2bccd47810546d97faefd1"
+  integrity sha512-RpM5pSdKaY0rovdKzywA2Z5zOa/AsuUIQBWa07lPtFQe2AR9CG/b6xX4SuQwO3G4i/ZM+F9qARyfQHbq66glIA==
   dependencies:
     "@ethersproject/abstract-provider" "^5.1.0"
     "@ethersproject/providers" "^5.1.0"
@@ -7078,6 +7083,7 @@ picklefinance-core@^0.2.78:
     "@types/i18n" "^0.13.1"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/v3-sdk" "^3.6.3"
+    bignumber.js "^9.0.2"
     coingecko-api "^1.0.10"
     cross-fetch "^3.1.4"
     date-fns "^2.26.0"

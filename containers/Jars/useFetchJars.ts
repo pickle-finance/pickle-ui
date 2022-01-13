@@ -23,6 +23,7 @@ export type Jar = {
   chain: ChainNetwork;
   apiKey: string;
   supply: number;
+  isErc20: boolean;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -45,7 +46,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   const getJarsPfcoreImpl = async (): Promise<Jar[]> => {
     if (controller && strategy && multicallProvider && chainName) {
-      const pfcoreChainName: ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName]
+      const pfcoreChainName: ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName];
       const allJars: JarDefinition[] | undefined = pickleCore?.assets.jars;
       if (!allJars) {
         // Time to return, dead
@@ -53,9 +54,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       }
 
       const chainJars: JarDefinition[] = allJars.filter(
-        (x) =>
-          x.chain === pfcoreChainName &&
-          shouldJarBeInUi(x, pickleCore),
+        (x) => x.chain === pfcoreChainName && shouldJarBeInUi(x, pickleCore),
       );
 
       const possibleJars: (Jar | undefined)[] = chainJars.map((x) => {
@@ -68,7 +67,8 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           protocol: x.protocol,
           chain: x.chain,
           apiKey: x.details.apiKey,
-          supply: x.details.totalSupply || 0
+          supply: x.details.totalSupply || 0,
+          isErc20: x.depositToken.style?.erc20 ?? true,
         };
 
         return z;

@@ -19,17 +19,17 @@ export enum NETWORK_NAMES {
   ARB = "Arbitrum",
   MOONRIVER = "Moonriver",
   CRONOS = "Cronos",
-  AURORA = "Aurora"
+  AURORA = "Aurora",
 }
 
-export const NETWORK_NAMES_PFCORE_MAP : any = {
-  "Ethereum": ChainNetwork.Ethereum,
-  "Polygon": ChainNetwork.Polygon,
-  "OKEx": ChainNetwork.OKEx,
-  "Arbitrum": ChainNetwork.Arbitrum,
-  "Moonriver": ChainNetwork.Moonriver,
-  "Cronos": ChainNetwork.Cronos,
-  "Aurora": ChainNetwork.Aurora, 
+export const NETWORK_NAMES_PFCORE_MAP: any = {
+  Ethereum: ChainNetwork.Ethereum,
+  Polygon: ChainNetwork.Polygon,
+  OKEx: ChainNetwork.OKEx,
+  Arbitrum: ChainNetwork.Arbitrum,
+  Moonriver: ChainNetwork.Moonriver,
+  Cronos: ChainNetwork.Cronos,
+  Aurora: ChainNetwork.Aurora,
 };
 
 export type ChainName =
@@ -68,8 +68,8 @@ export const config: Config = {
       name: NETWORK_NAMES.CRONOS,
     },
     1313161554: {
-      name: NETWORK_NAMES.AURORA
-    }
+      name: NETWORK_NAMES.AURORA,
+    },
   },
   addresses: {
     Ethereum: {

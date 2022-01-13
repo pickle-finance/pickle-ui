@@ -1,6 +1,16 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { Chains } from "picklefinance-core";
+import chains from "./chainIds.json";
+
+export interface Connector {
+  id: Connectors;
+  icon: any;
+  title: string;
+  connector: AbstractConnector;
+}
 
 export enum Connectors {
   Metamask,
@@ -20,7 +30,7 @@ const RPC_URLS = {
 };
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 66, 137, 42161, 1285, 25, 1313161554],
+  supportedChainIds: chains,
 });
 
 export const walletconnect = new WalletConnectConnector({

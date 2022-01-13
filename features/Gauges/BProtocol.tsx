@@ -168,7 +168,10 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               <CenteredGrid xs={24} sm={8} md={3} lg={3}>
                 <Data isZero={depositedNum === 0}>
                   <Tooltip text={`${valueStr} LUSD + ${pendingPLqtyStr} pLQTY`}>
-                    ${formatString((userValue + +pendingLqtyStr * prices?.lqty).toFixed(2))}
+                    $
+                    {formatString(
+                      (userValue + +pendingLqtyStr * prices?.lqty).toFixed(2),
+                    )}
                     <img
                       src="./question.svg"
                       width="15px"
@@ -249,11 +252,13 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              </div>
+              <div
+                style={{ display: "flex", justifyContent: "space-between" }}
+              ></div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.balance")}: {depositedStr} ({valueStr} LUSD + {pendingPLqtyStr} pLQTY)
+                  {t("balances.balance")}: {depositedStr} ({valueStr} LUSD +{" "}
+                  {pendingPLqtyStr} pLQTY)
                 </div>
                 <Link
                   color

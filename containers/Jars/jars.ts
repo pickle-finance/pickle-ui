@@ -13,7 +13,7 @@ const BALANCER_POOLS = [
 
 export const isBalancerPool = (depositTokenAddress: string) => {
   return BALANCER_POOLS.includes(depositTokenAddress.toLowerCase());
-}
+};
 
 // pUSDC jar token
 export const isPUsdcToken = (jarTokenAddress: string) => {
@@ -73,9 +73,9 @@ export const shouldJarBeInUi = (
 
 /**
  * Should this jar appear in the 'enabled' section of the UI
- * @param jarApiKey 
- * @param pfcore 
- * @returns 
+ * @param jarApiKey
+ * @param pfcore
+ * @returns
  */
 export const isJarActive = (
   jarApiKey: string,
@@ -86,7 +86,6 @@ export const isJarActive = (
           checkJarEnablement(AssetEnablement.DEV, jarApiKey, pfcore); // REMOVE BEFORE MERGING
 };
 
-
 export const isJarWithdrawOnly = (
   jarApiKey: string,
   pfcore: PickleModelJson.PickleModelJson | null,
@@ -94,13 +93,12 @@ export const isJarWithdrawOnly = (
   return checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore);
 };
 
-
 /**
  * Should this jar appear in the 'Inactive Jars' section of the UI
  * This will not show permanently-disabled jars
- * @param jarApiKey 
- * @param pfcore 
- * @returns 
+ * @param jarApiKey
+ * @param pfcore
+ * @returns
  */
 export const isJarDisabled = (
   jarApiKey: string,

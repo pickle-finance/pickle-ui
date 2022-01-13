@@ -11,7 +11,6 @@ import erc20 from "@studydefi/money-legos/erc20";
 import BLensABI from "../ABIs/blens.json";
 import { Jar__factory as JarFactory } from "../../containers/Contracts/factories/Jar__factory";
 
-
 export const usePBAMM = () => {
   const { signer, provider, address } = Connection.useContainer();
   const { stabilityPool, pBAMM } = Contracts.useContainer();
@@ -40,7 +39,8 @@ export const usePBAMM = () => {
     BLensABI,
     provider,
   );
-  const pLQTYContract = provider && JarFactory.connect(BPAddresses.pLQTY, provider);
+  const pLQTYContract =
+    provider && JarFactory.connect(BPAddresses.pLQTY, provider);
 
   const updateData = async () => {
     if (stabilityPool && pBAMM && prices && address) {

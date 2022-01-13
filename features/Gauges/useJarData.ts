@@ -53,7 +53,7 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
 
   useEffect(() => {
     updateJarData();
-  }, [chainName, jars, blockNum, tokenBalances, transferStatus]);
+  }, [chainName, jars, jarsWithV3, blockNum, tokenBalances, transferStatus]);
 
   return { jarData };
 };

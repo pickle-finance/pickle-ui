@@ -57,12 +57,15 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const dataForChart = gaugeChartData.filter((x) => x.allocPoint > 0.02);
   const dataForTable = gaugeChartData.filter((x) => !dataForChart.includes(x));
 
-  const smallFarmsData = dataForTable?.reduce((acc, cur) => {
-    return {
-      allocPoint: acc.allocPoint + cur.allocPoint,
-      depositTokenName: t("gauges.other"),
-    };
-  }, {allocPoint: 0, depositTokenName: t("gauges.other")});
+  const smallFarmsData = dataForTable?.reduce(
+    (acc, cur) => {
+      return {
+        allocPoint: acc.allocPoint + cur.allocPoint,
+        depositTokenName: t("gauges.other"),
+      };
+    },
+    { allocPoint: 0, depositTokenName: t("gauges.other") },
+  );
 
   dataForChart.push(smallFarmsData);
 

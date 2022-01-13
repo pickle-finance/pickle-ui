@@ -1,13 +1,18 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import {
-  JarDefinition,
-  AssetProtocol,
-} from "picklefinance-core/lib/model/PickleModelJson";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
-import { classNames, formatDollars, protocolIdToName } from "v2/utils";
+import { classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
+import {
+  UserData,
+  UserTokenData,
+} from "picklefinance-core/lib/client/UserModel";
+import { useSelector } from "react-redux";
+import { UserSelectors } from "v2/store/user";
+import { BigNumber } from "@ethersproject/bignumber";
+import { CoreSelectors } from "v2/store/core";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -27,6 +32,27 @@ interface Props {
 }
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
+  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+  const allCore = useSelector(CoreSelectors.selectCore);
+  let picklePrice = 0;
+  if (allCore) {
+    picklePrice = allCore.prices.pickle;
+  }
+  let picklesPending = 0;
+  if (userModel) {
+    const userTokenDetails: UserTokenData | undefined = userModel.tokens.find(
+      (x) => x.assetKey === jar.details.apiKey,
+    );
+    if (userTokenDetails) {
+      picklesPending =
+        BigNumber.from(userTokenDetails.picklePending)
+          .div(1e10)
+          .div(1e6)
+          .toNumber() / 100;
+    }
+  }
+  const pendingPicklesAsDollars = picklesPending * picklePrice;
+
   return (
     <>
       <RowCell
@@ -51,15 +77,17 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             {jar.depositToken.name}
           </p>
           <p className="italic font-normal text-xs text-gray-light">
-            {protocolIdToName(jar.protocol as AssetProtocol)}
+            {jar.protocol}
           </p>
         </div>
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">
-          {formatDollars(100)}
+          {formatDollars(pendingPicklesAsDollars)}
         </p>
-        <p className="font-normal text-xs text-gray-light">9.3 PICKLEs</p>
+        <p className="font-normal text-xs text-gray-light">
+          {picklesPending} PICKLEs
+        </p>
       </RowCell>
       <RowCell>
         <div className="flex items-center">

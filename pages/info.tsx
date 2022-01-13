@@ -152,26 +152,24 @@ const DataPoint = styled.div`
 const PicklePerDayCell = (props: any) => {
   const { t } = useTranslation("common");
   const classes = useStyles();
-  const { val, precision, apy} = props;
+  const { val, precision, apy } = props;
 
   return (
     <Tooltip
-    title={
-      <span>
-        {t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}
-      </span>
-    }
+      title={
+        <span>{t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}</span>
+      }
     >
-        <TableCell className={classes.farmTableCell}>
-          <div className={clsx(classes.cardTitle, classes.cardContent)}>
-            <Avatar
-              variant="square"
-              src="./assets/pickle.png"
-              className={classes.emissionIcon}
-            />
-            {val.toFixed(precision)} / day
-          </div>
-        </TableCell>
+      <TableCell className={classes.farmTableCell}>
+        <div className={clsx(classes.cardTitle, classes.cardContent)}>
+          <Avatar
+            variant="square"
+            src="./assets/pickle.png"
+            className={classes.emissionIcon}
+          />
+          {val.toFixed(precision)} / day
+        </div>
+      </TableCell>
     </Tooltip>
   );
 };
@@ -180,12 +178,12 @@ const ApyCell = (props: any) => {
   const { t } = useTranslation("common");
   const classes = useStyles();
   const { val, jarIndex, farmIndex, isFarm, precision } = props;
-  let cellData = '-'
+  let cellData = "-";
 
-  if ( isFarm && val[farmIndex] ) { 
-    cellData = `${val[farmIndex].toFixed(precision)}%`
-  } else if ( val[jarIndex] ) {
-    cellData = `${val[jarIndex].toFixed(precision)}%`
+  if (isFarm && val[farmIndex]) {
+    cellData = `${val[farmIndex].toFixed(precision)}%`;
+  } else if (val[jarIndex]) {
+    cellData = `${val[jarIndex].toFixed(precision)}%`;
   }
 
   return (
@@ -199,21 +197,28 @@ const ApyCell = (props: any) => {
 
 const TooltipAndApyCell = (props: any) => {
   const { t } = useTranslation("common");
-  const { val, frequency, jarIndex, farmIndex, isFarm, Ndays, precision } = props;
+  const {
+    val,
+    frequency,
+    jarIndex,
+    farmIndex,
+    isFarm,
+    Ndays,
+    precision,
+  } = props;
   const tooltipTitle = () => {
-    return(
+    return (
       <span>
         {t(frequency, {
-          percent: `${((isFarm ? val[farmIndex] : val[jarIndex]) / ( 365 / Ndays )).toFixed(precision)}`,
+          percent: `${(
+            (isFarm ? val[farmIndex] : val[jarIndex]) /
+            (365 / Ndays)
+          ).toFixed(precision)}`,
         })}
       </span>
     );
   };
-  return (
-    <Tooltip title={tooltipTitle()}>
-      {ApyCell(props)}
-    </Tooltip>
-  );
+  return <Tooltip title={tooltipTitle()}>{ApyCell(props)}</Tooltip>;
 };
 
 const FarmRow = (props: any) => {
@@ -251,14 +256,35 @@ const FarmRow = (props: any) => {
         </div>
       </TableCell>
       {isFarm && (
-         <PicklePerDayCell apy={item.apy} val={picklePerDay} precision="3"/>
+        <PicklePerDayCell apy={item.apy} val={picklePerDay} precision="3" />
       )}
-      <TooltipAndApyCell val={jar} frequency="info.daily" jarIndex="oneDay" farmIndex="oneDayFarm" 
-          isFarm={isFarm} Ndays="1" precision="2" />
-      <TooltipAndApyCell val={jar} frequency="info.weekly" jarIndex="sevenDay" farmIndex="sevenDayFarm" 
-          isFarm={isFarm} Ndays="7" precision="2" />
-      <TooltipAndApyCell val={jar} frequency="info.monthly" jarIndex="thirtyDay" farmIndex="thirtyDayFarm" 
-          isFarm={isFarm} Ndays="30" precision="2" />
+      <TooltipAndApyCell
+        val={jar}
+        frequency="info.daily"
+        jarIndex="oneDay"
+        farmIndex="oneDayFarm"
+        isFarm={isFarm}
+        Ndays="1"
+        precision="2"
+      />
+      <TooltipAndApyCell
+        val={jar}
+        frequency="info.weekly"
+        jarIndex="sevenDay"
+        farmIndex="sevenDayFarm"
+        isFarm={isFarm}
+        Ndays="7"
+        precision="2"
+      />
+      <TooltipAndApyCell
+        val={jar}
+        frequency="info.monthly"
+        jarIndex="thirtyDay"
+        farmIndex="thirtyDayFarm"
+        isFarm={isFarm}
+        Ndays="30"
+        precision="2"
+      />
     </TableRow>
   );
 };
@@ -275,8 +301,8 @@ const SkeletonCell = () => {
         />
       </Skeleton>
     </TableCell>
-  )
-}
+  );
+};
 
 const SkeletonChart = (props: any) => {
   const classes = useStyles();
@@ -290,7 +316,7 @@ const SkeletonChart = (props: any) => {
             <SkeletonCell />
             <SkeletonCell />
             <SkeletonCell />
-            {isFarm && (<SkeletonCell />)}
+            {isFarm && <SkeletonCell />}
             <SkeletonCell />
             <SkeletonCell />
             <SkeletonCell />
@@ -307,20 +333,14 @@ const FarmHeaderTooltipAndCell = (props: any) => {
   const { t } = useTranslation("common");
 
   const tooltipTitle = () => {
-    return (
-      <span>
-        {t(tooltipTitleText, {target})}
-      </span>
-    )
-  }
+    return <span>{t(tooltipTitleText, { target })}</span>;
+  };
   return (
     <Tooltip className={classes.cardTitle} title={tooltipTitle()}>
-      <TableCell className={classes.farmTableCell}>
-        {t(cellData)}
-      </TableCell>
+      <TableCell className={classes.farmTableCell}>{t(cellData)}</TableCell>
     </Tooltip>
-  )
-}
+  );
+};
 
 const FarmHeader = (props: any) => {
   const classes = useStyles();
@@ -334,35 +354,35 @@ const FarmHeader = (props: any) => {
         <TableCell className={classes.farmTableCell}>
           <div className={classes.cardTitle}>{target}</div>
         </TableCell>
-        <FarmHeaderTooltipAndCell 
+        <FarmHeaderTooltipAndCell
           tooltipTitleText="info.currentTokenBalance"
           target={target}
-          cellData="info.tokens" 
+          cellData="info.tokens"
         />
-        <FarmHeaderTooltipAndCell 
+        <FarmHeaderTooltipAndCell
           tooltipTitleText="info.currentUsdValue"
           target={target}
-          cellData="info.value" 
+          cellData="info.value"
         />
         {isFarm && (
           <TableCell className={classes.farmTableCell}>
             <div className={classes.cardTitle}>Pickle / $1000</div>
           </TableCell>
         )}
-        <FarmHeaderTooltipAndCell 
+        <FarmHeaderTooltipAndCell
           tooltipTitleText="info.dayApy"
           target={target}
-          cellData="info.day" 
+          cellData="info.day"
         />
-        <FarmHeaderTooltipAndCell 
+        <FarmHeaderTooltipAndCell
           tooltipTitleText="info.weeklyApy"
           target={target}
-          cellData="info.week" 
+          cellData="info.week"
         />
-        <FarmHeaderTooltipAndCell 
+        <FarmHeaderTooltipAndCell
           tooltipTitleText="info.monthlyApy"
           target={target}
-          cellData="info.month" 
+          cellData="info.month"
         />
       </TableRow>
     </TableHead>
@@ -439,7 +459,8 @@ export default function Brining() {
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>
-                <img src="/pickle.png"
+                <img
+                  src="/pickle.png"
                   style={{ width: "24px", verticalAlign: `text-bottom` }}
                 />{" "}
                 {t("info.picklePrice")}
@@ -500,7 +521,9 @@ export default function Brining() {
             <TableBody>
               {protocolInfo && farmInfo && jarInfo ? (
                 jarInfo
-                  .filter((jar: any) => jar.asset.toLowerCase() !== "pickle-eth")
+                  .filter(
+                    (jar: any) => jar.asset.toLowerCase() !== "pickle-eth",
+                  )
                   .sort((a: any, b: any) => {
                     const aBalance = protocolInfo[a.asset.toLowerCase()];
                     const bBalance = protocolInfo[b.asset.toLowerCase()];

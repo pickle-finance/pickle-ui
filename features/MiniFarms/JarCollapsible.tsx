@@ -251,8 +251,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0xb53bc2537e641c37c7b7a8d33aba1b30283cda2f": (
     <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
-  )
-  
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -504,15 +503,16 @@ export const JarCollapsible: FC<{
             onClick={() => {
               if (signer) {
                 // Allow Jar to get LP Token
-                const depositAmt = ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18);
+                const depositAmt = ethers.utils.parseUnits(
+                  depositAmount,
+                  isUsdc ? 6 : 18,
+                );
                 transfer({
                   token: depositToken.address,
                   recipient: jarContract.address,
-                  approvalAmountRequired: depositAmt ,
+                  approvalAmountRequired: depositAmt,
                   transferCallback: async () => {
-                    return jarContract
-                      .connect(signer)
-                      .deposit(depositAmt);
+                    return jarContract.connect(signer).deposit(depositAmt);
                   },
                 });
               }
