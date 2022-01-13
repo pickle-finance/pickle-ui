@@ -5,6 +5,11 @@ import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import Link from "v2/components/Link";
 import Button from "v2/components/Button";
 import MoreInfo from "v2/components/MoreInfo";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
+import { UserSelectors } from "v2/store/user";
+import { getUserAssetDataWithPrices } from "./FarmsTableRowHeader";
 
 interface Props {
   jar: JarDefinition;
@@ -12,6 +17,14 @@ interface Props {
 
 const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
+  const pfcore = useSelector(CoreSelectors.selectCore);
+  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+  const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
+  const jarTokens = data.depositTokensInJar.tokensVisible;
+  const farmTokens = data.depositTokensInFarm.tokensVisible;
+  const tokensInWallet = data.depositTokensInWallet.tokens;
+  const picklesPending = data.earnedPickles.tokensVisible;
+  const depositTokenCountString = tokensInWallet + " Tokens";
 
   return (
     <td
@@ -20,7 +33,9 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
     >
       <div className="block sm:flex">
         <div className="py-4 flex-shrink-0 sm:mr-6">
-          <p className="font-title font-medium text-base leading-5">1.699 LP</p>
+          <p className="font-title font-medium text-base leading-5">
+            {depositTokenCountString}
+          </p>
           <p className="font-normal text-xs text-gray-light mb-6">
             {t("v2.balances.balance")}
           </p>
@@ -40,7 +55,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-green font-medium text-base leading-5">
-              0.00
+              {jarTokens}
             </span>
             <Button>{t("v2.farms.enable")}</Button>
           </div>
@@ -52,7 +67,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-green font-medium text-base leading-5">
-              0.00
+              {farmTokens}
             </span>
             <Button type="disabled">{t("v2.farms.enable")}</Button>
           </div>
@@ -63,7 +78,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-green font-medium text-base leading-5">
-              0.00
+              {picklesPending}
             </span>
             <Button type="disabled">{t("v2.farms.enable")}</Button>
           </div>
