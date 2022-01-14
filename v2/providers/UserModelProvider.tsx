@@ -6,7 +6,7 @@ import { UserModel } from "picklefinance-core/lib/client/UserModel";
 
 import { CoreSelectors } from "v2/store/core";
 import { useAppDispatch } from "v2/store";
-import { setData } from "v2/store/user";
+import { setData, setIsFetching } from "v2/store/user";
 
 const UserModelProvider: FC = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -19,12 +19,17 @@ const UserModelProvider: FC = ({ children }) => {
     if (!timestamp || !core || !account) return;
 
     const refreshUserModel = async () => {
+      dispatch(setIsFetching(true));
+
       const user = new UserModel(core, account, new Map());
 
-      // TODO: error handling
-      const data = await user.generateUserModel();
-
-      dispatch(setData(data));
+      user
+        .generateUserModel()
+        .then((data) => {
+          dispatch(setData(data));
+          dispatch(setIsFetching(false));
+        })
+        .catch(() => setIsFetching(false));
     };
 
     refreshUserModel();

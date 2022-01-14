@@ -1,9 +1,13 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  JarDefinition,
+  PickleAsset,
+  PickleModelJson,
+} from "picklefinance-core/lib/model/PickleModelJson";
 
-import { classNames, formatDollars } from "v2/utils";
+import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
 import {
   UserData,
@@ -30,28 +34,123 @@ interface Props {
   open: boolean;
   jar: JarDefinition;
 }
+export interface UserAssetDataWithPricesComponent {
+  wei: BigNumber;
+  tokens: string;
+  tokensVisible: string;
+  tokensUSD: number;
+}
+export interface UserAssetDataWithPrices {
+  depositTokensInWallet: UserAssetDataWithPricesComponent;
+  depositTokensInJar: UserAssetDataWithPricesComponent;
+  depositTokensInFarm: UserAssetDataWithPricesComponent;
+  earnedPickles: UserAssetDataWithPricesComponent;
+}
+const userAssetDataZeroComponent = (): UserAssetDataWithPricesComponent => {
+  return {
+    wei: BigNumber.from(0),
+    tokens: "0",
+    tokensVisible: "0.00",
+    tokensUSD: 0,
+  };
+};
+
+const createUserAssetDataComponent = (
+  wei: BigNumber,
+  decimals: number,
+  price: number,
+  ratio: number,
+): UserAssetDataWithPricesComponent => {
+  // TODO this will cause problems for some tokens, using only 3 decimals of precission
+  const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
+  const weiMulPrice = depositTokenWei.mul((price * 1e8).toFixed()).div(1e8);
+  return {
+    wei: depositTokenWei,
+    tokens: bigNumberToTokenNumber(
+      depositTokenWei,
+      decimals,
+      decimals,
+    ).toString(),
+    tokensVisible: bigNumberToTokenNumber(
+      depositTokenWei,
+      decimals,
+      3,
+    ).toString(),
+    tokensUSD: bigNumberToTokenNumber(weiMulPrice, decimals, 3),
+  };
+};
+
+const userAssetDataZeroEverything = (): UserAssetDataWithPrices => {
+  return {
+    depositTokensInWallet: userAssetDataZeroComponent(),
+    depositTokensInJar: userAssetDataZeroComponent(),
+    depositTokensInFarm: userAssetDataZeroComponent(),
+    earnedPickles: userAssetDataZeroComponent(),
+  };
+};
+export const getUserAssetDataWithPrices = (
+  jar: JarDefinition,
+  core: PickleModelJson | undefined,
+  userModel: UserData | undefined,
+): UserAssetDataWithPrices => {
+  if (core === undefined || userModel === undefined) {
+    return userAssetDataZeroEverything();
+  }
+  const userTokenDetails: UserTokenData | undefined = userModel.tokens.find(
+    (x) => x.assetKey === jar.details.apiKey,
+  );
+  if (userTokenDetails === undefined) {
+    return userAssetDataZeroEverything();
+  }
+  const jarDecimals = jar.details.decimals
+    ? jar.details.decimals
+    : jar.depositToken.decimals
+    ? jar.depositToken.decimals
+    : 18;
+  const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userTokenDetails.depositTokenBalance),
+    jarDecimals,
+    jar.depositToken.price || 0,
+    1.0,
+  );
+  const jarComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userTokenDetails.pAssetBalance),
+    jarDecimals,
+    jar.depositToken.price || 0,
+    jar.details.ratio || 0,
+  );
+  const farmComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userTokenDetails.pStakedBalance),
+    jarDecimals,
+    jar.depositToken.price || 0,
+    jar.details.ratio || 0,
+  );
+  const pickleComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userTokenDetails.picklePending),
+    18,
+    core.prices.pickle || 0,
+    1.0,
+  );
+  return {
+    earnedPickles: pickleComponent,
+    depositTokensInWallet: wallet,
+    depositTokensInJar: jarComponent,
+    depositTokensInFarm: farmComponent,
+  };
+};
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   const allCore = useSelector(CoreSelectors.selectCore);
-  let picklePrice = 0;
-  if (allCore) {
-    picklePrice = allCore.prices.pickle;
-  }
-  let picklesPending = 0;
-  if (userModel) {
-    const userTokenDetails: UserTokenData | undefined = userModel.tokens.find(
-      (x) => x.assetKey === jar.details.apiKey,
-    );
-    if (userTokenDetails) {
-      picklesPending =
-        BigNumber.from(userTokenDetails.picklePending)
-          .div(1e10)
-          .div(1e6)
-          .toNumber() / 100;
-    }
-  }
-  const pendingPicklesAsDollars = picklesPending * picklePrice;
+  const data = getUserAssetDataWithPrices(jar, allCore, userModel);
+  const totalTokensInJarAndFarm =
+    data.depositTokensInJar.tokens + data.depositTokensInFarm.tokens;
+  const depositTokenUSD =
+    data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
+  const pendingPicklesAsDollars = data.earnedPickles.tokensUSD;
+  const picklesPending = data.earnedPickles.tokensVisible;
+  const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
+  const aprRangeString = "42%";
 
   return (
     <>
@@ -94,14 +193,18 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           <FarmsBadge active />
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5">
-              {formatDollars(9000)}
+              {formatDollars(depositTokenUSD)}
             </p>
-            <p className="font-normal text-xs text-gray-light">10.33 LP</p>
+            <p className="font-normal text-xs text-gray-light">
+              {depositTokenCountString}
+            </p>
           </div>
         </div>
       </RowCell>
       <RowCell>
-        <p className="font-title font-medium text-base leading-5">42%</p>
+        <p className="font-title font-medium text-base leading-5">
+          {aprRangeString}
+        </p>
       </RowCell>
       <RowCell className={classNames(simple && "rounded-r-xl")}>
         <p className="font-title font-medium text-base leading-5">

@@ -12,6 +12,7 @@ import Web3Provider from "v2/providers/Web3Provider";
 import UserModelProvider from "v2/providers/UserModelProvider";
 import ConnectionStatus from "v2/features/connection/ConnectionStatus";
 import BlockNumber from "v2/features/connection/BlockNumber";
+import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -34,7 +35,10 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
             <TopNavbar PageTitle={PageTitle} />
             <ConnectionStatus />
             <Component {...pageProps} />
-            <BlockNumber />
+            <div className="flex justify-between bg-black my-10">
+              <UserBalanceStatus />
+              <BlockNumber />
+            </div>
           </div>
         </main>
         <CoreProvider />
