@@ -184,25 +184,12 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         )}
       >
         <TokenIcon
-              src={
-                FARM_LP_TO_ICON[
-                  jar.contract as keyof typeof FARM_LP_TO_ICON
-                ]
-              }
-            />
-        {/* <div className="w-9 h-9 rounded-full border-3 border-gray-outline mr-3">
-          <Image
-            // WIP
-            // src={getFarmIconPath(jar.contract)}
-            src={'/pickle.png/'}
-            className="rounded-full"
-            width={200}
-            height={200}
-            layout="responsive"
-            alt={jar.depositToken.name}
-            title={jar.depositToken.name}
-          />
-        </div> */}
+          src={
+            FARM_LP_TO_ICON[
+              jar.contract as keyof typeof FARM_LP_TO_ICON
+            ]
+          }
+        />
         <div>
           <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
             {jar.depositToken.name}
