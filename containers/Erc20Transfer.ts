@@ -63,15 +63,14 @@ function useERC20Transfer() {
 
       try {
         const tx = await transferCallback();
-        await tx.wait();
+        const res = await tx.wait();
+        setTransferStatus(token, recipient, Status.Success);
+        return res;
       } catch (e) {
         console.log("error", e.toString());
         setTransferStatus(token, recipient, Status.Failed);
         return false;
       }
-
-      setTransferStatus(token, recipient, Status.Success);
-      return true;
     }
   };
 

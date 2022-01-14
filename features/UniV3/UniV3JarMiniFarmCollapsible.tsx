@@ -192,7 +192,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   const [exitButton, setExitButton] = useState<string | null>(null);
 
   const depositAndStake = async () => {
-    if (balNum && minichef && address) {
+    if (minichef && address) {
       try {
         setIsEntryBatch(true);
         const res = await transfer({
@@ -218,9 +218,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
           );
           await tx.wait();
         }
-        const realRatio = await Token.getRatio();
+        console.log(res);
         setDepositStakeButton(t("farms.staking"));
-        const newBalance = getStakeableBalance(realRatio);
+        const newBalance = getStakeableBalance(res);
         const farmTx = await minichef.deposit(poolIndex, newBalance, address);
         await farmTx.wait();
         await sleep(10000);
@@ -237,12 +237,10 @@ export const UniV3JarMiniFarmCollapsible: FC<{
 
   // Necessary because querying pToken balance intros a race condition
   // TODO use event to get pTokens returned to user
-  const getStakeableBalance = (realRatio: ethers.BigNumber) =>
-    parseEther("0")
-      .mul(ethers.utils.parseUnits("1", 18))
-      .div(realRatio)
-      .add(deposited)
-      .sub("1");
+  const getStakeableBalance = (res: ethers.ContractReceipt) => {
+    const pTokenAmount = res.logs.filter((x) => x.address === farmDepositToken.address)[0]?.data;
+    return BigNumber.from(pTokenAmount)
+  };
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
@@ -330,6 +328,19 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   }, [erc20TransferStatuses, jarData, tokenBalances, blockNum, address]);
   const { erc20, minichef, jar } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
+
+  useEffect(() => {
+    const checkAllowance = async () => {
+      if (erc20 && address && signer && minichef) {
+        const Token = erc20.attach(farmDepositToken.address).connect(signer);
+        const allowance = await Token.allowance(address, minichef.address);
+        if (allowance.gt(ethers.constants.Zero)) {
+          setApproved(true);
+        }
+      }
+    };
+    checkAllowance();
+  }, [blockNum, address, erc20]);
 
   if (!token0 || !token1) return <> </>;
   return (
@@ -483,11 +494,12 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {!stakedNum && `(${formatValue(
-                  (depositedNum * token0.jarAmount * ratio) / supply,
-                )} ${token0.name.toUpperCase()}, ${formatValue(
-                  (depositedNum * token1.jarAmount * ratio) / supply,
-                )} ${token1.name.toUpperCase()})`}
+                {!stakedNum &&
+                  `(${formatValue(
+                    (depositedNum * token0.jarAmount * ratio) / supply,
+                  )} ${token0.name.toUpperCase()}, ${formatValue(
+                    (depositedNum * token1.jarAmount * ratio) / supply,
+                  )} ${token1.name.toUpperCase()})`}
               </div>
               <Link
                 color
