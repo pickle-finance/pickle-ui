@@ -326,7 +326,8 @@
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "liquidity": "Liquidity",
-      "loading": "Loading farms ...",
+      "loadingFarms": "Loading farms ...",
+      "loadingUserModel": "Loading your balances ...",
       "stakedToken": "{{ token }} staked"
     },
     "gasPrices": {
