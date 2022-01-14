@@ -106,14 +106,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
-  const balNum = parseFloat(formatEther(balance));
-  const depositedNum = parseFloat(formatEther(deposited));
-
-  const depositedStr = formatValue(depositedNum);
-
-  const depositedUnderlyingStr = formatValue(
-    parseFloat(formatEther(deposited)) * ratio,
-  );
   // Farm info
   const {
     depositToken: farmDepositToken,
@@ -126,15 +118,18 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     totalAPY,
   } = farmData;
 
+  const depositedNum = parseFloat(formatEther(deposited));
+
+  const depositedStr = formatValue(depositedNum);
+
   const stakedNum = parseFloat(formatEther(staked));
 
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  );
+  const totalNum = parseFloat(formatEther(deposited.add(staked)));
+
+  const valueStr = (usdPerPToken * totalNum).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   const [deposit0Amount, setDeposit0Amount] = useState("");
   const [deposit1Amount, setDeposit1Amount] = useState("");
@@ -238,8 +233,10 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   // Necessary because querying pToken balance intros a race condition
   // TODO use event to get pTokens returned to user
   const getStakeableBalance = (res: ethers.ContractReceipt) => {
-    const pTokenAmount = res.logs.filter((x) => x.address === farmDepositToken.address)[0]?.data;
-    return BigNumber.from(pTokenAmount)
+    const pTokenAmount = res.logs.filter(
+      (x) => x.address === farmDepositToken.address,
+    )[0]?.data;
+    return BigNumber.from(pTokenAmount);
   };
 
   const exit = async () => {
@@ -496,9 +493,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               <div>
                 {!stakedNum &&
                   `(${formatValue(
-                    (depositedNum * token0.jarAmount * ratio) / supply,
+                    (totalNum * token0.jarAmount) / supply,
                   )} ${token0.name.toUpperCase()}, ${formatValue(
-                    (depositedNum * token1.jarAmount * ratio) / supply,
+                    (totalNum * token1.jarAmount) / supply,
                   )} ${token1.name.toUpperCase()})`}
               </div>
               <Link
@@ -593,9 +590,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                   {`(${formatValue(
-                    (stakedNum * token0.jarAmount * ratio) / supply,
+                    (totalNum * token0.jarAmount) / supply,
                   )} ${token0.name.toUpperCase()}, ${formatValue(
-                    (stakedNum * token1.jarAmount * ratio) / supply,
+                    (totalNum * token1.jarAmount) / supply,
                   )} ${token1.name.toUpperCase()})`}
                 </div>
                 <Link
