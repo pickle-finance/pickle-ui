@@ -78,6 +78,7 @@
     "react-select": "^5.2.1",
     "recharts": "^2.0.8",
     "recharts-scale": "^0.4.3",
+    "rooks": "^5.8.0",
     "rxjs": "^6.6.3",
     "sass": "^1.26.11",
     "styled-components": "^5.2.0",

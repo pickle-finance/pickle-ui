@@ -50,7 +50,7 @@ const FarmsTable: FC<Props> = ({ simple, title, dashboard }) => {
                 </tr>
               </thead>
               <tbody className="text-white">
-                <FarmsTableBody simple={simple} dashboard={dashboard}/>
+                <FarmsTableBody simple={simple} dashboard={dashboard} />
               </tbody>
             </table>
           </div>

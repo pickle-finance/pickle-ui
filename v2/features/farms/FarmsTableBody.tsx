@@ -5,7 +5,10 @@ import { useSelector } from "react-redux";
 import FarmsTableRow from "./FarmsTableRow";
 import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import {
+  UserData,
+  UserTokenData,
+} from "picklefinance-core/lib/client/UserModel";
 
 interface Props {
   simple?: boolean;
@@ -19,10 +22,15 @@ const FarmsTableBody: FC<Props> = ({ simple, dashboard }) => {
 
   // TODO Should be all assets, not just jars
   let jars = useSelector(CoreSelectors.selectEnabledJars);
-  if( dashboard && userModel) {
-    const empty = (val:string) => val !== undefined && val !== "0";
-    const showAsset = (x:UserTokenData):boolean => !empty(x.pAssetBalance) || !empty(x.pStakedBalance) || !empty(x.picklePending);
-    const apiKeys:string[] = userModel.tokens.filter((x)=> showAsset(x)).map((x)=>x.assetKey);
+  if (dashboard && userModel) {
+    const empty = (val: string) => val !== undefined && val !== "0";
+    const showAsset = (x: UserTokenData): boolean =>
+      !empty(x.pAssetBalance) ||
+      !empty(x.pStakedBalance) ||
+      !empty(x.picklePending);
+    const apiKeys: string[] = userModel.tokens
+      .filter((x) => showAsset(x))
+      .map((x) => x.assetKey);
     jars = jars.filter((x) => apiKeys.includes(x.details.apiKey));
   }
 
