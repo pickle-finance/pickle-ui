@@ -22,7 +22,6 @@ import { useTranslation } from "next-i18next";
 import { FARM_LP_TO_ICON } from "features/Farms/FarmCollapsible";
 import { TokenIcon } from "components/TokenIcon";
 
-
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
     className={classNames(
@@ -33,6 +32,40 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
     {children}
   </td>
 );
+const chainProtocol = (
+  jar: JarDefinition,
+  pfCore: PickleModelJson | undefined,
+): JSX.Element => {
+  return (
+    <div>
+      <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
+        {jar.depositToken.name}
+      </p>
+      <table>
+        <tr>
+          <td>
+            <div className="w-4 h-4 mr-1">
+              <Image
+                src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+                className="flex inline rounded-full"
+                width={20}
+                height={20}
+                layout="responsive"
+                alt={jar.chain}
+                title={jar.chain}
+              />
+            </div>
+          </td>
+          <td>
+            <p className="italic font-normal text-xs text-gray-light">
+              {jar.protocol}
+            </p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  );
+};
 
 interface Props {
   simple?: boolean;
@@ -144,21 +177,26 @@ export const getUserAssetDataWithPrices = (
   };
 };
 
-const formatNetworkName = (chain: string, pfcore: PickleModelJson | undefined): string => {
+const formatNetworkName = (
+  chain: string,
+  pfcore: PickleModelJson | undefined,
+): string => {
   try {
-    return pfcore?.chains.find(x => x.network === chain)?.networkVisible || chain;
+    return (
+      pfcore?.chains.find((x) => x.network === chain)?.networkVisible || chain
+    );
   } catch (err) {
     return chain;
   }
-}
+};
 const formatImagePath = (chain: string): string => {
   const thisNetwork = networks.find((network) => network.name === chain);
   if (thisNetwork) {
-    return thisNetwork.icon
+    return thisNetwork.icon;
   } else {
-    return '/pickle.png'
+    return "/pickle.png";
   }
-}
+};
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const { t } = useTranslation("common");
@@ -184,13 +222,10 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         )}
       >
         <TokenIcon
-          src={
-            FARM_LP_TO_ICON[
-              jar.contract as keyof typeof FARM_LP_TO_ICON
-            ]
-          }
+          src={FARM_LP_TO_ICON[jar.contract as keyof typeof FARM_LP_TO_ICON]}
         />
-        <div>
+        {chainProtocol(jar, allCore)}
+        {/* <div>
           <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
             {jar.depositToken.name}
           </p>
@@ -216,21 +251,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
               </td>
             </tr>
           </table>
-          {/* <p className="italic font-normal text-xs text-gray-light">
-            {jar.protocol}
-          </p>
-          <div className="w-5 h-5">
-            <Image
-              src={formatImagePath(formatNetworkName(jar.chain, allCore))}
-              className="flex inline rounded-full"
-              width={20}
-              height={20}
-              layout="responsive"
-              alt={jar.chain}
-              title={jar.chain}
-            />
-          </div> */}
-        </div>
+        </div> */}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">

@@ -24,13 +24,13 @@ const DillBalanceCard: FC = () => {
         <div className="flex mr-20">
           <div className="w-12 h-12 p-2 bg-black rounded-full mr-5">
             <Image
-                src="/dill-icon.png"
-                width={200}
-                height={200}
-                layout="responsive"
-                alt="Pickle Finance"
-                title="Pickle Finance"
-              />
+              src="/dill-icon.png"
+              width={200}
+              height={200}
+              layout="responsive"
+              alt="Pickle Finance"
+              title="Pickle Finance"
+            />
           </div>
           <div>
             <p className="font-title font-medium text-2xl leading-7 mb-1">

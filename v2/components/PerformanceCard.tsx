@@ -16,7 +16,6 @@ const PerformanceCard: FC = () => {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-
   return (
     <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
       <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-gray-dark">
