@@ -4,6 +4,7 @@ import { useTranslation, Trans } from "next-i18next";
 
 import { UserSelectors } from "v2/store/user";
 import TimeAgo from "v2/components/TimeAgo";
+import Ping from "./Ping";
 
 const UserBalancesStatus: FC = () => {
   const { t } = useTranslation("common");
@@ -14,10 +15,7 @@ const UserBalancesStatus: FC = () => {
     return (
       <div className="flex items-center text-gray-outline-light text-sm">
         <p>{t("v2.balances.fetching")}</p>
-        <div className="inline-flex relative h-3 w-3 ml-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-light opacity-75" />
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-orange opacity-90" />
-        </div>
+        <Ping />
       </div>
     );
 
