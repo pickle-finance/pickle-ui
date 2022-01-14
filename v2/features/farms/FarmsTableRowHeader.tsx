@@ -194,8 +194,30 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
             {jar.depositToken.name}
           </p>
-          <p className="italic font-normal text-xs text-gray-light">
-            {`${jar.protocol} on ${formatNetworkName(jar.chain, allCore)}`}
+          <table>
+            <tr>
+              <td>
+                <div className="w-4 h-4 mr-1">
+                  <Image
+                    src={formatImagePath(formatNetworkName(jar.chain, allCore))}
+                    className="flex inline rounded-full"
+                    width={20}
+                    height={20}
+                    layout="responsive"
+                    alt={jar.chain}
+                    title={jar.chain}
+                  />
+                </div>
+              </td>
+              <td>
+                <p className="italic font-normal text-xs text-gray-light">
+                  {jar.protocol}
+                </p>
+              </td>
+            </tr>
+          </table>
+          {/* <p className="italic font-normal text-xs text-gray-light">
+            {jar.protocol}
           </p>
           <div className="w-5 h-5">
             <Image
@@ -207,7 +229,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
               alt={jar.chain}
               title={jar.chain}
             />
-          </div>
+          </div> */}
         </div>
       </RowCell>
       <RowCell>

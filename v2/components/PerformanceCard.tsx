@@ -1,17 +1,21 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { CashIcon, DatabaseIcon } from "@heroicons/react/solid";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "./Button";
 import HarvestModal from "./HarvestModal";
+import { useSelector } from "react-redux";
+import { UserSelectors } from "v2/store/user";
 
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
   let [isOpen, setIsOpen] = useState<boolean>(false);
+  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
 
   return (
     <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
@@ -33,7 +37,8 @@ const PerformanceCard: FC = () => {
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
-                $9,888.99
+                {/* {userModel?.earnings || 0} */}
+                {420}
               </p>
               <p className="text-gray-light text-sm">
                 {t("v2.balances.balance")}
@@ -53,7 +58,8 @@ const PerformanceCard: FC = () => {
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
-                $777.89
+                {69}
+                {/* {userModel?.pickles} */}
               </p>
               <p className="text-gray-light text-sm">
                 {t("v2.dashboard.unclaimedRewards")}
