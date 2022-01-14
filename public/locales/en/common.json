@@ -44,7 +44,8 @@
       "arbitrum": "Arbitrum",
       "moonriver": "Moonriver",
       "cronos": "Cronos",
-      "aurora": "Aurora"
+      "aurora": "Aurora",
+      "metis": "Metis"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",

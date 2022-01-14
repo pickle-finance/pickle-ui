@@ -20,6 +20,7 @@ export enum NETWORK_NAMES {
   MOONRIVER = "Moonriver",
   CRONOS = "Cronos",
   AURORA = "Aurora",
+  METIS = "Metis",
 }
 
 export const NETWORK_NAMES_PFCORE_MAP: any = {
@@ -30,6 +31,7 @@ export const NETWORK_NAMES_PFCORE_MAP: any = {
   Moonriver: ChainNetwork.Moonriver,
   Cronos: ChainNetwork.Cronos,
   Aurora: ChainNetwork.Aurora,
+  Metis: ChainNetwork.Metis,
 };
 
 export type ChainName =
@@ -40,6 +42,7 @@ export type ChainName =
   | NETWORK_NAMES.MOONRIVER
   | NETWORK_NAMES.CRONOS
   | NETWORK_NAMES.AURORA
+  | NETWORK_NAMES.METIS
   | null;
 
 interface Config {
@@ -69,6 +72,9 @@ export const config: Config = {
     },
     1313161554: {
       name: NETWORK_NAMES.AURORA,
+    },
+    1088: {
+      name: NETWORK_NAMES.METIS,
     },
   },
   addresses: {
@@ -123,6 +129,13 @@ export const config: Config = {
       pickle: "0x291c8fceaca3342b29cc36171deb98106f712c66",
       masterChef: "0x13cc0A2644f4f727db23f5B9dB3eBd72134085b7",
       minichef: "0x13cc0A2644f4f727db23f5B9dB3eBd72134085b7",
+      rewarder: "0x0000000000000000000000000000000000000000",
+    },
+    Metis: {
+      controller: "0xD556018E7b37e66f618A65737144A2ae2B98127f",
+      pickle: "0x0000000000000000000000000000000000000000",
+      masterChef: "0x0000000000000000000000000000000000000000",
+      minichef: "0x0000000000000000000000000000000000000000",
       rewarder: "0x0000000000000000000000000000000000000000",
     },
   },
