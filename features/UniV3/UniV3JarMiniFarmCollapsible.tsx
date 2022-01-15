@@ -86,6 +86,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   jarData: UserJarData;
   farmData: FarmDataWithAPY;
 }> = ({ jarData, farmData }) => {
+  if (!jarData || !farmData) return <></>;
   const {
     name,
     jarContract,
@@ -124,7 +125,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
 
   const stakedNum = parseFloat(formatEther(staked));
 
-  const totalNum = parseFloat(formatEther(deposited.add(staked)));
+  const totalNum = parseFloat(formatEther((deposited || BigNumber.from("0").add(staked || BigNumber.from("0)")))));
 
   const valueStr = (usdPerPToken * totalNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
