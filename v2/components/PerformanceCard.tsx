@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { UserData } from "picklefinance-core/lib/client/UserModel";
+import { CashIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
 import HarvestModal from "./HarvestModal";
@@ -88,15 +88,8 @@ const PerformanceCard: FC = () => {
         </h2>
         <div className="flex flex-wrap mb-9">
           <div className="flex mr-20 mb-6 xl:mb-0">
-            <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
-              <Image
-                src="/pickle-icon.svg"
-                width={200}
-                height={200}
-                layout="responsive"
-                alt="Pickle Finance"
-                title="Pickle Finance"
-              />
+            <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
+              <CashIcon />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
