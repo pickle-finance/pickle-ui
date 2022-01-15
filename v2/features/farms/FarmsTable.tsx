@@ -13,12 +13,12 @@ const FarmsTableHeaderCell: FC = ({ children }) => (
 );
 
 interface Props {
+  requiresUserModel?: boolean;
   simple?: boolean;
   title: string;
-  dashboard: boolean;
 }
 
-const FarmsTable: FC<Props> = ({ simple, title, dashboard }) => {
+const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
   const { t } = useTranslation("common");
 
   return (
@@ -46,11 +46,14 @@ const FarmsTable: FC<Props> = ({ simple, title, dashboard }) => {
                     {t("v2.farms.liquidity")}
                   </FarmsTableHeaderCell>
                   {/* Chevron down/up column */}
-                  {!simple && <FarmsTableHeaderCell></FarmsTableHeaderCell>}
+                  {!simple && <FarmsTableHeaderCell />}
                 </tr>
               </thead>
               <tbody className="text-white">
-                <FarmsTableBody simple={simple} dashboard={dashboard} />
+                <FarmsTableBody
+                  simple={simple}
+                  requiresUserModel={requiresUserModel}
+                />
               </tbody>
             </table>
           </div>

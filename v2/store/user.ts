@@ -11,7 +11,7 @@ interface UserState {
 
 const initialState: UserState = {
   data: undefined,
-  isFetching: false,
+  isFetching: true,
   updatedAt: undefined,
 };
 

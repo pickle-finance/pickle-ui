@@ -13,6 +13,7 @@ const blocksPerMinute: Record<number, number> = {
   1285: 4.3, // moonriver
   25: 5.7, // cronos
   1313161554: 1, // aurora
+  1088: 17, // aurora
 };
 
 const usePickleCore = () => {

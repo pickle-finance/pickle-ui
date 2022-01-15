@@ -44,7 +44,8 @@
       "arbitrum": "Arbitrum",
       "moonriver": "Moonriver",
       "cronos": "Cronos",
-      "aurora": "Aurora"
+      "aurora": "Aurora",
+      "metis": "Metis"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
@@ -326,7 +327,8 @@
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "liquidity": "Liquidity",
-      "loading": "Loading farms ...",
+      "loadingFarms": "Loading farms ...",
+      "loadingUserModel": "Loading your balances ...",
       "stakedToken": "{{ token }} staked"
     },
     "gasPrices": {
