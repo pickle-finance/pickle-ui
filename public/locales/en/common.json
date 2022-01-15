@@ -316,6 +316,7 @@
     "farms": {
       "apy": "APY",
       "asset": "Asset",
+      "chain": "Chain",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
       "earned": "Earned",

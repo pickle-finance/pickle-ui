@@ -17,6 +17,10 @@ import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
 import { BigNumber } from "@ethersproject/bignumber";
 import { CoreSelectors } from "v2/store/core";
+import { networks } from "../connection/networks";
+import { useTranslation } from "next-i18next";
+import { FARM_LP_TO_ICON } from "features/Farms/FarmCollapsible";
+import { TokenIcon } from "components/TokenIcon";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -28,6 +32,40 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
     {children}
   </td>
 );
+const chainProtocol = (
+  jar: JarDefinition,
+  pfCore: PickleModelJson | undefined,
+): JSX.Element => {
+  return (
+    <div>
+      <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
+        {jar.depositToken.name}
+      </p>
+      <table>
+        <tr>
+          <td>
+            <div className="w-4 h-4 mr-1">
+              <Image
+                src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+                className="flex inline rounded-full"
+                width={20}
+                height={20}
+                layout="responsive"
+                alt={jar.chain}
+                title={jar.chain}
+              />
+            </div>
+          </td>
+          <td>
+            <p className="italic font-normal text-xs text-gray-light">
+              {jar.protocol}
+            </p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  );
+};
 
 interface Props {
   simple?: boolean;
@@ -139,7 +177,30 @@ export const getUserAssetDataWithPrices = (
   };
 };
 
+const formatNetworkName = (
+  chain: string,
+  pfcore: PickleModelJson | undefined,
+): string => {
+  try {
+    return (
+      pfcore?.chains.find((x) => x.network === chain)?.networkVisible || chain
+    );
+  } catch (err) {
+    return chain;
+  }
+};
+const formatImagePath = (chain: string): string => {
+  const thisNetwork = networks.find((network) => network.name === chain);
+  if (thisNetwork) {
+    return thisNetwork.icon;
+  } else {
+    return "/pickle.png";
+  }
+};
+
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
+  const { t } = useTranslation("common");
+
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   const allCore = useSelector(CoreSelectors.selectCore);
   const data = getUserAssetDataWithPrices(jar, allCore, userModel);
@@ -160,25 +221,37 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           "rounded-tl-xl flex items-center",
         )}
       >
-        <div className="w-9 h-9 rounded-full border-3 border-gray-outline mr-3">
-          <Image
-            src="/alchemix.png"
-            className="rounded-full"
-            width={200}
-            height={200}
-            layout="responsive"
-            alt={jar.depositToken.name}
-            title={jar.depositToken.name}
-          />
-        </div>
-        <div>
+        <TokenIcon
+          src={FARM_LP_TO_ICON[jar.contract as keyof typeof FARM_LP_TO_ICON]}
+        />
+        {chainProtocol(jar, allCore)}
+        {/* <div>
           <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
             {jar.depositToken.name}
           </p>
-          <p className="italic font-normal text-xs text-gray-light">
-            {jar.protocol}
-          </p>
-        </div>
+          <table>
+            <tr>
+              <td>
+                <div className="w-4 h-4 mr-1">
+                  <Image
+                    src={formatImagePath(formatNetworkName(jar.chain, allCore))}
+                    className="flex inline rounded-full"
+                    width={20}
+                    height={20}
+                    layout="responsive"
+                    alt={jar.chain}
+                    title={jar.chain}
+                  />
+                </div>
+              </td>
+              <td>
+                <p className="italic font-normal text-xs text-gray-light">
+                  {jar.protocol}
+                </p>
+              </td>
+            </tr>
+          </table>
+        </div> */}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">

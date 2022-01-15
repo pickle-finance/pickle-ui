@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
+import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { CashIcon, DatabaseIcon } from "@heroicons/react/solid";
+import { CashIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
 import HarvestModal from "./HarvestModal";
@@ -70,6 +71,7 @@ const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+
   const allCore = useSelector(CoreSelectors.selectCore);
   const userTotalBalance =
     allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
@@ -100,7 +102,14 @@ const PerformanceCard: FC = () => {
           </div>
           <div className="flex">
             <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
-              <DatabaseIcon />
+              <Image
+                src="/pickle-icon.svg"
+                width={200}
+                height={200}
+                layout="responsive"
+                alt="Pickle Finance"
+                title="Pickle Finance"
+              />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
