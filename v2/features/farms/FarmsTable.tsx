@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
-
+import SearchBar from "v2/components/farmSearch";
 import FarmsTableBody from "./FarmsTableBody";
 
 const FarmsTableHeaderCell: FC = ({ children }) => (
@@ -20,6 +20,7 @@ interface Props {
 
 const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
   const { t } = useTranslation("common");
+  const [farmFilter, setFarmFilter] = useState("");
 
   return (
     <>
@@ -27,6 +28,10 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
+            <SearchBar 
+              farmFilter={farmFilter}
+              setFarmFilter={setFarmFilter}
+            />
             <table className="min-w-full table-auto border-collapse">
               <thead className="bg-black uppercase">
                 <tr>
@@ -53,6 +58,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
                 <FarmsTableBody
                   simple={simple}
                   requiresUserModel={requiresUserModel}
+                  farmFilter={farmFilter}
                 />
               </tbody>
             </table>

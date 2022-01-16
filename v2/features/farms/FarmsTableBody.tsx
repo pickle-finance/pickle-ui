@@ -8,6 +8,7 @@ import { UserSelectors } from "v2/store/user";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import Ping from "../connection/Ping";
 import { CheckCircleIcon } from "@heroicons/react/solid";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
@@ -18,9 +19,14 @@ const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
+  farmFilter?: string;
 }
 
-const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
+const FarmsTableBody: FC<Props> = ({
+  simple,
+  requiresUserModel,
+  farmFilter,
+}) => {
   const { t } = useTranslation("common");
   const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
   const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
@@ -63,14 +69,26 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
       </tr>
     );
   }
-
   return (
     <>
-      {jars.map((jar) => (
-        <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
-      ))}
+      {jarsToShow(jars, farmFilter)
+
+        .map((jar) => (
+          <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
+        ))}
     </>
   );
 };
+const jarsToShow = (jars: JarDefinition[], farmFilter: string | undefined): JarDefinition[] => {
+  return jars.filter((jar) => {
+    if (farmFilter !== "" && farmFilter !== undefined) {
+      return jar.farm?.farmNickname
+        .toLowerCase()
+        .includes(farmFilter.toLowerCase());
+    } else {
+      return true;
+    }
+  })
+}
 
 export default FarmsTableBody;

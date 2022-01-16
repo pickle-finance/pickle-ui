@@ -59,13 +59,6 @@ const renderSelectOptions = (gauge: UserGaugeData) => ({
   label: gauge.depositTokenName,
   value: gauge.address,
 });
-// <Select.Option
-//   key={gauge.address}
-//   style={{ color: pickleWhite }}
-//   value={gauge.depositTokenName}
-// >
-//   {gauge.depositTokenName}
-// </Select.Option>
 
 const compare = (otherArray: UserGaugeData[]) => (current: UserGaugeData) => {
   otherArray.filter((other) => other.address == current.address).length == 0;
@@ -374,20 +367,6 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           onChange={(value) => handleSelect(value.map((x) => x.label))}
           options={gauges.map(renderSelectOptions)}
         />
-        {/* <Button
-          size="large"
-          css={{
-            height: "unset !important",
-            display: "flex !important",
-            alignItems: "center",
-            marginLeft: "20px",
-            width: "120px !important",
-            minWidth: "0 !important",
-          }}
-          onClick={handleSelectAll}
-        >
-          {t("gauges.selectAll")}
-        </Button> */}
       </div>
       <Spacer y={0.5} />
       <h3>{t("gauges.selectedFarms")}</h3>
