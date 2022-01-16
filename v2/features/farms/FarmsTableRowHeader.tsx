@@ -291,7 +291,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           <div className="flex justify-end pr-3">
             <ChevronDownIcon
               className={classNames(
-                open && "transform rotate-180",
+                open && "rotate-180",
                 "text-white ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"
