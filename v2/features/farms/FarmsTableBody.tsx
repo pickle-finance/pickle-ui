@@ -8,6 +8,7 @@ import { UserSelectors } from "v2/store/user";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import Ping from "../connection/Ping";
 import { CheckCircleIcon } from "@heroicons/react/solid";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
@@ -70,21 +71,24 @@ const FarmsTableBody: FC<Props> = ({
   }
   return (
     <>
-      {jars
-        .filter((jar) => {
-          if (farmFilter !== "" && farmFilter !== undefined) {
-            return jar.farm?.farmNickname
-              .toLowerCase()
-              .includes(farmFilter.toLowerCase());
-          } else {
-            return jar;
-          }
-        })
+      {jarsToShow(jars, farmFilter)
+
         .map((jar) => (
           <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
         ))}
     </>
   );
 };
+const jarsToShow = (jars: JarDefinition[], farmFilter: string | undefined): JarDefinition[] => {
+  return jars.filter((jar) => {
+    if (farmFilter !== "" && farmFilter !== undefined) {
+      return jar.farm?.farmNickname
+        .toLowerCase()
+        .includes(farmFilter.toLowerCase());
+    } else {
+      return true;
+    }
+  })
+}
 
 export default FarmsTableBody;
