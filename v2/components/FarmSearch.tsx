@@ -18,7 +18,6 @@ const SearchBar: FC<Props> = ({farmFilter, setFarmFilter}) => {
         onChange={event => setFarmFilter(event.target.value)}
         name="s" 
       />
-      {/* {console.log(filter)} */}
     </div>
   );
 }

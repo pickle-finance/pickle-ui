@@ -82,9 +82,22 @@ const FarmsTableBody: FC<Props> = ({
 const jarsToShow = (jars: JarDefinition[], farmFilter: string | undefined): JarDefinition[] => {
   return jars.filter((jar) => {
     if (farmFilter !== "" && farmFilter !== undefined) {
-      return jar.farm?.farmNickname
-        .toLowerCase()
-        .includes(farmFilter.toLowerCase());
+      const filterTerms = farmFilter.split(" ") || farmFilter;
+      if (filterTerms[0] === "apr" || filterTerms[0] === "apy") {
+        if (filterTerms[1] === ">=" || filterTerms[1] === ">") {
+          if (jar.aprStats !== undefined) {
+            return jar.aprStats[filterTerms[0]] >= parseFloat(filterTerms[2]);
+          }
+        } else if (filterTerms[1] === "<=" || filterTerms[1] === "<") {
+          if (jar.aprStats !== undefined) {
+            return jar.aprStats[filterTerms[0]] <= parseFloat(filterTerms[2]);
+          }
+        }
+      } else {
+        return jar.farm?.farmNickname
+          .toLowerCase()
+          .includes(farmFilter.toLowerCase());
+      }
     } else {
       return true;
     }
