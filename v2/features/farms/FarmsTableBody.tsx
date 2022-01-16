@@ -18,10 +18,14 @@ const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
-  farmFilter: string;
+  farmFilter?: string;
 }
 
-const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, farmFilter }) => {
+const FarmsTableBody: FC<Props> = ({
+  simple,
+  requiresUserModel,
+  farmFilter,
+}) => {
   const { t } = useTranslation("common");
   const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
   const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
@@ -66,8 +70,19 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, farmFilter }) =>
   }
   return (
     <>
-      {jars.filter(jar => jar.farm?.farmNickname.toLowerCase().includes(farmFilter.toLowerCase()))
-        .map((jar) => <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />)}
+      {jars
+        .filter((jar) => {
+          if (farmFilter !== "" && farmFilter !== undefined) {
+            return jar.farm?.farmNickname
+              .toLowerCase()
+              .includes(farmFilter.toLowerCase());
+          } else {
+            return jar;
+          }
+        })
+        .map((jar) => (
+          <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
+        ))}
     </>
   );
 };

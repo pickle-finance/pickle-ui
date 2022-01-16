@@ -20,22 +20,23 @@ interface Props {
 
 const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
   const { t } = useTranslation("common");
-  const [farmFilter, setFarmFilter] = useState('');
+  const [farmFilter, setFarmFilter] = useState("");
   const SearchBar: FC = ({}) => {
     return (
-      <div>  
+      <div>
         <input
           className="bg-black-light h-10 px-5 pr-16 mr-5 mb-5 rounded-lg text-sm focus:outline-none"
           type="text"
           id="farm-search"
           placeholder="Filter Farms"
+          autoFocus={true}
           value={farmFilter}
-          onChange={event => setFarmFilter(event.target.value)}
-          name="s" 
+          onChange={(event) => setFarmFilter(event.target.value)}
+          name="s"
         />
       </div>
     );
-  }
+  };
   return (
     <>
       <h2 className="font-body font-bold text-xl mb-6">{title}</h2>
