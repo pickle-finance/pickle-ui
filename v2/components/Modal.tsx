@@ -45,7 +45,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-110"
           >
-            <div className="relative inline-block w-full max-w-md overflow-hidden align-middle bg-black-light rounded-2xl border border-gray-dark z-20 transition-all transform">
+            <div className="relative inline-block w-full max-w-md overflow-hidden align-middle bg-black-light rounded-2xl border border-gray-dark z-20 transition-all">
               <Dialog.Title
                 as="div"
                 className="flex justify-between items-center text-lg text-left font-title font-medium leading-6 text-white px-6 py-4 sm:px-8 sm:py-6 border-b border-gray-dark"

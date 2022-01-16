@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
-import SearchBar from "v2/components/farmSearch";
+import SearchBar from "v2/components/FarmSearch";
 import FarmsTableBody from "./FarmsTableBody";
 
 const FarmsTableHeaderCell: FC = ({ children }) => (
@@ -28,10 +28,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
-            <SearchBar 
-              farmFilter={farmFilter}
-              setFarmFilter={setFarmFilter}
-            />
+            <SearchBar farmFilter={farmFilter} setFarmFilter={setFarmFilter} />
             <table className="min-w-full table-auto border-collapse">
               <thead className="bg-black uppercase">
                 <tr>
