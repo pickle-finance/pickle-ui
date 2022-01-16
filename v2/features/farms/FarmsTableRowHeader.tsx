@@ -47,7 +47,7 @@ const chainProtocol = (
             <div className="w-4 h-4 mr-1">
               <Image
                 src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
-                className="flex inline rounded-full"
+                className="rounded-full"
                 width={20}
                 height={20}
                 layout="responsive"
@@ -202,8 +202,6 @@ const formatImagePath = (chain: string): string => {
 };
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
-  const { t } = useTranslation("common");
-
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   const allCore = useSelector(CoreSelectors.selectCore);
   const data = getUserAssetDataWithPrices(jar, allCore, userModel);
@@ -224,37 +222,42 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           "rounded-tl-xl flex items-center",
         )}
       >
-        <TokenIcon
-          src={FARM_LP_TO_ICON[jar.contract as keyof typeof FARM_LP_TO_ICON]}
-        />
+        <div className="flex relative mr-2">
+          <div className="w-10 h-10 rounded-full border-3 border-gray-outline z-10 hover:scale-125 duration-200 hover:z-50">
+            <Image
+              src="/usdc.png"
+              className="rounded-full"
+              width={200}
+              height={200}
+              layout="responsive"
+              alt={jar.depositToken.name}
+              title={"USDC"}
+            />
+          </div>
+          <div className="w-10 h-10 rounded-full border-3 border-gray-outline -ml-3 mr-3 hover:scale-125 duration-200 hover:z-50">
+            <Image
+              src="/ethereum.svg"
+              className="rounded-full"
+              width={200}
+              height={200}
+              layout="responsive"
+              alt={jar.depositToken.name}
+              title={"ETH"}
+            />
+          </div>
+          <div className="absolute -top-3 -right-3 w-7 h-7 rounded-full border-3 border-gray-outline -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200">
+            <Image
+              src="/protocols/sushiswap.png"
+              className="rounded-full"
+              width={200}
+              height={200}
+              layout="responsive"
+              alt={jar.depositToken.name}
+              title={"ETH"}
+            />
+          </div>
+        </div>
         {chainProtocol(jar, allCore)}
-        {/* <div>
-          <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
-            {jar.depositToken.name}
-          </p>
-          <table>
-            <tr>
-              <td>
-                <div className="w-4 h-4 mr-1">
-                  <Image
-                    src={formatImagePath(formatNetworkName(jar.chain, allCore))}
-                    className="flex inline rounded-full"
-                    width={20}
-                    height={20}
-                    layout="responsive"
-                    alt={jar.chain}
-                    title={jar.chain}
-                  />
-                </div>
-              </td>
-              <td>
-                <p className="italic font-normal text-xs text-gray-light">
-                  {jar.protocol}
-                </p>
-              </td>
-            </tr>
-          </table>
-        </div> */}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">
