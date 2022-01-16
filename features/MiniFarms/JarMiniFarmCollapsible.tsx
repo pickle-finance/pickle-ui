@@ -143,6 +143,12 @@ export const FARM_LP_TO_ICON: {
   "0x0be790c83648c28eD285fee5E0BD79D1d57AAe69": (
     <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/bal-tricrypto.png"} />
   ),
+  "0x979Cb85f2fe4B6036c089c554c91fdfB7158bB28": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x46573375eEDA7979e19fAEEdd7eF2843047D9E0d": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/balancer.png"} />
+  ),
   "0x6779EB2838f44300CB6025d17DEB9F2E27CC9540": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/gohm.png"} />
   ),

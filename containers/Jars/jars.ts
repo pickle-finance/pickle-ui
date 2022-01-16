@@ -7,8 +7,9 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 const BALANCER_POOLS = [
-  "0xc2f082d33b5b8ef3a7e3de30da54efd3114512ac", // bal pickle-eth
-  "0x64541216bafffeec8ea535bb71fbc927831d0595", // bal tricrypto
+  "0xc2f082d33b5b8ef3a7e3de30da54efd3114512ac", // bal pickle-eth (arbitrum)
+  "0x64541216bafffeec8ea535bb71fbc927831d0595", // bal tricrypto  (arbitrum)
+  "0x46573375eeda7979e19faeedd7ef2843047d9e0d", // bal-eth        (arbitrum)
 ];
 
 export const isBalancerPool = (depositTokenAddress: string) => {
