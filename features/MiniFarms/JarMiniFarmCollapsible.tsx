@@ -108,6 +108,18 @@ export const FARM_LP_TO_ICON: {
   "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
   ),
+  "0x6f8B4D9c4dC3592962C55207Ac945dbf5be54cC4": (
+    <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0xCA12121E55C5523ad5e0e6a9062689c4eBa0b691": (
+    <LpIcon swapIconSrc={"/raider.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f": (
+    <LpIcon swapIconSrc={"/raider.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x5E5D7739ea3B6787587E129E4A508FfDAF180923": (
+    <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/usdc.png"} />
+  ),
 
   //Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
