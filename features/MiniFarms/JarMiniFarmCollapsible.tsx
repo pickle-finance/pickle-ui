@@ -22,7 +22,6 @@ import {
 } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
-import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
@@ -435,7 +434,8 @@ export const JarMiniFarmCollapsible: FC<{
     ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
     : false;
 
-  const isBalancerJar = isBalancerPool(depositToken.address);
+  const isCooldownJar = foundJar?.tags?.includes("cooldown")? true: false;
+  
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -597,7 +597,7 @@ export const JarMiniFarmCollapsible: FC<{
 
   useEffect(() => {
     const checkCooldown = async () => {
-      if (isBalancerJar && signer && multicallProvider) {
+      if (isCooldownJar && signer && multicallProvider) {
         const jarMulticall = new MulticallContract(
           jarContract.address,
           jarTimelockABI,
@@ -824,7 +824,7 @@ export const JarMiniFarmCollapsible: FC<{
             </Grid>
           </Grid.Container>
           <Spacer y={1} />
-          {isBalancerJar ? t("farms.balancer.info") : null}
+          {isCooldownJar ? t("farms.balancer.info") : null}
         </Grid>
         {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
           <Grid xs={24} md={12}>
@@ -881,7 +881,7 @@ export const JarMiniFarmCollapsible: FC<{
             >
               {withdrawButton.text}
             </Button>
-            {isBalancerJar && balancerTimerProps ? (
+            {isCooldownJar && balancerTimerProps ? (
               <BalancerJarTimer {...balancerTimerProps} />
             ) : null}
           </Grid>
