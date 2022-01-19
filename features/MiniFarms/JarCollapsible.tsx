@@ -300,6 +300,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   "0x8121113eb9952086dec3113690af0538bb5506fd": ( // TETHYS USDT/METIS
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisusdt.png"} />
+  ),
+  "0x586f616bb811f1b0dfa953fbf6de3569e7919752": ( // TETHYS USDT/METIS
+    <LpIcon swapIconSrc={"/hades.svg"} tokenIconSrc={"/metis.png"} />
+  ),
+  "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": ( // TETHYS USDT/METIS
+    <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
   )
 };
 
@@ -514,7 +520,7 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
             <Data>
               <Tooltip text={ReactHtmlParser(tooltipText)}>
-                {totalAPY.toFixed(2) + "%" || "--"}
+                {getFormatString(totalAPY) + "%" || "--"}
               </Tooltip>
               <img
                 src="./question.svg"
