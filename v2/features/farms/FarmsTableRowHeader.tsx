@@ -79,6 +79,7 @@ export interface UserAssetDataWithPricesComponent {
   tokensUSD: number;
 }
 export interface UserAssetDataWithPrices {
+  assetId: string;
   depositTokensInWallet: UserAssetDataWithPricesComponent;
   depositTokensInJar: UserAssetDataWithPricesComponent;
   depositTokensInFarm: UserAssetDataWithPricesComponent;
@@ -120,6 +121,7 @@ const createUserAssetDataComponent = (
 
 const userAssetDataZeroEverything = (): UserAssetDataWithPrices => {
   return {
+    assetId: "",
     depositTokensInWallet: userAssetDataZeroComponent(),
     depositTokensInJar: userAssetDataZeroComponent(),
     depositTokensInFarm: userAssetDataZeroComponent(),
@@ -170,6 +172,7 @@ export const getUserAssetDataWithPrices = (
     1.0,
   );
   return {
+    assetId: jar.details.apiKey,
     earnedPickles: pickleComponent,
     depositTokensInWallet: wallet,
     depositTokensInJar: jarComponent,
