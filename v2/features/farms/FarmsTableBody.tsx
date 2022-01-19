@@ -71,15 +71,16 @@ const FarmsTableBody: FC<Props> = ({
   }
   return (
     <>
-      {jarsToShow(jars, farmFilter)
-
-        .map((jar) => (
-          <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
-        ))}
+      {jarsToShow(jars, farmFilter).map((jar) => (
+        <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
+      ))}
     </>
   );
 };
-const jarsToShow = (jars: JarDefinition[], farmFilter: string | undefined): JarDefinition[] => {
+const jarsToShow = (
+  jars: JarDefinition[],
+  farmFilter: string | undefined,
+): JarDefinition[] => {
   return jars.filter((jar) => {
     if (farmFilter !== "" && farmFilter !== undefined) {
       return jar.farm?.farmNickname
@@ -88,7 +89,7 @@ const jarsToShow = (jars: JarDefinition[], farmFilter: string | undefined): JarD
     } else {
       return true;
     }
-  })
-}
+  });
+};
 
 export default FarmsTableBody;

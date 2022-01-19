@@ -20,7 +20,10 @@ import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
+import {
+  getRatioStringAndPendingString,
+  RatioAndPendingStrings,
+} from "./JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -256,57 +259,74 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
 
   // Metis
-  "0x60312d4ebbf3617d3d33841906b5868a86931cbd": ( // NET NETT/METIS
+  // NET NETT/METIS
+  "0x60312d4ebbf3617d3d33841906b5868a86931cbd": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metis.png"} />
   ),
-  "0x3bf77b9192579826f260bc48f2214dfba840fce5": ( // NET BNB/NETT
+  // NET BNB/NETT
+  "0x3bf77b9192579826f260bc48f2214dfba840fce5": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/bnbnett.png"} />
   ),
-  "0x59051b5f5172b69e66869048dc69d35db0b3610d": ( // NET ETH/METIS
+  // NET ETH/METIS
+  "0x59051b5f5172b69e66869048dc69d35db0b3610d": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethmetis.png"} />
   ),
-  "0xc8ae82a0ab6ada2062b812827e1556c0fa448dd0": ( // NET ETH/NETT
+  // NET ETH/NETT
+  "0xc8ae82a0ab6ada2062b812827e1556c0fa448dd0": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethereum.png"} />
   ),
-  "0xf5988809ac97c65121e2c34f5d49558e3d12c253": ( // NET ETH/USDC
+  // NET ETH/USDC
+  "0xf5988809ac97c65121e2c34f5d49558e3d12c253": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethusdc.png"} />
   ),
-  "0x4db4ce7f5b43a6b455d3c3057b63a083b09b8376": ( // NET ETH/USDT
+  // NET ETH/USDT
+  "0x4db4ce7f5b43a6b455d3c3057b63a083b09b8376": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethusdt.png"} />
   ),
-  "0x5ae3ee7fbb3cb28c17e7adc3a6ae605ae2465091": ( // NET METIS/USDC
+  // NET METIS/USDC
+  "0x5ae3ee7fbb3cb28c17e7adc3a6ae605ae2465091": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metisusdc.png"} />
   ),
-  "0x0724d37522585e87d27c802728e824862dc72861": ( // NET NETT/USDC
+  // NET NETT/USDC
+  "0x0724d37522585e87d27c802728e824862dc72861": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
-  "0x7d02ab940d7dd2b771e59633bbc1ed6ec2b99af1": ( // NET NETT/USDT
+  // NET NETT/USDT
+  "0x7d02ab940d7dd2b771e59633bbc1ed6ec2b99af1": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdt.png"} />
   ),
-  "0x3d60afecf67e6ba950b499137a72478b2ca7c5a1": ( // NET USDT/METIS
+  // NET USDT/METIS
+  "0x3d60afecf67e6ba950b499137a72478b2ca7c5a1": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metisusdt.png"} />
   ),
-  "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": ( // NET USDT/USDC
+  // NET USDT/USDC
+  "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
-  "0xc9b290ff37fa53272e9d71a0b13a444010af4497": ( // TETHYS TETHYS/METIS
+  // TETHYS TETHYS/METIS
+  "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metis.png"} />
   ),
-  "0xee5adb5b0dfc51029aca5ad4bc684ad676b307f7": ( // TETHYS ETH/METIS
+  // TETHYS ETH/METIS
+  "0xee5adb5b0dfc51029aca5ad4bc684ad676b307f7": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/ethmetis.png"} />
   ),
-  "0xdd7df3522a49e6e1127bf1a1d3baea3bc100583b": ( // TETHYS METIS/USDC
+  // TETHYS METIS/USDC
+  "0xdd7df3522a49e6e1127bf1a1d3baea3bc100583b": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisusdc.png"} />
   ),
-  "0x8121113eb9952086dec3113690af0538bb5506fd": ( // TETHYS USDT/METIS
+  // TETHYS USDT/METIS
+  "0x8121113eb9952086dec3113690af0538bb5506fd": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisusdt.png"} />
   ),
-  "0x586f616bb811f1b0dfa953fbf6de3569e7919752": ( // TETHYS USDT/METIS
+  // TETHYS USDT/METIS
+  "0x586f616bb811f1b0dfa953fbf6de3569e7919752": (
     <LpIcon swapIconSrc={"/hades.svg"} tokenIconSrc={"/metis.png"} />
   ),
-  "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": ( // TETHYS USDT/METIS
+  // TETHYS USDT/METIS
+  "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": (
     <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
-  )
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -467,8 +487,15 @@ export const JarCollapsible: FC<{
     );
   }, [erc20TransferStatuses]);
 
-  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(usdPerPToken, 
-    depositedNum, 0, ratio, jarContract.address.toLowerCase(), pickleCore, t);
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    0,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
 
@@ -509,12 +536,11 @@ export const JarCollapsible: FC<{
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>{t("balances.depositValue")}</Label>
             {Boolean(valueStrExplained !== undefined) && (
-                <Label>{valueStrExplained}</Label>
+              <Label>{valueStrExplained}</Label>
             )}
             {Boolean(userSharePendingStr !== undefined) && (
-               <Label>{userSharePendingStr}</Label>
+              <Label>{userSharePendingStr}</Label>
             )}
-
           </Grid>
 
           <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
