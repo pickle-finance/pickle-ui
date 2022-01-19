@@ -6,13 +6,28 @@ import Button from "./Button";
 import Modal from "./Modal";
 
 interface Props {
+  harvestables: RewardRowProps[],
   isOpen: boolean;
   closeModal: () => void;
 }
 
-const RewardRow: FC = () => {
+export interface RewardRowProps {
+  descriptor: string;
+  rewardCount: number;
+  tokenString: string;
+  harvester: {
+    harvest: () => Promise<boolean>;
+  }
+}
+interface RewardRowPropWrapper {
+  details: RewardRowProps
+}
+
+
+const RewardRow: FC<RewardRowPropWrapper> = ({details}) => {
   const { t } = useTranslation("common");
 
+  // TODO image needs to be configurable for what the reward is
   return (
     <div className="flex justify-between font-body">
       <div className="flex">
@@ -28,26 +43,29 @@ const RewardRow: FC = () => {
         </div>
         <div className="flex flex-col text-left justify-center">
           <p className="uppercase text-gray-light font-bold text-xs">
-            PICKLE-ETH
+            {details.descriptor}
           </p>
           <p className="text-green font-bold text-lg align-bottom leading-6">
-            102.01
-            <span className="text-white text-xs ml-2">PICKLEs</span>
+            {details.rewardCount}
+            <span className="text-white text-xs ml-2">{details.tokenString}</span>
           </p>
         </div>
       </div>
       <div className="flex items-center">
         <Button type="secondary" size="small">
-          {t("v2.farms.harvest")}
+          {
+            // TODO use the harvester when clicked on. 
+            t("v2.farms.harvest")
+          }
         </Button>
       </div>
     </div>
   );
 };
 
-const HarvestModal: FC<Props> = ({ isOpen, closeModal }) => {
+const HarvestModal: FC<Props> = ({ isOpen, closeModal, harvestables }) => {
   const { t } = useTranslation("common");
-
+  const safeHarvestables = (harvestables === undefined ? [] : harvestables);
   return (
     <Modal
       isOpen={isOpen}
@@ -55,8 +73,13 @@ const HarvestModal: FC<Props> = ({ isOpen, closeModal }) => {
       title={t("v2.farms.harvestRewards")}
     >
       <div className="grid gap-9">
-        <RewardRow />
-        <RewardRow />
+        {
+          safeHarvestables.map((h)=>{
+            const key = h.descriptor;
+            return (
+              <RewardRow key={key} details={h}/>
+            );
+        })}
       </div>
     </Modal>
   );
