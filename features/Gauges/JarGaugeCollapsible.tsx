@@ -243,6 +243,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xDC00bA87Cc2D99468f7f34BC04CBf72E111A32f7": (
     <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={"/weth.png"} />
   ),
+  "0xf4d2888d29D722226FafA5d9B24F9164c092421E": (
+    <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={""} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -386,7 +389,12 @@ export const JarGaugeCollapsible: FC<{
       `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
       ...APYs.map((x) => {
         const k = Object.keys(x)[0];
-        const v = uncompoundAPY(Object.values(x)[0]);
+        const v =
+          // Exception for looks staking which autocompounds
+          gaugeDepositToken.address ===
+            "0xb4EBc2C371182DeEa04B2264B9ff5AC4F0159C69" && k === "looks"
+            ? Object.values(x)[0]
+            : uncompoundAPY(Object.values(x)[0]);
         return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
       }),
       `${t(
