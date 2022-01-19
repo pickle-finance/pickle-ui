@@ -381,12 +381,7 @@ export const JarGaugeCollapsible: FC<{
       `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
       ...APYs.map((x) => {
         const k = Object.keys(x)[0];
-        const v =
-          // Exception for looks staking which autocompounds
-          gaugeDepositToken.address ===
-            "0xb4EBc2C371182DeEa04B2264B9ff5AC4F0159C69" && k === "looks"
-            ? Object.values(x)[0]
-            : uncompoundAPY(Object.values(x)[0]);
+        const v = uncompoundAPY(Object.values(x)[0]);
         return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
       }),
       `${t(
