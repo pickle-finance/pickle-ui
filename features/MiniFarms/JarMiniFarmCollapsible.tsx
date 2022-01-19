@@ -635,9 +635,27 @@ export const JarMiniFarmCollapsible: FC<{
       : tvlUSD;
 
   const tvlStr = getFormatString(tvlNum);
-  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(usdPerPToken, 
-    depositedNum, stakedNum, ratio, jarContract.address.toLowerCase(), pickleCore, t);
-  const valueStr = explanations.ratioString === undefined ? "0" : "1"; // hack, lazy
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
+
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  const valueStr = toLocaleNdigits(
+    usdPerPToken * (depositedNum + stakedNum),
+    2,
+  );
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
   return (
@@ -1005,16 +1023,19 @@ export const JarMiniFarmCollapsible: FC<{
 };
 
 export interface RatioAndPendingStrings {
-  ratioString: string | undefined,
-  pendingString: string | undefined,
+  ratioString: string | undefined;
+  pendingString: string | undefined;
 }
 
 export const getRatioStringAndPendingString = (
-  usdPerPToken: number, depositedNum: number, stakedNum: number,
-  ratio: number, jarAddress: string, pickleCore: PickleModelJson.PickleModelJson | null,
-  t: Function
+  usdPerPToken: number,
+  depositedNum: number,
+  stakedNum: number,
+  ratio: number,
+  jarAddress: string,
+  pickleCore: PickleModelJson.PickleModelJson | null,
+  t: Function,
 ): RatioAndPendingStrings => {
-
   const toLocaleNdigits = (val: number, digits: number) => {
     return val.toLocaleString(undefined, {
       minimumFractionDigits: digits,
@@ -1047,8 +1068,8 @@ export const getRatioStringAndPendingString = (
   return {
     ratioString: valueStrExplained,
     pendingString: userSharePendingStr,
-  }
-}
+  };
+};
 const StyledNotice = styled.div`
   width: "100%";
   textalign: "center";
