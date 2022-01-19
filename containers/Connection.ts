@@ -164,10 +164,7 @@ function useConnection() {
         1313161554,
         "0x60Ad579Fb20c8896b7b98E800cBA9e196E6eaA44",
       );
-      setMulticallAddress(
-        1088,
-        "0xa99850Ff94d3D333e7F669203Ab7B77Ec634028F",
-      );
+      setMulticallAddress(1088, "0xa99850Ff94d3D333e7F669203Ab7B77Ec634028F");
 
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider

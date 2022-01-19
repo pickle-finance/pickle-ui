@@ -59,7 +59,6 @@ export const getPendingRewardsUsd = (
   return formatUsd(runningUsd);
 };
 
-
 export const getUserAssetDataWithPricesForJars = (
   core: PickleModelJson.PickleModelJson,
   userdata: UserData,
@@ -70,7 +69,10 @@ export const getUserAssetDataWithPricesForJars = (
     const jar = core.assets.jars.find((x) => x.details.apiKey === key);
     if (jar) {
       const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(
-        jar, core,userdata);
+        jar,
+        core,
+        userdata,
+      );
       if (data) {
         ret.push(data);
       }
@@ -79,16 +81,25 @@ export const getUserAssetDataWithPricesForJars = (
   return ret;
 };
 
-export const getAllPickleAssets = (core: PickleModelJson.PickleModelJson): PickleAsset[] => {
+export const getAllPickleAssets = (
+  core: PickleModelJson.PickleModelJson,
+): PickleAsset[] => {
   const ret: PickleAsset[] = [];
-  return ret.concat(core.assets.jars).concat(core.assets.standaloneFarms).concat(core.assets.external);
-} 
-export const userVisibleStringForPickleAsset = (apiKey: string, 
-  core: PickleModelJson.PickleModelJson): string | undefined => {
+  return ret
+    .concat(core.assets.jars)
+    .concat(core.assets.standaloneFarms)
+    .concat(core.assets.external);
+};
+export const userVisibleStringForPickleAsset = (
+  apiKey: string,
+  core: PickleModelJson.PickleModelJson,
+): string | undefined => {
   const allAssets: PickleAsset[] = getAllPickleAssets(core);
-  const asset: PickleAsset | undefined = allAssets.find((x)=>x.details.apiKey === apiKey);
+  const asset: PickleAsset | undefined = allAssets.find(
+    (x) => x.details.apiKey === apiKey,
+  );
   return asset ? asset.depositToken.name : undefined;
-}
+};
 
 export const getRewardRowPropertiesForRewards = (
   core: PickleModelJson.PickleModelJson,
@@ -100,18 +111,19 @@ export const getRewardRowPropertiesForRewards = (
     harvest: async (): Promise<boolean> => {
       // TODO
       return false;
-    }
+    },
   };
   const dillHarvester = {
     harvest: async (): Promise<boolean> => {
       // TODO
       return false;
-    }
+    },
   };
   for (let i = 0; i < jarData.length; i++) {
-    const descriptor = userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
+    const descriptor =
+      userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
     const earnedPickles = parseFloat(jarData[i].earnedPickles.tokens);
-    if( earnedPickles > 0 ) {
+    if (earnedPickles > 0) {
       ret.push({
         descriptor: descriptor,
         tokenString: "PICKLEs", // TODO i18n
@@ -133,7 +145,6 @@ export const getRewardRowPropertiesForRewards = (
   return ret;
 };
 
-
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -144,7 +155,10 @@ const PerformanceCard: FC = () => {
     allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
   const unclaimedRewards =
     allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
-  const rewardRowProps: RewardRowProps[] = allCore && userModel ? getRewardRowPropertiesForRewards(allCore, userModel) : [];
+  const rewardRowProps: RewardRowProps[] =
+    allCore && userModel
+      ? getRewardRowPropertiesForRewards(allCore, userModel)
+      : [];
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
@@ -194,7 +208,11 @@ const PerformanceCard: FC = () => {
         <Button onClick={openModal} size="normal">
           {t("v2.dashboard.harvestRewards")}
         </Button>
-        <HarvestModal isOpen={isOpen} closeModal={closeModal} harvestables={rewardRowProps} />
+        <HarvestModal
+          isOpen={isOpen}
+          closeModal={closeModal}
+          harvestables={rewardRowProps}
+        />
       </div>
     </div>
   );

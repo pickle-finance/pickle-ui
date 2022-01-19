@@ -18,5 +18,5 @@ export const normalize = (value) => {
 export const noFarms = (chainName) =>
   chainName === NETWORK_NAMES.OKEX ||
   chainName === NETWORK_NAMES.MOONRIVER ||
-  chainName === NETWORK_NAMES.CRONOS || 
+  chainName === NETWORK_NAMES.CRONOS ||
   chainName === NETWORK_NAMES.METIS;

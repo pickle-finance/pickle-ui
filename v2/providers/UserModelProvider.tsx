@@ -33,7 +33,7 @@ const UserModelProvider: FC = ({ children }) => {
         })
         .catch(() => {
           console.log("Got an error");
-          setIsFetching(false)
+          setIsFetching(false);
         });
     };
 
