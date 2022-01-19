@@ -47,6 +47,7 @@ import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { getRatioStringAndPendingString, RatioAndPendingStrings } from "features/MiniFarms/JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -312,41 +313,13 @@ export const JarGaugeCollapsible: FC<{
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
+  
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(usdPerPToken, 
+    depositedNum, stakedNum, ratio, jarContract.address.toLowerCase(), pickleCore, t);
+  const valueStr = explanations.ratioString === undefined ? "0" : "1"; // hack, lazy
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
 
-  const toLocaleNdigits = (val: number, digits: number) => {
-    return val.toLocaleString(undefined, {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits,
-    });
-  };
-
-  const valueStr = toLocaleNdigits(
-    usdPerPToken * (depositedNum + stakedNum),
-    2,
-  );
-  let valueStrExplained = undefined;
-  let userSharePendingStr = undefined;
-  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
-    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
-    const jarAddress = jarContract.address;
-    const jar = pickleCore?.assets.jars.find(
-      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
-    );
-    if (jar) {
-      const totalPtokens = jar.details.tokenBalance;
-      if (totalPtokens) {
-        const userShare = (depositedNum + stakedNum) / totalPtokens;
-        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
-        if (pendingHarvest) {
-          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
-          userSharePendingStr =
-            t("farms.pending") +
-            ": $" +
-            toLocaleNdigits(userShareHarvestUsd, 2);
-        }
-      }
-    }
-  }
 
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;

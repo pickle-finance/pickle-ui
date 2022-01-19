@@ -19,6 +19,8 @@ import { uncompoundAPY } from "util/jars";
 import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -354,6 +356,7 @@ export const JarCollapsible: FC<{
     tvlUSD,
   } = jarData;
   const { t } = useTranslation("common");
+  const { pickleCore } = PickleCore.useContainer();
 
   const isUsdc = isUsdcToken(depositToken.address);
 
@@ -458,6 +461,11 @@ export const JarCollapsible: FC<{
     );
   }, [erc20TransferStatuses]);
 
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(usdPerPToken, 
+    depositedNum, 0, ratio, jarContract.address.toLowerCase(), pickleCore, t);
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -494,6 +502,13 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>{t("balances.depositValue")}</Label>
+            {Boolean(valueStrExplained !== undefined) && (
+                <Label>{valueStrExplained}</Label>
+            )}
+            {Boolean(userSharePendingStr !== undefined) && (
+               <Label>{userSharePendingStr}</Label>
+            )}
+
           </Grid>
 
           <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
