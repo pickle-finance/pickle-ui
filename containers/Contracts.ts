@@ -235,6 +235,8 @@ function useContracts() {
         return config.addresses.Aurora;
       case NETWORK_NAMES.METIS:
         return config.addresses.Metis;
+      case NETWORK_NAMES.MOONBEAM:
+        return config.addresses.Moonbeam;
       case NETWORK_NAMES.ETH:
       default:
         return config.addresses.Ethereum;
