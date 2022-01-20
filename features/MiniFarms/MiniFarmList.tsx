@@ -54,13 +54,14 @@ export const MiniFarmList: FC = () => {
   }
   const farmsWithAPY = (farmData ? farmData : []).map((farm) => {
     let APYs: JarApy[] = [{ pickle: farm.apy * 100 }];
-
+    let totalAPY = 0;
     const jar = getJarFarmMap(pickleCore)[farm.depositToken.address];
     if (jar) {
       const farmingJar = jarData
         ? jarData.filter((x) => x.name === jar.jarName)[0]
         : undefined;
       APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
+      totalAPY = farmingJar?.totalAPY || 0;
     }
 
     const uncompounded = APYs.map((x) => {
@@ -74,9 +75,6 @@ export const MiniFarmList: FC = () => {
       return ret;
     });
 
-    const totalAPY: number = APYs.map((x) => {
-      return Object.values(x).reduce((acc, y) => acc + y, 0);
-    }).reduce((acc, x) => acc + x, 0);
     const totalAPR: number = uncompounded
       .map((x) => {
         return Object.values(x).reduce((acc, y) => acc + y, 0);
