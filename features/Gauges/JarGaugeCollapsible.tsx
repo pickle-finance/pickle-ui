@@ -359,11 +359,6 @@ export const JarGaugeCollapsible: FC<{
 
   let difference = 0;
   if (APYs !== undefined) {
-    const totalAPY1: number = APYs?.map((x) => {
-      return Object.values(x)
-        .filter((x) => !isNaN(x))
-        .reduce((acc, y) => acc + y, 0);
-    }).reduce((acc, x) => acc + x, 0);
     const totalAPR1: number = uncompounded
       .map((x) => {
         return Object.values(x)
@@ -371,7 +366,7 @@ export const JarGaugeCollapsible: FC<{
           .reduce((acc, y) => acc + y, 0);
       })
       .reduce((acc, x) => acc + x, 0);
-    difference = totalAPY1 - totalAPR1;
+    difference = totalAPY - totalAPR1;
   }
 
   let apyRangeTooltipText = "APY Range Unavailable.";
