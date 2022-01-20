@@ -7070,23 +7070,21 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.2.86:
-  version "0.2.86"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.2.86.tgz#25cd841974201eeecd2bccd47810546d97faefd1"
-  integrity sha512-RpM5pSdKaY0rovdKzywA2Z5zOa/AsuUIQBWa07lPtFQe2AR9CG/b6xX4SuQwO3G4i/ZM+F9qARyfQHbq66glIA==
+picklefinance-core@^0.3.02:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.2.tgz#437f4238c23ea2f0a897df04dc5b77545842ad9a"
+  integrity sha512-Wb9SmDL4sI/xF1JgxckS934TfyuFhn0vhdKw8yCMY74k12oydwvqbnsjcCiceA+/cVjyNP1uSSbAvfl0NegF5g==
   dependencies:
     "@ethersproject/abstract-provider" "^5.1.0"
     "@ethersproject/providers" "^5.1.0"
     "@thanpolas/univ3prices" "^3.0.2"
     "@types/coingecko-api" "^1.0.0"
-    "@types/date-fns" "^2.6.0"
     "@types/i18n" "^0.13.1"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/v3-sdk" "^3.6.3"
     bignumber.js "^9.0.2"
     coingecko-api "^1.0.10"
     cross-fetch "^3.1.4"
-    date-fns "^2.26.0"
     ethers "^5.1.0"
     ethers-multicall "^0.2.1"
     i18n "^0.13.3"
