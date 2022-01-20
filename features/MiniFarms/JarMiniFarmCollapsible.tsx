@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
 import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
@@ -27,6 +27,7 @@ import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { PickleModelJson } from "picklefinance-core";
 
 interface DataProps {
   isZero?: boolean;
@@ -107,6 +108,18 @@ export const FARM_LP_TO_ICON: {
   ),
   "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
+  ),
+  "0x6f8B4D9c4dC3592962C55207Ac945dbf5be54cC4": (
+    <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0xCA12121E55C5523ad5e0e6a9062689c4eBa0b691": (
+    <LpIcon swapIconSrc={"/raider.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f": (
+    <LpIcon swapIconSrc={"/raider.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x5E5D7739ea3B6787587E129E4A508FfDAF180923": (
+    <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/usdc.png"} />
   ),
 
   //Arbitrum
@@ -317,10 +330,11 @@ export const JarMiniFarmCollapsible: FC<{
   const balStr = formatNumber(balNum);
 
   const depositedStr = formatNumber(depositedNum);
+  const underlyingStr = (num: BigNumber): string => {
+    return formatNumber(parseFloat(formatEther(num)) * ratio);
+  };
 
-  const depositedUnderlyingStr = formatNumber(
-    parseFloat(formatEther(deposited)) * ratio,
-  );
+  const depositedUnderlyingStr = underlyingStr(deposited);
 
   // Farm info
   const {
@@ -334,6 +348,7 @@ export const JarMiniFarmCollapsible: FC<{
     tooltipText,
     totalAPY,
   } = farmData;
+  const stakedUnderlyingStr = underlyingStr(staked);
 
   const stakedNum = parseFloat(formatEther(staked));
   const [depositAmount, setDepositAmount] = useState("");
@@ -620,6 +635,15 @@ export const JarMiniFarmCollapsible: FC<{
       : tvlUSD;
 
   const tvlStr = getFormatString(tvlNum);
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
 
   const toLocaleNdigits = (val: number, digits: number) => {
     return val.toLocaleString(undefined, {
@@ -632,30 +656,8 @@ export const JarMiniFarmCollapsible: FC<{
     usdPerPToken * (depositedNum + stakedNum),
     2,
   );
-  let valueStrExplained = undefined;
-  let userSharePendingStr = undefined;
-  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
-    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
-    const jarAddress = jarContract.address;
-    const jar = pickleCore?.assets.jars.find(
-      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
-    );
-    if (jar) {
-      const totalPtokens = jar.details.tokenBalance;
-      if (totalPtokens) {
-        const userShare = (depositedNum + stakedNum) / totalPtokens;
-        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
-        if (pendingHarvest) {
-          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
-          userSharePendingStr =
-            t("farms.pending") +
-            ": $" +
-            toLocaleNdigits(userShareHarvestUsd, 2);
-        }
-      }
-    }
-  }
-
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -924,7 +926,8 @@ export const JarMiniFarmCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName} (
+                  {stakedUnderlyingStr} {depositTokenName}){" "}
                 </div>
                 <Link
                   color
@@ -1019,6 +1022,54 @@ export const JarMiniFarmCollapsible: FC<{
   );
 };
 
+export interface RatioAndPendingStrings {
+  ratioString: string | undefined;
+  pendingString: string | undefined;
+}
+
+export const getRatioStringAndPendingString = (
+  usdPerPToken: number,
+  depositedNum: number,
+  stakedNum: number,
+  ratio: number,
+  jarAddress: string,
+  pickleCore: PickleModelJson.PickleModelJson | null,
+  t: Function,
+): RatioAndPendingStrings => {
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  let valueStrExplained = undefined;
+  let userSharePendingStr = undefined;
+  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
+    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
+    const jar = pickleCore?.assets.jars.find(
+      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
+    );
+    if (jar) {
+      const totalPtokens = jar.details.tokenBalance;
+      if (totalPtokens) {
+        const userShare = (depositedNum + stakedNum) / totalPtokens;
+        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+        if (pendingHarvest) {
+          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+          userSharePendingStr =
+            t("farms.pending") +
+            ": $" +
+            toLocaleNdigits(userShareHarvestUsd, 2);
+        }
+      }
+    }
+  }
+  return {
+    ratioString: valueStrExplained,
+    pendingString: userSharePendingStr,
+  };
+};
 const StyledNotice = styled.div`
   width: "100%";
   textalign: "center";

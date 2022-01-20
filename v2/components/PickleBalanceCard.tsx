@@ -11,15 +11,15 @@ const PickleBalanceCard: FC = () => {
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   let pickles = 0;
   let chains = 0;
-  if( userModel ) {
+  if (userModel) {
     for (const k in userModel.pickles) {
       const v = userModel.pickles[k];
-      if(  v !== undefined && v !== "0" ) {
-        pickles += BigNumber.from(v).div(1e10).toNumber()/1e8;
+      if (v !== undefined && v !== "0") {
+        pickles += BigNumber.from(v).div(1e10).toNumber() / 1e8;
         chains++;
       }
     }
-    pickles = Math.floor(pickles * 1000)/1000;
+    pickles = Math.floor(pickles * 1000) / 1000;
   }
 
   return (
@@ -38,13 +38,12 @@ const PickleBalanceCard: FC = () => {
           </div>
           <div>
             <p className="font-title font-medium text-2xl leading-7 mb-1">
-            {pickles}
+              {pickles}
             </p>
             <p className="text-gray-light text-sm">
-              { chains > 1 ? 
-                t("v2.dashboard.picklesInWallet", {chains: chains}) :
-                t("v2.dashboard.picklesInWalletZeroOrOne")
-              }
+              {chains > 1
+                ? t("v2.dashboard.picklesInWallet", { chains: chains })
+                : t("v2.dashboard.picklesInWalletZeroOrOne")}
             </p>
           </div>
         </div>

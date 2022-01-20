@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 import { Trans, useTranslation } from "next-i18next";
 
@@ -47,6 +47,10 @@ import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  getRatioStringAndPendingString,
+  RatioAndPendingStrings,
+} from "features/MiniFarms/JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -68,7 +72,8 @@ const JarName = styled(Grid)({
 
 const formatAPY = (apy: number) => {
   if (apy === Number.POSITIVE_INFINITY) return "∞%";
-  return apy.toFixed(2) + "%";
+  const decimalPlaces = Math.log(apy) / Math.log(10) > 4 ? 0 : 2;
+  return apy.toFixed(decimalPlaces) + "%";
 };
 
 const formatValue = (num: number) =>
@@ -239,6 +244,12 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x3A283D9c08E8b55966afb64C515f5143cf907611": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/weth.png"} />
   ),
+  "0xDC00bA87Cc2D99468f7f34BC04CBf72E111A32f7": (
+    <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xf4d2888d29D722226FafA5d9B24F9164c092421E": (
+    <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={""} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -285,11 +296,13 @@ export const JarGaugeCollapsible: FC<{
 
   const depositedStr = formatValue(depositedNum);
 
-  const depositedUnderlyingStr = formatValue(
-    parseFloat(
-      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-    ) * ratio,
-  );
+  const underlyingStr = (num: BigNumber): string => {
+    return formatValue(
+      parseFloat(formatEther(isUsdc && num ? num.mul(USDC_SCALE) : num)) *
+        ratio,
+    );
+  };
+  const depositedUnderlyingStr = underlyingStr(deposited);
   const {
     depositToken: gaugeDepositToken,
     balance: gaugeBalance,
@@ -299,11 +312,20 @@ export const JarGaugeCollapsible: FC<{
     fullApy,
     uncompounded,
   } = gaugeData;
-
+  const stakedUnderlyingStr = underlyingStr(staked);
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
   const toLocaleNdigits = (val: number, digits: number) => {
     return val.toLocaleString(undefined, {
       minimumFractionDigits: digits,
@@ -315,29 +337,8 @@ export const JarGaugeCollapsible: FC<{
     usdPerPToken * (depositedNum + stakedNum),
     2,
   );
-  let valueStrExplained = undefined;
-  let userSharePendingStr = undefined;
-  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
-    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
-    const jarAddress = jarContract.address;
-    const jar = pickleCore?.assets.jars.find(
-      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
-    );
-    if (jar) {
-      const totalPtokens = jar.details.tokenBalance;
-      if (totalPtokens) {
-        const userShare = (depositedNum + stakedNum) / totalPtokens;
-        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
-        if (pendingHarvest) {
-          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
-          userSharePendingStr =
-            t("farms.pending") +
-            ": $" +
-            toLocaleNdigits(userShareHarvestUsd, 2);
-        }
-      }
-    }
-  }
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
 
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
@@ -358,11 +359,6 @@ export const JarGaugeCollapsible: FC<{
 
   let difference = 0;
   if (APYs !== undefined) {
-    const totalAPY1: number = APYs?.map((x) => {
-      return Object.values(x)
-        .filter((x) => !isNaN(x))
-        .reduce((acc, y) => acc + y, 0);
-    }).reduce((acc, x) => acc + x, 0);
     const totalAPR1: number = uncompounded
       .map((x) => {
         return Object.values(x)
@@ -370,7 +366,7 @@ export const JarGaugeCollapsible: FC<{
           .reduce((acc, y) => acc + y, 0);
       })
       .reduce((acc, x) => acc + x, 0);
-    difference = totalAPY1 - totalAPR1;
+    difference = totalAPY - totalAPR1;
   }
 
   let apyRangeTooltipText = "APY Range Unavailable.";
@@ -956,22 +952,7 @@ export const JarGaugeCollapsible: FC<{
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 {t("balances.balance")}: {depositedStr} (
-                <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
-                >
-                  {depositedUnderlyingStr}
-                </Tooltip>{" "}
-                {depositTokenName}){" "}
+                {depositedUnderlyingStr} {depositTokenName}){" "}
               </div>
               <Link
                 color
@@ -1056,7 +1037,8 @@ export const JarGaugeCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName} (
+                  {stakedUnderlyingStr} {depositTokenName}){" "}
                 </div>
                 <Link
                   color

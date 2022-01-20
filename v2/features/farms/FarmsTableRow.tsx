@@ -42,11 +42,11 @@ const FarmsTableRow: FC<Props> = ({ jar, simple }) => {
             <Transition
               as={Fragment}
               enter="transition duration-100 ease-out"
-              enterFrom="transform opacity-0"
-              enterTo="transform opacity-100"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
               leave="transition duration-100 ease-out"
-              leaveFrom="transform opacity-100"
-              leaveTo="transform opacity-0"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
             >
               <Disclosure.Panel as="tr">
                 <FarmsTableRowBody jar={jar} />

@@ -63,7 +63,6 @@ function useConnection() {
       blockExplorerUrls: [chain.explorer],
     };
   };
-
   const switchChain = async (chainId: number) => {
     if (!pickleCore) return false;
     let method: string;
