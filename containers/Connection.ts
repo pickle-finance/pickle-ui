@@ -140,8 +140,10 @@ function useConnection() {
     }
   }, [library]);
 
-  const chainName = (chainId && config.chains[chainId].name) || null;
-
+  const chainName =   
+    pickleCore?.chains.find((x) => x.chainId === chainId)
+      ?.networkVisible || null
+  
   return {
     multicallProvider,
     provider: library,
