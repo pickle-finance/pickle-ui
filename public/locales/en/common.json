@@ -45,7 +45,8 @@
       "moonriver": "Moonriver",
       "cronos": "Cronos",
       "aurora": "Aurora",
-      "metis": "Metis"
+      "metis": "Metis",
+      "moonbeam": "Moonbeam"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",

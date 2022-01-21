@@ -10,6 +10,12 @@ import {
   setMulticallAddress,
 } from "ethers-multicall";
 import { useRouter } from "next/router";
+import {
+  ChainNetwork,
+  Chains,
+  RawChain,
+} from "picklefinance-core/lib/chain/Chains";
+import { PickleCore } from "./Jars/usePickleCore";
 
 type Network = ethers.providers.Network;
 
@@ -31,6 +37,7 @@ interface AddEthereumChainParameter {
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
   const router = useRouter();
+  const { pickleCore } = PickleCore.useContainer();
 
   const [
     multicallProvider,
@@ -40,92 +47,24 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const switchChainParams: AddEthereumChainParameter[] = [];
-
-  switchChainParams[137] = {
-    chainId: "0x89",
-    chainName: "Polygon",
-    nativeCurrency: {
-      name: "MATIC",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://polygon-rpc.com"],
-    blockExplorerUrls: ["https://polygonscan.com/"],
+  const chainToChainParams = (
+    chain: RawChain | undefined,
+  ): AddEthereumChainParameter | undefined => {
+    if (!chain) return undefined;
+    return {
+      chainId: "0x" + chain.chainId.toString(16),
+      chainName: chain.networkVisible,
+      nativeCurrency: {
+        name: chain.gasToken.toUpperCase(),
+        symbol: chain.gasToken.toUpperCase(),
+        decimals: 18,
+      },
+      rpcUrls: chain.rpcs,
+      blockExplorerUrls: [chain.explorer],
+    };
   };
-
-  switchChainParams[66] = {
-    chainId: "0x42",
-    chainName: "OKEx Chain",
-    nativeCurrency: {
-      name: "OKT",
-      symbol: "OKT",
-      decimals: 18,
-    },
-    rpcUrls: ["https://exchainrpc.okex.org"],
-    blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
-  };
-
-  switchChainParams[42161] = {
-    chainId: "0xA4B1",
-    chainName: "Arbitrum",
-    nativeCurrency: {
-      name: "AETH",
-      symbol: "AETH",
-      decimals: 18,
-    },
-    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-    blockExplorerUrls: ["https://arbiscan.io/"],
-  };
-
-  switchChainParams[1285] = {
-    chainId: "0x505",
-    chainName: "Moonriver",
-    nativeCurrency: {
-      name: "MOVR",
-      symbol: "MOVR",
-      decimals: 18,
-    },
-    rpcUrls: ["https://rpc.moonriver.moonbeam.network"],
-    blockExplorerUrls: ["https://moonriver.moonscan.io/"],
-  };
-
-  switchChainParams[25] = {
-    chainId: "0x19",
-    chainName: "Cronos",
-    nativeCurrency: {
-      name: "CRO",
-      symbol: "CRO",
-      decimals: 18,
-    },
-    rpcUrls: ["https://evm-cronos.crypto.org"],
-    blockExplorerUrls: ["https://cronos.crypto.org/explorer/"],
-  };
-
-  switchChainParams[1313161554] = {
-    chainId: "0x4E454152",
-    chainName: "Aurora",
-    nativeCurrency: {
-      name: "ETH",
-      symbol: "ETH",
-      decimals: 18,
-    },
-    rpcUrls: ["https://mainnet.aurora.dev"],
-    blockExplorerUrls: ["https://explorer.mainnet.aurora.dev/"],
-  };
-  switchChainParams[1088] = {
-    chainId: "0x440",
-    chainName: "Metis",
-    nativeCurrency: {
-      name: "METIS",
-      symbol: "METIS",
-      decimals: 18,
-    },
-    rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
-    blockExplorerUrls: ["https://andromeda-explorer.metis.io/"],
-  };
-
   const switchChain = async (chainId: number) => {
+    if (!pickleCore) return false;
     let method: string;
     let params: any[];
     if (chainId === 1) {
@@ -133,7 +72,10 @@ function useConnection() {
       params = [{ chainId: "0x1" }];
     } else {
       method = "wallet_addEthereumChain";
-      const param = switchChainParams[chainId];
+      method = "wallet_addEthereumChain";
+      const param = chainToChainParams(
+        pickleCore.chains.find((x) => x.chainId === chainId),
+      );
       if (param === undefined || param === null) return false;
       params = [param];
     }
@@ -149,22 +91,28 @@ function useConnection() {
     }
   };
 
-  const supportedChains = switchChainParams;
+  const rawChainFor = (network: ChainNetwork): RawChain | undefined => {
+    return pickleCore === undefined || pickleCore === null
+      ? undefined
+      : pickleCore.chains.find((z) => z.network === network);
+  };
+  const networks = Chains.list().filter((x) => rawChainFor(x) !== undefined);
+  const supportedChainParams = networks.map((x) => {
+    const rawChain = rawChainFor(x);
+    return chainToChainParams(rawChain);
+  });
+  const supportedChains = supportedChainParams;
 
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
       library.getNetwork().then((network: any) => setNetwork(network));
-
-      setMulticallAddress(66, "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa");
-      setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
-      setMulticallAddress(1285, "0x4c4a5d20f1ee40eaacb6a7787d20d16b7997363b");
-      setMulticallAddress(25, "0x0fA4d452693F2f45D28c4EC4d20b236C4010dA74");
-      setMulticallAddress(
-        1313161554,
-        "0x60Ad579Fb20c8896b7b98E800cBA9e196E6eaA44",
-      );
-      setMulticallAddress(1088, "0xa99850Ff94d3D333e7F669203Ab7B77Ec634028F");
+      Chains.list().map((x) => {
+        const raw: RawChain | undefined = rawChainFor(x);
+        if (raw && raw.multicallAddress) {
+          setMulticallAddress(raw.chainId, raw.multicallAddress);
+        }
+      });
 
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
@@ -192,8 +140,10 @@ function useConnection() {
     }
   }, [library]);
 
-  const chainName = (chainId && config.chains[chainId].name) || null;
-
+  const chainName =   
+    pickleCore?.chains.find((x) => x.chainId === chainId)
+      ?.networkVisible || null
+  
   return {
     multicallProvider,
     provider: library,

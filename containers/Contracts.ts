@@ -98,6 +98,9 @@ import { DodoRewards } from "./Contracts/DodoRewards";
 import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factories/DodoRewards__factory";
 import { LooksStaking__factory as LooksStakingFactory } from "containers/Contracts/factories/LooksStaking__factory";
 import { LooksStaking } from "./Contracts/LooksStaking";
+import { PickleCore } from "./Jars/usePickleCore";
+import { ADDRESSES } from "picklefinance-core/lib/model/PickleModel";
+import { ChainNetwork } from "picklefinance-core";
 
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
@@ -221,30 +224,13 @@ export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
 export const LOOKS_STAKING = "0xBcD7254A1D759EFA08eC7c3291B2E85c5dCC12ce";
 
 function useContracts() {
-  const { signer, chainName, multicallProvider } = Connection.useContainer();
-  const getNetworkConfig = (network: string | null) => {
-    switch (network) {
-      case NETWORK_NAMES.OKEX:
-        return config.addresses.OKEx;
-      case NETWORK_NAMES.POLY:
-        return config.addresses.Polygon;
-      case NETWORK_NAMES.ARB:
-        return config.addresses.Arbitrum;
-      case NETWORK_NAMES.MOONRIVER:
-        return config.addresses.Moonriver;
-      case NETWORK_NAMES.CRONOS:
-        return config.addresses.Cronos;
-      case NETWORK_NAMES.AURORA:
-        return config.addresses.Aurora;
-      case NETWORK_NAMES.METIS:
-        return config.addresses.Metis;
-      case NETWORK_NAMES.ETH:
-      default:
-        return config.addresses.Ethereum;
-    }
-  };
+  const { signer, chainId, multicallProvider } = Connection.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
 
-  const addresses = getNetworkConfig(chainName);
+  const addresses = ADDRESSES.get(
+    pickleCore?.chains.find((x) => x.chainId === chainId)
+      ?.network as ChainNetwork,
+  );
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);

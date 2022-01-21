@@ -327,6 +327,41 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": (
     <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
   ),
+
+  // Moonbeam
+
+  // STELLA STELLA/GLMR
+  "0x7f5ac0fc127bcf1eaf54e3cd01b00300a0861a62": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/moonbeam.png"} />
+  ),
+  // STELLA USDC/BNB
+  "0xac2657ba28768fe5f09052f07a9b7ea867a4608f": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdcbnb.png"} />
+  ),
+  // STELLA BUSD/GLMR
+  "0x367c36dae9ba198a4fee295c22bc98cb72f77fe1": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/busdglmr.png"} />
+  ),
+  // STELLA USDC/DAI
+  "0x5ced2f8dd70dc25cba10ad18c7543ad9ad5aeedd": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/daiusdc.png"} />
+  ),
+  // STELLA GLMR/ETH
+  "0x49a1cc58dcf28d0139daea9c18a3ca23108e78b3": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/glmreth.png"} />
+  ),
+  // STELLA GLMR/USDC
+  "0x555b74dafc4ef3a5a1640041e3244460dc7610d1": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/glmrusdc.png"} />
+  ),
+  // STELLA STELLA/USDC
+  "0x81e11a9374033d11cc7e7485a7192ae37d0795d6": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  // STELLA USDT/USDC
+  "0x8bc3cceef43392b315ddd92ba30b435f79b66b9e": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
