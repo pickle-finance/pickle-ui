@@ -35,8 +35,8 @@ const getLibrary = (provider: any) => {
 
 const WithContainers: FC = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
-    <Connection.Provider>
-      <PickleCore.Provider>
+    <PickleCore.Provider>
+      <Connection.Provider>
         <PoolData.Provider>
           <Contracts.Provider>
             <Balances.Provider>
@@ -80,8 +80,8 @@ const WithContainers: FC = ({ children }) => (
             </Balances.Provider>
           </Contracts.Provider>
         </PoolData.Provider>
-      </PickleCore.Provider>
-    </Connection.Provider>
+      </Connection.Provider>
+    </PickleCore.Provider>
   </Web3ReactProvider>
 );
 

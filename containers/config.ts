@@ -21,6 +21,7 @@ export enum NETWORK_NAMES {
   CRONOS = "Cronos",
   AURORA = "Aurora",
   METIS = "Metis",
+  MOONBEAM = "Moonbeam",
 }
 
 export const NETWORK_NAMES_PFCORE_MAP: any = {
@@ -32,6 +33,7 @@ export const NETWORK_NAMES_PFCORE_MAP: any = {
   Cronos: ChainNetwork.Cronos,
   Aurora: ChainNetwork.Aurora,
   Metis: ChainNetwork.Metis,
+  Moonbeam: ChainNetwork.Moonbeam
 };
 
 export type ChainName =
@@ -43,6 +45,7 @@ export type ChainName =
   | NETWORK_NAMES.CRONOS
   | NETWORK_NAMES.AURORA
   | NETWORK_NAMES.METIS
+  | NETWORK_NAMES.MOONBEAM
   | null;
 
 interface Config {
@@ -75,6 +78,9 @@ export const config: Config = {
     },
     1088: {
       name: NETWORK_NAMES.METIS,
+    },
+    1284: {
+      name: NETWORK_NAMES.MOONBEAM,
     },
   },
   addresses: {
@@ -133,6 +139,13 @@ export const config: Config = {
     },
     Metis: {
       controller: "0xD556018E7b37e66f618A65737144A2ae2B98127f",
+      pickle: "0x0000000000000000000000000000000000000000",
+      masterChef: "0x0000000000000000000000000000000000000000",
+      minichef: "0x0000000000000000000000000000000000000000",
+      rewarder: "0x0000000000000000000000000000000000000000",
+    },
+    Moonbeam: {
+      controller: "0x95ca4584eA2007D578fa2693CCC76D930a96d165",
       pickle: "0x0000000000000000000000000000000000000000",
       masterChef: "0x0000000000000000000000000000000000000000",
       minichef: "0x0000000000000000000000000000000000000000",
