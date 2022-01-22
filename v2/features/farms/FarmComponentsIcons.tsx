@@ -46,9 +46,9 @@ const FarmComponentsIcons: FC<Props> = ({ jar }) => {
         <Image
           src={protocolSrc}
           className="rounded-full"
-          width={200}
-          height={200}
-          layout="responsive"
+          width={28}
+          height={28}
+          layout="intrinsic"
           alt={jar.protocol}
           title={"ETH"}
         />
