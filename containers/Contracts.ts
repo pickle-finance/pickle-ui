@@ -96,6 +96,8 @@ import { DodoPair } from "./Contracts/DodoPair";
 import { DodoPair__factory as DodoPairFactory } from "./Contracts/factories/DodoPair__factory";
 import { DodoRewards } from "./Contracts/DodoRewards";
 import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factories/DodoRewards__factory";
+import { LooksStaking__factory as LooksStakingFactory } from "containers/Contracts/factories/LooksStaking__factory";
+import { LooksStaking } from "./Contracts/LooksStaking";
 import { PickleCore } from "./Jars/usePickleCore";
 import { ADDRESSES } from "picklefinance-core/lib/model/PickleModel";
 import { ChainNetwork } from "picklefinance-core";
@@ -219,6 +221,7 @@ export const PICKLE_SUSHI_REWARDER =
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
 export const JSWAPCHEF = "0x83C35EA2C32293aFb24aeB62a14fFE920C2259ab";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
+export const LOOKS_STAKING = "0xBcD7254A1D759EFA08eC7c3291B2E85c5dCC12ce";
 
 function useContracts() {
   const { signer, chainId, multicallProvider } = Connection.useContainer();
@@ -332,6 +335,7 @@ function useContracts() {
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
   const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
+  const [looksStaking, setLooksStaking] = useState<LooksStaking | null>(null);
 
   const [
     rallyRewardPools,
@@ -490,6 +494,8 @@ function useContracts() {
         RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
       );
       setDodoRewards(DodoRewardsFactory.connect(DODO_REWARDS, signer));
+
+      setLooksStaking(LooksStakingFactory.connect(LOOKS_STAKING, signer))
     }
   };
 
@@ -553,6 +559,7 @@ function useContracts() {
     rallyRewardPools,
     dodoPair,
     dodoRewards,
+    looksStaking
   };
 }
 

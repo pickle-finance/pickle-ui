@@ -177,7 +177,12 @@
     "withdrawingFromFarm": "Withdrawing from Farm...",
     "withdrawingFromJar": "Withdrawing from Jar...",
     "yvBOOSTMigration": "Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the Farm.<br />This process will require a number of transactions.<br />Learn more about yvBOOST <5>here</5>.",
-    "sushiMigration": "Your PICKLE/ETH LP tokens will be unstaked and migrated from Uniswap LP tokens to Sushi LP tokens <br /> and then staked in Sushi's MasterChef v2. This process will require a number of transactions."
+    "sushiMigration": "Your PICKLE/ETH LP tokens will be unstaked and migrated from Uniswap LP tokens to Sushi LP tokens <br /> and then staked in Sushi's MasterChef v2. This process will require a number of transactions.",
+    "looksMigration": "Migrate your LOOKS staked at looksrare.org to Pickle to autocompound your WETH rewards",
+    "looksDefault": "Migrate staked {{ amount }} LOOKS to Jar",
+    "looksWithdraw": "Withdrawing your staked LOOKS tokens...",
+    "looksDeposit": "Depositing in Jar...",
+    "looksSuccess": "Successfully migrated!"
   },
   "gauges": {
     "chartPreview": "View allocation of PICKLE reward weights <1>(based on votes cast by DILL holders)</1>",

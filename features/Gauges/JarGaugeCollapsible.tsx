@@ -31,17 +31,16 @@ import {
   isYveCrvEthJarToken,
   isMainnetMimEthJarDepositToken,
   isJarWithdrawOnly,
+  isLooksJar,
 } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
-import { getProtocolData } from "../../util/api";
 import { getFormatString } from "./GaugeInfo";
 import { zapDefaultTokens } from "../Zap/tokens";
 import { tokenInfo, useBalance } from "../Zap/useBalance";
 import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
-import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
@@ -420,6 +419,9 @@ export const JarGaugeCollapsible: FC<{
 
   const [zapStakeButton, setZapStakeButton] = useState<string | null>(null);
   const [zapOnlyButton, setZapOnlyButton] = useState<string | null>(null);
+  const [looksMigrateState, setLooksMigrateState] = useState<string | null>(
+    null,
+  );
 
   const {
     status: erc20TransferStatuses,
@@ -430,12 +432,14 @@ export const JarGaugeCollapsible: FC<{
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
-  const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
-    gaugeDepositToken,
-    0,
-    gaugeBalance,
-    staked,
-  );
+  const {
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+    withdrawLOOKS,
+    depositLOOKS,
+    looksBalance,
+  } = useMigrate(gaugeDepositToken, 0, gaugeBalance, staked);
 
   const stakedStr = formatValue(stakedNum);
 
@@ -532,6 +536,20 @@ export const JarGaugeCollapsible: FC<{
         setYvMigrateState(null);
         return;
       }
+    }
+  };
+
+  const handleLooksMigrate = async () => {
+    try {
+      setLooksMigrateState(t("farms.looksWithdraw"));
+      await withdrawLOOKS();
+      setLooksMigrateState(t("farms.looksDeposit"));
+      await depositLOOKS();
+      setLooksMigrateState(t("farms.looksSuccess"));
+    } catch (error) {
+      alert(error.message);
+      setLooksMigrateState(null);
+      return;
     }
   };
 
@@ -1176,6 +1194,31 @@ export const JarGaugeCollapsible: FC<{
                   </Trans>
                 </p>
               ) : null}
+            </div>
+          </Grid>
+        )}
+        {isLooksJar(depositToken.address) && (
+          <Grid xs={24}>
+            <Button
+              disabled={looksMigrateState !== null || looksBalance.isZero()}
+              onClick={handleLooksMigrate}
+              style={{ width: "100%", textTransform: "none" }}
+            >
+              {looksMigrateState ||
+                t("farms.looksDefault", {
+                  amount: (+formatEther(looksBalance)).toFixed(2),
+                })}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "Source Sans Pro",
+                fontSize: "1rem",
+              }}
+            >
+              <Spacer y={0.5} />
+              <p>{t("farms.looksMigration")}</p>
             </div>
           </Grid>
         )}
