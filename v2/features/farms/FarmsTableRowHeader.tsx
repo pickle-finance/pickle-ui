@@ -38,28 +38,22 @@ const chainProtocol = (
       <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
         {jar.depositToken.name}
       </p>
-      <table>
-        <tr>
-          <td>
-            <div className="w-4 h-4 mr-1">
-              <Image
-                src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
-                className="rounded-full"
-                width={20}
-                height={20}
-                layout="responsive"
-                alt={jar.chain}
-                title={jar.chain}
-              />
-            </div>
-          </td>
-          <td>
-            <p className="italic font-normal text-xs text-gray-light">
-              {jar.protocol}
-            </p>
-          </td>
-        </tr>
-      </table>
+      <div className="flex mt-1">
+        <div className="w-4 h-4 mr-1">
+          <Image
+            src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+            className="rounded-full"
+            width={20}
+            height={20}
+            layout="responsive"
+            alt={jar.chain}
+            title={jar.chain}
+          />
+        </div>
+        <p className="italic font-normal text-xs text-gray-light">
+          {jar.protocol}
+        </p>
+      </div>
     </div>
   );
 };
