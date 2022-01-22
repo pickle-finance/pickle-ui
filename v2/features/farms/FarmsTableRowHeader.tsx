@@ -1,26 +1,23 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   JarDefinition,
-  PickleAsset,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
-
-import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
-import FarmsBadge from "./FarmsBadge";
 import {
   UserData,
   UserTokenData,
 } from "picklefinance-core/lib/client/UserModel";
+
+import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
+import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
-import { BigNumber } from "@ethersproject/bignumber";
 import { CoreSelectors } from "v2/store/core";
 import { networks } from "../connection/networks";
-import { useTranslation } from "next-i18next";
-import { FARM_LP_TO_ICON } from "features/Farms/FarmCollapsible";
-import { TokenIcon } from "components/TokenIcon";
+import FarmComponentsIcons from "./FarmComponentsIcons";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -222,41 +219,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           "rounded-tl-xl flex items-center",
         )}
       >
-        <div className="flex relative mr-2">
-          <div className="w-10 h-10 rounded-full border-3 border-gray-outline z-10 hover:scale-125 duration-200 hover:z-50">
-            <Image
-              src="/usdc.png"
-              className="rounded-full"
-              width={200}
-              height={200}
-              layout="responsive"
-              alt={jar.depositToken.name}
-              title={"USDC"}
-            />
-          </div>
-          <div className="w-10 h-10 rounded-full border-3 border-gray-outline -ml-3 mr-3 hover:scale-125 duration-200 hover:z-50">
-            <Image
-              src="/ethereum.svg"
-              className="rounded-full"
-              width={200}
-              height={200}
-              layout="responsive"
-              alt={jar.depositToken.name}
-              title={"ETH"}
-            />
-          </div>
-          <div className="absolute -top-3 -right-3 w-7 h-7 rounded-full border-3 border-gray-outline -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200">
-            <Image
-              src="/protocols/sushiswap.png"
-              className="rounded-full"
-              width={200}
-              height={200}
-              layout="responsive"
-              alt={jar.depositToken.name}
-              title={"ETH"}
-            />
-          </div>
-        </div>
+        <FarmComponentsIcons jar={jar} />
         {chainProtocol(jar, allCore)}
       </RowCell>
       <RowCell>
