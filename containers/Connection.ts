@@ -138,7 +138,7 @@ function useConnection() {
       setMulticallProvider(null);
       setBlockNum(null);
     }
-  }, [library]);
+  }, [library, pickleCore]);
 
   const chainName =   
     pickleCore?.chains.find((x) => x.chainId === chainId)
