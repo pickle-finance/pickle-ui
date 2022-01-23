@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { classNames } from "v2/utils";
+import { brandColor } from "./colors";
 
 interface Props {
   jar: JarDefinition;
@@ -31,11 +32,10 @@ const TokenIcons: FC<Props> = ({ jar }) => {
             index === 1 && "z-30",
             index === 2 && "z-20",
             index === 3 && "z-10",
-            index > 0 && "-ml-3",
+            index > 0 && "-ml-4",
             index === components.length - 1 && "mr-3",
           )}
-          // 70% opacity
-          style={{ background: "#2975cab3" }}
+          style={{ background: brandColor(component) }}
         >
           <Image
             src={`/tokens/${component}.png`}
@@ -53,22 +53,24 @@ const TokenIcons: FC<Props> = ({ jar }) => {
 };
 
 const FarmComponentsIcons: FC<Props> = ({ jar }) => {
-  const protocolSrc = `/protocols/${jar.protocol
-    .replace(/\s/g, "")
-    .toLowerCase()}.png`;
+  const { protocol } = jar;
+  const sanitizedProtocolName = protocol.replace(/\s/g, "").toLowerCase();
 
   return (
     <div className="flex relative mr-2">
       <TokenIcons jar={jar} />
-      <div className="absolute -top-3 -right-3 z-50 w-7 h-7 rounded-full border-3 border-gray-outline -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200">
+      <div
+        className="absolute -top-3 -right-3 z-50 w-7 h-7 rounded-full border-3 border-gray-outline -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200"
+        style={{ background: brandColor(sanitizedProtocolName) }}
+      >
         <Image
-          src={protocolSrc}
+          src={`/protocols/${sanitizedProtocolName}.png`}
           className="rounded-full"
           width={28}
           height={28}
           layout="intrinsic"
-          alt={jar.protocol}
-          title={"ETH"}
+          alt={protocol}
+          title={protocol}
         />
       </div>
     </div>
