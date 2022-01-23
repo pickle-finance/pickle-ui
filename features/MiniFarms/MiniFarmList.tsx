@@ -157,7 +157,7 @@ export const MiniFarmList: FC = () => {
     const tooltipText = nonCompoundedYieldsToTooltip(nonCompoundedYields, magicCompounding, t);
     return {
       ...farm,
-      APYs: [],
+      APYs: APYs,
       totalAPY,
       tooltipText,
     };
