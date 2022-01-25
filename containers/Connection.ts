@@ -39,6 +39,9 @@ function useConnection() {
   const router = useRouter();
   const { pickleCore } = PickleCore.useContainer();
 
+  // Turn off ethersjs warnings 
+  ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR);
+
   const [
     multicallProvider,
     setMulticallProvider,
