@@ -9,10 +9,9 @@ import { Dill, UseDillOutput } from "../../containers/Dill";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import { isPUsdcToken } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "../../containers/config";
 import { PickleCore } from "./../../containers/Jars/usePickleCore";
 import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
-import { values } from "lodash";
+import { ChainNetwork } from "picklefinance-core";
 
 export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
@@ -123,7 +122,7 @@ export const CalcCollapsible: FC<{
       setDillBalance(formatEther(dillStats.balance.toString() || 0));
   }, [dillStats]);
 
-  if (!gaugeData && chainName === NETWORK_NAMES.ETH) {
+  if (!gaugeData && chainName === ChainNetwork.Ethereum) {
     return <h2>{t("connection.loading")}</h2>;
   }
   return (

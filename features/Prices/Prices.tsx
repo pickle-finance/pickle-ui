@@ -2,8 +2,8 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Card, Grid } from "@geist-ui/react";
 import { Prices as PricesContainer } from "../../containers/Prices";
-import { NETWORK_NAMES } from "containers/config";
 import { Connection } from "containers/Connection";
+import { ChainNetwork } from "picklefinance-core";
 
 const DataPoint = styled.div`
   font-size: 24px;
@@ -64,11 +64,11 @@ export const Prices: FC = () => {
 
   const swapLink = () => {
     switch (chainName) {
-      case NETWORK_NAMES.POLY:
+      case ChainNetwork.Polygon:
         return "https://swap.cometh.io/#/swap?inputCurrency=0x9c78ee466d6cb57a4d01fd887d2b5dfb2d46288f&outputCurrency=0x2b88ad57897a8b496595925f43048301c37615da";
-      case NETWORK_NAMES.ARB:
+      case ChainNetwork.Arbitrum:
         return "https://arbitrum.balancer.fi/#/trade/ether/0x965772e0E9c84b6f359c8597C891108DcF1c5B1A";
-      case NETWORK_NAMES.ETH:
+      case ChainNetwork.Ethereum:
       default:
         return "https://analytics.sushi.com/pairs/0x269db91fc3c7fcc275c2e6f22e5552504512811c";
     }

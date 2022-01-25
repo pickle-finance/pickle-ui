@@ -7,7 +7,7 @@ import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "containers/config";
+import { ChainNetwork } from "picklefinance-core";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -17,13 +17,13 @@ export const FarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserFarms.useContainer();
   const [showInactive, setShowInactive] = useState<boolean>(
-    chainName === NETWORK_NAMES.POLY ? false : true,
+    chainName === ChainNetwork.Polygon ? false : true,
   );
   const { t } = useTranslation("common");
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
-  if (!farmData && chainName !== NETWORK_NAMES.POLY) {
+  if (!farmData && chainName !== ChainNetwork.Polygon) {
     return <h2>{t("connection.loading")}</h2>;
   }
 

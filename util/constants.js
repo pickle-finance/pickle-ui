@@ -1,4 +1,4 @@
-import { NETWORK_NAMES } from "containers/config";
+import { ChainNetwork } from "picklefinance-core";
 
 export const backgroundColor = "#fafafa";
 export const pickleGreen = "#33691E";
@@ -16,8 +16,8 @@ export const normalize = (value) => {
 };
 
 export const noFarms = (chainName) =>
-  chainName === NETWORK_NAMES.OKEX ||
-  chainName === NETWORK_NAMES.MOONRIVER ||
-  chainName === NETWORK_NAMES.CRONOS ||
-  chainName === NETWORK_NAMES.METIS||
-  chainName === NETWORK_NAMES.MOONBEAM;;
+  chainName === ChainNetwork.OKEx ||
+  chainName === ChainNetwork.Moonriver ||
+  chainName === ChainNetwork.Cronos ||
+  chainName === ChainNetwork.Metis||
+  chainName === ChainNetwork.Moonbeam;

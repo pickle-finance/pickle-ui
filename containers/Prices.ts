@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import { Connection } from "./Connection";
 import CoinGecko from "coingecko-api";
-import { NETWORK_NAMES } from "./config";
+import { ChainNetwork } from "picklefinance-core";
 
 interface PriceObject {
   dai: number;
@@ -99,7 +99,7 @@ const jswapPrice = async (isOEC: boolean): Promise<number> => {
 function usePrices() {
   const [prices, setPrices] = useState<PriceObject | null>(null);
   const { chainName } = Connection.useContainer();
-  const isOK = chainName === NETWORK_NAMES.OKEX;
+  const isOK = chainName === ChainNetwork.OKEx;
 
   const getPrices = async () => {
     if (!chainName) return;
