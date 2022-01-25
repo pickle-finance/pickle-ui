@@ -388,7 +388,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   // BEAM USDC/USDT
   "0xa35b2c07cb123ea5e1b9c7530d0812e7e03ec3c1": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/usdcusdt.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/usdcusdt.png"} />
   ),
 };
 
