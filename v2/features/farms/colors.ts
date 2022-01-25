@@ -16,6 +16,7 @@ const colors: { [token: string]: string } = {
   aurum: "#e58200",
   avax: "#e84142",
   balancer: "#1e1e1e",
+  beamswap: "#7740ca",
   bifi: "#c3bbaf",
   bnb: "#f3ba2f",
   brl: "#25caa0",
