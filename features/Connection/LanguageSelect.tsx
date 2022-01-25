@@ -24,6 +24,10 @@ const languages = [
     name: "Español",
     locale: "es",
   },
+  {
+    name: "Türkçe",
+    locale: "tr",
+  },
 ];
 
 const activeLanguage = (locale: string | undefined): string => {
