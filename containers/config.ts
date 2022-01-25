@@ -12,75 +12,39 @@ interface Addresses {
   sorbettiere?: string;
 }
 
-export enum NETWORK_NAMES {
-  ETH = "Ethereum",
-  POLY = "Polygon",
-  OKEX = "OKEx",
-  ARB = "Arbitrum",
-  MOONRIVER = "Moonriver",
-  CRONOS = "Cronos",
-  AURORA = "Aurora",
-  METIS = "Metis",
-  MOONBEAM = "Moonbeam",
-}
-
-export const NETWORK_NAMES_PFCORE_MAP: any = {
-  Ethereum: ChainNetwork.Ethereum,
-  Polygon: ChainNetwork.Polygon,
-  OKEx: ChainNetwork.OKEx,
-  Arbitrum: ChainNetwork.Arbitrum,
-  Moonriver: ChainNetwork.Moonriver,
-  Cronos: ChainNetwork.Cronos,
-  Aurora: ChainNetwork.Aurora,
-  Metis: ChainNetwork.Metis,
-  Moonbeam: ChainNetwork.Moonbeam
-};
-
-export type ChainName =
-  | NETWORK_NAMES.ETH
-  | NETWORK_NAMES.POLY
-  | NETWORK_NAMES.OKEX
-  | NETWORK_NAMES.ARB
-  | NETWORK_NAMES.MOONRIVER
-  | NETWORK_NAMES.CRONOS
-  | NETWORK_NAMES.AURORA
-  | NETWORK_NAMES.METIS
-  | NETWORK_NAMES.MOONBEAM
-  | null;
-
 interface Config {
-  chains: Record<number, { name: ChainName }>;
+  chains: Record<number, { name: ChainNetwork }>;
   addresses: Record<string, Addresses>;
 }
 
 export const config: Config = {
   chains: {
     1: {
-      name: NETWORK_NAMES.ETH,
+      name: ChainNetwork.Ethereum,
     },
     66: {
-      name: NETWORK_NAMES.OKEX,
+      name: ChainNetwork.OKEx,
     },
     137: {
-      name: NETWORK_NAMES.POLY,
+      name: ChainNetwork.Polygon,
     },
     42161: {
-      name: NETWORK_NAMES.ARB,
+      name: ChainNetwork.Arbitrum,
     },
     1285: {
-      name: NETWORK_NAMES.MOONRIVER,
+      name: ChainNetwork.Moonriver,
     },
     25: {
-      name: NETWORK_NAMES.CRONOS,
+      name: ChainNetwork.Cronos,
     },
     1313161554: {
-      name: NETWORK_NAMES.AURORA,
+      name: ChainNetwork.Cronos,
     },
     1088: {
-      name: NETWORK_NAMES.METIS,
+      name: ChainNetwork.Metis,
     },
     1284: {
-      name: NETWORK_NAMES.MOONBEAM,
+      name: ChainNetwork.Moonbeam,
     },
   },
   addresses: {

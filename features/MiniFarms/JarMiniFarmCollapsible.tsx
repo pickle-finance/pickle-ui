@@ -15,7 +15,6 @@ import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
-import { NETWORK_NAMES } from "containers/config";
 import {
   isJarWithdrawOnly,
   isQlpQiMaticOrUsdcToken,
@@ -563,9 +562,6 @@ export const JarMiniFarmCollapsible: FC<{
 
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
-
-  const isOK = chainName === NETWORK_NAMES.OKEX;
-  const isArb = chainName === NETWORK_NAMES.ARB;
 
   useEffect(() => {
     const checkAllowance = async () => {

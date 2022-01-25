@@ -142,7 +142,7 @@ function useConnection() {
 
   const chainName =   
     pickleCore?.chains.find((x) => x.chainId === chainId)
-      ?.networkVisible || null
+      ?.network || null
   
   return {
     multicallProvider,

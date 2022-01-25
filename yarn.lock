@@ -6976,10 +6976,10 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.3.02:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.2.tgz#437f4238c23ea2f0a897df04dc5b77545842ad9a"
-  integrity sha512-Wb9SmDL4sI/xF1JgxckS934TfyuFhn0vhdKw8yCMY74k12oydwvqbnsjcCiceA+/cVjyNP1uSSbAvfl0NegF5g==
+picklefinance-core@^0.3.08:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.8.tgz#90dd738e15dbef57e3f06c01a3c1125f8bb09caa"
+  integrity sha512-oaK5/ucpwp2c1l63lEoHjlGxzjOgwO/W0R0Fw3e0JC7QPFWKxPbGsKmzGYGqPO3qSKC12OH7wi+ATllG+7dAEg==
   dependencies:
     "@ethersproject/abstract-provider" "^5.1.0"
     "@ethersproject/providers" "^5.1.0"

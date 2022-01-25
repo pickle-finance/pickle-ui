@@ -7,7 +7,6 @@ import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__fa
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
-import { NETWORK_NAMES_PFCORE_MAP } from "containers/config";
 import { ChainNetwork } from "picklefinance-core";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleCore } from "./usePickleCore";
@@ -45,7 +44,6 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
 
   const getJarsPfcoreImpl = async (): Promise<Jar[]> => {
     if (controller && strategy && multicallProvider && chainName) {
-      const pfcoreChainName: ChainNetwork = NETWORK_NAMES_PFCORE_MAP[chainName];
       const allJars: JarDefinition[] | undefined = pickleCore?.assets.jars;
       if (!allJars) {
         // Time to return, dead
@@ -53,7 +51,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       }
 
       const chainJars: JarDefinition[] = allJars.filter(
-        (x) => x.chain === pfcoreChainName && shouldJarBeInUi(x, pickleCore),
+        (x) => x.chain === chainName && shouldJarBeInUi(x, pickleCore),
       );
 
       const possibleJars: (Jar | undefined)[] = chainJars.map((x) => {

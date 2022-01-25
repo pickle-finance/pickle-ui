@@ -73,7 +73,7 @@ import { PickleRewarder__factory as PickleRewarderFactory } from "./Contracts/fa
 import { StabilityPool } from "./Contracts/StabilityPool";
 import { StabilityPool__factory as StabilityPoolFactory } from "./Contracts/factories/StabilityPool__factory";
 
-import { config, NETWORK_NAMES, BPAddresses } from "./config";
+import { BPAddresses } from "./config";
 import { SushiMigrator } from "./Contracts/SushiMigrator";
 import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
 import { FossilFarms } from "./Contracts/FossilFarms";

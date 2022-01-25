@@ -18,7 +18,6 @@ import { uncompoundAPY } from "../../util/jars";
 import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { Jars } from "../../containers/Jars";
-import { NETWORK_NAMES } from "containers/config";
 import { UserJarData } from "containers/UserJars";
 import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
@@ -30,6 +29,7 @@ import {
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -252,7 +252,7 @@ export const GaugeList: FC = () => {
         <h2>{t("farms.jarsAndFarms")}</h2>
       </div>
       <Grid.Container gap={1}>
-        {chainName === NETWORK_NAMES.ETH && yearnJars.length > 0 && (
+        {chainName === ChainNetwork.Ethereum && yearnJars.length > 0 && (
           <>
             {t("farms.poweredBy")}&nbsp;
             <a href="https://yearn.finance/" target="_">
@@ -276,7 +276,7 @@ export const GaugeList: FC = () => {
             })}
           </>
         )}
-        {chainName === NETWORK_NAMES.ETH && (
+        {chainName === ChainNetwork.Ethereum && (
           <BProtocol showUserJars={showUserJars} />
         )}
         {showUserJars

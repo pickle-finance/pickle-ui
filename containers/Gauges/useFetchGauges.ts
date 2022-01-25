@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { Contract as MulticallContract } from "ethers-multicall";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface RawGauge {
   token: string;
@@ -22,7 +23,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
   const [gauges, setGauges] = useState<Array<RawGauge> | null>(null);
 
   const getGauges = async () => {
-    if (gaugeProxy && multicallProvider && gauge && chainName === "Ethereum") {
+    if (gaugeProxy && multicallProvider && gauge && chainName === ChainNetwork.Ethereum) {
       const tokens = await gaugeProxy.tokens();
       const totalWeight = await gaugeProxy.totalWeight();
 

@@ -8,7 +8,7 @@ import { useJarWithAPY as useJarsWithAPYPFCore } from "./Jars/useJarsWithAPYPFCo
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
-import { NETWORK_NAMES } from "./config";
+import { ChainNetwork } from "picklefinance-core";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
@@ -26,7 +26,7 @@ function useJars() {
         .map((x) => x.depositToken.address);
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
       const addedTokens = [...wants, ...pTokens];
-      if (chainName === NETWORK_NAMES.ETH)
+      if (chainName === ChainNetwork.Ethereum)
         addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM);
       addTokens(addedTokens);
     }

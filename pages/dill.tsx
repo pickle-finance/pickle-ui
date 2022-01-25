@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import { Footer } from "../features/Footer/Footer";
 import { DillFeature } from "../features/DILL/DILL";
 import { Connection } from "../containers/Connection";
-import { NETWORK_NAMES } from "containers/config";
+import { ChainNetwork } from "picklefinance-core";
 
 const Dill: FC = () => {
   const { chainName } = Connection.useContainer();
@@ -19,7 +19,7 @@ const Dill: FC = () => {
             {t("dill.dill")}
           </h1>
           <p>{t("dill.description")}</p>
-          {chainName !== NETWORK_NAMES.ETH ? (
+          {chainName !== ChainNetwork.Ethereum ? (
             t("dill.connectionPrompt")
           ) : (
             <DillFeature />

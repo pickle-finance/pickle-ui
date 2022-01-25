@@ -6,8 +6,8 @@ import { Footer } from "../features/Footer/Footer";
 import { GaugeList } from "../features/Gauges/GaugeList";
 import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
 import { Connection } from "../containers/Connection";
-import { NETWORK_NAMES } from "containers/config";
 import { noFarms } from "util/constants";
+import { ChainNetwork } from "picklefinance-core";
 
 const Gauges: FC = () => {
   const { chainName } = Connection.useContainer();
@@ -20,7 +20,7 @@ const Gauges: FC = () => {
         <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
           {noFarm ? t("info.jars") : t("info.farms")}
         </h1>
-        {chainName === NETWORK_NAMES.ETH ? <GaugeList /> : <MiniFarmList />}
+        {chainName === ChainNetwork.Ethereum ? <GaugeList /> : <MiniFarmList />}
       </Page.Content>
       <Footer />
     </Page>

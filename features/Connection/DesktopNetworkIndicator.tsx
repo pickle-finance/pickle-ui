@@ -6,11 +6,12 @@ import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
-import { config, NETWORK_NAMES } from "../../containers/config";
+import { config } from "../../containers/config";
 import { MiniIcon } from "../../components/TokenIcon";
 import LanguageSelect from "./LanguageSelect";
 import useENS from "hooks/useENS";
 import { PickleCore } from "containers/Jars/usePickleCore";
+import { Chains } from "picklefinance-core";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -134,7 +135,9 @@ export const DesktopNetworkIndicator: FC = () => {
 
     const success = await switchChain(newChainId);
     if (!success) {
-      setSwitchChainName(config.chains[newChainId].name);
+      const chain = pickleCore?.chains.find((x) => x.chainId === newChainId);
+      const chainName = chain?.network || "";
+      setSwitchChainName(chainName);
       setSwitchChainModalOpen(true);
     }
   };
@@ -217,7 +220,8 @@ export const DesktopNetworkIndicator: FC = () => {
           <MiniIcon source="/metis.png" /> {t("connection.networks.metis")}
         </Select.Option>
         <Select.Option value="1284">
-          <MiniIcon source="/moonbeam.png" /> {t("connection.networks.moonbeam")}
+          <MiniIcon source="/moonbeam.png" />{" "}
+          {t("connection.networks.moonbeam")}
         </Select.Option>
       </Select>
       <AddressContainer

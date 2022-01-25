@@ -7,8 +7,8 @@ import { MiniPickles } from "../Pickles";
 import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { RawFarm } from "../Farms/useFetchFarms";
-import { NETWORK_NAMES } from "containers/config";
 import { NULL_ADDRESS } from "features/Zap/constants";
+import { ChainNetwork } from "picklefinance-core";
 
 // this hook calculates and adds the following properties to the RawFarm objects
 export interface FarmWithReward extends RawFarm {
@@ -93,7 +93,7 @@ export const useWithReward = (rawFarms: Input): Output => {
           maticRewardedPerSecond = maticFraction * maticPerSecond;
           maticValuePerSecond =
             maticRewardedPerSecond *
-            (chainName === NETWORK_NAMES.OKEX ? prices.wokt : prices.matic);
+            (chainName === ChainNetwork.OKEx ? prices.wokt : prices.matic);
         }
 
         return {
@@ -117,7 +117,7 @@ export const useWithReward = (rawFarms: Input): Output => {
 
   useEffect(() => {
     calculateReward();
-  }, [rawFarms?.length, picklePerSecond, maticPerSecond, prices]);
+  }, [rawFarms, picklePerSecond, maticPerSecond, prices]);
 
   return { farmsWithReward: farms };
 };

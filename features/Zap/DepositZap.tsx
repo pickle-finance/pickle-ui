@@ -13,7 +13,6 @@ import { useZapIn } from "./useZapper";
 import { TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "../../features/Farms/UseMigrate";
 import { Connection } from "containers/Connection";
-import { NETWORK_NAMES } from "containers/config";
 import { Trans, useTranslation } from "next-i18next";
 import { Link } from "components/Link";
 
@@ -23,6 +22,7 @@ import {
   CRV_ADDRESS,
   ETH_ADDRESS,
 } from "./constants";
+import { ChainNetwork } from "picklefinance-core";
 
 const formatValue = (numStr: string) =>
   parseFloat(numStr).toLocaleString(undefined, {
@@ -81,7 +81,7 @@ export const DepositZap: FC = () => {
     }
   };
 
-  const isEth = chainName === NETWORK_NAMES.ETH;
+  const isEth = chainName === ChainNetwork.Ethereum;
 
   const disableZap = () => {
     if (!isEth) return true;

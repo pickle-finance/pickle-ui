@@ -8,8 +8,6 @@ import { Connection } from "../../containers/Connection";
 import { useJarData } from "features/Gauges/useJarData";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
-import { uncompoundAPY } from "../../util/jars";
-import { NETWORK_NAMES } from "containers/config";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { pickleWhite } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
@@ -17,7 +15,7 @@ import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 import { noFarms } from "util/constants";
-import { PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { UserJarData } from "containers/UserJars";
 
@@ -115,9 +113,9 @@ export const MiniFarmList: FC = () => {
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
-  if ((!jarData || !farmData) && chainName !== NETWORK_NAMES.POLY) {
+  if ((!jarData || !farmData) && chainName !== ChainNetwork.Polygon) {
     return <h2>{t("connection.loading")}</h2>;
-  } else if ((!jarData || !farmData) && chainName === NETWORK_NAMES.POLY) {
+  } else if ((!jarData || !farmData) && chainName === ChainNetwork.Polygon) {
     return (
       <>
         <h2>{t("connection.loading")}</h2>
@@ -190,7 +188,7 @@ export const MiniFarmList: FC = () => {
 
   return (
     <Container>
-      {chainName === NETWORK_NAMES.ARB && (
+      {chainName === ChainNetwork.Arbitrum && (
         <>
           <BalFarm />
           <Spacer y={1} />
