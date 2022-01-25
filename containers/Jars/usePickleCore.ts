@@ -21,21 +21,18 @@ const usePickleCore = () => {
     pickleCore,
     setPickleCore,
   ] = useState<PickleModelJson.PickleModelJson | null>(null);
-  const { blockNum, chainId } = Connection.useContainer();
-  const [lastFetchBlockNum, setLastFetchBlockNum] = useState<number>(0);
 
   const fetchPickleCore = async () => {
-    if (chainId) {
-      if ((blockNum || 0) > lastFetchBlockNum + 3 * blocksPerMinute[chainId]) {
-        setLastFetchBlockNum(blockNum!);
-        setPickleCore(<PickleModelJson.PickleModelJson>await getPickleCore());
-      }
-    }
+    setPickleCore(<PickleModelJson.PickleModelJson>await getPickleCore());
   };
 
   useEffect(() => {
     fetchPickleCore();
-  }, [blockNum]);
+    const interval = setInterval(() => {
+      fetchPickleCore();
+    }, 180000);
+    return () => clearInterval(interval);
+  }, []);
 
   return { pickleCore };
 };

@@ -1,26 +1,23 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   JarDefinition,
-  PickleAsset,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
-
-import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
-import FarmsBadge from "./FarmsBadge";
 import {
   UserData,
   UserTokenData,
 } from "picklefinance-core/lib/client/UserModel";
+
+import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
+import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
-import { BigNumber } from "@ethersproject/bignumber";
 import { CoreSelectors } from "v2/store/core";
 import { networks } from "../connection/networks";
-import { useTranslation } from "next-i18next";
-import { FARM_LP_TO_ICON } from "features/Farms/FarmCollapsible";
-import { TokenIcon } from "components/TokenIcon";
+import FarmComponentsIcons from "./FarmComponentsIcons";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -41,28 +38,22 @@ const chainProtocol = (
       <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
         {jar.depositToken.name}
       </p>
-      <table>
-        <tr>
-          <td>
-            <div className="w-4 h-4 mr-1">
-              <Image
-                src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
-                className="flex inline rounded-full"
-                width={20}
-                height={20}
-                layout="responsive"
-                alt={jar.chain}
-                title={jar.chain}
-              />
-            </div>
-          </td>
-          <td>
-            <p className="italic font-normal text-xs text-gray-light">
-              {jar.protocol}
-            </p>
-          </td>
-        </tr>
-      </table>
+      <div className="flex mt-1">
+        <div className="w-4 h-4 mr-1">
+          <Image
+            src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+            className="rounded-full"
+            width={20}
+            height={20}
+            layout="responsive"
+            alt={jar.chain}
+            title={jar.chain}
+          />
+        </div>
+        <p className="italic font-normal text-xs text-gray-light">
+          {jar.protocol}
+        </p>
+      </div>
     </div>
   );
 };
@@ -79,6 +70,7 @@ export interface UserAssetDataWithPricesComponent {
   tokensUSD: number;
 }
 export interface UserAssetDataWithPrices {
+  assetId: string;
   depositTokensInWallet: UserAssetDataWithPricesComponent;
   depositTokensInJar: UserAssetDataWithPricesComponent;
   depositTokensInFarm: UserAssetDataWithPricesComponent;
@@ -120,6 +112,7 @@ const createUserAssetDataComponent = (
 
 const userAssetDataZeroEverything = (): UserAssetDataWithPrices => {
   return {
+    assetId: "",
     depositTokensInWallet: userAssetDataZeroComponent(),
     depositTokensInJar: userAssetDataZeroComponent(),
     depositTokensInFarm: userAssetDataZeroComponent(),
@@ -170,6 +163,7 @@ export const getUserAssetDataWithPrices = (
     1.0,
   );
   return {
+    assetId: jar.details.apiKey,
     earnedPickles: pickleComponent,
     depositTokensInWallet: wallet,
     depositTokensInJar: jarComponent,
@@ -199,8 +193,6 @@ const formatImagePath = (chain: string): string => {
 };
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
-  const { t } = useTranslation("common");
-
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   const allCore = useSelector(CoreSelectors.selectCore);
   const data = getUserAssetDataWithPrices(jar, allCore, userModel);
@@ -221,37 +213,8 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           "rounded-tl-xl flex items-center",
         )}
       >
-        <TokenIcon
-          src={FARM_LP_TO_ICON[jar.contract as keyof typeof FARM_LP_TO_ICON]}
-        />
+        <FarmComponentsIcons jar={jar} />
         {chainProtocol(jar, allCore)}
-        {/* <div>
-          <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
-            {jar.depositToken.name}
-          </p>
-          <table>
-            <tr>
-              <td>
-                <div className="w-4 h-4 mr-1">
-                  <Image
-                    src={formatImagePath(formatNetworkName(jar.chain, allCore))}
-                    className="flex inline rounded-full"
-                    width={20}
-                    height={20}
-                    layout="responsive"
-                    alt={jar.chain}
-                    title={jar.chain}
-                  />
-                </div>
-              </td>
-              <td>
-                <p className="italic font-normal text-xs text-gray-light">
-                  {jar.protocol}
-                </p>
-              </td>
-            </tr>
-          </table>
-        </div> */}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">

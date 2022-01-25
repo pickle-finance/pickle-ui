@@ -31,22 +31,25 @@ import {
   isYveCrvEthJarToken,
   isMainnetMimEthJarDepositToken,
   isJarWithdrawOnly,
+  isLooksJar,
 } from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
-import { getProtocolData } from "../../util/api";
 import { getFormatString } from "./GaugeInfo";
 import { zapDefaultTokens } from "../Zap/tokens";
 import { tokenInfo, useBalance } from "../Zap/useBalance";
 import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
-import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  getRatioStringAndPendingString,
+  RatioAndPendingStrings,
+} from "features/MiniFarms/JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -243,6 +246,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xDC00bA87Cc2D99468f7f34BC04CBf72E111A32f7": (
     <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={"/weth.png"} />
   ),
+  "0xf4d2888d29D722226FafA5d9B24F9164c092421E": (
+    <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={""} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -310,6 +316,15 @@ export const JarGaugeCollapsible: FC<{
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
   const toLocaleNdigits = (val: number, digits: number) => {
     return val.toLocaleString(undefined, {
       minimumFractionDigits: digits,
@@ -321,29 +336,8 @@ export const JarGaugeCollapsible: FC<{
     usdPerPToken * (depositedNum + stakedNum),
     2,
   );
-  let valueStrExplained = undefined;
-  let userSharePendingStr = undefined;
-  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
-    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
-    const jarAddress = jarContract.address;
-    const jar = pickleCore?.assets.jars.find(
-      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
-    );
-    if (jar) {
-      const totalPtokens = jar.details.tokenBalance;
-      if (totalPtokens) {
-        const userShare = (depositedNum + stakedNum) / totalPtokens;
-        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
-        if (pendingHarvest) {
-          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
-          userSharePendingStr =
-            t("farms.pending") +
-            ": $" +
-            toLocaleNdigits(userShareHarvestUsd, 2);
-        }
-      }
-    }
-  }
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
 
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
@@ -364,11 +358,6 @@ export const JarGaugeCollapsible: FC<{
 
   let difference = 0;
   if (APYs !== undefined) {
-    const totalAPY1: number = APYs?.map((x) => {
-      return Object.values(x)
-        .filter((x) => !isNaN(x))
-        .reduce((acc, y) => acc + y, 0);
-    }).reduce((acc, x) => acc + x, 0);
     const totalAPR1: number = uncompounded
       .map((x) => {
         return Object.values(x)
@@ -376,7 +365,7 @@ export const JarGaugeCollapsible: FC<{
           .reduce((acc, y) => acc + y, 0);
       })
       .reduce((acc, x) => acc + x, 0);
-    difference = totalAPY1 - totalAPR1;
+    difference = totalAPY - totalAPR1;
   }
 
   let apyRangeTooltipText = "APY Range Unavailable.";
@@ -430,6 +419,9 @@ export const JarGaugeCollapsible: FC<{
 
   const [zapStakeButton, setZapStakeButton] = useState<string | null>(null);
   const [zapOnlyButton, setZapOnlyButton] = useState<string | null>(null);
+  const [looksMigrateState, setLooksMigrateState] = useState<string | null>(
+    null,
+  );
 
   const {
     status: erc20TransferStatuses,
@@ -440,12 +432,14 @@ export const JarGaugeCollapsible: FC<{
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
-  const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
-    gaugeDepositToken,
-    0,
-    gaugeBalance,
-    staked,
-  );
+  const {
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+    withdrawLOOKS,
+    depositLOOKS,
+    looksBalance,
+  } = useMigrate(gaugeDepositToken, 0, gaugeBalance, staked);
 
   const stakedStr = formatValue(stakedNum);
 
@@ -542,6 +536,20 @@ export const JarGaugeCollapsible: FC<{
         setYvMigrateState(null);
         return;
       }
+    }
+  };
+
+  const handleLooksMigrate = async () => {
+    try {
+      setLooksMigrateState(t("farms.looksWithdraw"));
+      await withdrawLOOKS();
+      setLooksMigrateState(t("farms.looksDeposit"));
+      await depositLOOKS();
+      setLooksMigrateState(t("farms.looksSuccess"));
+    } catch (error) {
+      alert(error.message);
+      setLooksMigrateState(null);
+      return;
     }
   };
 
@@ -1186,6 +1194,31 @@ export const JarGaugeCollapsible: FC<{
                   </Trans>
                 </p>
               ) : null}
+            </div>
+          </Grid>
+        )}
+        {isLooksJar(depositToken.address) && (
+          <Grid xs={24}>
+            <Button
+              disabled={looksMigrateState !== null || looksBalance.isZero()}
+              onClick={handleLooksMigrate}
+              style={{ width: "100%", textTransform: "none" }}
+            >
+              {looksMigrateState ||
+                t("farms.looksDefault", {
+                  amount: (+formatEther(looksBalance)).toFixed(2),
+                })}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "Source Sans Pro",
+                fontSize: "1rem",
+              }}
+            >
+              <Spacer y={0.5} />
+              <p>{t("farms.looksMigration")}</p>
             </div>
           </Grid>
         )}

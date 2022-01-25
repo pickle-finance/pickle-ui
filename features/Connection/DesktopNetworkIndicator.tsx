@@ -10,6 +10,7 @@ import { config, NETWORK_NAMES } from "../../containers/config";
 import { MiniIcon } from "../../components/TokenIcon";
 import LanguageSelect from "./LanguageSelect";
 import useENS from "hooks/useENS";
+import { PickleCore } from "containers/Jars/usePickleCore";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -121,6 +122,7 @@ export const DesktopNetworkIndicator: FC = () => {
   const [reset, setReset] = useState(0);
   const { t } = useTranslation("common");
   const { ensName } = useENS(address);
+  const { pickleCore } = PickleCore.useContainer();
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
@@ -136,41 +138,20 @@ export const DesktopNetworkIndicator: FC = () => {
       setSwitchChainModalOpen(true);
     }
   };
-
+  const chain =
+    pickleCore === undefined || pickleCore === null
+      ? undefined
+      : pickleCore.chains.find((x) => x.chainId === chainId);
+  let explorer = chain ? chain.explorer : undefined;
+  if (explorer === undefined) {
+    explorer = `https://etherscan.io`;
+  }
   const renderBlock = () => {
-    if (chainName === NETWORK_NAMES.POLY)
-      return `https://polygonscan.com/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.OKEX)
-      return `https://www.oklink.com/okexchain/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.ARB)
-      return `https://arbiscan.io/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.MOONRIVER)
-      return `https://moonriver.moonscan.io/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.CRONOS)
-      return `https://cronos.crypto.org/explorer/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.AURORA)
-      return `https://explorer.mainnet.aurora.dev/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.METIS)
-      return `https://andromeda-explorer.metis.io/block/${blockNum}`;
-    else return `https://etherscan.io/block/${blockNum}`;
+    return `${explorer}/block/${blockNum}`;
   };
 
   const renderAddress = () => {
-    if (chainName === NETWORK_NAMES.POLY)
-      return `https://polygonscan.com/address/${address}`;
-    if (chainName === NETWORK_NAMES.OKEX)
-      return `https://www.oklink.com/okexchain/address/${address}`;
-    if (chainName === NETWORK_NAMES.ARB)
-      return `https://arbiscan.io/address/${address}`;
-    if (chainName === NETWORK_NAMES.MOONRIVER)
-      return `https://moonriver.moonscan.io/address/${address}`;
-    if (chainName === NETWORK_NAMES.CRONOS)
-      return `https://cronos.crypto.org/explorer/address/${address}`;
-    if (chainName === NETWORK_NAMES.AURORA)
-      return `https://explorer.mainnet.aurora.dev/${address}`;
-    if (chainName === NETWORK_NAMES.METIS)
-      return `https://andromeda-explorer.metis.io/address/${address}`;
-    else return `https://etherscan.io/address/${address}`;
+    return `${explorer}/address/${address}`;
   };
 
   return (
@@ -234,6 +215,9 @@ export const DesktopNetworkIndicator: FC = () => {
         </Select.Option>
         <Select.Option value="1088">
           <MiniIcon source="/metis.png" /> {t("connection.networks.metis")}
+        </Select.Option>
+        <Select.Option value="1284">
+          <MiniIcon source="/moonbeam.png" /> {t("connection.networks.moonbeam")}
         </Select.Option>
       </Select>
       <AddressContainer

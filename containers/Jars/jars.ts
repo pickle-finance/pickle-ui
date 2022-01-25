@@ -38,6 +38,13 @@ export const isYveCrvEthJarToken = (jarTokenAddress: string) => {
   );
 };
 
+export const isLooksJar = (depositTokenAddress: string) => {
+  return (
+    depositTokenAddress.toLowerCase() ===
+    "0xf4d2888d29d722226fafa5d9b24f9164c092421e"
+  );
+};
+
 export const isQlpQiToken = (depositTokenAddress: string) => {
   return (
     depositTokenAddress.toLowerCase() ===
