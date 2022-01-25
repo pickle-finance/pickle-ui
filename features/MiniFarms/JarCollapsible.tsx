@@ -362,6 +362,34 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x8bc3cceef43392b315ddd92ba30b435f79b66b9e": (
     <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
+  // BEAM BNB/BUSD
+  "0x34a1f4ab3548a92c6b32cd778eed310fcd9a340d": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/bnbbusd.png"} />
+  ),
+  // BEAM BUSD/GLMR
+  "0xfc422eb0a2c7a99bad330377497fd9798c9b1001": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/busdglmr.png"} />
+  ),
+  // BEAM BUSD/USDC
+  "0xa0799832fb2b9f18acf44b92fbbedcfd6442dd5e": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/busdusdc.png"} />
+  ),
+  // BEAM ETH/USDC
+  "0x6ba3071760d46040fb4dc7b627c9f68efaca3000": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/ethusdc.png"} />
+  ),
+  // BEAM GLMR/GLINT
+  "0x99588867e817023162f4d4829995299054a5fc57": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/tokens/glmr.png"} />
+  ),
+  // BEAM GLMR/USDC
+  "0xb929914b89584b4081c7966ac6287636f7efd053": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/glmrusdc.png"} />
+  ),
+  // BEAM USDC/USDT
+  "0xa35b2c07cb123ea5e1b9c7530d0812e7e03ec3c1": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -544,7 +572,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -658,17 +686,16 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(
+                        isUsdc && deposited
+                          ? deposited.mul(USDC_SCALE)
+                          : deposited,
+                      ),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
