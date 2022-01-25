@@ -28,6 +28,7 @@ const languages = [
     name: "Türkçe",
     locale: "tr",
   },
+  {
     name: "हिन्दी",
     locale: "hi",
   },
