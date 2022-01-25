@@ -27,6 +27,7 @@ import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { PickleModelJson } from "picklefinance-core";
 
 interface DataProps {
   isZero?: boolean;
@@ -634,6 +635,15 @@ export const JarMiniFarmCollapsible: FC<{
       : tvlUSD;
 
   const tvlStr = getFormatString(tvlNum);
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
 
   const toLocaleNdigits = (val: number, digits: number) => {
     return val.toLocaleString(undefined, {
@@ -646,30 +656,8 @@ export const JarMiniFarmCollapsible: FC<{
     usdPerPToken * (depositedNum + stakedNum),
     2,
   );
-  let valueStrExplained = undefined;
-  let userSharePendingStr = undefined;
-  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
-    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
-    const jarAddress = jarContract.address;
-    const jar = pickleCore?.assets.jars.find(
-      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
-    );
-    if (jar) {
-      const totalPtokens = jar.details.tokenBalance;
-      if (totalPtokens) {
-        const userShare = (depositedNum + stakedNum) / totalPtokens;
-        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
-        if (pendingHarvest) {
-          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
-          userSharePendingStr =
-            t("farms.pending") +
-            ": $" +
-            toLocaleNdigits(userShareHarvestUsd, 2);
-        }
-      }
-    }
-  }
-
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -1034,6 +1022,54 @@ export const JarMiniFarmCollapsible: FC<{
   );
 };
 
+export interface RatioAndPendingStrings {
+  ratioString: string | undefined;
+  pendingString: string | undefined;
+}
+
+export const getRatioStringAndPendingString = (
+  usdPerPToken: number,
+  depositedNum: number,
+  stakedNum: number,
+  ratio: number,
+  jarAddress: string,
+  pickleCore: PickleModelJson.PickleModelJson | null,
+  t: Function,
+): RatioAndPendingStrings => {
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  let valueStrExplained = undefined;
+  let userSharePendingStr = undefined;
+  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
+    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
+    const jar = pickleCore?.assets.jars.find(
+      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
+    );
+    if (jar) {
+      const totalPtokens = jar.details.tokenBalance;
+      if (totalPtokens) {
+        const userShare = (depositedNum + stakedNum) / totalPtokens;
+        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+        if (pendingHarvest) {
+          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+          userSharePendingStr =
+            t("farms.pending") +
+            ": $" +
+            toLocaleNdigits(userShareHarvestUsd, 2);
+        }
+      }
+    }
+  }
+  return {
+    ratioString: valueStrExplained,
+    pendingString: userSharePendingStr,
+  };
+};
 const StyledNotice = styled.div`
   width: "100%";
   textalign: "center";
