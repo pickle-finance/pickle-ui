@@ -364,27 +364,27 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   // BEAM BNB/BUSD
   "0x34a1f4ab3548a92c6b32cd778eed310fcd9a340d": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/bnbbusd.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/bnbbusd.png"} />
   ),
   // BEAM BUSD/GLMR
   "0xfc422eb0a2c7a99bad330377497fd9798c9b1001": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/busdglmr.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/busdglmr.png"} />
   ),
   // BEAM BUSD/USDC
   "0xa0799832fb2b9f18acf44b92fbbedcfd6442dd5e": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/busdusdc.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/busdusdc.png"} />
   ),
   // BEAM ETH/USDC
   "0x6ba3071760d46040fb4dc7b627c9f68efaca3000": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/ethusdc.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/ethusdc.png"} />
   ),
   // BEAM GLMR/GLINT
   "0x99588867e817023162f4d4829995299054a5fc57": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/glmrglint.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/tokens/glmr.png"} />
   ),
   // BEAM GLMR/USDC
   "0xb929914b89584b4081c7966ac6287636f7efd053": (
-    <LpIcon swapIconSrc={"/moonbeam.png"} tokenIconSrc={"/glmrusdc.png"} />
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/glmrusdc.png"} />
   ),
   // BEAM USDC/USDT
   "0xa35b2c07cb123ea5e1b9c7530d0812e7e03ec3c1": (
