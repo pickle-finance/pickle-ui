@@ -4,7 +4,6 @@ import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
-import { config } from "./config";
 import {
   Provider as MulticallProvider,
   setMulticallAddress,
@@ -56,10 +55,10 @@ function useConnection() {
     if (!chain) return undefined;
     return {
       chainId: "0x" + chain.chainId.toString(16),
-      chainName: chain.networkVisible,
+      chainName: chain.network,
       nativeCurrency: {
-        name: chain.gasToken.toUpperCase(),
-        symbol: chain.gasToken.toUpperCase(),
+        name: chain.gasTokenSymbol.toUpperCase(),
+        symbol: chain.gasTokenSymbol.toUpperCase(),
         decimals: 18,
       },
       rpcUrls: chain.rpcs,
