@@ -55,7 +55,7 @@ function useConnection() {
     if (!chain) return undefined;
     return {
       chainId: "0x" + chain.chainId.toString(16),
-      chainName: chain.network,
+      chainName: chain.networkVisible,
       nativeCurrency: {
         name: chain.gasTokenSymbol.toUpperCase(),
         symbol: chain.gasTokenSymbol.toUpperCase(),
