@@ -533,7 +533,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                       return jarContract
                         .connect(signer)
                         .withdraw(convertDecimals(withdrawAmount), {
-                          gasLimit: 600000,
+                          gasLimit: 800000,
                         });
                     },
                     approval: false,
