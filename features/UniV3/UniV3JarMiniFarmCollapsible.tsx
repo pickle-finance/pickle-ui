@@ -257,7 +257,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
         );
         await exitTx.wait();
         setExitButton(t("farms.withdrawingFromJar"));
-        const withdrawTx = await jarContract.connect(signer).withdrawAll();
+        const withdrawTx = await jarContract
+          .connect(signer)
+          .withdrawAll({ gasLimit: 600000 });
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);
@@ -533,7 +535,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                       return jarContract
                         .connect(signer)
                         .withdraw(convertDecimals(withdrawAmount), {
-                          gasLimit: 800000,
+                          gasLimit: 600000,
                         });
                     },
                     approval: false,
