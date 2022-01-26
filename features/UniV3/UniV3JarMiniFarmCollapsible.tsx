@@ -204,7 +204,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               .deposit(
                 convertDecimals(deposit0Amount, token0.decimals),
                 convertDecimals(deposit1Amount, token1.decimals),
-                { gasLimit: 750000 },
+                { gasLimit: 850000 },
               );
           },
           approval: false,
@@ -449,7 +449,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                           .deposit(
                             convertDecimals(deposit0Amount, token0.decimals),
                             convertDecimals(deposit1Amount, token1.decimals),
-                            { gasLimit: 750000 },
+                            { gasLimit: 850000 },
                           );
                       },
                       approval: false,
@@ -533,7 +533,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                       return jarContract
                         .connect(signer)
                         .withdraw(convertDecimals(withdrawAmount), {
-                          gasLimit: 550000,
+                          gasLimit: 600000,
                         });
                     },
                     approval: false,
