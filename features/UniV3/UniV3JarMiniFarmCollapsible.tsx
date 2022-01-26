@@ -125,15 +125,19 @@ export const UniV3JarMiniFarmCollapsible: FC<{
 
   const stakedNum = parseFloat(formatEther(staked));
 
-  const totalNum = parseFloat(formatEther((deposited || BigNumber.from("0").add(staked || BigNumber.from("0)")))));
+  const totalNum = parseFloat(
+    formatEther(
+      deposited || BigNumber.from("0").add(staked || BigNumber.from("0)")),
+    ),
+  );
 
   const valueStr = (usdPerPToken * totalNum).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 
-  const [deposit0Amount, setDeposit0Amount] = useState("");
-  const [deposit1Amount, setDeposit1Amount] = useState("");
+  const [deposit0Amount, setDeposit0Amount] = useState("0");
+  const [deposit1Amount, setDeposit1Amount] = useState("0");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
@@ -198,8 +202,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             return jarContract
               .connect(signer)
               .deposit(
-                convertDecimals(deposit0Amount),
-                convertDecimals(deposit1Amount),
+                convertDecimals(deposit0Amount, token0.decimals),
+                convertDecimals(deposit1Amount, token1.decimals),
+                { gasLimit: 750000 },
               );
           },
           approval: false,
@@ -416,7 +421,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             otherToken={token1}
             isToken0={true}
             setDepositThisAmount={setDeposit0Amount}
-            setDepositOtherAmount={setDeposit1Amount}
             proportion={proportion!}
             depositAmount={deposit0Amount}
             jarAddr={jarContract.address}
@@ -426,7 +430,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             otherToken={token0}
             isToken0={false}
             setDepositThisAmount={setDeposit1Amount}
-            setDepositOtherAmount={setDeposit0Amount}
             proportion={proportion!}
             depositAmount={deposit1Amount}
             jarAddr={jarContract.address}
@@ -446,6 +449,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                           .deposit(
                             convertDecimals(deposit0Amount, token0.decimals),
                             convertDecimals(deposit1Amount, token1.decimals),
+                            { gasLimit: 750000 },
                           );
                       },
                       approval: false,
@@ -528,7 +532,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(convertDecimals(withdrawAmount));
+                        .withdraw(convertDecimals(withdrawAmount), {
+                          gasLimit: 550000,
+                        });
                     },
                     approval: false,
                   });

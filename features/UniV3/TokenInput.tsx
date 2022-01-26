@@ -13,7 +13,6 @@ export const TokenInput: FC<{
   otherToken: UniV3Token;
   isToken0: boolean;
   setDepositThisAmount: any;
-  setDepositOtherAmount: any;
   proportion: BigNumber;
   depositAmount: string;
   jarAddr: string;
@@ -22,7 +21,6 @@ export const TokenInput: FC<{
   otherToken,
   isToken0,
   setDepositThisAmount,
-  setDepositOtherAmount,
   proportion,
   depositAmount,
   jarAddr,
@@ -46,14 +44,6 @@ export const TokenInput: FC<{
           onClick={(e) => {
             e.preventDefault();
             setDepositThisAmount(formatUnits(balanceUsed, token.decimals));
-            setDepositOtherAmount(
-              formatUnits(
-                isToken0
-                  ? balanceUsed.mul(proportion).div(parseEther("1"))
-                  : balanceUsed.mul(parseEther("1")).div(proportion),
-                otherToken.decimals,
-              ),
-            );
           }}
         >
           {t("balances.max")}
@@ -64,20 +54,6 @@ export const TokenInput: FC<{
           <Input
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
-              setDepositOtherAmount(
-                formatUnits(
-                  isToken0
-                    ? parseUnits(e.target.value, token.decimals)
-                        .mul(proportion)
-                        .div(BigNumber.from(10).pow(otherToken.decimals))
-                    : parseUnits(e.target.value, token.decimals)
-                        .mul(parseEther("1"))
-                        .mul(parseEther("1"))
-                        .div(BigNumber.from(10).pow(otherToken.decimals))
-                        .div(proportion),
-                ),
-                otherToken.decimals,
-              );
             }}
             value={depositAmount}
             width="100%"
