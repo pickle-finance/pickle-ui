@@ -308,7 +308,7 @@
     },
     "dashboard": {
       "dillAmount": "DILL amount",
-      "earnUpTo": "Earn up to <1>{{ percent }}</1> APY",
+      "earnUpTo": "Earn up to <1>{{ percent }}</1><2/>APY",
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",

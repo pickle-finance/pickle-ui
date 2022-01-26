@@ -2,11 +2,26 @@ import { FC } from "react";
 import Link from "next/link";
 import { useTranslation, Trans } from "next-i18next";
 import { ArrowRightIcon } from "@heroicons/react/outline";
-
 import { formatPercentage } from "../utils";
+import APYTooltip from "./APYTooltip";
+import { CoreSelectors } from "v2/store/core";
+import { useSelector } from "react-redux";
+import { JarDetails } from "v2/types";
+import { ChainNetwork } from "picklefinance-core";
 
 const DashboardCalloutCard: FC = () => {
   const { t } = useTranslation("common");
+  let coreMaxApy: JarDetails | undefined = useSelector(
+    CoreSelectors.selectMaxApy,
+  );
+
+  if (!coreMaxApy)
+    coreMaxApy = {
+      name: "",
+      apiKey: "",
+      chain: "Ethereum",
+      apy: 0,
+    };
 
   return (
     <Link href="/v2/farms">
@@ -17,8 +32,9 @@ const DashboardCalloutCard: FC = () => {
               <Trans i18nKey="v2.dashboard.earnUpTo">
                 Earn up to
                 <span className="text-green">
-                  {{ percent: formatPercentage(5.92) }}
+                  {{ percent: formatPercentage(coreMaxApy.apy) }}
                 </span>
+                <APYTooltip maxAPY={coreMaxApy} />
                 APY
               </Trans>
             </p>
