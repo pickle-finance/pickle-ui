@@ -1,9 +1,10 @@
 import { FC, useState } from "react";
+import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { CashIcon, DatabaseIcon } from "@heroicons/react/solid";
+import { CashIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
-import HarvestModal from "./HarvestModal";
+import HarvestModal, { RewardRowProps } from "./HarvestModal";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
@@ -15,6 +16,7 @@ import {
 } from "v2/features/farms/FarmsTableRowHeader";
 import { BigNumber } from "ethers";
 import { formatUsd } from "util/api";
+import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 
 export const getTotalBalances = (
   core: PickleModelJson.PickleModelJson,
@@ -43,7 +45,25 @@ export const getPendingRewardsUsd = (
   core: PickleModelJson.PickleModelJson,
   userdata: UserData,
 ): string => {
+  const jarData = getUserAssetDataWithPricesForJars(core, userdata);
   let runningUsd = 0;
+  for (let i = 0; i < jarData.length; i++) {
+    runningUsd += jarData[i].earnedPickles.tokensUSD;
+  }
+  if (userdata.dill && userdata.dill.claimable) {
+    const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
+    const dillRewardUsd =
+      wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
+    runningUsd += dillRewardUsd;
+  }
+  return formatUsd(runningUsd);
+};
+
+export const getUserAssetDataWithPricesForJars = (
+  core: PickleModelJson.PickleModelJson,
+  userdata: UserData,
+): UserAssetDataWithPrices[] => {
+  const ret: UserAssetDataWithPrices[] = [];
   for (let i = 0; i < userdata.tokens.length; i++) {
     const key = userdata.tokens[i].assetKey;
     const jar = core.assets.jars.find((x) => x.details.apiKey === key);
@@ -54,27 +74,91 @@ export const getPendingRewardsUsd = (
         userdata,
       );
       if (data) {
-        runningUsd += data.earnedPickles.tokensUSD || 0;
+        ret.push(data);
       }
+    }
+  }
+  return ret;
+};
+
+export const getAllPickleAssets = (
+  core: PickleModelJson.PickleModelJson,
+): PickleAsset[] => {
+  const ret: PickleAsset[] = [];
+  return ret
+    .concat(core.assets.jars)
+    .concat(core.assets.standaloneFarms)
+    .concat(core.assets.external);
+};
+export const userVisibleStringForPickleAsset = (
+  apiKey: string,
+  core: PickleModelJson.PickleModelJson,
+): string | undefined => {
+  const allAssets: PickleAsset[] = getAllPickleAssets(core);
+  const asset: PickleAsset | undefined = allAssets.find(
+    (x) => x.details.apiKey === apiKey,
+  );
+  return asset ? asset.depositToken.name : undefined;
+};
+
+export const getRewardRowPropertiesForRewards = (
+  core: PickleModelJson.PickleModelJson,
+  userdata: UserData,
+): RewardRowProps[] => {
+  const ret: RewardRowProps[] = [];
+  const jarData = getUserAssetDataWithPricesForJars(core, userdata);
+  const jarHarvester = {
+    harvest: async (): Promise<boolean> => {
+      // TODO
+      return false;
+    },
+  };
+  const dillHarvester = {
+    harvest: async (): Promise<boolean> => {
+      // TODO
+      return false;
+    },
+  };
+  for (let i = 0; i < jarData.length; i++) {
+    const descriptor =
+      userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
+    const earnedPickles = parseFloat(jarData[i].earnedPickles.tokens);
+    if (earnedPickles > 0) {
+      ret.push({
+        descriptor: descriptor,
+        tokenString: "PICKLEs", // TODO i18n
+        rewardCount: parseFloat(jarData[i].earnedPickles.tokens),
+        harvester: jarHarvester,
+      });
     }
   }
   if (userdata.dill && userdata.dill.claimable) {
     const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
-    const dillRewardUsd =
-      wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
-    runningUsd += dillRewardUsd;
+    const dillRewardPickles = wei.div(1e10).div(1e8).toNumber();
+    ret.push({
+      descriptor: "Dill Rewards", // TODO i18n
+      tokenString: "PICKLEs",
+      rewardCount: dillRewardPickles,
+      harvester: dillHarvester,
+    });
   }
-  return formatUsd(runningUsd);
+  return ret;
 };
+
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+
   const allCore = useSelector(CoreSelectors.selectCore);
   const userTotalBalance =
     allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
   const unclaimedRewards =
     allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
+  const rewardRowProps: RewardRowProps[] =
+    allCore && userModel
+      ? getRewardRowPropertiesForRewards(allCore, userModel)
+      : [];
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
@@ -100,7 +184,14 @@ const PerformanceCard: FC = () => {
           </div>
           <div className="flex">
             <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
-              <DatabaseIcon />
+              <Image
+                src="/pickle-icon.svg"
+                width={200}
+                height={200}
+                layout="responsive"
+                alt="Pickle Finance" // TODO i18n
+                title="Pickle Finance" // TODO i18n
+              />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
@@ -117,7 +208,11 @@ const PerformanceCard: FC = () => {
         <Button onClick={openModal} size="normal">
           {t("v2.dashboard.harvestRewards")}
         </Button>
-        <HarvestModal isOpen={isOpen} closeModal={closeModal} />
+        <HarvestModal
+          isOpen={isOpen}
+          closeModal={closeModal}
+          harvestables={rewardRowProps}
+        />
       </div>
     </div>
   );

@@ -19,6 +19,11 @@ import { uncompoundAPY } from "util/jars";
 import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import {
+  getRatioStringAndPendingString,
+  RatioAndPendingStrings,
+} from "./JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -254,51 +259,137 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
 
   // Metis
-  "0x60312d4ebbf3617d3d33841906b5868a86931cbd": ( // NET NETT/METIS
+  // NET NETT/METIS
+  "0x60312d4ebbf3617d3d33841906b5868a86931cbd": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metis.png"} />
   ),
-  "0x3bf77b9192579826f260bc48f2214dfba840fce5": ( // NET BNB/NETT
+  // NET BNB/NETT
+  "0x3bf77b9192579826f260bc48f2214dfba840fce5": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/bnbnett.png"} />
   ),
-  "0x59051b5f5172b69e66869048dc69d35db0b3610d": ( // NET ETH/METIS
+  // NET ETH/METIS
+  "0x59051b5f5172b69e66869048dc69d35db0b3610d": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethmetis.png"} />
   ),
-  "0xc8ae82a0ab6ada2062b812827e1556c0fa448dd0": ( // NET ETH/NETT
+  // NET ETH/NETT
+  "0xc8ae82a0ab6ada2062b812827e1556c0fa448dd0": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethereum.png"} />
   ),
-  "0xf5988809ac97c65121e2c34f5d49558e3d12c253": ( // NET ETH/USDC
+  // NET ETH/USDC
+  "0xf5988809ac97c65121e2c34f5d49558e3d12c253": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethusdc.png"} />
   ),
-  "0x4db4ce7f5b43a6b455d3c3057b63a083b09b8376": ( // NET ETH/USDT
+  // NET ETH/USDT
+  "0x4db4ce7f5b43a6b455d3c3057b63a083b09b8376": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/ethusdt.png"} />
   ),
-  "0x5ae3ee7fbb3cb28c17e7adc3a6ae605ae2465091": ( // NET METIS/USDC
+  // NET METIS/USDC
+  "0x5ae3ee7fbb3cb28c17e7adc3a6ae605ae2465091": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metisusdc.png"} />
   ),
-  "0x0724d37522585e87d27c802728e824862dc72861": ( // NET NETT/USDC
+  // NET NETT/USDC
+  "0x0724d37522585e87d27c802728e824862dc72861": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
-  "0x7d02ab940d7dd2b771e59633bbc1ed6ec2b99af1": ( // NET NETT/USDT
+  // NET NETT/USDT
+  "0x7d02ab940d7dd2b771e59633bbc1ed6ec2b99af1": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdt.png"} />
   ),
-  "0x3d60afecf67e6ba950b499137a72478b2ca7c5a1": ( // NET USDT/METIS
+  // NET USDT/METIS
+  "0x3d60afecf67e6ba950b499137a72478b2ca7c5a1": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metisusdt.png"} />
   ),
-  "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": ( // NET USDT/USDC
+  // NET USDT/USDC
+  "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
-  "0xc9b290ff37fa53272e9d71a0b13a444010af4497": ( // TETHYS TETHYS/METIS
+  // TETHYS TETHYS/METIS
+  "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metis.png"} />
   ),
-  "0xee5adb5b0dfc51029aca5ad4bc684ad676b307f7": ( // TETHYS ETH/METIS
+  // TETHYS ETH/METIS
+  "0xee5adb5b0dfc51029aca5ad4bc684ad676b307f7": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/ethmetis.png"} />
   ),
-  "0xdd7df3522a49e6e1127bf1a1d3baea3bc100583b": ( // TETHYS METIS/USDC
+  // TETHYS METIS/USDC
+  "0xdd7df3522a49e6e1127bf1a1d3baea3bc100583b": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisusdc.png"} />
   ),
-  "0x8121113eb9952086dec3113690af0538bb5506fd": ( // TETHYS USDT/METIS
+  // TETHYS USDT/METIS
+  "0x8121113eb9952086dec3113690af0538bb5506fd": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisusdt.png"} />
-  )
+  ),
+  // TETHYS USDT/METIS
+  "0x586f616bb811f1b0dfa953fbf6de3569e7919752": (
+    <LpIcon swapIconSrc={"/hades.svg"} tokenIconSrc={"/metis.png"} />
+  ),
+  // TETHYS USDT/METIS
+  "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": (
+    <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
+  ),
+
+  // Moonbeam
+
+  // STELLA STELLA/GLMR
+  "0x7f5ac0fc127bcf1eaf54e3cd01b00300a0861a62": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/moonbeam.png"} />
+  ),
+  // STELLA USDC/BNB
+  "0xac2657ba28768fe5f09052f07a9b7ea867a4608f": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdcbnb.png"} />
+  ),
+  // STELLA BUSD/GLMR
+  "0x367c36dae9ba198a4fee295c22bc98cb72f77fe1": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/busdglmr.png"} />
+  ),
+  // STELLA USDC/DAI
+  "0x5ced2f8dd70dc25cba10ad18c7543ad9ad5aeedd": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/daiusdc.png"} />
+  ),
+  // STELLA GLMR/ETH
+  "0x49a1cc58dcf28d0139daea9c18a3ca23108e78b3": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/glmreth.png"} />
+  ),
+  // STELLA GLMR/USDC
+  "0x555b74dafc4ef3a5a1640041e3244460dc7610d1": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/glmrusdc.png"} />
+  ),
+  // STELLA STELLA/USDC
+  "0x81e11a9374033d11cc7e7485a7192ae37d0795d6": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  // STELLA USDT/USDC
+  "0x8bc3cceef43392b315ddd92ba30b435f79b66b9e": (
+    <LpIcon swapIconSrc={"/stella.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  // BEAM BNB/BUSD
+  "0x34a1f4ab3548a92c6b32cd778eed310fcd9a340d": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/bnbbusd.png"} />
+  ),
+  // BEAM BUSD/GLMR
+  "0xfc422eb0a2c7a99bad330377497fd9798c9b1001": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/busdglmr.png"} />
+  ),
+  // BEAM BUSD/USDC
+  "0xa0799832fb2b9f18acf44b92fbbedcfd6442dd5e": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/busdusdc.png"} />
+  ),
+  // BEAM ETH/USDC
+  "0x6ba3071760d46040fb4dc7b627c9f68efaca3000": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/ethusdc.png"} />
+  ),
+  // BEAM GLMR/GLINT
+  "0x99588867e817023162f4d4829995299054a5fc57": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/tokens/glmr.png"} />
+  ),
+  // BEAM GLMR/USDC
+  "0xb929914b89584b4081c7966ac6287636f7efd053": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/glmrusdc.png"} />
+  ),
+  // BEAM USDC/USDT
+  "0xa35b2c07cb123ea5e1b9c7530d0812e7e03ec3c1": (
+    <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -354,6 +445,7 @@ export const JarCollapsible: FC<{
     tvlUSD,
   } = jarData;
   const { t } = useTranslation("common");
+  const { pickleCore } = PickleCore.useContainer();
 
   const isUsdc = isUsdcToken(depositToken.address);
 
@@ -458,6 +550,18 @@ export const JarCollapsible: FC<{
     );
   }, [erc20TransferStatuses]);
 
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    0,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -468,7 +572,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -494,12 +598,18 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>{t("balances.depositValue")}</Label>
+            {Boolean(valueStrExplained !== undefined) && (
+              <Label>{valueStrExplained}</Label>
+            )}
+            {Boolean(userSharePendingStr !== undefined) && (
+              <Label>{userSharePendingStr}</Label>
+            )}
           </Grid>
 
           <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
             <Data>
               <Tooltip text={ReactHtmlParser(tooltipText)}>
-                {totalAPY.toFixed(2) + "%" || "--"}
+                {getFormatString(totalAPY) + "%" || "--"}
               </Tooltip>
               <img
                 src="./question.svg"
@@ -576,17 +686,16 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(
+                        isUsdc && deposited
+                          ? deposited.mul(USDC_SCALE)
+                          : deposited,
+                      ),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}

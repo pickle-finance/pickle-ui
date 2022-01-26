@@ -15,6 +15,9 @@ module.exports = {
       "zh-TW",
       "zh-HK",
       "es",
+      "tr",
+      "hi",
+      "nl",
     ],
     fallbackLng: {
       "zh-CN": ["zh-Hans", "en"],

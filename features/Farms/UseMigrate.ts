@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { signERC2612Permit } from "eth-permit";
 import { Connection } from "../../containers/Connection";
@@ -9,6 +10,8 @@ import { Gauge } from "../../containers/Contracts/Gauge";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { addresses } from "../../containers/SushiPairs";
 import { Masterchefv2 } from "containers/Contracts/Masterchefv2";
+import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__factory";
+import { Erc20__factory as Erc20Factory } from "containers/Contracts/factories/Erc20__factory";
 
 export const FARM_LP_TO_GAUGE = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819":
@@ -69,7 +72,11 @@ export const useMigrate = (
     erc20,
     sushiMigrator,
     masterchefV2,
+    looksStaking,
   } = Contracts.useContainer();
+  const [looksBalance, setLooksBalance] = useState<ethers.BigNumber>(
+    ethers.BigNumber.from(0),
+  );
 
   const deposit = async () => {
     if (!jarToken || !address) return;
@@ -225,6 +232,42 @@ export const useMigrate = (
     await tx2.wait();
   };
 
+  const withdrawLOOKS = async () => {
+    if (!signer || !address || !looksStaking) return;
+    const userInfo = await looksStaking.userInfo(address);
+    const userBalance = userInfo?.shares;
+
+    const tx = await looksStaking.withdraw(userBalance, true);
+    await tx.wait();
+  };
+
+  const depositLOOKS = async () => {
+    if (!signer || !address || !erc20) return;
+
+    const LOOKS = "0xf4d2888d29d722226fafa5d9b24f9164c092421e";
+    const JAR = "0xb4EBc2C371182DeEa04B2264B9ff5AC4F0159C69";
+    const looksToken = Erc20Factory.connect(LOOKS, signer);
+    const jar = JarFactory.connect(JAR, signer);
+
+    const userBalance = await looksToken.balanceOf(address);
+    const allowance = await looksToken.allowance(address, JAR);
+    if (!allowance.gte(userBalance)) {
+      const tx1 = await looksToken.approve(JAR, ethers.constants.MaxUint256);
+      await tx1.wait();
+    }
+    const tx = await jar.depositAll();
+    await tx.wait();
+  };
+
+  useEffect(() => {
+    const setLooks = async () => {
+      if (!looksStaking || !address) return null;
+      const balance = await looksStaking.calculateSharesValueInLOOKS(address);
+      setLooksBalance(balance);
+    };
+    setLooks();
+  }, [blockNum]);
+
   return {
     deposit,
     withdraw,
@@ -233,5 +276,8 @@ export const useMigrate = (
     withdrawGauge,
     migratePickleEth,
     depositPickleEth,
+    withdrawLOOKS,
+    depositLOOKS,
+    looksBalance,
   };
 };

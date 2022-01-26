@@ -71,7 +71,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
     const fetchFarmData = async () => setFarmData(await getFarmData());
     if (!farmData) fetchFarmData();
     calculateApy();
-  }, [inputGauges, jars?.length]);
+  }, [inputGauges, jars]);
 
   return { jarGaugeWithApy: gauges };
 };

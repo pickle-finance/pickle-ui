@@ -8,7 +8,6 @@ import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
 import { Connection } from "../Connection";
-import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
 
 export interface JarApy {
@@ -74,7 +73,7 @@ export const useCurveLdoAPY = (
   };
 
   useEffect(() => {
-    if (chainName === NETWORK_NAMES.ETH) getLdoAPY();
+    if (chainName === ChainNetwork.Ethereum) getLdoAPY();
   }, [jars, prices]);
 
   return {

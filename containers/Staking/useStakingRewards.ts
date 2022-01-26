@@ -7,6 +7,7 @@ import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { Prices } from "../Prices";
 import { ethers } from "ethers";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface UseStakingRewardsOutput {
   APY: number | null;
@@ -58,7 +59,7 @@ export function useStakingRewards(
   };
 
   useEffect(() => {
-    if (stakingRewards && address && chainName === "Ethereum") {
+    if (stakingRewards && address && chainName === ChainNetwork.Ethereum) {
       const f = async () => {
         const pickleRewards = stakingRewards.attach(stakingRewardsAddress);
 

@@ -1,6 +1,5 @@
 module.exports = {
-  purge: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/**/*.tsx"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/**/*.tsx"],
   theme: {
     fontFamily: {
       body: [
@@ -60,9 +59,6 @@ module.exports = {
         3: "3px",
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 };

@@ -6,9 +6,8 @@ import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYPFCore } from "./Jars/useJarsWithAPYPFCore";
 import { useJarWithTVL } from "./Jars/useJarsWithTVL";
-import { BPAddresses, NETWORK_NAMES_PFCORE_MAP } from "./config";
+import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
-import { NETWORK_NAMES } from "./config";
 import { PickleCore } from "./Jars/usePickleCore";
 import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 import { ChainNetwork } from "picklefinance-core";
@@ -31,16 +30,15 @@ function useJars() {
       const pTokens = jarsWithTVL.map((x) => x.contract.address);
 
       const uniV3Jars = pickleCore?.assets.jars.filter(
-        (x) =>
-          x.protocol === AssetProtocol.UNISWAP_V3 &&
-          x.chain === NETWORK_NAMES_PFCORE_MAP[chainName],
+        (x) => x.protocol === AssetProtocol.UNISWAP_V3 && x.chain === chainName,
       );
       const uniV3Underlying = uniV3Jars
         ?.map((x) => x.depositToken.componentAddresses)
         .flat()
         .filter((x) => x);
       const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
-      if (chainName === NETWORK_NAMES.ETH)
+
+      if (chainName === ChainNetwork.Ethereum)
         addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM);
       addTokens(addedTokens);
     }

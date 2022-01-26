@@ -7,11 +7,10 @@ import { Contracts } from "../Contracts";
 import { Jar } from "./useFetchJars";
 
 import { Pool } from "../Contracts/Pool";
-import { Gauge } from "../Contracts/Gauge";
 
 import { CurveGauge } from "../Contracts/CurveGauge";
-import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface JarApy {
   [k: string]: number;
@@ -85,7 +84,7 @@ export const useCurveCrvAPY = (
   };
 
   useEffect(() => {
-    if (chainName === NETWORK_NAMES.ETH) getCRVAPY();
+    if (chainName === ChainNetwork.Ethereum) getCRVAPY();
   }, [jars, prices]);
 
   return {

@@ -1,6 +1,6 @@
 import { FC } from "react";
+import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { DatabaseIcon } from "@heroicons/react/solid";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
@@ -23,7 +23,14 @@ const DillBalanceCard: FC = () => {
       <div className="relative p-6 sm:p-8">
         <div className="flex mr-20">
           <div className="w-12 h-12 p-2 bg-black rounded-full mr-5">
-            <DatabaseIcon />
+            <Image
+              src="/dill-icon.png"
+              width={200}
+              height={200}
+              layout="responsive"
+              alt="Pickle Finance"
+              title="Pickle Finance"
+            />
           </div>
           <div>
             <p className="font-title font-medium text-2xl leading-7 mb-1">

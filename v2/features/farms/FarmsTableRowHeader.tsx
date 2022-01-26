@@ -1,22 +1,23 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   JarDefinition,
-  PickleAsset,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
-
-import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
-import FarmsBadge from "./FarmsBadge";
 import {
   UserData,
   UserTokenData,
 } from "picklefinance-core/lib/client/UserModel";
+
+import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
+import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
-import { BigNumber } from "@ethersproject/bignumber";
 import { CoreSelectors } from "v2/store/core";
+import { networks } from "../connection/networks";
+import FarmComponentsIcons from "./FarmComponentsIcons";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -28,6 +29,34 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
     {children}
   </td>
 );
+const chainProtocol = (
+  jar: JarDefinition,
+  pfCore: PickleModelJson | undefined,
+): JSX.Element => {
+  return (
+    <div>
+      <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
+        {jar.depositToken.name}
+      </p>
+      <div className="flex mt-1">
+        <div className="w-4 h-4 mr-1">
+          <Image
+            src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+            className="rounded-full"
+            width={20}
+            height={20}
+            layout="responsive"
+            alt={jar.chain}
+            title={jar.chain}
+          />
+        </div>
+        <p className="italic font-normal text-xs text-gray-light">
+          {jar.protocol}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 interface Props {
   simple?: boolean;
@@ -41,6 +70,7 @@ export interface UserAssetDataWithPricesComponent {
   tokensUSD: number;
 }
 export interface UserAssetDataWithPrices {
+  assetId: string;
   depositTokensInWallet: UserAssetDataWithPricesComponent;
   depositTokensInJar: UserAssetDataWithPricesComponent;
   depositTokensInFarm: UserAssetDataWithPricesComponent;
@@ -61,9 +91,14 @@ const createUserAssetDataComponent = (
   price: number,
   ratio: number,
 ): UserAssetDataWithPricesComponent => {
-  // TODO this will cause problems for some tokens, using only 3 decimals of precission
+  const log = Math.log(price) / Math.log(10);
+  const precisionAdjust = log > 4 ? 0 : 5 - Math.floor(log);
+  const precisionAsNumber = Math.pow(10, precisionAdjust);
+  const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
+
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul((price * 1e8).toFixed()).div(1e8);
+  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
+
   return {
     wei: depositTokenWei,
     tokens: bigNumberToTokenNumber(
@@ -82,6 +117,7 @@ const createUserAssetDataComponent = (
 
 const userAssetDataZeroEverything = (): UserAssetDataWithPrices => {
   return {
+    assetId: "",
     depositTokensInWallet: userAssetDataZeroComponent(),
     depositTokensInJar: userAssetDataZeroComponent(),
     depositTokensInFarm: userAssetDataZeroComponent(),
@@ -132,11 +168,33 @@ export const getUserAssetDataWithPrices = (
     1.0,
   );
   return {
+    assetId: jar.details.apiKey,
     earnedPickles: pickleComponent,
     depositTokensInWallet: wallet,
     depositTokensInJar: jarComponent,
     depositTokensInFarm: farmComponent,
   };
+};
+
+const formatNetworkName = (
+  chain: string,
+  pfcore: PickleModelJson | undefined,
+): string => {
+  try {
+    return (
+      pfcore?.chains.find((x) => x.network === chain)?.networkVisible || chain
+    );
+  } catch (err) {
+    return chain;
+  }
+};
+const formatImagePath = (chain: string): string => {
+  const thisNetwork = networks.find((network) => network.name === chain);
+  if (thisNetwork) {
+    return thisNetwork.icon;
+  } else {
+    return "/pickle.png";
+  }
 };
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
@@ -150,7 +208,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const pendingPicklesAsDollars = data.earnedPickles.tokensUSD;
   const picklesPending = data.earnedPickles.tokensVisible;
   const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
-  const aprRangeString = "42%";
+  const aprRangeString = jar.aprStats?.apy.toFixed(3) + "%";
 
   return (
     <>
@@ -160,25 +218,8 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           "rounded-tl-xl flex items-center",
         )}
       >
-        <div className="w-9 h-9 rounded-full border-3 border-gray-outline mr-3">
-          <Image
-            src="/alchemix.png"
-            className="rounded-full"
-            width={200}
-            height={200}
-            layout="responsive"
-            alt={jar.depositToken.name}
-            title={jar.depositToken.name}
-          />
-        </div>
-        <div>
-          <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
-            {jar.depositToken.name}
-          </p>
-          <p className="italic font-normal text-xs text-gray-light">
-            {jar.protocol}
-          </p>
-        </div>
+        <FarmComponentsIcons jar={jar} />
+        {chainProtocol(jar, allCore)}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">
@@ -218,7 +259,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
           <div className="flex justify-end pr-3">
             <ChevronDownIcon
               className={classNames(
-                open && "transform rotate-180",
+                open && "rotate-180",
                 "text-white ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"

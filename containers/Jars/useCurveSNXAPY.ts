@@ -8,8 +8,8 @@ import { StakingRewards } from "../Contracts/StakingRewards";
 import { Pool } from "../Contracts/Pool";
 
 import { Connection } from "../Connection";
-import { NETWORK_NAMES } from "containers/config";
 import { Contract as MulticallContract } from "ethers-multicall";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface JarApy {
   [k: string]: number;
@@ -77,7 +77,7 @@ export const useCurveSNXAPY = (
   };
 
   useEffect(() => {
-    if (chainName === NETWORK_NAMES.ETH) getSNXAPY();
+    if (chainName === ChainNetwork.Ethereum) getSNXAPY();
   }, [jars, prices]);
 
   return {

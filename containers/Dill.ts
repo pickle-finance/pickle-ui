@@ -6,6 +6,7 @@ import { Connection } from "./Connection";
 import { Prices } from "../containers/Prices";
 import { useProtocolIncome } from "./DILL/useProtocolIncome";
 import { ethers } from "ethers";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface UseDillOutput {
   lockedAmount?: ethers.BigNumber | null;
@@ -50,7 +51,7 @@ export function useDill(): UseDillOutput {
       feeDistributor &&
       address &&
       prices &&
-      chainName === "Ethereum"
+      chainName === ChainNetwork.Ethereum
     ) {
       const f = async () => {
         const dillContract = dill.attach(DILL);

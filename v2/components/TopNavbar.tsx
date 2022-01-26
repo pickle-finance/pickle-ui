@@ -10,11 +10,11 @@ interface Props {
 }
 
 const TopNavbar: FC<Props> = ({ PageTitle }) => (
-  <div className="flex flex-grow mb-8 sm:mb-12">
+  <div className="flex grow mb-8 sm:mb-12">
     <div className="pr-4">
       <PageTitle />
     </div>
-    <div className="flex-grow justify-end items-center hidden sm:flex h-10">
+    <div className="grow justify-end items-center hidden sm:flex h-10">
       <LanguageToggle />
       <NetworkToggle />
       <GasPriceIndicator />

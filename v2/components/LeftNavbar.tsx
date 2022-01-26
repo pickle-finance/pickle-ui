@@ -30,7 +30,7 @@ const LeftNavbar: FC = () => {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col flex-grow justify-between px-10">
+        <div className="flex flex-col grow justify-between px-10">
           <div className="flex flex-col overflow-y-auto">
             <NavItems />
           </div>

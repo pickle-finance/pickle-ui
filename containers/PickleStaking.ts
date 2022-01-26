@@ -11,6 +11,7 @@ import { Prices } from "./Prices";
 import { ethers } from "ethers";
 
 import { useStakingRewards } from "./Staking/useStakingRewards";
+import { ChainNetwork } from "picklefinance-core";
 
 function usePickleStaking() {
   const { blockNum, address, chainName } = Connection.useContainer();
@@ -26,7 +27,7 @@ function usePickleStaking() {
   );
 
   useEffect(() => {
-    if (susdPool && chainName === "Ethereum") {
+    if (susdPool && chainName === ChainNetwork.Ethereum) {
       const f = async () => {
         const virtualPriceBN = await susdPool.get_virtual_price();
         const virtualPrice = parseFloat(

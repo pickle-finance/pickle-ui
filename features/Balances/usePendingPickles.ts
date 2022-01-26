@@ -4,9 +4,8 @@ import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { UserGauges } from "../../containers/UserGauges";
-import { Provider } from "@ethersproject/providers";
-import { NETWORK_NAMES } from "containers/config";
 import { Dill } from "../../containers/Dill";
+import { ChainNetwork } from "picklefinance-core";
 
 export const usePendingPickles = (): { pendingPickles: number | null } => {
   const { address, blockNum, chainName } = Connection.useContainer();
@@ -19,7 +18,7 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
   const dillStats = Dill.useContainer();
 
   const getData = async () => {
-    if (address && gaugeData && chainName === NETWORK_NAMES.ETH && dillStats) {
+    if (address && gaugeData && chainName === ChainNetwork.Ethereum && dillStats) {
       const totalPendingPickles =
         gaugeData.reduce(
           (a, b) =>
@@ -36,7 +35,7 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
     if (
       address &&
       minichef &&
-      (chainName === NETWORK_NAMES.POLY || chainName === NETWORK_NAMES.ARB)
+      (chainName === ChainNetwork.Polygon || chainName === ChainNetwork.Arbitrum)
     ) {
       const poolLengthBN = await minichef.poolLength();
       const poolLength = poolLengthBN.toNumber();

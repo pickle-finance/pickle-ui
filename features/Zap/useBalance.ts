@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Erc20__factory as Erc20Factory } from "../../containers/Contracts/factories/Erc20__factory";
 import { Connection } from "../../containers/Connection";
-import { NETWORK_NAMES } from "containers/config";
+import { ChainNetwork } from "picklefinance-core";
 
 export const tokenInfo = {
   renBTC: "0xeb4c2781e4eba804ce9a9803c67d0893436bb27d",
@@ -27,7 +27,7 @@ export const useBalance = (symbol: null | keyof typeof tokenInfo) => {
   const [decimals, setDecimals] = useState<number | null>(null);
 
   const getBalance = async () => {
-    if (chainName === NETWORK_NAMES.POLY)
+    if (chainName === ChainNetwork.Polygon)
       return {
         balanceRaw: 0,
         balanceStr: null,
