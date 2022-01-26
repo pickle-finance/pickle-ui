@@ -91,9 +91,14 @@ const createUserAssetDataComponent = (
   price: number,
   ratio: number,
 ): UserAssetDataWithPricesComponent => {
-  // TODO this will cause problems for some tokens, using only 3 decimals of precission
+  const log = Math.log(price) / Math.log(10);
+  const precisionAdjust = log > 4 ? 0 : 5 - Math.floor(log);
+  const precisionAsNumber = Math.pow(10, precisionAdjust);
+  const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
+
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul((price * 1e8).toFixed()).div(1e8);
+  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
+
   return {
     wei: depositTokenWei,
     tokens: bigNumberToTokenNumber(
