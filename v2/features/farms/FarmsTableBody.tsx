@@ -9,6 +9,12 @@ import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import Ping from "../connection/Ping";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 
+const isPresent = (value: string): boolean => value !== "0";
+const hasBalances = (x: UserTokenData): boolean =>
+  isPresent(x.pAssetBalance) ||
+  isPresent(x.pStakedBalance) ||
+  isPresent(x.picklePending);
+
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
 
@@ -29,15 +35,10 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
   // TODO Should be all assets, not just jars
   let jars = useSelector(CoreSelectors.selectFilteredAssets);
   if (requiresUserModel && userModel) {
-    const empty = (val: string) => val !== undefined && val !== "0";
-    const showAsset = (x: UserTokenData): boolean =>
-      !empty(x.pAssetBalance) ||
-      !empty(x.pStakedBalance) ||
-      !empty(x.picklePending);
-    const apiKeys: string[] = userModel.tokens
-      .filter((x) => showAsset(x))
-      .map((x) => x.assetKey);
-    jars = jars.filter((x) => apiKeys.includes(x.details.apiKey));
+    const apiKeys = userModel.tokens
+      .filter(hasBalances)
+      .map((asset) => asset.assetKey);
+    jars = jars.filter((jar) => apiKeys.includes(jar.details.apiKey));
   }
 
   const isCoreLoading = coreLoadingState !== "fulfilled";
