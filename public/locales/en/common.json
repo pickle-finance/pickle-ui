@@ -330,6 +330,7 @@
       "earnedToken": "{{ token }} earned",
       "enable": "Enable",
       "expand": "Expand",
+      "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
