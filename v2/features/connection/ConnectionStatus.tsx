@@ -13,6 +13,8 @@ import { networks } from "./networks";
 import { resetWalletConnectState } from "./utils";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain, Chains } from "picklefinance-core/lib/chain/Chains";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (
@@ -80,7 +82,8 @@ export const switchChain = async (
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
-  const { activate, connector } = useWeb3React<Web3Provider>();
+  const { activate, connector, library } = useWeb3React<Web3Provider>();
+  const allCore = useSelector(CoreSelectors.selectCore);
 
   resetWalletConnectState(connector);
 
