@@ -1,7 +1,8 @@
 import React, { FC } from "react";
-import Select, { StylesConfig } from "react-select";
+import Select, { components, StylesConfig, ControlProps } from "react-select";
 import { useTranslation } from "next-i18next";
 import chroma from "chroma-js";
+import { SearchIcon } from "@heroicons/react/solid";
 
 import { colors } from "v2/features/farms/colors";
 
@@ -13,13 +14,20 @@ const orange = theme.extend.colors.orange.DEFAULT;
 const green = theme.extend.colors.green.DEFAULT;
 const grayOutlineLight = theme.extend.colors.gray["outline-light"];
 
-export interface Option {
+interface Option {
   readonly value: string;
   readonly label: string;
   readonly color: string;
   readonly isFixed?: boolean;
   readonly isDisabled?: boolean;
 }
+
+const Control = ({ children, ...props }: ControlProps<Option, true>) => (
+  <components.Control {...props}>
+    <SearchIcon className="w-6 h-6 text-gray-light ml-3 mr-1" />
+    {children}
+  </components.Control>
+);
 
 const options: Option[] = Object.entries(colors).map(([value, color]) => ({
   value,
@@ -101,6 +109,7 @@ const SearchBar: FC = () => {
   return (
     <Select
       components={{
+        Control,
         DropdownIndicator: () => null,
         IndicatorSeparator: () => null,
       }}
