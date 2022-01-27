@@ -98,9 +98,10 @@ const ApproveButton: FC<{
       disabled={approved}
       onClick={async () => {
         const Token = new ethers.Contract(depositTokenAddr, erc20.abi, signer);
+        setButtonText("Approving");
+        setUserApproved(true);
         const tx = await Token.approve(jarAddr, ethers.constants.MaxUint256);
         await tx.wait();
-        setUserApproved(true);
         setButtonText("Approved");
       }}
     >

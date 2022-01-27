@@ -127,7 +127,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
 
   const totalNum = parseFloat(
     formatEther(
-      deposited || BigNumber.from("0").add(staked || BigNumber.from("0)")),
+      (deposited || BigNumber.from("0")).add(staked || BigNumber.from("0)")),
     ),
   );
 
