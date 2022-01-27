@@ -1,45 +1,28 @@
-import arbitrum from "public/arbitrum.svg";
-import aurora from "public/aurora.svg";
-import ethereum from "public/ethereum.svg";
-import oec from "public/oec.svg";
-import matic from "public/matic.svg";
-import moonriver from "public/moonriver.svg";
+import { PickleModelJson } from "picklefinance-core";
+import { RawChain } from "picklefinance-core/lib/chain/Chains";
 
-type Network = {
+export type Network = {
   name: string;
-  icon: any;
+  visibleName: string;
   chainId: number;
 };
 
-export const networks: Network[] = [
-  {
-    name: "Arbitrum",
-    icon: arbitrum,
-    chainId: 42161,
-  },
-  {
-    name: "Aurora",
-    icon: aurora,
-    chainId: 1313161554,
-  },
-  {
-    name: "Ethereum",
-    icon: ethereum,
-    chainId: 1,
-  },
-  {
-    name: "Moonriver",
-    icon: moonriver,
-    chainId: 1285,
-  },
-  {
-    name: "OEC",
-    icon: oec,
-    chainId: 66,
-  },
-  {
-    name: "Polygon",
-    icon: matic,
-    chainId: 137,
-  },
-];
+export const getNetworks = (
+  core: PickleModelJson.PickleModelJson | undefined,
+): Network[] => {
+  if (!core) return [];
+  const chains: RawChain[] = [...core.chains].sort((first, second) =>
+    first.network > second.network ? 1 : -1,
+  );
+  let returns: Network[] = [];
+  for (let i = 0; i < chains.length; i++) {
+    const name = chains[i].network;
+    const visibleName = chains[i].networkVisible
+    returns.push({
+      name,
+      visibleName,
+      chainId: chains[i].chainId,
+    });
+  }
+  return returns;
+};

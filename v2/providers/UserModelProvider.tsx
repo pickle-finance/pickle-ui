@@ -20,20 +20,17 @@ const UserModelProvider: FC = ({ children }) => {
 
     const refreshUserModel = async () => {
       dispatch(setIsFetching(true));
-      console.log("Creating user model");
+
       const user = new UserModel(core, account, new Map());
-      console.log("Loading user model");
 
       user
         .generateUserModel()
         .then((data) => {
-          console.log("Got the data, setting it");
           dispatch(setData(data));
           dispatch(setIsFetching(false));
         })
         .catch(() => {
-          console.log("Got an error");
-          setIsFetching(false);
+          dispatch(setIsFetching(false));
         });
     };
 

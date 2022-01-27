@@ -16,8 +16,8 @@ import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
 import { CoreSelectors } from "v2/store/core";
-import { networks } from "../connection/networks";
 import FarmComponentsIcons from "./FarmComponentsIcons";
+import { Network } from "../connection/networks";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -31,7 +31,7 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
 );
 const chainProtocol = (
   jar: JarDefinition,
-  pfCore: PickleModelJson | undefined,
+  networks: Network[] | undefined,
 ): JSX.Element => {
   return (
     <div>
@@ -41,7 +41,7 @@ const chainProtocol = (
       <div className="flex mt-1">
         <div className="w-4 h-4 mr-1">
           <Image
-            src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+            src={formatImagePath(jar.chain, networks)}
             className="rounded-full"
             width={20}
             height={20}
@@ -97,7 +97,9 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
+  const weiMulPrice = depositTokenWei
+    .mul(tokenPriceWithPrecision)
+    .div(precisionAsNumber);
 
   return {
     wei: depositTokenWei,
@@ -176,22 +178,13 @@ export const getUserAssetDataWithPrices = (
   };
 };
 
-const formatNetworkName = (
+const formatImagePath = (
   chain: string,
-  pfcore: PickleModelJson | undefined,
+  networks: Network[] | undefined,
 ): string => {
-  try {
-    return (
-      pfcore?.chains.find((x) => x.network === chain)?.networkVisible || chain
-    );
-  } catch (err) {
-    return chain;
-  }
-};
-const formatImagePath = (chain: string): string => {
-  const thisNetwork = networks.find((network) => network.name === chain);
+  const thisNetwork = networks?.find((network) => network.name === chain);
   if (thisNetwork) {
-    return thisNetwork.icon;
+    return `/networks/${thisNetwork.name}.png`;
   } else {
     return "/pickle.png";
   }
@@ -200,6 +193,7 @@ const formatImagePath = (chain: string): string => {
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
   const allCore = useSelector(CoreSelectors.selectCore);
+  const networks = useSelector(CoreSelectors.selectNetworks);
   const data = getUserAssetDataWithPrices(jar, allCore, userModel);
   const totalTokensInJarAndFarm =
     data.depositTokensInJar.tokens + data.depositTokensInFarm.tokens;
@@ -219,7 +213,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         )}
       >
         <FarmComponentsIcons jar={jar} />
-        {chainProtocol(jar, allCore)}
+        {chainProtocol(jar, networks)}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">

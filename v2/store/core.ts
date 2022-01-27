@@ -5,6 +5,7 @@ import {
   AssetEnablement,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
+import { getNetworks } from "v2/features/connection/networks";
 
 import { RootState } from ".";
 
@@ -79,6 +80,11 @@ const selectMaxApy = (state: RootState) => {
   return maxBy(entries, "apy")!;
 };
 
+const selectNetworks = (state: RootState) => {
+  if (state.core.data === undefined) return [];
+
+  return getNetworks(state.core.data);
+};
 const selectLoadingState = (state: RootState) => state.core.loading;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
@@ -88,6 +94,7 @@ export const CoreSelectors = {
   selectLoadingState,
   selectTimestamp,
   selectMaxApy,
+  selectNetworks,
 };
 
 export default coreSlice.reducer;

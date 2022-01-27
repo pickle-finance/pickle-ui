@@ -11,25 +11,26 @@ import { useWeb3React } from "@web3-react/core";
 
 import { classNames } from "v2/utils";
 import SelectTransition from "v2/components/SelectTransition";
-import { networks } from "./networks";
 import { switchChain } from "./ConnectionStatus";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
+import { Network } from "./networks";
 
-interface NetworkToggleLabelProps {}
+interface NetworkToggleLabelProps {
+  networks: Network[] | undefined;
+}
 
-const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
+const NetworkToggleLabel: FC<NetworkToggleLabelProps> = ({ networks }) => {
   const { t } = useTranslation("common");
   const { chainId } = useWeb3React();
-
-  const activeChain = networks.find((network) => network.chainId === chainId);
+  const activeChain = networks?.find((network) => network.chainId === chainId);
 
   if (activeChain)
     return (
       <div className="flex">
         <div className="w-5 h-5 mr-3">
           <Image
-            src={activeChain.icon}
+            src={`/networks/${activeChain.name}.png`}
             width={200}
             height={200}
             layout="responsive"
@@ -39,7 +40,7 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
             priority
           />
         </div>
-        <span className="text-white text-sm font-bold">{activeChain.name}</span>
+        <span className="text-white text-sm font-bold">{activeChain.visibleName}</span>
       </div>
     );
 
@@ -57,6 +58,7 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = () => {
 const NetworkToggle: FC = () => {
   const { chainId, active, library } = useWeb3React();
   const allCore = useSelector(CoreSelectors.selectCore);
+  const networks = useSelector(CoreSelectors.selectNetworks);
 
   if (!active) return null;
 
@@ -65,7 +67,7 @@ const NetworkToggle: FC = () => {
       {({ open }) => (
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
-            <NetworkToggleLabel />
+            <NetworkToggleLabel networks={networks} />
             <ChevronDownIcon
               className={classNames(
                 open ? "text-orange" : "text-gray-lighter",
@@ -79,7 +81,7 @@ const NetworkToggle: FC = () => {
             <Popover.Panel className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-2 sm:px-0">
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark">
                 <div className="relative grid gap-1 bg-black-light p-2">
-                  {networks.map((network) => (
+                  {networks?.map((network) => (
                     <a
                       key={network.name}
                       href="#"
@@ -88,7 +90,7 @@ const NetworkToggle: FC = () => {
                       <div className="flex">
                         <div className="w-5 h-5 mr-3">
                           <Image
-                            src={network.icon}
+                            src={`/networks/${network.name}.png`}
                             width={200}
                             height={200}
                             layout="responsive"
@@ -104,7 +106,7 @@ const NetworkToggle: FC = () => {
                             switchChain(library, network.chainId, allCore);
                           }}
                         >
-                          {network.name}
+                          {network.visibleName}
                         </span>
                       </div>
                       {network.chainId === chainId ? (
