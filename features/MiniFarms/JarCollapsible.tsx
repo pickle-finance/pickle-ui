@@ -390,6 +390,25 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xa35b2c07cb123ea5e1b9c7530d0812e7e03ec3c1": (
     <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/usdcusdt.png"} />
   ),
+
+  //Optimism
+
+  //ZIP ETH/BTC
+  "0x251de0f0368c472Bba2E1C8f5Db5aC7582B5f847": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  //ZIP ETH/DAI
+  "0x53790B6C7023786659D11ed82eE03079F3bD6976": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethdai.png"} />
+  ),
+  //ZIP ETH/USDC
+  "0x1A981dAa7967C66C3356Ad044979BC82E4a478b9": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethusdc.png"} />
+  ),
+  //ZIP ETH/ZIP
+  "0xD7F6ECF4371eddBd60C1080BfAEc3d1d60D415d0": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
+  )
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
