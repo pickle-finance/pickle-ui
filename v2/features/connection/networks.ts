@@ -4,6 +4,8 @@ import ethereum from "public/ethereum.svg";
 import oec from "public/oec.svg";
 import matic from "public/matic.svg";
 import moonriver from "public/moonriver.svg";
+import metis from "public/metis.png";
+import moonbeam from "public/moonbeam.png";
 
 type Network = {
   name: string;
@@ -41,5 +43,15 @@ export const networks: Network[] = [
     name: "Polygon",
     icon: matic,
     chainId: 137,
+  },
+  {
+    name: "Metis",
+    icon: metis,
+    chainId: 1088,
+  },
+  {
+    name: "Moonbeam",
+    icon: moonbeam,
+    chainId: 1284,
   },
 ];
