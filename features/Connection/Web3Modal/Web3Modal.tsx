@@ -8,7 +8,13 @@ import { useTranslation } from "next-i18next";
 
 import { injected, walletconnect, walletlink } from "./Connectors";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
-import { config as supportedChains } from "../../../containers/config";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import {
+  ChainNetwork,
+  Chains,
+  RawChain,
+} from "picklefinance-core/lib/chain/Chains";
+import { chainToChainParams } from "containers/Connection";
 
 interface Web3ModalProps {
   setVisible: Function;
@@ -16,6 +22,18 @@ interface Web3ModalProps {
 
 const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   const { t } = useTranslation("common");
+  const { pickleCore } = PickleCore.useContainer();
+
+  const rawChainFor = (network: ChainNetwork): RawChain | undefined => {
+    return pickleCore === undefined || pickleCore === null
+      ? undefined
+      : pickleCore.chains.find((z) => z.network === network);
+  };
+  const networks = Chains.list().filter((x) => rawChainFor(x) !== undefined);
+  const supportedChains = networks.map((x) => {
+    const rawChain = rawChainFor(x);
+    return chainToChainParams(rawChain);
+  });
 
   const itemList = [
     {
@@ -62,7 +80,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
       } catch {
         connectedChain = 1;
       } // Failing assumes a wallet other than MetaMask is used
-      if (connectedChain == 1 || supportedChains.chains[connectedChain]) {
+      if (connectedChain == 1 || supportedChains[connectedChain]) {
         setActivatingConnector(web3connector);
         activate(web3connector);
         setVisible(false);
@@ -128,8 +146,8 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
           <div>
             <h1>{t("connection.unsupportedNetwork")}</h1>
             <ul>
-              {Object.keys(supportedChains.chains).map((chain) => (
-                <h2>- {supportedChains.chains[+chain].name}.</h2>
+              {supportedChains.map((chain) => (
+                <h2>- {chain?.chainName}.</h2>
               ))}
             </ul>
             <Button

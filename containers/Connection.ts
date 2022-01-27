@@ -33,6 +33,23 @@ interface AddEthereumChainParameter {
   rpcUrls?: string[];
 }
 
+export const chainToChainParams = (
+  chain: RawChain | undefined,
+): AddEthereumChainParameter | undefined => {
+  if (!chain) return undefined;
+  return {
+    chainId: "0x" + chain.chainId.toString(16),
+    chainName: chain.networkVisible,
+    nativeCurrency: {
+      name: chain.gasTokenSymbol.toUpperCase(),
+      symbol: chain.gasTokenSymbol.toUpperCase(),
+      decimals: 18,
+    },
+    rpcUrls: chain.rpcs,
+    blockExplorerUrls: [chain.explorer],
+  };
+};
+
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
   const router = useRouter();
@@ -49,22 +66,6 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const chainToChainParams = (
-    chain: RawChain | undefined,
-  ): AddEthereumChainParameter | undefined => {
-    if (!chain) return undefined;
-    return {
-      chainId: "0x" + chain.chainId.toString(16),
-      chainName: chain.networkVisible,
-      nativeCurrency: {
-        name: chain.gasTokenSymbol.toUpperCase(),
-        symbol: chain.gasTokenSymbol.toUpperCase(),
-        decimals: 18,
-      },
-      rpcUrls: chain.rpcs,
-      blockExplorerUrls: [chain.explorer],
-    };
-  };
   const switchChain = async (chainId: number) => {
     if (!pickleCore) return false;
     let method: string;
