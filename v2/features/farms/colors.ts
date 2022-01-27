@@ -5,7 +5,7 @@ const defaultColor = "#2b383b";
  * These colors are used as placeholders while token/protocol icons are loading.
  * Please keep it sorted.
  */
-const colors: { [token: string]: string } = {
+export const colors: { [token: string]: string } = {
   "2crv": "#ffad00",
   "3crv": "#ffad00",
   aave: "#4aa4be",

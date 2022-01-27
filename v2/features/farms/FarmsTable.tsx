@@ -28,7 +28,9 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
-            <SearchBar farmFilter={farmFilter} setFarmFilter={setFarmFilter} />
+            <div className="mb-4 w-full sm:w-1/2">
+              <SearchBar />
+            </div>
             <table className="min-w-full table-auto border-collapse">
               <thead className="bg-black uppercase">
                 <tr>

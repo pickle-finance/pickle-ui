@@ -3,10 +3,15 @@ import Select, { StylesConfig } from "react-select";
 import { useTranslation } from "next-i18next";
 import chroma from "chroma-js";
 
+import { colors } from "v2/features/farms/colors";
+
 // TODO: Use resolveConfig once this gets merged:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58385
 import { theme } from "tailwind.config";
 const blackLighter = theme.extend.colors.black.lighter;
+const orange = theme.extend.colors.orange.DEFAULT;
+const green = theme.extend.colors.green.DEFAULT;
+const grayOutlineLight = theme.extend.colors.gray["outline-light"];
 
 export interface Option {
   readonly value: string;
@@ -16,15 +21,11 @@ export interface Option {
   readonly isDisabled?: boolean;
 }
 
-const options: Option[] = [
-  { value: "aave", label: "AAVE", color: "#4aa4be" },
-  { value: "alcx", label: "ALCX", color: "#edc0a1" },
-  { value: "alusd", label: "ALUSD", color: "#edc0a1" },
-  { value: "aurora", label: "AURORA", color: "#6ed34a" },
-  { value: "auroraswap", label: "AuroraSwap", color: "#25caa0" },
-  { value: "maapl", label: "MAAPL", color: "#000000" },
-  { value: "near", label: "NEAR", color: "#fdfdfd" },
-];
+const options: Option[] = Object.entries(colors).map(([value, color]) => ({
+  value,
+  label: value.toUpperCase(),
+  color,
+}));
 
 const styles: StylesConfig<Option> = {
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -45,15 +46,6 @@ const styles: StylesConfig<Option> = {
           ? "white"
           : "black"
         : data.color,
-
-      ":active": {
-        ...styles[":active"],
-        backgroundColor: !isDisabled
-          ? isSelected
-            ? data.color
-            : color.alpha(0.3).css()
-          : undefined,
-      },
     };
   },
   control: (styles) => ({
@@ -62,23 +54,43 @@ const styles: StylesConfig<Option> = {
     border: 0,
     padding: "8px 0",
   }),
+  input: (styles) => ({
+    ...styles,
+    color: green,
+  }),
   multiValue: (styles, { data }) => {
-    const color = chroma(data.color);
     return {
       ...styles,
-      backgroundColor: color.alpha(0.15).css(),
+      backgroundColor: chroma(data.color).css(),
     };
   },
-  multiValueLabel: (styles, { data }) => ({
-    ...styles,
-    color: data.color,
-  }),
+  multiValueLabel: (styles, { data }) => {
+    const darker = chroma(data.color).darken(2.5);
+
+    return {
+      ...styles,
+      fontWeight: 700,
+      color:
+        // Darken the label color if it ends up with sufficient contrast
+        chroma.contrast(darker, "black") >= 3 ? darker.css() : "white",
+    };
+  },
   multiValueRemove: (styles, { data }) => ({
     ...styles,
-    color: data.color,
+    color:
+      chroma.contrast(data.color, "white") >= 7
+        ? "white"
+        : chroma(data.color).darken(2.5).css(),
     ":hover": {
-      backgroundColor: data.color,
-      color: chroma.contrast(data.color, "white") > 2 ? "white" : "black",
+      color: "white",
+      backgroundColor: orange,
+    },
+  }),
+  clearIndicator: (styles) => ({
+    ...styles,
+    color: grayOutlineLight,
+    ":hover": {
+      color: "white",
     },
   }),
 };
