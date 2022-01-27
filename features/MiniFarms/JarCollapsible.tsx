@@ -394,19 +394,19 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   //Optimism
 
   //ZIP ETH/BTC
-  "0x251de0f0368c472Bba2E1C8f5Db5aC7582B5f847": (
+  "0x251de0f0368c472bba2e1c8f5db5ac7582b5f847": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethbtc.png"} />
   ),
   //ZIP ETH/DAI
-  "0x53790B6C7023786659D11ed82eE03079F3bD6976": (
+  "0x53790b6c7023786659d11ed82ee03079f3bd6976": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethdai.png"} />
   ),
   //ZIP ETH/USDC
-  "0x1A981dAa7967C66C3356Ad044979BC82E4a478b9": (
+  "0x1a981daa7967c66c3356ad044979bc82e4a478b9": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethusdc.png"} />
   ),
   //ZIP ETH/ZIP
-  "0xD7F6ECF4371eddBd60C1080BfAEc3d1d60D415d0": (
+  "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
   )
 };
