@@ -83,7 +83,6 @@ export const switchChain = async (
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
   const { activate, connector, library } = useWeb3React<Web3Provider>();
-  // const { chainId, active, library } = useWeb3React();
   const allCore = useSelector(CoreSelectors.selectCore);
 
   resetWalletConnectState(connector);
