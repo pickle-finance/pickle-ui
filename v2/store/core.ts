@@ -52,33 +52,32 @@ const selectEnabledJars = (state: RootState) => {
   );
 };
 const selectMaxApy = (state: RootState) => {
-  if (state.core.data === undefined) return undefined;
+  const { data } = state.core;
 
-  const jars = state.core.data.assets.jars;
-  const data = jars
+  if (data === undefined) return undefined;
+
+  const { jars } = data.assets;
+  const entries = jars
     .filter((jar) => jar.enablement === AssetEnablement.ENABLED)
     .map((jar) => {
       let farmApr = 0;
       const apy = jar.aprStats?.apy || 0;
       const farmApyComponents = jar.farm?.details?.farmApyComponents;
 
-      if (farmApyComponents && farmApyComponents.length) {
+      if (farmApyComponents?.length) {
         farmApr = farmApyComponents[0].apr;
       }
 
       return {
-        apiKey: jar.details.apiKey,
         name: jar.depositToken.name,
-        chain: state.core.data?.chains.find(x=>x.network === jar.chain)?.networkVisible || "Ethereum",
+        chain: data.chains.find((chain) => chain.network === jar.chain)!
+          .networkVisible,
         apy: apy + farmApr,
       };
-    })
-    .filter((jar) => jar.apiKey)
-    // When we add a new chain this value will be null and break SSG
-    .filter((jar) => jar.chain);
+    });
 
-  return maxBy(data, "apy")!;
-}
+  return maxBy(entries, "apy")!;
+};
 
 const selectLoadingState = (state: RootState) => state.core.loading;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
@@ -88,7 +87,7 @@ export const CoreSelectors = {
   selectEnabledJars,
   selectLoadingState,
   selectTimestamp,
-  selectMaxApy
+  selectMaxApy,
 };
 
 export default coreSlice.reducer;
