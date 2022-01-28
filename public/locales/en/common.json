@@ -46,7 +46,8 @@
       "cronos": "Cronos",
       "aurora": "Aurora",
       "metis": "Metis",
-      "moonbeam": "Moonbeam"
+      "moonbeam": "Moonbeam",
+      "optimism": "Optimism"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
