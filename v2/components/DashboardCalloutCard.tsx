@@ -1,13 +1,12 @@
 import { FC } from "react";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 import { useTranslation, Trans } from "next-i18next";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import { formatPercentage } from "../utils";
-import APYTooltip from "./APYTooltip";
 import { CoreSelectors } from "v2/store/core";
-import { useSelector } from "react-redux";
 import { JarDetails } from "v2/types";
-import { ChainNetwork } from "picklefinance-core";
+import MoreInfo from "./MoreInfo";
 
 const DashboardCalloutCard: FC = () => {
   const { t } = useTranslation("common");
@@ -34,7 +33,7 @@ const DashboardCalloutCard: FC = () => {
                 <span className="text-green">
                   {{ percent: formatPercentage(coreMaxApy.apy) }}
                 </span>
-                <APYTooltip maxAPY={coreMaxApy} />
+                <MoreInfo primaryText={coreMaxApy.name} secondaryText={coreMaxApy.chain} />
                 APY
               </Trans>
             </p>

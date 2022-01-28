@@ -3,13 +3,17 @@ import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 
 interface Props {
-  text: string;
+  primaryText?: string;
+  secondaryText?: string;
 }
 
-const TooltipContent: FC<Props> = ({ text }) => (
+const TooltipContent: FC<Props> = ({ primaryText, secondaryText }) => (
   <div className="rounded-lg shadow-lg border border-gray-dark overflow-hidden">
     <div className="bg-black-light px-3 py-2">
-      <span className="text-gray-light text-sm">{text}</span>
+      <p className="text-green-light text-base font-normal">
+        {primaryText}
+        <span className="text-gray-light text-sm ml-2">{secondaryText}</span>
+      </p>
     </div>
   </div>
 );
@@ -35,8 +39,12 @@ const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(
   );
 });
 
-const MoreInfo: FC<Props> = ({ text }) => (
-  <Tippy content={<TooltipContent text={text} />}>
+const MoreInfo: FC<Props> = ({ primaryText = "", secondaryText = "" }) => (
+  <Tippy
+    content={
+      <TooltipContent primaryText={primaryText} secondaryText={secondaryText} />
+    }
+  >
     <TooltipTarget />
   </Tippy>
 );
