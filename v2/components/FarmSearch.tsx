@@ -108,15 +108,21 @@ const SearchBar: FC = () => {
 
   return (
     <Select
+      autoFocus
+      escapeClearsValue
+      isClearable
+      isMulti
+      openMenuOnClick={false}
+      openMenuOnFocus={false}
+      placeholder={t("v2.farms.filter")}
       components={{
         Control,
         DropdownIndicator: () => null,
         IndicatorSeparator: () => null,
       }}
-      placeholder={t("v2.farms.filter")}
-      isMulti
-      isClearable
-      autoFocus
+      onChange={(value) => console.log(value)}
+      options={options}
+      styles={styles}
       theme={(theme) => ({
         ...theme,
         borderRadius: 10,
@@ -126,9 +132,6 @@ const SearchBar: FC = () => {
           primary: "black",
         },
       })}
-      onChange={(value) => console.log(value)}
-      styles={styles}
-      options={options}
     />
   );
 };
