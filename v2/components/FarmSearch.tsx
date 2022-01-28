@@ -1,5 +1,10 @@
 import React, { FC } from "react";
-import Select, { components, StylesConfig, ControlProps } from "react-select";
+import Select, {
+  components,
+  StylesConfig,
+  ControlProps,
+  OptionProps,
+} from "react-select";
 import { useTranslation } from "next-i18next";
 import chroma from "chroma-js";
 import { SearchIcon } from "@heroicons/react/solid";
@@ -9,17 +14,17 @@ import { colors } from "v2/features/farms/colors";
 // TODO: Use resolveConfig once this gets merged:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58385
 import { theme } from "tailwind.config";
+const blackLight = theme.extend.colors.black.light;
 const blackLighter = theme.extend.colors.black.lighter;
 const orange = theme.extend.colors.orange.DEFAULT;
 const green = theme.extend.colors.green.DEFAULT;
 const grayOutlineLight = theme.extend.colors.gray["outline-light"];
 
 interface Option {
-  readonly value: string;
-  readonly label: string;
-  readonly color: string;
-  readonly isFixed?: boolean;
-  readonly isDisabled?: boolean;
+  value: string;
+  label: string;
+  color: string;
+  type: "token" | "protocol" | "network";
 }
 
 const Control = ({ children, ...props }: ControlProps<Option, true>) => (
@@ -29,33 +34,28 @@ const Control = ({ children, ...props }: ControlProps<Option, true>) => (
   </components.Control>
 );
 
+const Option = ({ children, ...props }: OptionProps<Option, true>) => (
+  <components.Option {...props}>
+    hi
+    {children}
+  </components.Option>
+);
+
 const options: Option[] = Object.entries(colors).map(([value, color]) => ({
   value,
   label: value.toUpperCase(),
   color,
+  type: "token",
 }));
 
 const styles: StylesConfig<Option> = {
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    const color = chroma(data.color);
-    return {
-      ...styles,
-      backgroundColor: isDisabled
-        ? undefined
-        : isSelected
-        ? data.color
-        : isFocused
-        ? color.alpha(0.15).css()
-        : undefined,
-      color: isDisabled
-        ? "#ccc"
-        : isSelected
-        ? chroma.contrast(color, "white") > 2
-          ? "white"
-          : "black"
-        : data.color,
-    };
-  },
+  clearIndicator: (styles) => ({
+    ...styles,
+    color: grayOutlineLight,
+    ":hover": {
+      color: "white",
+    },
+  }),
   control: (styles) => ({
     ...styles,
     backgroundColor: blackLighter,
@@ -65,6 +65,12 @@ const styles: StylesConfig<Option> = {
   input: (styles) => ({
     ...styles,
     color: green,
+  }),
+  menu: (styles) => ({
+    ...styles,
+    backgroundColor: blackLight,
+    padding: 8,
+    zIndex: 55,
   }),
   multiValue: (styles, { data }) => {
     return {
@@ -94,12 +100,12 @@ const styles: StylesConfig<Option> = {
       backgroundColor: orange,
     },
   }),
-  clearIndicator: (styles) => ({
+  option: (styles, { data, isFocused }) => ({
     ...styles,
-    color: grayOutlineLight,
-    ":hover": {
-      color: "white",
-    },
+    backgroundColor: isFocused ? blackLighter : undefined,
+    borderRadius: 10,
+    color: data.color,
+    transition: "all 0.3s ease-in-out",
   }),
 };
 
@@ -119,6 +125,7 @@ const SearchBar: FC = () => {
         Control,
         DropdownIndicator: () => null,
         IndicatorSeparator: () => null,
+        Option,
       }}
       onChange={(value) => console.log(value)}
       options={options}
