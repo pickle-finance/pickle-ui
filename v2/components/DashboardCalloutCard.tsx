@@ -5,19 +5,15 @@ import { useTranslation, Trans } from "next-i18next";
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import { formatPercentage } from "../utils";
 import { CoreSelectors } from "v2/store/core";
-import { JarDetails } from "v2/types";
 import MoreInfo from "./MoreInfo";
 
 const DashboardCalloutCard: FC = () => {
   const { t } = useTranslation("common");
-  let coreMaxApy: JarDetails | undefined = useSelector(
-    CoreSelectors.selectMaxApy,
-  );
+  let coreMaxApy = useSelector(CoreSelectors.selectMaxApy);
 
   if (!coreMaxApy)
     coreMaxApy = {
       name: "",
-      apiKey: "",
       chain: "Ethereum",
       apy: 0,
     };
@@ -33,7 +29,10 @@ const DashboardCalloutCard: FC = () => {
                 <span className="text-green">
                   {{ percent: formatPercentage(coreMaxApy.apy) }}
                 </span>
-                <MoreInfo primaryText={coreMaxApy.name} secondaryText={coreMaxApy.chain} />
+                <MoreInfo
+                  primaryText={coreMaxApy.name}
+                  secondaryText={coreMaxApy.chain}
+                />
                 APY
               </Trans>
             </p>
