@@ -5,9 +5,10 @@ import {
   AssetEnablement,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
-import { getNetworks } from "v2/features/connection/networks";
+import { Chains } from "picklefinance-core/lib/chain/Chains";
 
 import { RootState } from ".";
+import { getNetworks } from "v2/features/connection/networks";
 
 const apiHost = process.env.apiHost;
 
@@ -46,6 +47,7 @@ const coreSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchCore.pending, (state) => {
       state.loading = "pending";
+      console.log(Chains.list());
     });
     builder.addCase(fetchCore.fulfilled, (state, action) => {
       state.data = action.payload;
@@ -53,6 +55,15 @@ const coreSlice = createSlice({
     });
   },
 });
+
+/**
+ * Utilities
+ */
+const filtersFromCoreData = (data: PickleModelJson) => {
+  const tokens: Set<string> = new Set();
+  const networks: Set<string> = new Set();
+  const protocols: Set<string> = new Set();
+};
 
 /**
  * Selectors
