@@ -19,12 +19,25 @@ export const fetchCore = createAsyncThunk<PickleModelJson>(
   },
 );
 
+interface Filter {
+  value: string;
+  label: string;
+  color: string;
+  imageSrc: string;
+  type: "token" | "protocol" | "network";
+}
+
 interface CoreState {
   data: PickleModelJson | undefined;
   loading: keyof typeof QueryStatus;
+  filters: Filter[];
 }
 
-const initialState: CoreState = { data: undefined, loading: "uninitialized" };
+const initialState: CoreState = {
+  data: undefined,
+  loading: "uninitialized",
+  filters: [],
+};
 
 const coreSlice = createSlice({
   name: "core",
