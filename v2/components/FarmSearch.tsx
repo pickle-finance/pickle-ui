@@ -105,7 +105,7 @@ const styles: StylesConfig<Option> = {
     backgroundColor: isFocused ? blackLighter : undefined,
     borderRadius: 10,
     color: data.color,
-    transition: "all 0.3s ease-in-out",
+    transition: "all 200ms ease-in-out",
   }),
 };
 
