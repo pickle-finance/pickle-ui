@@ -40,7 +40,9 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = ({ networks }) => {
             priority
           />
         </div>
-        <span className="text-white text-sm font-bold">{activeChain.visibleName}</span>
+        <span className="text-white text-sm font-bold">
+          {activeChain.visibleName}
+        </span>
       </div>
     );
 
@@ -82,9 +84,8 @@ const NetworkToggle: FC = () => {
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   {networks?.map((network) => (
-                    <a
+                    <Popover.Button
                       key={network.name}
-                      href="#"
                       className="flex group justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out"
                     >
                       <div className="flex">
@@ -101,7 +102,7 @@ const NetworkToggle: FC = () => {
                           />
                         </div>
                         <span
-                          className="text-white group-hover:text-green-light text-sm font-bold pr-4"
+                          className="text-white group-hover:text-green-light text-sm font-bold pr-4 whitespace-nowrap"
                           onClick={() => {
                             switchChain(library, network.chainId, allCore);
                           }}
@@ -114,7 +115,7 @@ const NetworkToggle: FC = () => {
                       ) : (
                         <div className="w-5">&nbsp;</div>
                       )}
-                    </a>
+                    </Popover.Button>
                   ))}
                 </div>
               </div>

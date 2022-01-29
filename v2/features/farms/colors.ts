@@ -110,7 +110,7 @@ const colors: { [token: string]: string } = {
   yearn: "#006eee",
   yfi: "#006eee",
   yvboost: "#fa7d09",
-  zipswap: "#34a5f5"
+  zipswap: "#34a5f5",
 };
 
 export const brandColor = (symbol: string): string => {
