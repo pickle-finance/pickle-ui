@@ -9,7 +9,6 @@ import { getStats } from "../../features/Zap/useZapper";
 import { Gauge } from "../../containers/Contracts/Gauge";
 import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { addresses } from "../../containers/SushiPairs";
-import { Masterchefv2 } from "containers/Contracts/Masterchefv2";
 import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__factory";
 import { Erc20__factory as Erc20Factory } from "containers/Contracts/factories/Erc20__factory";
 
@@ -255,7 +254,9 @@ export const useMigrate = (
       const tx1 = await looksToken.approve(JAR, ethers.constants.MaxUint256);
       await tx1.wait();
     }
-    const tx = await jar.depositAll();
+    const tx = await jar.depositAll({
+      gasLimit: 250000,
+    });
     await tx.wait();
   };
 
