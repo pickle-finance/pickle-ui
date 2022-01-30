@@ -12,7 +12,9 @@ import { SearchIcon } from "@heroicons/react/solid";
 import { useSelector } from "react-redux";
 
 import { classNames } from "v2/utils";
-import { Filter, CoreSelectors } from "v2/store/core";
+import { useAppDispatch } from "v2/store";
+import { CoreSelectors } from "v2/store/core";
+import { Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
 import { theme } from "tailwind.config";
 
@@ -143,6 +145,7 @@ const styles: StylesConfig<Filter> = {
 const SearchBar: FC = () => {
   const { t } = useTranslation("common");
   const filters = useSelector(CoreSelectors.selectFilters);
+  const dispatch = useAppDispatch();
 
   return (
     <Select
@@ -159,7 +162,7 @@ const SearchBar: FC = () => {
         IndicatorSeparator: () => null,
         Option,
       }}
-      onChange={(value) => console.log(value)}
+      onChange={(filters) => dispatch(setFilters(filters))}
       options={filters}
       styles={styles}
       theme={(theme) => ({

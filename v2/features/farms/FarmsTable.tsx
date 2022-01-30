@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import SearchBar from "v2/components/FarmSearch";
 import FarmsTableBody from "./FarmsTableBody";
@@ -20,7 +20,6 @@ interface Props {
 
 const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
   const { t } = useTranslation("common");
-  const [farmFilter, setFarmFilter] = useState("");
 
   return (
     <>
@@ -59,7 +58,6 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
                 <FarmsTableBody
                   simple={simple}
                   requiresUserModel={requiresUserModel}
-                  farmFilter={farmFilter}
                 />
               </tbody>
             </table>
