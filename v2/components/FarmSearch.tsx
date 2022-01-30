@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { classNames } from "v2/utils";
 import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
-import { Filter, setFilters } from "v2/store/controls";
+import { ControlsSelectors, Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
 import { theme } from "tailwind.config";
 
@@ -144,7 +144,8 @@ const styles: StylesConfig<Filter> = {
 
 const SearchBar: FC = () => {
   const { t } = useTranslation("common");
-  const filters = useSelector(CoreSelectors.selectFilters);
+  const options = useSelector(CoreSelectors.selectFilters);
+  const filters = useSelector(ControlsSelectors.selectFilters);
   const dispatch = useAppDispatch();
 
   return (
@@ -163,7 +164,7 @@ const SearchBar: FC = () => {
         Option,
       }}
       onChange={(filters) => dispatch(setFilters(filters))}
-      options={filters}
+      options={options}
       styles={styles}
       theme={(theme) => ({
         ...theme,
@@ -174,6 +175,7 @@ const SearchBar: FC = () => {
           primary: "black",
         },
       })}
+      value={filters}
     />
   );
 };
