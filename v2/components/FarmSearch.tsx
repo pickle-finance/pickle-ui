@@ -109,7 +109,7 @@ const styles: StylesConfig<Filter> = {
       fontWeight: 700,
       color:
         // Darken the label color if it ends up with sufficient contrast
-        chroma.contrast(darker, "black") >= 3 ? darker.css() : "white",
+        chroma.contrast(darker, "black") >= 5 ? darker.css() : "white",
     };
   },
   multiValueRemove: (styles, { data }) => ({

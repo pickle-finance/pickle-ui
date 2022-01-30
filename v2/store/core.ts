@@ -20,8 +20,14 @@ export const fetchCore = createAsyncThunk<PickleModelJson>(
   },
 );
 
+enum FilterType {
+  Token = "token",
+  Protocol = "protocol",
+  Network = "network",
+}
+
 export interface Filter {
-  type: "token" | "protocol" | "network";
+  type: FilterType;
   value: string;
   label: string;
   color: string;
@@ -60,13 +66,49 @@ const coreSlice = createSlice({
  * Utilities
  */
 const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
-  return data.chains.map(({ network, networkVisible }) => ({
-    type: "network",
+  const networkFilters = data.chains.map(({ network, networkVisible }) => ({
+    type: FilterType.Network,
     value: network,
     label: networkVisible,
     imageSrc: `/networks/${network}.png`,
     color: brandColor(network),
   }));
+
+  let protocols: string[] = [];
+
+  data.assets.jars.forEach((jar) => {
+    if (jar.enablement !== AssetEnablement.ENABLED) return;
+
+    protocols.push(jar.protocol);
+  });
+
+  data.assets.external.forEach((jar) => {
+    if (jar.enablement !== AssetEnablement.ENABLED) return;
+
+    protocols.push(jar.protocol);
+  });
+
+  data.assets.standaloneFarms.forEach((jar) => {
+    if (jar.enablement !== AssetEnablement.ENABLED) return;
+
+    protocols.push(jar.protocol);
+  });
+
+  const uniqueProtocols = [...new Set(protocols)];
+
+  const protocolFilters = uniqueProtocols.sort().map((protocol) => {
+    const sanitizedProtocolName = protocol.replace(/\s|\./g, "").toLowerCase();
+
+    return {
+      type: FilterType.Protocol,
+      value: protocol,
+      label: protocol,
+      imageSrc: `/protocols/${sanitizedProtocolName}.png`,
+      color: brandColor(sanitizedProtocolName),
+    };
+  });
+
+  return [...networkFilters, ...protocolFilters];
 };
 
 /**
