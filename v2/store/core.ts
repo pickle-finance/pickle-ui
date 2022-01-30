@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import { QueryStatus } from "@reduxjs/toolkit/query";
 import { maxBy } from "lodash";
 import {
@@ -10,7 +14,7 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { RootState } from ".";
-import { Filter, FilterType } from "./controls";
+import { Filter, FilterType, ControlsSelectors } from "./controls";
 import { getNetworks } from "v2/features/connection/networks";
 import { brandColor } from "v2/features/farms/colors";
 
@@ -120,12 +124,44 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
  */
 const selectCore = (state: RootState) => state.core.data;
 const selectEnabledJars = (state: RootState) => {
-  if (state.core.data === undefined) return [];
+  const { data } = state.core;
 
-  return state.core.data.assets.jars.filter(
+  if (data === undefined) return [];
+
+  return data.assets.jars.filter(
     (jar) => jar.enablement === AssetEnablement.ENABLED,
   );
 };
+
+const selectFilteredAssets = createSelector(
+  selectEnabledJars,
+  ControlsSelectors.selectFilters,
+  (jars, filters) => {
+    if (filters.length === 0) return jars;
+
+    return jars.filter((jar) => {
+      const predicateResults = filters.map((filter) => {
+        switch (filter.type) {
+          case FilterType.Network:
+            return jar.chain === filter.value;
+          case FilterType.Protocol:
+            return jar.protocol === filter.value;
+          case FilterType.Token:
+            const { components } = jar.depositToken;
+
+            if (!components) return false;
+
+            return components.includes(filter.value);
+          default:
+            return false;
+        }
+      });
+
+      return predicateResults.filter(Boolean).length > 0;
+    });
+  },
+);
+
 const selectMaxApy = (state: RootState) => {
   const { data } = state.core;
 
@@ -166,6 +202,7 @@ const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 export const CoreSelectors = {
   selectCore,
   selectEnabledJars,
+  selectFilteredAssets,
   selectFilters,
   selectLoadingState,
   selectMaxApy,

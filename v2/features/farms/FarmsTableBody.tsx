@@ -27,7 +27,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
   const userModel = useSelector(UserSelectors.selectData);
 
   // TODO Should be all assets, not just jars
-  let jars = useSelector(CoreSelectors.selectEnabledJars);
+  let jars = useSelector(CoreSelectors.selectFilteredAssets);
   if (requiresUserModel && userModel) {
     const empty = (val: string) => val !== undefined && val !== "0";
     const showAsset = (x: UserTokenData): boolean =>
