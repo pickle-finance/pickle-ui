@@ -9,7 +9,7 @@ export const defaultBackgroundColor = chroma(defaultColor).alpha(0.7).css();
  * These colors are used as placeholders while token/protocol icons are loading.
  * Please keep it sorted.
  */
-export const colors: { [token: string]: string } = {
+const colors: { [token: string]: string } = {
   "2crv": "#ffad00",
   "3crv": "#ffad00",
   aave: "#4aa4be",

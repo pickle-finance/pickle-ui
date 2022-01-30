@@ -11,6 +11,7 @@ import chroma from "chroma-js";
 import { SearchIcon } from "@heroicons/react/solid";
 import { useSelector } from "react-redux";
 
+import { classNames } from "v2/utils";
 import { Filter, CoreSelectors } from "v2/store/core";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
 import { theme } from "tailwind.config";
@@ -52,6 +53,8 @@ const OptionImage: FC<Filter> = ({ color, imageSrc, label }) => {
 
 const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
   const { t } = useTranslation("common");
+  // Correctly highlight active option when navigating the menu using arrows keys
+  const { isFocused } = props;
   const { type } = props.data;
 
   return (
@@ -59,7 +62,12 @@ const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
       <div className="flex items-center">
         <OptionImage {...props.data} />
         <div>
-          <p className="text-white font-title text-base group-hover:text-green-light transition duration-200 ease-in-out">
+          <p
+            className={classNames(
+              "text-white font-title text-base group-hover:text-green-light transition duration-200 ease-in-out",
+              isFocused && "text-green-light",
+            )}
+          >
             {children}
           </p>
           <p className="font-normal text-sm text-gray-light italic">
@@ -102,14 +110,14 @@ const styles: StylesConfig<Filter> = {
     };
   },
   multiValueLabel: (styles, { data }) => {
-    const darker = chroma(data.color).darken(2.5);
+    const darker = chroma(data.color).darken(3);
 
     return {
       ...styles,
       fontWeight: 700,
       color:
         // Darken the label color if it ends up with sufficient contrast
-        chroma.contrast(darker, "black") >= 5 ? darker.css() : "white",
+        chroma.contrast(darker, "black") >= 3 ? darker.css() : "white",
     };
   },
   multiValueRemove: (styles, { data }) => ({

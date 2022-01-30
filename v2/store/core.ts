@@ -3,7 +3,10 @@ import { QueryStatus } from "@reduxjs/toolkit/query";
 import { maxBy } from "lodash";
 import {
   AssetEnablement,
+  ExternalAssetDefinition,
+  JarDefinition,
   PickleModelJson,
+  StandaloneFarmDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { RootState } from ".";
@@ -65,7 +68,33 @@ const coreSlice = createSlice({
 /**
  * Utilities
  */
+
+/**
+ * We sort filters in the following order:
+ * Networks -> Protocols -> Tokens (alphabetical sort withing groups)
+ * This is the order they appear in the filters autocomplete menu.
+ */
 const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
+  let protocols: string[] = [];
+  let tokens: string[] = [];
+
+  const processJar = (
+    jar: JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition,
+  ): void => {
+    if (jar.enablement !== AssetEnablement.ENABLED) return;
+
+    protocols.push(jar.protocol);
+
+    const { components } = jar.depositToken;
+
+    if (!components) return;
+
+    tokens.push(...components);
+  };
+
+  const entities = ["jars", "external", "standaloneFarms"] as const;
+  entities.forEach((entity) => data.assets[entity].forEach(processJar));
+
   const networkFilters = data.chains.map(({ network, networkVisible }) => ({
     type: FilterType.Network,
     value: network,
@@ -74,28 +103,7 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
     color: brandColor(network),
   }));
 
-  let protocols: string[] = [];
-
-  data.assets.jars.forEach((jar) => {
-    if (jar.enablement !== AssetEnablement.ENABLED) return;
-
-    protocols.push(jar.protocol);
-  });
-
-  data.assets.external.forEach((jar) => {
-    if (jar.enablement !== AssetEnablement.ENABLED) return;
-
-    protocols.push(jar.protocol);
-  });
-
-  data.assets.standaloneFarms.forEach((jar) => {
-    if (jar.enablement !== AssetEnablement.ENABLED) return;
-
-    protocols.push(jar.protocol);
-  });
-
   const uniqueProtocols = [...new Set(protocols)];
-
   const protocolFilters = uniqueProtocols.sort().map((protocol) => {
     const sanitizedProtocolName = protocol.replace(/\s|\./g, "").toLowerCase();
 
@@ -108,7 +116,16 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
     };
   });
 
-  return [...networkFilters, ...protocolFilters];
+  const uniqueTokens = [...new Set(tokens)];
+  const tokenFilters = uniqueTokens.sort().map((token) => ({
+    type: FilterType.Token,
+    value: token,
+    label: token.toUpperCase(),
+    imageSrc: `/tokens/${token}.png`,
+    color: brandColor(token),
+  }));
+
+  return [...networkFilters, ...protocolFilters, ...tokenFilters];
 };
 
 /**
