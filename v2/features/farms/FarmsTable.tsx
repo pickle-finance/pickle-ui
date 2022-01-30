@@ -1,8 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import FarmSearch from "v2/components/FarmSearch";
 import FarmsTableBody from "./FarmsTableBody";
-import MatchAllFiltersToggle from "./MatchAllFiltersToggle";
+import FarmControls from "./FarmControls";
 
 const FarmsTableHeaderCell: FC = ({ children }) => (
   <th
@@ -28,12 +27,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
-            {!simple && (
-              <div className="mb-4 w-full sm:w-1/2">
-                <FarmSearch />
-                <MatchAllFiltersToggle />
-              </div>
-            )}
+            {!simple && <FarmControls />}
             <table className="min-w-full table-auto border-collapse">
               <thead className="bg-black uppercase">
                 <tr>
