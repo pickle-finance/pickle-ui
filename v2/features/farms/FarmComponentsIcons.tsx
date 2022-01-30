@@ -20,7 +20,7 @@ const TokenIcons: FC<Props> = ({ jar }) => {
         <div
           key={component}
           className={classNames(
-            "image w-10 h-10 rounded-full border-3 border-gray-outline z-10 hover:scale-125 duration-200 hover:z-50",
+            "w-10 h-10 rounded-full border-3 border-gray-outline z-10 hover:scale-125 duration-200 hover:z-50",
             /**
              * Allow me, dear reader, to ask you not to dismiss this code as something
              * written by a complete idiot, "clean it up", and ultimately break it.
