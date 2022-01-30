@@ -1,5 +1,9 @@
-// Gray outline
-const defaultColor = "#2b383b";
+import chroma from "chroma-js";
+
+import { theme } from "tailwind.config";
+
+const defaultColor = theme.extend.colors.gray.outline;
+export const defaultBackgroundColor = chroma(defaultColor).alpha(0.7).css();
 
 /**
  * These colors are used as placeholders while token/protocol icons are loading.
@@ -11,6 +15,7 @@ export const colors: { [token: string]: string } = {
   aave: "#4aa4be",
   alcx: "#edc0a1",
   alusd: "#edc0a1",
+  arbitrum: "#2c374c",
   aurora: "#6ed34a",
   auroraswap: "#25caa0",
   aurum: "#e58200",
@@ -29,6 +34,7 @@ export const colors: { [token: string]: string } = {
   cherryswap: "#ffccd6",
   comethswap: "#1d80b7",
   cro: "#20254d",
+  cronos: "#051221",
   crv: "#ffad00",
   curve: "#a4ff53",
   cvx: "#3a3a3a",
@@ -45,6 +51,7 @@ export const colors: { [token: string]: string } = {
   glmr: "#1d2549",
   gohm: "#708b96",
   hades: "#ef4625",
+  harmony: "#45dfcd",
   hellshare: "#8a25ef",
   hnd: "#859fb5",
   iron: "#eb6d22",
@@ -64,6 +71,8 @@ export const colors: { [token: string]: string } = {
   mim: "#5452fd",
   mimatic: "#db3737",
   mir: "#172240",
+  moonbeam: "#e1147b",
+  moonriver: "#f2b705",
   movr: "#f2b705",
   mqqq: "#000ad2",
   mslv: "#ed8b00",
@@ -73,9 +82,12 @@ export const colors: { [token: string]: string } = {
   nearpad: "#4c50aa",
   netswap: "#0058f5",
   nett: "#0058f5",
+  okex: "#0d74f5",
+  optimism: "#ff0420",
   pad: "#6366f1",
   pets: "#f3278d",
   pickle: "#48c148",
+  polygon: "#8247e5",
   qi: "#ff6b6b",
   quickswap: "#418aca",
   raider: "#1e1833",
@@ -110,12 +122,12 @@ export const colors: { [token: string]: string } = {
   yearn: "#006eee",
   yfi: "#006eee",
   yvboost: "#fa7d09",
+  zip: "#34a5f5",
   zipswap: "#34a5f5",
 };
 
 export const brandColor = (symbol: string): string => {
   const color = colors[symbol] ?? defaultColor;
 
-  // 70% opacity
-  return `${color}b3`;
+  return chroma(color).alpha(0.7).css();
 };

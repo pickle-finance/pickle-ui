@@ -1,54 +1,77 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Select, {
   components,
   StylesConfig,
   ControlProps,
   OptionProps,
 } from "react-select";
+import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import chroma from "chroma-js";
 import { SearchIcon } from "@heroicons/react/solid";
+import { useSelector } from "react-redux";
 
-import { colors } from "v2/features/farms/colors";
-
-// TODO: Use resolveConfig once this gets merged:
-// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/58385
+import { Filter, CoreSelectors } from "v2/store/core";
+import { defaultBackgroundColor } from "v2/features/farms/colors";
 import { theme } from "tailwind.config";
+
 const blackLight = theme.extend.colors.black.light;
 const blackLighter = theme.extend.colors.black.lighter;
 const orange = theme.extend.colors.orange.DEFAULT;
 const green = theme.extend.colors.green.DEFAULT;
 const grayOutlineLight = theme.extend.colors.gray["outline-light"];
 
-interface Option {
-  value: string;
-  label: string;
-  color: string;
-  type: "token" | "protocol" | "network";
-}
-
-const Control = ({ children, ...props }: ControlProps<Option, true>) => (
+const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
     <SearchIcon className="w-6 h-6 text-gray-light ml-3 mr-1" />
     {children}
   </components.Control>
 );
 
-const Option = ({ children, ...props }: OptionProps<Option, true>) => (
-  <components.Option {...props}>
-    hi
-    {children}
-  </components.Option>
-);
+const OptionImage: FC<Filter> = ({ color, imageSrc, label }) => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-const options: Option[] = Object.entries(colors).map(([value, color]) => ({
-  value,
-  label: value.toUpperCase(),
-  color,
-  type: "token",
-}));
+  return (
+    <div
+      className="mr-3 w-8 h-8 rounded-full border-3 border-gray-outline"
+      style={{ background: isLoaded ? defaultBackgroundColor : color }}
+    >
+      <Image
+        src={imageSrc}
+        className="rounded-full"
+        width={32}
+        height={32}
+        layout="intrinsic"
+        alt={label}
+        title={label}
+        onLoadingComplete={() => setIsLoaded(true)}
+      />
+    </div>
+  );
+};
 
-const styles: StylesConfig<Option> = {
+const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
+  const { t } = useTranslation("common");
+  const { type } = props.data;
+
+  return (
+    <components.Option {...props} className="group">
+      <div className="flex items-center">
+        <OptionImage {...props.data} />
+        <div>
+          <p className="text-white font-title text-base group-hover:text-green-light transition duration-200 ease-in-out">
+            {children}
+          </p>
+          <p className="font-normal text-sm text-gray-light italic">
+            {t(`v2.farms.${type}`)}
+          </p>
+        </div>
+      </div>
+    </components.Option>
+  );
+};
+
+const styles: StylesConfig<Filter> = {
   clearIndicator: (styles) => ({
     ...styles,
     color: grayOutlineLight,
@@ -111,6 +134,7 @@ const styles: StylesConfig<Option> = {
 
 const SearchBar: FC = () => {
   const { t } = useTranslation("common");
+  const filters = useSelector(CoreSelectors.selectFilters);
 
   return (
     <Select
@@ -128,7 +152,7 @@ const SearchBar: FC = () => {
         Option,
       }}
       onChange={(value) => console.log(value)}
-      options={options}
+      options={filters}
       styles={styles}
       theme={(theme) => ({
         ...theme,

@@ -84,7 +84,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
   const { activate, connector, library } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
-  const networks = useSelector(CoreSelectors.selectNetworks)
+  const networks = useSelector(CoreSelectors.selectNetworks);
 
   resetWalletConnectState(connector);
 

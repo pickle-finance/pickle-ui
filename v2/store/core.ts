@@ -5,10 +5,10 @@ import {
   AssetEnablement,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
-import { Chains } from "picklefinance-core/lib/chain/Chains";
 
 import { RootState } from ".";
 import { getNetworks } from "v2/features/connection/networks";
+import { brandColor } from "v2/features/farms/colors";
 
 const apiHost = process.env.apiHost;
 
@@ -20,12 +20,12 @@ export const fetchCore = createAsyncThunk<PickleModelJson>(
   },
 );
 
-interface Filter {
+export interface Filter {
+  type: "token" | "protocol" | "network";
   value: string;
   label: string;
   color: string;
   imageSrc: string;
-  type: "token" | "protocol" | "network";
 }
 
 interface CoreState {
@@ -47,11 +47,11 @@ const coreSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchCore.pending, (state) => {
       state.loading = "pending";
-      console.log(Chains.list());
     });
     builder.addCase(fetchCore.fulfilled, (state, action) => {
       state.data = action.payload;
       state.loading = "fulfilled";
+      state.filters = filtersFromCoreData(action.payload);
     });
   },
 });
@@ -59,10 +59,14 @@ const coreSlice = createSlice({
 /**
  * Utilities
  */
-const filtersFromCoreData = (data: PickleModelJson) => {
-  const tokens: Set<string> = new Set();
-  const networks: Set<string> = new Set();
-  const protocols: Set<string> = new Set();
+const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
+  return data.chains.map(({ network, networkVisible }) => ({
+    type: "network",
+    value: network,
+    label: networkVisible,
+    imageSrc: `/networks/${network}.png`,
+    color: brandColor(network),
+  }));
 };
 
 /**
@@ -109,16 +113,18 @@ const selectNetworks = (state: RootState) => {
 
   return getNetworks(state.core.data);
 };
+const selectFilters = (state: RootState) => state.core.filters;
 const selectLoadingState = (state: RootState) => state.core.loading;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
 export const CoreSelectors = {
   selectCore,
   selectEnabledJars,
+  selectFilters,
   selectLoadingState,
-  selectTimestamp,
   selectMaxApy,
   selectNetworks,
+  selectTimestamp,
 };
 
 export default coreSlice.reducer;

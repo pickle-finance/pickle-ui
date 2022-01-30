@@ -337,7 +337,10 @@
       "liquidity": "Liquidity",
       "loadingFarms": "Loading farms ...",
       "loadingUserModel": "Loading your balances ...",
-      "stakedToken": "{{ token }} staked"
+      "network": "Network",
+      "protocol": "Protocol",
+      "stakedToken": "{{ token }} staked",
+      "token": "Token"
     },
     "gasPrices": {
       "fast": "Fast",
