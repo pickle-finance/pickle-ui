@@ -10,6 +10,7 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { RootState } from ".";
+import { Filter, FilterType } from "./controls";
 import { getNetworks } from "v2/features/connection/networks";
 import { brandColor } from "v2/features/farms/colors";
 
@@ -23,19 +24,7 @@ export const fetchCore = createAsyncThunk<PickleModelJson>(
   },
 );
 
-enum FilterType {
-  Token = "token",
-  Protocol = "protocol",
-  Network = "network",
-}
-
-export interface Filter {
-  type: FilterType;
-  value: string;
-  label: string;
-  color: string;
-  imageSrc: string;
-}
+type Asset = JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition;
 
 interface CoreState {
   data: PickleModelJson | undefined;
@@ -78,9 +67,7 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
   let protocols: string[] = [];
   let tokens: string[] = [];
 
-  const processJar = (
-    jar: JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition,
-  ): void => {
+  const processJar = (jar: Asset): void => {
     if (jar.enablement !== AssetEnablement.ENABLED) return;
 
     protocols.push(jar.protocol);
