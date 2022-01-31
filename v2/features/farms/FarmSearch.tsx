@@ -151,18 +151,19 @@ const SearchBar: FC = () => {
   return (
     <Select
       autoFocus
-      escapeClearsValue
-      isClearable
-      isMulti
-      openMenuOnClick={false}
-      openMenuOnFocus={false}
-      placeholder={t("v2.farms.filter")}
       components={{
         Control,
         DropdownIndicator: () => null,
         IndicatorSeparator: () => null,
         Option,
       }}
+      escapeClearsValue
+      isClearable
+      isMulti
+      openMenuOnClick={false}
+      openMenuOnFocus={false}
+      placeholder={t("v2.farms.filter")}
+      noOptionsMessage={() => t("v2.farms.noResults")}
       onChange={(filters) => dispatch(setFilters(filters))}
       options={options}
       styles={styles}
@@ -171,7 +172,6 @@ const SearchBar: FC = () => {
         borderRadius: 10,
         colors: {
           ...theme.colors,
-          primary25: "hotpink",
           primary: "black",
         },
       })}

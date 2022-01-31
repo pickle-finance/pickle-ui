@@ -63,6 +63,19 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
       </tr>
     );
   }
+
+  if (jars.length === 0)
+    return (
+      <tr>
+        <td
+          colSpan={6}
+          className="bg-black-light text-gray-light text-center p-8 rounded-xl"
+        >
+          {t("v2.farms.noResults")}
+        </td>
+      </tr>
+    );
+
   return (
     <>
       {jars.map((jar) => (

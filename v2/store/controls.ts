@@ -17,11 +17,13 @@ export interface Filter {
 }
 
 interface ControlsState {
-  readonly filters: Filter[];
+  filters: Filter[];
+  matchAllFilters: boolean;
 }
 
 const initialState: ControlsState = {
   filters: [],
+  matchAllFilters: false,
 };
 
 const controlsSlice = createSlice({
@@ -33,21 +35,27 @@ const controlsSlice = createSlice({
     setFilters: (state, action: PayloadAction<readonly Filter[]>) => {
       state.filters = [...action.payload];
     },
+    setMatchAllFilters: (state, action: PayloadAction<boolean>) => {
+      state.matchAllFilters = action.payload;
+    },
   },
 });
 
 /**
  * Actions
  */
-export const { setFilters } = controlsSlice.actions;
+export const { setFilters, setMatchAllFilters } = controlsSlice.actions;
 
 /**
  * Selectors
  */
 const selectFilters = (state: RootState) => state.controls.filters;
+const selectMatchAllFilters = (state: RootState) =>
+  state.controls.matchAllFilters;
 
 export const ControlsSelectors = {
   selectFilters,
+  selectMatchAllFilters,
 };
 
 export default controlsSlice.reducer;

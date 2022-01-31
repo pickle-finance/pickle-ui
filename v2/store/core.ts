@@ -136,7 +136,8 @@ const selectEnabledJars = (state: RootState) => {
 const selectFilteredAssets = createSelector(
   selectEnabledJars,
   ControlsSelectors.selectFilters,
-  (jars, filters) => {
+  ControlsSelectors.selectMatchAllFilters,
+  (jars, filters, matchAllFilters) => {
     if (filters.length === 0) return jars;
 
     return jars.filter((jar) => {
@@ -157,7 +158,11 @@ const selectFilteredAssets = createSelector(
         }
       });
 
-      return predicateResults.filter(Boolean).length > 0;
+      const matchingFilters = predicateResults.filter(Boolean);
+
+      return matchAllFilters
+        ? matchingFilters.length === predicateResults.length
+        : matchingFilters.length > 0;
     });
   },
 );
