@@ -11,7 +11,10 @@ import { PickleCore } from "./usePickleCore";
 import {
   JarDefinition,
   AssetProtocol,
+  PickleAsset,
+  IExternalToken,
 } from "picklefinance-core/lib/model/PickleModelJson";
+import { PickleModelJson } from "picklefinance-core";
 
 export interface UniV3Token {
   address: string;
@@ -28,6 +31,21 @@ export interface JarV3 extends JarWithTVL {
   proportion: BigNumber | null;
 }
 
+export const getComponentTokenAddresses = (pickleCore: PickleModelJson.PickleModelJson | null | undefined, definition: PickleAsset): string[] | undefined => {
+  if( pickleCore === undefined || pickleCore === null )
+    return [];
+  const components = definition.depositToken.components || [];
+  const addresses: string[] = [];
+  for( let i = 0; i < components.length; i++ ) {
+    const found: IExternalToken | undefined = pickleCore.tokens.find((x) => x.chain === definition.chain && x.id === components[i]);
+    if( !found ) {
+      return undefined;
+    }
+    addresses.push(found.contractAddr);
+  }
+  return addresses;
+}
+
 export const useJarsWithUniV3 = (
   jars: Array<JarWithTVL> | null,
 ): { jarsWithV3: Array<JarV3> | null } => {
@@ -42,28 +60,32 @@ export const useJarsWithUniV3 = (
   const fetchUniV3 = async () => {
     if (jars && signer && erc20 && address && pickleCore) {
       const promises = jars.map(async (jar) => {
+        const returnError = {
+          ...jar,
+          token0: null,
+          token1: null,
+          proportion: null,
+        }
         const found: JarDefinition | undefined = pickleCore.assets.jars.find(
           (x) => x.details.apiKey === jar.apiKey,
         );
         if (
           !found ||
-          !found.depositToken.componentAddresses ||
           !found.depositToken.componentTokens ||
           !found.depositToken.components ||
-          found?.protocol != AssetProtocol.UNISWAP_V3
+          found?.protocol !== AssetProtocol.UNISWAP_V3 ||
+          getComponentTokenAddresses(pickleCore, found) === undefined
         ) {
-          return {
-            ...jar,
-            token0: null,
-            token1: null,
-            proportion: null,
-          };
+          return returnError;
         }
 
         const jarV3 = JarV3Factory.connect(jar.contract.address, signer);
+        const componentAddressArray = getComponentTokenAddresses(pickleCore, found);
+        if( componentAddressArray === undefined || componentAddressArray.length !== 2 )
+          return returnError;
 
-        const token0 = found.depositToken.componentAddresses[0];
-        const token1 = found.depositToken.componentAddresses[1];
+        const token0 = componentAddressArray[0];
+        const token1 = componentAddressArray[1];
 
         const Token0 = erc20.attach(token0).connect(signer);
         const Token1 = erc20.attach(token1).connect(signer);
