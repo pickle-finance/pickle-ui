@@ -6,6 +6,7 @@ import { useAppDispatch } from "v2/store";
 
 import { ControlsSelectors, setMatchAllFilters } from "v2/store/controls";
 import { classNames } from "v2/utils";
+import MoreInfo from "v2/components/MoreInfo";
 
 const MatchAllFiltersToggle: FC = () => {
   const { t } = useTranslation("common");
@@ -75,6 +76,13 @@ const MatchAllFiltersToggle: FC = () => {
         <span className="text-sm font-medium text-gray-light">
           {t("v2.farms.matchAllFilters")}
         </span>
+        <MoreInfo
+          secondaryText={
+            matchAllFilters
+              ? t("v2.farms.matchingAllFilters")
+              : t("v2.farms.notMatchingAllFilters")
+          }
+        />
       </Switch.Label>
     </Switch.Group>
   );
