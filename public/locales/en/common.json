@@ -337,7 +337,9 @@
       "liquidity": "Liquidity",
       "loadingFarms": "Loading farms ...",
       "loadingUserModel": "Loading your balances ...",
+      "matchAllFilters": "Match all filters",
       "network": "Network",
+      "noResults": "No results",
       "protocol": "Protocol",
       "stakedToken": "{{ token }} staked",
       "token": "Token"

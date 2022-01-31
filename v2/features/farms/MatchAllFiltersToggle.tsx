@@ -1,31 +1,37 @@
-import { useState, FC } from "react";
+import { FC } from "react";
 import { Switch } from "@headlessui/react";
+import { useTranslation } from "next-i18next";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "v2/store";
 
+import { ControlsSelectors, setMatchAllFilters } from "v2/store/controls";
 import { classNames } from "v2/utils";
 
 const MatchAllFiltersToggle: FC = () => {
-  const [enabled, setEnabled] = useState(false);
+  const { t } = useTranslation("common");
+  const dispatch = useAppDispatch();
+  const matchAllFilters = useSelector(ControlsSelectors.selectMatchAllFilters);
 
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch
-        checked={enabled}
-        onChange={setEnabled}
+        checked={matchAllFilters}
+        onChange={(value) => dispatch(setMatchAllFilters(value))}
         className={classNames(
-          enabled ? "bg-green" : "bg-gray-light",
+          matchAllFilters ? "bg-green" : "bg-gray-light",
           "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-2000",
         )}
       >
         <span
           aria-hidden="true"
           className={classNames(
-            enabled ? "translate-x-5" : "translate-x-0",
+            matchAllFilters ? "translate-x-5" : "translate-x-0",
             "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200",
           )}
         >
           <span
             className={classNames(
-              enabled
+              matchAllFilters
                 ? "opacity-0 ease-out duration-100"
                 : "opacity-100 ease-in duration-200",
               "absolute inset-0 h-full w-full flex items-center justify-center transition-opacity",
@@ -48,7 +54,7 @@ const MatchAllFiltersToggle: FC = () => {
           </span>
           <span
             className={classNames(
-              enabled
+              matchAllFilters
                 ? "opacity-100 ease-in duration-200"
                 : "opacity-0 ease-out duration-100",
               "absolute inset-0 h-full w-full flex items-center justify-center transition-opacity",
@@ -67,7 +73,7 @@ const MatchAllFiltersToggle: FC = () => {
       </Switch>
       <Switch.Label as="span" className="ml-3">
         <span className="text-sm font-medium text-gray-light">
-          Match all filters
+          {t("v2.farms.matchAllFilters")}
         </span>
       </Switch.Label>
     </Switch.Group>
