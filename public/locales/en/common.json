@@ -338,8 +338,10 @@
       "loadingFarms": "Loading farms ...",
       "loadingUserModel": "Loading your balances ...",
       "matchAllFilters": "Match all filters",
+      "matchingAllFilters": "Showing farms matching all filters",
       "network": "Network",
       "noResults": "No results",
+      "notMatchingAllFilters": "Showing farms matching at least one filter",
       "protocol": "Protocol",
       "stakedToken": "{{ token }} staked",
       "token": "Token"
