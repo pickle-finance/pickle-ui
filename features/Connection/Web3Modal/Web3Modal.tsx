@@ -30,7 +30,6 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
       : pickleCore.chains.find((z) => z.network === network);
   };
   const networks = Chains.list().filter((x) => rawChainFor(x) !== undefined);
-  console.log(networks)
   const supportedChains = networks.map((x) => {
     const rawChain = rawChainFor(x);
     return chainToChainParams(rawChain);

@@ -408,7 +408,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   //ZIP ETH/ZIP
   "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
-  )
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -468,7 +468,7 @@ export const JarCollapsible: FC<{
 
   const isUsdc = isUsdcToken(depositToken.address);
 
-  const uncompounded = APYs.map((x) => {
+  const uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
     const shouldNotUncompound = k === "pickle" || k === "lp";
     const v = shouldNotUncompound
@@ -480,7 +480,7 @@ export const JarCollapsible: FC<{
   });
 
   const totalAPR: number = uncompounded
-    .map((x) => {
+    ?.map((x) => {
       return Object.values(x).reduce((acc, y) => acc + y, 0);
     })
     .reduce((acc, x) => acc + x, 0);
@@ -488,11 +488,11 @@ export const JarCollapsible: FC<{
 
   const tooltipText = [
     `${t("farms.baseAPRs")}:`,
-    ...uncompounded.map((x) => {
+    ...[uncompounded?.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
       return `${k}: ${v.toFixed(2)}%`;
-    }),
+    })],
     `${t(
       "farms.compounding",
     )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
@@ -591,7 +591,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -705,16 +705,17 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${deposited && ratio
-                    ? parseFloat(
-                      formatEther(
-                        isUsdc && deposited
-                          ? deposited.mul(USDC_SCALE)
-                          : deposited,
-                      ),
-                    ) * ratio
-                    : 0
-                    } ${depositTokenName}`}
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(
+                            isUsdc && deposited
+                              ? deposited.mul(USDC_SCALE)
+                              : deposited,
+                          ),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
