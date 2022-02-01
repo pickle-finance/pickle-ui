@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
-import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
+import { Link, Input, Grid, Spacer, Button, Select } from "@geist-ui/react";
 import { formatValue } from "./UniV3JarMiniFarmCollapsible";
 import { UniV3Token } from "containers/Jars/useJarsWithUniV3";
 import erc20 from "@studydefi/money-legos/erc20";
@@ -16,6 +16,7 @@ export const TokenInput: FC<{
   proportion: BigNumber;
   depositAmount: string;
   jarAddr: string;
+  setUseEth: any;
 }> = ({
   token,
   otherToken,
@@ -24,11 +25,26 @@ export const TokenInput: FC<{
   proportion,
   depositAmount,
   jarAddr,
+  setUseEth,
 }) => {
   const { signer, address, blockNum } = Connection.useContainer();
+  const ethOptions = ["MATIC", "WMATIC"];
+  const [inputToken, setInputToken] = useState(ethOptions[0]);
+  const [ethBalance, setEthBalance] = useState(BigNumber.from(0));
   const [userApproved, setUserApproved] = useState(false);
+
+  // In the future, make this an array to check for the native gas token on diff chains
+  const isEth =
+    token?.address.toLowerCase() ===
+    "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270";
+  const ethSelected = isEth && inputToken === ethOptions[0];
   const { t } = useTranslation("common");
-  const balanceUsed = token?.walletBalance;
+  const balanceUsed = ethSelected ? ethBalance : token?.walletBalance;
+  
+  useEffect(() => {
+    const setBalance = async () => setEthBalance(await signer.getBalance());
+    setBalance();
+  }, [address, blockNum]);
 
   return (
     <>
@@ -50,7 +66,32 @@ export const TokenInput: FC<{
         </Link>
       </div>
       <Grid.Container gap={3}>
-        <Grid md={24}>
+        {isEth && (
+          <Grid md={8}>
+            <Select
+              size="medium"
+              width="100%"
+              value={inputToken}
+              onChange={(e) => {
+                setInputToken(e.toString());
+                setUseEth(ethSelected);
+              }}
+            >
+              {ethOptions.map((token) => (
+                <Select.Option
+                  style={{ fontSize: "1rem" }}
+                  value={token}
+                  key={token}
+                >
+                  <div style={{ display: `flex`, alignItems: `center` }}>
+                    {token}
+                  </div>
+                </Select.Option>
+              ))}
+            </Select>
+          </Grid>
+        )}
+        <Grid md={isEth ? 16 : 24}>
           <Input
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
@@ -62,7 +103,11 @@ export const TokenInput: FC<{
                 depositTokenAddr={token.address}
                 jarAddr={jarAddr}
                 signer={signer}
-                approved={token.approved || userApproved}
+                approved={
+                  (isEth && inputToken === ethOptions[0]) ||
+                  token.approved ||
+                  userApproved
+                }
                 setUserApproved={setUserApproved}
               />
             }

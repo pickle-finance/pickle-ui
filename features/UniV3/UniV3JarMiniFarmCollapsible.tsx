@@ -76,6 +76,18 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x45dDa9cb7c25131DF268515131f647d726f50608": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/usdc.png"} />
   ),
+  "0x167384319B41F7094e62f7506409Eb38079AbfF8": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/maticweth.png"} />
+  ),
+  "0x88f3C15523544835fF6c738DDb30995339AD57d6": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/maticusdc.png"} />
+  ),
+  "0x3F5228d0e7D75467366be7De2c31D0d098bA2C23": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x50eaEDB835021E4A108B7290636d62E9765cc6d7": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
 };
 
 function sleep(ms: number) {
@@ -190,6 +202,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     null,
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
+  const [useEth, setUseEth] = useState<boolean>(true);
 
   const depositAndStake = async () => {
     if (minichef && address) {
@@ -202,9 +215,12 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             return jarContract
               .connect(signer)
               .deposit(
-                convertDecimals(deposit0Amount, token0.decimals),
-                convertDecimals(deposit1Amount, token1.decimals),
-                { gasLimit: 850000 },
+                convertDecimals(
+                  useEth ? "0" : deposit0Amount,
+                  token0?.decimals,
+                ),
+                convertDecimals(deposit1Amount, token1?.decimals),
+                { value: parseEther(deposit1Amount) },
               );
           },
           approval: false,
@@ -219,7 +235,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
           );
           await tx.wait();
         }
-        console.log(res);
         setDepositStakeButton(t("farms.staking"));
         const newBalance = getStakeableBalance(res);
         const farmTx = await minichef.deposit(poolIndex, newBalance, address);
@@ -426,6 +441,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             proportion={proportion!}
             depositAmount={deposit0Amount}
             jarAddr={jarContract.address}
+            setUseEth={setUseEth}
           />
           <TokenInput
             token={token1}
@@ -435,6 +451,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             proportion={proportion!}
             depositAmount={deposit1Amount}
             jarAddr={jarContract.address}
+            setUseEth={setUseEth}
           />
           <Grid.Container gap={1}>
             <Grid xs={24} md={12}>
@@ -449,9 +466,12 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                         return jarContract
                           .connect(signer)
                           .deposit(
-                            convertDecimals(deposit0Amount, token0.decimals),
-                            convertDecimals(deposit1Amount, token1.decimals),
-                            { gasLimit: 850000 },
+                            convertDecimals(
+                              useEth ? "0" : deposit0Amount,
+                              token0?.decimals,
+                            ),
+                            convertDecimals(deposit1Amount, token1?.decimals),
+                            { value: parseEther(deposit1Amount) },
                           );
                       },
                       approval: false,
