@@ -233,10 +233,8 @@ export const useMigrate = (
 
   const withdrawLOOKS = async () => {
     if (!signer || !address || !looksStaking) return;
-    const userInfo = await looksStaking.userInfo(address);
-    const userBalance = userInfo?.shares;
 
-    const tx = await looksStaking.withdraw(userBalance, true);
+    const tx = await looksStaking.withdrawAll(true, { gasLimit: 200000 });
     await tx.wait();
   };
 
