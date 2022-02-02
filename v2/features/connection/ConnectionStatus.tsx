@@ -149,12 +149,14 @@ const ConnectionStatus: FC = () => {
   let { error, chainId } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
+  if (!chainId) 
+    return null;
   if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
     return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {
     // App will function with all known chains
     // supportedChains contains all chains Pickle supports
-    // we want error if Chain is not in supportedChains
+    // we want error if chainId is not in supportedChains
     error = new UnsupportedChainIdError(
       chainId ? chainId : -1,
       supportedChains,
