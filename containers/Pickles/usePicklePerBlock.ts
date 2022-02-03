@@ -12,7 +12,7 @@ export const usePicklePerBlock = (): { picklePerBlock: number | null } => {
 
   const getData = async () => {
     if (masterchef?.address != NULL_ADDRESS && blockNum) {
-      const picklePerBlock = await masterchef?.picklePerBlock();
+      const picklePerBlock = BigNumber.from(1);
 
       setPicklePerBlock(
         parseFloat(
