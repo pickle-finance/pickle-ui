@@ -75,10 +75,9 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         }
 
         const farmBalance = farmBalances[idx];
-
-        const numTokensInPool = parseFloat(
-          ethers.utils.formatEther(farmBalance),
-        );
+        
+        const numTokensInPool = farmBalance ? 
+          parseFloat(ethers.utils.formatEther(farmBalance)) : 0;
 
         const valueStakedInFarm =
           (farmingJar.usdPerPToken || 0) * numTokensInPool;
