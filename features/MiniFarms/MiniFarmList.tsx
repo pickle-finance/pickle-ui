@@ -16,7 +16,7 @@ import { getJarFarmMap } from "containers/Farms/farms";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 import { noFarms } from "util/constants";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { AssetAprComponent, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { UserJarData } from "containers/UserJars";
 
 const Container = styled.div`
@@ -144,9 +144,17 @@ export const MiniFarmList: FC = () => {
         }
         const jardef: JarDefinition|undefined = findJarDefinition(pickleCore, farmingJar.apiKey);
         if( jardef !== undefined ) {
+          let farmApyToUse = farm.apy*100;
           nonCompoundedYields = nonCompoundedYields.concat(getJarAprPfcore(jardef));
           if( jardef.aprStats !== undefined ) {
-            totalAPY = jardef.aprStats.apy + (farm.apy*100);
+            const farmApyComponents = jardef.farm?.details?.farmApyComponents;
+            if( farmApyComponents !== undefined ) {
+              const farmApy: AssetAprComponent | undefined = farmApyComponents.find((x)=>x.name.toLowerCase() === 'pickle');
+              if( farmApy !== undefined ) {
+                farmApyToUse = farmApy.apr;
+              }
+            }
+            totalAPY = jardef.aprStats.apy + farmApyToUse;
             magicCompounding = jardef.aprStats.apy - jardef.aprStats.apr;
           }
         }
