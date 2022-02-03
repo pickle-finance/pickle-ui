@@ -202,7 +202,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     null,
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
-  const [useEth, setUseEth] = useState<boolean>(true);
+  const [useEth, setUseEth] = useState<boolean>(false);
 
   const depositAndStake = async () => {
     if (minichef && address) {
@@ -220,7 +220,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                   token0?.decimals,
                 ),
                 convertDecimals(deposit1Amount, token1?.decimals),
-                { value: parseEther(deposit1Amount) },
+                { value: parseEther(deposit1Amount), gasLimit: 850000 },
               );
           },
           approval: false,
@@ -471,7 +471,10 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                               token0?.decimals,
                             ),
                             convertDecimals(deposit1Amount, token1?.decimals),
-                            { value: parseEther(deposit1Amount) },
+                            {
+                              value: parseEther(deposit1Amount),
+                              gasLimit: 850000,
+                            },
                           );
                       },
                       approval: false,
