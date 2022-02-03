@@ -248,7 +248,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   };
 
   const defaultDeposit = () => {
-    console.log("default Deposit");
     return jarContract
       .connect(signer)
       .deposit(
