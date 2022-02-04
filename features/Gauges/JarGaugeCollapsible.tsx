@@ -594,7 +594,7 @@ export const JarGaugeCollapsible: FC<{
         setExitButton(t("farms.withdrawingFromJar"));
         const withdrawTx = await jarContract
           .connect(signer)
-          .withdrawAll({ gasLimit: 350000 });
+          .withdrawAll();
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);
@@ -1005,9 +1005,7 @@ export const JarGaugeCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(convertDecimals(withdrawAmount), {
-                          gasLimit: 350000,
-                        });
+                        .withdraw(convertDecimals(withdrawAmount));
                     },
                     approval: false,
                   });
