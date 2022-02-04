@@ -57,7 +57,10 @@ function useFarms() {
         x.lpToken != "0x45F7fa97BD0e0C212A844BAea35876C7560F465B",
     )
     .map((farm) => {
-      const { tokenName, poolName } = createIFarmInfo(pickleCore)[farm.lpToken];
+      const farmInfo = createIFarmInfo(pickleCore)[farm.lpToken];
+      const tokenName = farmInfo?.tokenName || ""
+      const poolName = farmInfo?.poolName || ""
+
       return {
         ...farm,
         tokenName,
