@@ -592,7 +592,9 @@ export const JarGaugeCollapsible: FC<{
         const exitTx = await gauge.exit();
         await exitTx.wait();
         setExitButton(t("farms.withdrawingFromJar"));
-        const withdrawTx = await jarContract.connect(signer).withdrawAll();
+        const withdrawTx = await jarContract
+          .connect(signer)
+          .withdrawAll({ gasLimit: 350000 });
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);
@@ -1003,7 +1005,9 @@ export const JarGaugeCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(convertDecimals(withdrawAmount));
+                        .withdraw(convertDecimals(withdrawAmount), {
+                          gasLimit: 350000,
+                        });
                     },
                     approval: false,
                   });
