@@ -22,19 +22,20 @@ interface Props {
 }
 
 const ConnectButton: FC<{ network: Network | undefined }> = ({ network }) => {
+  const { t } = useTranslation("common");
   const { library } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
 
   if (!network || !allCore || !library) return null;
   return (
     <Button onClick={() => switchChain(library, network.chainId, allCore)}>
-      <span>Connect to</span>
+      <span>{t("connection.connectTo")}</span>
       <div className="w-4 h-4 mr-1 ml-1">
         <Image
           src={`/networks/${network.name}.png`}
-          width={200}
-          height={200}
-          layout="responsive"
+          width={16}
+          height={16}
+          layout="intrinsic"
           alt={network.name}
           title={network.name}
           className="rounded-full"
