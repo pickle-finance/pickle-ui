@@ -1,5 +1,8 @@
 import { FC } from "react";
+import Image from "next/image";
 import { useTranslation } from "next-i18next";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 import Link from "v2/components/Link";
@@ -10,10 +13,39 @@ import { CoreSelectors } from "v2/store/core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices } from "./FarmsTableRowHeader";
+import { ChainNetwork } from "picklefinance-core";
+import { Network } from "../connection/networks";
+import { switchChain } from "../connection/ConnectionStatus";
 
 interface Props {
   jar: JarDefinition;
 }
+
+const ConnectButton: FC<{ network: Network | undefined }> = ({ network }) => {
+  const { t } = useTranslation("common");
+  const { library } = useWeb3React<Web3Provider>();
+  const allCore = useSelector(CoreSelectors.selectCore);
+
+  if (!network || !allCore || !library) return null;
+  return (
+    <Button onClick={() => switchChain(library, network.chainId, allCore)}>
+      <span>{t("connection.connectTo")}</span>
+      <div className="w-4 h-4 mr-1 ml-1">
+        <Image
+          src={`/networks/${network.name}.png`}
+          width={16}
+          height={16}
+          layout="intrinsic"
+          alt={network.name}
+          title={network.name}
+          className="rounded-full"
+          priority
+        />
+      </div>
+      <span>{network.visibleName}</span>
+    </Button>
+  );
+};
 
 const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
@@ -26,6 +58,14 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const picklesPending = data.earnedPickles.tokensVisible;
   const depositTokenCountString = tokensInWallet + " Tokens";
 
+  const networks = useSelector(CoreSelectors.selectNetworks);
+  const { chainId } = useWeb3React();
+
+  const activeNetwork = networks?.find(
+    (network) => network.chainId === chainId,
+  );
+  const isJarOnActiveNetwork = jar.chain === activeNetwork?.name;
+  const jarNetwork = networks?.find((network) => network.name === jar.chain);
   return (
     <td
       colSpan={6}
@@ -57,7 +97,11 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             <span className="font-title text-green font-medium text-base leading-5">
               {jarTokens}
             </span>
-            <Button>{t("v2.farms.enable")}</Button>
+            {isJarOnActiveNetwork ? (
+              <Button>{t("v2.farms.enable")}</Button>
+            ) : (
+              <ConnectButton network={jarNetwork} />
+            )}
           </div>
         </div>
         <div className="grow border border-gray-dark rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
