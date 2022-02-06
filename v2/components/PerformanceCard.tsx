@@ -25,13 +25,9 @@ export const getTotalBalances = (
   let runningUsd = 0;
   for (let i = 0; i < userdata.tokens.length; i++) {
     const key = userdata.tokens[i].assetKey;
-    const jar = core.assets.jars.find((x) => x.details.apiKey === key);
+    const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
     if (jar) {
-      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(
-        jar,
-        core,
-        userdata,
-      );
+      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
       if (data) {
         runningUsd += data.depositTokensInJar.tokensUSD || 0;
         runningUsd += data.depositTokensInFarm.tokensUSD || 0;
@@ -52,8 +48,7 @@ export const getPendingRewardsUsd = (
   }
   if (userdata.dill && userdata.dill.claimable) {
     const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
-    const dillRewardUsd =
-      wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
+    const dillRewardUsd = wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
     runningUsd += dillRewardUsd;
   }
   return formatUsd(runningUsd);
@@ -66,7 +61,7 @@ export const getPendingHarvestsUsd = (
   let runningUsd = 0;
   for (let i = 0; i < userdata.tokens.length; i++) {
     const key = userdata.tokens[i].assetKey;
-    const jar = core.assets.jars.find((x) => x.details.apiKey === key);
+    const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
     const totalPTokens = jar?.details.tokenBalance;
     if (totalPTokens) {
       const userShare =
@@ -90,13 +85,9 @@ export const getUserAssetDataWithPricesForJars = (
   const ret: UserAssetDataWithPrices[] = [];
   for (let i = 0; i < userdata.tokens.length; i++) {
     const key = userdata.tokens[i].assetKey;
-    const jar = core.assets.jars.find((x) => x.details.apiKey === key);
+    const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
     if (jar) {
-      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(
-        jar,
-        core,
-        userdata,
-      );
+      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
       if (data) {
         ret.push(data);
       }
@@ -105,23 +96,18 @@ export const getUserAssetDataWithPricesForJars = (
   return ret;
 };
 
-export const getAllPickleAssets = (
-  core: PickleModelJson.PickleModelJson,
-): PickleAsset[] => {
-  const ret: PickleAsset[] = [];
-  return ret
-    .concat(core.assets.jars)
-    .concat(core.assets.standaloneFarms)
-    .concat(core.assets.external);
-};
+export const getAllPickleAssets = (core: PickleModelJson.PickleModelJson): PickleAsset[] => [
+  ...core.assets.jars,
+  ...core.assets.standaloneFarms,
+  ...core.assets.external,
+];
+
 export const userVisibleStringForPickleAsset = (
   apiKey: string,
   core: PickleModelJson.PickleModelJson,
 ): string | undefined => {
   const allAssets: PickleAsset[] = getAllPickleAssets(core);
-  const asset: PickleAsset | undefined = allAssets.find(
-    (x) => x.details.apiKey === apiKey,
-  );
+  const asset: PickleAsset | undefined = allAssets.find((x) => x.details?.apiKey === apiKey);
   return asset ? asset.depositToken.name : undefined;
 };
 
@@ -144,8 +130,7 @@ export const getRewardRowPropertiesForRewards = (
     },
   };
   for (let i = 0; i < jarData.length; i++) {
-    const descriptor =
-      userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
+    const descriptor = userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
     const earnedPickles = parseFloat(jarData[i].earnedPickles.tokens);
     if (earnedPickles > 0) {
       ret.push({
@@ -175,16 +160,11 @@ const PerformanceCard: FC = () => {
   const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
 
   const allCore = useSelector(CoreSelectors.selectCore);
-  const userTotalBalance =
-    allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
-  const unclaimedRewards =
-    allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
-  const pendingHarvest =
-    allCore && userModel ? getPendingHarvestsUsd(allCore, userModel) : 0;
+  const userTotalBalance = allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
+  const unclaimedRewards = allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
+  const pendingHarvest = allCore && userModel ? getPendingHarvestsUsd(allCore, userModel) : 0;
   const rewardRowProps: RewardRowProps[] =
-    allCore && userModel
-      ? getRewardRowPropertiesForRewards(allCore, userModel)
-      : [];
+    allCore && userModel ? getRewardRowPropertiesForRewards(allCore, userModel) : [];
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
@@ -200,12 +180,8 @@ const PerformanceCard: FC = () => {
               <CashIcon className="text-foreground-button" />
             </div>
             <div>
-              <p className="font-title font-medium text-2xl leading-7 mb-1">
-                {userTotalBalance}
-              </p>
-              <p className="text-foreground-alt-200 text-sm">
-                {t("v2.balances.balance")}
-              </p>
+              <p className="font-title font-medium text-2xl leading-7 mb-1">{userTotalBalance}</p>
+              <p className="text-foreground-alt-200 text-sm">{t("v2.balances.balance")}</p>
             </div>
           </div>
           <div className="flex mb-6 xl:mb-0">
@@ -220,9 +196,7 @@ const PerformanceCard: FC = () => {
               />
             </div>
             <div>
-              <p className="font-title font-medium text-2xl leading-7 mb-1">
-                {unclaimedRewards}
-              </p>
+              <p className="font-title font-medium text-2xl leading-7 mb-1">{unclaimedRewards}</p>
               <p className="text-foreground-alt-200 text-sm">
                 {t("v2.dashboard.unclaimedRewards")}
               </p>
@@ -233,12 +207,8 @@ const PerformanceCard: FC = () => {
               <ClockIcon className="text-foreground-button" />
             </div>
             <div>
-              <p className="font-title font-medium text-2xl leading-7 mb-1">
-                {pendingHarvest}
-              </p>
-              <p className="text-foreground-alt-200 text-sm">
-                {t("v2.dashboard.pendingHarvests")}
-              </p>
+              <p className="font-title font-medium text-2xl leading-7 mb-1">{pendingHarvest}</p>
+              <p className="text-foreground-alt-200 text-sm">{t("v2.dashboard.pendingHarvests")}</p>
             </div>
           </div>
         </div>
@@ -247,11 +217,7 @@ const PerformanceCard: FC = () => {
         <Button onClick={openModal} size="normal">
           {t("v2.dashboard.harvestRewards")}
         </Button>
-        <HarvestModal
-          isOpen={isOpen}
-          closeModal={closeModal}
-          harvestables={rewardRowProps}
-        />
+        <HarvestModal isOpen={isOpen} closeModal={closeModal} harvestables={rewardRowProps} />
       </div>
     </div>
   );

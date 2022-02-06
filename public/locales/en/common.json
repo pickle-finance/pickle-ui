@@ -372,6 +372,7 @@
       "network": "Network",
       "noResults": "No results",
       "notMatchingAllFilters": "Showing farms matching at least one filter",
+      "pagination": "Page {{ current }} of {{ total }}",
       "protocol": "Protocol",
       "stakedToken": "{{ token }} staked",
       "token": "Token"
@@ -390,7 +391,9 @@
       "feedback": "Feedback",
       "jarsAndFarms": "Jars & Farms",
       "networkSettings": "Network settings",
+      "next": "Next",
       "openMenu": "Open main menu",
+      "previous": "Prev",
       "stats": "Stats",
       "tokenAddress": "Token address"
     },
