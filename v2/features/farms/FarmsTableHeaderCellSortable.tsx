@@ -17,14 +17,18 @@ interface Props {
 
 const flip = (value: SortDirection): SortDirection => {
   if (value === "desc") return "asc";
+
   return "desc";
 };
 
 const FarmsTableHeaderCellSortable: FC<Props> = ({ sortType, label }) => {
-  const sortable = sortType != SortType.None;
+  const sortable = sortType !== SortType.None;
   const sort = useSelector(ControlsSelectors.selectSort);
   const dispatch = useAppDispatch();
+
   const handleClick = () => {
+    if (!sortable) return;
+
     let newDirection: SortDirection = sort.direction;
 
     /**
@@ -52,8 +56,8 @@ const FarmsTableHeaderCellSortable: FC<Props> = ({ sortType, label }) => {
     <th
       scope="col"
       className={classNames(
-        "px-4 py-1 text-left text-xs font-bold text-gray-light tracking-normal sm:px-6",
-        sortType !== SortType.None &&
+        "px-4 py-1 h-8 text-left text-xs font-bold text-gray-light tracking-normal sm:px-6",
+        sortable &&
           "cursor-pointer transition duration-300 ease-in-out hover:bg-black-light rounded-t-xl",
       )}
       onClick={handleClick}
