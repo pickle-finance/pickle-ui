@@ -18,6 +18,7 @@ import { UserSelectors } from "v2/store/user";
 import { CoreSelectors } from "v2/store/core";
 import FarmComponentsIcons from "./FarmComponentsIcons";
 import { Network } from "../connection/networks";
+import { JarWithData } from "./FarmsTableBody";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -61,7 +62,7 @@ const chainProtocol = (
 interface Props {
   simple?: boolean;
   open: boolean;
-  jar: JarDefinition;
+  jar: JarWithData;
 }
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -191,16 +192,13 @@ const formatImagePath = (
 };
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
-  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
-  const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
-  const data = getUserAssetDataWithPrices(jar, allCore, userModel);
   const totalTokensInJarAndFarm =
-    data.depositTokensInJar.tokens + data.depositTokensInFarm.tokens;
+    jar.depositTokensInJar.tokens + jar.depositTokensInFarm.tokens;
   const depositTokenUSD =
-    data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
-  const pendingPicklesAsDollars = data.earnedPickles.tokensUSD;
-  const picklesPending = data.earnedPickles.tokensVisible;
+  jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
+  const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
+  const picklesPending = jar.earnedPickles.tokensVisible;
   const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
   const aprRangeString = jar.aprStats?.apy.toFixed(3) + "%";
 
