@@ -2,23 +2,15 @@ import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { BigNumber } from "@ethersproject/bignumber";
-import {
-  JarDefinition,
-  PickleModelJson,
-} from "picklefinance-core/lib/model/PickleModelJson";
-import {
-  UserData,
-  UserTokenData,
-} from "picklefinance-core/lib/client/UserModel";
+import { JarDefinition, PickleModelJson } from "picklefinance-core/lib/model/PickleModelJson";
+import { UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
-import { UserSelectors } from "v2/store/user";
-import { CoreSelectors } from "v2/store/core";
+import { CoreSelectors, JarWithData } from "v2/store/core";
 import FarmComponentsIcons from "./FarmComponentsIcons";
 import { Network } from "../connection/networks";
-import { JarWithData } from "./FarmsTableBody";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -30,10 +22,7 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
     {children}
   </td>
 );
-const chainProtocol = (
-  jar: JarDefinition,
-  networks: Network[] | undefined,
-): JSX.Element => {
+const chainProtocol = (jar: JarDefinition, networks: Network[] | undefined): JSX.Element => {
   return (
     <div>
       <p className="font-title font-medium text-base leading-5 group-hover:text-primary-light transition duration-300 ease-in-out">
@@ -51,9 +40,7 @@ const chainProtocol = (
             title={jar.chain}
           />
         </div>
-        <p className="italic font-normal text-xs text-foreground-alt-200">
-          {jar.protocol}
-        </p>
+        <p className="italic font-normal text-xs text-foreground-alt-200">{jar.protocol}</p>
       </div>
     </div>
   );
@@ -98,22 +85,12 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei
-    .mul(tokenPriceWithPrecision)
-    .div(precisionAsNumber);
+  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
 
   return {
     wei: depositTokenWei,
-    tokens: bigNumberToTokenNumber(
-      depositTokenWei,
-      decimals,
-      decimals,
-    ).toString(),
-    tokensVisible: bigNumberToTokenNumber(
-      depositTokenWei,
-      decimals,
-      3,
-    ).toString(),
+    tokens: bigNumberToTokenNumber(depositTokenWei, decimals, decimals).toString(),
+    tokensVisible: bigNumberToTokenNumber(depositTokenWei, decimals, 3).toString(),
     tokensUSD: bigNumberToTokenNumber(weiMulPrice, decimals, 3),
   };
 };
@@ -179,10 +156,7 @@ export const getUserAssetDataWithPrices = (
   };
 };
 
-const formatImagePath = (
-  chain: string,
-  networks: Network[] | undefined,
-): string => {
+const formatImagePath = (chain: string, networks: Network[] | undefined): string => {
   const thisNetwork = networks?.find((network) => network.name === chain);
   if (thisNetwork) {
     return `/networks/${thisNetwork.name}.png`;
@@ -193,10 +167,8 @@ const formatImagePath = (
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
-  const totalTokensInJarAndFarm =
-    jar.depositTokensInJar.tokens + jar.depositTokensInFarm.tokens;
-  const depositTokenUSD =
-    jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
+  const totalTokensInJarAndFarm = jar.depositTokensInJar.tokens + jar.depositTokensInFarm.tokens;
+  const depositTokenUSD = jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
   const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
   const picklesPending = jar.earnedPickles.tokensVisible;
   const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
@@ -204,12 +176,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
 
   return (
     <>
-      <RowCell
-        className={classNames(
-          !open && "rounded-bl-xl",
-          "rounded-tl-xl flex items-center",
-        )}
-      >
+      <RowCell className={classNames(!open && "rounded-bl-xl", "rounded-tl-xl flex items-center")}>
         <FarmComponentsIcons jar={jar} />
         {chainProtocol(jar, networks)}
       </RowCell>
@@ -217,9 +184,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         <p className="font-title font-medium text-base leading-5">
           {formatDollars(pendingPicklesAsDollars)}
         </p>
-        <p className="font-normal text-xs text-foreground-alt-200">
-          {picklesPending} PICKLEs
-        </p>
+        <p className="font-normal text-xs text-foreground-alt-200">{picklesPending} PICKLEs</p>
       </RowCell>
       <RowCell>
         <div className="flex items-center">
@@ -228,16 +193,12 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             <p className="font-title font-medium text-base leading-5">
               {formatDollars(depositTokenUSD)}
             </p>
-            <p className="font-normal text-xs text-foreground-alt-200">
-              {depositTokenCountString}
-            </p>
+            <p className="font-normal text-xs text-foreground-alt-200">{depositTokenCountString}</p>
           </div>
         </div>
       </RowCell>
       <RowCell>
-        <p className="font-title font-medium text-base leading-5">
-          {aprRangeString}
-        </p>
+        <p className="font-title font-medium text-base leading-5">{aprRangeString}</p>
       </RowCell>
       <RowCell className={classNames(simple && "rounded-r-xl")}>
         <p className="font-title font-medium text-base leading-5">
@@ -245,9 +206,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         </p>
       </RowCell>
       {!simple && (
-        <RowCell
-          className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}
-        >
+        <RowCell className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}>
           <div className="flex justify-end pr-3">
             <ChevronDownIcon
               className={classNames(

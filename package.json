@@ -19,9 +19,6 @@
     "tsc": "tsc",
     "typechain": "typechain --target ethers-v5 --outDir ./containers/Contracts ./containers/ABIs/**/*.json"
   },
-  "prettier": {
-    "trailingComma": "all"
-  },
   "dependencies": {
     "@davatar/react": "^1.8.1",
     "@ethersproject/abstract-provider": "^5.0.4",

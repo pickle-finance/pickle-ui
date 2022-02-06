@@ -31,15 +31,19 @@ export interface Filter {
   imageSrc: string;
 }
 
+export const itemsPerPage = 20;
+
 interface ControlsState {
   filters: Filter[];
   matchAllFilters: boolean;
   sort: Sort;
+  currentPage: number;
 }
 
 const initialState: ControlsState = {
   filters: [],
   matchAllFilters: false,
+  currentPage: 0,
   sort: {
     type: SortType.Earned,
     direction: "desc",
@@ -54,6 +58,7 @@ const controlsSlice = createSlice({
     // by react-select. We spread the array later so we can work with it.
     setFilters: (state, action: PayloadAction<readonly Filter[]>) => {
       state.filters = [...action.payload];
+      state.currentPage = 0;
     },
     setMatchAllFilters: (state, action: PayloadAction<boolean>) => {
       state.matchAllFilters = action.payload;
@@ -61,30 +66,34 @@ const controlsSlice = createSlice({
     setSort: (state, action: PayloadAction<Sort>) => {
       state.sort = action.payload;
     },
+    setCurrentPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
+    },
   },
 });
 
 /**
  * Actions
  */
-export const {
-  setFilters,
-  setMatchAllFilters,
-  setSort,
-} = controlsSlice.actions;
+export const { setFilters, setMatchAllFilters, setSort, setCurrentPage } = controlsSlice.actions;
 
 /**
  * Selectors
  */
 const selectFilters = (state: RootState) => state.controls.filters;
-const selectMatchAllFilters = (state: RootState) =>
-  state.controls.matchAllFilters;
+const selectMatchAllFilters = (state: RootState) => state.controls.matchAllFilters;
 const selectSort = (state: RootState) => state.controls.sort;
+const selectPaginateParams = (state: RootState) => ({
+  currentPage: state.controls.currentPage,
+  itemsPerPage,
+  offset: state.controls.currentPage * itemsPerPage,
+});
 
 export const ControlsSelectors = {
   selectFilters,
   selectMatchAllFilters,
   selectSort,
+  selectPaginateParams,
 };
 
 export default controlsSlice.reducer;
