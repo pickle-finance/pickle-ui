@@ -1,16 +1,9 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import FarmsTableBody from "./FarmsTableBody";
 import FarmControls from "./FarmControls";
-
-const FarmsTableHeaderCell: FC = ({ children }) => (
-  <th
-    scope="col"
-    className="px-4 py-1 text-left text-xs font-bold text-gray-light tracking-normal sm:px-6"
-  >
-    {children}
-  </th>
-);
+import FarmsTableHeaderCellSortable from "./FarmsTableHeaderCellSortable";
+import { SortType } from "v2/store/controls";
 
 interface Props {
   requiresUserModel?: boolean;
@@ -31,23 +24,31 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
             <table className="min-w-full table-auto border-collapse">
               <thead className="bg-black uppercase">
                 <tr>
-                  <FarmsTableHeaderCell>
-                    {t("v2.farms.asset")}
-                  </FarmsTableHeaderCell>
-                  <FarmsTableHeaderCell>
-                    {t("v2.farms.earned")}
-                  </FarmsTableHeaderCell>
-                  <FarmsTableHeaderCell>
-                    {t("v2.farms.deposited")}
-                  </FarmsTableHeaderCell>
-                  <FarmsTableHeaderCell>
-                    {t("v2.farms.apy")}
-                  </FarmsTableHeaderCell>
-                  <FarmsTableHeaderCell>
-                    {t("v2.farms.liquidity")}
-                  </FarmsTableHeaderCell>
+                  <FarmsTableHeaderCellSortable
+                    sortType={SortType.None}
+                    label={t("v2.farms.asset")}
+                  />
+
+                  <FarmsTableHeaderCellSortable
+                    sortType={SortType.Earned}
+                    label={t("v2.farms.earned")}
+                  />
+
+                  <FarmsTableHeaderCellSortable
+                    sortType={SortType.Deposited}
+                    label={t("v2.farms.deposited")}
+                  />
+
+                  <FarmsTableHeaderCellSortable
+                    sortType={SortType.Apy}
+                    label={t("v2.farms.apy")}
+                  />
+
+                  <FarmsTableHeaderCellSortable
+                    sortType={SortType.Liquidity}
+                    label={t("v2.farms.liquidity")}
+                  />
                   {/* Chevron down/up column */}
-                  {!simple && <FarmsTableHeaderCell />}
                 </tr>
               </thead>
               <tbody className="text-white">

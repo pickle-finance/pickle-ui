@@ -8,6 +8,21 @@ export enum FilterType {
   Network = "network",
 }
 
+export type Sort = {
+  type: SortType;
+  direction: SortDirection;
+};
+
+export type SortDirection = "asc" | "desc";
+
+export enum SortType {
+  Earned = "earned",
+  Deposited = "deposited",
+  Apy = "apy",
+  Liquidity = "liquidity",
+  None = "none",
+}
+
 export interface Filter {
   type: FilterType;
   value: string;
@@ -19,11 +34,16 @@ export interface Filter {
 interface ControlsState {
   filters: Filter[];
   matchAllFilters: boolean;
+  sort: Sort;
 }
 
 const initialState: ControlsState = {
   filters: [],
   matchAllFilters: false,
+  sort: {
+    type: SortType.Earned,
+    direction: "desc",
+  },
 };
 
 const controlsSlice = createSlice({
@@ -38,13 +58,20 @@ const controlsSlice = createSlice({
     setMatchAllFilters: (state, action: PayloadAction<boolean>) => {
       state.matchAllFilters = action.payload;
     },
+    setSort: (state, action: PayloadAction<Sort>) => {
+      state.sort = action.payload;
+    },
   },
 });
 
 /**
  * Actions
  */
-export const { setFilters, setMatchAllFilters } = controlsSlice.actions;
+export const {
+  setFilters,
+  setMatchAllFilters,
+  setSort,
+} = controlsSlice.actions;
 
 /**
  * Selectors
@@ -52,10 +79,12 @@ export const { setFilters, setMatchAllFilters } = controlsSlice.actions;
 const selectFilters = (state: RootState) => state.controls.filters;
 const selectMatchAllFilters = (state: RootState) =>
   state.controls.matchAllFilters;
+const selectSort = (state: RootState) => state.controls.sort;
 
 export const ControlsSelectors = {
   selectFilters,
   selectMatchAllFilters,
+  selectSort,
 };
 
 export default controlsSlice.reducer;

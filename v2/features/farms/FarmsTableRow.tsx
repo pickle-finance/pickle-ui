@@ -1,15 +1,15 @@
 import { FC, Fragment } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { classNames } from "v2/utils";
 import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
+import { JarWithData } from "./FarmsTableBody";
 
 interface Props {
   simple?: boolean;
-  jar: JarDefinition;
+  jar: JarWithData;
 }
 
 const FarmsTableRow: FC<Props> = ({ jar, simple }) => {
