@@ -82,13 +82,13 @@ export function useInactiveListener(suppress = false) {
   }, [active, error, suppress, activate]);
 }
 
-export const useENS = (address: string, provider: any) => {
+export const useENS = (address: string, provider: any, chainId: number | undefined) => {
   // const { provider } = Connection.useContainer();
   const [ensName, setENSName] = useState<string | null>(null);
 
   useEffect(() => {
     const resolveENS = async () => {
-      if (ethers.utils.isAddress(address)) {
+      if (ethers.utils.isAddress(address) && chainId === 1) {
         let ensName = await provider.lookupAddress(address);
         if (ensName) setENSName(ensName);
       }

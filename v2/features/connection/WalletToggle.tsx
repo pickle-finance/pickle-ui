@@ -52,7 +52,6 @@ const WalletToggleOptions: FC = () => {
 
 const WalletToggle: FC = () => {
   const { account, library, chainId } = useWeb3React<Web3Provider>();
-  console.log(account, library, chainId)
   if (!account) return <ConnectWalletButton />;
 
   return (
@@ -61,7 +60,7 @@ const WalletToggle: FC = () => {
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-white font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <span className="block mr-2">
-              {(chainId === 1 && useENS(account, library)) || shortenAddress(account)}
+              {useENS(account, library, chainId) || shortenAddress(account)}
             </span>
             <Davatar
               size={32}
