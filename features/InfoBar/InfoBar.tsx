@@ -81,11 +81,6 @@ export const InfoBar: FC = () => {
               {t("nav.jars")}
             </NavItem>
           </Link>
-          <Link href="/info/stats" passHref>
-            <NavItem active={router.pathname.startsWith("/info/stats")}>
-              {t("nav.stats")}
-            </NavItem>
-          </Link>
         </Content>
       </MaxWidthWrapper>
     </div>
