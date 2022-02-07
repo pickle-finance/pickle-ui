@@ -82,8 +82,11 @@ export function useInactiveListener(suppress = false) {
   }, [active, error, suppress, activate]);
 }
 
-export const useENS = (address: string, provider: any, chainId: number | undefined) => {
-  // const { provider } = Connection.useContainer();
+export const useENS = (
+  address: any,
+  provider: any,
+  chainId: number | undefined,
+) => {
   const [ensName, setENSName] = useState<string | null>(null);
 
   useEffect(() => {
