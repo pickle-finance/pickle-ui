@@ -57,6 +57,7 @@
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
     "apy": "DILL holder APY",
+    "currentAPY": "Current APY",
     "averageLockDuration": "The average lock duration is currently <1>{{ years }}</1> years (based on {{ dill }} DILL and {{ pickle }} PICKLEs locked).",
     "boostCalculator": "PICKLE Boost Calculator",
     "boostFactor": "PICKLE boost factor",
@@ -75,6 +76,7 @@
     "extendLockTime": "Extend Lock Time",
     "historic": "Historic distributions of PICKLE",
     "increaseLockAmount": "Increase Lock Amount",
+    "increaseLockDate": "Increase Lock Date",
     "lastDistribution": "Last week's distribution",
     "lockedUntil": "Locked (until {{ date }})",
     "lockExpiration": "Lock will expire in",
@@ -100,9 +102,21 @@
     "weeklyDillAmount": "Weekly DILL 🔒",
     "weeklyPickleAmount": "Weekly PICKLEs distributed",
     "weeklyRevenue": "Weekly protocol revenue",
+    "weeklyReward": "Weekly reward",
     "yourDill": "Your DILL",
     "yourShare": "{{ percentage }} of total DILL",
-    "youWillReceive": "You will receive"
+    "youWillReceive": "You will receive",
+    "revenueShareStats": "Revenue share stats",
+    "buttonConfirm": "Confirm",
+    "buttonEnable": "Enable",
+    "buttonHarvest": "Harvest",
+    "dillAmount": "DILL amount",
+    "unlockDate": "Unlock date",
+    "earnedPICKLEs": "Earned PICKLEs",
+    "days": "days",
+    "monthlyPickleAmount": "Monthly PICKLEs distributed",
+    "monthlyDillAmount": "Monthly DILL 🔒"
+
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",

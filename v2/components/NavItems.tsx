@@ -21,7 +21,7 @@ const NavItems: FC = () => {
       href: "/v2/farms",
       icon: LightningBoltIcon,
     },
-    { name: t("v2.nav.dill"), href: "#", icon: UserGroupIcon },
+    { name: t("v2.nav.dill"), href: "/v2/dill", icon: UserGroupIcon },
     { name: t("v2.nav.stats"), href: "#", icon: ChartBarIcon },
     { name: t("v2.nav.faq"), href: "#", icon: QuestionMarkCircleIcon },
     { name: t("v2.nav.feedback"), href: "#", icon: SpeakerphoneIcon },
