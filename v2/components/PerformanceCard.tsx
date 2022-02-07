@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { CashIcon } from "@heroicons/react/solid";
+import { CashIcon, ClockIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
 import HarvestModal, { RewardRowProps } from "./HarvestModal";
@@ -55,6 +55,30 @@ export const getPendingRewardsUsd = (
     const dillRewardUsd =
       wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
     runningUsd += dillRewardUsd;
+  }
+  return formatUsd(runningUsd);
+};
+
+export const getPendingHarvestsUsd = (
+  core: PickleModelJson.PickleModelJson,
+  userdata: UserData,
+): string => {
+  let runningUsd = 0;
+  for (let i = 0; i < userdata.tokens.length; i++) {
+    const key = userdata.tokens[i].assetKey;
+    const jar = core.assets.jars.find((x) => x.details.apiKey === key);
+    const totalPTokens = jar?.details.tokenBalance;
+    if (totalPTokens) {
+      const userShare =
+        (parseFloat(userdata.tokens[i].pAssetBalance) +
+          parseFloat(userdata.tokens[i].pStakedBalance)) /
+        (totalPTokens * 1e18);
+      const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+      if (pendingHarvest) {
+        const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+        runningUsd += userShareHarvestUsd;
+      }
+    }
   }
   return formatUsd(runningUsd);
 };
@@ -155,6 +179,8 @@ const PerformanceCard: FC = () => {
     allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
   const unclaimedRewards =
     allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
+  const pendingHarvest =
+    allCore && userModel ? getPendingHarvestsUsd(allCore, userModel) : 0;
   const rewardRowProps: RewardRowProps[] =
     allCore && userModel
       ? getRewardRowPropertiesForRewards(allCore, userModel)
@@ -182,7 +208,7 @@ const PerformanceCard: FC = () => {
               </p>
             </div>
           </div>
-          <div className="flex">
+          <div className="flex mr-20 mb-6 xl:mb-0">
             <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
               <Image
                 src="/pickle-icon.svg"
@@ -199,6 +225,19 @@ const PerformanceCard: FC = () => {
               </p>
               <p className="text-gray-light text-sm">
                 {t("v2.dashboard.unclaimedRewards")}
+              </p>
+            </div>
+          </div>
+          <div className="flex mr-20 mb-6 xl:mb-0">
+            <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
+              <ClockIcon />
+            </div>
+            <div>
+              <p className="font-title font-medium text-2xl leading-7 mb-1">
+                {pendingHarvest}
+              </p>
+              <p className="text-gray-light text-sm">
+                {t("v2.dashboard.pendingHarvests")}
               </p>
             </div>
           </div>
