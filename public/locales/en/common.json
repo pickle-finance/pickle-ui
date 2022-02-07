@@ -106,7 +106,6 @@
     "yourDill": "Your DILL",
     "yourShare": "{{ percentage }} of total DILL",
     "youWillReceive": "You will receive",
-    "revenueShareStats": "Revenue share stats",
     "buttonConfirm": "Confirm",
     "buttonEnable": "Enable",
     "buttonHarvest": "Harvest",
@@ -116,7 +115,6 @@
     "days": "days",
     "monthlyPickleAmount": "Monthly PICKLEs distributed",
     "monthlyDillAmount": "Monthly DILL 🔒"
-
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
@@ -334,6 +332,11 @@
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
+    },
+    "dill": {
+      "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
+      "readMore": "Read more",
+      "revenueShareStats": "Revenue share stats"
     },
     "farms": {
       "apy": "APY",
