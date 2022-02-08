@@ -9,7 +9,7 @@ import { RevenueStats } from "v2/features/dill/RevenueStats";
 import { CoreSelectors } from "v2/store/core";
 import { DillInfo } from "v2/features/dill/DillInfo";
 
-const Farms: PickleFinancePage = () => {
+const Dill: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
 
   return (
@@ -44,8 +44,8 @@ const PageTitle: FC = () => {
   );
 };
 
-Farms.PageTitle = PageTitle;
+Dill.PageTitle = PageTitle;
 
 export { getStaticProps } from "../../util/locales";
 
-export default Farms;
+export default Dill;
