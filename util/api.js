@@ -24,52 +24,6 @@ export const getAllJarsChart = async () => {
   return jarData;
 };
 
-const getJarChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/jar/${asset}?count=4400`,
-  ).then((response) => response.json());
-};
-
-export const getStakingData = async () => {
-  return await fetch(`${pickleApi}/protocol/reward`).then((response) =>
-    response.json(),
-  );
-};
-
-export const getStakingChart = async (assets) => {
-  const stakingData = assets.map(async (asset) => {
-    const assetKey = asset.toLowerCase();
-    return {
-      asset: asset,
-      data: await getStakingChartData(assetKey),
-    };
-  });
-  return await Promise.all(stakingData);
-};
-
-const getStakingChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/reward/${asset}?count=4400`,
-  ).then((response) => response.json());
-};
-
-export const getPerformanceChart = async (assets) => {
-  const performanceData = assets.map(async (asset) => {
-    const assetKey = asset.toLowerCase();
-    return {
-      asset: asset,
-      data: await getPerformanceChartData(assetKey.toLowerCase()),
-    };
-  });
-  return await Promise.all(performanceData);
-};
-
-const getPerformanceChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/jar/${asset}/performance`,
-  ).then((response) => response.json());
-};
-
 export const getPerformanceData = async (assets) => {
   const performanceData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
