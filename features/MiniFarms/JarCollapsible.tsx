@@ -157,7 +157,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/movrfinn.png"} />
   ),
   "0x7128c61da34c27ead5419b8eb50c71ce0b15cd50": (
-    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/usdcmovr.png"} />
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/usdcmovr.png"} />
   ),
 
   // Cronos
@@ -408,27 +408,27 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
 
   // FLARE FLARE/GLMR
   "0x26a2abd79583155ea5d34443b62399879d42748a": (
-    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/glmr.png"} />
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/glmr.png"} />
   ),
   // FLARE FLARE/USDC
   "0x976888647affb4b2d7ac1952cb12ca048cd67762": (
-    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/usdc.png"} />
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
   // FLARE GLMR/MOVR
   "0xa65949fa1053903fcc019ac21b0335aa4b4b1bfa": (
-    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/movr.png"} />
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/movr.png"} />
   ),
   // FLARE GLMR/USDC
   "0xab89ed43d10c7ce0f4d6f21616556aecb71b9c5f": (
-    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/usdc.png"} />
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
   // FLARE GLMR/ETH
   "0xb521c0acf67390c1364f1e940e44db25828e5ef9": (
-    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/eth.png"} />
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/eth.png"} />
   ),
   // FLARE GLMR/WBTC
   "0xdf74d67a4fe29d9d5e0bfaab3516c65b21a5d7cf": (
-    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/wbtc.png"} />
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/wbtc.png"} />
   ),
 
   //Optimism
