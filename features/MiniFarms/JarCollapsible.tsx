@@ -145,19 +145,19 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
   ),
   "0xf09211fb5ed5019b072774cfd7db0c9f4ccd5be0": (
-    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/ dotfinn.png"} />
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/dotfinn.png"} />
   ),
   "0x14be4d09c5a8237403b83a8a410bace16e8667dc": (
-    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/finnksm.png"} />
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/finnksm.png"} />
   ),
   "0xd9e98ad7ae9e5612b90cd0bdcd82df4fa5b943b8": (
-    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/finnrmrk.png"} />
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/finnrmrk.png"} />
   ),
   "0xbbe2f34367972cb37ae8dea849ae168834440685": (
-    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/movrfinn.png"} />
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/movrfinn.png"} />
   ),
   "0x7128c61da34c27ead5419b8eb50c71ce0b15cd50": (
-    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/usdcmovr.png"} />
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/usdcmovr.png"} />
   ),
 
   // Cronos
