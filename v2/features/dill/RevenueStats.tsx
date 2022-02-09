@@ -1,13 +1,12 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { classNames } from "v2/utils";
 
 interface Props {
   active?: boolean;
   dill?: any;
 }
 
-export const RevenueStats: FC<Props> = ({ active, dill }) => {
+const RevenueStats: FC<Props> = ({ dill }) => {
   const { t } = useTranslation("common");
   const items = [
     {
@@ -32,15 +31,10 @@ export const RevenueStats: FC<Props> = ({ active, dill }) => {
 
   return (
     <>
-      <h1 className="font-title font-medium text-xl sm:text-xl pt-10 pb-2 pl-1">
+      <h1 className="font-body font-bold text-xl mb-4">
         {t("v2.dill.revenueShareStats")}
       </h1>
-      <div
-        className={classNames(
-          active ? "bg-green" : "bg-gray-outline",
-          "rounded-xl py-5 px-5 flex justify-between align-center",
-        )}
-      >
+      <div className="flex justify-between align-center bg-black-light rounded-xl border border-gray-dark shadow px-6 py-7">
         {items?.map((item, i) => (
           <aside key={i}>
             <p>{item.value}</p>
@@ -51,3 +45,5 @@ export const RevenueStats: FC<Props> = ({ active, dill }) => {
     </>
   );
 };
+
+export default RevenueStats;

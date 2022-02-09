@@ -33,32 +33,30 @@ const DillInfo: FC<{}> = () => {
 
   return (
     <>
-      <section className="block sm:flex w-full sm:w-4/5">
-        <DillCard
-          title={t("v2.dill.dillAmount")}
-          data={userBalance ? userBalance : "--" || 0.0}
+      <DillCard
+        title={t("v2.dill.dillAmount")}
+        data={userBalance ? userBalance : "--" || 0.0}
+      >
+        <Button
+          type={parseFloat(userBalance || "0") ? "primary" : "disabled"}
+          onClick={() => setIsOpen(true)}
         >
-          <Button
-            type={parseFloat(userBalance || "0") ? "primary" : "disabled"}
-            onClick={() => setIsOpen(true)}
-          >
-            {t("v2.actions.enable")}
-          </Button>
-        </DillCard>
-        <DillCard
-          title={t("v2.dill.unlockDate")}
-          data={
-            <Trans i18nKey="v2.time.day" count={0}>
-              0 days
-            </Trans>
-          }
-        >
-          <Button onClick={() => setIsOpen2(true)}>+</Button>
-        </DillCard>
-        <DillCard title={t("v2.dill.earnedPickles")} data={0}>
-          <Button>{t("v2.actions.harvest")}</Button>
-        </DillCard>
-      </section>
+          {t("v2.actions.enable")}
+        </Button>
+      </DillCard>
+      <DillCard
+        title={t("v2.dill.unlockDate")}
+        data={
+          <Trans i18nKey="v2.time.day" count={0}>
+            0 days
+          </Trans>
+        }
+      >
+        <Button onClick={() => setIsOpen2(true)}>+</Button>
+      </DillCard>
+      <DillCard title={t("v2.dill.earnedPickles")} data={0}>
+        <Button>{t("v2.actions.harvest")}</Button>
+      </DillCard>
       <GetDillModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />
       <IncreaseLockDateModal
         isOpen={isOpen2}

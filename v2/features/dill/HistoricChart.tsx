@@ -21,9 +21,6 @@ import { DillWeek } from "picklefinance-core/lib/model/PickleModelJson";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { roundNumber } from "util/number";
 
-interface Props {
-  active?: boolean;
-}
 interface Entry {
   payload: MonthlyDistributionDataPoint;
 }
@@ -158,9 +155,9 @@ const Footnote: FC<FootnoteProps> = ({ series }) => {
   );
 };
 
-type ChartMode = "monthly" | "weekly" | "total";
+type ChartMode = "monthly" | "weekly";
 
-export const HistoricChart: FC<Props> = ({ active }) => {
+const HistoricChart: FC = () => {
   const { t } = useTranslation("common");
   const core = useSelector(CoreSelectors.selectCore);
   const [dataSeries, setDataSeries] = useState<MonthlyDistributionDataPoint[]>(
@@ -206,14 +203,8 @@ export const HistoricChart: FC<Props> = ({ active }) => {
   };
 
   return (
-    <div
-      className={classNames(
-        active ? "bg-green" : "bg-gray-outline",
-        "rounded-xl py-1 px-2 mt-10",
-      )}
-    >
+    <div className="bg-black-light rounded-xl border border-gray-dark shadow px-2 py-1">
       <h2 className="font-body font-bold text-xl pl-8 pt-8">
-        {" "}
         {t("dill.historic")}
       </h2>
       <aside className="h-[600px] px-3 py-10">
@@ -335,3 +326,5 @@ export const HistoricChart: FC<Props> = ({ active }) => {
     </div>
   );
 };
+
+export default HistoricChart;
