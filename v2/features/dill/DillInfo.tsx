@@ -7,9 +7,11 @@ import { PICKLE_TOKEN_ADDR, DILL } from "../../../containers/Contracts";
 import { ethers } from "picklefinance-core/node_modules/ethers";
 import erc20 from "@studydefi/money-legos/erc20";
 import { useTranslation } from "next-i18next";
-import Button from "v2/components/Button";
 
-export const DillInfo: FC<{}> = () => {
+import Button from "v2/components/Button";
+import DillCard from "./DillCard";
+
+const DillInfo: FC<{}> = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
@@ -31,7 +33,7 @@ export const DillInfo: FC<{}> = () => {
 
   return (
     <>
-      <section className="flex mt-10">
+      <section className="block sm:flex w-full sm:w-4/5">
         <DillCard
           title={t("dill.dillAmount")}
           data={userBalance ? userBalance : "--" || 0.0}
@@ -64,27 +66,4 @@ export const DillInfo: FC<{}> = () => {
   );
 };
 
-interface Props {
-  title: string;
-  data: string;
-}
-
-const DillCard: FC<React.PropsWithChildren<Props>> = ({
-  title,
-  data,
-  children,
-}) => {
-  return (
-    <aside className="box-border border-solid border-2 border-gray-dark w-64 h-24 overflow-visible rounded-lg flex flex-col justify-between p-3 mr-4">
-      <h1 className="w-auto h-auto overflow-visible whitespace-pre font-medium not-italic text-gray-400 text-base tracking-normal leading-5">
-        {title}
-      </h1>
-      <div className="flex justify-between items-end">
-        <p className="w-auto h-auto overflow-visible whitespace-pre font-medium not-italic text-green-500 text-base tracking-normal leading-5">
-          {data}
-        </p>
-        {children}
-      </div>
-    </aside>
-  );
-};
+export default DillInfo;
