@@ -1,8 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { TFunction, useTranslation } from "next-i18next";
-import { classNames } from "v2/utils";
 import dayjs from "util/dayjs";
-import { theme } from "tailwind.config";
 import {
   Bar,
   Cell,
@@ -16,10 +14,18 @@ import {
   YAxis,
 } from "recharts";
 import { useSelector } from "react-redux";
-import { CoreSelectors } from "v2/store/core";
 import { DillWeek } from "picklefinance-core/lib/model/PickleModelJson";
 import Skeleton from "@material-ui/lab/Skeleton";
+
+import { CoreSelectors } from "v2/store/core";
 import { roundNumber } from "util/number";
+import {
+  grayDark,
+  grayLighter,
+  greenDark,
+  greenLight,
+  orange,
+} from "v2/utils/theme";
 
 interface Entry {
   payload: MonthlyDistributionDataPoint;
@@ -231,7 +237,7 @@ const HistoricChart: FC = () => {
                   value={t("dill.tokenAmount") as string}
                   position="insideLeft"
                   angle={-90}
-                  fill={theme.extend.colors.gray.lighter}
+                  fill={grayLighter}
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
@@ -245,14 +251,14 @@ const HistoricChart: FC = () => {
                   value={t("dill.pickleDillRatio") as string}
                   position="insideRight"
                   angle={-90}
-                  fill={theme.extend.colors.gray.lighter}
+                  fill={grayLighter}
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: theme.extend.colors.gray.dark,
-                  borderColor: theme.extend.colors.black.lighter,
+                  backgroundColor: grayDark,
+                  borderColor: grayLighter,
                   borderRadius: "10px 10px 10px 10px",
                 }}
                 formatter={(value: number, name: string, entry: Entry) =>
@@ -272,12 +278,12 @@ const HistoricChart: FC = () => {
                     ? "monthlyPickleAmount"
                     : "totalPickleAmount"
                 }
-                fill={theme.extend.colors.gray.lighter}
+                fill={grayLighter}
                 radius={[10, 10, 0, 0]}
               >
                 {dataSeries.map((point, index) => (
                   <Cell
-                    fill={theme.extend.colors.green.dark}
+                    fill={greenDark}
                     opacity={point.isProjected ? 0.25 : 1}
                     key={`pickle-${index}`}
                   />
@@ -289,12 +295,12 @@ const HistoricChart: FC = () => {
                     ? "monthlyDillAmount"
                     : "totalDillAmount"
                 }
-                fill={theme.extend.colors.green.light}
+                fill={greenLight}
                 radius={[10, 10, 0, 0]}
               >
                 {dataSeries.map((point, index) => (
                   <Cell
-                    fill={theme.extend.colors.green.light}
+                    fill={greenLight}
                     opacity={point.isProjected ? 0.25 : 1}
                     key={`dill-${index}`}
                   />
@@ -303,7 +309,7 @@ const HistoricChart: FC = () => {
               <Line
                 type="linear"
                 dataKey="pickleDillRatio"
-                stroke="var(--link-color)"
+                stroke={orange}
                 yAxisId="right"
                 strokeWidth={2}
               />

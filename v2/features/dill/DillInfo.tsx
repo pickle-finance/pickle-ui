@@ -11,7 +11,7 @@ import { Trans, useTranslation } from "next-i18next";
 import Button from "v2/components/Button";
 import DillCard from "./DillCard";
 
-const DillInfo: FC<{}> = () => {
+const DillInfo: FC = () => {
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpen2, setIsOpen2] = useState<boolean>(false);

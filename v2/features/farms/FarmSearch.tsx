@@ -16,13 +16,13 @@ import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
 import { ControlsSelectors, Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
-import { theme } from "tailwind.config";
-
-const blackLight = theme.extend.colors.black.light;
-const blackLighter = theme.extend.colors.black.lighter;
-const orange = theme.extend.colors.orange.DEFAULT;
-const green = theme.extend.colors.green.DEFAULT;
-const grayOutlineLight = theme.extend.colors.gray["outline-light"];
+import {
+  blackLight,
+  blackLighter,
+  grayOutlineLight,
+  green,
+  orange,
+} from "v2/utils/theme";
 
 const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
