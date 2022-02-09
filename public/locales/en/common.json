@@ -107,12 +107,6 @@
     "yourShare": "{{ percentage }} of total DILL",
     "youWillReceive": "You will receive",
     "buttonConfirm": "Confirm",
-    "buttonEnable": "Enable",
-    "buttonHarvest": "Harvest",
-    "dillAmount": "DILL amount",
-    "unlockDate": "Unlock date",
-    "earnedPICKLEs": "Earned PICKLEs",
-    "days": "days",
     "monthlyPickleAmount": "Monthly PICKLEs distributed",
     "monthlyDillAmount": "Monthly DILL 🔒"
   },
@@ -306,6 +300,10 @@
     "zapping": "Zapping..."
   },
   "v2": {
+    "actions": {
+      "enable": "Enable",
+      "harvest": "Harvest"
+    },
     "balances": {
       "balance": "Balance",
       "fetching": "Fetching your balances",
@@ -335,8 +333,11 @@
     },
     "dill": {
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
+      "dillAmount": "DILL amount",
+      "earnedPickles": "Earned PICKLEs",
       "readMore": "Read more",
-      "revenueShareStats": "Revenue share stats"
+      "revenueShareStats": "Revenue share stats",
+      "unlockDate": "Unlock date"
     },
     "farms": {
       "apy": "APY",

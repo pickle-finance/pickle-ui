@@ -6,7 +6,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { PICKLE_TOKEN_ADDR, DILL } from "../../../containers/Contracts";
 import { ethers } from "picklefinance-core/node_modules/ethers";
 import erc20 from "@studydefi/money-legos/erc20";
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 
 import Button from "v2/components/Button";
 import DillCard from "./DillCard";
@@ -35,26 +35,28 @@ const DillInfo: FC<{}> = () => {
     <>
       <section className="block sm:flex w-full sm:w-4/5">
         <DillCard
-          title={t("dill.dillAmount")}
+          title={t("v2.dill.dillAmount")}
           data={userBalance ? userBalance : "--" || 0.0}
         >
-          {" "}
           <Button
             type={parseFloat(userBalance || "0") ? "primary" : "disabled"}
             onClick={() => setIsOpen(true)}
           >
-            {t("dill.buttonEnable")}
+            {t("v2.actions.enable")}
           </Button>
         </DillCard>
-        <DillCard title={t("dill.unlockDate")} data={`0 ${t("dill.days")}`}>
-          {" "}
-          <Button onClick={() => setIsOpen2(true)}>
-            <div> + </div>
-          </Button>
+        <DillCard
+          title={t("v2.dill.unlockDate")}
+          data={
+            <Trans i18nKey="v2.time.day" count={0}>
+              0 days
+            </Trans>
+          }
+        >
+          <Button onClick={() => setIsOpen2(true)}>+</Button>
         </DillCard>
-        <DillCard title={t("dill.earnedPICKLEs")} data={`0`}>
-          {" "}
-          <Button>{t("dill.buttonHarvest")}</Button>
+        <DillCard title={t("v2.dill.earnedPickles")} data={0}>
+          <Button>{t("v2.actions.harvest")}</Button>
         </DillCard>
       </section>
       <GetDillModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />

@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 
 interface Props {
   title: string;
-  data: string;
+  data: string | ReactNode;
 }
 
 const DillCard: FC<Props> = ({ title, data, children }) => (
