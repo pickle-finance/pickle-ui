@@ -121,7 +121,6 @@ export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   let { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
-  console.log(jarData);
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const [selectedProtocol, setSelectedProtocol] = useState<string | null>(null);
   const { t } = useTranslation("common");
