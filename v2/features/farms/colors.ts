@@ -1,8 +1,8 @@
 import chroma from "chroma-js";
 
-import { theme } from "tailwind.config";
+import { grayOutline } from "v2/utils/theme";
 
-const defaultColor = theme.extend.colors.gray.outline;
+const defaultColor = grayOutline;
 export const defaultBackgroundColor = chroma(defaultColor).alpha(0.7).css();
 
 /**
