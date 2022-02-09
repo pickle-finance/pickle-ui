@@ -7,7 +7,7 @@ import Link from "v2/components/Link";
 import { HistoricChart } from "v2/features/dill/HistoricChart";
 import { RevenueStats } from "v2/features/dill/RevenueStats";
 import { CoreSelectors } from "v2/store/core";
-import { DillInfo } from "v2/features/dill/DillInfo";
+import DillInfo from "v2/features/dill/DillInfo";
 
 const Dill: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
