@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 
 import type { PickleFinancePage } from "v2/types";
 import Link from "v2/components/Link";
-import { HistoricChart } from "v2/features/dill/HistoricChart";
-import { RevenueStats } from "v2/features/dill/RevenueStats";
+import HistoricChart from "v2/features/dill/HistoricChart";
+import RevenueStats from "v2/features/dill/RevenueStats";
 import { CoreSelectors } from "v2/store/core";
 import DillInfo from "v2/features/dill/DillInfo";
 
@@ -13,11 +13,15 @@ const Dill: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
 
   return (
-    <>
-      <DillInfo />
-      <RevenueStats dill={core?.dill} />
+    <div className="w-full sm:w-4/5 sm:mb-5">
+      <div className="block sm:flex mb-6 sm:mb-10">
+        <DillInfo />
+      </div>
+      <div className="mb-3">
+        <RevenueStats dill={core?.dill} />
+      </div>
       <HistoricChart />
-    </>
+    </div>
   );
 };
 
