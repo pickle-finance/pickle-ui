@@ -1,5 +1,5 @@
 import { createContainer } from "unstated-next";
-
+import { Connection } from "./Connection";
 import { useFetchGauges } from "./Gauges/useFetchGauges";
 import { useWithReward } from "./Gauges/useWithReward";
 import { useUniV2Apy } from "./Gauges/useUniV2Apy";
@@ -8,15 +8,21 @@ import { PickleCore } from "./Jars/usePickleCore";
 import { createIFarmInfo } from "./Farms";
 
 function useGauges() {
+  const { chainId } = Connection.useContainer();
   const { pickleCore } = PickleCore.useContainer();
   const { rawGauges } = useFetchGauges();
   const { gaugesWithReward } = useWithReward(rawGauges);
   const { uniV2GaugesWithApy } = useUniV2Apy(gaugesWithReward);
   const { jarGaugeWithApy } = useJarGaugeApy(gaugesWithReward);
   const ifarmInfo = createIFarmInfo(pickleCore);
+
+  const chain = pickleCore?.chains.find((x) => x.chainId === chainId)?.network!;
+
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
-    if (ifarmInfo[gauge?.token.toLowerCase()]) {
-      const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
+    if (ifarmInfo[chain][gauge?.token.toLowerCase()]) {
+      const { tokenName, poolName } = ifarmInfo[chain][
+        gauge.token.toLowerCase()
+      ];
       return {
         ...gauge,
         tokenName,
@@ -25,8 +31,10 @@ function useGauges() {
     }
   });
   const jarGauges2 = jarGaugeWithApy?.map((gauge) => {
-    if (ifarmInfo[gauge?.token.toLowerCase()]) {
-      const { tokenName, poolName } = ifarmInfo[gauge.token.toLowerCase()];
+    if (ifarmInfo[chain][gauge?.token.toLowerCase()]) {
+      const { tokenName, poolName } = ifarmInfo[chain][
+        gauge.token.toLowerCase()
+      ];
       return {
         ...gauge,
         tokenName,
