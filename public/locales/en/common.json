@@ -335,6 +335,7 @@
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
       "dillAmount": "DILL amount",
       "earnedPickles": "Earned PICKLEs",
+      "historic": "Historic distributions of PICKLE",
       "readMore": "Read more",
       "revenueShareStats": "Revenue share stats",
       "unlockDate": "Unlock date"

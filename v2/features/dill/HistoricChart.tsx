@@ -149,15 +149,12 @@ const Footnote: FC<FootnoteProps> = ({ series }) => {
   if (!projectedEntry) return null;
 
   return (
-    <>
-      <aside className="py-2" />
-      <p className="px-4">
-        *{" "}
-        {t("dill.projectedData", {
-          date: dateFormatter(monthToDate(projectedEntry.distributionMonth)),
-        })}
-      </p>
-    </>
+    <aside className="px-4">
+      *{" "}
+      {t("dill.projectedData", {
+        date: dateFormatter(monthToDate(projectedEntry.distributionMonth)),
+      })}
+    </aside>
   );
 };
 
@@ -209,10 +206,8 @@ const HistoricChart: FC = () => {
   };
 
   return (
-    <div className="bg-black-light rounded-xl border border-gray-dark shadow px-2 py-1">
-      <h2 className="font-body font-bold text-xl pl-8 pt-8">
-        {t("dill.historic")}
-      </h2>
+    <div className="bg-black-light rounded-xl border border-gray-dark shadow p-4 sm:p-8">
+      <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
       <aside className="h-[600px] px-3 py-10">
         {dataSeries.length > 0 ? (
           <ResponsiveContainer>
@@ -275,35 +270,27 @@ const HistoricChart: FC = () => {
               <Bar
                 dataKey={
                   chartMode === "monthly"
-                    ? "monthlyPickleAmount"
-                    : "totalPickleAmount"
+                    ? "monthlyDillAmount"
+                    : "totalDillAmount"
                 }
-                fill={grayLighter}
+                fill={greenDark}
                 radius={[10, 10, 0, 0]}
               >
-                {dataSeries.map((point, index) => (
-                  <Cell
-                    fill={greenDark}
-                    opacity={point.isProjected ? 0.25 : 1}
-                    key={`pickle-${index}`}
-                  />
+                {dataSeries.map((_, index) => (
+                  <Cell fill={greenDark} key={`dill-${index}`} />
                 ))}
               </Bar>
               <Bar
                 dataKey={
                   chartMode === "monthly"
-                    ? "monthlyDillAmount"
-                    : "totalDillAmount"
+                    ? "monthlyPickleAmount"
+                    : "totalPickleAmount"
                 }
                 fill={greenLight}
                 radius={[10, 10, 0, 0]}
               >
-                {dataSeries.map((point, index) => (
-                  <Cell
-                    fill={greenLight}
-                    opacity={point.isProjected ? 0.25 : 1}
-                    key={`dill-${index}`}
-                  />
+                {dataSeries.map((_, index) => (
+                  <Cell fill={greenLight} key={`pickle-${index}`} />
                 ))}
               </Bar>
               <Line
