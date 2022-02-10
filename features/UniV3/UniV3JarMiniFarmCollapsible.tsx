@@ -220,7 +220,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
       : ethToken.none;
 
   const depositBuilder = () => {
-    if (useEth) defaultDeposit();
+    if (useEth) return defaultDeposit();
     else {
       switch (isEthToken) {
         case ethToken.token0:
@@ -230,7 +230,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               value: parseEther(deposit0Amount),
               gasLimit: 850000,
             });
-          break;
         case ethToken.token1:
           return jarContract
             .connect(signer)
@@ -238,24 +237,21 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               value: parseEther(deposit1Amount),
               gasLimit: 850000,
             });
-          break;
         case ethToken.none:
         default:
-          defaultDeposit();
-          break;
+          return defaultDeposit();
       }
     }
   };
 
-  const defaultDeposit = () => {
-    return jarContract
+  const defaultDeposit = () =>
+    jarContract
       .connect(signer)
       .deposit(
         convertDecimals(deposit0Amount, token0?.decimals),
         convertDecimals(deposit1Amount, token1?.decimals),
         { gasLimit: 850000 },
       );
-  };
 
   const depositAndStake = async () => {
     if (minichef && address) {
@@ -265,7 +261,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
           token: depositToken.address,
           recipient: jarContract.address,
           transferCallback: async () => {
-            depositBuilder();
+            return depositBuilder();
           },
           approval: false,
         });
@@ -406,7 +402,6 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  console.log(depositToken.address)
   if (!token0 || !token1) return <> </>;
   return (
     <Collapse
@@ -433,24 +428,20 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               </a>
             </div>
           </JarName>
-          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Data isZero={balanceNum === 0}>{balanceStr}</Data>
-            <Label>{t("balances.walletBalance")}</Label>
-          </Grid>
-          <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={harvestableNum === 0}>
               {harvestableStr}{" "}
               {Boolean(harvestableNum) && <MiniIcon source={"/pickle.png"} />}
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
-          <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
+          <Grid xs={24} sm={12} md={5} lg={5} css={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
               <Label>{t("balances.depositValue")}</Label>
             </>
           </Grid>
-          <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
+          <Grid xs={24} sm={24} md={5} lg={5} style={{ textAlign: "center" }}>
             <Data>
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {totalAPY.toFixed(2) + "%" || "--"}
@@ -508,7 +499,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                       token: depositToken.address,
                       recipient: jarContract.address,
                       transferCallback: async () => {
-                        depositBuilder();
+                        return defaultDeposit();
                       },
                       approval: false,
                     });
