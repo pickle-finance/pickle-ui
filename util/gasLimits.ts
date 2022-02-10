@@ -24,8 +24,8 @@ interface TokenGasLimits {
 const tokenGasLimits: TokenGasLimits = {
   // LOOKS
   "0xb4EBc2C371182DeEa04B2264B9ff5AC4F0159C69": {
-    [JarInteraction.Withdraw]: 250000,
-    [JarInteraction.WithdrawAll]: 250000,
+    [JarInteraction.Withdraw]: 300000,
+    [JarInteraction.WithdrawAll]: 300000,
   },
 };
 
