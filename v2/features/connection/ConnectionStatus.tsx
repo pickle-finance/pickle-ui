@@ -9,10 +9,12 @@ import { FireIcon } from "@heroicons/react/solid";
 
 import Link from "v2/components/Link";
 import { injected } from "v2/features/connection/connectors";
-import { networks } from "./networks";
 import { resetWalletConnectState } from "./utils";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain, Chains } from "picklefinance-core/lib/chain/Chains";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
+import { getNetworks, Network } from "./networks";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (
@@ -80,7 +82,9 @@ export const switchChain = async (
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
   const { t } = useTranslation("common");
-  const { activate, connector } = useWeb3React<Web3Provider>();
+  const { activate, connector, library } = useWeb3React<Web3Provider>();
+  const allCore = useSelector(CoreSelectors.selectCore);
+  const networks = useSelector(CoreSelectors.selectNetworks);
 
   resetWalletConnectState(connector);
 
@@ -89,14 +93,14 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
       <>
         <p>{t("v2.connection.unsupportedNetwork")}</p>
         <div className="mt-4">
-          {networks.map((network) => (
+          {networks?.map((network) => (
             <div
               key={network.name}
               className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2"
             >
               <div className="w-5 h-5 mr-3">
                 <Image
-                  src={network.icon}
+                  src={`/networks/${network.name}.png`}
                   width={200}
                   height={200}
                   layout="responsive"
@@ -110,7 +114,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                 className="text-white cursor-pointer group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
                 onClick={() => switchChain(library, network.chainId, allCore)}
               >
-                {network.name}
+                {network.visibleName}
               </span>
             </div>
           ))}
@@ -145,12 +149,14 @@ const ConnectionStatus: FC = () => {
   let { error, chainId } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
+  if (!chainId) 
+    return null;
   if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
     return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {
     // App will function with all known chains
     // supportedChains contains all chains Pickle supports
-    // we want error if Chain is not in supportedChains
+    // we want error if chainId is not in supportedChains
     error = new UnsupportedChainIdError(
       chainId ? chainId : -1,
       supportedChains,

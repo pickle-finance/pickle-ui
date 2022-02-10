@@ -14,10 +14,12 @@ import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
-import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
 import { noFarms } from "util/constants";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
-import { JarDefinition, AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  AssetAprComponent,
+  JarDefinition,
+} from "picklefinance-core/lib/model/PickleModelJson";
 import { UserJarData } from "containers/UserJars";
 
 const Container = styled.div`
@@ -28,31 +30,39 @@ export interface JarApy {
   [k: string]: number;
 }
 
-
 export const getCompoundingAPY = (apr: number) => {
   // Numbers are assumed to be *100 already. ie, 42% is passed in as 42, not 0.42
-  const r = (Math.pow(1 + (apr/100) / 365, 365) - 1);
+  const r = Math.pow(1 + apr / 100 / 365, 365) - 1;
   console.log("compounded " + apr + " to " + r);
   return r;
 };
 
-export const findJarDefinition = (pickleCore: PickleModelJson.PickleModelJson | null, apiKey: string):JarDefinition | undefined => {
-  const jar: JarDefinition | undefined = pickleCore === null ? undefined : 
-        pickleCore.assets.jars.find((x) => 
-            x !== undefined && x.details !== undefined && x.details.apiKey !== undefined && 
-            x.details.apiKey.toLowerCase() === apiKey.toLowerCase());
+export const findJarDefinition = (
+  pickleCore: PickleModelJson.PickleModelJson | null,
+  apiKey: string,
+): JarDefinition | undefined => {
+  const jar: JarDefinition | undefined =
+    pickleCore === null
+      ? undefined
+      : pickleCore.assets.jars.find(
+          (x) =>
+            x !== undefined &&
+            x.details !== undefined &&
+            x.details.apiKey !== undefined &&
+            x.details.apiKey.toLowerCase() === apiKey.toLowerCase(),
+        );
   return jar;
-}
+};
 
-export const findJarCompoundingMagic = ( jar: JarDefinition):number => {
-  if(jar.aprStats !== undefined ) {
+export const findJarCompoundingMagic = (jar: JarDefinition): number => {
+  if (jar.aprStats !== undefined) {
     return jar.aprStats.apy - jar.aprStats.apr;
   }
   return 0;
-}
+};
 
 export const getJarAprPfcore = (jar: JarDefinition): JarApy[] => {
-  if( jar !== undefined && jar.aprStats !== undefined ) {
+  if (jar !== undefined && jar.aprStats !== undefined) {
     const ret: JarApy[] = jar.aprStats.components.map((x) => {
       const ret: JarApy = {};
       ret[x.name] = x.apr;
@@ -61,14 +71,14 @@ export const getJarAprPfcore = (jar: JarDefinition): JarApy[] => {
     return ret;
   }
   return [];
-}
+};
 
 export const getJarApyPfcore = (jar: JarDefinition): JarApy[] => {
-  if( jar !== undefined && jar.aprStats !== undefined ) {
+  if (jar !== undefined && jar.aprStats !== undefined) {
     const ret: JarApy[] = jar.aprStats.components.map((x) => {
       const ret: JarApy = {};
       ret[x.name] = x.apr;
-      if( x.compoundable ) {
+      if (x.compoundable) {
         ret[x.name] = getCompoundingAPY(x.apr);
       }
       return ret;
@@ -76,30 +86,36 @@ export const getJarApyPfcore = (jar: JarDefinition): JarApy[] => {
     return ret;
   }
   return [];
-}
+};
 
 export const sumJarApy = (apys: JarApy[]): number => {
   let total = 0;
-  for( let i = 0; i < apys.length; i++ ) {
+  for (let i = 0; i < apys.length; i++) {
     for (const [_key, value] of Object.entries(apys[i])) {
       total += value;
     }
   }
   return total;
-}
+};
 
-export const nonCompoundedYieldsToTooltip = (apr: JarApy[], compounding: number, t: any): string => {
-  const beginning = `${t("farms.baseAPRs")}:`
+export const nonCompoundedYieldsToTooltip = (
+  apr: JarApy[],
+  compounding: number,
+  t: any,
+): string => {
+  const beginning = `${t("farms.baseAPRs")}:`;
   const elements: string[] = apr.map((x) => {
     const k = Object.keys(x)[0];
     const v = Object.values(x)[0];
     return `${k}: ${v.toFixed(2)}%`;
   });
   const compoundingNumStr: string = compounding.toFixed(2);
-  const compoundingStr: string = `${t("farms.compounding")} <img src="/magicwand.svg" height="16" width="16"/>: ${compoundingNumStr}%`;
+  const compoundingStr: string = `${t(
+    "farms.compounding",
+  )} <img src="/magicwand.svg" height="16" width="16"/>: ${compoundingNumStr}%`;
   const finalArr = [beginning].concat(elements).concat([compoundingStr]);
   return finalArr.filter((x) => x).join(" <br/> ");
-}
+};
 
 export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
@@ -139,21 +155,42 @@ export const MiniFarmList: FC = () => {
       const farmingJar: UserJarData | undefined = jarData
         ? jarData.filter((x) => x.name === jar.jarName)[0]
         : undefined;
-      if( farmingJar && farmingJar.apiKey ) {
-        if( farmingJar && farmingJar.APYs) {
+      if (farmingJar && farmingJar.apiKey) {
+        if (farmingJar && farmingJar.APYs) {
           APYs = [...APYs, ...farmingJar.APYs];
         }
-        const jardef: JarDefinition|undefined = findJarDefinition(pickleCore, farmingJar.apiKey);
-        if( jardef !== undefined ) {
-          nonCompoundedYields = nonCompoundedYields.concat(getJarAprPfcore(jardef));
-          if( jardef.aprStats !== undefined ) {
-            totalAPY = jardef.aprStats.apy + (farm.apy*100);
+        const jardef: JarDefinition | undefined = findJarDefinition(
+          pickleCore,
+          farmingJar.apiKey,
+        );
+        if (jardef !== undefined) {
+          let farmApyToUse = farm.apy * 100;
+          nonCompoundedYields = nonCompoundedYields.concat(
+            getJarAprPfcore(jardef),
+          );
+          if (jardef.aprStats !== undefined) {
+            const farmApyComponents = jardef.farm?.details?.farmApyComponents;
+            if (farmApyComponents !== undefined) {
+              const farmApy:
+                | AssetAprComponent
+                | undefined = farmApyComponents.find(
+                (x) => x.name.toLowerCase() === "pickle",
+              );
+              if (farmApy !== undefined) {
+                farmApyToUse = farmApy.apr;
+              }
+            }
+            totalAPY = jardef.aprStats.apy + farmApyToUse;
             magicCompounding = jardef.aprStats.apy - jardef.aprStats.apr;
           }
         }
       }
     }
-    const tooltipText = nonCompoundedYieldsToTooltip(nonCompoundedYields, magicCompounding, t);
+    const tooltipText = nonCompoundedYieldsToTooltip(
+      nonCompoundedYields,
+      magicCompounding,
+      t,
+    );
     return {
       ...farm,
       APYs: APYs,
@@ -167,16 +204,8 @@ export const MiniFarmList: FC = () => {
   const activeJars = !jarData
     ? []
     : jarData
-        .filter(
-          (jar) =>
-            isJarActive(jar.apiKey, pickleCore) &&
-            jar.protocol != AssetProtocol.UNISWAP_V3,
-        )
+        .filter((jar) => isJarActive(jar.apiKey, pickleCore))
         .sort((a, b) => b.totalAPY - a.totalAPY);
-
-  const uniV3Jars = jarData?.filter(
-    (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
-  );
 
   const protocolJars = activeJars.filter(
     (jar) => jar.protocol === selectedProtocol,
@@ -233,18 +262,6 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
-        {uniV3Jars?.map((jar) => {
-          const farm = farmsWithAPY.find(
-            (x) =>
-              x.depositToken.address.toLowerCase() ===
-              jar.jarContract.address.toLowerCase(),
-          );
-          return (
-            <Grid xs={24} key={jar.name}>
-              <UniV3JarMiniFarmCollapsible jarData={jar} farmData={farm} />
-            </Grid>
-          );
-        })}
         {(selectedProtocol ? protocolJars : activeJars).map((jar) => {
           const farm = farmsWithAPY.find(
             (x) =>

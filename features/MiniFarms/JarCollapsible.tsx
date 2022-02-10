@@ -144,6 +144,21 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x0d171b55fc8d3bddf17e376fdb2d90485f900888": (
     <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/weth.png"} />
   ),
+  "0xf09211fb5ed5019b072774cfd7db0c9f4ccd5be0": (
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/dotfinn.png"} />
+  ),
+  "0x14be4d09c5a8237403b83a8a410bace16e8667dc": (
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/finnksm.png"} />
+  ),
+  "0xd9e98ad7ae9e5612b90cd0bdcd82df4fa5b943b8": (
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/finnrmrk.png"} />
+  ),
+  "0xbbe2f34367972cb37ae8dea849ae168834440685": (
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/tokens/movrfinn.png"} />
+  ),
+  "0x7128c61da34c27ead5419b8eb50c71ce0b15cd50": (
+    <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/usdcmovr.png"} />
+  ),
 
   // Cronos
   "0x1803e360393a472bec6e1a688bdf7048d3076b1a": (
@@ -390,6 +405,50 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xa35b2c07cb123ea5e1b9c7530d0812e7e03ec3c1": (
     <LpIcon swapIconSrc={"/beamswap.webp"} tokenIconSrc={"/usdcusdt.png"} />
   ),
+
+  // FLARE FLARE/GLMR
+  "0x26a2abd79583155ea5d34443b62399879d42748a": (
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/glmr.png"} />
+  ),
+  // FLARE FLARE/USDC
+  "0x976888647affb4b2d7ac1952cb12ca048cd67762": (
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
+  // FLARE GLMR/MOVR
+  "0xa65949fa1053903fcc019ac21b0335aa4b4b1bfa": (
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/movr.png"} />
+  ),
+  // FLARE GLMR/USDC
+  "0xab89ed43d10c7ce0f4d6f21616556aecb71b9c5f": (
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
+  // FLARE GLMR/ETH
+  "0xb521c0acf67390c1364f1e940e44db25828e5ef9": (
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/eth.png"} />
+  ),
+  // FLARE GLMR/WBTC
+  "0xdf74d67a4fe29d9d5e0bfaab3516c65b21a5d7cf": (
+    <LpIcon swapIconSrc={"/flare.png"} tokenIconSrc={"/tokens/wbtc.png"} />
+  ),
+
+  //Optimism
+
+  //ZIP ETH/BTC
+  "0x251de0f0368c472bba2e1c8f5db5ac7582b5f847": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  //ZIP ETH/DAI
+  "0x53790b6c7023786659d11ed82ee03079f3bd6976": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethdai.png"} />
+  ),
+  //ZIP ETH/USDC
+  "0x1a981daa7967c66c3356ad044979bc82e4a478b9": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethusdc.png"} />
+  ),
+  //ZIP ETH/ZIP
+  "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
+    <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -449,7 +508,7 @@ export const JarCollapsible: FC<{
 
   const isUsdc = isUsdcToken(depositToken.address);
 
-  const uncompounded = APYs.map((x) => {
+  const uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
     const shouldNotUncompound = k === "pickle" || k === "lp";
     const v = shouldNotUncompound
@@ -461,7 +520,7 @@ export const JarCollapsible: FC<{
   });
 
   const totalAPR: number = uncompounded
-    .map((x) => {
+    ?.map((x) => {
       return Object.values(x).reduce((acc, y) => acc + y, 0);
     })
     .reduce((acc, x) => acc + x, 0);
@@ -469,11 +528,12 @@ export const JarCollapsible: FC<{
 
   const tooltipText = [
     `${t("farms.baseAPRs")}:`,
-    ...uncompounded.map((x) => {
+    ...uncompounded?.map((x) => {
       const k = Object.keys(x)[0];
       const v = Object.values(x)[0];
-      return `${k}: ${v.toFixed(2)}%`;
+      return v ? `${k}: ${v.toFixed(2)}%` : null;
     }),
+    ,
     `${t(
       "farms.compounding",
     )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
@@ -572,7 +632,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -686,16 +746,17 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${deposited && ratio
-                    ? parseFloat(
-                      formatEther(
-                        isUsdc && deposited
-                          ? deposited.mul(USDC_SCALE)
-                          : deposited,
-                      ),
-                    ) * ratio
-                    : 0
-                    } ${depositTokenName}`}
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(
+                            isUsdc && deposited
+                              ? deposited.mul(USDC_SCALE)
+                              : deposited,
+                          ),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}

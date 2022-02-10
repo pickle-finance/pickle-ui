@@ -30,6 +30,11 @@ interface Weights {
   [key: string]: number;
 }
 
+interface HandleBoostReturn {
+  tokens: string[];
+  weights: number[];
+}
+
 const Label = styled.div`
   font-family: "Source Sans Pro";
 `;
@@ -48,6 +53,7 @@ const formatPercent = (decimal: number): string => {
   if (decimal) {
     return (decimal * 100).toFixed(2);
   }
+  return "0.00";
 };
 
 const formatAPY = (apy: number): string => {
@@ -73,7 +79,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const { gaugeProxy } = Contracts.useContainer();
   const { signer } = Connection.useContainer();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
-  const [newWeights, setNewWeights] = useState<number[]>([]);
+  const [newWeights, setNewWeights] = useState<Weights[]>([]);
   const { t } = useTranslation("common");
   const [voteButton, setVoteButton] = useState<ButtonStatus>({
     disabled: false,
@@ -95,12 +101,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   }
 
   const weightsValid = totalGaugeWeight === 100;
-
-  if (!gauges) {
-    return null;
-  }
-
-  const handleSelect = (depositTokens: string | string[]) => {
+  const handleSelect = (depositTokens: string | string[]): void => {
+    if (!gauges) {
+      return;
+    }
     const selectedFarms = Array.isArray(depositTokens)
       ? depositTokens.map((x) => gauges.find((y) => y.depositTokenName === x)!)
       : [];
@@ -118,7 +122,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     setVotingFarms(selectedFarms);
   };
 
-  const handleBoost = () => {
+  const handleBoost = (): HandleBoostReturn => {
     const tokens: string[] = [];
     const weights: number[] = [];
 
@@ -132,29 +136,46 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     return { tokens, weights };
   };
 
-  const calculateNewWeights = () => {
+  const singleNewWeightMapping = (x: Weights): Weights | undefined => {
+    const gaugeAddress = Object.keys(x)[0];
+    const gauge = gauges.find((gauge) => gauge.address === gaugeAddress);
+    if (gauge && dillBalanceBN) {
+      const dillBalance = +dillBalanceBN.toString();
+      // Revise user's weight distribution for new estimate
+      const estimatedWeight =
+        (gauge.gaugeWeight -
+          gauge.userWeight +
+          (dillBalance * Object.values(x)[0]) / 100) /
+        (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
+
+      return { [gauge.address]: estimatedWeight };
+    } else {
+      return undefined;
+    }
+  };
+
+  const calculateNewWeights = (): void => {
     if (weightsValid) {
-      const voteArray = Object.entries(voteWeights).map((e) => ({
+      const voteArray: Weights[] = Object.entries(voteWeights).map((e) => ({
         [e[0]]: e[1],
       }));
-      const newWeights = voteArray.map((x) => {
-        const gaugeAddress = Object.keys(x)[0];
-        const gauge = gauges.find((gauge) => gauge.address === gaugeAddress);
-        if (gauge && dillBalanceBN) {
-          const dillBalance = +dillBalanceBN.toString();
-          // Revise user's weight distribution for new estimate
-          const estimatedWeight =
-            (gauge.gaugeWeight -
-              gauge.userWeight +
-              (dillBalance * Object.values(x)[0]) / 100) /
-            (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
 
-          return { [gauge.address]: estimatedWeight };
-        } else {
-          return [];
-        }
+      const tmpWeights: (Weights | undefined)[] = voteArray.map((x) => {
+        const oneNewWeight = singleNewWeightMapping(x);
+        return oneNewWeight;
       });
-      setNewWeights(newWeights);
+      const internalNewWeights: Weights[] = [];
+      for (let i = 0; i < tmpWeights.length; i++) {
+        const t = tmpWeights[i];
+        if (t !== undefined) {
+          internalNewWeights.push(t);
+        }
+      }
+      if (internalNewWeights) {
+        setNewWeights(internalNewWeights);
+      } else {
+        setNewWeights([]);
+      }
     } else {
       setNewWeights([]);
     }
@@ -183,17 +204,17 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   };
 
   useEffect(() => {
-    initialize();
-  }, [gauges]);
+    gauges && initialize();
+  }, [gauges]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    calculateNewWeights();
-  }, [weightsValid]);
+    gauges && calculateNewWeights();
+  }, [weightsValid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (gaugeProxy) {
       const voteStatus = getTransferStatus("vote", gaugeProxy.address);
-      const balance = +dillBalanceBN?.toString();
+      const balance = dillBalanceBN ? +dillBalanceBN?.toString() : 0;
       const buttonText = balance
         ? weightsValid
           ? t("gauges.submitVote")
@@ -214,7 +235,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         });
       }
     }
-  }, [transferStatus, weightsValid]);
+  }, [transferStatus, weightsValid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { getUniPairDayAPY } = useUniPairDayData();
   const { jars } = Jars.useContainer();
@@ -253,9 +274,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         return Object.values(x).reduce((acc, y) => acc + (isNaN(y) ? 0 : y), 0);
       }).reduce((acc, x) => acc + x, 0);
 
-      const newWeightMaybe = newWeights?.find(
-        (x: UserGaugeData) => x[address] >= 0,
-      );
+      const newWeightMaybe = newWeights?.find((x: Weights) => x[address] >= 0);
       const newWeight = newWeightMaybe ? newWeightMaybe[address] : null;
 
       return (
@@ -304,11 +323,11 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                 minWidth: 0,
                 margin: "auto",
               }}
-              value={voteWeights[address] ? voteWeights[address] : 0}
+              value={voteWeights[address]}
               onValueChange={({ floatValue }) => {
                 setVoteWeights({
                   ...voteWeights,
-                  [address]: floatValue,
+                  [address]: floatValue ? floatValue : 0,
                 });
               }}
             />

@@ -46,11 +46,13 @@
       "cronos": "Cronos",
       "aurora": "Aurora",
       "metis": "Metis",
-      "moonbeam": "Moonbeam"
+      "moonbeam": "Moonbeam",
+      "optimism": "Optimism"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
-    "unsupportedNetwork": "Please Connect to one of the following supported chains:"
+    "unsupportedNetwork": "Please Connect to one of the following supported chains:",
+    "connectTo": "Connect to"
   },
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
@@ -308,7 +310,7 @@
     },
     "dashboard": {
       "dillAmount": "DILL amount",
-      "earnUpTo": "Earn up to <1>{{ percent }}</1> APY",
+      "earnUpTo": "Earn up to <1>{{ percent }}</1><2/>APY",
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",
@@ -329,13 +331,21 @@
       "earnedToken": "{{ token }} earned",
       "enable": "Enable",
       "expand": "Expand",
+      "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "liquidity": "Liquidity",
       "loadingFarms": "Loading farms ...",
       "loadingUserModel": "Loading your balances ...",
-      "stakedToken": "{{ token }} staked"
+      "matchAllFilters": "Match all filters",
+      "matchingAllFilters": "Showing farms matching all filters",
+      "network": "Network",
+      "noResults": "No results",
+      "notMatchingAllFilters": "Showing farms matching at least one filter",
+      "protocol": "Protocol",
+      "stakedToken": "{{ token }} staked",
+      "token": "Token"
     },
     "gasPrices": {
       "fast": "Fast",

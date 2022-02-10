@@ -592,7 +592,9 @@ export const JarGaugeCollapsible: FC<{
         const exitTx = await gauge.exit();
         await exitTx.wait();
         setExitButton(t("farms.withdrawingFromJar"));
-        const withdrawTx = await jarContract.connect(signer).withdrawAll();
+        const withdrawTx = await jarContract
+          .connect(signer)
+          .withdrawAll();
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);

@@ -16,8 +16,9 @@ import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
 import { CoreSelectors } from "v2/store/core";
-import { networks } from "../connection/networks";
 import FarmComponentsIcons from "./FarmComponentsIcons";
+import { Network } from "../connection/networks";
+import { JarWithData } from "./FarmsTableBody";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -31,7 +32,7 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
 );
 const chainProtocol = (
   jar: JarDefinition,
-  pfCore: PickleModelJson | undefined,
+  networks: Network[] | undefined,
 ): JSX.Element => {
   return (
     <div>
@@ -41,7 +42,7 @@ const chainProtocol = (
       <div className="flex mt-1">
         <div className="w-4 h-4 mr-1">
           <Image
-            src={formatImagePath(formatNetworkName(jar.chain, pfCore))}
+            src={formatImagePath(jar.chain, networks)}
             className="rounded-full"
             width={20}
             height={20}
@@ -61,7 +62,7 @@ const chainProtocol = (
 interface Props {
   simple?: boolean;
   open: boolean;
-  jar: JarDefinition;
+  jar: JarWithData;
 }
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -97,7 +98,9 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
+  const weiMulPrice = depositTokenWei
+    .mul(tokenPriceWithPrecision)
+    .div(precisionAsNumber);
 
   return {
     wei: depositTokenWei,
@@ -176,37 +179,26 @@ export const getUserAssetDataWithPrices = (
   };
 };
 
-const formatNetworkName = (
+const formatImagePath = (
   chain: string,
-  pfcore: PickleModelJson | undefined,
+  networks: Network[] | undefined,
 ): string => {
-  try {
-    return (
-      pfcore?.chains.find((x) => x.network === chain)?.networkVisible || chain
-    );
-  } catch (err) {
-    return chain;
-  }
-};
-const formatImagePath = (chain: string): string => {
-  const thisNetwork = networks.find((network) => network.name === chain);
+  const thisNetwork = networks?.find((network) => network.name === chain);
   if (thisNetwork) {
-    return thisNetwork.icon;
+    return `/networks/${thisNetwork.name}.png`;
   } else {
     return "/pickle.png";
   }
 };
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
-  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
-  const allCore = useSelector(CoreSelectors.selectCore);
-  const data = getUserAssetDataWithPrices(jar, allCore, userModel);
+  const networks = useSelector(CoreSelectors.selectNetworks);
   const totalTokensInJarAndFarm =
-    data.depositTokensInJar.tokens + data.depositTokensInFarm.tokens;
+    jar.depositTokensInJar.tokens + jar.depositTokensInFarm.tokens;
   const depositTokenUSD =
-    data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
-  const pendingPicklesAsDollars = data.earnedPickles.tokensUSD;
-  const picklesPending = data.earnedPickles.tokensVisible;
+    jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
+  const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
+  const picklesPending = jar.earnedPickles.tokensVisible;
   const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
   const aprRangeString = jar.aprStats?.apy.toFixed(3) + "%";
 
@@ -219,7 +211,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         )}
       >
         <FarmComponentsIcons jar={jar} />
-        {chainProtocol(jar, allCore)}
+        {chainProtocol(jar, networks)}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">
@@ -231,7 +223,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
       </RowCell>
       <RowCell>
         <div className="flex items-center">
-          <FarmsBadge active />
+          <FarmsBadge active={depositTokenUSD > 0} />
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5">
               {formatDollars(depositTokenUSD)}

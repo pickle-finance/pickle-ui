@@ -1,7 +1,7 @@
-import { FC, Fragment } from "react";
+import { FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Popover, Transition } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { ChevronDownIcon, CheckCircleIcon } from "@heroicons/react/solid";
 import { TranslateIcon } from "@heroicons/react/outline";
 

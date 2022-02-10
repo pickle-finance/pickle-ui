@@ -15,9 +15,9 @@ yarn dev
 
 ### Images
 
-Images must be square, with no transparent background, in PNG format.
-Ideally, 350x350px. Rendered images are resized as necessary and
-returned in optimal format (typically `webp`) by Next.js.
+Images must be square, in PNG format. Ideally, 350x350px.
+Rendered images are resized as necessary and returned in optimal
+format (typically `webp`) by Next.js.
 
 #### Tokens
 

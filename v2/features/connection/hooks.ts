@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
+import type { Web3Provider } from "@ethersproject/providers";
 
 import { injected } from "./connectors";
 import { ConnectionSelectors } from "v2/store/connection";
@@ -80,3 +82,26 @@ export function useInactiveListener(suppress = false) {
     return undefined;
   }, [active, error, suppress, activate]);
 }
+
+export const useENS = (
+  address: string | null | undefined,
+  provider: Web3Provider | undefined,
+  chainId: number | undefined,
+) => {
+  const [ensName, setENSName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!provider || !address) return;
+
+    const resolveENS = async () => {
+      if (ethers.utils.isAddress(address) && chainId === 1) {
+        let ensName = await provider.lookupAddress(address);
+        if (ensName) setENSName(ensName);
+      }
+    };
+
+    resolveENS();
+  }, [address, provider, chainId]);
+
+  return ensName;
+};

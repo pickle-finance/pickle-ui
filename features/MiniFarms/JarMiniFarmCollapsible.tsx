@@ -149,6 +149,9 @@ export const FARM_LP_TO_ICON: {
   "0xEcAf3149fdA215E46e792C65dc0aB7399C2eA78B": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
   ),
+  "0x0c02883103e64b62c4b52ABe7E743Cc50EB2D4C7": (
+    <LpIcon swapIconSrc={"/protocols/balancer.png"} tokenIconSrc={"/tokens/vsta.png"} />
+  ),
 
   // Aurora
   "0xbD59171dA1c3a2624D60421bcb6c3c3270111656": (

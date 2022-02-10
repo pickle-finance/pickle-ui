@@ -1478,6 +1478,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/chroma-js@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.1.3.tgz#0b03d737ff28fad10eb884e0c6cedd5ffdc4ba0a"
+  integrity sha512-1xGPhoSGY1CPmXLCBcjVZSQinFjL26vlR8ZqprsBWiFyED4JacJJ9zHhh5aaUXqbY9B37mKQ73nlydVAXmr1+g==
+
 "@types/coingecko-api@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@types/coingecko-api/-/coingecko-api-1.0.0.tgz#1f3373c76034a58248fdaefcf7f2ec32351050ea"
@@ -1781,6 +1786,11 @@
     "@types/react-native" "*"
     csstype "^3.0.2"
 
+"@types/tailwindcss@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/tailwindcss/-/tailwindcss-3.0.4.tgz#ece342b039cb067cf46104c416bb9f9fec128691"
+  integrity sha512-ICFSmSeBMqPCpa3/fIGt4jjLbbIxqpV3pZeniosFIZ3dEWxSJH+6j0Gm3GOLnUQ18/bOiIFjuH3Tha+WhogiOA==
+
 "@types/zen-observable@^0.8.0":
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.2.tgz#808c9fa7e4517274ed555fa158f2de4b4f468e71"
@@ -1889,6 +1899,14 @@
   dependencies:
     "@typescript-eslint/types" "4.29.2"
     eslint-visitor-keys "^2.0.0"
+
+"@ukstv/jazzicon-react@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@ukstv/jazzicon-react/-/jazzicon-react-1.0.0.tgz#f319ebf3b6a165bfc5feaea7ee4c1eb81c5d9b85"
+  integrity sha512-V0klHdrO8Mk+faTGhQRd4t2vR+1IUHJa9sLaP/vhed0klPrOblhEU/Mc+Utgxep6oUuyhcGigjvkEJUOVE1/sg==
+  dependencies:
+    color "^3.1.2"
+    mersenne-twister "^1.1.0"
 
 "@uniswap/lib@^4.0.1-alpha":
   version "4.0.1-alpha"
@@ -3043,6 +3061,13 @@ chokidar@^3.4.3, chokidar@^3.5.2:
   optionalDependencies:
     fsevents "~2.3.2"
 
+chroma-js@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/chroma-js/-/chroma-js-2.1.2.tgz#1075cb9ae25bcb2017c109394168b5cf3aa500ec"
+  integrity sha512-ri/ouYDWuxfus3UcaMxC1Tfp3IE9K5iQzxc2hSxbBRVNQFut1UuGAsZmiAf2mOUubzGJwgMSv9lHg+XqLaz1QQ==
+  dependencies:
+    cross-env "^6.0.3"
+
 ci-info@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ci-info/-/ci-info-2.0.0.tgz"
@@ -3152,7 +3177,7 @@ color-string@^1.6.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.2.1:
+color@^3.1.2, color@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/color/-/color-3.2.1.tgz#3544dc198caf4490c3ecc9a790b54fe9ff45e164"
   integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
@@ -3313,6 +3338,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
+
+cross-env@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-6.0.3.tgz#4256b71e49b3a40637a0ce70768a6ef5c72ae941"
+  integrity sha512-+KqxF6LCvfhWvADcDPqo64yVIB31gv/jQulX2NGzKS/g3GEVz6/pt4wjHFtFWsHMddebWD/sDthJemzM4MaAag==
+  dependencies:
+    cross-spawn "^7.0.0"
 
 cross-fetch@3.1.4, cross-fetch@^3.1.4:
   version "3.1.4"
@@ -6976,10 +7008,10 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.3.08:
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.8.tgz#90dd738e15dbef57e3f06c01a3c1125f8bb09caa"
-  integrity sha512-oaK5/ucpwp2c1l63lEoHjlGxzjOgwO/W0R0Fw3e0JC7QPFWKxPbGsKmzGYGqPO3qSKC12OH7wi+ATllG+7dAEg==
+picklefinance-core@^0.3.12:
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.12.tgz#cfc76efc3550c254c7d320a25df114dc81482549"
+  integrity sha512-txY/i1blG00tdM4jTlMsg7wKH4lHpNp1kmcsbaSj54ueRSJSNvvbkzCDThZquc49CJCq2omhueajBIakYB6d8A==
   dependencies:
     "@ethersproject/abstract-provider" "^5.1.0"
     "@ethersproject/providers" "^5.1.0"
