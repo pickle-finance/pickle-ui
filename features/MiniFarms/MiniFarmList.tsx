@@ -9,6 +9,7 @@ import { useJarData } from "features/Gauges/useJarData";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
 import { BalFarm } from "../PickleFarms/BalFarm";
+import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
 import { pickleWhite } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
@@ -18,6 +19,7 @@ import { noFarms } from "util/constants";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import {
   AssetAprComponent,
+  AssetProtocol,
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { UserJarData } from "containers/UserJars";
@@ -205,7 +207,17 @@ export const MiniFarmList: FC = () => {
     ? []
     : jarData
         .filter((jar) => isJarActive(jar.apiKey, pickleCore))
+        .sort((a, b) => b.totalAPY - a.totalAPY)
+        .filter(
+          (jar) =>
+            isJarActive(jar.apiKey, pickleCore) &&
+            jar.protocol != AssetProtocol.UNISWAP_V3,
+        )
         .sort((a, b) => b.totalAPY - a.totalAPY);
+
+  const uniV3Jars = jarData?.filter(
+    (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
+  );
 
   const protocolJars = activeJars.filter(
     (jar) => jar.protocol === selectedProtocol,
@@ -262,6 +274,18 @@ export const MiniFarmList: FC = () => {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={1}>
+        {uniV3Jars?.map((jar) => {
+          const farm = farmsWithAPY.find(
+            (x) =>
+              x.depositToken.address.toLowerCase() ===
+              jar.jarContract.address.toLowerCase(),
+          );
+          return (
+            <Grid xs={24} key={jar.name}>
+              <UniV3JarMiniFarmCollapsible jarData={jar} farmData={farm} />
+            </Grid>
+          );
+        })}
         {(selectedProtocol ? protocolJars : activeJars).map((jar) => {
           const farm = farmsWithAPY.find(
             (x) =>

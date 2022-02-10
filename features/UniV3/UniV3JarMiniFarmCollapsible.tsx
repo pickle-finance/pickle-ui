@@ -74,7 +74,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
   "0x45dDa9cb7c25131DF268515131f647d726f50608": (
-    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/usdc.png"} />
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/ethusdc.png"} />
   ),
   "0x167384319B41F7094e62f7506409Eb38079AbfF8": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/maticweth.png"} />
@@ -406,6 +406,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
+  console.log(depositToken.address)
   if (!token0 || !token1) return <> </>;
   return (
     <Collapse
