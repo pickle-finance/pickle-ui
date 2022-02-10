@@ -1,24 +1,21 @@
 import { createContainer } from "unstated-next";
-
+import { Connection } from "./Connection";
 import { useFetchFarms } from "./Farms/useFetchFarms";
 import { useWithReward } from "./Farms/useWithReward";
-import { useUniV2Apy } from "./Farms/useUniV2Apy";
-import { useJarFarmApy } from "./Farms/useJarFarmApy";
-import { PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, Chains, PickleModelJson } from "picklefinance-core";
 import { PickleCore } from "./Jars/usePickleCore";
-
-interface IFarmInfo {
-  [key: string]: { tokenName: string; poolName: string };
-}
 
 export const createIFarmInfo = (
   pfcore: PickleModelJson.PickleModelJson | null,
-): IFarmInfo => {
+): any => {
   if (!pfcore) {
     return {};
   }
 
-  const ret: IFarmInfo = {};
+  const ret: any = {};
+  pfcore.chains.map((chain) => {
+    ret[chain.network] = {};
+  });
   for (let i = 0; i < pfcore.assets.jars.length; i++) {
     if (
       pfcore.assets.jars[i].id !== undefined &&
@@ -31,11 +28,17 @@ export const createIFarmInfo = (
         tokenName: tName,
         poolName: pfcore.assets.jars[i].depositToken.name,
       };
-      ret[pfcore.assets.jars[i].depositToken.addr.toLowerCase()] = r;
-      ret[pfcore.assets.jars[i].contract.toLowerCase()] = r;
+      ret[pfcore.assets.jars[i].chain][
+        pfcore.assets.jars[i].depositToken.addr.toLowerCase()
+      ] = r;
+      ret[pfcore.assets.jars[i].chain][
+        pfcore.assets.jars[i].contract.toLowerCase()
+      ] = r;
     }
   }
-  ret["0xdc98556Ce24f007A5eF6dC1CE96322d65832A819".toLowerCase()] = {
+  ret[ChainNetwork.Ethereum][
+    "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819".toLowerCase()
+  ] = {
     tokenName: "UNI PICKLE/ETH",
     poolName: "Pickle Power",
   };
@@ -43,9 +46,11 @@ export const createIFarmInfo = (
 };
 
 function useFarms() {
+  const { chainId } = Connection.useContainer();
   const { rawFarms } = useFetchFarms();
   const { farmsWithReward } = useWithReward(rawFarms);
   const { pickleCore } = PickleCore.useContainer();
+  const chain = pickleCore?.chains.find((x) => x.chainId === chainId)?.network!;
 
   // const { uniV2FarmsWithApy } = useUniV2Apy(farmsWithReward);
   // const { jarFarmWithApy } = useJarFarmApy(farmsWithReward)
@@ -57,9 +62,9 @@ function useFarms() {
         x.lpToken != "0x45F7fa97BD0e0C212A844BAea35876C7560F465B",
     )
     .map((farm) => {
-      const farmInfo = createIFarmInfo(pickleCore)[farm.lpToken];
-      const tokenName = farmInfo?.tokenName || ""
-      const poolName = farmInfo?.poolName || ""
+      const farmInfo = createIFarmInfo(pickleCore)[chain][farm.lpToken];
+      const tokenName = farmInfo?.tokenName || "";
+      const poolName = farmInfo?.poolName || "";
 
       return {
         ...farm,

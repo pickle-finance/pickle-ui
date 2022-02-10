@@ -37,24 +37,26 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
           return p;
         }, []);
 
-      const farmingJarsMCContracts = jarFarms
-        .map((farm) => {
-          const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
+      const farmingJarsMCContracts = jarFarms.map((farm) => {
+        const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
 
-          const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
+        const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
-          if (!farmingJar) {
-            return null;
-          }
+        if (!farmingJar) {
+          return null;
+        }
 
-          return farmingJar.contract;
-        })
-        .filter((x) => x);
+        return farmingJar.contract;
+      });
 
       const farmBalances = await Promise.all(
-        farmingJarsMCContracts.map((x) =>
-          x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0)),
-        ),
+        farmingJarsMCContracts.map((x) => {
+          if (!x) return Promise.resolve(ethers.BigNumber.from(0));
+
+          return x
+            .balanceOf(masterchef.address)
+            .catch(() => ethers.BigNumber.from(0));
+        }),
       );
 
       const res = jarFarms.map((farm, idx) => {
@@ -75,9 +77,10 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         }
 
         const farmBalance = farmBalances[idx];
-        
-        const numTokensInPool = farmBalance ? 
-          parseFloat(ethers.utils.formatEther(farmBalance)) : 0;
+
+        const numTokensInPool = farmBalance
+          ? parseFloat(ethers.utils.formatEther(farmBalance))
+          : 0;
 
         const valueStakedInFarm =
           (farmingJar.usdPerPToken || 0) * numTokensInPool;
