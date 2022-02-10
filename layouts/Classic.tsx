@@ -14,7 +14,6 @@ import { Farms } from "../containers/Farms";
 import { Jars } from "../containers/Jars";
 import { UniV2Pairs } from "../containers/UniV2Pairs";
 import { CurvePairs } from "../containers/CurvePairs";
-import { UserJars } from "../containers/UserJars";
 import { UserFarms } from "../containers/UserFarms";
 import { UserMiniFarms } from "../containers/UserMiniFarms";
 import { SushiPairs } from "../containers/SushiPairs";
@@ -54,7 +53,6 @@ const WithContainers: FC = ({ children }) => (
                                     <Farms.Provider>
                                       <Gauges.Provider>
                                         <MiniFarms.Provider>
-                                          <UserJars.Provider>
                                             <UserFarms.Provider>
                                               <UserGauges.Provider>
                                                 <UserMiniFarms.Provider>
@@ -62,7 +60,6 @@ const WithContainers: FC = ({ children }) => (
                                                 </UserMiniFarms.Provider>
                                               </UserGauges.Provider>
                                             </UserFarms.Provider>
-                                          </UserJars.Provider>
                                         </MiniFarms.Provider>
                                       </Gauges.Provider>
                                     </Farms.Provider>
