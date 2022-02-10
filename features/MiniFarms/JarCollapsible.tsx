@@ -220,6 +220,14 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x5eec60f348cb1d661e4a5122cf4638c7db7a886e": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroraeth.png"} />
   ),
+  "0x6443532841a5279cb04420E61Cf855cBEb70dc8C": (
+    <LpIcon swapIconSrc={"/trisolaris.png"}
+      tokenIconSrc={"/tokens/nearavax.png"} />
+  ),
+  "0x3dC236Ea01459F57EFc737A12BA3Bb5F3BFfD071": (
+    <LpIcon swapIconSrc={"/trisolaris.png"}
+      tokenIconSrc={"/maticnear.png"} />
+  ),
   "0xbf9eef63139b67fd0abf22bd5504acb0519a4212": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
   ),
@@ -632,7 +640,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -746,17 +754,16 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(
+                        isUsdc && deposited
+                          ? deposited.mul(USDC_SCALE)
+                          : deposited,
+                      ),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
