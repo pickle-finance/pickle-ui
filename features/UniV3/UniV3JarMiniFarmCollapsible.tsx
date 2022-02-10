@@ -499,7 +499,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                       token: depositToken.address,
                       recipient: jarContract.address,
                       transferCallback: async () => {
-                        return defaultDeposit();
+                        return depositBuilder();
                       },
                       approval: false,
                     });
