@@ -50,6 +50,7 @@ import {
   getRatioStringAndPendingString,
   RatioAndPendingStrings,
 } from "features/MiniFarms/JarMiniFarmCollapsible";
+import { gasLimit, JarInteraction } from "util/gasLimits";
 
 interface DataProps {
   isZero?: boolean;
@@ -594,7 +595,9 @@ export const JarGaugeCollapsible: FC<{
         setExitButton(t("farms.withdrawingFromJar"));
         const withdrawTx = await jarContract
           .connect(signer)
-          .withdrawAll();
+          .withdrawAll(
+            gasLimit(jarContract.address, JarInteraction.WithdrawAll),
+          );
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);
@@ -1005,7 +1008,13 @@ export const JarGaugeCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(convertDecimals(withdrawAmount));
+                        .withdraw(
+                          convertDecimals(withdrawAmount),
+                          gasLimit(
+                            jarContract.address,
+                            JarInteraction.Withdraw,
+                          ),
+                        );
                     },
                     approval: false,
                   });
