@@ -21,7 +21,7 @@ const TabsTimePicker: FC<TabsTimePickerProps> = ({ text, variant }) => {
   );
 };
 
-export const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal }) => {
+const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal }) => {
   const { t } = useTranslation("common");
 
   return (
@@ -50,3 +50,5 @@ interface TabsTimePickerProps {
   text: string;
   variant: "Selected" | "Default";
 }
+
+export default IncreaseLockDateModal;
