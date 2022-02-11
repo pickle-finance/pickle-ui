@@ -336,8 +336,12 @@
       "dillAmount": "DILL amount",
       "earnedPickles": "Earned PICKLEs",
       "historic": "Historic distributions of PICKLE",
+      "monthlyDillAmount": "Monthly DILL 🔒",
+      "monthlyPickleAmount": "Monthly PICKLEs distributed",
+      "pickleDillRatio": "PICKLEs per 1 DILL ratio",
       "readMore": "Read more",
       "revenueShareStats": "Revenue share stats",
+      "tokenAmount": "Token amount",
       "unlockDate": "Unlock date"
     },
     "farms": {
