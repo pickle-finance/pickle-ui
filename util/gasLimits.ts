@@ -33,7 +33,7 @@ export const gasLimit = (
   tokenAddress: string,
   interaction: Interaction,
 ): Overrides => {
-  const gasLimit = tokenGasLimits[tokenAddress][interaction];
+  const gasLimit = tokenGasLimits?.[tokenAddress]?.[interaction];
 
   return gasLimit ? { gasLimit } : {};
 };
