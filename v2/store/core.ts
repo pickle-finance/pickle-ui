@@ -202,6 +202,12 @@ const selectNetworks = (state: RootState) => {
 };
 const selectFilters = (state: RootState) => state.core.filters;
 const selectLoadingState = (state: RootState) => state.core.loading;
+const selectPicklePrice = (state: RootState): number => {
+  const prices = selectPrices(state);
+
+  return prices ? prices["pickle"] : 0;
+};
+const selectPrices = (state: RootState) => state.core.data?.prices;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
 export const CoreSelectors = {
@@ -212,6 +218,7 @@ export const CoreSelectors = {
   selectLoadingState,
   selectMaxApy,
   selectNetworks,
+  selectPicklePrice,
   selectTimestamp,
 };
 

@@ -7,26 +7,19 @@ import FarmsTableRow from "./FarmsTableRow";
 import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
-import Ping from "../connection/Ping";
-import { CheckCircleIcon } from "@heroicons/react/solid";
 import { ControlsSelectors, Sort, SortType } from "v2/store/controls";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import {
   getUserAssetDataWithPrices,
   UserAssetDataWithPrices,
 } from "./FarmsTableRowHeader";
+import LoadingIndicator from "v2/components/LoadingIndicator";
 
 const isPresent = (value: string): boolean => value !== "0";
 const hasBalances = (x: UserTokenData): boolean =>
   isPresent(x.pAssetBalance) ||
   isPresent(x.pStakedBalance) ||
   isPresent(x.picklePending);
-
-const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
-  if (isLoading) return <Ping />;
-
-  return <CheckCircleIcon className="w-4 h-4 mr-1 text-green-light" />;
-};
 
 interface Props {
   requiresUserModel?: boolean;
@@ -86,18 +79,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
     return (
       <tr>
         <td colSpan={6}>
-          <div className="bg-black-light text-center text-sm text-gray-light py-8 rounded-xl">
-            <div className="flex items-center justify-center text-gray-outline-light text-sm mb-2">
-              <LoadStatusIcon isLoading={isCoreLoading} />
-              <span>{t("v2.farms.loadingFarms")}</span>
-            </div>
-            {requiresUserModel && (
-              <div className="flex items-center justify-center text-gray-outline-light text-sm mb-2">
-                <LoadStatusIcon isLoading={isUserModelLoading} />
-                <span>{t("v2.farms.loadingUserModel")}</span>
-              </div>
-            )}
-          </div>
+          <LoadingIndicator waitForCore waitForUserModel />
         </td>
       </tr>
     );
