@@ -57,7 +57,6 @@
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
     "apy": "DILL holder APY",
-    "currentAPY": "Current APY",
     "averageLockDuration": "The average lock duration is currently <1>{{ years }}</1> years (based on {{ dill }} DILL and {{ pickle }} PICKLEs locked).",
     "boostCalculator": "PICKLE Boost Calculator",
     "boostFactor": "PICKLE boost factor",
@@ -332,6 +331,7 @@
       "unclaimedRewards": "Unclaimed rewards"
     },
     "dill": {
+      "currentAPY": "Current APY",
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
       "dillAmount": "DILL amount",
       "earnedPickles": "Earned PICKLEs",
@@ -342,7 +342,10 @@
       "readMore": "Read more",
       "revenueShareStats": "Revenue share stats",
       "tokenAmount": "Token amount",
-      "unlockDate": "Unlock date"
+      "totalValueLocked": "Total value locked",
+      "unlockDate": "Unlock date",
+      "upcomingDistributionValue": "Upcoming distribution value",
+      "upcomingDistributionDate": "Upcoming distribution date"
     },
     "farms": {
       "apy": "APY",
