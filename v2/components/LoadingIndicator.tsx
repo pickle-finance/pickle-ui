@@ -26,7 +26,7 @@ const LoadingIndicator: FC<Props> = ({ waitForCore, waitForUserModel }) => {
   const isCoreLoading = coreLoadingState !== "fulfilled";
 
   return (
-    <div className="bg-black-light text-center text-sm text-gray-light py-8 rounded-xl">
+    <div className="bg-black-light text-center text-sm text-gray-light py-8 rounded-xl w-full">
       {waitForCore && (
         <div className="flex items-center justify-center text-gray-outline-light text-sm mb-2">
           <LoadStatusIcon isLoading={isCoreLoading} />

@@ -13,19 +13,21 @@ import LoadingIndicator from "v2/components/LoadingIndicator";
 const Dill: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
 
-  if (!core) {
-    return <LoadingIndicator waitForCore />;
-  }
-
   return (
     <div className="w-full sm:w-4/5 sm:mb-5">
-      <div className="block sm:flex mb-6 sm:mb-10">
-        <DillInfo />
-      </div>
-      <div className="mb-3">
-        <RevenueStats dill={core.dill} />
-      </div>
-      <HistoricChart />
+      {core ? (
+        <>
+          <div className="block sm:flex mb-6 sm:mb-10">
+            <DillInfo />
+          </div>
+          <div className="mb-3">
+            <RevenueStats dill={core.dill} />
+          </div>
+          <HistoricChart />
+        </>
+      ) : (
+        <LoadingIndicator waitForCore />
+      )}
     </div>
   );
 };

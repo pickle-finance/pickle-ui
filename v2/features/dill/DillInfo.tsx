@@ -1,46 +1,30 @@
-import React, { FC, useState, useEffect } from "react";
-import { GetDillModal } from "v2/features/dill/GetDillModal";
-import { IncreaseLockDateModal } from "v2/features/dill/IncreaseLockDateModal";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
-import { PICKLE_TOKEN_ADDR, DILL } from "../../../containers/Contracts";
-import { ethers } from "picklefinance-core/node_modules/ethers";
-import erc20 from "@studydefi/money-legos/erc20";
+import React, { FC, useState } from "react";
 import { Trans, useTranslation } from "next-i18next";
+import { useSelector } from "react-redux";
+import { ethers } from "ethers";
 
+import { UserSelectors } from "v2/store/user";
+import GetDillModal from "v2/features/dill/GetDillModal";
+import IncreaseLockDateModal from "v2/features/dill/IncreaseLockDateModal";
 import Button from "v2/components/Button";
 import DillCard from "./DillCard";
+import LoadingIndicator from "v2/components/LoadingIndicator";
 
 const DillInfo: FC = () => {
   const { t } = useTranslation("common");
+  const userData = useSelector(UserSelectors.selectData);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpen2, setIsOpen2] = useState<boolean>(false);
-  const [userBalance, setUserBalance] = useState<string>();
-  const { account, library } = useWeb3React<Web3Provider>();
 
-  useEffect(() => {
-    const queryBalance = async () => {
-      const contract = new ethers.Contract(
-        PICKLE_TOKEN_ADDR,
-        erc20.abi,
-        library,
-      );
-      const userBalance = await contract.balanceOf(account);
-      setUserBalance(ethers.utils.formatUnits(userBalance));
-    };
-    queryBalance();
-  });
+  if (!userData) return <LoadingIndicator waitForUserModel />;
+
+  const userBalance = ethers.utils.formatUnits(userData.dill.balance);
 
   return (
     <>
-      <DillCard
-        title={t("v2.dill.dillAmount")}
-        data={userBalance ? userBalance : "--" || 0.0}
-      >
-        <Button
-          type={parseFloat(userBalance || "0") ? "primary" : "disabled"}
-          onClick={() => setIsOpen(true)}
-        >
+      <DillCard title={t("v2.dill.dillAmount")} data={userBalance}>
+        <Button type="primary" onClick={() => setIsOpen(true)}>
           {t("v2.actions.enable")}
         </Button>
       </DillCard>
