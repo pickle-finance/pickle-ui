@@ -1,5 +1,16 @@
 import { BigNumber } from "@ethersproject/bignumber";
 
+export const formatDate = (value: Date): string => {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  return formatter.format(value);
+};
+
 export const formatDollars = (value: number, precision = 0): string => {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",

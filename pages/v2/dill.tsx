@@ -8,9 +8,14 @@ import HistoricChart from "v2/features/dill/HistoricChart";
 import RevenueStats from "v2/features/dill/RevenueStats";
 import { CoreSelectors } from "v2/store/core";
 import DillInfo from "v2/features/dill/DillInfo";
+import LoadingIndicator from "v2/components/LoadingIndicator";
 
 const Dill: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
+
+  if (!core) {
+    return <LoadingIndicator waitForCore />;
+  }
 
   return (
     <div className="w-full sm:w-4/5 sm:mb-5">
@@ -18,7 +23,7 @@ const Dill: PickleFinancePage = () => {
         <DillInfo />
       </div>
       <div className="mb-3">
-        <RevenueStats dill={core?.dill} />
+        <RevenueStats dill={core.dill} />
       </div>
       <HistoricChart />
     </div>

@@ -1,31 +1,38 @@
 import { FC } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
+import { DillDetails } from "picklefinance-core/lib/model/PickleModelJson";
+
+import { CoreSelectors } from "v2/store/core";
+import { formatDollars, formatDate } from "v2/utils";
 
 interface Props {
-  dill?: any;
+  dill: DillDetails;
 }
 
 const RevenueStats: FC<Props> = ({ dill }) => {
   const { t } = useTranslation("common");
+  const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
+  const { dillWeeks } = dill;
+  const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
+
   const items = [
     {
-      value: Number(dill?.totalDill).toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }),
+      value: formatDollars(dill.pickleLocked * picklePrice),
       title: t("v2.dill.totalValueLocked"),
     },
+    // TODO update this
     { value: "101.78%", title: t("v2.dill.currentAPY") },
     {
-      value: Number(
-        dill?.dillWeeks[dill.dillWeeks.length - 1].weeklyDillAmount,
-      ).toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }),
+      value: formatDollars(
+        upcomingDistribution.weeklyPickleAmount * picklePrice,
+      ),
       title: t("v2.dill.upcomingDistributionValue"),
     },
-    { value: "Thu, Jun 10 2021", title: t("v2.dill.upcomingDistributionDate") },
+    {
+      value: formatDate(new Date(upcomingDistribution.distributionTime)),
+      title: t("v2.dill.upcomingDistributionDate"),
+    },
   ];
 
   return (
