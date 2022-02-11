@@ -220,13 +220,13 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x5eec60f348cb1d661e4a5122cf4638c7db7a886e": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroraeth.png"} />
   ),
-  "0x6443532841a5279cb04420E61Cf855cBEb70dc8C": (
+  "0x6443532841a5279cb04420e61cf855cbeb70dc8c": (
     <LpIcon swapIconSrc={"/trisolaris.png"}
       tokenIconSrc={"/tokens/nearavax.png"} />
   ),
-  "0x3dC236Ea01459F57EFc737A12BA3Bb5F3BFfD071": (
+  "0x3dc236ea01459f57efc737a12ba3bb5f3bffd071": (
     <LpIcon swapIconSrc={"/trisolaris.png"}
-      tokenIconSrc={"/maticnear.png"} />
+      tokenIconSrc={"/tokens/maticnear.png"} />
   ),
   "0xbf9eef63139b67fd0abf22bd5504acb0519a4212": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
