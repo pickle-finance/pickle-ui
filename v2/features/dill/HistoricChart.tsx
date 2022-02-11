@@ -63,10 +63,6 @@ const groupMonth = (dillStats: DillWeek[]) => {
   });
   return bymonth;
 };
-interface FootnoteProps {
-  series: MonthlyDistributionDataPoint[];
-}
-
 const formatDollarValue = (amount: number, digits: number) =>
   `$${roundNumber(amount, digits).toLocaleString()}`;
 
@@ -108,17 +104,13 @@ const tooltipFormatter = (
 
   switch (name) {
     case "monthlyPickleAmount":
-      return [formattedDollarValue, t("dill.monthlyPickleAmount")];
-    case "totalPickleAmount":
-      return [formattedDollarValue, t("dill.totalPickleAmount")];
+      return [formattedDollarValue, t("v2.dill.monthlyPickleAmount")];
     case "monthlyDillAmount":
-      return [formattedNumber, t("dill.monthlyDillAmount")];
-    case "totalDillAmount":
-      return [formattedNumber, t("dill.totalDillAmount")];
+      return [formattedNumber, t("v2.dill.monthlyDillAmount")];
     case "pickleDillRatio":
       return [
         `${formattedNumber} (${formatDollarValue(amount, 2)})`,
-        t("dill.pickleDillRatio"),
+        t("v2.dill.pickleDillRatio"),
       ];
     default:
       return [formattedNumber, name];
@@ -128,19 +120,19 @@ const tooltipFormatter = (
 const legendFormatter = (value: string, t: TFunction): string => {
   switch (value) {
     case "monthlyPickleAmount":
-      return t("dill.monthlyPickleAmount");
-    case "totalPickleAmount":
-      return t("dill.totalPickleAmount");
+      return t("v2.dill.monthlyPickleAmount");
     case "monthlyDillAmount":
-      return t("dill.monthlyDillAmount");
-    case "totalDillAmount":
-      return t("dill.totalDillAmount");
+      return t("v2.dill.monthlyDillAmount");
     case "pickleDillRatio":
-      return t("dill.pickleDillRatio");
+      return t("v2.dill.pickleDillRatio");
     default:
       return value;
   }
 };
+
+interface FootnoteProps {
+  series: MonthlyDistributionDataPoint[];
+}
 
 const Footnote: FC<FootnoteProps> = ({ series }) => {
   const projectedEntry = series.find((entry) => entry.isProjected);
@@ -158,6 +150,7 @@ const Footnote: FC<FootnoteProps> = ({ series }) => {
   );
 };
 
+// TODO: add toggle to switch between monthly and weekly view
 type ChartMode = "monthly" | "weekly";
 
 const HistoricChart: FC = () => {
@@ -229,7 +222,7 @@ const HistoricChart: FC = () => {
                 tickCount={9}
               >
                 <Label
-                  value={t("dill.tokenAmount") as string}
+                  value={t("v2.dill.tokenAmount") as string}
                   position="insideLeft"
                   angle={-90}
                   fill={grayLighter}
@@ -243,7 +236,7 @@ const HistoricChart: FC = () => {
                 padding={{ top: 20 }}
               >
                 <Label
-                  value={t("dill.pickleDillRatio") as string}
+                  value={t("v2.dill.pickleDillRatio") as string}
                   position="insideRight"
                   angle={-90}
                   fill={grayLighter}
@@ -253,8 +246,8 @@ const HistoricChart: FC = () => {
               <Tooltip
                 contentStyle={{
                   backgroundColor: grayDark,
-                  borderColor: grayLighter,
-                  borderRadius: "10px 10px 10px 10px",
+                  borderColor: grayDark,
+                  borderRadius: 10,
                 }}
                 formatter={(value: number, name: string, entry: Entry) =>
                   tooltipFormatter(value, name, entry, t)
@@ -271,7 +264,7 @@ const HistoricChart: FC = () => {
                 dataKey={
                   chartMode === "monthly"
                     ? "monthlyDillAmount"
-                    : "totalDillAmount"
+                    : "weeklyDillAmount"
                 }
                 fill={greenDark}
                 radius={[10, 10, 0, 0]}
@@ -284,7 +277,7 @@ const HistoricChart: FC = () => {
                 dataKey={
                   chartMode === "monthly"
                     ? "monthlyPickleAmount"
-                    : "totalPickleAmount"
+                    : "weeklyPickleAmount"
                 }
                 fill={greenLight}
                 radius={[10, 10, 0, 0]}
