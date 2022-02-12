@@ -18,7 +18,7 @@ const DillAmount: FC<Props> = ({ dillBalance }) => {
     <>
       <DillCard title={t("v2.dill.dillAmount")} data={dillBalance.toFixed(4)}>
         <Button type="primary" onClick={() => setIsOpen(true)}>
-          {t("v2.actions.enable")}
+          {t("v2.dill.getDill")}
         </Button>
       </DillCard>
       <GetDillModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />

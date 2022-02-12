@@ -105,9 +105,7 @@
     "yourDill": "Your DILL",
     "yourShare": "{{ percentage }} of total DILL",
     "youWillReceive": "You will receive",
-    "buttonConfirm": "Confirm",
-    "monthlyPickleAmount": "Monthly PICKLEs distributed",
-    "monthlyDillAmount": "Monthly DILL 🔒"
+    "buttonConfirm": "Confirm"
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
@@ -331,13 +329,16 @@
       "unclaimedRewards": "Unclaimed rewards"
     },
     "dill": {
+      "amount": "Amount",
       "currentAPY": "Current APY",
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
       "dillAmount": "DILL amount",
       "earnedPickles": "Earned PICKLEs",
+      "getDill": "Get DILL",
       "historic": "Historic distributions of PICKLE",
       "monthlyDillAmount": "Monthly DILL 🔒",
       "monthlyPickleAmount": "Monthly PICKLEs distributed",
+      "pickleBalance": "PICKLE Balance",
       "pickleDillRatio": "PICKLEs per 1 DILL ratio",
       "readMore": "Read more",
       "revenueShareStats": "Revenue share stats",
