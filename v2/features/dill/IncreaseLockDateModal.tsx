@@ -19,10 +19,10 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal }) => {
       closeModal={closeModal}
       title={t("v2.dill.increaseLockDate")}
     >
-      <LockTimeOptions />
-      <section>
-        <Button>{t("v2.actions.confirm")}</Button>
-      </section>
+      <div className="mb-6">
+        <LockTimeOptions />
+      </div>
+      <Button>{t("v2.actions.confirm")}</Button>
     </Modal>
   );
 };

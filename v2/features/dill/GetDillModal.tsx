@@ -16,7 +16,7 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickleBalance }) => {
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.dill.getDill")}>
-      <div className="bg-black-lighter mb-4 rounded-xl px-4 py-2">
+      <div className="bg-black-lighter rounded-xl px-4 py-2">
         <div className="flex justify-between mb-2">
           <p className="font-bold text-gray-outline-light text-xs tracking-normal leading-4">
             {t("v2.dill.amount")}
@@ -34,8 +34,10 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickleBalance }) => {
           <Button size="small">{t("v2.balances.max")}</Button>
         </div>
       </div>
-      <LockTimeOptions showValue />
-      <Button className="mt-6">{t("v2.actions.confirm")}</Button>
+      <div className="my-6">
+        <LockTimeOptions showValue />
+      </div>
+      <Button>{t("v2.actions.confirm")}</Button>
     </Modal>
   );
 };
