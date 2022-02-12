@@ -1,5 +1,14 @@
 import { BigNumber } from "@ethersproject/bignumber";
 
+export const formatNumber = (value: number, precision = 0): string => {
+  const formatter = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  });
+
+  return formatter.format(value);
+};
+
 export const formatDate = (value: Date): string => {
   const formatter = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
