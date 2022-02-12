@@ -7,9 +7,10 @@ import DillCard from "./DillCard";
 
 interface Props {
   dillBalance: number;
+  pickleBalance: number;
 }
 
-const DillAmount: FC<Props> = ({ dillBalance }) => {
+const DillAmount: FC<Props> = ({ dillBalance, pickleBalance }) => {
   const { t } = useTranslation("common");
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -21,7 +22,11 @@ const DillAmount: FC<Props> = ({ dillBalance }) => {
           {t("v2.dill.getDill")}
         </Button>
       </DillCard>
-      <GetDillModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />
+      <GetDillModal
+        pickleBalance={pickleBalance}
+        isOpen={isOpen}
+        closeModal={() => setIsOpen(false)}
+      />
     </>
   );
 };

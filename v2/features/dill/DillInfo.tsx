@@ -17,7 +17,10 @@ const DillInfo: FC = () => {
 
   return (
     <>
-      <DillAmount dillBalance={parseFloat(userBalance)} />
+      <DillAmount
+        pickleBalance={19} // TODO: fetch real value
+        dillBalance={parseFloat(userBalance)}
+      />
       <UnlockDate />
       <Harvest />
     </>
