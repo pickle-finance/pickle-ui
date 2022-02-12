@@ -13,11 +13,11 @@ const Dashboard: PickleFinancePage = () => {
 
   return (
     <>
-      <div className="block lg:flex mb-8 sm:mb-10">
-        <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0">
+      <div className="block xl:flex mb-8 sm:mb-10">
+        <div className="w-full mb-4 xl:w-1/2 xl:mr-8 xl:mb-0">
           <PerformanceCard />
         </div>
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col md:justify-start 2xl:justify-between">
           <PickleBalanceCard />
           <DillBalanceCard />
         </div>

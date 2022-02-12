@@ -194,8 +194,8 @@ const PerformanceCard: FC = () => {
         <h2 className="text-lg font-normal text-gray-light mb-7">
           {t("v2.dashboard.performance")}
         </h2>
-        <div className="flex flex-wrap mb-9">
-          <div className="flex mr-20 mb-6 xl:mb-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 mb-5">
+          <div className="flex mb-6 xl:mb-0">
             <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
               <CashIcon />
             </div>
@@ -208,7 +208,7 @@ const PerformanceCard: FC = () => {
               </p>
             </div>
           </div>
-          <div className="flex mr-20 mb-6 xl:mb-0">
+          <div className="flex mb-6 xl:mb-0">
             <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
               <Image
                 src="/pickle-icon.svg"
@@ -228,7 +228,7 @@ const PerformanceCard: FC = () => {
               </p>
             </div>
           </div>
-          <div className="flex mr-20 mb-6 xl:mb-0">
+          <div className="flex mb-6 xl:mb-0">
             <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
               <ClockIcon />
             </div>
