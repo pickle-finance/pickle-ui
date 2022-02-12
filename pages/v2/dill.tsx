@@ -14,10 +14,10 @@ const Dill: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
 
   return (
-    <div className="w-full sm:w-4/5 sm:mb-5">
+    <div className="w-full xl:w-4/5 mb-5">
       {core ? (
         <>
-          <div className="block sm:flex mb-6 sm:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-10">
             <DillInfo />
           </div>
           <div className="mb-3">

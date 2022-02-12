@@ -23,8 +23,8 @@ const RevenueStats: FC<Props> = ({ dill }) => {
       <h1 className="font-body font-bold text-xl mb-4">
         {t("v2.dill.revenueShareStats")}
       </h1>
-      <div className="flex justify-between align-center bg-black-light rounded-xl border border-gray-dark shadow px-6 py-7">
-        <div>
+      <div className="grid grid-cols-2 xl:grid-cols-4 bg-black-light rounded-xl border border-gray-dark shadow px-6 py-7">
+        <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-white text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}
             <MoreInfo
@@ -65,7 +65,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
             {t("v2.dill.totalValueLocked")}
           </p>
         </div>
-        <div>
+        <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-white text-lg leading-5">
             {/* TODO update this */}
             101.78%
