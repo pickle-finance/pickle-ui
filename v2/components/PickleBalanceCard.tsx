@@ -29,9 +29,9 @@ const PickleBalanceCard: FC = () => {
           <div className="w-12 h-12 p-1 bg-black rounded-full mr-5">
             <Image
               src="/pickle-icon.svg"
-              width={200}
-              height={200}
-              layout="responsive"
+              width={48}
+              height={48}
+              layout="intrinsic"
               alt="Pickle Finance"
               title="Pickle Finance"
             />

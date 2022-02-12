@@ -1,10 +1,10 @@
-import { FC, forwardRef } from "react";
+import { FC, forwardRef, ReactNode } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 
 interface Props {
-  primaryText?: string;
-  secondaryText?: string;
+  primaryText?: string | ReactNode;
+  secondaryText?: string | ReactNode;
 }
 
 const TooltipContent: FC<Props> = ({ primaryText, secondaryText }) => (
