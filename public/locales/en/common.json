@@ -324,9 +324,9 @@
       "picklesInWalletZeroOrOne": "PICKLEs in wallet",
       "picklesInWallet": "PICKLEs on {{ chains }} chains",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
+      "pendingHarvests": "Pending harvests",
       "pickleTitle": "Pickle Finance",
-      "unclaimedRewards": "Unclaimed rewards",
-      "pendingHarvests": "Pending harvests"
+      "unclaimedRewards": "Unclaimed rewards"
     },
     "dill": {
       "amount": "Amount",
