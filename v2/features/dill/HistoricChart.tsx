@@ -117,17 +117,24 @@ const tooltipFormatter = (
   }
 };
 
-const legendFormatter = (value: string, t: TFunction): string => {
+const legendFormatter = (value: string, t: TFunction): ReactNode => {
+  let result: string;
+
   switch (value) {
     case "monthlyPickleAmount":
-      return t("v2.dill.monthlyPickleAmount");
+      result = t("v2.dill.monthlyPickleAmount");
+      break;
     case "monthlyDillAmount":
-      return t("v2.dill.monthlyDillAmount");
+      result = t("v2.dill.monthlyDillAmount");
+      break;
     case "pickleDillRatio":
-      return t("v2.dill.pickleDillRatio");
+      result = t("v2.dill.pickleDillRatio");
+      break;
     default:
-      return value;
+      result = value;
   }
+
+  return <span className="text-gray-light">{result}</span>;
 };
 
 interface FootnoteProps {
