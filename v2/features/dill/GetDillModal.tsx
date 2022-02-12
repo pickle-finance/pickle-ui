@@ -8,7 +8,7 @@ interface Props {
   closeModal: () => void;
 }
 
-const TabsTimePicker: FC<TabsTimePickerProps> = ({ number, text, variant }) => {
+const TabsTimePicker: FC<TabsTimePickerProps> = ({ number, text }) => {
   return (
     <div className="tabsTimePicker">
       <p className="tabsTimePicker__text">{text}</p>
@@ -21,25 +21,25 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal }) => {
   const { t } = useTranslation("common");
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title="Get DILL">
-      <section className="w-full bg-gray-900 overflow-visible mb-4">
-        <aside className="flex justify-between p-3">
-          <p className="whitespace-pre font-bold not-italic text-gray-600 text-xs tracking-normal leading-3">
-            {t("dill.totalDillAmount")}
+    <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.dill.getDill")}>
+      <div className="bg-black-lighter mb-4 rounded-xl px-4 py-2">
+        <div className="flex justify-between mb-2">
+          <p className="font-bold text-gray-outline-light text-xs tracking-normal leading-4">
+            {t("v2.dill.amount")}
           </p>
-          <p className="whitespace-pre font-bold not-italic text-gray-600 text-xs tracking-normal leading-3">
-            {t("dill.pickleBalance")}: 41.897
+          <p className="font-bold text-gray-outline-light text-xs tracking-normal leading-4">
+            {t("v2.dill.pickleBalance")}: 41.897
           </p>
-        </aside>
+        </div>
 
-        <aside className="flex justify-between p-3 h-12 pt-0">
+        <div className="flex justify-between">
           <input
             type="text"
-            className="bg-transparent focus:outline-none w-4/5 h-auto flex-shrink-0 overflow-visible whitespace-pre font-medium not-italic text-green-500 text-base tracking-normal leading-5"
+            className="w-3/5 bg-transparent focus:outline-none flex-shrink-0 font-medium text-green leading-7"
           />
-          <Button>{t("balances.max")}</Button>
-        </aside>
-      </section>
+          <Button size="small">{t("balances.max")}</Button>
+        </div>
+      </div>
       <section className="flex justify-between">
         <TabsTimePicker
           number="0.0206"
