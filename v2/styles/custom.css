@@ -2,6 +2,12 @@
   background: #48c248;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .bg-gradient {
   background: radial-gradient(
     97.8% 63.1% at 2.1999999999999997% 0%,

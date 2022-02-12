@@ -75,7 +75,6 @@
     "extendLockTime": "Extend Lock Time",
     "historic": "Historic distributions of PICKLE",
     "increaseLockAmount": "Increase Lock Amount",
-    "increaseLockDate": "Increase Lock Date",
     "lastDistribution": "Last week's distribution",
     "lockedUntil": "Locked (until {{ date }})",
     "lockExpiration": "Lock will expire in",
@@ -101,11 +100,9 @@
     "weeklyDillAmount": "Weekly DILL 🔒",
     "weeklyPickleAmount": "Weekly PICKLEs distributed",
     "weeklyRevenue": "Weekly protocol revenue",
-    "weeklyReward": "Weekly reward",
     "yourDill": "Your DILL",
     "yourShare": "{{ percentage }} of total DILL",
-    "youWillReceive": "You will receive",
-    "buttonConfirm": "Confirm"
+    "youWillReceive": "You will receive"
   },
   "farms": {
     "about": "Farms allow you to earn PICKLEs by staking tokens.",
@@ -298,13 +295,15 @@
   },
   "v2": {
     "actions": {
+      "confirm": "Confirm",
       "enable": "Enable",
       "harvest": "Harvest"
     },
     "balances": {
       "balance": "Balance",
       "fetching": "Fetching your balances",
-      "lastUpdated": "Your balances updated <1 /> ago."
+      "lastUpdated": "Your balances updated <1 /> ago.",
+      "max": "Max"
     },
     "connection": {
       "coinbase": "Coinbase",
@@ -336,6 +335,7 @@
       "earnedPickles": "Earned PICKLEs",
       "getDill": "Get DILL",
       "historic": "Historic distributions of PICKLE",
+      "increaseLockDate": "Increase Lock Date",
       "monthlyDillAmount": "Monthly DILL 🔒",
       "monthlyPickleAmount": "Monthly PICKLEs distributed",
       "pickleBalance": "PICKLE Balance",
@@ -407,7 +407,8 @@
       "week": "1 week",
       "week_plural": "{{ count }} weeks",
       "year": "1 year",
-      "year_plural": "{{ count }} years"
+      "year_plural": "{{ count }} years",
+      "year_singular": "year"
     },
     "wallet": {
       "exit": "Exit",
