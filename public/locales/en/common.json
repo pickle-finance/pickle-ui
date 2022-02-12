@@ -166,7 +166,7 @@
     },
     "poweredBy": "Powered by",
     "ratio": "Ratio",
-    "showInactive": "Show Inactive Farms",
+    "showInactive": "Show Inactive",
     "showMyJars": "Show My Jars",
     "stake": "Stake",
     "stakeUnstaked": "Stake Unstaked {{ amount }} Tokens in Farm",

@@ -45,7 +45,7 @@ interface Weights {
   [key: string]: number;
 }
 
-const GreenSwitch = withStyles({
+export const GreenSwitch = withStyles({
   switchBase: {
     color: backgroundColor,
     "&$checked": {

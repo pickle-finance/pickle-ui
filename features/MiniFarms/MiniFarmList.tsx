@@ -23,6 +23,8 @@ import {
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { UserJarData } from "containers/UserJars";
+import { formatEther } from "ethers/lib/utils";
+import { GreenSwitch } from "features/Gauges/GaugeList";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -125,6 +127,7 @@ export const MiniFarmList: FC = () => {
   const { jarData } = useJarData();
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const [selectedProtocol, setSelectedProtocol] = useState<string | null>(null);
+  const [showUserJars, setShowUserJars] = useState<boolean>(false);
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
   const noFarm = noFarms(chainName);
@@ -215,11 +218,23 @@ export const MiniFarmList: FC = () => {
         )
         .sort((a, b) => b.totalAPY - a.totalAPY);
 
+  const userJars = jarData.filter((jar) => {
+    const farm = farmsWithAPY.find(
+      (x) =>
+        x.depositToken.address.toLowerCase() ===
+        jar.jarContract.address.toLowerCase(),
+    );
+    return (
+      parseFloat(formatEther(jar.deposited)) ||
+      parseFloat(formatEther(farm?.staked || 0))
+    );
+  });
+
   const uniV3Jars = jarData?.filter(
     (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
   );
 
-  const protocolJars = activeJars.filter(
+  const protocolJars = (showUserJars ? userJars : activeJars).filter(
     (jar) => jar.protocol === selectedProtocol,
   );
 
@@ -245,10 +260,10 @@ export const MiniFarmList: FC = () => {
         </>
       )}
       <Grid.Container gap={1}>
-        <Grid md={16}>
+        <Grid md={14}>
           <FarmsIntro />
         </Grid>
-        <Grid md={8} style={{ textAlign: "right" }}>
+        <Grid md={10} style={{ textAlign: "right" }}>
           <Checkbox
             checked={showInactive}
             size="medium"
@@ -256,6 +271,12 @@ export const MiniFarmList: FC = () => {
           >
             {t("farms.showInactive")}
           </Checkbox>
+          <GreenSwitch
+            style={{ top: "-2px" }}
+            checked={showUserJars}
+            onChange={() => setShowUserJars(!showUserJars)}
+          />
+          {t("farms.showMyJars")}
         </Grid>
       </Grid.Container>
       <Grid.Container gap={1} justify="center">
@@ -286,7 +307,12 @@ export const MiniFarmList: FC = () => {
             </Grid>
           );
         })}
-        {(selectedProtocol ? protocolJars : activeJars).map((jar) => {
+        {(selectedProtocol
+          ? protocolJars
+          : showUserJars
+          ? userJars
+          : activeJars
+        ).map((jar) => {
           const farm = farmsWithAPY.find(
             (x) =>
               x.depositToken.address.toLowerCase() ===
