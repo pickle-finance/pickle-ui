@@ -3,22 +3,21 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 import Link from "v2/components/Link";
 import Button from "v2/components/Button";
 import MoreInfo from "v2/components/MoreInfo";
 import { useSelector } from "react-redux";
-import { CoreSelectors } from "v2/store/core";
+import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices } from "./FarmsTableRowHeader";
-import { ChainNetwork } from "picklefinance-core";
 import { Network } from "../connection/networks";
 import { switchChain } from "../connection/ConnectionStatus";
+import FarmsTableRowDetails from "./FarmsTableRowDetails";
 
 interface Props {
-  jar: JarDefinition;
+  jar: JarWithData;
 }
 
 const ConnectButton: FC<{ network: Network | undefined }> = ({ network }) => {
@@ -61,9 +60,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
   const { chainId } = useWeb3React();
 
-  const activeNetwork = networks?.find(
-    (network) => network.chainId === chainId,
-  );
+  const activeNetwork = networks?.find((network) => network.chainId === chainId);
   const isJarOnActiveNetwork = jar.chain === activeNetwork?.name;
   const jarNetwork = networks?.find((network) => network.name === jar.chain);
   return (
@@ -71,20 +68,13 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
       colSpan={6}
       className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
-      <div className="block sm:flex">
+      <div className="block sm:flex mb-5">
         <div className="py-4 flex-shrink-0 sm:mr-6">
-          <p className="font-title font-medium text-base leading-5">
-            {depositTokenCountString}
-          </p>
+          <p className="font-title font-medium text-base leading-5">{depositTokenCountString}</p>
           <p className="font-normal text-xs text-foreground-alt-200 mb-6">
             {t("v2.balances.balance")}
           </p>
-          <Link
-            href={jar.depositToken.link}
-            className="font-bold"
-            external
-            primary
-          >
+          <Link href={jar.depositToken.link} className="font-bold" external primary>
             {t("v2.farms.getToken", { token: jar.depositToken.name })}
           </Link>
         </div>
@@ -128,6 +118,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </div>
         </div>
       </div>
+      <FarmsTableRowDetails jar={jar} />
     </td>
   );
 };

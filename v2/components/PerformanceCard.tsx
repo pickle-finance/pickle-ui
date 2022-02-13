@@ -62,7 +62,10 @@ export const getPendingHarvestsUsd = (
   for (let i = 0; i < userdata.tokens.length; i++) {
     const key = userdata.tokens[i].assetKey;
     const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
-    const totalPTokens = jar?.details.tokenBalance;
+
+    if (!jar) continue;
+
+    const totalPTokens = jar.details?.tokenBalance;
     if (totalPTokens) {
       const userShare =
         (parseFloat(userdata.tokens[i].pAssetBalance) +
