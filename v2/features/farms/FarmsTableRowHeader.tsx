@@ -167,7 +167,8 @@ const formatImagePath = (chain: string, networks: Network[] | undefined): string
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
-  const totalTokensInJarAndFarm = jar.depositTokensInJar.tokens + jar.depositTokensInFarm.tokens;
+  const totalTokensInJarAndFarm =
+    parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
   const depositTokenUSD = jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
   const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
   const picklesPending = jar.earnedPickles.tokensVisible;
