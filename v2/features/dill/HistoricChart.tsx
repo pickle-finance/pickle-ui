@@ -19,13 +19,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import { CoreSelectors } from "v2/store/core";
 import { roundNumber } from "util/number";
-import {
-  grayDark,
-  grayLighter,
-  greenDark,
-  greenLight,
-  orange,
-} from "v2/utils/theme";
+import { grayDark, grayLighter, orange } from "v2/utils/theme";
 
 interface Entry {
   payload: MonthlyDistributionDataPoint;
@@ -273,11 +267,14 @@ const HistoricChart: FC = () => {
                     ? "monthlyDillAmount"
                     : "weeklyDillAmount"
                 }
-                fill={greenDark}
+                fill="rgb(var(--color-primary-dark))"
                 radius={[10, 10, 0, 0]}
               >
                 {dataSeries.map((_, index) => (
-                  <Cell fill={greenDark} key={`dill-${index}`} />
+                  <Cell
+                    fill="rgb(var(--color-primary-dark))"
+                    key={`dill-${index}`}
+                  />
                 ))}
               </Bar>
               <Bar
@@ -286,11 +283,14 @@ const HistoricChart: FC = () => {
                     ? "monthlyPickleAmount"
                     : "weeklyPickleAmount"
                 }
-                fill={greenLight}
+                fill="rgb(var(--color-primary-light))"
                 radius={[10, 10, 0, 0]}
               >
                 {dataSeries.map((_, index) => (
-                  <Cell fill={greenLight} key={`pickle-${index}`} />
+                  <Cell
+                    fill="rgb(var(--color-primary-light))"
+                    key={`pickle-${index}`}
+                  />
                 ))}
               </Bar>
               <Line
