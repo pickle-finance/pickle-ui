@@ -27,7 +27,7 @@ const AppLink: FC<Props> = ({
         onClick={onClick}
         className={classNames(
           active && "bg-black-light text-green-light",
-          primary ? "text-orange" : "text-white",
+          primary ? "text-orange" : "text-base",
           "group inline-flex grow items-center text-sm rounded-lg hover:text-green-light transition duration-300 ease-in-out",
           className,
         )}
@@ -37,7 +37,7 @@ const AppLink: FC<Props> = ({
         {external && (
           <ExternalLinkIcon
             className={classNames(
-              primary ? "text-orange" : "text-white",
+              primary ? "text-orange" : "text-base",
               "group-hover:text-green-light ml-2 flex-shrink-0 h-4 w-4 transition duration-300 ease-in-out",
             )}
             aria-hidden="true"

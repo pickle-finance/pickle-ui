@@ -66,7 +66,7 @@ const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
         <div>
           <p
             className={classNames(
-              "text-white font-title text-base group-hover:text-green-light transition duration-200 ease-in-out",
+              "text-base font-title text-base group-hover:text-green-light transition duration-200 ease-in-out",
               isFocused && "text-green-light",
             )}
           >

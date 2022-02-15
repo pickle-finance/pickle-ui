@@ -111,7 +111,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                 />
               </div>
               <span
-                className="text-white cursor-pointer group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
+                className="text-base cursor-pointer group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
                 onClick={() => switchChain(library, network.chainId, allCore)}
               >
                 {network.visibleName}
@@ -149,8 +149,7 @@ const ConnectionStatus: FC = () => {
   let { error, chainId } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!chainId) 
-    return null;
+  if (!chainId) return null;
   if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
     return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {

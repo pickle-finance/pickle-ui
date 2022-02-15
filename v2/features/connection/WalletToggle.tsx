@@ -60,7 +60,7 @@ const WalletToggle: FC = () => {
     <Popover className="relative">
       {() => (
         <>
-          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-white font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
+          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-base font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <span className="block mr-2">{ens || shortenAddress(account)}</span>
             <Davatar
               size={32}

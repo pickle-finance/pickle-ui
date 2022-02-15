@@ -40,7 +40,7 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = ({ networks }) => {
             priority
           />
         </div>
-        <span className="text-white text-sm font-bold">
+        <span className="text-base text-sm font-bold">
           {activeChain.visibleName}
         </span>
       </div>
@@ -102,7 +102,7 @@ const NetworkToggle: FC = () => {
                           />
                         </div>
                         <span
-                          className="text-white group-hover:text-green-light text-sm font-bold pr-4 whitespace-nowrap"
+                          className="text-base group-hover:text-green-light text-sm font-bold pr-4 whitespace-nowrap"
                           onClick={() => {
                             switchChain(library, network.chainId, allCore);
                           }}
