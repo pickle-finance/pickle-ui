@@ -196,7 +196,7 @@ const PerformanceCard: FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 mb-5">
           <div className="flex mb-6 xl:mb-0">
-            <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
+            <div className="bg-primary p-2 w-12 h-12 rounded-full mr-6">
               <CashIcon />
             </div>
             <div>
@@ -229,7 +229,7 @@ const PerformanceCard: FC = () => {
             </div>
           </div>
           <div className="flex mb-6 xl:mb-0">
-            <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
+            <div className="bg-primary p-2 w-12 h-12 rounded-full mr-6">
               <ClockIcon />
             </div>
             <div>

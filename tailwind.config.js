@@ -1,4 +1,4 @@
-const colorClass = (variable) => {
+const withOpacityValue = (variable) => {
   return ({ opacityValue }) =>
     opacityValue
       ? `rgba(var(${variable}), ${opacityValue})`
@@ -6,7 +6,17 @@ const colorClass = (variable) => {
 };
 
 const textColor = {
-  base: colorClass("--color-text-base"),
+  "color-base": withOpacityValue("--color-text-base"),
+  primary: withOpacityValue("--color-primary"),
+  "primary-light": withOpacityValue("--color-primary-light"),
+};
+
+const backgroundColor = {
+  primary: withOpacityValue("--color-primary"),
+};
+
+const borderColor = {
+  "primary-light": withOpacityValue("--color-primary-light"),
 };
 
 module.exports = {
@@ -40,6 +50,8 @@ module.exports = {
       DEFAULT: "0px 3px 20px 15px rgba(0, 0, 0, 0.1);",
     },
     extend: {
+      backgroundColor,
+      borderColor,
       textColor,
       colors: {
         black: {

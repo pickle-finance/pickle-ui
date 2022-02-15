@@ -6,7 +6,7 @@ interface Props extends HTMLAttributes<HTMLElement> {}
 
 const Spinner: FC<Props> = ({ className }) => (
   <svg
-    className={classNames("animate-spin text-base", className)}
+    className={classNames("animate-spin text-color-base", className)}
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"

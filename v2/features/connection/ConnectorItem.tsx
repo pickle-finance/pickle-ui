@@ -74,7 +74,7 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
     >
       <ConnectorItemIcon connector={connector} isLoading={isLoading} />
       <div className="flex flex-col text-left justify-center">
-        <p className="text-base text-xl group-hover:text-green-light transition-colors duration-300 ease-in-out">
+        <p className="text-color-base text-xl group-hover:text-primary-light transition-colors duration-300 ease-in-out">
           {connector.title}
         </p>
       </div>
