@@ -1,3 +1,14 @@
+const colorClass = (variable) => {
+  return ({ opacityValue }) =>
+    opacityValue
+      ? `rgba(var(${variable}), ${opacityValue})`
+      : `rgb(var(${variable}))`;
+};
+
+const textColor = {
+  base: colorClass("--color-text-base"),
+};
+
 module.exports = {
   content: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/**/*.tsx"],
   theme: {
@@ -29,6 +40,7 @@ module.exports = {
       DEFAULT: "0px 3px 20px 15px rgba(0, 0, 0, 0.1);",
     },
     extend: {
+      textColor,
       colors: {
         black: {
           DEFAULT: "#031316",

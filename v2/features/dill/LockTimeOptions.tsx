@@ -32,7 +32,7 @@ const LockTimeOptions: FC<Props> = ({ showValue = false }) => {
                 checked
                   ? "bg-gray-outline border-green-light"
                   : "bg-black-light border-gray-dark hover:bg-gray-outline",
-                "font-title border rounded-xl cursor-pointer text-white py-4 px-6 flex items-center justify-center text-sm font-medium",
+                "font-title border rounded-xl cursor-pointer text-base py-4 px-6 flex items-center justify-center text-sm font-medium",
               )
             }
           >

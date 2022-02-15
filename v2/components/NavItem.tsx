@@ -27,7 +27,7 @@ const NavItem: FC<Props> = ({ href, children, className, Icon, external }) => {
             className={classNames(
               isCurrent
                 ? "text-green-light"
-                : "text-white group-hover:text-green-light",
+                : "text-base group-hover:text-green-light",
               "mr-2 flex-shrink-0 h-5 w-5",
             )}
             aria-hidden="true"

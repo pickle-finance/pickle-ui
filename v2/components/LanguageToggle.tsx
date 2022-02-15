@@ -68,7 +68,7 @@ const LanguageToggle: FC = () => {
                       locale={language.locale}
                     >
                       <a className="flex group justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out">
-                        <span className="text-white group-hover:text-green-light text-sm font-bold">
+                        <span className="text-base group-hover:text-green-light text-sm font-bold">
                           {language.name}
                         </span>
                         {languageNameFromLocale(locale) === language.name && (
