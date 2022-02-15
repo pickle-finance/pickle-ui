@@ -20,7 +20,6 @@ import {
   blackLight,
   blackLighter,
   grayOutlineLight,
-  green,
   orange,
 } from "v2/utils/theme";
 
@@ -97,7 +96,7 @@ const styles: StylesConfig<Filter> = {
   }),
   input: (styles) => ({
     ...styles,
-    color: green,
+    color: "rgb(var(--color-primary))",
   }),
   menu: (styles) => ({
     ...styles,

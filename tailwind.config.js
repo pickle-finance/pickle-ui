@@ -71,11 +71,6 @@ module.exports = {
           "outline-light": "#869498",
           dark: "#1f2d30",
         },
-        green: {
-          DEFAULT: "#48c248",
-          dark: "#065506",
-          light: "#5eed5d",
-        },
       },
       scale: {
         "-1": "-1",
