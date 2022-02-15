@@ -10,7 +10,7 @@ import Ping from "v2/features/connection/Ping";
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
 
-  return <CheckCircleIcon className="w-4 h-4 mr-1 text-green-light" />;
+  return <CheckCircleIcon className="w-4 h-4 mr-1 text-primary-light" />;
 };
 
 interface Props {

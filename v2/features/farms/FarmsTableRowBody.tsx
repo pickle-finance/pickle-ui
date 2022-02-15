@@ -94,7 +94,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             <MoreInfo secondaryText="More info" />
           </p>
           <div className="flex items-end justify-between">
-            <span className="font-title text-green font-medium text-base leading-5">
+            <span className="font-title text-primary font-medium text-base leading-5">
               {jarTokens}
             </span>
             {isJarOnActiveNetwork ? (
@@ -110,7 +110,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             <MoreInfo secondaryText="More info" />
           </p>
           <div className="flex items-end justify-between">
-            <span className="font-title text-green font-medium text-base leading-5">
+            <span className="font-title text-primary font-medium text-base leading-5">
               {farmTokens}
             </span>
             <Button type="disabled">{t("v2.farms.enable")}</Button>
@@ -121,7 +121,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             {t("v2.farms.earnedToken", { token: "PICKLEs" })}
           </p>
           <div className="flex items-end justify-between">
-            <span className="font-title text-green font-medium text-base leading-5">
+            <span className="font-title text-primary font-medium text-base leading-5">
               {picklesPending}
             </span>
             <Button type="disabled">{t("v2.farms.enable")}</Button>

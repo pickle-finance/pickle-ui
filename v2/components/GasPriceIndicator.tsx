@@ -54,7 +54,7 @@ const GasPriceIndicatorOptions: FC<{
           key={price.name}
           className="group hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out"
         >
-          <p className="text-sm font-bold uppercase group-hover:text-green-light">
+          <p className="text-sm font-bold uppercase group-hover:text-primary-light">
             {price.value} GWEI
           </p>
           <p className="text-xs italic text-gray-light">{price.name}</p>
@@ -82,7 +82,7 @@ const GasPriceIndicator: FC = () => {
 
           <SelectTransition>
             <Popover.Panel className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-2 w-28 max-w-screen-sm sm:px-0">
-              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden text-base">
+              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden text-color-base">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   <GasPriceIndicatorOptions data={data} />
                 </div>

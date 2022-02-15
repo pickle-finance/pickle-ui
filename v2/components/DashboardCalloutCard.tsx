@@ -26,7 +26,7 @@ const DashboardCalloutCard: FC = () => {
             <p className="font-body font-bold text-lg sm:text-xl leading-6 mb-1">
               <Trans i18nKey="v2.dashboard.earnUpTo">
                 Earn up to
-                <span className="text-green">
+                <span className="text-primary">
                   {{ percent: formatPercentage(coreMaxApy.apy) }}
                 </span>
                 <MoreInfo

@@ -10,7 +10,7 @@ const FarmsBadge: FC<Props> = ({ active }) => {
   return (
     <div
       className={classNames(
-        active ? "bg-green" : "bg-gray-outline",
+        active ? "bg-primary" : "bg-gray-outline",
         "rounded-xl py-1 px-2",
       )}
     >

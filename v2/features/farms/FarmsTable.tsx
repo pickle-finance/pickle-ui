@@ -51,7 +51,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
                   {/* Chevron down/up column */}
                 </tr>
               </thead>
-              <tbody className="text-base">
+              <tbody className="text-color-base">
                 <FarmsTableBody
                   simple={simple}
                   requiresUserModel={requiresUserModel}

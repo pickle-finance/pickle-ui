@@ -30,9 +30,9 @@ const LockTimeOptions: FC<Props> = ({ showValue = false }) => {
             className={({ checked }) =>
               classNames(
                 checked
-                  ? "bg-gray-outline border-green-light"
+                  ? "bg-gray-outline border-primary-light"
                   : "bg-black-light border-gray-dark hover:bg-gray-outline",
-                "font-title border rounded-xl cursor-pointer text-base py-4 px-6 flex items-center justify-center text-sm font-medium",
+                "font-title border rounded-xl cursor-pointer text-color-base py-4 px-6 flex items-center justify-center text-sm font-medium",
               )
             }
           >
@@ -40,7 +40,7 @@ const LockTimeOptions: FC<Props> = ({ showValue = false }) => {
               <p>{opt.count}</p>
               <p>{opt.unit}</p>
               {showValue && (
-                <p className="mt-4 text-green">{opt.value.toFixed(4)}</p>
+                <p className="mt-4 text-primary">{opt.value.toFixed(4)}</p>
               )}
             </RadioGroup.Label>
           </RadioGroup.Option>

@@ -5,5 +5,7 @@
 @layer base {
   :root {
     --color-text-base: 255, 255, 255;
+    --color-primary: 72, 194, 72;
+    --color-primary-light: 94, 237, 93;
   }
 }
