@@ -22,7 +22,6 @@ import {
 } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
-import { isBalancerPool } from "containers/Jars/jars";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
@@ -142,6 +141,12 @@ export const FARM_LP_TO_ICON: {
   ),
   "0x0be790c83648c28eD285fee5E0BD79D1d57AAe69": (
     <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/bal-tricrypto.png"} />
+  ),
+  "0x979Cb85f2fe4B6036c089c554c91fdfB7158bB28": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x46573375eEDA7979e19fAEEdd7eF2843047D9E0d": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/balancer.png"} />
   ),
   "0x6779EB2838f44300CB6025d17DEB9F2E27CC9540": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/gohm.png"} />
@@ -429,7 +434,8 @@ export const JarMiniFarmCollapsible: FC<{
     ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
     : false;
 
-  const isBalancerJar = isBalancerPool(depositToken.address);
+  const isCooldownJar = foundJar?.tags?.includes("cooldown")? true: false;
+  
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -591,7 +597,7 @@ export const JarMiniFarmCollapsible: FC<{
 
   useEffect(() => {
     const checkCooldown = async () => {
-      if (isBalancerJar && signer && multicallProvider) {
+      if (isCooldownJar && signer && multicallProvider) {
         const jarMulticall = new MulticallContract(
           jarContract.address,
           jarTimelockABI,
@@ -818,7 +824,7 @@ export const JarMiniFarmCollapsible: FC<{
             </Grid>
           </Grid.Container>
           <Spacer y={1} />
-          {isBalancerJar ? t("farms.balancer.info") : null}
+          {isCooldownJar ? t("farms.balancer.info") : null}
         </Grid>
         {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
           <Grid xs={24} md={12}>
@@ -875,7 +881,7 @@ export const JarMiniFarmCollapsible: FC<{
             >
               {withdrawButton.text}
             </Button>
-            {isBalancerJar && balancerTimerProps ? (
+            {isCooldownJar && balancerTimerProps ? (
               <BalancerJarTimer {...balancerTimerProps} />
             ) : null}
           </Grid>

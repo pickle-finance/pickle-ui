@@ -6,14 +6,6 @@ import {
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
-const BALANCER_POOLS = [
-  "0xc2f082d33b5b8ef3a7e3de30da54efd3114512ac", // bal pickle-eth
-  "0x64541216bafffeec8ea535bb71fbc927831d0595", // bal tricrypto
-];
-
-export const isBalancerPool = (depositTokenAddress: string) => {
-  return BALANCER_POOLS.includes(depositTokenAddress.toLowerCase());
-};
 
 // pUSDC jar token
 export const isPUsdcToken = (jarTokenAddress: string) => {
