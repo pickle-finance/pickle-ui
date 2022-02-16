@@ -1,26 +1,25 @@
-import { FC, useState } from "react";
+import { FC } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 import { RadioGroup } from "@headlessui/react";
+import { SunIcon, MoonIcon, SparklesIcon } from "@heroicons/react/solid";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { classNames } from "v2/utils";
-import { SunIcon, MoonIcon, SparklesIcon } from "@heroicons/react/solid";
+import { ThemeType } from "v2/store/theme";
+import { ThemeSelectors, setThemeType } from "v2/store/theme";
+import { useAppDispatch } from "v2/store";
 
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
 }
 
-enum ThemeType {
-  Light,
-  Dark,
-  Rare,
-}
-
 const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
   const { t } = useTranslation("common");
-  const [option, setOption] = useState<number>(ThemeType.Dark);
+  const dispatch = useAppDispatch();
+  const theme = useSelector(ThemeSelectors.selectTheme);
 
   const options = [
     { value: ThemeType.Dark, label: t("v2.theme.dark"), icon: MoonIcon },
@@ -30,7 +29,10 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.theme.pick")}>
-      <RadioGroup value={option} onChange={setOption}>
+      <RadioGroup
+        value={theme.type}
+        onChange={(value) => dispatch(setThemeType(value))}
+      >
         <div className="grid grid-cols-3 gap-2">
           {options.map((opt) => {
             const Icon = opt.icon;
