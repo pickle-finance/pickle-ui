@@ -295,6 +295,7 @@
   },
   "v2": {
     "actions": {
+      "close": "Close",
       "confirm": "Confirm",
       "enable": "Enable",
       "harvest": "Harvest"
@@ -392,6 +393,12 @@
       "openMenu": "Open main menu",
       "stats": "Stats",
       "tokenAddress": "Token address"
+    },
+    "theme": {
+      "dark": "Dark",
+      "light": "Light",
+      "pick": "Pick a theme",
+      "rare": "Rare"
     },
     "time": {
       "day": "1 day",
