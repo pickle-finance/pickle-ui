@@ -26,7 +26,7 @@ const PickleBalanceCard: FC = () => {
     <div className="bg-gradient rounded-2xl border border-gray-dark shadow mb-4">
       <div className="relative p-6 sm:p-8">
         <div className="flex mr-20">
-          <div className="w-12 h-12 p-1 bg-black rounded-full mr-5">
+          <div className="w-12 h-12 p-1 bg-background rounded-full mr-5">
             <Image
               src="/pickle-icon.svg"
               width={48}

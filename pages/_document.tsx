@@ -50,7 +50,7 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
         </Head>
-        <body className="h-full font-body bg-black">
+        <body className="h-full font-body bg-background">
           <Main />
           <NextScript />
         </body>

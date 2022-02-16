@@ -72,7 +72,7 @@ const SlideOverMenu: FC = () => {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="h-full flex py-8 bg-black shadow-xl overflow-y-scroll">
+                  <div className="h-full flex py-8 bg-background shadow-xl overflow-y-scroll">
                     <div className="flex-1 flex overflow-y-auto">
                       <NavItems />
                     </div>

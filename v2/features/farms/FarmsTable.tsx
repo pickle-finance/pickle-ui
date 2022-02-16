@@ -22,7 +22,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
           <div className="py-2 align-middle inline-block min-w-full">
             {!simple && <FarmControls />}
             <table className="min-w-full table-auto border-collapse">
-              <thead className="bg-black uppercase">
+              <thead className="bg-background uppercase">
                 <tr>
                   <FarmsTableHeaderCellSortable
                     sortType={SortType.None}
