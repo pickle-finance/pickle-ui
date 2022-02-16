@@ -59,7 +59,7 @@ const LanguageToggle: FC = () => {
 
           <SelectTransition>
             <Popover.Panel className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-2 w-36 max-w-screen-sm sm:px-0">
-              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden">
+              <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-gray-dark overflow-hidden">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   {languages.map((language) => (
                     <Link
@@ -68,7 +68,7 @@ const LanguageToggle: FC = () => {
                       locale={language.locale}
                     >
                       <a className="flex group justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out">
-                        <span className="text-color-base group-hover:text-primary-light text-sm font-bold">
+                        <span className="text-foreground group-hover:text-primary-light text-sm font-bold">
                           {language.name}
                         </span>
                         {languageNameFromLocale(locale) === language.name && (

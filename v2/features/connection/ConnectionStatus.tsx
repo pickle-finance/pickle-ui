@@ -111,7 +111,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                 />
               </div>
               <span
-                className="text-color-base cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
+                className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
                 onClick={() => switchChain(library, network.chainId, allCore)}
               >
                 {network.visibleName}

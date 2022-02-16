@@ -25,12 +25,12 @@ const RevenueStats: FC<Props> = ({ dill }) => {
       </h1>
       <div className="grid grid-cols-2 xl:grid-cols-4 bg-black-light rounded-xl border border-gray-dark shadow px-6 py-7">
         <div className="mb-6 xl:mb-0">
-          <h2 className="font-title font-medium text-color-base text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}
             <MoreInfo
               secondaryText={
                 <div className="flex items-center font-bold">
-                  <span className="text-color-base mr-1">
+                  <span className="text-foreground mr-1">
                     {formatNumber(dill.pickleLocked)}
                   </span>
                   <div className="inline-block w-6 h-6">
@@ -44,7 +44,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                     />
                   </div>
                   <span className="mr-2 text-gray-light">=</span>
-                  <span className="text-color-base mr-1">
+                  <span className="text-foreground mr-1">
                     {formatNumber(dill.totalDill)}
                   </span>
                   <div className="inline-block w-6 h-6">
@@ -66,7 +66,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
           </p>
         </div>
         <div className="mb-6 xl:mb-0">
-          <h2 className="font-title font-medium text-color-base text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {/* TODO update this */}
             101.78%
           </h2>
@@ -75,14 +75,14 @@ const RevenueStats: FC<Props> = ({ dill }) => {
           </p>
         </div>
         <div>
-          <h2 className="font-title font-medium text-color-base text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(
               upcomingDistribution.weeklyPickleAmount * picklePrice,
             )}
             <MoreInfo
               secondaryText={
                 <div className="flex items-center font-bold">
-                  <span className="text-color-base mr-1">
+                  <span className="text-foreground mr-1">
                     {formatNumber(upcomingDistribution.weeklyPickleAmount)}
                   </span>
                   <div className="inline-block w-6 h-6">
@@ -104,7 +104,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
           </p>
         </div>
         <div>
-          <h2 className="font-title font-medium text-color-base text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDate(new Date(upcomingDistribution.distributionTime))}
           </h2>
           <p className="font-body text-gray-light font-normal text-xs leading-4">

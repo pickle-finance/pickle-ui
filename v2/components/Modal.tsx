@@ -48,11 +48,11 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
             <div className="relative inline-block w-full max-w-md overflow-hidden align-middle bg-black-light rounded-2xl border border-gray-dark z-50 transition-all">
               <Dialog.Title
                 as="div"
-                className="flex justify-between items-center text-lg text-left font-title font-medium leading-6 text-color-base px-6 py-4 sm:px-8 sm:py-6 border-b border-gray-dark"
+                className="flex justify-between items-center text-lg text-left font-title font-medium leading-6 text-foreground px-6 py-4 sm:px-8 sm:py-6 border-b border-gray-dark"
               >
                 <span>{title}</span>
                 <button
-                  className="cursor-pointer p-2 text-gray-light hover:bg-background hover:text-color-base outline-none transition duration-300 ease-in-out rounded-xl"
+                  className="cursor-pointer p-2 text-gray-light hover:bg-background hover:text-foreground outline-none transition duration-300 ease-in-out rounded-xl"
                   onClick={closeModal}
                 >
                   <XIcon className="w-5 h-5" />
