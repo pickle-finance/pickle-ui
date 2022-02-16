@@ -52,7 +52,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
               >
                 <span>{title}</span>
                 <button
-                  className="cursor-pointer p-2 text-gray-light hover:bg-black hover:text-color-base outline-none transition duration-300 ease-in-out rounded-xl"
+                  className="cursor-pointer p-2 text-gray-light hover:bg-background hover:text-color-base outline-none transition duration-300 ease-in-out rounded-xl"
                   onClick={closeModal}
                 >
                   <XIcon className="w-5 h-5" />

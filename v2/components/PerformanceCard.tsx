@@ -209,7 +209,7 @@ const PerformanceCard: FC = () => {
             </div>
           </div>
           <div className="flex mb-6 xl:mb-0">
-            <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
+            <div className="bg-background p-2 w-12 h-12 rounded-full mr-6">
               <Image
                 src="/pickle-icon.svg"
                 width={200}

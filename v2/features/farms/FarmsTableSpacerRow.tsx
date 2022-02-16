@@ -9,7 +9,7 @@ import { FC } from "react";
 const FarmsTableSpacerRow: FC = () => {
   return (
     <tr>
-      <td colSpan={6} className="bg-black p-1"></td>
+      <td colSpan={6} className="bg-background p-1"></td>
     </tr>
   );
 };

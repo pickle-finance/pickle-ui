@@ -16,7 +16,7 @@ const FarmsBadge: FC<Props> = ({ active }) => {
     >
       <span
         className={classNames(
-          active ? "text-black" : "text-gray-outline-light",
+          active ? "text-background" : "text-gray-outline-light",
           "block font-title font-bold text-sm text-center leading-none",
         )}
       >
