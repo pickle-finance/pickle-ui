@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import SlideOverMenu from "./SlideOverMenu";
 import LanguageToggle from "./LanguageToggle";
+import ThemeToggle from "v2/features/theme/ThemeToggle";
 
 const NavbarMobile: FC = () => (
   <div className="block sm:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,6 +24,7 @@ const NavbarMobile: FC = () => (
         </Link>
       </div>
       <div className="flex items-center">
+        <ThemeToggle />
         <LanguageToggle />
         <SlideOverMenu />
       </div>
