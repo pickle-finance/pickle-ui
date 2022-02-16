@@ -5,26 +5,6 @@ const withOpacityValue = (variable) => {
       : `rgb(var(${variable}))`;
 };
 
-const textColor = {
-  background: withOpacityValue("--color-background"),
-  "color-base": withOpacityValue("--color-text-base"),
-  primary: withOpacityValue("--color-primary"),
-  "primary-light": withOpacityValue("--color-primary-light"),
-};
-
-const backgroundColor = {
-  background: withOpacityValue("--color-background"),
-  primary: withOpacityValue("--color-primary"),
-};
-
-const borderColor = {
-  "primary-light": withOpacityValue("--color-primary-light"),
-};
-
-const ringColor = {
-  background: withOpacityValue("--color-background"),
-};
-
 module.exports = {
   content: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/**/*.tsx"],
   theme: {
@@ -56,11 +36,13 @@ module.exports = {
       DEFAULT: "0px 3px 20px 15px rgba(0, 0, 0, 0.1)",
     },
     extend: {
-      backgroundColor,
-      borderColor,
-      ringColor,
-      textColor,
       colors: {
+        background: withOpacityValue("--color-background"),
+        foreground: withOpacityValue("--color-foreground"),
+        primary: {
+          DEFAULT: withOpacityValue("--color-primary"),
+          light: withOpacityValue("--color-primary-light"),
+        },
         black: {
           light: "#0f1f22",
           lighter: "#172628",

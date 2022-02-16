@@ -60,7 +60,7 @@ const WalletToggle: FC = () => {
     <Popover className="relative">
       {() => (
         <>
-          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-color-base font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
+          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-foreground font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <span className="block mr-2">{ens || shortenAddress(account)}</span>
             <Davatar
               size={32}
@@ -72,7 +72,7 @@ const WalletToggle: FC = () => {
 
           <SelectTransition>
             <Popover.Panel className="absolute z-10 w-full left-1/2 -translate-x-1/2 mt-2 px-2 sm:px-0">
-              <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-dark overflow-hidden">
+              <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-gray-dark overflow-hidden">
                 <div className="relative grid gap-1 bg-black-light p-2">
                   <WalletToggleOptions />
                 </div>

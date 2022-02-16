@@ -46,7 +46,7 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
           </p>
           <p className="text-primary font-bold text-lg align-bottom leading-6">
             {details.rewardCount}
-            <span className="text-color-base text-xs ml-2">
+            <span className="text-foreground text-xs ml-2">
               {details.tokenString}
             </span>
           </p>

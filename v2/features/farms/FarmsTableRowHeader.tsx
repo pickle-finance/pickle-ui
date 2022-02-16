@@ -23,7 +23,7 @@ import { JarWithData } from "./FarmsTableBody";
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
     className={classNames(
-      "bg-black-light p-4 whitespace-nowrap text-sm text-color-base sm:p-6 group-hover:bg-black-lighter transition duration-300 ease-in-out",
+      "bg-black-light p-4 whitespace-nowrap text-sm text-foreground sm:p-6 group-hover:bg-black-lighter transition duration-300 ease-in-out",
       className,
     )}
   >
@@ -252,7 +252,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             <ChevronDownIcon
               className={classNames(
                 open && "rotate-180",
-                "text-color-base ml-2 h-5 w-5 transition duration-300 ease-in-out",
+                "text-foreground ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"
             />

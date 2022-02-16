@@ -25,7 +25,7 @@ const Button: FC<Props> = ({
         size === "large" && "px-6 py-4 uppercase rounded-2xl",
         size === "small" && "p-2 leading-4 rounded-xl leading-2",
         type === "primary" &&
-          "text-color-base bg-orange border-transparent hover:bg-orange-light",
+          "text-foreground bg-orange border-transparent hover:bg-orange-light",
         type === "secondary" &&
           "text-orange bg-transparent border-orange hover:bg-orange-lightest hover:border-orange-light hover:text-orange-light",
         type === "disabled" &&
