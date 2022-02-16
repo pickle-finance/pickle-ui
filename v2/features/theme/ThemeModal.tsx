@@ -48,12 +48,20 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
                   )
                 }
               >
-                <RadioGroup.Label as="div">
-                  <div className="flex flex-col items-center">
-                    <Icon className="h-5 w-5 fill-current mb-2" />
-                    <p>{opt.label}</p>
-                  </div>
-                </RadioGroup.Label>
+                {({ checked }) => (
+                  <RadioGroup.Label
+                    as="div"
+                    className="flex flex-col items-center"
+                  >
+                    <Icon
+                      className={classNames(
+                        checked ? "fill-primary-light" : "fill-current",
+                        "h-5 w-5 mb-3",
+                      )}
+                    />
+                    <span>{opt.label}</span>
+                  </RadioGroup.Label>
+                )}
               </RadioGroup.Option>
             );
           })}
