@@ -5,6 +5,7 @@ import coreReducer from "./core";
 import connectionReducer from "./connection";
 import userReducer from "./user";
 import controlsReducer from "./controls";
+import themeReducer from "./theme";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     connection: connectionReducer,
     user: userReducer,
     controls: controlsReducer,
+    theme: themeReducer,
   },
 });
 
