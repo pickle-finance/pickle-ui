@@ -779,7 +779,9 @@ export const JarGaugeCollapsible: FC<{
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
-            {!gaugeData ? (
+            {isClosingOnly ? (
+              <div>--</div>
+            ) : !gaugeData ? (
               <Data>
                 <Tooltip text={ReactHtmlParser(apyRangeTooltipText)}>
                   {totalAPY.toFixed(2) + "%" || "--"}

@@ -155,7 +155,10 @@ export const FARM_LP_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
   ),
   "0x0c02883103e64b62c4b52ABe7E743Cc50EB2D4C7": (
-    <LpIcon swapIconSrc={"/protocols/balancer.png"} tokenIconSrc={"/tokens/vsta.png"} />
+    <LpIcon
+      swapIconSrc={"/protocols/balancer.png"}
+      tokenIconSrc={"/tokens/vsta.png"}
+    />
   ),
 
   // Aurora
@@ -434,8 +437,7 @@ export const JarMiniFarmCollapsible: FC<{
     ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
     : false;
 
-  const isCooldownJar = foundJar?.tags?.includes("cooldown")? true: false;
-  
+  const isCooldownJar = foundJar?.tags?.includes("cooldown") ? true : false;
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -724,20 +726,24 @@ export const JarMiniFarmCollapsible: FC<{
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
-            <Data>
-              <Tooltip text={ReactHtmlParser(tooltipText)}>
-                {totalAPY.toFixed(2) + "%" || "--"}
-              </Tooltip>
-              <img
-                src="./question.svg"
-                width="15px"
-                style={{ marginLeft: 5 }}
-              />
-              <Spacer y={1} />
-              <div>
-                <span>{t("balances.apy")}</span>
-              </div>
-            </Data>
+            {isClosingOnly ? (
+              <div>--</div>
+            ) : (
+              <Data>
+                <Tooltip text={ReactHtmlParser(tooltipText)}>
+                  {totalAPY.toFixed(2) + "%" || "--"}
+                </Tooltip>
+                <img
+                  src="./question.svg"
+                  width="15px"
+                  style={{ marginLeft: 5 }}
+                />
+                <Spacer y={1} />
+                <div>
+                  <span>{t("balances.apy")}</span>
+                </div>
+              </Data>
+            )}
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} style={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
