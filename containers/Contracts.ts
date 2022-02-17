@@ -221,8 +221,8 @@ export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
 export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
 
-export const CONTROLLER_UNIV3 = "0xD6CA5052Bf7b57f6AEdeE0D259a0E9AA4DCa64c6";
-export const VEFXS_VAULT = "0x3158bc6935dA5EE7bAa8c8e9Be45A1130d6b115b";
+export const CONTROLLER_UNIV3 = "0x7B5916C61bCEeaa2646cf49D9541ac6F5DCe3637";
+export const VEFXS_VAULT = "0x62826760CC53AE076a7523Fd9dCF4f8Dbb1dA140";
 
 function useContracts() {
   const { signer, chainName, multicallProvider } = Connection.useContainer();
