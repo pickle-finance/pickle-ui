@@ -112,7 +112,7 @@ export const FraxFeature: FC = () => {
                       return vefxsVault
                         .connect(signer)
                         .deposit(parseEther(depositAmount), {
-                          gasLimit: 500000,
+                          gasLimit: 1200000,
                         });
                     },
                   });
