@@ -133,7 +133,21 @@ export const FraxFeature: FC = () => {
             <Spacer />
             <Button
               disabled={claimButton.disabled || !userPendingFxs}
-              onClick={() => {}}
+              onClick={() => {
+                  if (signer && vefxsVault) {
+                    transfer({
+                      token: FraxAddresses.FXS,
+                      recipient: FraxAddresses.veFXSVault,
+                      transferCallback: async () => {
+                        return vefxsVault
+                          .connect(signer)
+                          .claim({
+                            gasLimit: 650000,
+                          });
+                      },
+                    });
+                  }
+              }}
               style={{ width: "100%" }}
             >
               {claimButton.text}{" "}
