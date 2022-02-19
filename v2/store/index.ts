@@ -6,6 +6,7 @@ import connectionReducer from "./connection";
 import userReducer from "./user";
 import controlsReducer from "./controls";
 import themeReducer from "./theme";
+import { listenerMiddleware } from "./listenerMiddleware";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,8 @@ export const store = configureStore({
     controls: controlsReducer,
     theme: themeReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
