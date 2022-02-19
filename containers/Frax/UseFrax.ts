@@ -45,6 +45,8 @@ export const useFrax = () => {
         feeDistributorEarnedFxs,
         userLockedFxs,
         pickleLockedFxs,
+        index,
+        supplyIndex
       ] = (
         await Promise.all([
           feeDistributor.getYieldForDuration(),
@@ -53,6 +55,8 @@ export const useFrax = () => {
           feeDistributor.earned(FraxAddresses.locker),
           vefxsVault.balanceOf(address),
           vefxsVault.totalSupply(),
+          vefxsVault.index(),
+          vefxsVault.supplyIndex(address)
         ])
       ).map((x) => +formatEther(x));
 
@@ -60,7 +64,8 @@ export const useFrax = () => {
       const fxsApr = (weeklyFxs * prices.fxs * 52) / (veFxsTotalSupply);
 
       const fxsPending = userPendingFxs + (feeDistributorEarnedFxs *
-        userLockedFxs / pickleLockedFxs);
+        userLockedFxs / pickleLockedFxs)  +
+        ((index - supplyIndex) * userLockedFxs);
 
       setFxsBalance(getBalance(FraxAddresses.FXS) || BigNumber.from(0));
       setFxsApr(fxsApr);
