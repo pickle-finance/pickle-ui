@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { startAppListening } from "./listenerMiddleware";
 
 import { RootState } from ".";
 
@@ -35,6 +36,30 @@ export const { setThemeType } = themeSlice.actions;
  * Selectors
  */
 const selectTheme = (state: RootState) => state.theme;
+
+/**
+ * Listeners
+ */
+startAppListening({
+  actionCreator: setThemeType,
+  effect: async (action) => {
+    console.log("~~~ Theme changed: ", action.payload);
+
+    let root = document.documentElement;
+
+    switch (action.payload) {
+      case "light":
+        root.style.setProperty("--color-foreground", "3, 19, 22");
+        break;
+      case "dark":
+        root.style.setProperty("--color-foreground", "255, 255, 255");
+        break;
+      case "rare":
+        root.style.setProperty("--color-foreground", "0, 255, 0");
+        break;
+    }
+  },
+});
 
 export const ThemeSelectors = {
   selectTheme,
