@@ -10,7 +10,8 @@ import { PriceIds, Prices } from "../Prices";
 import erc20 from "@studydefi/money-legos/erc20";
 import BLensABI from "../ABIs/blens.json";
 
-const DISTRUBTOR_ABI = ["function getYieldForDuration() view returns(uint256)"];
+const DISTRUBTOR_ABI = ["function getYieldForDuration() view returns(uint256)",
+                        "function earned(address) view returns(uint256)"];
 const VEFXS_ABI = ["function totalSupply() view returns(uint256)"];
 
 export const useFrax = () => {
@@ -41,6 +42,7 @@ export const useFrax = () => {
         weeklyFxs,
         veFxsTotalSupply,
         userPendingFxs,
+        feeDistributorEarnedFxs,
         userLockedFxs,
         pickleLockedFxs,
       ] = (
@@ -48,6 +50,7 @@ export const useFrax = () => {
           feeDistributor.getYieldForDuration(),
           veFxs.totalSupply(),
           vefxsVault.claimable(address),
+          feeDistributor.earned(FraxAddresses.locker),
           vefxsVault.balanceOf(address),
           vefxsVault.totalSupply(),
         ])
@@ -56,10 +59,13 @@ export const useFrax = () => {
       // 1 FXS = 4 veFXS when locked for 4 years
       const fxsApr = (weeklyFxs * prices.fxs * 52) / (veFxsTotalSupply);
 
+      const fxsPending = userPendingFxs + (feeDistributorEarnedFxs *
+        userLockedFxs / pickleLockedFxs);
+
       setFxsBalance(getBalance(FraxAddresses.FXS) || BigNumber.from(0));
       setFxsApr(fxsApr);
       setUserLockedFxs(userLockedFxs);
-      setUserPendingFxs(userPendingFxs);
+      setUserPendingFxs(fxsPending);
       setPickleLockedFxs(pickleLockedFxs);
       setTvl(pickleLockedFxs * prices.fxs);
     }
