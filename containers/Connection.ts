@@ -4,18 +4,59 @@ import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
-import { config } from "./config";
 import {
   Provider as MulticallProvider,
   setMulticallAddress,
 } from "ethers-multicall";
 import { useRouter } from "next/router";
+import {
+  ChainNetwork,
+  Chains,
+  RawChain,
+} from "picklefinance-core/lib/chain/Chains";
+import { PickleCore } from "./Jars/usePickleCore";
 
 type Network = ethers.providers.Network;
+
+// See https://eips.ethereum.org/EIPS/eip-3085 and
+// https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
+interface AddEthereumChainParameter {
+  chainId: string;
+  blockExplorerUrls?: string[];
+  chainName?: string;
+  iconUrls?: string[];
+  nativeCurrency?: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls?: string[];
+}
+
+export const chainToChainParams = (
+  chain: RawChain | undefined,
+): AddEthereumChainParameter | undefined => {
+  if (!chain) return undefined;
+  return {
+    chainId: "0x" + chain.chainId.toString(16),
+    chainName: chain.networkVisible,
+    nativeCurrency: {
+      name: chain.gasTokenSymbol.toUpperCase(),
+      symbol: chain.gasTokenSymbol.toUpperCase(),
+      decimals: 18,
+    },
+    rpcUrls: chain.rpcs,
+    blockExplorerUrls: [chain.explorer],
+  };
+};
 
 function useConnection() {
   const { account, library, chainId } = useWeb3React();
   const router = useRouter();
+  const { pickleCore } = PickleCore.useContainer();
+
+  // Turn off ethersjs warnings 
+  ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR);
 
   const [
     multicallProvider,
@@ -25,43 +66,8 @@ function useConnection() {
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const switchChainParams: any[] = [];
-  switchChainParams[137] = {
-    chainId: "0x89",
-    chainName: "Polygon",
-    nativeCurrency: {
-      name: "MATIC",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://polygon-rpc.com"],
-    blockExplorerUrls: ["https://polygonscan.com/"],
-  };
-
-  switchChainParams[66] = {
-    chainId: "0x42",
-    chainName: "OKEx Chain",
-    nativeCurrency: {
-      name: "OKT",
-      symbol: "OKT",
-      decimals: 18,
-    },
-    rpcUrls: ["https://exchainrpc.okex.org"],
-    blockExplorerUrls: ["https://www.oklink.com/okexchain/"],
-  };
-
-  switchChainParams[42161] = {
-    chainId: "0xA4B1",
-    chainName: "Arbitrum",
-    nativeCurrency: {
-      name: "AETH",
-      symbol: "AETH",
-      decimals: 18,
-    },
-    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-    blockExplorerUrls: ["https://arbiscan.io/"],
-  };
   const switchChain = async (chainId: number) => {
+    if (!pickleCore) return false;
     let method: string;
     let params: any[];
     if (chainId === 1) {
@@ -69,7 +75,10 @@ function useConnection() {
       params = [{ chainId: "0x1" }];
     } else {
       method = "wallet_addEthereumChain";
-      const param = switchChainParams[chainId];
+      method = "wallet_addEthereumChain";
+      const param = chainToChainParams(
+        pickleCore.chains.find((x) => x.chainId === chainId),
+      );
       if (param === undefined || param === null) return false;
       params = [param];
     }
@@ -85,19 +94,35 @@ function useConnection() {
     }
   };
 
+  const rawChainFor = (network: ChainNetwork): RawChain | undefined => {
+    return pickleCore === undefined || pickleCore === null
+      ? undefined
+      : pickleCore.chains.find((z) => z.network === network);
+  };
+  const networks = Chains.list().filter((x) => rawChainFor(x) !== undefined);
+  const supportedChainParams = networks.map((x) => {
+    const rawChain = rawChainFor(x);
+    return chainToChainParams(rawChain);
+  });
+  const supportedChains = supportedChainParams;
+
   // create observable to stream new blocks
   useEffect(() => {
     if (library) {
       library.getNetwork().then((network: any) => setNetwork(network));
+      Chains.list().map((x) => {
+        const raw: RawChain | undefined = rawChainFor(x);
+        if (raw && raw.multicallAddress) {
+          setMulticallAddress(raw.chainId, raw.multicallAddress);
+        }
+      });
 
-      setMulticallAddress(66, "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa");
-      setMulticallAddress(42161, "0x813715eF627B01f4931d8C6F8D2459F26E19137E");
       const _multicallProvider = new MulticallProvider(library);
       _multicallProvider
         .init()
         .then(() => setMulticallProvider(_multicallProvider));
 
-      const { ethereum } = window;
+      const { ethereum } = window as any;
       ethereum?.on("chainChanged", () => router.reload());
 
       const observable = new Observable<number>((subscriber) => {
@@ -116,10 +141,12 @@ function useConnection() {
       setMulticallProvider(null);
       setBlockNum(null);
     }
-  }, [library]);
+  }, [library, pickleCore]);
 
-  const chainName = (chainId && config.chains[chainId].name) || null;
-
+  const chainName =   
+    pickleCore?.chains.find((x) => x.chainId === chainId)
+      ?.network || null
+  
   return {
     multicallProvider,
     provider: library,
@@ -130,6 +157,7 @@ function useConnection() {
     chainId,
     chainName,
     switchChain,
+    supportedChains,
   };
 }
 

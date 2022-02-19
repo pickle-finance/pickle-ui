@@ -4,8 +4,8 @@ import { useTranslation } from "next-i18next";
 
 import { Footer } from "../features/Footer/Footer";
 import { Connection } from "../containers/Connection";
-import { NETWORK_NAMES } from "containers/config";
 import { FraxFeature } from "features/Frax/Frax";
+import { ChainNetwork } from "picklefinance-core";
 
 const Frax: FC = () => {
   const { chainName } = Connection.useContainer();
@@ -19,7 +19,7 @@ const Frax: FC = () => {
             {t("frax.frax")}
           </h1>
           <p>{t("frax.description")}</p>
-          {chainName !== NETWORK_NAMES.ETH ? (
+          {chainName !== ChainNetwork.Ethereum ? (
             t("frax.connectionPrompt")
           ) : (
             <FraxFeature />

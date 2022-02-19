@@ -1,62 +1,32 @@
 import fetch from "node-fetch";
 
 const pickleApi = process.env.apiHost;
+const getJarChartData = async (asset) => {
+    return await fetch(
+      `${pickleApi}/chart/jar/${asset}?count=4400`,
+    ).then((response) => response.json());
+};
 
 export const getJarChart = async (assets) => {
   const jarData = assets.map(async (asset) => {
     const assetKey = asset.toLowerCase();
-    return {
+    const ret = {
       asset: asset,
       data: await getJarChartData(assetKey),
     };
+    return ret;
   });
-  return await Promise.all(jarData);
+  const waited = await Promise.all(jarData);
+  return waited;
 };
 
-const getJarChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/jar/${asset}?count=4400`,
-  ).then((response) => response.json());
-};
-
-export const getStakingData = async () => {
-  return await fetch(`${pickleApi}/protocol/reward`).then((response) =>
-    response.json(),
-  );
-};
-
-export const getStakingChart = async (assets) => {
-  const stakingData = assets.map(async (asset) => {
-    const assetKey = asset.toLowerCase();
-    return {
-      asset: asset,
-      data: await getStakingChartData(assetKey),
-    };
+export const getAllJarsChart = async () => {
+  const alljarsData = await getJarChartData("alljars");
+  const jarData = Object.keys(alljarsData).map((assetName) => {
+    return { asset: assetName, data: alljarsData[assetName] };
   });
-  return await Promise.all(stakingData);
-};
 
-const getStakingChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/reward/${asset}?count=4400`,
-  ).then((response) => response.json());
-};
-
-export const getPerformanceChart = async (assets) => {
-  const performanceData = assets.map(async (asset) => {
-    const assetKey = asset.toLowerCase();
-    return {
-      asset: asset,
-      data: await getPerformanceChartData(assetKey.toLowerCase()),
-    };
-  });
-  return await Promise.all(performanceData);
-};
-
-const getPerformanceChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/jar/${asset}/performance`,
-  ).then((response) => response.json());
+  return jarData;
 };
 
 export const getPerformanceData = async (assets) => {
@@ -121,6 +91,12 @@ const coingeckoApi = "https://api.coingecko.com/api/v3";
 
 export const getCoinData = async (coin) => {
   return await fetch(`${coingeckoApi}/coins/${coin}`).then((response) =>
+    response.json(),
+  );
+};
+
+export const getPickleCore = async () => {
+  return await fetch(`${pickleApi}/protocol/pfcore/`).then((response) =>
     response.json(),
   );
 };

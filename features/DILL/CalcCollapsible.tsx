@@ -8,14 +8,17 @@ import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "../../containers/config";
+import { isPUsdcToken } from "../../containers/Jars/jars";
+import { PickleCore } from "./../../containers/Jars/usePickleCore";
+import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import { ChainNetwork } from "picklefinance-core";
 
 export const CalcCollapsible: FC<{
   dillStats: UseDillOutput;
 }> = ({ dillStats }) => {
   const { gaugeData } = UserGauges.useContainer();
   const { chainName } = Connection.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
   const [balance, setBalance] = useState("0");
   const [totalBalance, setTotalBalance] = useState("0");
   const [userChanged, setUserChanged] = useState(false);
@@ -23,6 +26,7 @@ export const CalcCollapsible: FC<{
   const [boostFactor, setBoostFactor] = useState<number>(1);
   const [dillRequired, setDillRequired] = useState<number>();
   const [selectedGauge, setSelectedGauge] = useState<UserGaugeData>();
+
   const { t } = useTranslation("common");
 
   const dillSupplyNum = parseFloat(formatEther(dillStats.totalSupply || 0));
@@ -36,9 +40,7 @@ export const CalcCollapsible: FC<{
     );
 
     if (selectedGauge) {
-      const isUsdc =
-        selectedGauge.depositToken.address.toLowerCase() ===
-        PICKLE_JARS.pyUSDC.toLowerCase();
+      const isPUsdcJar = isPUsdcToken(selectedGauge.depositToken.address);
 
       const balance = +formatEther(
         selectedGauge.balance.add(selectedGauge.staked),
@@ -46,14 +48,14 @@ export const CalcCollapsible: FC<{
       const balanceUSD = (
         balance *
         selectedGauge.usdPerToken *
-        (isUsdc ? 1e12 : 1)
+        (isPUsdcJar ? 1e12 : 1)
       ).toFixed(2);
 
       setBalance(balanceUSD);
       setTotalBalance(
         (
           (selectedGauge.totalSupply * selectedGauge.usdPerToken) /
-          (isUsdc ? 1e6 : 1e18)
+          (isPUsdcJar ? 1e6 : 1e18)
         ).toFixed(2),
       );
       setSelectedGauge(selectedGauge);
@@ -77,22 +79,50 @@ export const CalcCollapsible: FC<{
     setDillRequired(dillRequired);
   };
 
-  const renderSelectOptions = (gauge: UserGaugeData) => (
-    <Select.Option
-      key={gauge.address}
-      style={{ color: pickleWhite }}
-      value={gauge.depositTokenName}
-    >
-      {gauge.depositTokenName}
-    </Select.Option>
-  );
+  const visibleNameForGauge = (gauge: UserGaugeData): string => {
+    let votable: PickleAsset[] = [];
+    if (pickleCore && pickleCore.assets && pickleCore.assets.jars) {
+      votable = votable.concat(pickleCore.assets.jars);
+    }
+    if (pickleCore && pickleCore.assets && pickleCore.assets.standaloneFarms) {
+      votable = votable.concat(pickleCore.assets.standaloneFarms);
+    }
+    const depositTokenAddr: string = gauge.depositToken.address.toLowerCase();
+    let val = gauge.depositTokenName;
+    const findFarm = votable.find(
+      (x) => x.depositToken.addr.toLowerCase() === depositTokenAddr,
+    );
+    if (findFarm !== undefined) {
+      val = val + " (" + findFarm.id + ")";
+    } else {
+      const findJar = votable.find(
+        (x) => x.contract.toLowerCase() === depositTokenAddr,
+      );
+      if (findJar !== undefined) {
+        val = val + " (" + findJar.id + ")";
+      }
+    }
+    return val;
+  };
+  const renderSelectOptions = (gauge: UserGaugeData) => {
+    const visibleName = visibleNameForGauge(gauge);
+    return (
+      <Select.Option
+        key={gauge.address}
+        style={{ color: pickleWhite }}
+        value={gauge.depositTokenName}
+      >
+        {visibleName}
+      </Select.Option>
+    );
+  };
 
   useEffect(() => {
     if (!userChanged && dillStats && dillStats.balance)
       setDillBalance(formatEther(dillStats.balance.toString() || 0));
   }, [dillStats]);
 
-  if (!gaugeData && chainName === NETWORK_NAMES.ETH) {
+  if (!gaugeData && chainName === ChainNetwork.Ethereum) {
     return <h2>{t("connection.loading")}</h2>;
   }
   return (

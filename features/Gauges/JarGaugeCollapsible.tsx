@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 import { Trans, useTranslation } from "next-i18next";
 
@@ -26,20 +26,31 @@ import {
   ZapperIcon,
   MiniIcon,
 } from "../../components/TokenIcon";
-import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
+import {
+  isUsdcToken,
+  isYveCrvEthJarToken,
+  isMainnetMimEthJarDepositToken,
+  isJarWithdrawOnly,
+  isLooksJar,
+} from "../../containers/Jars/jars";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
-import { getProtocolData } from "../../util/api";
-import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
+import { getFormatString } from "./GaugeInfo";
 import { zapDefaultTokens } from "../Zap/tokens";
 import { tokenInfo, useBalance } from "../Zap/useBalance";
 import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
-import { NETWORK_NAMES } from "../../containers/config";
 import { uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  getRatioStringAndPendingString,
+  RatioAndPendingStrings,
+} from "features/MiniFarms/JarMiniFarmCollapsible";
+import { gasLimit, JarInteraction } from "util/gasLimits";
 
 interface DataProps {
   isZero?: boolean;
@@ -61,7 +72,8 @@ const JarName = styled(Grid)({
 
 const formatAPY = (apy: number) => {
   if (apy === Number.POSITIVE_INFINITY) return "∞%";
-  return apy.toFixed(2) + "%";
+  const decimalPlaces = Math.log(apy) / Math.log(10) > 4 ? 0 : 2;
+  return apy.toFixed(decimalPlaces) + "%";
 };
 
 const formatValue = (num: number) =>
@@ -226,6 +238,18 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/curve.png"} />
   ),
+  "0xEd4064f376cB8d68F770FB1Ff088a3d0F3FF5c4d": (
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/crveth.png"} />
+  ),
+  "0x3A283D9c08E8b55966afb64C515f5143cf907611": (
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xDC00bA87Cc2D99468f7f34BC04CBf72E111A32f7": (
+    <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0xf4d2888d29D722226FafA5d9B24F9164c092421E": (
+    <LpIcon swapIconSrc={"/looks.png"} tokenIconSrc={""} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -253,14 +277,13 @@ export const JarGaugeCollapsible: FC<{
     depositTokenLink,
     apr,
   } = jarData;
+  const { pickleCore } = PickleCore.useContainer();
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
-  const isUsdc =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].USDC.toLowerCase();
+  const isUsdc = isUsdcToken(depositToken.address);
 
   const balNum = parseFloat(
     formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
@@ -273,11 +296,13 @@ export const JarGaugeCollapsible: FC<{
 
   const depositedStr = formatValue(depositedNum);
 
-  const depositedUnderlyingStr = formatValue(
-    parseFloat(
-      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-    ) * ratio,
-  );
+  const underlyingStr = (num: BigNumber): string => {
+    return formatValue(
+      parseFloat(formatEther(isUsdc && num ? num.mul(USDC_SCALE) : num)) *
+        ratio,
+    );
+  };
+  const depositedUnderlyingStr = underlyingStr(deposited);
   const {
     depositToken: gaugeDepositToken,
     balance: gaugeBalance,
@@ -285,20 +310,35 @@ export const JarGaugeCollapsible: FC<{
     harvestable,
     depositTokenName: gaugeDepositTokenName,
     fullApy,
-    uncompounded
+    uncompounded,
   } = gaugeData;
-
+  const stakedUnderlyingStr = underlyingStr(staked);
   const stakedNum = parseFloat(
     formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
   );
 
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
   );
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  const valueStr = toLocaleNdigits(
+    usdPerPToken * (depositedNum + stakedNum),
+    2,
+  );
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
 
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
@@ -317,53 +357,55 @@ export const JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
+  let difference = 0;
+  if (APYs !== undefined) {
+    const totalAPR1: number = uncompounded
+      .map((x) => {
+        return Object.values(x)
+          .filter((x) => !isNaN(x))
+          .reduce((acc, y) => acc + y, 0);
+      })
+      .reduce((acc, x) => acc + x, 0);
+    difference = totalAPY - totalAPR1;
+  }
 
-  const totalAPY1: number = APYs.map((x) => {
-    return Object.values(x)
-      .filter((x) => !isNaN(x))
-      .reduce((acc, y) => acc + y, 0);
-  }).reduce((acc, x) => acc + x, 0);
-  const totalAPR1: number = uncompounded
-    .map((x) => {
-      return Object.values(x)
-        .filter((x) => !isNaN(x))
-        .reduce((acc, y) => acc + y, 0);
-    })
-    .reduce((acc, x) => acc + x, 0);
-  const difference = totalAPY1 - totalAPR1;
+  let apyRangeTooltipText = "APY Range Unavailable.";
+  if (APYs !== undefined) {
+    apyRangeTooltipText = [
+      `${t("farms.baseAPRs")}:`,
+      `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = uncompoundAPY(Object.values(x)[0]);
+        return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
+      }),
+      `${t(
+        "farms.compounding",
+      )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
+        2,
+      )}%`,
+    ]
+      .filter((x) => x)
+      .join(` <br/> `);
+  }
 
-  const apyRangeTooltipText = [
-    `${t("farms.baseAPRs")}:`,
-    `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
-    ...APYs.map((x) => {
-      const k = Object.keys(x)[0];
-      const v = uncompoundAPY(Object.values(x)[0]);
-      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
-    }),
-    `${t(
-      "farms.compounding",
-    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
-      2,
-    )}%`,
-  ]
-    .filter((x) => x)
-    .join(` <br/> `);
-
-  const yourApyTooltipText = [
-    `${t("farms.baseAPRs")}:`,
-    `pickle: ${formatAPY(pickleAPY)}`,
-    ...APYs.map((x) => {
-      const k = Object.keys(x)[0];
-      const v = uncompoundAPY(Object.values(x)[0]);
-      return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
-    }),
-  ]
-    .filter((x) => x)
-    .join(` <br/> `);
+  let yourApyTooltipText = "Your APY is unavailable.";
+  if (APYs !== undefined) {
+    yourApyTooltipText = [
+      `${t("farms.baseAPRs")}:`,
+      `pickle: ${formatAPY(pickleAPY)}`,
+      ...APYs.map((x) => {
+        const k = Object.keys(x)[0];
+        const v = uncompoundAPY(Object.values(x)[0]);
+        return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
+      }),
+    ]
+      .filter((x) => x)
+      .join(` <br/> `);
+  }
 
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
 
@@ -378,6 +420,9 @@ export const JarGaugeCollapsible: FC<{
 
   const [zapStakeButton, setZapStakeButton] = useState<string | null>(null);
   const [zapOnlyButton, setZapOnlyButton] = useState<string | null>(null);
+  const [looksMigrateState, setLooksMigrateState] = useState<string | null>(
+    null,
+  );
 
   const {
     status: erc20TransferStatuses,
@@ -388,12 +433,14 @@ export const JarGaugeCollapsible: FC<{
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
-  const { migrateYvboost, depositYvboost, withdrawGauge } = useMigrate(
-    gaugeDepositToken,
-    0,
-    gaugeBalance,
-    staked,
-  );
+  const {
+    migrateYvboost,
+    depositYvboost,
+    withdrawGauge,
+    withdrawLOOKS,
+    depositLOOKS,
+    looksBalance,
+  } = useMigrate(gaugeDepositToken, 0, gaugeBalance, staked);
 
   const stakedStr = formatValue(stakedNum);
 
@@ -452,13 +499,11 @@ export const JarGaugeCollapsible: FC<{
 
   const isZap = inputToken != zapInputTokens[0].symbol;
 
-  const isyveCRVFarm =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS[NETWORK_NAMES.ETH].SUSHI_ETH_YVECRV.toLowerCase();
+  const isyveCRVFarm = isYveCrvEthJarToken(depositToken.address.toLowerCase());
 
-  const isMimJar =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.Ethereum.MIM_ETH.toLowerCase();
+  const isMimJar = isMainnetMimEthJarDepositToken(
+    depositToken.address.toLowerCase(),
+  );
 
   const depositGauge = async () => {
     if (!approved) {
@@ -495,6 +540,20 @@ export const JarGaugeCollapsible: FC<{
     }
   };
 
+  const handleLooksMigrate = async () => {
+    try {
+      setLooksMigrateState(t("farms.looksWithdraw"));
+      await withdrawLOOKS();
+      setLooksMigrateState(t("farms.looksDeposit"));
+      await depositLOOKS();
+      setLooksMigrateState(t("farms.looksSuccess"));
+    } catch (error) {
+      alert(error.message);
+      setLooksMigrateState(null);
+      return;
+    }
+  };
+
   const depositAndStake = async () => {
     if (isZap) {
       handleZap(true);
@@ -506,6 +565,7 @@ export const JarGaugeCollapsible: FC<{
         const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
+          approvalAmountRequired: convertDecimals(depositAmount),
           transferCallback: async () => {
             return jarContract
               .connect(signer)
@@ -533,7 +593,11 @@ export const JarGaugeCollapsible: FC<{
         const exitTx = await gauge.exit();
         await exitTx.wait();
         setExitButton(t("farms.withdrawingFromJar"));
-        const withdrawTx = await jarContract.connect(signer).withdrawAll();
+        const withdrawTx = await jarContract
+          .connect(signer)
+          .withdrawAll(
+            gasLimit(jarContract.address, JarInteraction.WithdrawAll),
+          );
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);
@@ -649,17 +713,22 @@ export const JarGaugeCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
-  useEffect(() => {
-    getProtocolData().then((info) => setTVLData(info));
-  }, []);
-
+  const tvlJarData = pickleCore?.assets.jars.filter(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )[0];
   const tvlNum =
-    tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+    tvlJarData && tvlJarData.details.harvestStats
+      ? tvlJarData.details.harvestStats.balanceUSD
       : 0;
   const tvlStr = getFormatString(tvlNum);
+  const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  );
+  const isClosingOnly = foundJar
+    ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
+    : false;
 
   return (
     <Collapse
@@ -701,10 +770,18 @@ export const JarGaugeCollapsible: FC<{
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
               <Label>{t("balances.depositValue")}</Label>
+              {Boolean(valueStrExplained !== undefined) && (
+                <Label>{valueStrExplained}</Label>
+              )}
+              {Boolean(userSharePendingStr !== undefined) && (
+                <Label>{userSharePendingStr}</Label>
+              )}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} css={{ textAlign: "center" }}>
-            {!gaugeData ? (
+            {isClosingOnly ? (
+              <div>--</div>
+            ) : !gaugeData ? (
               <Data>
                 <Tooltip text={ReactHtmlParser(apyRangeTooltipText)}>
                   {totalAPY.toFixed(2) + "%" || "--"}
@@ -796,7 +873,11 @@ export const JarGaugeCollapsible: FC<{
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(formatEther(depositBalance));
+                setDepositAmount(
+                  formatEther(
+                    isUsdc ? depositBalance.mul(USDC_SCALE) : depositBalance,
+                  ),
+                );
               }}
             >
               {t("balances.max")}
@@ -841,6 +922,7 @@ export const JarGaugeCollapsible: FC<{
                     transfer({
                       token: depositToken.address,
                       recipient: jarContract.address,
+                      approvalAmountRequired: convertDecimals(depositAmount),
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)
@@ -852,7 +934,9 @@ export const JarGaugeCollapsible: FC<{
                     handleZap();
                   }
                 }}
-                disabled={depositButton.disabled || zapOnlyButton}
+                disabled={
+                  depositButton.disabled || isClosingOnly || zapOnlyButton
+                }
                 style={{ width: "100%" }}
               >
                 {isZap
@@ -863,6 +947,9 @@ export const JarGaugeCollapsible: FC<{
               {isMimJar ? (
                 <StyledNotice>{t("farms.abra.rewardsEnded")}</StyledNotice>
               ) : null}
+              {isClosingOnly ? (
+                <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
+              ) : null}
             </Grid>
             <Grid xs={24} md={12}>
               <Button
@@ -870,6 +957,7 @@ export const JarGaugeCollapsible: FC<{
                 disabled={
                   Boolean(depositStakeButton) ||
                   Boolean(zapStakeButton) ||
+                  isClosingOnly ||
                   depositButton.disabled
                 }
                 style={{ width: "100%" }}
@@ -889,22 +977,7 @@ export const JarGaugeCollapsible: FC<{
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 {t("balances.balance")}: {depositedStr} (
-                <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
-                >
-                  {depositedUnderlyingStr}
-                </Tooltip>{" "}
-                {depositTokenName}){" "}
+                {depositedUnderlyingStr} {depositTokenName}){" "}
               </div>
               <Link
                 color
@@ -937,7 +1010,13 @@ export const JarGaugeCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(convertDecimals(withdrawAmount));
+                        .withdraw(
+                          convertDecimals(withdrawAmount),
+                          gasLimit(
+                            jarContract.address,
+                            JarInteraction.Withdraw,
+                          ),
+                        );
                     },
                     approval: false,
                   });
@@ -989,7 +1068,8 @@ export const JarGaugeCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {gaugeDepositTokenName} (
+                  {stakedUnderlyingStr} {depositTokenName}){" "}
                 </div>
                 <Link
                   color
@@ -1127,6 +1207,31 @@ export const JarGaugeCollapsible: FC<{
                   </Trans>
                 </p>
               ) : null}
+            </div>
+          </Grid>
+        )}
+        {isLooksJar(depositToken.address) && (
+          <Grid xs={24}>
+            <Button
+              disabled={looksMigrateState !== null || looksBalance.isZero()}
+              onClick={handleLooksMigrate}
+              style={{ width: "100%", textTransform: "none" }}
+            >
+              {looksMigrateState ||
+                t("farms.looksDefault", {
+                  amount: (+formatEther(looksBalance)).toFixed(2),
+                })}
+            </Button>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "Source Sans Pro",
+                fontSize: "1rem",
+              }}
+            >
+              <Spacer y={0.5} />
+              <p>{t("farms.looksMigration")}</p>
             </div>
           </Grid>
         )}

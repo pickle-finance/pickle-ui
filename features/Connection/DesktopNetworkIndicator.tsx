@@ -1,13 +1,17 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import Davatar from "@davatar/react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
-import { config, NETWORK_NAMES } from "../../containers/config";
+import { config } from "../../containers/config";
+import { MiniIcon } from "../../components/TokenIcon";
 import LanguageSelect from "./LanguageSelect";
+import useENS from "hooks/useENS";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { Chains } from "picklefinance-core";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
@@ -43,6 +47,7 @@ const AddressContainer = styled.a`
 const Address = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const AddressLabel = styled.div`
@@ -111,11 +116,14 @@ export const DesktopNetworkIndicator: FC = () => {
     chainId,
     switchChain,
     chainName,
+    provider,
   } = Connection.useContainer();
   const [switchChainModalOpen, setSwitchChainModalOpen] = useState(false);
   const [switchChainName, setSwitchChainName] = useState("");
   const [reset, setReset] = useState(0);
   const { t } = useTranslation("common");
+  const { ensName } = useENS(address);
+  const { pickleCore } = PickleCore.useContainer();
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
 
@@ -127,29 +135,26 @@ export const DesktopNetworkIndicator: FC = () => {
 
     const success = await switchChain(newChainId);
     if (!success) {
-      setSwitchChainName(config.chains[newChainId].name);
+      const chain = pickleCore?.chains.find((x) => x.chainId === newChainId);
+      const chainName = chain?.network || "";
+      setSwitchChainName(chainName);
       setSwitchChainModalOpen(true);
     }
   };
-
+  const chain =
+    pickleCore === undefined || pickleCore === null
+      ? undefined
+      : pickleCore.chains.find((x) => x.chainId === chainId);
+  let explorer = chain ? chain.explorer : undefined;
+  if (explorer === undefined) {
+    explorer = `https://etherscan.io`;
+  }
   const renderBlock = () => {
-    if (chainName === NETWORK_NAMES.POLY)
-      return `https://polygonscan.com/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.OKEX)
-      return `https://www.oklink.com/okexchain/block/${blockNum}`;
-    if (chainName === NETWORK_NAMES.ARB)
-      return `https://arbiscan.io/block/${blockNum}`;
-    else return `https://etherscan.io/block/${blockNum}`;
+    return `${explorer}/block/${blockNum}`;
   };
 
   const renderAddress = () => {
-    if (chainName === NETWORK_NAMES.POLY)
-      return `https://polygonscan.com/address/${address}`;
-    if (chainName === NETWORK_NAMES.OKEX)
-      return `https://www.oklink.com/okexchain/address/${address}`;
-    if (chainName === NETWORK_NAMES.ARB)
-      return `https://arbiscan.io/address/${address}`;
-    else return `https://etherscan.io/address/${address}`;
+    return `${explorer}/address/${address}`;
   };
 
   return (
@@ -189,16 +194,38 @@ export const DesktopNetworkIndicator: FC = () => {
         }}
       >
         <Select.Option value="1">
-          {t("connection.networks.ethereum")}
+          <MiniIcon source="/weth.png" /> {t("connection.networks.ethereum")}
         </Select.Option>
         <Select.Option value="137">
-          {t("connection.networks.polygon")}
+          <MiniIcon source="/matic.png" /> {t("connection.networks.polygon")}
         </Select.Option>
-        {/* <Select.Option value="66">
-          {t("connection.networks.okex")}
-        </Select.Option> */}
+        <Select.Option value="66">
+          <MiniIcon source="/okex.png" /> {t("connection.networks.okex")}
+        </Select.Option>
         <Select.Option value="42161">
+          <MiniIcon source="/arbitrum.svg" />{" "}
           {t("connection.networks.arbitrum")}
+        </Select.Option>
+        <Select.Option value="1285">
+          <MiniIcon source="/moonriver.png" />{" "}
+          {t("connection.networks.moonriver")}
+        </Select.Option>
+        {/* <Select.Option value="25">
+          <MiniIcon source="/cronos.png" /> {t("connection.networks.cronos")}
+        </Select.Option> */}
+        <Select.Option value="1313161554">
+          <MiniIcon source="/aurora.png" /> {t("connection.networks.aurora")}
+        </Select.Option>
+        <Select.Option value="1088">
+          <MiniIcon source="/metis.png" /> {t("connection.networks.metis")}
+        </Select.Option>
+        <Select.Option value="1284">
+          <MiniIcon source="/moonbeam.png" />{" "}
+          {t("connection.networks.moonbeam")}
+        </Select.Option>
+        <Select.Option value="10">
+          <MiniIcon source="/optimism.png" />{" "}
+          {t("connection.networks.optimism")}
         </Select.Option>
       </Select>
       <AddressContainer
@@ -207,8 +234,19 @@ export const DesktopNetworkIndicator: FC = () => {
         rel="noopener noreferrer"
       >
         <Address>
-          <AddressLabel title={address || ""}>{shortAddress}</AddressLabel>
-          <Jazzicon diameter={16} seed={jsNumberForAddress(address)} />
+          <AddressLabel title={address || ""}>
+            {ensName || shortAddress}
+          </AddressLabel>
+          <div>
+            {address && (
+              <Davatar
+                size={16}
+                address={address}
+                generatedAvatarType="jazzicon"
+                provider={provider}
+              />
+            )}
+          </div>
         </Address>
         <Block>
           <Tooltip text={t("connection.blockNumber")} placement="left">

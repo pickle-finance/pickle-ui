@@ -73,7 +73,7 @@ import { PickleRewarder__factory as PickleRewarderFactory } from "./Contracts/fa
 import { StabilityPool } from "./Contracts/StabilityPool";
 import { StabilityPool__factory as StabilityPoolFactory } from "./Contracts/factories/StabilityPool__factory";
 
-import { config, NETWORK_NAMES, BPAddresses } from "./config";
+import { BPAddresses } from "./config";
 import { SushiMigrator } from "./Contracts/SushiMigrator";
 import { SushiMigrator__factory as SushiMigratorFactory } from "./Contracts/factories/SushiMigrator__factory";
 import { FossilFarms } from "./Contracts/FossilFarms";
@@ -81,10 +81,12 @@ import { FossilFarms__factory as FossilFarmsFactory } from "./Contracts/factorie
 
 import { Cherrychef } from "./Contracts/Cherrychef";
 import { Cherrychef__factory as CherrychefFactory } from "./Contracts/factories/Cherrychef__factory";
+
+import { Jswapchef } from "./Contracts/Jswapchef";
+import { Jswapchef__factory as JswapFactory } from "./Contracts/factories/Jswapchef__factory";
+
 import { CvxBooster } from "./Contracts/CvxBooster";
 import { CvxBooster__factory as CvxBoosterFactory } from "./Contracts/factories/CvxBooster__factory";
-import { Bxhchef } from "./Contracts/Bxhchef";
-import { Bxhchef__factory as BxhchefFactory } from "./Contracts/factories/Bxhchef__factory";
 
 import { Feichef } from "./Contracts/Feichef";
 import { Feichef__factory as FeichefFactory } from "./Contracts/factories/Feichef__factory";
@@ -94,6 +96,11 @@ import { DodoPair } from "./Contracts/DodoPair";
 import { DodoPair__factory as DodoPairFactory } from "./Contracts/factories/DodoPair__factory";
 import { DodoRewards } from "./Contracts/DodoRewards";
 import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factories/DodoRewards__factory";
+import { LooksStaking__factory as LooksStakingFactory } from "containers/Contracts/factories/LooksStaking__factory";
+import { LooksStaking } from "./Contracts/LooksStaking";
+import { PickleCore } from "./Jars/usePickleCore";
+import { ADDRESSES } from "picklefinance-core/lib/model/PickleModel";
+import { ChainNetwork } from "picklefinance-core";
 
 import { ControllerUniv3 } from "./Contracts/ControllerUniv3";
 import { ControllerUniv3__factory as ControllerUniv3Factory } from "./Contracts/factories/ControllerUniv3__factory";
@@ -179,7 +186,7 @@ export const MIRROR_MBABA_UST_STAKING_REWARDS =
 export const FEI_MASTERCHEF = "0x9e1076cC0d19F9B0b8019F384B0a29E48Ee46f7f";
 
 export const FOX_ETH_STAKING_REWARDS =
-  "0xdd80e21669a664bce83e3ad9a0d74f8dad5d9e72";
+  "0xc54B9F82C1c54E9D4d274d633c7523f2299c42A0";
 
 export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
   "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
@@ -218,29 +225,21 @@ export const PICKLE_SUSHI_REWARDER =
   "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
-export const BXHCHEF = "0x006854D77b0710859Ba68b98d2c992ea2837c382";
+export const JSWAPCHEF = "0x83C35EA2C32293aFb24aeB62a14fFE920C2259ab";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
+export const LOOKS_STAKING = "0xBcD7254A1D759EFA08eC7c3291B2E85c5dCC12ce";
 
 export const CONTROLLER_UNIV3 = "0x7B5916C61bCEeaa2646cf49D9541ac6F5DCe3637";
 export const VEFXS_VAULT = "0x62826760CC53AE076a7523Fd9dCF4f8Dbb1dA140";
 
 function useContracts() {
-  const { signer, chainName, multicallProvider } = Connection.useContainer();
-  const getNetworkConfig = (network: string | null) => {
-    switch (network) {
-      case NETWORK_NAMES.OKEX:
-        return config.addresses.OKEx;
-      case NETWORK_NAMES.POLY:
-        return config.addresses.Polygon;
-      case NETWORK_NAMES.ARB:
-        return config.addresses.Arbitrum;
-      case NETWORK_NAMES.ETH:
-      default:
-        return config.addresses.Ethereum;
-    }
-  };
+  const { signer, chainId, multicallProvider } = Connection.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
 
-  const addresses = getNetworkConfig(chainName);
+  const addresses = ADDRESSES.get(
+    pickleCore?.chains.find((x) => x.chainId === chainId)
+      ?.network as ChainNetwork,
+  );
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
   const [masterchef, setMasterchef] = useState<Masterchef | null>(null);
@@ -338,16 +337,20 @@ function useContracts() {
   );
 
   const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null);
-  const [bxhchef, setBxhchef] = useState<Bxhchef | null>(null);
+  const [jswapchef, setJswapchef] = useState<Jswapchef | null>(null);
+
   const [cvxBooster, setCvxBooster] = useState<CvxBooster | null>(null);
   const [jar, setJar] = useState<Jar | null>(null);
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
   const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
+
   const [
     controllerUniV3,
     setControllerUniV3,
   ] = useState<ControllerUniv3 | null>(null);
+
+  const [looksStaking, setLooksStaking] = useState<LooksStaking | null>(null);
 
   const [
     rallyRewardPools,
@@ -497,7 +500,8 @@ function useContracts() {
       );
 
       setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
-      setBxhchef(BxhchefFactory.connect(BXHCHEF, signer));
+      setJswapchef(JswapFactory.connect(JSWAPCHEF, signer));
+
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
       setFeichef(FeichefFactory.connect(FEI_MASTERCHEF, signer));
       setRallyRewardPools(
@@ -515,6 +519,8 @@ function useContracts() {
       setVefxsVault(
         VefxsVaultFactory.connect(VEFXS_VAULT, signer)
       )
+
+      setLooksStaking(LooksStakingFactory.connect(LOOKS_STAKING, signer))
     }
   };
 
@@ -571,15 +577,16 @@ function useContracts() {
     sushiMigrator,
     pickleSushiRewarder,
     cherrychef,
+    jswapchef,
     cvxBooster,
-    bxhchef,
     jar,
     feichef,
     rallyRewardPools,
     dodoPair,
     dodoRewards,
     controllerUniV3,
-    vefxsVault
+    vefxsVault,
+    looksStaking
   };
 }
 

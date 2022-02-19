@@ -1,11 +1,10 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
+import { Contract as MulticallContract } from "ethers-multicall";
 import styled from "styled-components";
-
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
-
 import { Connection } from "../../containers/Connection";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
@@ -14,13 +13,19 @@ import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "features/Gauges/useJarData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
-import { getProtocolData } from "../../util/api";
-import { GAUGE_TVL_KEY, getFormatString } from "../Gauges/GaugeInfo";
+import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
-import { Balances } from "../../containers/Balances";
-import { NETWORK_NAMES } from "containers/config";
-import { JAR_DEPOSIT_TOKENS } from "containers/Jars/jars";
+import {
+  isJarWithdrawOnly,
+  isQlpQiMaticOrUsdcToken,
+  isQlpQiToken,
+} from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
+import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
+import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { PickleModelJson } from "picklefinance-core";
 
 interface DataProps {
   isZero?: boolean;
@@ -93,24 +98,6 @@ export const FARM_LP_TO_ICON: {
   "0x1cCDB8152Bb12aa34e5E7F6C9c7870cd6C45E37F": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/dino.jpeg"} />
   ),
-  "0xC3f393FB40F8Cc499C1fe7FA5781495dc6FAc9E9": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
-  ),
-  "0xe75c8805f9970c7547255059A22d14001d3D7b94": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/usdt.png"} />
-  ),
-  "0x4a19C49Ee3233A2AE103487f3699D70573EC2371": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/ethereum.png"} />
-  ),
-  "0x7072B80D4E259F26b82C2C4e53cDBFB71450195e": (
-    <LpIcon swapIconSrc={"/cherryswap.png"} tokenIconSrc={"/okex.png"} />
-  ),
-  "0x09C22BDC438B69bCC190EFa8F8E3417277E1DD4F": (
-    <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/bxh.png"} />
-  ),
-  "0x2a956403816445553FdA5Cbfce2ac6c251454f6f": (
-    <LpIcon swapIconSrc={"/bxh.png"} tokenIconSrc={"/ethbtc.png"} />
-  ),
   "0xe5BD4954Bd6749a8E939043eEDCe4C62b41CC6D0": (
     <LpIcon swapIconSrc={"/quickswap.png"} tokenIconSrc={"/qi.png"} />
   ),
@@ -119,6 +106,18 @@ export const FARM_LP_TO_ICON: {
   ),
   "0xD170F0a8629a6F7A1E330D5fC455d96E54c09675": (
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/work.png"} />
+  ),
+  "0x6f8B4D9c4dC3592962C55207Ac945dbf5be54cC4": (
+    <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0xCA12121E55C5523ad5e0e6a9062689c4eBa0b691": (
+    <LpIcon swapIconSrc={"/raider.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f": (
+    <LpIcon swapIconSrc={"/raider.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x5E5D7739ea3B6787587E129E4A508FfDAF180923": (
+    <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/usdc.png"} />
   ),
 
   //Arbitrum
@@ -136,6 +135,183 @@ export const FARM_LP_TO_ICON: {
   ),
   "0x4d622C1f40A83C6FA2c0E441AE393e6dE61E7dD2": (
     <LpIcon swapIconSrc={"/dodo.png"} tokenIconSrc={"/hundred.jpg"} />
+  ),
+  "0x0A9eD9B39613850819a5f80857395bFeA434c22A": (
+    <LpIcon swapIconSrc={"/dodo.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x0be790c83648c28eD285fee5E0BD79D1d57AAe69": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/bal-tricrypto.png"} />
+  ),
+  "0x979Cb85f2fe4B6036c089c554c91fdfB7158bB28": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/pickle.png"} />
+  ),
+  "0x46573375eEDA7979e19fAEEdd7eF2843047D9E0d": (
+    <LpIcon swapIconSrc={"/balancer.png"} tokenIconSrc={"/balancer.png"} />
+  ),
+  "0x6779EB2838f44300CB6025d17DEB9F2E27CC9540": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/gohm.png"} />
+  ),
+  "0xEcAf3149fdA215E46e792C65dc0aB7399C2eA78B": (
+    <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
+  ),
+  "0x0c02883103e64b62c4b52ABe7E743Cc50EB2D4C7": (
+    <LpIcon
+      swapIconSrc={"/protocols/balancer.png"}
+      tokenIconSrc={"/tokens/vsta.png"}
+    />
+  ),
+
+  // Aurora
+  "0xbD59171dA1c3a2624D60421bcb6c3c3270111656": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0xF623c32828B40c89D5cf114A7186c6B8b25De4Ed": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xF49803dB604E118f3aFCF44beB0012f3c6684F05": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0xfc258cF7f1bf3739A04992D1c790aF20d60f44E9": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x1E686d65031Ac75754Cd6AeAb5B71ac2257c6a9D": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0x023d4874f30292b24512b969dC8dc8A3227d2012": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x6494DcFa6Af36cE89A990Ca13911365f006898ae": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroratri.png"} />
+  ),
+  "0x4add83C7a0aEd64468A149dA583f1b92d1aCa6AA": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/auroraeth.png"} />
+  ),
+  "0x4550B283D30F96a8B56Fe16EB576f6d5033adDF7": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xECDA075c31c20449f89Dc4467CF70d5F98e657D2": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0x6791325D64318BbCe35392da6BdFf94840c4A4B5": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0xB87C8a9c77e3C98AdcA0E24Dce5D9F43E2b698BB": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  "0x7b659258a57A5F4DB9C4049d01B6D8AaF6400a25": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  "0x6379F3801cC2004C6CeaD7d766f5d4279E178953": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  "0x4DdaC2BfF3746aDAC32E355f1855FD67Cc6FAa2B": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x90e28D422AeaC1011e03713125Fb9Ba6b4276fc8": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neardai.png"} />
+  ),
+  "0x639a02651557fFC1C7F233334248c4E7D416D60B": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  "0xCb7f715c4CaB533b245c070b58628b4d6a4019E0": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  "0xC6c7481d7e030aC3acbFD53f98797E32824A7B70": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  "0x4D2FE5BcC9d3d252383D32E1ffF3B3C279eB4E85": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  "0x86950b9668804154BD385AE0E228099c4375fEEA": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  "0xcf59208abbAE8457F39f961eAb6293bdef1E5F1e": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  "0x4F83d6ae3401f6859B579D840a5E38862a889282": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x6401Ded5D808eE824791dBfc23aA8769b585EB37": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/near.png"} />
+  ),
+  "0xc773eF9aE52fF43031DD2Db439966ef4cb55bd79": (
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  // nearJar 5a Auroraswap AURORA/NEAR
+  "0xE0df9e3a0595989D6Ada23AF1C0df876e8742941": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/auroranear.png"} />
+  ),
+  // nearJar 5b Auroraswap AVAX/NEAR
+  "0xf4A06eBe93847f2D822fAc255eB01416545709C6": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/avax.png"} />
+  ),
+  // nearJar 5d Auroraswap BRL/AURORA
+  "0xEc84AF3108c76bFBbf9652A2F39F7dC7005D70a4": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/aurora.png"} />
+  ),
+  // nearJar 5e Auroraswap BRL/ETH
+  "0x25a7f48587DD37eD194d1e6DCF3b2DDC48D83cAf": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ethereum.png"} />
+  ),
+  // nearJar 5f AuroraSwap BRL/NEAR
+  "0x3d1E5f81101de37463775a5Be13C2eEe066a0D63": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/near.png"} />
+  ),
+  // nearJar 5g AuroraSwap BUSD/NEAR
+  "0x544c6bab8Fd668B6888D9a1c0bb1BE0c9009fce0": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/busd.png"} />
+  ),
+  // nearJar 5h AuroraSwap ETH/BTC
+  "0x6bcd59972Af5b6C27e7Df3FA49787B5Fb578E083": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  // nearJar 5i AuroraSwap MATIC/NEAR
+  "0x506f103Dbef428426A8ABD31B3F7c7AbfeB5F681": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/matic.png"} />
+  ),
+  // nearJar 5j AuroraSwap NEAR/BTC
+  "0xA80751447B89dE8601bacB876Ff0096E2FF77c71": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearwbtc.png"} />
+  ),
+  // nearJar 5k AuroraSwap NEAR/ETH
+  "0x8Bc0684beF765B1b0dAf266A82c9f26699Ee0d2A": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/neareth.png"} />
+  ),
+  // nearJar 5l AuroraSwap NEAR/LUNA
+  "0x5583D1E47884ba3bbe7E66B564782151114f5ddE": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/luna.webp"} />
+  ),
+  // nearJar 5m AuroraSwap NEAR/USDC
+  "0xcd71713171fe53Fc1D9EF4C034052669Eb978c20": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearusdc.png"} />
+  ),
+  // nearJar 5n AuroraSwap NEAR/USDT
+  "0xD06Bfe30e9AD42Bb92bab8930300BBE98BBe12B7": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/nearusdt.png"} />
+  ),
+  // nearJar 5o AuroraSwap USDT/USDC
+  "0x4F5bd36925e1a141Ebb34f94Be00bdc4A3fc7034": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  // nearJar 5p AuroaSwap UST/NEAR
+  "0xD701e3E627f30458ee24dBeeDf11BDAA20B96dAe": (
+    <LpIcon swapIconSrc={"/auroraswap.png"} tokenIconSrc={"/ust.png"} />
+  ),
+  // trisolaris TRI-USDT
+  "0x820980948220115Ccc64C66Ef71E65c2b7239664": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/usdt.png"} />
+  ),
+  // trisolaris NEAR-LUNA
+  "0x59384A541cEF5f604d39C5AaF0CD98170EEb15D2": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/luna.webp"} />
+  ),
+  // trisolaris UST-NEAR
+  "0xC7201D4BA106F524AafBB93aBeac648016E17A06": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/ust.png"} />
+  ),
+  // wannaswap WANNA-AURORA
+  "0xf3EbeC4D691Bc5Ea7B0158228feCfC3de2aE3910": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/wanna.png"} />
   ),
 };
 
@@ -164,10 +340,11 @@ export const JarMiniFarmCollapsible: FC<{
   const balStr = formatNumber(balNum);
 
   const depositedStr = formatNumber(depositedNum);
+  const underlyingStr = (num: BigNumber): string => {
+    return formatNumber(parseFloat(formatEther(num)) * ratio);
+  };
 
-  const depositedUnderlyingStr = formatNumber(
-    parseFloat(formatEther(deposited)) * ratio,
-  );
+  const depositedUnderlyingStr = underlyingStr(deposited);
 
   // Farm info
   const {
@@ -181,20 +358,11 @@ export const JarMiniFarmCollapsible: FC<{
     tooltipText,
     totalAPY,
   } = farmData;
+  const stakedUnderlyingStr = underlyingStr(staked);
 
   const stakedNum = parseFloat(formatEther(staked));
-
-  const valueStr = (usdPerPToken * (depositedNum + stakedNum)).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  );
-
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
   const [isEntryBatch, setIsEntryBatch] = useState<Boolean>(false);
   const { t } = useTranslation("common");
@@ -214,8 +382,15 @@ export const JarMiniFarmCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer, address, blockNum, chainName } = Connection.useContainer();
+  const {
+    signer,
+    address,
+    blockNum,
+    chainName,
+    multicallProvider,
+  } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
 
@@ -251,15 +426,18 @@ export const JarMiniFarmCollapsible: FC<{
   );
   const [exitButton, setExitButton] = useState<string | null>(null);
 
-  const isMaiJar =
-    depositToken.address.toLowerCase() ===
-      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_USDC.toLowerCase() ||
-    depositToken.address.toLowerCase() ===
-      JAR_DEPOSIT_TOKENS.Polygon.QUICK_MATIC_QI.toLowerCase();
+  const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
-  const isQiMaiJar =
-    depositToken.address.toLowerCase() ===
-    JAR_DEPOSIT_TOKENS.Polygon.QUICK_MIMATIC_QI.toLowerCase();
+  const isQiMaiJar = isQlpQiToken(depositToken.address);
+  const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  );
+  const isClosingOnly = foundJar
+    ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
+    : false;
+
+  const isCooldownJar = foundJar?.tags?.includes("cooldown") ? true : false;
 
   const depositAndStake = async () => {
     if (balNum && minichef && address) {
@@ -268,6 +446,7 @@ export const JarMiniFarmCollapsible: FC<{
         const res = await transfer({
           token: depositToken.address,
           recipient: jarContract.address,
+          approvalAmountRequired: parseEther(depositAmount),
           transferCallback: async () => {
             return jarContract
               .connect(signer)
@@ -306,7 +485,8 @@ export const JarMiniFarmCollapsible: FC<{
     parseEther(depositAmount)
       .mul(ethers.utils.parseUnits("1", 18))
       .div(realRatio)
-      .add(deposited);
+      .add(deposited)
+      .sub("1");
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
@@ -394,9 +574,6 @@ export const JarMiniFarmCollapsible: FC<{
   const { erc20 } = Contracts.useContainer();
   const [approved, setApproved] = useState(false);
 
-  const isOK = chainName === NETWORK_NAMES.OKEX;
-  const isArb = chainName === NETWORK_NAMES.ARB;
-
   useEffect(() => {
     const checkAllowance = async () => {
       if (erc20 && address && signer && minichef) {
@@ -410,18 +587,84 @@ export const JarMiniFarmCollapsible: FC<{
     checkAllowance();
   }, [blockNum, address, erc20]);
 
+  const tvlJarData = pickleCore?.assets.jars.filter(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )[0];
+
+  const [
+    balancerTimerProps,
+    setBalancerTimerProps,
+  ] = useState<BalancerJarTimerProps | null>(null);
+
   useEffect(() => {
-    getProtocolData().then((info) => setTVLData(info));
-  }, []);
+    const checkCooldown = async () => {
+      if (isCooldownJar && signer && multicallProvider) {
+        const jarMulticall = new MulticallContract(
+          jarContract.address,
+          jarTimelockABI,
+        );
+        const [
+          cdStartTimeRes,
+          cdTimeRes,
+          initialWFRes,
+          initialWFMaxRes,
+        ] = await multicallProvider.all([
+          jarMulticall.cooldownStartTime(address),
+          jarMulticall.cooldownTime(),
+          jarMulticall.initialWithdrawalFee(),
+          jarMulticall.initialWithdrawalFeeMax(),
+        ]);
+        const cdStartTime = parseFloat(
+          ethers.utils.formatUnits(cdStartTimeRes, 0),
+        );
+        const cdTime = parseFloat(ethers.utils.formatUnits(cdTimeRes, 0));
+        const initialWF = parseFloat(ethers.utils.formatUnits(initialWFRes, 0));
+        const initialWFMax = parseFloat(
+          ethers.utils.formatUnits(initialWFMaxRes, 0),
+        );
+        const endTime = cdStartTime + cdTime;
+        const timerProps: BalancerJarTimerProps = {
+          endTime: endTime,
+          timeLockLength: cdTime,
+          initialExitFee: initialWF,
+          initialExitFeeMax: initialWFMax,
+        };
+        setBalancerTimerProps(timerProps);
+      }
+    };
+    checkCooldown();
+  }, [blockNum]);
 
   const tvlNum =
-    tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+    tvlJarData && tvlJarData.details.harvestStats
+      ? tvlJarData.details.harvestStats.balanceUSD
       : tvlUSD;
-  const tvlStr = getFormatString(tvlNum);
 
+  const tvlStr = getFormatString(tvlNum);
+  const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
+    usdPerPToken,
+    depositedNum,
+    stakedNum,
+    ratio,
+    jarContract.address.toLowerCase(),
+    pickleCore,
+    t,
+  );
+
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  const valueStr = toLocaleNdigits(
+    usdPerPToken * (depositedNum + stakedNum),
+    2,
+  );
+  const valueStrExplained = explanations.ratioString;
+  const userSharePendingStr = explanations.pendingString;
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -473,25 +716,34 @@ export const JarMiniFarmCollapsible: FC<{
           <Grid xs={24} sm={12} md={3} lg={3} style={{ textAlign: "center" }}>
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
-              <br />
               <Label>{t("balances.depositValue")}</Label>
+              {Boolean(valueStrExplained !== undefined) && (
+                <Label>{valueStrExplained}</Label>
+              )}
+              {Boolean(userSharePendingStr !== undefined) && (
+                <Label>{userSharePendingStr}</Label>
+              )}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
-            <Data>
-              <Tooltip text={ReactHtmlParser(tooltipText)}>
-                {totalAPY.toFixed(2) + "%" || "--"}
-              </Tooltip>
-              <img
-                src="./question.svg"
-                width="15px"
-                style={{ marginLeft: 5 }}
-              />
-              <Spacer y={1} />
-              <div>
-                <span>{t("balances.apy")}</span>
-              </div>
-            </Data>
+            {isClosingOnly ? (
+              <div>--</div>
+            ) : (
+              <Data>
+                <Tooltip text={ReactHtmlParser(tooltipText)}>
+                  {totalAPY.toFixed(2) + "%" || "--"}
+                </Tooltip>
+                <img
+                  src="./question.svg"
+                  width="15px"
+                  style={{ marginLeft: 5 }}
+                />
+                <Spacer y={1} />
+                <div>
+                  <span>{t("balances.apy")}</span>
+                </div>
+              </Data>
+            )}
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} style={{ textAlign: "center" }}>
             <Data isZero={tvlNum === 0}>${tvlStr}</Data>
@@ -537,6 +789,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transfer({
                       token: depositToken.address,
                       recipient: jarContract.address,
+                      approvalAmountRequired: parseEther(depositAmount),
                       transferCallback: async () => {
                         return jarContract
                           .connect(signer)
@@ -545,7 +798,7 @@ export const JarMiniFarmCollapsible: FC<{
                     });
                   }
                 }}
-                disabled={depositButton.disabled || isQiMaiJar}
+                disabled={depositButton.disabled || isClosingOnly || isQiMaiJar}
                 style={{ width: "100%" }}
               >
                 {depositButton.text}
@@ -555,6 +808,9 @@ export const JarMiniFarmCollapsible: FC<{
               ) : isQiMaiJar ? (
                 <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
               ) : null}
+              {isClosingOnly ? (
+                <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
+              ) : null}
             </Grid>
             <Grid xs={24} md={12}>
               <Button
@@ -562,7 +818,8 @@ export const JarMiniFarmCollapsible: FC<{
                 disabled={
                   Boolean(depositStakeButton) ||
                   depositButton.disabled ||
-                  isQiMaiJar
+                  isQiMaiJar ||
+                  isClosingOnly
                 }
                 style={{ width: "100%" }}
               >
@@ -572,6 +829,8 @@ export const JarMiniFarmCollapsible: FC<{
               </Button>
             </Grid>
           </Grid.Container>
+          <Spacer y={1} />
+          {isCooldownJar ? t("farms.balancer.info") : null}
         </Grid>
         {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
           <Grid xs={24} md={12}>
@@ -628,6 +887,9 @@ export const JarMiniFarmCollapsible: FC<{
             >
               {withdrawButton.text}
             </Button>
+            {isCooldownJar && balancerTimerProps ? (
+              <BalancerJarTimer {...balancerTimerProps} />
+            ) : null}
           </Grid>
         )}
       </Grid.Container>
@@ -647,6 +909,7 @@ export const JarMiniFarmCollapsible: FC<{
                     transfer({
                       token: farmDepositToken.address,
                       recipient: minichef.address,
+                      approvalAmountRequired: farmBalance,
                       transferCallback: async () => {
                         return minichef.deposit(
                           poolIndex,
@@ -674,7 +937,8 @@ export const JarMiniFarmCollapsible: FC<{
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName}
+                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName} (
+                  {stakedUnderlyingStr} {depositTokenName}){" "}
                 </div>
                 <Link
                   color
@@ -769,6 +1033,54 @@ export const JarMiniFarmCollapsible: FC<{
   );
 };
 
+export interface RatioAndPendingStrings {
+  ratioString: string | undefined;
+  pendingString: string | undefined;
+}
+
+export const getRatioStringAndPendingString = (
+  usdPerPToken: number,
+  depositedNum: number,
+  stakedNum: number,
+  ratio: number,
+  jarAddress: string,
+  pickleCore: PickleModelJson.PickleModelJson | null,
+  t: Function,
+): RatioAndPendingStrings => {
+  const toLocaleNdigits = (val: number, digits: number) => {
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+  };
+
+  let valueStrExplained = undefined;
+  let userSharePendingStr = undefined;
+  if (usdPerPToken * (depositedNum + stakedNum) !== 0) {
+    valueStrExplained = t("farms.ratio") + ": " + toLocaleNdigits(ratio, 4);
+    const jar = pickleCore?.assets.jars.find(
+      (x) => x.contract.toLowerCase() === jarAddress.toLowerCase(),
+    );
+    if (jar) {
+      const totalPtokens = jar.details.tokenBalance;
+      if (totalPtokens) {
+        const userShare = (depositedNum + stakedNum) / totalPtokens;
+        const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
+        if (pendingHarvest) {
+          const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
+          userSharePendingStr =
+            t("farms.pending") +
+            ": $" +
+            toLocaleNdigits(userShareHarvestUsd, 2);
+        }
+      }
+    }
+  }
+  return {
+    ratioString: valueStrExplained,
+    pendingString: userSharePendingStr,
+  };
+};
 const StyledNotice = styled.div`
   width: "100%";
   textalign: "center";

@@ -35,11 +35,15 @@ const moduleExports = {
       },
     ];
   },
+  webpack5: true,
   webpack(config, context) {
     if (!context.isServer && context.dev) {
       config.plugins.push(new I18NextHMRPlugin({ localesDir }));
     }
-
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
     return config;
   },
 };

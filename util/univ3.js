@@ -5,7 +5,6 @@ import univ3prices from "@thanpolas/univ3prices";
 import erc20 from "@studydefi/money-legos/erc20";
 import { JAR_DEPOSIT_TOKENS } from "../containers/Jars/jars";
 import { tokenInfo } from "features/Zap/useBalance";
-import { NETWORK_NAMES } from "containers/config";
 import { Token } from "@uniswap/sdk-core";
 import { Pool, Position } from "@uniswap/v3-sdk";
 

@@ -6,8 +6,8 @@ import { useTranslation } from "next-i18next";
 import { FarmCollapsible } from "./FarmCollapsible";
 import { UserFarms, UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
-import { PICKLE_JARS } from "../../containers/Jars/jars";
-import { NETWORK_NAMES } from "containers/config";
+import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
+import { ChainNetwork } from "picklefinance-core";
 
 const Container = styled.div`
   padding-top: 1.5rem;
@@ -17,23 +17,21 @@ export const FarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   const { farmData } = UserFarms.useContainer();
   const [showInactive, setShowInactive] = useState<boolean>(
-    chainName === NETWORK_NAMES.POLY ? false : true,
+    chainName === ChainNetwork.Polygon ? false : true,
   );
   const { t } = useTranslation("common");
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
 
-  if (!farmData && chainName !== NETWORK_NAMES.POLY) {
+  if (!farmData && chainName !== ChainNetwork.Polygon) {
     return <h2>{t("connection.loading")}</h2>;
   }
 
   const activeFarms = farmData.filter((x) => x.apy !== 0);
   const inactiveFarms = farmData.filter((x) => x.apy === 0);
 
-  const indexofYvecrv = inactiveFarms.findIndex(
-    (x) =>
-      x.depositToken.address.toLowerCase() ===
-      PICKLE_JARS.pSUSHIETHYVECRV.toLowerCase(),
+  const indexofYvecrv = inactiveFarms.findIndex((x) =>
+    isYveCrvEthJarToken(x.depositToken.address),
   );
 
   const moveInArray = (arr: UserFarmData[], from: number, to: number) => {

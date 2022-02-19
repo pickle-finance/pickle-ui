@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
+import { Connection } from "./Connection";
 import CoinGecko from "coingecko-api";
+import { ChainNetwork } from "picklefinance-core";
 
 interface PriceObject {
   dai: number;
@@ -60,15 +62,47 @@ interface PriceObject {
   hnd: number;
   dodo: number;
   work: number;
-  rbn: number;
+  jswap: number;
+  movr: number;
+  solar: number;
 }
 
 export type PriceIds = keyof PriceObject;
 
+interface CMCResponse {
+  data?: {
+    [id: string]: {
+      quote: {
+        USD: {
+          price: number;
+        };
+      };
+    };
+  };
+}
+
+const jswapPrice = async (isOEC: boolean): Promise<number> => {
+  if (!isOEC) return 0;
+
+  const cmcRequest = `https://api.allorigins.win/get?url=${encodeURIComponent(
+    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=2ba4867e-b50f-44d7-806d-c0c5fde1a8db&slug=jswap-finance",
+  )}`;
+  const data = await fetch(cmcRequest).then((body) => body.json());
+
+  const cmcData: CMCResponse = JSON.parse(data.contents);
+
+  if (!cmcData.data) return 0;
+
+  return cmcData?.data[Object.keys(cmcData.data)[0]].quote.USD.price;
+};
+
 function usePrices() {
   const [prices, setPrices] = useState<PriceObject | null>(null);
+  const { chainName } = Connection.useContainer();
+  const isOK = chainName === ChainNetwork.OKEx;
 
   const getPrices = async () => {
+    if (!chainName) return;
     const CoinGeckoClient = new CoinGecko();
     const { data: response } = await CoinGeckoClient.simple.price({
       ids: [
@@ -127,7 +161,8 @@ function usePrices() {
         "hundred-finance",
         "dodo",
         "the-employment-commons-work-token",
-        "ribbon-finance",
+        "moonriver",
+        "solarbeam",
       ],
       vs_currencies: ["usd"],
     });
@@ -190,7 +225,9 @@ function usePrices() {
       hnd: response["hundred-finance"].usd,
       dodo: response["dodo"].usd,
       work: response["the-employment-commons-work-token"].usd,
-      rbn: response["ribbon-finance"].usd
+      movr: response["moonriver"].usd,
+      solar: response["solarbeam"].usd,
+      jswap: await jswapPrice(isOK),
     };
     setPrices(prices);
   };
@@ -198,7 +235,7 @@ function usePrices() {
   useEffect(() => {
     getPrices();
     setInterval(() => getPrices(), 120000);
-  }, []);
+  }, [chainName]);
 
   return { prices };
 }

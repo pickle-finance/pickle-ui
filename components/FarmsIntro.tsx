@@ -2,15 +2,15 @@ import { FC } from "react";
 import { Trans, useTranslation } from "next-i18next";
 
 import { Connection } from "../containers/Connection";
-import { NETWORK_NAMES } from "containers/config";
 import { MiniIcon } from "../components/TokenIcon";
+import { noFarms } from "util/constants";
+import { ChainNetwork } from "picklefinance-core";
 
 export const FarmsIntro: FC = () => {
   const { chainName } = Connection.useContainer();
   const { t } = useTranslation("common");
 
-  const isPolygon = chainName === NETWORK_NAMES.POLY;
-
+  const isPolygon = chainName === ChainNetwork.Polygon;
   if (isPolygon)
     return (
       <p>
@@ -20,6 +20,15 @@ export const FarmsIntro: FC = () => {
           <MiniIcon source="/matic.png" /> rewards by staking tokens. (Note:
           MATIC rewards end August 23)
         </Trans>
+        <br />
+        {t("farms.apy")}
+      </p>
+    );
+
+  if (noFarms(chainName))
+    return (
+      <p>
+        {t("farms.introOK")}
         <br />
         {t("farms.apy")}
       </p>

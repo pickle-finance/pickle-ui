@@ -6,7 +6,6 @@ import { useTranslation } from "next-i18next";
 import { useBalances } from "./useBalances";
 import { Prices } from "../../containers/Prices";
 import { Connection } from "../../containers/Connection";
-import { PickleStaking } from "../../containers/PickleStaking";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
 import { getProtocolData } from "util/api";
@@ -49,24 +48,10 @@ export const Balances: FC = () => {
     picklePerSecond,
   } = useBalances();
 
-  const { WETHRewards } = PickleStaking.useContainer();
-
-  let earned = ethers.constants.Zero;
-  let staked = ethers.constants.Zero;
-
-  if (WETHRewards) {
-    const { staked: stakedWETH, earned: earnedWETH } = WETHRewards;
-
-    if (stakedWETH && earnedWETH) {
-      earned = earned.add(earnedWETH);
-      staked = staked.add(stakedWETH);
-    }
-  }
-
   const { blockNum } = Connection.useContainer();
   const { prices } = Prices.useContainer();
 
-  const [protocolInfo, setProtocolInfo] = useState(undefined);
+  const [protocolInfo, setProtocolInfo] = useState<any>(undefined);
   const [marketCap, setMarketCap] = useState<number | null>(null);
   const [tooltipText, setTooltipText] = useState<string | null>("");
   const { t } = useTranslation("common");
@@ -146,7 +131,7 @@ export const Balances: FC = () => {
                   text={tooltipText}
                 >
                   {t("balances.totalSupply")}:{" "}
-                  {totalSupply
+                  {totalSupply && prices?.pickle
                     ? formatPickles(marketCap / prices?.pickle)
                     : "--"}
                   <PickleIcon size={14} />

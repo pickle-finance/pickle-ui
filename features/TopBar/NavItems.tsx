@@ -78,13 +78,6 @@ const infoItems = (router: NextRouter) => {
           </NavItem>
         </Link>
       </p>
-      <p>
-        <Link href="/info/stats" passHref>
-          <NavItem active={router.pathname.startsWith("/info/stats")}>
-            {t("nav.stats")}
-          </NavItem>
-        </Link>
-      </p>
     </div>
   );
 };

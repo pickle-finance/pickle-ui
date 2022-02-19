@@ -23,6 +23,7 @@ interface TransferFunction {
   recipient: string;
   transferCallback: () => Promise<TransactionResponse>;
   approval?: boolean;
+  approvalAmountRequired?: ethers.BigNumber;
 }
 
 function useERC20Transfer() {
@@ -36,12 +37,13 @@ function useERC20Transfer() {
     recipient,
     transferCallback,
     approval = true,
+    approvalAmountRequired = ethers.constants.MaxUint256,
   }: TransferFunction) => {
     if (erc20 && address && provider && signer) {
       if (approval) {
         const Token = erc20.attach(token).connect(signer);
         const allowance = await Token.allowance(address, recipient);
-        if (allowance.lte(ethers.constants.Zero)) {
+        if (allowance.lt(approvalAmountRequired)) {
           setTransferStatus(token, recipient, Status.Approving);
 
           try {
@@ -61,15 +63,14 @@ function useERC20Transfer() {
 
       try {
         const tx = await transferCallback();
-        await tx.wait();
+        const res = await tx.wait();
+        setTransferStatus(token, recipient, Status.Success);
+        return res;
       } catch (e) {
         console.log("error", e.toString());
         setTransferStatus(token, recipient, Status.Failed);
         return false;
       }
-
-      setTransferStatus(token, recipient, Status.Success);
-      return true;
     }
   };
 

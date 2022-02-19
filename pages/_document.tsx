@@ -39,14 +39,18 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html className="h-full">
         <Head>
           <link
             href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:wght@300&family=VT323&display=swap"
             rel="stylesheet"
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@500&display=swap"
+            rel="stylesheet"
+          />
         </Head>
-        <body>
+        <body className="h-full font-body bg-black">
           <Main />
           <NextScript />
         </body>

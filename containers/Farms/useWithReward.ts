@@ -38,7 +38,6 @@ export const useWithReward = (rawFarms: Input): Output => {
         const fraction = farm.allocPoint.toNumber() / totalAllocPoints;
         const pickleRewardedPerBlock = fraction * picklePerBlock;
         const valRewardedPerBlock = pickleRewardedPerBlock * prices.pickle;
-
         return {
           ...farm,
           totalAllocPoints,
