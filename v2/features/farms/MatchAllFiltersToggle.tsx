@@ -63,7 +63,7 @@ const MatchAllFiltersToggle: FC = () => {
             aria-hidden="true"
           >
             <svg
-              className="h-3 w-3 text-orange"
+              className="h-3 w-3 text-accent"
               fill="currentColor"
               viewBox="0 0 12 12"
             >

@@ -1,5 +1,5 @@
 ::selection {
-  background: #48c248;
+  background: rgb(var(--color-primary));
 }
 
 input[type="number"]::-webkit-inner-spin-button,

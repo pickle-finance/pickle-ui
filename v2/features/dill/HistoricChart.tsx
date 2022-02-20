@@ -19,7 +19,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import { CoreSelectors } from "v2/store/core";
 import { roundNumber } from "util/number";
-import { grayDark, grayLighter, orange } from "v2/utils/theme";
+import { grayDark, grayLighter } from "v2/utils/theme";
 
 interface Entry {
   payload: MonthlyDistributionDataPoint;
@@ -296,7 +296,7 @@ const HistoricChart: FC = () => {
               <Line
                 type="linear"
                 dataKey="pickleDillRatio"
-                stroke={orange}
+                stroke="rgb(var(--color-accent))"
                 yAxisId="right"
                 strokeWidth={2}
               />
