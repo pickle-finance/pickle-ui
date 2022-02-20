@@ -68,7 +68,7 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
       onClick={handleClick}
       aria-disabled={disabled}
       className={classNames(
-        "flex group outline-none bg-black-lighter rounded-xl py-4 px-6 hover:bg-gray-dark transition-colors duration-300 ease-in-out",
+        "flex group outline-none bg-background-lightest rounded-xl py-4 px-6 hover:bg-gray-dark transition-colors duration-300 ease-in-out",
         disabled && "filter grayscale cursor-not-allowed",
       )}
     >

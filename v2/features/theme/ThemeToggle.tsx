@@ -9,7 +9,7 @@ const ThemeToggle: FC = () => {
   return (
     <>
       <div
-        className="group rounded-xl text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none cursor-pointer px-4 py-2 mr-3"
+        className="group rounded-xl text-sm text-gray-light font-bold hover:bg-background-light transition duration-300 ease-in-out focus:outline-none cursor-pointer px-4 py-2 mr-3"
         onClick={() => setIsOpen(true)}
       >
         <SunIcon className="h-5 w-5 fill-current" />

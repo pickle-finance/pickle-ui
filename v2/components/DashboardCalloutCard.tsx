@@ -20,7 +20,7 @@ const DashboardCalloutCard: FC = () => {
 
   return (
     <Link href="/v2/farms">
-      <div className="group bg-black-light rounded-xl border border-gray-dark shadow cursor-pointer transition duration-300 ease-in-out hover:bg-black-lighter">
+      <div className="group bg-background-light rounded-xl border border-gray-dark shadow cursor-pointer transition duration-300 ease-in-out hover:bg-background-lightest">
         <div className="flex justify-between px-5 py-4 sm:px-8 sm:py-5">
           <div className="pr-4">
             <p className="font-body font-bold text-lg sm:text-xl leading-6 mb-1">

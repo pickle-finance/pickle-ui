@@ -23,7 +23,7 @@ import { JarWithData } from "./FarmsTableBody";
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
     className={classNames(
-      "bg-black-light p-4 whitespace-nowrap text-sm text-foreground sm:p-6 group-hover:bg-black-lighter transition duration-300 ease-in-out",
+      "bg-background-light p-4 whitespace-nowrap text-sm text-foreground sm:p-6 group-hover:bg-background-lightest transition duration-300 ease-in-out",
       className,
     )}
   >

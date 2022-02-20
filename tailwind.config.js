@@ -41,16 +41,16 @@ module.exports = {
           DEFAULT: withOpacityValue("--color-accent"),
           light: withOpacityValue("--color-accent-light"),
         },
-        background: withOpacityValue("--color-background"),
+        background: {
+          DEFAULT: withOpacityValue("--color-background"),
+          light: withOpacityValue("--color-background-light"),
+          lightest: withOpacityValue("--color-background-lightest"),
+        },
         foreground: withOpacityValue("--color-foreground"),
         primary: {
           DEFAULT: withOpacityValue("--color-primary"),
           light: withOpacityValue("--color-primary-light"),
           dark: withOpacityValue("--color-primary-dark"),
-        },
-        black: {
-          light: "#0f1f22",
-          lighter: "#172628",
         },
         gray: {
           light: "#c0c4c5",

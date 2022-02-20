@@ -58,7 +58,7 @@ const FarmsTableHeaderCellSortable: FC<Props> = ({ sortType, label }) => {
       className={classNames(
         "px-4 py-1 h-8 text-left text-xs font-bold text-gray-light tracking-normal sm:px-6",
         sortable &&
-          "cursor-pointer transition duration-300 ease-in-out hover:bg-black-light rounded-t-xl",
+          "cursor-pointer transition duration-300 ease-in-out hover:bg-background-light rounded-t-xl",
       )}
       onClick={handleClick}
     >

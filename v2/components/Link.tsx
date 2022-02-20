@@ -26,7 +26,7 @@ const AppLink: FC<Props> = ({
         href={href}
         onClick={onClick}
         className={classNames(
-          active && "bg-black-light text-primary-light",
+          active && "bg-background-light text-primary-light",
           primary ? "text-accent" : "text-foreground",
           "group inline-flex grow items-center text-sm rounded-lg hover:text-primary-light transition duration-300 ease-in-out",
           className,

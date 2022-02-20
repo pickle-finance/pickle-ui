@@ -16,7 +16,7 @@ import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
 import { ControlsSelectors, Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
-import { blackLight, blackLighter, grayOutlineLight } from "v2/utils/theme";
+import { grayOutlineLight } from "v2/utils/theme";
 
 const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
@@ -85,7 +85,7 @@ const styles: StylesConfig<Filter> = {
   }),
   control: (styles) => ({
     ...styles,
-    backgroundColor: blackLighter,
+    backgroundColor: "rgb(var(--color-background-lightest))",
     border: 0,
     padding: "8px 0",
   }),
@@ -95,7 +95,7 @@ const styles: StylesConfig<Filter> = {
   }),
   menu: (styles) => ({
     ...styles,
-    backgroundColor: blackLight,
+    backgroundColor: "rgb(var(--color-background-light))",
     padding: 8,
     zIndex: 55,
   }),
@@ -129,7 +129,9 @@ const styles: StylesConfig<Filter> = {
   }),
   option: (styles, { data, isFocused }) => ({
     ...styles,
-    backgroundColor: isFocused ? blackLighter : undefined,
+    backgroundColor: isFocused
+      ? "rgb(var(--color-background-lightest))"
+      : undefined,
     borderRadius: 10,
     color: data.color,
     transition: "all 200ms ease-in-out",

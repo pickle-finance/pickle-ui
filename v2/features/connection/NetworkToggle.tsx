@@ -68,7 +68,7 @@ const NetworkToggle: FC = () => {
     <Popover className="relative mr-3">
       {({ open }) => (
         <>
-          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-black-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
+          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-background-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
             <NetworkToggleLabel networks={networks} />
             <ChevronDownIcon
               className={classNames(
@@ -82,11 +82,11 @@ const NetworkToggle: FC = () => {
           <SelectTransition>
             <Popover.Panel className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-2 sm:px-0">
               <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-gray-dark">
-                <div className="relative grid gap-1 bg-black-light p-2">
+                <div className="relative grid gap-1 bg-background-light p-2">
                   {networks?.map((network) => (
                     <Popover.Button
                       key={network.name}
-                      className="flex group justify-between items-center hover:bg-black-lighter p-2 rounded-lg transition duration-300 ease-in-out"
+                      className="flex group justify-between items-center hover:bg-background-lightest p-2 rounded-lg transition duration-300 ease-in-out"
                     >
                       <div className="flex">
                         <div className="w-5 h-5 mr-3">

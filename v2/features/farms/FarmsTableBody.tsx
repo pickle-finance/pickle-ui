@@ -90,7 +90,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
       <tr>
         <td
           colSpan={6}
-          className="bg-black-light text-gray-light text-center p-8 rounded-xl"
+          className="bg-background-light text-gray-light text-center p-8 rounded-xl"
         >
           {t("v2.farms.noResults")}
         </td>
