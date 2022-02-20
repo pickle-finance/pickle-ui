@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { startAppListening } from "./listenerMiddleware";
 
 import { RootState } from ".";
+import { applyTheme } from "v2/features/theme/themes";
 
 export enum ThemeType {
   Light = "light",
@@ -42,23 +43,7 @@ const selectTheme = (state: RootState) => state.theme;
  */
 startAppListening({
   actionCreator: setThemeType,
-  effect: async (action) => {
-    console.log("~~~ Theme changed: ", action.payload);
-
-    let root = document.documentElement;
-
-    switch (action.payload) {
-      case "light":
-        root.style.setProperty("--color-foreground", "3, 19, 22");
-        break;
-      case "dark":
-        root.style.setProperty("--color-foreground", "255, 255, 255");
-        break;
-      case "rare":
-        root.style.setProperty("--color-foreground", "0, 255, 0");
-        break;
-    }
-  },
+  effect: (action) => applyTheme(action.payload),
 });
 
 export const ThemeSelectors = {
