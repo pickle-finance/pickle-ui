@@ -44,10 +44,9 @@ export const applyTheme = (name: string) => {
   const root = document.documentElement;
   const theme = themes[name] || themes["dark"];
 
-  Object.entries(theme).forEach(([property, rgb]) => {
-    root.style.setProperty(
-      `--color-${property}`,
-      `${rgb[0]}, ${rgb[1]}, ${rgb[2]}`,
-    );
-  });
+  const variables = Object.entries(theme).map(
+    ([property, rgb]) => `--color-${property}: ${rgb[0]}, ${rgb[1]}, ${rgb[2]}`,
+  );
+
+  root.setAttribute("style", variables.join(";"));
 };
