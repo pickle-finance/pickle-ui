@@ -191,7 +191,7 @@ const PerformanceCard: FC = () => {
   return (
     <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
       <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-gray-dark">
-        <h2 className="text-lg font-normal text-gray-light mb-7">
+        <h2 className="text-lg font-normal text-foreground-alt-200 mb-7">
           {t("v2.dashboard.performance")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 mb-5">
@@ -203,7 +203,7 @@ const PerformanceCard: FC = () => {
               <p className="font-title font-medium text-2xl leading-7 mb-1">
                 {userTotalBalance}
               </p>
-              <p className="text-gray-light text-sm">
+              <p className="text-foreground-alt-200 text-sm">
                 {t("v2.balances.balance")}
               </p>
             </div>
@@ -223,7 +223,7 @@ const PerformanceCard: FC = () => {
               <p className="font-title font-medium text-2xl leading-7 mb-1">
                 {unclaimedRewards}
               </p>
-              <p className="text-gray-light text-sm">
+              <p className="text-foreground-alt-200 text-sm">
                 {t("v2.dashboard.unclaimedRewards")}
               </p>
             </div>
@@ -236,7 +236,7 @@ const PerformanceCard: FC = () => {
               <p className="font-title font-medium text-2xl leading-7 mb-1">
                 {pendingHarvest}
               </p>
-              <p className="text-gray-light text-sm">
+              <p className="text-foreground-alt-200 text-sm">
                 {t("v2.dashboard.pendingHarvests")}
               </p>
             </div>

@@ -76,7 +76,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           <p className="font-title font-medium text-base leading-5">
             {depositTokenCountString}
           </p>
-          <p className="font-normal text-xs text-gray-light mb-6">
+          <p className="font-normal text-xs text-foreground-alt-200 mb-6">
             {t("v2.balances.balance")}
           </p>
           <Link
@@ -89,7 +89,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </Link>
         </div>
         <div className="grow border border-gray-dark rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
-          <p className="font-title text-gray-light font-medium text-base leading-5 mb-2">
+          <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
             {t("v2.farms.depositedToken", { token: jar.depositToken.name })}
             <MoreInfo secondaryText="More info" />
           </p>
@@ -105,7 +105,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </div>
         </div>
         <div className="grow border border-gray-dark rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
-          <p className="font-title text-gray-light font-medium text-base leading-5 mb-2">
+          <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
             {t("v2.farms.stakedToken", { token: jar.depositToken.name })}
             <MoreInfo secondaryText="More info" />
           </p>
@@ -117,7 +117,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           </div>
         </div>
         <div className="grow border border-gray-dark rounded-xl p-4">
-          <p className="font-title text-gray-light font-medium text-base leading-5 mb-2">
+          <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
             {t("v2.farms.earnedToken", { token: "PICKLEs" })}
           </p>
           <div className="flex items-end justify-between">
