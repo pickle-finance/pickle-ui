@@ -6,7 +6,7 @@ interface Props {
 }
 
 const DillCard: FC<Props> = ({ title, data, children }) => (
-  <aside className="border border-gray-dark grow font-title rounded-lg tracking-normal p-4">
+  <aside className="border border-foreground-alt-500 grow font-title rounded-lg tracking-normal p-4">
     <h1 className="font-medium text-foreground-alt-200 text-base leading-5">
       {title}
     </h1>

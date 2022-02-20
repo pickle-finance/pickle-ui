@@ -23,7 +23,7 @@ const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({
   connector,
   isLoading,
 }) => (
-  <div className="relative w-12 h-12 p-1 bg-gray-outline rounded-full mr-4">
+  <div className="relative w-12 h-12 p-1 bg-foreground-alt-400 rounded-full mr-4">
     <Image
       src={connector.icon}
       width={200}
@@ -68,7 +68,7 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
       onClick={handleClick}
       aria-disabled={disabled}
       className={classNames(
-        "flex group outline-none bg-background-lightest rounded-xl py-4 px-6 hover:bg-gray-dark transition-colors duration-300 ease-in-out",
+        "flex group outline-none bg-background-lightest rounded-xl py-4 px-6 hover:bg-foreground-alt-500 transition-colors duration-300 ease-in-out",
         disabled && "filter grayscale cursor-not-allowed",
       )}
     >

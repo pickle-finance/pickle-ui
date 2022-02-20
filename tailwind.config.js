@@ -51,6 +51,9 @@ module.exports = {
           alt: {
             100: withOpacityValue("--color-foreground-alt-100"),
             200: withOpacityValue("--color-foreground-alt-200"),
+            300: withOpacityValue("--color-foreground-alt-300"),
+            400: withOpacityValue("--color-foreground-alt-400"),
+            500: withOpacityValue("--color-foreground-alt-500"),
           },
         },
         primary: {
@@ -58,19 +61,15 @@ module.exports = {
           light: withOpacityValue("--color-primary-light"),
           dark: withOpacityValue("--color-primary-dark"),
         },
-        gray: {
-          light: "#c0c4c5", // 200
-          lighter: "#e0e1e2", // 100
-          outline: "#2b383b", // 400
-          "outline-light": "#869498", // 300
-          dark: "#1f2d30", // 500
-        },
       },
       scale: {
         "-1": "-1",
       },
       borderWidth: {
         3: "3px",
+      },
+      zIndex: {
+        60: 60,
       },
     },
   },

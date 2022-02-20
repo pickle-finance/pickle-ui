@@ -189,8 +189,8 @@ const PerformanceCard: FC = () => {
   const closeModal = () => setIsOpen(false);
 
   return (
-    <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
-      <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-gray-dark">
+    <div className="bg-gradient rounded-2xl border border-foreground-alt-500 shadow">
+      <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-foreground-alt-500">
         <h2 className="text-lg font-normal text-foreground-alt-200 mb-7">
           {t("v2.dashboard.performance")}
         </h2>

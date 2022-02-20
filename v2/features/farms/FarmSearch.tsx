@@ -16,7 +16,6 @@ import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
 import { ControlsSelectors, Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
-import { grayOutlineLight } from "v2/utils/theme";
 
 const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
@@ -30,7 +29,7 @@ const OptionImage: FC<Filter> = ({ color, imageSrc, label }) => {
 
   return (
     <div
-      className="mr-3 w-8 h-8 rounded-full border-3 border-gray-outline"
+      className="mr-3 w-8 h-8 rounded-full border-3 border-foreground-alt-400"
       style={{ background: isLoaded ? defaultBackgroundColor : color }}
     >
       <Image
@@ -78,7 +77,7 @@ const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
 const styles: StylesConfig<Filter> = {
   clearIndicator: (styles) => ({
     ...styles,
-    color: grayOutlineLight,
+    color: "rgb(var(--color-foreground-alt-300))",
     ":hover": {
       color: "white",
     },
@@ -87,6 +86,7 @@ const styles: StylesConfig<Filter> = {
     ...styles,
     backgroundColor: "rgb(var(--color-background-lightest))",
     border: 0,
+    boxShadow: "none",
     padding: "8px 0",
   }),
   input: (styles) => ({

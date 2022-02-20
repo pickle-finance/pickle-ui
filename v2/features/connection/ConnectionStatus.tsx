@@ -162,7 +162,7 @@ const ConnectionStatus: FC = () => {
     );
   } else return null;
   return (
-    <div className="bg-background-lightest px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-gray-dark">
+    <div className="bg-background-lightest px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-foreground-alt-500">
       <div className="flex font-title mb-2 text-lg items-center">
         <FireIcon className="text-accent w-5 h-5 mr-2" />
         {t("v2.connection.errorTitle")}

@@ -30,7 +30,7 @@ const TokenIcon: FC<TokenIconProps> = ({ component, index, isLast }) => {
   return (
     <div
       className={classNames(
-        "w-10 h-10 rounded-full border-3 border-gray-outline z-10 hover:scale-125 duration-200 hover:z-50",
+        "w-10 h-10 rounded-full border-3 border-foreground-alt-400 z-10 hover:scale-125 duration-200 hover:z-50",
         /**
          * Allow me, dear reader, to ask you not to dismiss this code as something
          * written by a complete idiot, "clean it up", and ultimately break it.
@@ -69,7 +69,7 @@ const ProtocolIcon: FC<ProtocolIconProps> = ({ protocol }) => {
 
   return (
     <div
-      className="absolute -top-3 -right-3 z-50 w-7 h-7 rounded-full border-3 border-gray-outline -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200"
+      className="absolute -top-3 -right-3 z-50 w-7 h-7 rounded-full border-3 border-foreground-alt-400 -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200"
       style={{
         background: isLoaded
           ? defaultBackgroundColor

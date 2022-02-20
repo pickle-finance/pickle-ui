@@ -8,7 +8,7 @@ interface Props {
 }
 
 const TooltipContent: FC<Props> = ({ primaryText, secondaryText }) => (
-  <div className="rounded-lg shadow-lg border border-gray-dark overflow-hidden">
+  <div className="rounded-lg shadow-lg border border-foreground-alt-500 overflow-hidden">
     <div className="bg-background-light px-3 py-2">
       <p className="text-primary-light text-base font-normal">
         {primaryText && <span className="mr-2">{primaryText}</span>}

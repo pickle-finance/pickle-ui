@@ -29,7 +29,7 @@ const Button: FC<Props> = ({
         type === "secondary" &&
           "text-accent bg-transparent border-accent hover:bg-accent-light hover:bg-opacity-20 hover:border-accent-light hover:text-accent-light",
         type === "disabled" &&
-          "bg-gray-outline text-gray-outline-light border-transparent cursor-not-allowed",
+          "bg-foreground-alt-400 text-foreground-alt-300 border-transparent cursor-not-allowed",
         "inline-flex items-center cursor-pointer border-2 text-sm font-bold shadow-sm focus:outline-none transition duration-300 ease-in-out",
         className,
       )}

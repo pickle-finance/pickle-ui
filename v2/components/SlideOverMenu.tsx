@@ -13,7 +13,7 @@ const SlideOverMenu: FC = () => {
     <>
       {/* Mobile menu button */}
       <div className="-mr-2 flex sm:hidden">
-        <div className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-foreground hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+        <div className="inline-flex items-center justify-center p-2 rounded-md text-foreground-alt-200 hover:bg-background-light focus:outline-none focus:ring-2 focus:ring-inset">
           <span className="sr-only">{t("v2.nav.openMenu")}</span>
           <MenuIcon
             onClick={() => setIsOpen(true)}
@@ -26,7 +26,7 @@ const SlideOverMenu: FC = () => {
         <Dialog
           as="div"
           static
-          className="fixed inset-0 overflow-hidden"
+          className="fixed inset-0 overflow-hidden z-60"
           open={isOpen}
           onClose={() => setIsOpen(false)}
         >
@@ -64,7 +64,7 @@ const SlideOverMenu: FC = () => {
                   >
                     <div className="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4">
                       <button
-                        className="rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-light"
+                        className="rounded-md text-foreground-alt-400 focus:outline-none focus:ring-2 focus:ring-accent-light"
                         onClick={() => setIsOpen(false)}
                       >
                         <span className="sr-only">{t("v2.nav.close")}</span>

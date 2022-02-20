@@ -69,7 +69,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   return (
     <td
       colSpan={6}
-      className="bg-background-light rounded-b-xl p-6 border-t border-gray-dark"
+      className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
       <div className="block sm:flex">
         <div className="py-4 flex-shrink-0 sm:mr-6">
@@ -88,7 +88,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             {t("v2.farms.getToken", { token: jar.depositToken.name })}
           </Link>
         </div>
-        <div className="grow border border-gray-dark rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
+        <div className="grow border border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
             {t("v2.farms.depositedToken", { token: jar.depositToken.name })}
             <MoreInfo secondaryText="More info" />
@@ -104,7 +104,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             )}
           </div>
         </div>
-        <div className="grow border border-gray-dark rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
+        <div className="grow border border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
             {t("v2.farms.stakedToken", { token: jar.depositToken.name })}
             <MoreInfo secondaryText="More info" />
@@ -116,7 +116,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             <Button type="disabled">{t("v2.farms.enable")}</Button>
           </div>
         </div>
-        <div className="grow border border-gray-dark rounded-xl p-4">
+        <div className="grow border border-foreground-alt-500 rounded-xl p-4">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
             {t("v2.farms.earnedToken", { token: "PICKLEs" })}
           </p>

@@ -1,8 +1,6 @@
 import chroma from "chroma-js";
 
-import { grayOutline } from "v2/utils/theme";
-
-const defaultColor = grayOutline;
+const defaultColor = "#2b383b";
 export const defaultBackgroundColor = chroma(defaultColor).alpha(0.7).css();
 
 /**

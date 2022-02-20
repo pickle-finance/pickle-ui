@@ -82,7 +82,7 @@ const GasPriceIndicator: FC = () => {
 
           <SelectTransition>
             <Popover.Panel className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-2 w-28 max-w-screen-sm sm:px-0">
-              <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-gray-dark overflow-hidden text-foreground">
+              <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-foreground-alt-500 overflow-hidden text-foreground">
                 <div className="relative grid gap-1 bg-background-light p-2">
                   <GasPriceIndicatorOptions data={data} />
                 </div>
