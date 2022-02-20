@@ -69,7 +69,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   return (
     <td
       colSpan={6}
-      className="bg-black-light rounded-b-xl p-6 border-t border-gray-dark"
+      className="bg-background-light rounded-b-xl p-6 border-t border-gray-dark"
     >
       <div className="block sm:flex">
         <div className="py-4 flex-shrink-0 sm:mr-6">

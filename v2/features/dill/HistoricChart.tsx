@@ -200,7 +200,7 @@ const HistoricChart: FC = () => {
   };
 
   return (
-    <div className="bg-black-light rounded-xl border border-gray-dark shadow p-4 sm:p-8">
+    <div className="bg-background-light rounded-xl border border-gray-dark shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
       <aside className="h-[600px] px-3 py-10">
         {dataSeries.length > 0 ? (

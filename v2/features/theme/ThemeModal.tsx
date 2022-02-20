@@ -45,7 +45,7 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
                   classNames(
                     checked
                       ? "bg-gray-outline border-primary-light"
-                      : "bg-black-light border-gray-dark hover:bg-gray-outline",
+                      : "bg-background-light border-gray-dark hover:bg-gray-outline",
                     "font-title border rounded-xl cursor-pointer text-foreground py-4 px-6 flex items-center justify-center text-sm font-medium",
                   )
                 }
