@@ -50,7 +50,7 @@ const LanguageToggle: FC = () => {
             <TranslateIcon className="h-5 w-5" />
             <ChevronDownIcon
               className={classNames(
-                open ? "text-orange" : "text-gray-lighter",
+                open ? "text-accent" : "text-gray-lighter",
                 "ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"

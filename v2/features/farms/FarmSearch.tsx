@@ -16,12 +16,7 @@ import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
 import { ControlsSelectors, Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
-import {
-  blackLight,
-  blackLighter,
-  grayOutlineLight,
-  orange,
-} from "v2/utils/theme";
+import { blackLight, blackLighter, grayOutlineLight } from "v2/utils/theme";
 
 const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
@@ -129,7 +124,7 @@ const styles: StylesConfig<Filter> = {
         : chroma(data.color).darken(2.5).css(),
     ":hover": {
       color: "white",
-      backgroundColor: orange,
+      backgroundColor: "rgb(var(--color-accent))",
     },
   }),
   option: (styles, { data, isFocused }) => ({

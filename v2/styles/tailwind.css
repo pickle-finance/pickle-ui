@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --color-accent: 225, 85, 47;
+    --color-accent-light: 255, 147, 117;
     --color-background: 3, 19, 22;
     --color-foreground: 255, 255, 255;
     --color-primary: 72, 194, 72;

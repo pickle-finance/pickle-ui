@@ -28,7 +28,7 @@ const NavItem: FC<Props> = ({ href, children, className, Icon, external }) => {
               isCurrent
                 ? "text-primary-light"
                 : "text-foreground group-hover:text-primary-light",
-              "mr-2 flex-shrink-0 h-5 w-5",
+              "mr-2 flex-shrink-0 h-5 w-5 transition duration-300 ease-in-out",
             )}
             aria-hidden="true"
           />

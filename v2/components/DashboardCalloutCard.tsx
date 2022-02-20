@@ -41,7 +41,7 @@ const DashboardCalloutCard: FC = () => {
             </p>
           </div>
           <div className="flex items-center">
-            <ArrowRightIcon className="w-6 h-6 text-gray-light group-hover:text-orange transition duration-300 ease-in-out" />
+            <ArrowRightIcon className="w-6 h-6 text-gray-light group-hover:text-accent transition duration-300 ease-in-out" />
           </div>
         </div>
       </div>

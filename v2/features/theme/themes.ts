@@ -4,6 +4,8 @@ interface Theme {
   background: RGB;
   foreground: RGB;
   primary: RGB;
+  "primary-light": RGB;
+  "primary-dark": RGB;
   [key: string]: RGB;
 }
 
@@ -20,11 +22,15 @@ const themes: ThemeConfig = {
     background: [3, 19, 22],
     foreground: [255, 255, 255],
     primary: [72, 194, 72],
+    "primary-light": [94, 237, 93],
+    "primary-dark": [6, 85, 6],
   },
   light: {
     background: [255, 255, 255],
     foreground: [3, 19, 22],
     primary: [72, 194, 72],
+    "primary-light": [94, 237, 93],
+    "primary-dark": [6, 85, 6],
   },
 };
 

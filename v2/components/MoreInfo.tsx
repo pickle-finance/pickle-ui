@@ -31,7 +31,7 @@ const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(
   return (
     <span
       ref={ref}
-      className="cursor-pointer transition-colors duration-300 hover:text-orange ml-1"
+      className="cursor-pointer transition-colors duration-300 hover:text-accent ml-1"
       {...props}
     >
       <QuestionMarkCircleIcon className="inline-block w-4 h-4 mx-1 align-top" />

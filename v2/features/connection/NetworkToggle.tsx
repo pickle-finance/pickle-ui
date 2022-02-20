@@ -40,7 +40,7 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = ({ networks }) => {
             priority
           />
         </div>
-        <span className="text-foreground text-sm font-bold">
+        <span className="text-gray-light text-sm font-bold">
           {activeChain.visibleName}
         </span>
       </div>
@@ -72,7 +72,7 @@ const NetworkToggle: FC = () => {
             <NetworkToggleLabel networks={networks} />
             <ChevronDownIcon
               className={classNames(
-                open ? "text-orange" : "text-gray-lighter",
+                open ? "text-accent" : "text-gray-lighter",
                 "ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"

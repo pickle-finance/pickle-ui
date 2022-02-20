@@ -64,7 +64,7 @@ const SlideOverMenu: FC = () => {
                   >
                     <div className="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4">
                       <button
-                        className="rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-light"
+                        className="rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-light"
                         onClick={() => setIsOpen(false)}
                       >
                         <span className="sr-only">{t("v2.nav.close")}</span>

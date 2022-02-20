@@ -37,20 +37,20 @@ module.exports = {
     },
     extend: {
       colors: {
+        accent: {
+          DEFAULT: withOpacityValue("--color-accent"),
+          light: withOpacityValue("--color-accent-light"),
+        },
         background: withOpacityValue("--color-background"),
         foreground: withOpacityValue("--color-foreground"),
         primary: {
           DEFAULT: withOpacityValue("--color-primary"),
           light: withOpacityValue("--color-primary-light"),
+          dark: withOpacityValue("--color-primary-dark"),
         },
         black: {
           light: "#0f1f22",
           lighter: "#172628",
-        },
-        orange: {
-          DEFAULT: "#e1552f",
-          light: "#ff9375",
-          lightest: "#ff807533",
         },
         gray: {
           light: "#c0c4c5",
