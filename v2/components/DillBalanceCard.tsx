@@ -36,7 +36,7 @@ const DillBalanceCard: FC = () => {
             <p className="font-title font-medium text-2xl leading-7 mb-1">
               {val}
             </p>
-            <p className="text-gray-light text-sm">
+            <p className="text-foreground-alt-200 text-sm">
               {t("v2.dashboard.dillAmount")}
             </p>
           </div>

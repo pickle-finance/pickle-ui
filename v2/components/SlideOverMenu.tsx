@@ -40,7 +40,7 @@ const SlideOverMenu: FC = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="absolute inset-0 bg-gray-light bg-opacity-75 transition-opacity" />
+              <Dialog.Overlay className="absolute inset-0 bg-foreground-alt-200 bg-opacity-75 transition-opacity" />
             </Transition.Child>
             <div className="fixed inset-y-0 right-0 flex w-4/5">
               <Transition.Child

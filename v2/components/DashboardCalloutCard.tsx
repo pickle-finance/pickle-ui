@@ -36,12 +36,12 @@ const DashboardCalloutCard: FC = () => {
                 APY
               </Trans>
             </p>
-            <p className="text-gray-lighter text-xs sm:text-sm font-normal leading-5">
+            <p className="text-foreground-alt-100 text-xs sm:text-sm font-normal leading-5">
               {t("v2.dashboard.extraBoost")}
             </p>
           </div>
           <div className="flex items-center">
-            <ArrowRightIcon className="w-6 h-6 text-gray-light group-hover:text-accent transition duration-300 ease-in-out" />
+            <ArrowRightIcon className="w-6 h-6 text-foreground-alt-200 group-hover:text-accent transition duration-300 ease-in-out" />
           </div>
         </div>
       </div>

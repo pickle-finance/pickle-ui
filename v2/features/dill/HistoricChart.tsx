@@ -128,7 +128,7 @@ const legendFormatter = (value: string, t: TFunction): ReactNode => {
       result = value;
   }
 
-  return <span className="text-gray-light">{result}</span>;
+  return <span className="text-foreground-alt-200">{result}</span>;
 };
 
 interface FootnoteProps {

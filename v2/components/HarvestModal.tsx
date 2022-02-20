@@ -41,7 +41,7 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
           />
         </div>
         <div className="flex flex-col text-left justify-center">
-          <p className="uppercase text-gray-light font-bold text-xs">
+          <p className="uppercase text-foreground-alt-200 font-bold text-xs">
             {details.descriptor}
           </p>
           <p className="text-primary font-bold text-lg align-bottom leading-6">

@@ -40,7 +40,7 @@ const PickleBalanceCard: FC = () => {
             <p className="font-title font-medium text-2xl leading-7 mb-1">
               {pickles}
             </p>
-            <p className="text-gray-light text-sm">
+            <p className="text-foreground-alt-200 text-sm">
               {chains > 1
                 ? t("v2.dashboard.picklesInWallet", { chains: chains })
                 : t("v2.dashboard.picklesInWalletZeroOrOne")}

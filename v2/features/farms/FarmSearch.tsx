@@ -20,7 +20,7 @@ import { grayOutlineLight } from "v2/utils/theme";
 
 const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
-    <SearchIcon className="w-6 h-6 text-gray-light ml-3 mr-1" />
+    <SearchIcon className="w-6 h-6 text-foreground-alt-200 ml-3 mr-1" />
     {children}
   </components.Control>
 );
@@ -66,7 +66,7 @@ const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
           >
             {children}
           </p>
-          <p className="font-normal text-sm text-gray-light italic">
+          <p className="font-normal text-sm text-foreground-alt-200 italic">
             {t(`v2.farms.${type}`)}
           </p>
         </div>

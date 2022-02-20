@@ -51,7 +51,7 @@ const chainProtocol = (
             title={jar.chain}
           />
         </div>
-        <p className="italic font-normal text-xs text-gray-light">
+        <p className="italic font-normal text-xs text-foreground-alt-200">
           {jar.protocol}
         </p>
       </div>
@@ -217,7 +217,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         <p className="font-title font-medium text-base leading-5">
           {formatDollars(pendingPicklesAsDollars)}
         </p>
-        <p className="font-normal text-xs text-gray-light">
+        <p className="font-normal text-xs text-foreground-alt-200">
           {picklesPending} PICKLEs
         </p>
       </RowCell>
@@ -228,7 +228,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             <p className="font-title font-medium text-base leading-5">
               {formatDollars(depositTokenUSD)}
             </p>
-            <p className="font-normal text-xs text-gray-light">
+            <p className="font-normal text-xs text-foreground-alt-200">
               {depositTokenCountString}
             </p>
           </div>

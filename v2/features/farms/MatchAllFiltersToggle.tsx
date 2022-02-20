@@ -19,7 +19,7 @@ const MatchAllFiltersToggle: FC = () => {
         checked={matchAllFilters}
         onChange={(value) => dispatch(setMatchAllFilters(value))}
         className={classNames(
-          matchAllFilters ? "bg-primary" : "bg-gray-light",
+          matchAllFilters ? "bg-primary" : "bg-foreground-alt-200",
           "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-2000",
         )}
       >
@@ -40,7 +40,7 @@ const MatchAllFiltersToggle: FC = () => {
             aria-hidden="true"
           >
             <svg
-              className="h-3 w-3 text-gray-light"
+              className="h-3 w-3 text-foreground-alt-200"
               fill="none"
               viewBox="0 0 12 12"
             >
@@ -73,7 +73,7 @@ const MatchAllFiltersToggle: FC = () => {
         </span>
       </Switch>
       <Switch.Label as="span" className="ml-3">
-        <span className="text-sm font-medium text-gray-light">
+        <span className="text-sm font-medium text-foreground-alt-200">
           {t("v2.farms.matchAllFilters")}
         </span>
         <MoreInfo

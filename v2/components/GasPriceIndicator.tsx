@@ -57,7 +57,7 @@ const GasPriceIndicatorOptions: FC<{
           <p className="text-sm font-bold uppercase group-hover:text-primary-light">
             {price.value} GWEI
           </p>
-          <p className="text-xs italic text-gray-light">{price.name}</p>
+          <p className="text-xs italic text-foreground-alt-200">{price.name}</p>
         </div>
       ))}
     </>
@@ -74,7 +74,7 @@ const GasPriceIndicator: FC = () => {
         <>
           <Popover.Button
             disabled={!data}
-            className="group rounded-xl inline-flex items-center text-sm text-gray-light font-bold hover:bg-background-light transition duration-300 ease-in-out focus:outline-none px-4 py-2"
+            className="group rounded-xl inline-flex items-center text-sm text-foreground-alt-200 font-bold hover:bg-background-light transition duration-300 ease-in-out focus:outline-none px-4 py-2"
           >
             <GasPumpIcon className="h-5 w-5 mr-2 fill-current" />
             <GasPriceIndicatorButtonLabel data={data} />

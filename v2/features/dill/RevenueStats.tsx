@@ -43,7 +43,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                       title="PICKLE"
                     />
                   </div>
-                  <span className="mr-2 text-gray-light">=</span>
+                  <span className="mr-2 text-foreground-alt-200">=</span>
                   <span className="text-foreground mr-1">
                     {formatNumber(dill.totalDill)}
                   </span>
@@ -61,7 +61,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
               }
             />
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.totalValueLocked")}
           </p>
         </div>
@@ -70,7 +70,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
             {/* TODO update this */}
             101.78%
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.currentAPY")}
           </p>
         </div>
@@ -99,7 +99,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
               }
             />
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.upcomingDistributionValue")}
           </p>
         </div>
@@ -107,7 +107,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDate(new Date(upcomingDistribution.distributionTime))}
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.upcomingDistributionDate")}
           </p>
         </div>
