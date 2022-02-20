@@ -19,6 +19,7 @@ export type Jar = {
   jarName: string;
   contract: JarContract;
   protocol: string;
+  stakingProtocol?: string;
   chain: ChainNetwork;
   apiKey: string;
   supply: number;
@@ -68,6 +69,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           depositTokenLink: x.depositToken.link,
           contract: JarFactory.connect(x.contract, provider),
           protocol: x.protocol,
+          stakingProtocol: x.stakingProtocol,
           chain: x.chain,
           apiKey: x.details.apiKey,
           supply: x.details.totalSupply || 0,

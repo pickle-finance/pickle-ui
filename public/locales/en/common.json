@@ -47,7 +47,8 @@
       "aurora": "Aurora",
       "metis": "Metis",
       "moonbeam": "Moonbeam",
-      "optimism": "Optimism"
+      "optimism": "Optimism",
+      "fantom": "Fantom"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",

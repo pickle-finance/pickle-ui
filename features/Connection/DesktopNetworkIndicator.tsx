@@ -227,6 +227,9 @@ export const DesktopNetworkIndicator: FC = () => {
           <MiniIcon source="/optimism.png" />{" "}
           {t("connection.networks.optimism")}
         </Select.Option>
+        <Select.Option value="250">
+          <MiniIcon source="/fantom.png" /> {t("connection.networks.fantom")}
+        </Select.Option>
       </Select>
       <AddressContainer
         href={renderAddress()}
