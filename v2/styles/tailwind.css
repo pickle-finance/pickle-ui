@@ -12,6 +12,9 @@
     --color-foreground: 255, 255, 255;
     --color-foreground-alt-100: 224, 225, 226;
     --color-foreground-alt-200: 192, 196, 197;
+    --color-foreground-alt-300: 134, 148, 152;
+    --color-foreground-alt-400: 43, 56, 59;
+    --color-foreground-alt-500: 31, 45, 48;
     --color-primary: 72, 194, 72;
     --color-primary-light: 94, 237, 93;
     --color-primary-dark: 6, 85, 6;

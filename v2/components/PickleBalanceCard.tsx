@@ -23,7 +23,7 @@ const PickleBalanceCard: FC = () => {
   }
 
   return (
-    <div className="bg-gradient rounded-2xl border border-gray-dark shadow mb-4">
+    <div className="bg-gradient rounded-2xl border border-foreground-alt-500 shadow mb-4">
       <div className="relative p-6 sm:p-8">
         <div className="flex mr-20">
           <div className="w-12 h-12 p-1 bg-background rounded-full mr-5">

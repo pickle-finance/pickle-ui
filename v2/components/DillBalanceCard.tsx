@@ -19,7 +19,7 @@ const DillBalanceCard: FC = () => {
   }
 
   return (
-    <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
+    <div className="bg-gradient rounded-2xl border border-foreground-alt-500 shadow">
       <div className="relative p-6 sm:p-8">
         <div className="flex mr-20">
           <div className="w-12 h-12 p-2 bg-background rounded-full mr-5">

@@ -19,7 +19,6 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import { CoreSelectors } from "v2/store/core";
 import { roundNumber } from "util/number";
-import { grayDark, grayLighter } from "v2/utils/theme";
 
 interface Entry {
   payload: MonthlyDistributionDataPoint;
@@ -200,7 +199,7 @@ const HistoricChart: FC = () => {
   };
 
   return (
-    <div className="bg-background-light rounded-xl border border-gray-dark shadow p-4 sm:p-8">
+    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
       <aside className="h-[600px] px-3 py-10">
         {dataSeries.length > 0 ? (
@@ -226,7 +225,7 @@ const HistoricChart: FC = () => {
                   value={t("v2.dill.tokenAmount") as string}
                   position="insideLeft"
                   angle={-90}
-                  fill={grayLighter}
+                  fill="rgb(var(--color-foreground-alt-100))"
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
@@ -240,14 +239,14 @@ const HistoricChart: FC = () => {
                   value={t("v2.dill.pickleDillRatio") as string}
                   position="insideRight"
                   angle={-90}
-                  fill={grayLighter}
+                  fill="rgb(var(--color-foreground-alt-100))"
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: grayDark,
-                  borderColor: grayDark,
+                  backgroundColor: "rgb(var(--color-foreground-alt-500))",
+                  borderColor: "rgb(var(--color-foreground-alt-500))",
                   borderRadius: 10,
                 }}
                 formatter={(value: number, name: string, entry: Entry) =>
