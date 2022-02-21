@@ -24,7 +24,7 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
   const options = [
     { value: ThemeType.Dark, label: t("v2.theme.dark"), icon: MoonIcon },
     { value: ThemeType.Light, label: t("v2.theme.light"), icon: SunIcon },
-    { value: ThemeType.Rare, label: t("v2.theme.rare"), icon: SparklesIcon },
+    // { value: ThemeType.Rare, label: t("v2.theme.rare"), icon: SparklesIcon },
   ];
 
   return (
@@ -33,7 +33,7 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
         value={theme.type}
         onChange={(value) => dispatch(setThemeType(value))}
       >
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {options.map((opt) => {
             const Icon = opt.icon;
 
@@ -44,8 +44,8 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
                 className={({ checked }) =>
                   classNames(
                     checked
-                      ? "bg-foreground-alt-400 border-primary-light"
-                      : "bg-background-light border-foreground-alt-500 hover:bg-foreground-alt-400",
+                      ? "bg-background-lightest border-primary-light"
+                      : "bg-background-light border-foreground-alt-500 hover:bg-background-lightest",
                     "font-title border rounded-xl cursor-pointer text-foreground py-4 px-6 flex items-center justify-center text-sm font-medium",
                   )
                 }

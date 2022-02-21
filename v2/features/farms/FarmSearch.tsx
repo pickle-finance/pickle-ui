@@ -79,7 +79,7 @@ const styles: StylesConfig<Filter> = {
     ...styles,
     color: "rgb(var(--color-foreground-alt-300))",
     ":hover": {
-      color: "white",
+      color: "rgb(var(--color-foreground-alt-200))",
     },
   }),
   control: (styles) => ({

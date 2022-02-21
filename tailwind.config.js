@@ -33,7 +33,7 @@ module.exports = {
       ],
     },
     boxShadow: {
-      DEFAULT: "0px 3px 20px 15px rgba(0, 0, 0, 0.1)",
+      DEFAULT: "0px 3px 15px 6px rgba(0, 0, 0, 0.1)",
     },
     extend: {
       colors: {

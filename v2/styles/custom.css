@@ -11,7 +11,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .bg-gradient {
   background: radial-gradient(
     97.8% 63.1% at 2.1999999999999997% 0%,
-    #2b383b 0%,
-    rgb(16, 31, 34) 100%
+    rgb(var(--color-background-glow)) 0%,
+    rgb(var(--color-background-light)) 100%
   );
 }
