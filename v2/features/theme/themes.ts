@@ -8,6 +8,7 @@ interface Theme {
   "background-light": RGB;
   "background-lightest": RGB;
   foreground: RGB;
+  "foreground-button": RGB;
   "foreground-alt-100": RGB;
   "foreground-alt-200": RGB;
   "foreground-alt-300": RGB;
@@ -36,6 +37,7 @@ const themes: ThemeConfig = {
     "background-light": [15, 31, 34],
     "background-lightest": [23, 38, 40],
     foreground: [255, 255, 255],
+    "foreground-button": [255, 255, 255],
     "foreground-alt-100": [224, 225, 226],
     "foreground-alt-200": [192, 196, 197],
     "foreground-alt-300": [134, 148, 152],
@@ -53,6 +55,7 @@ const themes: ThemeConfig = {
     "background-light": [211, 249, 207],
     "background-lightest": [235, 255, 236],
     foreground: [60, 70, 60],
+    "foreground-button": [252, 255, 252],
     "foreground-alt-100": [95, 118, 95],
     "foreground-alt-200": [111, 137, 111],
     "foreground-alt-300": [134, 166, 135],
