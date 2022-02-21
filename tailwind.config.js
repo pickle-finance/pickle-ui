@@ -55,6 +55,7 @@ module.exports = {
             400: withOpacityValue("--color-foreground-alt-400"),
             500: withOpacityValue("--color-foreground-alt-500"),
           },
+          button: withOpacityValue("--color-foreground-button"),
         },
         primary: {
           DEFAULT: withOpacityValue("--color-primary"),
