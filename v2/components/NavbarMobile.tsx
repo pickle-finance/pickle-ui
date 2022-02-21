@@ -7,6 +7,7 @@ import SlideOverMenu from "./SlideOverMenu";
 import LanguageToggle from "./LanguageToggle";
 import ThemeToggle from "v2/features/theme/ThemeToggle";
 import { ThemeSelectors } from "v2/store/theme";
+import { matchingLogoSrc } from "v2/features/theme/themes";
 
 const NavbarMobile: FC = () => {
   const theme = useSelector(ThemeSelectors.selectTheme);
@@ -18,7 +19,7 @@ const NavbarMobile: FC = () => {
           <Link href="/v2">
             <a>
               <Image
-                src={`/pickle-logo-${theme.type}.svg`}
+                src={matchingLogoSrc(theme)}
                 width={158}
                 height={60}
                 layout="responsive"

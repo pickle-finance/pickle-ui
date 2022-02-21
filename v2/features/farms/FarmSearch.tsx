@@ -98,6 +98,7 @@ const styles: StylesConfig<Filter> = {
     backgroundColor: "rgb(var(--color-background-light))",
     padding: 8,
     zIndex: 55,
+    boxShadow: "0 0 0 1px rgb(var(--color-background-lightest))",
   }),
   multiValue: (styles, { data }) => {
     return {
