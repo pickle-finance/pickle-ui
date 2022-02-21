@@ -197,7 +197,7 @@ const PerformanceCard: FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 mb-5">
           <div className="flex mb-6 xl:mb-0">
             <div className="bg-primary p-2 w-12 h-12 rounded-full mr-6">
-              <CashIcon />
+              <CashIcon className="text-foreground-button" />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
@@ -230,7 +230,7 @@ const PerformanceCard: FC = () => {
           </div>
           <div className="flex mb-6 xl:mb-0">
             <div className="bg-primary p-2 w-12 h-12 rounded-full mr-6">
-              <ClockIcon />
+              <ClockIcon className="text-foreground-button" />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
