@@ -8,6 +8,7 @@ import NavItems from "./NavItems";
 import NavItem from "./NavItem";
 import PicklePriceIndicator from "./PicklePriceIndicator";
 import { ThemeSelectors } from "v2/store/theme";
+import { matchingLogoSrc } from "v2/features/theme/themes";
 
 const LeftNavbar: FC = () => {
   const { t } = useTranslation("common");
@@ -21,7 +22,7 @@ const LeftNavbar: FC = () => {
             <Link href="/v2">
               <a aria-label="Pickle Finance home">
                 <Image
-                  src={`/pickle-logo-${theme.type}.svg`}
+                  src={matchingLogoSrc(theme)}
                   width={300}
                   height={140}
                   layout="responsive"

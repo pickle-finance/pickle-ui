@@ -10,12 +10,19 @@ export enum ThemeType {
   Rare = "rare",
 }
 
-interface ThemeState {
+export interface CurrentTheme {
+  label: string;
+  value: string;
+}
+
+export interface ThemeState {
   type: ThemeType;
+  current: CurrentTheme;
 }
 
 const initialState: ThemeState = {
   type: ThemeType.Dark,
+  current: { label: "9-to-5", value: "9-to-5" },
 };
 
 const themeSlice = createSlice({
@@ -25,13 +32,16 @@ const themeSlice = createSlice({
     setThemeType: (state, action: PayloadAction<ThemeType>) => {
       state.type = action.payload;
     },
+    setCurrentTheme: (state, action: PayloadAction<CurrentTheme>) => {
+      state.current = action.payload;
+    },
   },
 });
 
 /**
  * Actions
  */
-export const { setThemeType } = themeSlice.actions;
+export const { setThemeType, setCurrentTheme } = themeSlice.actions;
 
 /**
  * Selectors
@@ -43,7 +53,12 @@ const selectTheme = (state: RootState) => state.theme;
  */
 startAppListening({
   actionCreator: setThemeType,
-  effect: (action) => applyTheme(action.payload),
+  effect: (_, listenerApi) => applyTheme(listenerApi.getState().theme),
+});
+
+startAppListening({
+  actionCreator: setCurrentTheme,
+  effect: (_, listenerApi) => applyTheme(listenerApi.getState().theme),
 });
 
 export const ThemeSelectors = {
