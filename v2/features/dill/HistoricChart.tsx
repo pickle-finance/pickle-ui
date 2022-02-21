@@ -213,10 +213,12 @@ const HistoricChart: FC = () => {
                 angle={300}
                 interval={0}
                 tickMargin={35}
+                tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
               />
               <YAxis
                 width={100}
                 padding={{ top: 50 }}
+                tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
                 type="number"
                 domain={[0, 300000]}
                 tickCount={9}
@@ -234,6 +236,7 @@ const HistoricChart: FC = () => {
                 yAxisId="right"
                 orientation="right"
                 padding={{ top: 20 }}
+                tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
               >
                 <Label
                   value={t("v2.dill.pickleDillRatio") as string}
