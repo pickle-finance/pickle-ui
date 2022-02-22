@@ -10,7 +10,14 @@ interface Props extends HTMLAttributes<HTMLElement> {
   external?: boolean;
 }
 
-const NavItem: FC<Props> = ({ href, children, className, Icon, external }) => {
+const NavItem: FC<Props> = ({
+  href,
+  children,
+  className,
+  Icon,
+  external,
+  onClick,
+}) => {
   const router = useRouter();
   const isCurrent = external ? false : router.pathname.endsWith(href);
 
@@ -20,6 +27,7 @@ const NavItem: FC<Props> = ({ href, children, className, Icon, external }) => {
         href={href}
         external={external}
         active={isCurrent}
+        onClick={onClick}
         className={classNames("px-4 py-2 font-bold", className)}
       >
         {Icon && (
