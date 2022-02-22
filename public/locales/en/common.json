@@ -394,6 +394,9 @@
       "stats": "Stats",
       "tokenAddress": "Token address"
     },
+    "stats": {
+      "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol"
+    },
     "theme": {
       "dark": "Dark",
       "light": "Light",
