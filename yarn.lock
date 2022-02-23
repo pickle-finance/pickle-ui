@@ -1011,9 +1011,9 @@
   resolved "https://registry.npmjs.org/@geist-ui/react-icons/-/react-icons-1.0.0.tgz"
   integrity sha512-6mNGTLu+EDcyDmf2BLMqKbne3bNX9wbHl4YTSj4nVy4GaMvC8IAIXpxfhdTBBHiTZ1Bm3+9PxQqtyvJvYl0WXQ==
 
-"@geist-ui/react@^2.0.2":
+"@geist-ui/react@2.0.2":
   version "2.0.2"
-  resolved "https://registry.npmjs.org/@geist-ui/react/-/react-2.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/@geist-ui/react/-/react-2.0.2.tgz#6e786920600afe077dceb3474f4283ceb2050555"
   integrity sha512-g8rDTc4siR/96bmIbUYaw5+khZ9hn7Eha/PuvtuT61eO7Hg9jBcGIJTw5pn333MF2/bkJy4LKjousgMvOTBaWA==
   dependencies:
     styled-jsx "^3.2.5"
@@ -7008,10 +7008,10 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.3.12:
-  version "0.3.12"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.12.tgz#cfc76efc3550c254c7d320a25df114dc81482549"
-  integrity sha512-txY/i1blG00tdM4jTlMsg7wKH4lHpNp1kmcsbaSj54ueRSJSNvvbkzCDThZquc49CJCq2omhueajBIakYB6d8A==
+picklefinance-core@0.3.32:
+  version "0.3.32"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.32.tgz#a74503970fe7e832e5dd91be8169410b5fbf4c0a"
+  integrity sha512-hJTuF3YlJo9ijCN8AmO6ZDyHzLa+9R1s3UOy7xV8tki6JmM8Gy5B+YvRPnh+Go4BqJEYCeQ9pYMQFIWwn9JRoQ==
   dependencies:
     "@ethersproject/abstract-provider" "^5.1.0"
     "@ethersproject/providers" "^5.1.0"

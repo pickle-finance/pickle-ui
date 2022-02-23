@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -24,6 +24,9 @@ import {
   getRatioStringAndPendingString,
   RatioAndPendingStrings,
 } from "./JarMiniFarmCollapsible";
+import { TokenDetails, ZapDetails } from "containers/Jars/useJarsWithZap";
+import { Balances } from "containers/Balances";
+import { formatUnits } from "picklefinance-core/node_modules/@ethersproject/units";
 
 interface DataProps {
   isZero?: boolean;
@@ -484,9 +487,27 @@ const setButtonStatus = (
   }
 };
 
+const getZapInputTokens = (
+  zapDetails: ZapDetails,
+  depositTokenName: string,
+  depositTokenBalance: BigNumber,
+  isUsdc: boolean,
+) => {
+  return [
+    {
+      name: depositTokenName,
+      symbol: depositTokenName,
+      balance: depositTokenBalance,
+      decimals: isUsdc ? 6 : 18,
+    },
+    zapDetails.nativeTokenDetails,
+    zapDetails.token0,
+    zapDetails.token1,
+  ]
+}
+
 export const JarCollapsible: FC<{
   jarData: UserJarData;
-  isYearnJar?: boolean;
 }> = ({ jarData }) => {
   const {
     name,
@@ -505,6 +526,9 @@ export const JarCollapsible: FC<{
   } = jarData;
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
+
+  const [inputToken, setInputToken] = useState<string>(depositTokenName);
+  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([]);
 
   const isUsdc = isUsdcToken(depositToken.address);
 
@@ -590,6 +614,22 @@ export const JarCollapsible: FC<{
   const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
+    jarData.zapDetails && setAllInputTokens(
+      [
+        {
+          name: depositTokenName,
+          symbol: depositTokenName,
+          balance: balance,
+          decimals: isUsdc ? 6 : 18,
+        },
+        jarData.zapDetails.nativeTokenDetails,
+        jarData.zapDetails.token0,
+        jarData.zapDetails.token1,
+      ]
+    )
+  }, [jarData.zapDetails]);
+
+  useEffect(() => {
     const dStatus = getTransferStatus(
       depositToken.address,
       jarContract.address,
@@ -621,6 +661,21 @@ export const JarCollapsible: FC<{
   );
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
+
+  const getInputTokenBal = (inputToken: string) => {
+    const found = allInputTokens.find((x) => x.symbol === inputToken);
+    
+    if (!found) return "0";
+
+    const bal = parseFloat(
+      formatUnits(found.balance, found.decimals),
+    );
+
+    return bal.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: bal < 1 ? 8 : 4,
+    });
+  }
 
   return (
     <Collapse
@@ -693,28 +748,56 @@ export const JarCollapsible: FC<{
         <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              {t("balances.balance")}: {balStr} {depositTokenName}
+              {t("balances.balance")}: {getInputTokenBal(inputToken)} {inputToken}
             </div>
             <Link
               color
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(
-                  formatEther(
-                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
-                  ),
-                );
+                setDepositAmount(getInputTokenBal(inputToken));
               }}
             >
               {t("balances.max")}
             </Link>
           </div>
-          <Input
-            onChange={(e) => setDepositAmount(e.target.value)}
-            value={depositAmount}
-            width="100%"
-          ></Input>
+          {jarData.zapDetails && allInputTokens.length > 0 ?
+            <Grid.Container gap={3}>
+              <Grid md={8}>
+                <Select
+                  size="medium"
+                  width="100%"
+                  value={inputToken}
+                  onChange={(e) => setInputToken(e.toString())}
+                >
+                  {allInputTokens.map((token) => (
+                    <Select.Option
+                      style={{ fontSize: "1rem" }}
+                      value={token?.symbol}
+                      key={token?.symbol}
+                    >
+                      <div style={{ display: `flex`, alignItems: `center` }}>
+                        {token?.symbol}
+                      </div>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid md={16}>
+                <Input
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                  value={depositAmount}
+                  width="100%"
+                ></Input>
+              </Grid>
+            </Grid.Container>
+            :
+            <Input
+              onChange={(e) => setDepositAmount(e.target.value)}
+              value={depositAmount}
+              width="100%"
+            ></Input>
+          }
           <Spacer y={0.5} />
           <Button
             onClick={() => {

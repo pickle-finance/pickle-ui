@@ -8,6 +8,7 @@ import { Jar as JarContract } from "../containers/Contracts/Jar";
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
 import { UniV3Token, useJarsWithUniV3 } from "./Jars/useJarsWithUniV3";
 import { JarV3 as jarV3Contract } from "./Contracts/JarV3";
+import { ZapDetails } from "./Jars/useJarsWithZap";
 
 export interface UserJarData {
   name: string;
@@ -29,4 +30,5 @@ export interface UserJarData {
   token1: UniV3Token | null;
   proportion: BigNumber | null;
   supply: number;
+  zapDetails: ZapDetails | null;
 }
