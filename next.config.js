@@ -24,7 +24,10 @@ const moduleExports = {
     polygonRPC: "https://polygon-rpc.com",
     Fortmatic: "pk_live_3754096A894BEFE4",
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
+    apiChain: "https://api.pickle.finance/prod/protocol/analytics/chain",
     apiHost: "https://api.pickle.finance/prod",
+    apiJar: "https://api.pickle.finance/prod/protocol/analytics/jar",
+    apiPlatform: "https://api.pickle.finance/prod/protocol/analytics/platform/en"
   },
   i18n,
   async rewrites() {
