@@ -11,18 +11,25 @@ import {
   SwapProtocol,
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { JarV3 } from "containers/Jars/useJarsWithUniV3";
+import { PickleZapV1 } from "../Contracts/PickleZapV1";
+import { PickleZapV1__factory as pickleZapV1Factory} from "../Contracts/factories/PickleZapV1__factory";
+import { UniswapRouter } from "../Contracts/UniswapRouter";
+import { UniswapRouter__factory as uniswapRouterFactory} from "../Contracts/factories/UniswapRouter__factory";
 
 export interface TokenDetails {
   name: string;
   symbol: string;
   balance: BigNumber;
   decimals: number;
+  address: string;
   allowance?: BigNumber;
   isNative?: boolean;
 }
 
 export interface ZapDetails {
-  swapProtocol: SwapProtocol;
+  zappable: boolean;
+  pickleZapContract: PickleZapV1;
+  router: UniswapRouter;
   nativePath: {
     path: string[];
     target: string;
@@ -131,7 +138,9 @@ export const useJarsWithZap = (
         return {
           ...jar,
           zapDetails: {
-            swapProtocol: swapProtocol,
+            zappable: swapProtocol.zappable,
+            pickleZapContract: pickleZapV1Factory.connect(swapProtocol.pickleZapAddress, provider),
+            router: uniswapRouterFactory.connect(swapProtocol.router, provider),
             nativePath: found.depositToken.nativePath,
             inputTokens: [
               {
@@ -140,6 +149,7 @@ export const useJarsWithZap = (
                 balance: nativebal,
                 decimals: 18,
                 isNative: true,
+                address: ethers.constants.AddressZero,
               },
               {
                 name: name0,
@@ -147,6 +157,7 @@ export const useJarsWithZap = (
                 balance: bal0,
                 decimals: decimal0,
                 allowance: allowance0,
+                address: Token0.address,
               },
               {
                 name: name1,
@@ -154,6 +165,7 @@ export const useJarsWithZap = (
                 balance: bal1,
                 decimals: decimal1,
                 allowance: allowance1,
+                address: Token1.address,
               },
             ]
           },

@@ -35,6 +35,7 @@ import {
 import { TokenDetails, ZapDetails } from "containers/Jars/useJarsWithZap";
 import { Balances } from "containers/Balances";
 import { formatUnits } from "picklefinance-core/node_modules/@ethersproject/units";
+import { PickleZapV1 as PickleZap } from "containers/Contracts/PickleZapV1";
 
 interface DataProps {
   isZero?: boolean;
@@ -523,6 +524,7 @@ export const JarCollapsible: FC<{
     symbol: depositTokenName,
     balance: balance,
     decimals: isUsdc ? 6 : 18,
+    address: depositToken.address,
   }
 
   const [inputToken, setInputToken] = useState<TokenDetails>(jarTokenDetails);
@@ -619,8 +621,10 @@ export const JarCollapsible: FC<{
 
   useEffect(() => {
     const dStatus = getTransferStatus(
-      depositToken.address,
-      jarContract.address,
+      inputToken.address,
+      inputToken.symbol === depositTokenName || !jarData.zapDetails 
+        ? jarContract.address : 
+        jarData.zapDetails.pickleZapContract.address,
     );
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
@@ -665,6 +669,60 @@ export const JarCollapsible: FC<{
     return found;
   }
 
+  const deposit = async (zapDetails: ZapDetails | null) => {
+    if (!signer) return;
+
+    const depositAmt = ethers.utils.parseUnits(
+      depositAmount,
+      inputToken.decimals,
+    );
+
+    // Deposit token
+    if (inputToken.symbol === depositTokenName) {
+      return transfer({
+        token: inputToken.address,
+        recipient: jarContract.address,
+        approvalAmountRequired: depositAmt,
+        transferCallback: async () => {
+          return jarContract.connect(signer).deposit(depositAmt);
+        },
+      });
+    }
+
+    if (!zapDetails) return;
+
+    const swapTx = await zapDetails.router.connect(signer).populateTransaction.swapExactETHForTokens(
+      0,
+      zapDetails.nativePath.path,
+      zapDetails.pickleZapContract.address,
+      BigNumber.from("33202513960"),
+    )
+
+    return transfer({
+      token: inputToken.address,
+      recipient: zapDetails.pickleZapContract.address,
+      approval: !(inputToken.isNative === true),
+      approvalAmountRequired: depositAmt,
+      transferCallback: async () => {
+        return zapDetails.pickleZapContract.connect(signer).ZapIn(
+          inputToken.address,
+          depositAmt,
+          depositToken.address,
+          jarContract.address,
+          0,
+          zapDetails.nativePath.target,
+          swapTx.data || ethers.constants.AddressZero,
+          true,
+          zapDetails.router.address,
+          false,
+          {
+            value: inputToken.isNative === true ? depositAmt : BigNumber.from(0),
+          }
+        );
+      },
+    });
+  }
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -675,7 +733,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -789,23 +847,7 @@ export const JarCollapsible: FC<{
           )}
           <Spacer y={0.5} />
           <Button
-            onClick={() => {
-              if (signer) {
-                // Allow Jar to get LP Token
-                const depositAmt = ethers.utils.parseUnits(
-                  depositAmount,
-                  isUsdc ? 6 : 18,
-                );
-                transfer({
-                  token: depositToken.address,
-                  recipient: jarContract.address,
-                  approvalAmountRequired: depositAmt,
-                  transferCallback: async () => {
-                    return jarContract.connect(signer).deposit(depositAmt);
-                  },
-                });
-              }
-            }}
+            onClick={() => deposit(jarData.zapDetails)}
             disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
@@ -818,17 +860,16 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
+                  text={`${deposited && ratio
                       ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
+                      ) * ratio
                       : 0
-                  } ${depositTokenName}`}
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
