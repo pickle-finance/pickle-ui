@@ -18,6 +18,7 @@ export interface TokenDetails {
   balance: BigNumber;
   decimals: number;
   allowance?: BigNumber;
+  isNative?: boolean;
 }
 
 export interface ZapDetails {
@@ -26,10 +27,7 @@ export interface ZapDetails {
     path: string[];
     target: string;
   };
-  nativeTokenDetails: TokenDetails;
-  // wrappedTokenDetails: TokenDetails;
-  token0: TokenDetails;
-  token1: TokenDetails;
+  inputTokens: Array<TokenDetails>;
 }
 
 export interface JarZap extends JarV3 {
@@ -45,6 +43,7 @@ export const useJarsWithZap = (
     signer,
     address,
     provider,
+    chainId,
   } = Connection.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
@@ -127,31 +126,36 @@ export const useJarsWithZap = (
           provider.getBalance(address),
         ]);
 
+        const chainDetails = pickleCore.chains.find(x => x.chainId === chainId);
+
         return {
           ...jar,
           zapDetails: {
             swapProtocol: swapProtocol,
             nativePath: found.depositToken.nativePath,
-            nativeTokenDetails: {
-              name: "Native",
-              symbol: "NAT",
-              balance: nativebal,
-              decimals: 18,
-            },
-            token0: {
-              name: name0,
-              symbol: symbol0,
-              balance: bal0,
-              decimals: decimal0,
-              allowance: allowance0,
-            },
-            token1: {
-              name: name1,
-              symbol: symbol1,
-              balance: bal1,
-              decimals: decimal1,
-              allowance: allowance1,
-            },
+            inputTokens: [
+              {
+                name: chainDetails?.gasToken || "Native",
+                symbol: chainDetails?.gasTokenSymbol.toUpperCase() || "NAT",
+                balance: nativebal,
+                decimals: 18,
+                isNative: true,
+              },
+              {
+                name: name0,
+                symbol: symbol0,
+                balance: bal0,
+                decimals: decimal0,
+                allowance: allowance0,
+              },
+              {
+                name: name1,
+                symbol: symbol1,
+                balance: bal1,
+                decimals: decimal1,
+                allowance: allowance1,
+              },
+            ]
           },
         };
       });

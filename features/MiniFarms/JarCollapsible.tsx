@@ -495,25 +495,6 @@ const setButtonStatus = (
   }
 };
 
-const getZapInputTokens = (
-  zapDetails: ZapDetails,
-  depositTokenName: string,
-  depositTokenBalance: BigNumber,
-  isUsdc: boolean,
-) => {
-  return [
-    {
-      name: depositTokenName,
-      symbol: depositTokenName,
-      balance: depositTokenBalance,
-      decimals: isUsdc ? 6 : 18,
-    },
-    zapDetails.nativeTokenDetails,
-    zapDetails.token0,
-    zapDetails.token1,
-  ];
-};
-
 export const JarCollapsible: FC<{
   jarData: UserJarData;
 }> = ({ jarData }) => {
@@ -535,10 +516,17 @@ export const JarCollapsible: FC<{
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
 
-  const [inputToken, setInputToken] = useState<string>(depositTokenName);
-  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([]);
-
   const isUsdc = isUsdcToken(depositToken.address);
+
+  const jarTokenDetails: TokenDetails = {
+    name: depositTokenName,
+    symbol: depositTokenName,
+    balance: balance,
+    decimals: isUsdc ? 6 : 18,
+  }
+
+  const [inputToken, setInputToken] = useState<TokenDetails>(jarTokenDetails);
+  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([jarTokenDetails]);
 
   const uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
@@ -624,15 +612,8 @@ export const JarCollapsible: FC<{
   useEffect(() => {
     jarData.zapDetails &&
       setAllInputTokens([
-        {
-          name: depositTokenName,
-          symbol: depositTokenName,
-          balance: balance,
-          decimals: isUsdc ? 6 : 18,
-        },
-        jarData.zapDetails.nativeTokenDetails,
-        jarData.zapDetails.token0,
-        jarData.zapDetails.token1,
+        jarTokenDetails,
+        ...jarData.zapDetails.inputTokens
       ]);
   }, [jarData.zapDetails]);
 
@@ -669,18 +650,20 @@ export const JarCollapsible: FC<{
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
 
-  const getInputTokenBal = (inputToken: string) => {
-    const found = allInputTokens.find((x) => x.symbol === inputToken);
-
-    if (!found) return "0";
-
-    const bal = parseFloat(formatUnits(found.balance, found.decimals));
+  const getInputTokenBalStr = (inputToken: TokenDetails) => {
+    const bal = parseFloat(formatUnits(inputToken.balance, inputToken.decimals));
 
     return bal.toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: bal < 1 ? 8 : 4,
     });
   };
+
+  const getTokenBySymbol = (symbol: string) => {
+    const found = allInputTokens.find((x) => x.symbol === symbol);
+    if (!found) return jarTokenDetails;
+    return found;
+  }
 
   return (
     <Collapse
@@ -753,15 +736,15 @@ export const JarCollapsible: FC<{
         <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              {t("balances.balance")}: {getInputTokenBal(inputToken)}{" "}
-              {inputToken}
+              {t("balances.balance")}: {getInputTokenBalStr(inputToken)}{" "}
+              {inputToken.symbol}
             </div>
             <Link
               color
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setDepositAmount(getInputTokenBal(inputToken));
+                setDepositAmount(formatUnits(inputToken.balance, inputToken.decimals));
               }}
             >
               {t("balances.max")}
@@ -773,17 +756,17 @@ export const JarCollapsible: FC<{
                 <Select
                   size="medium"
                   width="100%"
-                  value={inputToken}
-                  onChange={(e) => setInputToken(e.toString())}
+                  value={inputToken.symbol}
+                  onChange={(e) => setInputToken(getTokenBySymbol(e.toString()))}
                 >
                   {allInputTokens.map((token) => (
                     <Select.Option
                       style={{ fontSize: "1rem" }}
-                      value={token?.symbol}
-                      key={token?.symbol}
+                      value={token.symbol}
+                      key={token.symbol}
                     >
                       <div style={{ display: `flex`, alignItems: `center` }}>
-                        {token?.symbol}
+                        {token.symbol}
                       </div>
                     </Select.Option>
                   ))}
