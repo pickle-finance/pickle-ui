@@ -2,7 +2,15 @@ import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import {
+  Button,
+  Link,
+  Input,
+  Grid,
+  Spacer,
+  Tooltip,
+  Select,
+} from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -503,8 +511,8 @@ const getZapInputTokens = (
     zapDetails.nativeTokenDetails,
     zapDetails.token0,
     zapDetails.token1,
-  ]
-}
+  ];
+};
 
 export const JarCollapsible: FC<{
   jarData: UserJarData;
@@ -614,8 +622,8 @@ export const JarCollapsible: FC<{
   const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
-    jarData.zapDetails && setAllInputTokens(
-      [
+    jarData.zapDetails &&
+      setAllInputTokens([
         {
           name: depositTokenName,
           symbol: depositTokenName,
@@ -625,8 +633,7 @@ export const JarCollapsible: FC<{
         jarData.zapDetails.nativeTokenDetails,
         jarData.zapDetails.token0,
         jarData.zapDetails.token1,
-      ]
-    )
+      ]);
   }, [jarData.zapDetails]);
 
   useEffect(() => {
@@ -664,18 +671,16 @@ export const JarCollapsible: FC<{
 
   const getInputTokenBal = (inputToken: string) => {
     const found = allInputTokens.find((x) => x.symbol === inputToken);
-    
+
     if (!found) return "0";
 
-    const bal = parseFloat(
-      formatUnits(found.balance, found.decimals),
-    );
+    const bal = parseFloat(formatUnits(found.balance, found.decimals));
 
     return bal.toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: bal < 1 ? 8 : 4,
     });
-  }
+  };
 
   return (
     <Collapse
@@ -748,7 +753,8 @@ export const JarCollapsible: FC<{
         <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              {t("balances.balance")}: {getInputTokenBal(inputToken)} {inputToken}
+              {t("balances.balance")}: {getInputTokenBal(inputToken)}{" "}
+              {inputToken}
             </div>
             <Link
               color
@@ -761,7 +767,7 @@ export const JarCollapsible: FC<{
               {t("balances.max")}
             </Link>
           </div>
-          {jarData.zapDetails && allInputTokens.length > 0 ?
+          {jarData.zapDetails && allInputTokens.length > 0 ? (
             <Grid.Container gap={3}>
               <Grid md={8}>
                 <Select
@@ -791,13 +797,13 @@ export const JarCollapsible: FC<{
                 ></Input>
               </Grid>
             </Grid.Container>
-            :
+          ) : (
             <Input
               onChange={(e) => setDepositAmount(e.target.value)}
               value={depositAmount}
               width="100%"
             ></Input>
-          }
+          )}
           <Spacer y={0.5} />
           <Button
             onClick={() => {

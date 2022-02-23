@@ -13,11 +13,11 @@ import {
 import { JarV3 } from "containers/Jars/useJarsWithUniV3";
 
 export interface TokenDetails {
-  name: string
-  symbol: string
-  balance: BigNumber
-  decimals: number
-  allowance?: BigNumber
+  name: string;
+  symbol: string;
+  balance: BigNumber;
+  decimals: number;
+  allowance?: BigNumber;
 }
 
 export interface ZapDetails {
@@ -39,7 +39,13 @@ export interface JarZap extends JarV3 {
 export const useJarsWithZap = (
   jars: Array<JarV3> | null,
 ): { jarsWithZap: Array<JarZap> | null } => {
-  const { blockNum, chainName, signer, address, provider } = Connection.useContainer();
+  const {
+    blockNum,
+    chainName,
+    signer,
+    address,
+    provider,
+  } = Connection.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
   const { erc20 } = Contracts.useContainer();
@@ -56,7 +62,7 @@ export const useJarsWithZap = (
 
         const swapProtocol = pickleCore.swapProtocols.find((x) => {
           return x.protocol == jar.protocol && x.chain == chainName;
-        })
+        });
 
         if (
           !found ||
@@ -75,14 +81,17 @@ export const useJarsWithZap = (
         }
 
         const tokens = pickleCore.tokens.filter((token) => {
-          return found.depositToken.components?.includes(token.id) && token.chain == chainName;
-        })
+          return (
+            found.depositToken.components?.includes(token.id) &&
+            token.chain == chainName
+          );
+        });
 
         if (tokens.length === 0) {
           return {
             ...jar,
             zapDetails: null,
-          }; 
+          };
         }
 
         const token0 = tokens[0].contractAddr;
@@ -143,7 +152,7 @@ export const useJarsWithZap = (
               decimals: decimal1,
               allowance: allowance1,
             },
-          }
+          },
         };
       });
       const newJars = await Promise.all(promises);

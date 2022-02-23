@@ -1,8 +1,6 @@
-
 import { BigNumber, ethers } from "ethers";
 
 import { JarApy } from "./Jars/useJarsWithAPYPFCore";
-
 
 import { Jar as JarContract } from "../containers/Contracts/Jar";
 import { Erc20 as Erc20Contract } from "../containers/Contracts/Erc20";
