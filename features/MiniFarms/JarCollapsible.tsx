@@ -610,18 +610,24 @@ export const JarCollapsible: FC<{
   const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
-    zapDetails &&
-      setAllInputTokens([
-        jarTokenDetails,
-        ...zapDetails.inputTokens
-      ]);
-  }, [zapDetails]);
+    // Update tokens and balances
+    let inputTokens = [jarTokenDetails];
+    if (zapDetails) inputTokens = [...inputTokens, ...zapDetails.inputTokens];
+
+    const updatedBalance = inputTokens.find(x => x.symbol === inputToken.symbol)?.balance || BigNumber.from("0");
+    setAllInputTokens(inputTokens);
+    setInputToken({
+      ...inputToken,
+      balance: updatedBalance,
+    })
+
+  }, [zapDetails, erc20TransferStatuses]);
 
   useEffect(() => {
     const dStatus = getTransferStatus(
       inputToken.address,
-      inputToken.symbol === depositTokenName || !zapDetails 
-        ? jarContract.address : 
+      inputToken.symbol === depositTokenName || !zapDetails
+        ? jarContract.address :
         zapDetails.pickleZapContract.address,
     );
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
@@ -688,7 +694,7 @@ export const JarCollapsible: FC<{
     }
 
     if (!zapDetails) return;
-    
+
     const swapTx = await zapDetails.router.connect(signer).populateTransaction.swapExactETHForTokens(
       0,
       zapDetails.nativePath.path,
@@ -813,7 +819,10 @@ export const JarCollapsible: FC<{
                   size="medium"
                   width="100%"
                   value={inputToken.symbol}
-                  onChange={(e) => setInputToken(getTokenBySymbol(e.toString()))}
+                  onChange={(e) => {
+                    setInputToken(getTokenBySymbol(e.toString()));
+                    setDepositAmount("");
+                  }}
                 >
                   {allInputTokens.map((token) => (
                     <Select.Option
@@ -859,14 +868,14 @@ export const JarCollapsible: FC<{
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
                   text={`${deposited && ratio
-                      ? parseFloat(
-                        formatEther(
-                          isUsdc && deposited
-                            ? deposited.mul(USDC_SCALE)
-                            : deposited,
-                        ),
-                      ) * ratio
-                      : 0
+                    ? parseFloat(
+                      formatEther(
+                        isUsdc && deposited
+                          ? deposited.mul(USDC_SCALE)
+                          : deposited,
+                      ),
+                    ) * ratio
+                    : 0
                     } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
