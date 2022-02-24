@@ -12,9 +12,9 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { JarV3 } from "containers/Jars/useJarsWithUniV3";
 import { PickleZapV1 } from "../Contracts/PickleZapV1";
-import { PickleZapV1__factory as pickleZapV1Factory} from "../Contracts/factories/PickleZapV1__factory";
+import { PickleZapV1__factory as pickleZapV1Factory } from "../Contracts/factories/PickleZapV1__factory";
 import { UniswapRouter } from "../Contracts/UniswapRouter";
-import { UniswapRouter__factory as uniswapRouterFactory} from "../Contracts/factories/UniswapRouter__factory";
+import { UniswapRouter__factory as uniswapRouterFactory } from "../Contracts/factories/UniswapRouter__factory";
 
 export interface TokenDetails {
   symbol: string;
@@ -105,13 +105,7 @@ export const useJarsWithZap = (
         const Token1 = erc20.attach(token1Address).connect(signer);
 
         // [TODO]: No need for fetching details if already fetched in v3
-        const [
-          bal0,
-          bal1,
-          symbol0,
-          symbol1,
-          nativebal,
-        ] = await Promise.all([
+        const [bal0, bal1, symbol0, symbol1, nativebal] = await Promise.all([
           Token0.balanceOf(address),
           Token1.balanceOf(address),
           Token0.symbol(),
@@ -119,13 +113,18 @@ export const useJarsWithZap = (
           provider.getBalance(address),
         ]);
 
-        const chainDetails = pickleCore.chains.find(x => x.chainId === chainId);
+        const chainDetails = pickleCore.chains.find(
+          (x) => x.chainId === chainId,
+        );
 
         return {
           ...jar,
           zapDetails: {
             zappable: swapProtocol.zappable,
-            pickleZapContract: pickleZapV1Factory.connect(swapProtocol.pickleZapAddress, provider),
+            pickleZapContract: pickleZapV1Factory.connect(
+              swapProtocol.pickleZapAddress,
+              provider,
+            ),
             router: uniswapRouterFactory.connect(swapProtocol.router, provider),
             nativePath: found.depositToken.nativePath,
             inputTokens: [
@@ -148,7 +147,7 @@ export const useJarsWithZap = (
                 decimals: token1Decimals,
                 address: Token1.address,
               },
-            ]
+            ],
           },
         };
       });
