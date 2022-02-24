@@ -318,6 +318,18 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
+  // NET BTC/METIS
+  "0xe0cc462fe369146baef2306ec6b4bf26704ee84e": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/tokens/btcmetis.png"} />
+  ),
+  // NET BTC/USDT
+  "0xad9b903451dfdc3d79d2021289f9d864fd8c8119": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/tokens/btcusdt.png"} />
+  ),
+  // NET METIS/RELAY
+  "0xa58bd557bfbc12f8ceaccc6e1668f5fbfb2118bb": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/tokens/metisrelay.png"} />
+  ),
   // TETHYS TETHYS/METIS
   "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metis.png"} />
@@ -341,6 +353,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   // TETHYS USDT/METIS
   "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": (
     <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
+  ),
+  // TETHYS BTC/METIS
+  "0xa0081c6d591c53ae651bd71b8d90c83c1f1106c2": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/tokens/btcmetis.png"} />
   ),
 
   // Moonbeam
@@ -632,7 +648,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -746,17 +762,16 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(
+                        isUsdc && deposited
+                          ? deposited.mul(USDC_SCALE)
+                          : deposited,
+                      ),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
