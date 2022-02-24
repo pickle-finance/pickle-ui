@@ -17,12 +17,10 @@ import { UniswapRouter } from "../Contracts/UniswapRouter";
 import { UniswapRouter__factory as uniswapRouterFactory} from "../Contracts/factories/UniswapRouter__factory";
 
 export interface TokenDetails {
-  name: string;
   symbol: string;
   balance: BigNumber;
   decimals: number;
   address: string;
-  allowance?: BigNumber;
   isNative?: boolean;
 }
 
@@ -73,7 +71,6 @@ export const useJarsWithZap = (
         if (
           !found ||
           !found.depositToken.components ||
-          !found.depositToken.isSwapProtocol ||
           !swapProtocol ||
           !found.depositToken.nativePath ||
           !swapProtocol.zappable ||
@@ -100,34 +97,23 @@ export const useJarsWithZap = (
           };
         }
 
-        const token0 = tokens[0].contractAddr;
-        const token1 = tokens[1].contractAddr;
-
-        const Token0 = erc20.attach(token0).connect(signer);
-        const Token1 = erc20.attach(token1).connect(signer);
+        const token0Address = tokens[0].contractAddr;
+        const token1Address = tokens[1].contractAddr;
+        const token0Decimals = tokens[0].decimals;
+        const token1Decimals = tokens[1].decimals;
+        const Token0 = erc20.attach(token0Address).connect(signer);
+        const Token1 = erc20.attach(token1Address).connect(signer);
 
         // [TODO]: No need for fetching details if already fetched in v3
         const [
           bal0,
           bal1,
-          allowance0,
-          allowance1,
-          decimal0,
-          decimal1,
-          name0,
-          name1,
           symbol0,
           symbol1,
           nativebal,
         ] = await Promise.all([
           Token0.balanceOf(address),
           Token1.balanceOf(address),
-          Token0.allowance(address, swapProtocol.pickleZapAddress),
-          Token1.allowance(address, swapProtocol.pickleZapAddress),
-          Token0.decimals(),
-          Token1.decimals(),
-          Token0.name(),
-          Token1.name(),
           Token0.symbol(),
           Token1.symbol(),
           provider.getBalance(address),
@@ -144,7 +130,6 @@ export const useJarsWithZap = (
             nativePath: found.depositToken.nativePath,
             inputTokens: [
               {
-                name: chainDetails?.gasToken || "Native",
                 symbol: chainDetails?.gasTokenSymbol.toUpperCase() || "NAT",
                 balance: nativebal,
                 decimals: 18,
@@ -152,19 +137,15 @@ export const useJarsWithZap = (
                 address: ethers.constants.AddressZero,
               },
               {
-                name: name0,
                 symbol: symbol0,
                 balance: bal0,
-                decimals: decimal0,
-                allowance: allowance0,
+                decimals: token0Decimals,
                 address: Token0.address,
               },
               {
-                name: name1,
                 symbol: symbol1,
                 balance: bal1,
-                decimals: decimal1,
-                allowance: allowance1,
+                decimals: token1Decimals,
                 address: Token1.address,
               },
             ]

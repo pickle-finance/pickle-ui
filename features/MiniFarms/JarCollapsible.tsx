@@ -33,9 +33,8 @@ import {
   RatioAndPendingStrings,
 } from "./JarMiniFarmCollapsible";
 import { TokenDetails, ZapDetails } from "containers/Jars/useJarsWithZap";
-import { Balances } from "containers/Balances";
 import { formatUnits } from "picklefinance-core/node_modules/@ethersproject/units";
-import { PickleZapV1 as PickleZap } from "containers/Contracts/PickleZapV1";
+import { neverExpireEpochTime } from "util/constants";
 
 interface DataProps {
   isZero?: boolean;
@@ -511,8 +510,8 @@ export const JarCollapsible: FC<{
     APYs,
     totalAPY,
     depositTokenLink,
-    apr,
     tvlUSD,
+    zapDetails
   } = jarData;
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
@@ -520,7 +519,6 @@ export const JarCollapsible: FC<{
   const isUsdc = isUsdcToken(depositToken.address);
 
   const jarTokenDetails: TokenDetails = {
-    name: depositTokenName,
     symbol: depositTokenName,
     balance: balance,
     decimals: isUsdc ? 6 : 18,
@@ -612,19 +610,19 @@ export const JarCollapsible: FC<{
   const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
-    jarData.zapDetails &&
+    zapDetails &&
       setAllInputTokens([
         jarTokenDetails,
-        ...jarData.zapDetails.inputTokens
+        ...zapDetails.inputTokens
       ]);
-  }, [jarData.zapDetails]);
+  }, [zapDetails]);
 
   useEffect(() => {
     const dStatus = getTransferStatus(
       inputToken.address,
-      inputToken.symbol === depositTokenName || !jarData.zapDetails 
+      inputToken.symbol === depositTokenName || !zapDetails 
         ? jarContract.address : 
-        jarData.zapDetails.pickleZapContract.address,
+        zapDetails.pickleZapContract.address,
     );
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
@@ -669,7 +667,7 @@ export const JarCollapsible: FC<{
     return found;
   }
 
-  const deposit = async (zapDetails: ZapDetails | null) => {
+  const deposit = async () => {
     if (!signer) return;
 
     const depositAmt = ethers.utils.parseUnits(
@@ -690,12 +688,12 @@ export const JarCollapsible: FC<{
     }
 
     if (!zapDetails) return;
-
+    
     const swapTx = await zapDetails.router.connect(signer).populateTransaction.swapExactETHForTokens(
       0,
       zapDetails.nativePath.path,
       zapDetails.pickleZapContract.address,
-      BigNumber.from("33202513960"),
+      BigNumber.from(neverExpireEpochTime),
     )
 
     return transfer({
@@ -808,7 +806,7 @@ export const JarCollapsible: FC<{
               {t("balances.max")}
             </Link>
           </div>
-          {jarData.zapDetails && allInputTokens.length > 0 ? (
+          {zapDetails && allInputTokens.length > 0 ? (
             <Grid.Container gap={3}>
               <Grid md={8}>
                 <Select
@@ -847,7 +845,7 @@ export const JarCollapsible: FC<{
           )}
           <Spacer y={0.5} />
           <Button
-            onClick={() => deposit(jarData.zapDetails)}
+            onClick={() => deposit(zapDetails)}
             disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
