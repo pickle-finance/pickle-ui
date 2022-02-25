@@ -308,6 +308,7 @@
   },
   "v2": {
     "actions": {
+      "close": "Close",
       "confirm": "Confirm",
       "enable": "Enable",
       "harvest": "Harvest"
@@ -359,8 +360,8 @@
       "tokenAmount": "Token amount",
       "totalValueLocked": "Total value locked",
       "unlockDate": "Unlock date",
-      "upcomingDistributionValue": "Upcoming distribution value",
-      "upcomingDistributionDate": "Upcoming distribution date"
+      "upcomingDistributionDate": "Upcoming distribution date",
+      "upcomingDistributionValue": "Upcoming distribution value"
     },
     "farms": {
       "apy": "APY",
@@ -405,6 +406,15 @@
       "openMenu": "Open main menu",
       "stats": "Stats",
       "tokenAddress": "Token address"
+    },
+    "stats": {
+      "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol"
+    },
+    "theme": {
+      "dark": "Dark",
+      "light": "Light",
+      "pick": "Pick a theme",
+      "rare": "Rare"
     },
     "time": {
       "day": "1 day",

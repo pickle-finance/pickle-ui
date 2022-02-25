@@ -19,10 +19,10 @@ const DillBalanceCard: FC = () => {
   }
 
   return (
-    <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
+    <div className="bg-gradient rounded-2xl border border-foreground-alt-500 shadow">
       <div className="relative p-6 sm:p-8">
         <div className="flex mr-20">
-          <div className="w-12 h-12 p-2 bg-black rounded-full mr-5">
+          <div className="w-12 h-12 p-2 bg-background rounded-full mr-5">
             <Image
               src="/dill-icon.png"
               width={48}
@@ -36,7 +36,7 @@ const DillBalanceCard: FC = () => {
             <p className="font-title font-medium text-2xl leading-7 mb-1">
               {val}
             </p>
-            <p className="text-gray-light text-sm">
+            <p className="text-foreground-alt-200 text-sm">
               {t("v2.dashboard.dillAmount")}
             </p>
           </div>

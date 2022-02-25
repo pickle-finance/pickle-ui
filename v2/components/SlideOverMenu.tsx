@@ -13,7 +13,7 @@ const SlideOverMenu: FC = () => {
     <>
       {/* Mobile menu button */}
       <div className="-mr-2 flex sm:hidden">
-        <div className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+        <div className="inline-flex items-center justify-center p-2 rounded-md text-foreground-alt-200 hover:bg-background-light focus:outline-none focus:ring-2 focus:ring-inset">
           <span className="sr-only">{t("v2.nav.openMenu")}</span>
           <MenuIcon
             onClick={() => setIsOpen(true)}
@@ -26,7 +26,7 @@ const SlideOverMenu: FC = () => {
         <Dialog
           as="div"
           static
-          className="fixed inset-0 overflow-hidden"
+          className="fixed inset-0 overflow-hidden z-60"
           open={isOpen}
           onClose={() => setIsOpen(false)}
         >
@@ -40,7 +40,7 @@ const SlideOverMenu: FC = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="absolute inset-0 bg-gray-light bg-opacity-75 transition-opacity" />
+              <Dialog.Overlay className="absolute inset-0 bg-foreground-alt-200 bg-opacity-75 transition-opacity" />
             </Transition.Child>
             <div className="fixed inset-y-0 right-0 flex w-4/5">
               <Transition.Child
@@ -64,7 +64,7 @@ const SlideOverMenu: FC = () => {
                   >
                     <div className="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4">
                       <button
-                        className="rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-light"
+                        className="rounded-md text-foreground-alt-400 focus:outline-none focus:ring-2 focus:ring-accent-light"
                         onClick={() => setIsOpen(false)}
                       >
                         <span className="sr-only">{t("v2.nav.close")}</span>
@@ -72,9 +72,9 @@ const SlideOverMenu: FC = () => {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="h-full flex py-8 bg-black shadow-xl overflow-y-scroll">
+                  <div className="h-full flex py-8 bg-background shadow-xl overflow-y-scroll">
                     <div className="flex-1 flex overflow-y-auto">
-                      <NavItems />
+                      <NavItems onClick={() => setIsOpen(false)} />
                     </div>
                   </div>
                 </div>

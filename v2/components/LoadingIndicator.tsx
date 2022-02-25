@@ -10,7 +10,7 @@ import Ping from "v2/features/connection/Ping";
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
 
-  return <CheckCircleIcon className="w-4 h-4 mr-1 text-green-light" />;
+  return <CheckCircleIcon className="w-4 h-4 mr-1 text-primary-light" />;
 };
 
 interface Props {
@@ -26,15 +26,15 @@ const LoadingIndicator: FC<Props> = ({ waitForCore, waitForUserModel }) => {
   const isCoreLoading = coreLoadingState !== "fulfilled";
 
   return (
-    <div className="bg-black-light text-center text-sm text-gray-light py-8 rounded-xl w-full">
+    <div className="bg-background-light text-center text-sm text-foreground-alt-200 py-8 rounded-xl w-full">
       {waitForCore && (
-        <div className="flex items-center justify-center text-gray-outline-light text-sm mb-2">
+        <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={isCoreLoading} />
           <span>{t("v2.farms.loadingCoreData")}</span>
         </div>
       )}
       {waitForUserModel && (
-        <div className="flex items-center justify-center text-gray-outline-light text-sm mb-2">
+        <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={isUserModelLoading} />
           <span>{t("v2.farms.loadingUserModel")}</span>
         </div>

@@ -31,11 +31,11 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
         <NavbarMobile />
         <LeftNavbar />
         <main className="sm:pl-64">
-          <div className="px-4 py-2 sm:px-10 sm:py-10 text-white">
+          <div className="px-4 py-2 sm:px-10 sm:py-10 text-foreground">
             <TopNavbar PageTitle={PageTitle} />
             <ConnectionStatus />
             <Component {...pageProps} />
-            <div className="flex justify-between bg-black my-10">
+            <div className="flex justify-between bg-background my-10">
               <UserBalanceStatus />
               <BlockNumber />
             </div>

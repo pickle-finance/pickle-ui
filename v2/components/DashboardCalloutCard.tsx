@@ -20,13 +20,13 @@ const DashboardCalloutCard: FC = () => {
 
   return (
     <Link href="/v2/farms">
-      <div className="group bg-black-light rounded-xl border border-gray-dark shadow cursor-pointer transition duration-300 ease-in-out hover:bg-black-lighter">
+      <div className="group bg-background-light rounded-xl border border-foreground-alt-500 shadow cursor-pointer transition duration-300 ease-in-out hover:bg-background-lightest">
         <div className="flex justify-between px-5 py-4 sm:px-8 sm:py-5">
           <div className="pr-4">
             <p className="font-body font-bold text-lg sm:text-xl leading-6 mb-1">
               <Trans i18nKey="v2.dashboard.earnUpTo">
                 Earn up to
-                <span className="text-green">
+                <span className="text-primary">
                   {{ percent: formatPercentage(coreMaxApy.apy) }}
                 </span>
                 <MoreInfo
@@ -36,12 +36,12 @@ const DashboardCalloutCard: FC = () => {
                 APY
               </Trans>
             </p>
-            <p className="text-gray-lighter text-xs sm:text-sm font-normal leading-5">
+            <p className="text-foreground-alt-100 text-xs sm:text-sm font-normal leading-5">
               {t("v2.dashboard.extraBoost")}
             </p>
           </div>
           <div className="flex items-center">
-            <ArrowRightIcon className="w-6 h-6 text-gray-light group-hover:text-orange transition duration-300 ease-in-out" />
+            <ArrowRightIcon className="w-6 h-6 text-foreground-alt-200 group-hover:text-accent transition duration-300 ease-in-out" />
           </div>
         </div>
       </div>

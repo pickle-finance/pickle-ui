@@ -23,10 +23,10 @@ const PickleBalanceCard: FC = () => {
   }
 
   return (
-    <div className="bg-gradient rounded-2xl border border-gray-dark shadow mb-4">
+    <div className="bg-gradient rounded-2xl border border-foreground-alt-500 shadow mb-4">
       <div className="relative p-6 sm:p-8">
         <div className="flex mr-20">
-          <div className="w-12 h-12 p-1 bg-black rounded-full mr-5">
+          <div className="w-12 h-12 p-1 bg-background rounded-full mr-5">
             <Image
               src="/pickle-icon.svg"
               width={48}
@@ -40,7 +40,7 @@ const PickleBalanceCard: FC = () => {
             <p className="font-title font-medium text-2xl leading-7 mb-1">
               {pickles}
             </p>
-            <p className="text-gray-light text-sm">
+            <p className="text-foreground-alt-200 text-sm">
               {chains > 1
                 ? t("v2.dashboard.picklesInWallet", { chains: chains })
                 : t("v2.dashboard.picklesInWalletZeroOrOne")}

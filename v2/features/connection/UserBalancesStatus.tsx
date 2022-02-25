@@ -13,14 +13,14 @@ const UserBalancesStatus: FC = () => {
 
   if (isFetching)
     return (
-      <div className="flex items-center text-gray-outline-light text-sm">
+      <div className="flex items-center text-foreground-alt-300 text-sm">
         <p>{t("v2.balances.fetching")}</p>
         <Ping />
       </div>
     );
 
   return (
-    <p className="text-gray-outline-light text-sm">
+    <p className="text-foreground-alt-300 text-sm">
       {updatedAt && (
         <Trans i18nKey="v2.balances.lastUpdated">
           Your balances updated <TimeAgo date={updatedAt} /> ago.

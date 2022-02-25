@@ -344,13 +344,12 @@ function useContracts() {
   const [feichef, setFeichef] = useState<Feichef | null>(null);
 
   const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
+  const [looksStaking, setLooksStaking] = useState<LooksStaking | null>(null);
 
   const [
     controllerUniV3,
     setControllerUniV3,
   ] = useState<ControllerUniv3 | null>(null);
-
-  const [looksStaking, setLooksStaking] = useState<LooksStaking | null>(null);
 
   const [
     rallyRewardPools,

@@ -23,7 +23,7 @@ import { JarWithData } from "./FarmsTableBody";
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
     className={classNames(
-      "bg-black-light p-4 whitespace-nowrap text-sm text-white sm:p-6 group-hover:bg-black-lighter transition duration-300 ease-in-out",
+      "bg-background-light p-4 whitespace-nowrap text-sm text-foreground sm:p-6 group-hover:bg-background-lightest transition duration-300 ease-in-out",
       className,
     )}
   >
@@ -36,7 +36,7 @@ const chainProtocol = (
 ): JSX.Element => {
   return (
     <div>
-      <p className="font-title font-medium text-base leading-5 group-hover:text-green-light transition duration-300 ease-in-out">
+      <p className="font-title font-medium text-base leading-5 group-hover:text-primary-light transition duration-300 ease-in-out">
         {jar.depositToken.name}
       </p>
       <div className="flex mt-1">
@@ -51,7 +51,7 @@ const chainProtocol = (
             title={jar.chain}
           />
         </div>
-        <p className="italic font-normal text-xs text-gray-light">
+        <p className="italic font-normal text-xs text-foreground-alt-200">
           {jar.protocol}
         </p>
       </div>
@@ -217,7 +217,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
         <p className="font-title font-medium text-base leading-5">
           {formatDollars(pendingPicklesAsDollars)}
         </p>
-        <p className="font-normal text-xs text-gray-light">
+        <p className="font-normal text-xs text-foreground-alt-200">
           {picklesPending} PICKLEs
         </p>
       </RowCell>
@@ -228,7 +228,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             <p className="font-title font-medium text-base leading-5">
               {formatDollars(depositTokenUSD)}
             </p>
-            <p className="font-normal text-xs text-gray-light">
+            <p className="font-normal text-xs text-foreground-alt-200">
               {depositTokenCountString}
             </p>
           </div>
@@ -252,7 +252,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
             <ChevronDownIcon
               className={classNames(
                 open && "rotate-180",
-                "text-white ml-2 h-5 w-5 transition duration-300 ease-in-out",
+                "text-foreground ml-2 h-5 w-5 transition duration-300 ease-in-out",
               )}
               aria-hidden="true"
             />

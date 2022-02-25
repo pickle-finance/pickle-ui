@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 import {
   ChartBarIcon,
   LightningBoltIcon,
@@ -11,7 +11,11 @@ import { useTranslation } from "next-i18next";
 
 import NavItem from "./NavItem";
 
-const NavItems: FC = () => {
+interface Props {
+  onClick?: MouseEventHandler;
+}
+
+const NavItems: FC<Props> = ({ onClick }) => {
   const { t } = useTranslation("common");
 
   const navigation = [
@@ -22,7 +26,7 @@ const NavItems: FC = () => {
       icon: LightningBoltIcon,
     },
     { name: t("v2.nav.dill"), href: "/v2/dill", icon: UserGroupIcon },
-    { name: t("v2.nav.stats"), href: "#", icon: ChartBarIcon },
+    { name: t("v2.nav.stats"), href: "/v2/stats", icon: ChartBarIcon },
     { name: t("v2.nav.faq"), href: "#", icon: QuestionMarkCircleIcon },
     { name: t("v2.nav.feedback"), href: "#", icon: SpeakerphoneIcon },
   ];
@@ -30,7 +34,12 @@ const NavItems: FC = () => {
   return (
     <nav className="flex-1 space-y-2">
       {navigation.map((item) => (
-        <NavItem key={item.name} Icon={item.icon} href={item.href}>
+        <NavItem
+          key={item.name}
+          Icon={item.icon}
+          href={item.href}
+          onClick={onClick}
+        >
           {item.name}
         </NavItem>
       ))}

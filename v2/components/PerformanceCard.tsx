@@ -189,27 +189,27 @@ const PerformanceCard: FC = () => {
   const closeModal = () => setIsOpen(false);
 
   return (
-    <div className="bg-gradient rounded-2xl border border-gray-dark shadow">
-      <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-gray-dark">
-        <h2 className="text-lg font-normal text-gray-light mb-7">
+    <div className="bg-gradient rounded-2xl border border-foreground-alt-500 shadow">
+      <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-foreground-alt-500">
+        <h2 className="text-lg font-normal text-foreground-alt-200 mb-7">
           {t("v2.dashboard.performance")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 mb-5">
           <div className="flex mb-6 xl:mb-0">
-            <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
-              <CashIcon />
+            <div className="bg-primary p-2 w-12 h-12 rounded-full mr-6">
+              <CashIcon className="text-foreground-button" />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
                 {userTotalBalance}
               </p>
-              <p className="text-gray-light text-sm">
+              <p className="text-foreground-alt-200 text-sm">
                 {t("v2.balances.balance")}
               </p>
             </div>
           </div>
           <div className="flex mb-6 xl:mb-0">
-            <div className="bg-black p-2 w-12 h-12 rounded-full mr-6">
+            <div className="bg-background p-2 w-12 h-12 rounded-full mr-6">
               <Image
                 src="/pickle-icon.svg"
                 width={200}
@@ -223,20 +223,20 @@ const PerformanceCard: FC = () => {
               <p className="font-title font-medium text-2xl leading-7 mb-1">
                 {unclaimedRewards}
               </p>
-              <p className="text-gray-light text-sm">
+              <p className="text-foreground-alt-200 text-sm">
                 {t("v2.dashboard.unclaimedRewards")}
               </p>
             </div>
           </div>
           <div className="flex mb-6 xl:mb-0">
-            <div className="bg-green p-2 w-12 h-12 rounded-full mr-6">
-              <ClockIcon />
+            <div className="bg-primary p-2 w-12 h-12 rounded-full mr-6">
+              <ClockIcon className="text-foreground-button" />
             </div>
             <div>
               <p className="font-title font-medium text-2xl leading-7 mb-1">
                 {pendingHarvest}
               </p>
-              <p className="text-gray-light text-sm">
+              <p className="text-foreground-alt-200 text-sm">
                 {t("v2.dashboard.pendingHarvests")}
               </p>
             </div>
