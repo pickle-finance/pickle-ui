@@ -19,18 +19,18 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { UserJarData } from "features/Gauges/useJarData";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useDill } from "../../containers/Dill";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
-import { GAUGE_TVL_KEY, getFormatString } from "./GaugeInfo";
-import { jars, uncompoundAPY } from "../../util/jars";
-import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
+import { getFormatString } from "./GaugeInfo";
+import { uncompoundAPY } from "../../util/jars";
+import { UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
-import { getPriceId } from "../../containers/Jars/jars";
 import { Balances } from "containers/Balances";
 import { TokenInput } from "./TokenInput";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
+import { UserJarData } from "containers/UserJars";
 
 interface DataProps {
   isZero?: boolean;
@@ -112,20 +112,17 @@ export const UniV3JarGaugeCollapsible: FC<{
     proportion,
     supply,
   } = jarData;
-  console.log(jarData)
+  console.log(jarData);
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
+  const { pickleCore } = PickleCore.useContainer();
 
-  const balNum = parseFloat(formatEther(balance));
   const depositedNum = parseFloat(formatEther(deposited));
 
   const depositedStr = formatValue(depositedNum);
 
-  const depositedUnderlyingStr = formatValue(
-    parseFloat(formatEther(deposited)) * ratio,
-  );
   const {
     depositToken: gaugeDepositToken,
     balance: gaugeBalance,
@@ -395,11 +392,13 @@ export const UniV3JarGaugeCollapsible: FC<{
     getProtocolData().then((info) => setTVLData(info));
   }, []);
 
+  const tvlJarData = pickleCore?.assets.jars.filter(
+    (x) =>
+      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )[0];
   const tvlNum =
-    tvlData &&
-    GAUGE_TVL_KEY[depositToken.address] &&
-    tvlData[GAUGE_TVL_KEY[depositToken.address]]
-      ? tvlData[GAUGE_TVL_KEY[depositToken.address]]
+    tvlJarData && tvlJarData.details.harvestStats
+      ? tvlJarData.details.harvestStats.balanceUSD
       : 0;
   const tvlStr = getFormatString(tvlNum);
 
@@ -604,9 +603,9 @@ export const UniV3JarGaugeCollapsible: FC<{
               <div>
                 {`(${formatValue(
                   (depositedNum * token0.jarAmount * ratio) / supply,
-                )} ${getTokenName(token0.address)}, ${formatValue(
+                )} ${token0.name.toUpperCase()}, ${formatValue(
                   (depositedNum * token1.jarAmount * ratio) / supply,
-                )} ${getTokenName(token1.address)})`}
+                )} ${token1.name.toUpperCase()})`}
               </div>
               <Link
                 color

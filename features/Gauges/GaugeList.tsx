@@ -30,6 +30,7 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 import { ChainNetwork } from "picklefinance-core";
+import { UniV3JarGaugeCollapsible } from "./UniV3JarGaugeCollapsible";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -181,6 +182,10 @@ export const GaugeList: FC = () => {
     );
   });
 
+  const uniV3Jars = jarData?.filter(
+    (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
+  );
+
   const activeGauges = gaugesWithAPY.sort(
     (a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy),
   );
@@ -252,6 +257,15 @@ export const GaugeList: FC = () => {
         <h2>{t("farms.jarsAndFarms")}</h2>
       </div>
       <Grid.Container gap={1}>
+        {chainName === ChainNetwork.Ethereum &&
+          uniV3Jars?.map((jar) => {
+            const gauge = findGauge(jar)
+            return (
+              <Grid xs={24} key={jar.name}>
+                <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
+              </Grid>
+            );
+          })}
         {chainName === ChainNetwork.Ethereum && yearnJars.length > 0 && (
           <>
             {t("farms.poweredBy")}&nbsp;
