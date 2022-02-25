@@ -43,7 +43,7 @@ export const useJarsWithUniV3 = (
     if (jars && signer && erc20 && address && pickleCore) {
       const promises = jars.map(async (jar) => {
         const found: JarDefinition | undefined = pickleCore.assets.jars.find(
-          (x) => x.details.apiKey === jar.apiKey,
+          (x) => x.details?.apiKey === jar.apiKey,
         );
         if (
           !found ||
