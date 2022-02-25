@@ -6,10 +6,7 @@ import { BigNumber, ethers } from "ethers";
 import { Balances } from "containers/Balances";
 import { ERC20Transfer } from "containers/Erc20Transfer";
 import { PickleCore } from "./usePickleCore";
-import {
-  JarDefinition,
-  SwapProtocol,
-} from "picklefinance-core/lib/model/PickleModelJson";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { JarV3 } from "containers/Jars/useJarsWithUniV3";
 import { PickleZapV1 } from "../Contracts/PickleZapV1";
 import { PickleZapV1__factory as pickleZapV1Factory } from "../Contracts/factories/PickleZapV1__factory";
@@ -61,10 +58,10 @@ export const useJarsWithZap = (
     if (jars && signer && erc20 && address && pickleCore && provider) {
       const promises = jars.map(async (jar) => {
         const found: JarDefinition | undefined = pickleCore.assets.jars.find(
-          (x) => x.details.apiKey === jar.apiKey,
+          (x) => x.details?.apiKey === jar.apiKey,
         );
 
-        const swapProtocol = pickleCore.swapProtocols.find((x) => {
+        const swapProtocol = pickleCore.xykSwapProtocols.find((x) => {
           return x.protocol == jar.protocol && x.chain == chainName;
         });
 
@@ -104,7 +101,6 @@ export const useJarsWithZap = (
         const Token0 = erc20.attach(token0Address).connect(signer);
         const Token1 = erc20.attach(token1Address).connect(signer);
 
-        // [TODO]: No need for fetching details if already fetched in v3
         const [bal0, bal1, symbol0, symbol1, nativebal] = await Promise.all([
           Token0.balanceOf(address),
           Token1.balanceOf(address),
@@ -117,6 +113,54 @@ export const useJarsWithZap = (
           (x) => x.chainId === chainId,
         );
 
+        const inputTokens = [
+          {
+            symbol: chainDetails?.gasTokenSymbol.toUpperCase() || "NAT",
+            balance: nativebal,
+            decimals: 18,
+            isNative: true,
+            address: ethers.constants.AddressZero,
+          },
+          {
+            symbol: symbol0.toUpperCase(),
+            balance: bal0,
+            decimals: token0Decimals,
+            address: Token0.address,
+          },
+          {
+            symbol: symbol1.toUpperCase(),
+            balance: bal1,
+            decimals: token1Decimals,
+            address: Token1.address,
+          },
+        ];
+
+        // Get wrapped token details
+        const wrappedTokenAddress = chainDetails?.wrappedNativeAddress;
+
+        if (
+          wrappedTokenAddress &&
+          ![token0Address.toLowerCase(), token1Address.toLowerCase()].includes(
+            wrappedTokenAddress.toLowerCase(),
+          )
+        ) {
+          const WrappedToken = erc20
+            .attach(wrappedTokenAddress)
+            .connect(signer);
+
+          const [wBal, wSym] = await Promise.all([
+            WrappedToken.balanceOf(address),
+            WrappedToken.symbol(),
+          ]);
+
+          inputTokens.push({
+            symbol: wSym.toUpperCase(),
+            balance: wBal,
+            decimals: 18,
+            address: wrappedTokenAddress,
+          });
+        }
+
         return {
           ...jar,
           zapDetails: {
@@ -127,27 +171,7 @@ export const useJarsWithZap = (
             ),
             router: uniswapRouterFactory.connect(swapProtocol.router, provider),
             nativePath: found.depositToken.nativePath,
-            inputTokens: [
-              {
-                symbol: chainDetails?.gasTokenSymbol.toUpperCase() || "NAT",
-                balance: nativebal,
-                decimals: 18,
-                isNative: true,
-                address: ethers.constants.AddressZero,
-              },
-              {
-                symbol: symbol0,
-                balance: bal0,
-                decimals: token0Decimals,
-                address: Token0.address,
-              },
-              {
-                symbol: symbol1,
-                balance: bal1,
-                decimals: token1Decimals,
-                address: Token1.address,
-              },
-            ],
+            inputTokens,
           },
         };
       });
