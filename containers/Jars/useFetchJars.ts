@@ -23,6 +23,7 @@ export type Jar = {
   apiKey: string;
   supply: number;
   isErc20: boolean;
+  ratio: number;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -63,6 +64,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           depositTokenLink: x.depositToken.link,
           contract: JarFactory.connect(x.contract, provider),
           protocol: x.protocol,
+          ratio: x.details?.ratio || 0,
           chain: x.chain,
           apiKey: x.details.apiKey,
           supply: x.details.totalSupply || 0,

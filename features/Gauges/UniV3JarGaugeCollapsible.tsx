@@ -86,11 +86,6 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const getTokenName = (address: string) => {
-  const name = getPriceId(address.toLowerCase());
-  return name === "eth" ? "WETH" : name.toUpperCase();
-};
-
 export const UniV3JarGaugeCollapsible: FC<{
   jarData: UserJarData;
   gaugeData: UserGaugeDataWithAPY;
@@ -112,7 +107,6 @@ export const UniV3JarGaugeCollapsible: FC<{
     proportion,
     supply,
   } = jarData;
-  console.log(jarData);
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
@@ -397,8 +391,8 @@ export const UniV3JarGaugeCollapsible: FC<{
       x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   )[0];
   const tvlNum =
-    tvlJarData && tvlJarData.details.harvestStats
-      ? tvlJarData.details.harvestStats.balanceUSD
+    tvlJarData && tvlJarData.details?.harvestStats
+      ? tvlJarData.details?.harvestStats.balanceUSD
       : 0;
   const tvlStr = getFormatString(tvlNum);
 
