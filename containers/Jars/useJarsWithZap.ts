@@ -19,6 +19,7 @@ export interface TokenDetails {
   decimals: number;
   address: string;
   isNative?: boolean;
+  isWrapped?: boolean;
 }
 
 export interface ZapDetails {
@@ -113,7 +114,7 @@ export const useJarsWithZap = (
           (x) => x.chainId === chainId,
         );
 
-        const inputTokens = [
+        const inputTokens: Array<TokenDetails> = [
           {
             symbol: chainDetails?.gasTokenSymbol.toUpperCase() || "NAT",
             balance: nativebal,
@@ -158,6 +159,7 @@ export const useJarsWithZap = (
             balance: wBal,
             decimals: 18,
             address: wrappedTokenAddress,
+            isWrapped: true,
           });
         }
 

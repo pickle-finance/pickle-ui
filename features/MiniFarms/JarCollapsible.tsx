@@ -700,14 +700,24 @@ export const JarCollapsible: FC<{
 
     if (!zapDetails) return;
 
-    const swapTx = await zapDetails.router
-      .connect(signer)
-      .populateTransaction.swapExactETHForTokens(
-        0,
-        zapDetails.nativePath.path,
-        zapDetails.pickleZapContract.address,
-        BigNumber.from(neverExpireEpochTime),
-      );
+    const swapTx = inputToken.isWrapped ?
+      await zapDetails.router
+        .connect(signer)
+        .populateTransaction.swapExactTokensForTokens(
+          depositAmt,
+          0,
+          zapDetails.nativePath.path,
+          zapDetails.pickleZapContract.address,
+          BigNumber.from(neverExpireEpochTime),
+        ) :
+      await zapDetails.router
+        .connect(signer)
+        .populateTransaction.swapExactETHForTokens(
+          0,
+          zapDetails.nativePath.path,
+          zapDetails.pickleZapContract.address,
+          BigNumber.from(neverExpireEpochTime),
+        );
 
     return transfer({
       token: inputToken.address,
@@ -747,7 +757,7 @@ export const JarCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -879,17 +889,16 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
+                  text={`${deposited && ratio
                       ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
+                        formatEther(
+                          isUsdc && deposited
+                            ? deposited.mul(USDC_SCALE)
+                            : deposited,
+                        ),
+                      ) * ratio
                       : 0
-                  } ${depositTokenName}`}
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
