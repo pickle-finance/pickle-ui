@@ -4,11 +4,7 @@ import { JarWithAPY } from "./useJarsWithAPYPFCore";
 import { PoolData } from "./usePoolData";
 import { CurvePairs } from "containers/CurvePairs";
 
-export interface JarWithTVL extends JarWithAPY {
-  tvlUSD: null | number;
-  usdPerPToken: null | number;
-  ratio: null | number;
-}
+export interface JarWithTVL extends JarWithAPY {}
 
 type Input = Array<JarWithAPY> | null;
 type Output = {
@@ -30,12 +26,8 @@ export const useJarWithTVL = (jars: Input): Output => {
             pool.tokenAddress.toLowerCase() ===
             jar.depositToken.address.toLowerCase(),
         );
-        const tvlUSD = poolInfo[0]?.liquidity_locked;
         return {
           ...jar,
-          tvlUSD,
-          usdPerPToken: (tvlUSD * poolInfo[0]?.ratio) / poolInfo[0]?.tokens,
-          ratio: poolInfo[0]?.ratio,
         };
       });
       setJarsWithTVL(newJars);
