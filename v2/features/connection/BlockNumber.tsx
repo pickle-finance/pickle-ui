@@ -10,8 +10,8 @@ const BlockNumber: FC = () => {
   if (!blockNumber) return null;
 
   return (
-    <div className="flex text-gray-outline-light text-sm">
-      <CubeIcon className="w-5 h-5 text-gray-outline-light text mr-2" />
+    <div className="flex text-foreground-alt-300 text-sm">
+      <CubeIcon className="w-5 h-5 text-foreground-alt-300 text mr-2" />
       {blockNumber}
     </div>
   );

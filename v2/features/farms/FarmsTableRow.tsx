@@ -5,7 +5,7 @@ import { classNames } from "v2/utils";
 import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
-import { JarWithData } from "./FarmsTableBody";
+import { JarWithData } from "v2/store/core";
 
 interface Props {
   simple?: boolean;
@@ -31,10 +31,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple }) => {
             <Disclosure.Button
               as="tr"
               // No hover state when the row is expaned.
-              className={classNames(
-                !open && "group",
-                !simple && "cursor-pointer",
-              )}
+              className={classNames(!open && "group", !simple && "cursor-pointer")}
             >
               <FarmsTableRowHeader open={open} simple={simple} jar={jar} />
             </Disclosure.Button>

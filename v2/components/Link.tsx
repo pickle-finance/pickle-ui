@@ -26,9 +26,9 @@ const AppLink: FC<Props> = ({
         href={href}
         onClick={onClick}
         className={classNames(
-          active && "bg-black-light text-green-light",
-          primary ? "text-orange" : "text-white",
-          "group inline-flex grow items-center text-sm rounded-lg hover:text-green-light transition duration-300 ease-in-out",
+          active && "bg-background-light text-primary-light",
+          primary ? "text-accent" : "text-foreground",
+          "group inline-flex grow items-center text-sm rounded-lg hover:text-primary-light transition duration-300 ease-in-out",
           className,
         )}
         {...(external && { target: "_blank", rel: "noopener" })}
@@ -37,8 +37,8 @@ const AppLink: FC<Props> = ({
         {external && (
           <ExternalLinkIcon
             className={classNames(
-              primary ? "text-orange" : "text-white",
-              "group-hover:text-green-light ml-2 flex-shrink-0 h-4 w-4 transition duration-300 ease-in-out",
+              primary ? "text-accent" : "text-foreground",
+              "group-hover:text-primary-light ml-2 flex-shrink-0 h-4 w-4 transition duration-300 ease-in-out",
             )}
             aria-hidden="true"
           />

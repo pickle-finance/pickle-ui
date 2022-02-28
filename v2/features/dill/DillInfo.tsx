@@ -11,7 +11,12 @@ import Harvest from "./Harvest";
 const DillInfo: FC = () => {
   const userData = useSelector(UserSelectors.selectData);
 
-  if (!userData) return <LoadingIndicator waitForUserModel />;
+  if (!userData)
+    return (
+      <div className="col-span-3">
+        <LoadingIndicator waitForUserModel />
+      </div>
+    );
 
   const userBalance = ethers.utils.formatUnits(userData.dill.balance);
 

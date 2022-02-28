@@ -19,13 +19,6 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import { CoreSelectors } from "v2/store/core";
 import { roundNumber } from "util/number";
-import {
-  grayDark,
-  grayLighter,
-  greenDark,
-  greenLight,
-  orange,
-} from "v2/utils/theme";
 
 interface Entry {
   payload: MonthlyDistributionDataPoint;
@@ -134,7 +127,7 @@ const legendFormatter = (value: string, t: TFunction): ReactNode => {
       result = value;
   }
 
-  return <span className="text-gray-light">{result}</span>;
+  return <span className="text-foreground-alt-200">{result}</span>;
 };
 
 interface FootnoteProps {
@@ -206,7 +199,7 @@ const HistoricChart: FC = () => {
   };
 
   return (
-    <div className="bg-black-light rounded-xl border border-gray-dark shadow p-4 sm:p-8">
+    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
       <aside className="h-[600px] px-3 py-10">
         {dataSeries.length > 0 ? (
@@ -220,10 +213,12 @@ const HistoricChart: FC = () => {
                 angle={300}
                 interval={0}
                 tickMargin={35}
+                tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
               />
               <YAxis
                 width={100}
                 padding={{ top: 50 }}
+                tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
                 type="number"
                 domain={[0, 300000]}
                 tickCount={9}
@@ -232,7 +227,7 @@ const HistoricChart: FC = () => {
                   value={t("v2.dill.tokenAmount") as string}
                   position="insideLeft"
                   angle={-90}
-                  fill={grayLighter}
+                  fill="rgb(var(--color-foreground-alt-100))"
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
@@ -241,19 +236,20 @@ const HistoricChart: FC = () => {
                 yAxisId="right"
                 orientation="right"
                 padding={{ top: 20 }}
+                tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
               >
                 <Label
                   value={t("v2.dill.pickleDillRatio") as string}
                   position="insideRight"
                   angle={-90}
-                  fill={grayLighter}
+                  fill="rgb(var(--color-foreground-alt-100))"
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: grayDark,
-                  borderColor: grayDark,
+                  backgroundColor: "rgb(var(--color-foreground-alt-500))",
+                  borderColor: "rgb(var(--color-foreground-alt-500))",
                   borderRadius: 10,
                 }}
                 formatter={(value: number, name: string, entry: Entry) =>
@@ -273,11 +269,14 @@ const HistoricChart: FC = () => {
                     ? "monthlyDillAmount"
                     : "weeklyDillAmount"
                 }
-                fill={greenDark}
+                fill="rgb(var(--color-primary-dark))"
                 radius={[10, 10, 0, 0]}
               >
                 {dataSeries.map((_, index) => (
-                  <Cell fill={greenDark} key={`dill-${index}`} />
+                  <Cell
+                    fill="rgb(var(--color-primary-dark))"
+                    key={`dill-${index}`}
+                  />
                 ))}
               </Bar>
               <Bar
@@ -286,17 +285,20 @@ const HistoricChart: FC = () => {
                     ? "monthlyPickleAmount"
                     : "weeklyPickleAmount"
                 }
-                fill={greenLight}
+                fill="rgb(var(--color-primary-light))"
                 radius={[10, 10, 0, 0]}
               >
                 {dataSeries.map((_, index) => (
-                  <Cell fill={greenLight} key={`pickle-${index}`} />
+                  <Cell
+                    fill="rgb(var(--color-primary-light))"
+                    key={`pickle-${index}`}
+                  />
                 ))}
               </Bar>
               <Line
                 type="linear"
                 dataKey="pickleDillRatio"
-                stroke={orange}
+                stroke="rgb(var(--color-accent))"
                 yAxisId="right"
                 strokeWidth={2}
               />

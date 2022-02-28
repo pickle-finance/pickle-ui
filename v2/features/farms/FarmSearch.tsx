@@ -1,10 +1,5 @@
 import React, { FC, useState } from "react";
-import Select, {
-  components,
-  StylesConfig,
-  ControlProps,
-  OptionProps,
-} from "react-select";
+import Select, { components, StylesConfig, ControlProps, OptionProps } from "react-select";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import chroma from "chroma-js";
@@ -16,17 +11,10 @@ import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
 import { ControlsSelectors, Filter, setFilters } from "v2/store/controls";
 import { defaultBackgroundColor } from "v2/features/farms/colors";
-import {
-  blackLight,
-  blackLighter,
-  grayOutlineLight,
-  green,
-  orange,
-} from "v2/utils/theme";
 
 const Control = ({ children, ...props }: ControlProps<Filter, true>) => (
   <components.Control {...props}>
-    <SearchIcon className="w-6 h-6 text-gray-light ml-3 mr-1" />
+    <SearchIcon className="w-6 h-6 text-foreground-alt-200 ml-3 mr-1" />
     {children}
   </components.Control>
 );
@@ -36,7 +24,7 @@ const OptionImage: FC<Filter> = ({ color, imageSrc, label }) => {
 
   return (
     <div
-      className="mr-3 w-8 h-8 rounded-full border-3 border-gray-outline"
+      className="mr-3 w-8 h-8 rounded-full border-3 border-foreground-alt-400"
       style={{ background: isLoaded ? defaultBackgroundColor : color }}
     >
       <Image
@@ -66,13 +54,13 @@ const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
         <div>
           <p
             className={classNames(
-              "text-white font-title text-base group-hover:text-green-light transition duration-200 ease-in-out",
-              isFocused && "text-green-light",
+              "text-foreground font-title text-base group-hover:text-primary-light transition duration-200 ease-in-out",
+              isFocused && "text-primary-light",
             )}
           >
             {children}
           </p>
-          <p className="font-normal text-sm text-gray-light italic">
+          <p className="font-normal text-sm text-foreground-alt-200 italic">
             {t(`v2.farms.${type}`)}
           </p>
         </div>
@@ -84,26 +72,28 @@ const Option = ({ children, ...props }: OptionProps<Filter, true>) => {
 const styles: StylesConfig<Filter> = {
   clearIndicator: (styles) => ({
     ...styles,
-    color: grayOutlineLight,
+    color: "rgb(var(--color-foreground-alt-300))",
     ":hover": {
-      color: "white",
+      color: "rgb(var(--color-foreground-alt-200))",
     },
   }),
   control: (styles) => ({
     ...styles,
-    backgroundColor: blackLighter,
+    backgroundColor: "rgb(var(--color-background-lightest))",
     border: 0,
+    boxShadow: "none",
     padding: "8px 0",
   }),
   input: (styles) => ({
     ...styles,
-    color: green,
+    color: "rgb(var(--color-primary))",
   }),
   menu: (styles) => ({
     ...styles,
-    backgroundColor: blackLight,
+    backgroundColor: "rgb(var(--color-background-light))",
     padding: 8,
     zIndex: 55,
+    boxShadow: "0 0 0 1px rgb(var(--color-background-lightest))",
   }),
   multiValue: (styles, { data }) => {
     return {
@@ -125,17 +115,15 @@ const styles: StylesConfig<Filter> = {
   multiValueRemove: (styles, { data }) => ({
     ...styles,
     color:
-      chroma.contrast(data.color, "white") >= 7
-        ? "white"
-        : chroma(data.color).darken(2.5).css(),
+      chroma.contrast(data.color, "white") >= 7 ? "white" : chroma(data.color).darken(2.5).css(),
     ":hover": {
       color: "white",
-      backgroundColor: orange,
+      backgroundColor: "rgb(var(--color-accent))",
     },
   }),
   option: (styles, { data, isFocused }) => ({
     ...styles,
-    backgroundColor: isFocused ? blackLighter : undefined,
+    backgroundColor: isFocused ? "rgb(var(--color-background-lightest))" : undefined,
     borderRadius: 10,
     color: data.color,
     transition: "all 200ms ease-in-out",

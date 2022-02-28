@@ -19,9 +19,6 @@
     "tsc": "tsc",
     "typechain": "typechain --target ethers-v5 --outDir ./containers/Contracts ./containers/ABIs/**/*.json"
   },
-  "prettier": {
-    "trailingComma": "all"
-  },
   "dependencies": {
     "@davatar/react": "^1.8.1",
     "@ethersproject/abstract-provider": "^5.0.4",
@@ -36,6 +33,7 @@
     "@pickle-finance/ethers-multicall": "^0.2.3",
     "@primer/octicons-react": "^11.0.0",
     "@reduxjs/toolkit": "^1.7.0",
+    "@rtk-incubator/action-listener-middleware": "^0.8.0",
     "@sentry/nextjs": "^6.11.0",
     "@studydefi/money-legos": "^2.3.7",
     "@tippyjs/react": "^4.2.6",

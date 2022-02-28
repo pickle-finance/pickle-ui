@@ -96,7 +96,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
           {networks?.map((network) => (
             <div
               key={network.name}
-              className="inline-flex group justify-between items-center bg-black p-2 rounded-lg mr-2"
+              className="inline-flex group justify-between items-center bg-background p-2 rounded-lg mr-2"
             >
               <div className="w-5 h-5 mr-3">
                 <Image
@@ -111,7 +111,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
                 />
               </div>
               <span
-                className="text-white cursor-pointer group-hover:text-green-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
+                className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
                 onClick={() => switchChain(library, network.chainId, allCore)}
               >
                 {network.visibleName}
@@ -149,8 +149,7 @@ const ConnectionStatus: FC = () => {
   let { error, chainId } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!chainId) 
-    return null;
+  if (!chainId) return null;
   if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
     return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {
@@ -163,12 +162,12 @@ const ConnectionStatus: FC = () => {
     );
   } else return null;
   return (
-    <div className="bg-black-lighter px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-gray-dark">
+    <div className="bg-background-lightest px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-foreground-alt-500">
       <div className="flex font-title mb-2 text-lg items-center">
-        <FireIcon className="text-orange w-5 h-5 mr-2" />
+        <FireIcon className="text-accent w-5 h-5 mr-2" />
         {t("v2.connection.errorTitle")}
       </div>
-      <div className="text-gray-light">
+      <div className="text-foreground-alt-200">
         <ErrorMessage error={error} />
       </div>
     </div>

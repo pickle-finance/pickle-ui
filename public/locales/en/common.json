@@ -295,6 +295,7 @@
   },
   "v2": {
     "actions": {
+      "close": "Close",
       "confirm": "Confirm",
       "enable": "Enable",
       "harvest": "Harvest"
@@ -320,11 +321,11 @@
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",
-      "performance": "Performance",
-      "picklesInWalletZeroOrOne": "PICKLEs in wallet",
-      "picklesInWallet": "PICKLEs on {{ chains }} chains",
-      "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pendingHarvests": "Pending harvests",
+      "performance": "Performance",
+      "picklesInWallet": "PICKLEs on {{ chains }} chains",
+      "picklesInWalletZeroOrOne": "PICKLEs in wallet",
+      "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
     },
@@ -346,8 +347,8 @@
       "tokenAmount": "Token amount",
       "totalValueLocked": "Total value locked",
       "unlockDate": "Unlock date",
-      "upcomingDistributionValue": "Upcoming distribution value",
-      "upcomingDistributionDate": "Upcoming distribution date"
+      "upcomingDistributionDate": "Upcoming distribution date",
+      "upcomingDistributionValue": "Upcoming distribution value"
     },
     "farms": {
       "apy": "APY",
@@ -371,6 +372,7 @@
       "network": "Network",
       "noResults": "No results",
       "notMatchingAllFilters": "Showing farms matching at least one filter",
+      "pagination": "Page {{ current }} of {{ total }}",
       "protocol": "Protocol",
       "stakedToken": "{{ token }} staked",
       "token": "Token"
@@ -389,9 +391,20 @@
       "feedback": "Feedback",
       "jarsAndFarms": "Jars & Farms",
       "networkSettings": "Network settings",
+      "next": "Next",
       "openMenu": "Open main menu",
+      "previous": "Prev",
       "stats": "Stats",
       "tokenAddress": "Token address"
+    },
+    "stats": {
+      "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol"
+    },
+    "theme": {
+      "dark": "Dark",
+      "light": "Light",
+      "pick": "Pick a theme",
+      "rare": "Rare"
     },
     "time": {
       "day": "1 day",

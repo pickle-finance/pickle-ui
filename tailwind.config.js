@@ -1,3 +1,10 @@
+const withOpacityValue = (variable) => {
+  return ({ opacityValue }) =>
+    opacityValue
+      ? `rgba(var(${variable}), ${opacityValue})`
+      : `rgb(var(${variable}))`;
+};
+
 module.exports = {
   content: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/**/*.tsx"],
   theme: {
@@ -26,31 +33,34 @@ module.exports = {
       ],
     },
     boxShadow: {
-      DEFAULT: "0px 3px 20px 15px rgba(0, 0, 0, 0.1);",
+      DEFAULT: "0px 3px 15px 6px rgba(0, 0, 0, 0.1)",
     },
     extend: {
       colors: {
-        black: {
-          DEFAULT: "#031316",
-          light: "#0f1f22",
-          lighter: "#172628",
+        accent: {
+          DEFAULT: withOpacityValue("--color-accent"),
+          light: withOpacityValue("--color-accent-light"),
         },
-        orange: {
-          DEFAULT: "#e1552f",
-          light: "#ff9375",
-          lightest: "#ff807533",
+        background: {
+          DEFAULT: withOpacityValue("--color-background"),
+          light: withOpacityValue("--color-background-light"),
+          lightest: withOpacityValue("--color-background-lightest"),
         },
-        gray: {
-          light: "#c0c4c5",
-          lighter: "#e0e1e2",
-          outline: "#2b383b",
-          "outline-light": "#869498",
-          dark: "#1f2d30",
+        foreground: {
+          DEFAULT: withOpacityValue("--color-foreground"),
+          alt: {
+            100: withOpacityValue("--color-foreground-alt-100"),
+            200: withOpacityValue("--color-foreground-alt-200"),
+            300: withOpacityValue("--color-foreground-alt-300"),
+            400: withOpacityValue("--color-foreground-alt-400"),
+            500: withOpacityValue("--color-foreground-alt-500"),
+          },
+          button: withOpacityValue("--color-foreground-button"),
         },
-        green: {
-          DEFAULT: "#48c248",
-          dark: "#065506",
-          light: "#5eed5d",
+        primary: {
+          DEFAULT: withOpacityValue("--color-primary"),
+          light: withOpacityValue("--color-primary-light"),
+          dark: withOpacityValue("--color-primary-dark"),
         },
       },
       scale: {
@@ -58,6 +68,9 @@ module.exports = {
       },
       borderWidth: {
         3: "3px",
+      },
+      zIndex: {
+        60: 60,
       },
     },
   },

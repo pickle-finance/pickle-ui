@@ -25,8 +25,8 @@ const PicklePriceIndicatorBody: FC = () => {
 };
 
 const PicklePriceIndicator: FC = () => (
-  <div className="flex items-center px-4 py-2 mb-2 text-white text-sm font-bold">
-    <div className="w-11 p-2 bg-black-light rounded-3xl mr-2">
+  <div className="flex items-center px-4 py-2 mb-2 text-foreground text-sm font-bold">
+    <div className="w-11 p-2 bg-background-light rounded-3xl mr-2">
       <Image
         src="/pickle-icon.svg"
         width={200}

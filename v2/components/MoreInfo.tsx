@@ -8,12 +8,12 @@ interface Props {
 }
 
 const TooltipContent: FC<Props> = ({ primaryText, secondaryText }) => (
-  <div className="rounded-lg shadow-lg border border-gray-dark overflow-hidden">
-    <div className="bg-black-light px-3 py-2">
-      <p className="text-green-light text-base font-normal">
+  <div className="rounded-lg shadow-lg border border-foreground-alt-500 overflow-hidden">
+    <div className="bg-background-light px-3 py-2">
+      <div className="text-primary-light text-base font-normal">
         {primaryText && <span className="mr-2">{primaryText}</span>}
-        <span className="text-gray-light text-sm">{secondaryText}</span>
-      </p>
+        <span className="text-foreground-alt-200 text-sm">{secondaryText}</span>
+      </div>
     </div>
   </div>
 );
@@ -31,7 +31,7 @@ const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(
   return (
     <span
       ref={ref}
-      className="cursor-pointer transition-colors duration-300 hover:text-orange ml-1"
+      className="cursor-pointer transition-colors duration-300 hover:text-accent ml-1"
       {...props}
     >
       <QuestionMarkCircleIcon className="inline-block w-4 h-4 mx-1 align-top" />

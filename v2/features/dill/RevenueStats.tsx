@@ -23,14 +23,14 @@ const RevenueStats: FC<Props> = ({ dill }) => {
       <h1 className="font-body font-bold text-xl mb-4">
         {t("v2.dill.revenueShareStats")}
       </h1>
-      <div className="grid grid-cols-2 xl:grid-cols-4 bg-black-light rounded-xl border border-gray-dark shadow px-6 py-7">
+      <div className="grid grid-cols-2 xl:grid-cols-4 bg-background-light rounded-xl border border-foreground-alt-500 shadow px-6 py-7">
         <div className="mb-6 xl:mb-0">
-          <h2 className="font-title font-medium text-white text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}
             <MoreInfo
               secondaryText={
                 <div className="flex items-center font-bold">
-                  <span className="text-white mr-1">
+                  <span className="text-foreground mr-1">
                     {formatNumber(dill.pickleLocked)}
                   </span>
                   <div className="inline-block w-6 h-6">
@@ -43,8 +43,8 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                       title="PICKLE"
                     />
                   </div>
-                  <span className="mr-2 text-gray-light">=</span>
-                  <span className="text-white mr-1">
+                  <span className="mr-2 text-foreground-alt-200">=</span>
+                  <span className="text-foreground mr-1">
                     {formatNumber(dill.totalDill)}
                   </span>
                   <div className="inline-block w-6 h-6">
@@ -61,28 +61,28 @@ const RevenueStats: FC<Props> = ({ dill }) => {
               }
             />
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.totalValueLocked")}
           </p>
         </div>
         <div className="mb-6 xl:mb-0">
-          <h2 className="font-title font-medium text-white text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {/* TODO update this */}
             101.78%
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.currentAPY")}
           </p>
         </div>
         <div>
-          <h2 className="font-title font-medium text-white text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(
               upcomingDistribution.weeklyPickleAmount * picklePrice,
             )}
             <MoreInfo
               secondaryText={
                 <div className="flex items-center font-bold">
-                  <span className="text-white mr-1">
+                  <span className="text-foreground mr-1">
                     {formatNumber(upcomingDistribution.weeklyPickleAmount)}
                   </span>
                   <div className="inline-block w-6 h-6">
@@ -99,15 +99,15 @@ const RevenueStats: FC<Props> = ({ dill }) => {
               }
             />
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.upcomingDistributionValue")}
           </p>
         </div>
         <div>
-          <h2 className="font-title font-medium text-white text-lg leading-5">
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDate(new Date(upcomingDistribution.distributionTime))}
           </h2>
-          <p className="font-body text-gray-light font-normal text-xs leading-4">
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.upcomingDistributionDate")}
           </p>
         </div>

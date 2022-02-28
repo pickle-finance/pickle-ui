@@ -22,7 +22,7 @@ export function useProtocolIncome() {
     if (pickleCore) {
       const jars = pickleCore.assets.jars;
       const profit = jars.reduce((acc, currJar: JarDefinition) => {
-        const jarTVL = currJar.details.harvestStats?.balanceUSD || 0;
+        const jarTVL = currJar.details?.harvestStats?.balanceUSD || 0;
         let apr = currJar.aprStats?.components.filter((x)=>x.compoundable).reduce((acc, curr) => {
           return acc + curr.apr;
         }, 0);
