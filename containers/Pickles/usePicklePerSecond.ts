@@ -22,7 +22,8 @@ export const usePicklePerSecond = (): {
       const mps = await pickleRewarder
         .rewardPerSecond()
         .catch(() => ethers.BigNumber.from(0));
-      setMaticPerSecond(parseFloat(ethers.utils.formatEther(mps)));
+      // only wbtc using this now, so hacking it...
+      setMaticPerSecond(parseFloat(ethers.utils.formatUnits(mps, 8)));
     }
   };
 

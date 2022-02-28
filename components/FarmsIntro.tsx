@@ -3,8 +3,9 @@ import { Trans, useTranslation } from "next-i18next";
 
 import { Connection } from "../containers/Connection";
 import { MiniIcon } from "../components/TokenIcon";
-import { noFarms } from "util/constants";
+import { noFarms, someFarms } from "util/constants";
 import { ChainNetwork } from "picklefinance-core";
+import { Spacer } from "@geist-ui/react";
 
 export const FarmsIntro: FC = () => {
   const { chainName } = Connection.useContainer();
@@ -31,6 +32,22 @@ export const FarmsIntro: FC = () => {
         {t("farms.introOK")}
         <br />
         {t("farms.apy")}
+      </p>
+    );
+
+  if (someFarms(chainName))
+    return (
+      <p>
+        {t("farms.introOK")}
+        <br />
+        {t("farms.apy")}
+        <Spacer />
+        <Trans i18nKey="farms.metisPromo">
+          Earn bonus WBTC <MiniIcon source="/wbtc.png" /> and METIS
+          <MiniIcon source="/metis.png" />
+          rewards until March 21 by staking select Netswap and
+          Tethys WBTC LP tokens
+        </Trans>
       </p>
     );
 

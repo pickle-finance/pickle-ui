@@ -10,7 +10,7 @@ import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
-import { pickleWhite } from "util/constants";
+import { pickleWhite, someFarms } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
@@ -106,10 +106,12 @@ export const nonCompoundedYieldsToTooltip = (
   apr: JarApy[],
   compounding: number,
   t: any,
+  chainName: ChainNetwork,
 ): string => {
   const beginning = `${t("farms.baseAPRs")}:`;
   const elements: string[] = apr.map((x) => {
-    const k = Object.keys(x)[0];
+    let k = Object.keys(x)[0];
+    if (chainName === ChainNetwork.Metis && k === "pickle") k = "Metis";
     const v = Object.values(x)[0];
     return `${k}: ${v.toFixed(2)}%`;
   });
@@ -131,6 +133,7 @@ export const MiniFarmList: FC = () => {
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
   const noFarm = noFarms(chainName);
+  const someFarm = someFarms(chainName);
   farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
@@ -184,17 +187,33 @@ export const MiniFarmList: FC = () => {
               if (farmApy !== undefined) {
                 farmApyToUse = farmApy.apr;
               }
+
+              // Can delete this chunk after Metis promo
+              if (chainName === ChainNetwork.Metis) {
+                const wbtcApr =
+                  farm.maticValuePerYear /
+                  (jardef?.farm?.details?.valueBalance || 1);
+                nonCompoundedYields = [
+                  ...nonCompoundedYields,
+                  {
+                    Wbtc: wbtcApr,
+                  },
+                ];
+                totalAPY += wbtcApr;
+              }
             }
-            totalAPY = jardef.aprStats.apy + farmApyToUse;
+            totalAPY += jardef.aprStats.apy + farmApyToUse;
             magicCompounding = jardef.aprStats.apy - jardef.aprStats.apr;
           }
         }
       }
     }
+
     const tooltipText = nonCompoundedYieldsToTooltip(
       nonCompoundedYields,
       magicCompounding,
       t,
+      chainName as ChainNetwork,
     );
     return {
       ...farm,
@@ -320,10 +339,15 @@ export const MiniFarmList: FC = () => {
           );
           return (
             <Grid xs={24} key={jar.name}>
-              {farm && !noFarm && (
+              {farm && !noFarm && !someFarm && (
                 <JarMiniFarmCollapsible farmData={farm} jarData={jar} />
               )}
               {noFarm && <JarCollapsible jarData={jar} />}
+              {someFarm && farm ? (
+                <JarMiniFarmCollapsible farmData={farm} jarData={jar} />
+              ) : (
+                <JarCollapsible jarData={jar} />
+              )}
             </Grid>
           );
         })}

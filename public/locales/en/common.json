@@ -184,7 +184,8 @@
     "looksDefault": "Migrate staked {{ amount }} LOOKS to Jar",
     "looksWithdraw": "Withdrawing your staked LOOKS tokens...",
     "looksDeposit": "Depositing in Jar...",
-    "looksSuccess": "Successfully migrated!"
+    "looksSuccess": "Successfully migrated!",
+    "metisPromo": "Earn bonus WBTC <1/> and METIS <3/> rewards until March 21 by staking select Netswap and Tethys WBTC LP jar tokens"
   },
   "gauges": {
     "chartPreview": "View allocation of PICKLE reward weights <1>(based on votes cast by DILL holders)</1>",

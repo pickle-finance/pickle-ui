@@ -93,7 +93,7 @@ export const useWithReward = (rawFarms: Input): Output => {
           maticRewardedPerSecond = maticFraction * maticPerSecond;
           maticValuePerSecond =
             maticRewardedPerSecond *
-            (chainName === ChainNetwork.OKEx ? prices.wokt : prices.matic);
+            (chainName === ChainNetwork.Metis ? prices.wbtc : prices.matic);
         }
 
         return {
