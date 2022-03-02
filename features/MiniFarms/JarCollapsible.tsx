@@ -7,10 +7,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
 import ReactHtmlParser from "react-html-parser";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer, Status as ERC20TransferStatus } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
@@ -20,10 +17,7 @@ import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import {
-  getRatioStringAndPendingString,
-  RatioAndPendingStrings,
-} from "./JarMiniFarmCollapsible";
+import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -47,6 +41,55 @@ const JarName = styled(Grid)({
   display: "flex",
 });
 
+// For protocols that share the same deposit token
+export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
+  [key: string]: { [apiKey: string]: string | ReactNode };
+} = {
+  // BOO FTM-BOO
+  "0xec7178f4c41f346b2721907f5cf7628e388a7a58": {
+    "LQDR-BOO-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmboo.png"} />,
+    "BOO-FTM-BOO": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmboo.png"} />,
+  },
+  // BOO FTM-DAI
+  "0xe120ffbda0d14f3bb6d6053e90e63c572a66a428": {
+    "LQDR-BOO-DAI-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmdai.png"} />,
+    "BOO-FTM-DAI": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmdai.png"} />,
+  },
+  // BOO FTM-USDT
+  "0x5965e53aa80a0bcf1cd6dbdd72e6a9b2aa047410": {
+    "LQDR-BOO-USDT-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />,
+    "BOO-USDT-FTM": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />,
+  },
+  // BOO FTM-SUSHI
+  "0xf84e313b36e86315af7a06ff26c8b20e9eb443c3": {
+    "LQDR-BOO-SUSHI-FTM": (
+      <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
+    ),
+    "BOO-FTM-SUSHI": (
+      <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
+    ),
+  },
+  // BOO FTM-MIM
+  "0x6f86e65b255c9111109d2d2325ca2dfc82456efc": {
+    "LQDR-BOO-MIM-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmmim.png"} />,
+    "BOO-FTM-MIM": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmmim.png"} />,
+  },
+  // BOO FTM-USDC
+  "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c": {
+    "LQDR-BOO-USDC-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/usdcftm.png"} />,
+    "BOO-USDC-FTM": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/usdcftm.png"} />,
+  },
+  // BOO FTM-LINK
+  "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29": {
+    "LQDR-BOO-LINK-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmlink.png"} />,
+    "BOO-FTM-LINK": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmlink.png"} />,
+  },
+  // BOO FTM
+  "0xf0702249f4d3a25cd3ded7859a165693685ab577": {
+    "LQDR-BOO-ETH-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmeth.png"} />,
+    "BOO-FTM-ETH": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />,
+  },
+};
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
@@ -449,6 +492,121 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
   ),
+
+  // Fantom
+
+  //BOO FTM-ICE
+  "0x623ee4a7f290d11c11315994db70fb148b13021d": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmice.png"} />
+  ),
+  //BOO FTM-SPELL
+  "0x78f82c16992932efdd18d93f889141ccf326dbc2": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmspell.png"} />
+  ),
+  //BOO CRV-FTM
+  "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/crvftm.png"} />
+  ),
+  //BOO FTM-AVAX
+  "0x5df809e410d9cc577f0d01b4e623c567c7ad56c1": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmavax.png"} />
+  ),
+  //BOO FTM-ETH
+  "0xf0702249f4d3a25cd3ded7859a165693685ab577": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+  ),
+  //BOO FTM-BNB
+  "0x956de13ea0fa5b577e4097be837bf4ac80005820": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmbnb.png"} />
+  ),
+  //BOO YFI-ETH
+  "0x0845c0bfe75691b1e21b24351aac581a7fb6b7df": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/yfieth.png"} />
+  ),
+  //BOO FTM-TREEB
+  "0xe8b72a866b8d59f5c13d2adef96e40a3ef5b3152": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmtreeb.png"} />
+  ),
+  //BOO FTM-ANY
+  "0x5c021d9cfad40aafc57786b409a9ce571de375b4": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmany.png"} />
+  ),
+  //BOO FTM-MATIC
+  "0x7051c6f0c1f1437498505521a3bd949654923fe1": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmatic.png"} />
+  ),
+  //BOO FTM-BTC
+  "0xfdb9ab8b9513ad9e419cf19530fee49d412c3ee3": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmbtc.png"} />
+  ),
+  //BOO BTC-ETH
+  "0xec454eda10accdd66209c57af8c12924556f3abd": (
+    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  //LQDR SPIRIT DEUS-FTM
+  "0x2599eba5fd1e49f294c76d034557948034d6c96e": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/deusftm.png"} />
+  ),
+  //LQDR SPIRIT FRAX-FTM
+  "0x7ed0cddb9bb6c6dfea6fb63e117c8305479b8d7d": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/fraxftm.png"} />
+  ),
+  //LQDR SPIRIT MIM-FTM
+  "0xb32b31dfafbd53e310390f641c7119b5b9ea0488": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/mimftm.png"} />
+  ),
+  //LQDR SPIRIT USDC-FTM
+  "0xe7e90f5a767406eff87fdad7eb07ef407922ec1d": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+  ),
+  //LQDR SPIRIT PILLS-FTM
+  "0x9c775d3d66167685b2a3f4567b548567d2875350": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/pillftm.png"} />
+  ),
+  //LQDR SPIRIT ETH-FTM
+  "0x613bf4e46b4817015c01c6bb31c7ae9edaadc26e": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+  ),
+  //LQDR SPIRIT SPIRIT-FTM
+  "0x30748322b6e34545dbe0788c421886aeb5297789": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/spiritftm.png"} />
+  ),
+  //LQDR SPIRIT LQDR-FTM
+  "0x4fe6f19031239f105f753d1df8a0d24857d0caa2": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+  ),
+  //LQDR SPIRIT DEI-USDC
+  "0x8efd36aa4afa9f4e157bec759f1744a7febaea0e": (
+    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
+  ),
+  //BEETS FTM-BEETS
+  "0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/ftmbeets.png"} />
+  ),
+  //BEETS BTC-ETH-FTM
+  "0xd47d2791d3b46f9452709fa41855a045304d6f9d": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/ftmethbtc.png"} />
+  ),
+  //BEETS LQDR-FTM
+  "0x5e02ab5699549675a6d3beeb92a62782712d0509": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+  ),
+  //BEETS FTM-MATIC-SOL-AVAX-LUNA-BNB
+  "0x9af1f0e9ac9c844a4a4439d446c1437807183075": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/ftmmaticsolavaxlunabnb.png"} />
+  ),
+  //BEETS FTM-USDC
+  "0xcdf68a4d525ba2e90fe959c74330430a5a6b8226": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+  ),
+  //BEETS USDC-DAI-MAI
+  "0x2c580c6f08044d6dfaca8976a66c8fadddbd9901": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/usdcdaimai.png"} />
+  ),
+  //BEETS USDC-FTM-BTC-ETH
+  "0xf3a602d30dcb723a74a0198313a7551feaca7dac": (
+    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/usdcftmbtceth.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -511,9 +669,7 @@ export const JarCollapsible: FC<{
   const uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
     const shouldNotUncompound = k === "pickle" || k === "lp";
-    const v = shouldNotUncompound
-      ? Object.values(x)[0]
-      : uncompoundAPY(Object.values(x)[0]);
+    const v = shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]);
     const ret: JarApy = {};
     ret[k] = v;
     return ret;
@@ -536,16 +692,12 @@ export const JarCollapsible: FC<{
     ,
     `${t(
       "farms.compounding",
-    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
-      2,
-    )}%`,
+    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`,
   ]
     .filter((x) => x)
     .join(" <br/> ");
 
-  const balNum = parseFloat(
-    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
-  );
+  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
@@ -558,9 +710,7 @@ export const JarCollapsible: FC<{
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const depositedUnderlyingStr = (
-    parseFloat(
-      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-    ) * ratio
+    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
@@ -590,24 +740,11 @@ export const JarCollapsible: FC<{
   const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
-    const dStatus = getTransferStatus(
-      depositToken.address,
-      jarContract.address,
-    );
+    const dStatus = getTransferStatus(depositToken.address, jarContract.address);
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
-    setButtonStatus(
-      dStatus,
-      t("farms.depositing"),
-      t("farms.deposit"),
-      setDepositButton,
-    );
-    setButtonStatus(
-      wStatus,
-      t("farms.withdrawing"),
-      t("farms.withdraw"),
-      setWithdrawButton,
-    );
+    setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
+    setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
   }, [erc20TransferStatuses]);
 
   const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
@@ -622,6 +759,12 @@ export const JarCollapsible: FC<{
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
 
+  const multiFarmsDepositToken = Object.keys(JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON).includes(
+    depositToken.address.toLowerCase(),
+  );
+  let multiFarmsApiKey: string | undefined;
+  if (multiFarmsDepositToken) multiFarmsApiKey = jarData.apiKey;
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -631,18 +774,18 @@ export const JarCollapsible: FC<{
           <JarName xs={24} sm={12} md={5} lg={6}>
             <TokenIcon
               src={
-                JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
-                ]
+                multiFarmsApiKey
+                  ? JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON[
+                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
+                    ][multiFarmsApiKey]
+                  : JAR_DEPOSIT_TOKEN_TO_ICON[
+                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                    ]
               }
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{name}</div>
-              <a
-                href={depositTokenLink}
-                target="_"
-                style={{ fontSize: `1rem` }}
-              >
+              <a href={depositTokenLink} target="_" style={{ fontSize: `1rem` }}>
                 {depositTokenName}
               </a>
             </div>
@@ -658,12 +801,8 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>{t("balances.depositValue")}</Label>
-            {Boolean(valueStrExplained !== undefined) && (
-              <Label>{valueStrExplained}</Label>
-            )}
-            {Boolean(userSharePendingStr !== undefined) && (
-              <Label>{userSharePendingStr}</Label>
-            )}
+            {Boolean(valueStrExplained !== undefined) && <Label>{valueStrExplained}</Label>}
+            {Boolean(userSharePendingStr !== undefined) && <Label>{userSharePendingStr}</Label>}
           </Grid>
 
           <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
@@ -671,11 +810,7 @@ export const JarCollapsible: FC<{
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {getFormatString(totalAPY) + "%" || "--"}
               </Tooltip>
-              <img
-                src="./question.svg"
-                width="15px"
-                style={{ marginLeft: 5 }}
-              />
+              <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>
@@ -701,9 +836,7 @@ export const JarCollapsible: FC<{
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatEther(
-                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
-                  ),
+                  formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
                 );
               }}
             >
@@ -720,10 +853,7 @@ export const JarCollapsible: FC<{
             onClick={() => {
               if (signer) {
                 // Allow Jar to get LP Token
-                const depositAmt = ethers.utils.parseUnits(
-                  depositAmount,
-                  isUsdc ? 6 : 18,
-                );
+                const depositAmt = ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18);
                 transfer({
                   token: depositToken.address,
                   recipient: jarContract.address,
@@ -749,11 +879,7 @@ export const JarCollapsible: FC<{
                   text={`${
                     deposited && ratio
                       ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
+                          formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
                         ) * ratio
                       : 0
                   } ${depositTokenName}`}
@@ -767,9 +893,7 @@ export const JarCollapsible: FC<{
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  setWithdrawAmount(
-                    formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
-                  );
+                  setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
                 }}
               >
                 {t("balances.max")}
@@ -793,12 +917,7 @@ export const JarCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(
-                          ethers.utils.parseUnits(
-                            withdrawAmount,
-                            isUsdc ? 6 : 18,
-                          ),
-                        );
+                        .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
                     },
                     approval: false,
                   });

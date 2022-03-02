@@ -6,7 +6,6 @@ import {
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
-
 // pUSDC jar token
 export const isPUsdcToken = (jarTokenAddress: string) => {
   return (
