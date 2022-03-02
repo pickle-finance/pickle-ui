@@ -666,7 +666,7 @@ export const JarCollapsible: FC<{
 
   const isUsdc = isUsdcToken(depositToken.address);
 
-  const uncompounded = APYs?.map((x) => {
+  let uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
     const shouldNotUncompound = k === "pickle" || k === "lp";
     const v = shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]);
@@ -680,7 +680,12 @@ export const JarCollapsible: FC<{
       return Object.values(x).reduce((acc, y) => acc + y, 0);
     })
     .reduce((acc, x) => acc + x, 0);
-  const difference = totalAPY - totalAPR;
+  let difference = totalAPY - totalAPR;
+
+  if (!uncompounded) {
+    uncompounded = [{lp:0}];
+  }
+
 
   const tooltipText = [
     `${t("farms.baseAPRs")}:`,
