@@ -350,7 +350,8 @@
       "totalValueLocked": "Total value locked",
       "unlockDate": "Unlock date",
       "upcomingDistributionDate": "Upcoming distribution date",
-      "upcomingDistributionValue": "Upcoming distribution value"
+      "upcomingDistributionValue": "Upcoming distribution value",
+      "usdValue": "USD Value"
     },
     "farms": {
       "apy": "APY",
@@ -417,6 +418,60 @@
       "tokenAddress": "Token address"
     },
     "stats": {
+      "chain": {
+        "assetTableHeaders": {
+          "asset": "Asset",
+          "tvl": "TVL",
+          "tvlChange": "TVL Change WoW",
+          "apyRange": "APY Range"
+        },
+        "assetTableTitle": "Asset Stats",
+        "revsChartTitle": "Daily Revenue",
+        "revenueYLabel": "Revenue (USD)",
+        "tvlChartTitle": "Total Value Locked",
+        "tvlYLabel": "TVL (USD)"
+      },
+      "jar": {
+        "balanceYLabel": "Token Balance",
+        "balanceTooltipUnits": "Tokens",
+        "depositTokenPriceYLabel": "Deposit Token Price (USD)",
+        "depositTokenPriceTooltipUnits": "Tokens",
+        "farmAllocShareYLabel": "Alloc. Share",
+        "farmAllocShareTooltipUnits": "%",
+        "farmPicklePerDayYLabel": "Pickles",
+        "farmPicklePerDayTooltipUnits": "Pickles",
+        "harvestableYLabel": "Harvestable (USD)",
+        "harvestableTooltipUnits": "USD",
+        "pctYield": "Percent Yield",
+        "pctYieldTooltipUnits": "%",
+        "ptokensInFarmYLabel": "Percent",
+        "ptokensInFarmTooltipUnits": "%",
+        "ratioYLabel": "Ratio",
+        "ratioTooltipUnits": "",
+        "revenueYLabel": "Revenue (USD)",
+        "revsTableHeaders": {
+          "date": "Date",
+          "txLink": "Tx Link",
+          "value": "Value"
+        },
+        "revsTableTitle": "Recent Harvests",
+        "tokenPriceVNumYLabelLeft": "No. of Tokens",
+        "tokenPriceVNumYLabelRight": "Token Price (USD)",
+        "valueYLabel": "USD Value",
+        "valueTooltipUnits": "USD"
+      },
+      "platform": {
+        "chainTableHeaders": {
+          "chain": "Chain",
+          "currentRevs": "Current Revs",
+          "revsChange": "Revs Change WoW",
+          "tvl": "TVL",
+          "tvlChange": "TVL Change WoW"
+        },
+        "chainTableTitle": "Chain Stats",
+        "revsChartTitle": "Daily Revenue",
+        "tvlChartTitle": "Total Value Locked"
+      },
       "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol"
     },
     "theme": {
