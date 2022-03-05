@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, HTMLAttributes } from "react";
 import { useSelector } from "react-redux";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
@@ -7,6 +7,7 @@ import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import Ping from "v2/features/connection/Ping";
 import { DocsSelectors } from "v2/store/docs";
+import { classNames } from "v2/utils";
 
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
@@ -14,13 +15,13 @@ const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   return <CheckCircleIcon className="w-4 h-4 mr-1 text-primary-light" />;
 };
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLElement> {
   waitForCore?: boolean;
   waitForUserModel?: boolean;
   waitForDocs?: boolean;
 }
 
-const LoadingIndicator: FC<Props> = ({ waitForCore, waitForDocs, waitForUserModel }) => {
+const LoadingIndicator: FC<Props> = ({ waitForCore, waitForDocs, waitForUserModel, className }) => {
   const { t } = useTranslation("common");
   const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
   const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
@@ -29,7 +30,12 @@ const LoadingIndicator: FC<Props> = ({ waitForCore, waitForDocs, waitForUserMode
   const isCoreLoading = coreLoadingState !== "fulfilled";
 
   return (
-    <div className="bg-background-light text-center text-sm text-foreground-alt-200 py-8 rounded-xl w-full">
+    <div
+      className={classNames(
+        "bg-background-light text-center text-sm text-foreground-alt-200 rounded-xl w-full",
+        className,
+      )}
+    >
       {waitForCore && (
         <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={isCoreLoading} />

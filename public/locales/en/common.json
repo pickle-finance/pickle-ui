@@ -298,10 +298,12 @@
   },
   "v2": {
     "actions": {
+      "approve": "Approve",
       "close": "Close",
       "confirm": "Confirm",
       "enable": "Enable",
-      "harvest": "Harvest"
+      "harvest": "Harvest",
+      "retry": "Retry"
     },
     "balances": {
       "balance": "Balance",
@@ -357,6 +359,8 @@
       "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
+      "analytics": "Analytics",
+      "approveToken": "Approve {{ token }}",
       "apy": "APY",
       "apyBreakdown": "APY breakdown",
       "asset": "Asset",
@@ -381,7 +385,7 @@
       "farmAddress": "Farm Address",
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
-      "analytics": "Analytics",
+      "givePermission": "Give Pickle Finance permission to access your {{ token }}?",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "jarAddress": "Jar Address",
@@ -405,8 +409,11 @@
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
       "strategyAddress": "Strategy Address",
+      "success": "Success!",
       "token": "Token",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
+      "transactionFailed": "Transaction failed",
+      "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "yieldRates": "Yield rates"
     },
     "gasPrices": {
