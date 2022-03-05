@@ -26,7 +26,7 @@ const Dill: PickleFinancePage = () => {
           <HistoricChart />
         </>
       ) : (
-        <LoadingIndicator waitForCore />
+        <LoadingIndicator waitForCore className="py-8" />
       )}
     </div>
   );

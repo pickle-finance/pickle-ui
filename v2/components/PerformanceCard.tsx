@@ -5,10 +5,9 @@ import { CashIcon, ClockIcon } from "@heroicons/react/solid";
 
 import Button from "./Button";
 import HarvestModal, { RewardRowProps } from "./HarvestModal";
-import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
-import { UserSelectors } from "v2/store/user";
+import { UserSelectors, UserDataV2 } from "v2/store/user";
 import { PickleModelJson } from "picklefinance-core";
 import {
   getUserAssetDataWithPrices,
@@ -20,11 +19,11 @@ import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 
 export const getTotalBalances = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserData,
+  userdata: UserDataV2,
 ): string => {
   let runningUsd = 0;
-  for (let i = 0; i < userdata.tokens.length; i++) {
-    const key = userdata.tokens[i].assetKey;
+
+  Object.entries(userdata.tokens).forEach(([key]) => {
     const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
     if (jar) {
       const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
@@ -33,13 +32,14 @@ export const getTotalBalances = (
         runningUsd += data.depositTokensInFarm.tokensUSD || 0;
       }
     }
-  }
+  });
+
   return formatUsd(runningUsd);
 };
 
 export const getPendingRewardsUsd = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserData,
+  userdata: UserDataV2,
 ): string => {
   const jarData = getUserAssetDataWithPricesForJars(core, userdata);
   let runningUsd = 0;
@@ -56,20 +56,19 @@ export const getPendingRewardsUsd = (
 
 export const getPendingHarvestsUsd = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserData,
+  userdata: UserDataV2,
 ): string => {
   let runningUsd = 0;
-  for (let i = 0; i < userdata.tokens.length; i++) {
-    const key = userdata.tokens[i].assetKey;
+
+  Object.entries(userdata.tokens).forEach(([key, tokenData]) => {
     const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
 
-    if (!jar) continue;
+    if (!jar) return;
 
     const totalPTokens = jar.details?.tokenBalance;
     if (totalPTokens) {
       const userShare =
-        (parseFloat(userdata.tokens[i].pAssetBalance) +
-          parseFloat(userdata.tokens[i].pStakedBalance)) /
+        (parseFloat(tokenData!.pAssetBalance) + parseFloat(tokenData!.pStakedBalance)) /
         (totalPTokens * 1e18);
       const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
       if (pendingHarvest) {
@@ -77,17 +76,18 @@ export const getPendingHarvestsUsd = (
         runningUsd += userShareHarvestUsd;
       }
     }
-  }
+  });
+
   return formatUsd(runningUsd);
 };
 
 export const getUserAssetDataWithPricesForJars = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserData,
+  userdata: UserDataV2,
 ): UserAssetDataWithPrices[] => {
   const ret: UserAssetDataWithPrices[] = [];
-  for (let i = 0; i < userdata.tokens.length; i++) {
-    const key = userdata.tokens[i].assetKey;
+
+  Object.entries(userdata.tokens).forEach(([key]) => {
     const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
     if (jar) {
       const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
@@ -95,7 +95,8 @@ export const getUserAssetDataWithPricesForJars = (
         ret.push(data);
       }
     }
-  }
+  });
+
   return ret;
 };
 
@@ -116,7 +117,7 @@ export const userVisibleStringForPickleAsset = (
 
 export const getRewardRowPropertiesForRewards = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserData,
+  userdata: UserDataV2,
 ): RewardRowProps[] => {
   const ret: RewardRowProps[] = [];
   const jarData = getUserAssetDataWithPricesForJars(core, userdata);
@@ -160,7 +161,7 @@ export const getRewardRowPropertiesForRewards = (
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+  const userModel = useSelector(UserSelectors.selectData);
 
   const allCore = useSelector(CoreSelectors.selectCore);
   const userTotalBalance = allCore && userModel ? getTotalBalances(allCore, userModel) : 0;

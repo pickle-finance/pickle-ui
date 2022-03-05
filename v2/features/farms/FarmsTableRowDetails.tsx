@@ -200,9 +200,12 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
               </div>
               <div className="px-4">
                 <InfoRowContent label={t("v2.farms.apyBreakdown")} tooltipText={null} value="" />
-                {jar.aprStats?.components.map((x, idx) => (
-                  <div key={x.name}>
-                    <ComponentRow property={x.name.toUpperCase()} value={`${x.apr}%`} />
+                {jar.aprStats?.components.map((component, idx) => (
+                  <div key={component.name}>
+                    <ComponentRow
+                      property={component.name.toUpperCase()}
+                      value={`${component.apr}%`}
+                    />
                     {idx === jar.aprStats?.components?.length! - 1 &&
                       jar.aprStats?.apy != jar.aprStats?.apr && (
                         <ComponentRow

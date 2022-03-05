@@ -27,7 +27,9 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
 
   // TODO Should be all assets, not just jars
   if (requiresUserModel && userModel) {
-    const apiKeys = userModel.tokens.filter(hasBalances).map((asset) => asset.assetKey);
+    const apiKeys = Object.entries(userModel.tokens)
+      .filter(([_, data]) => hasBalances(data!))
+      .map(([apiKey]) => apiKey);
     jars = jars.filter((jar) => apiKeys.includes(jar.details.apiKey));
   }
 
@@ -37,7 +39,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
     return (
       <tr>
         <td colSpan={6}>
-          <LoadingIndicator waitForCore waitForUserModel />
+          <LoadingIndicator waitForCore waitForUserModel className="py-8" />
         </td>
       </tr>
     );

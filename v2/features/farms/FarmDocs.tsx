@@ -15,7 +15,7 @@ const FarmDocs: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
   const jarDocs = useAppSelector((state) => DocsSelectors.selectJarDocs(state, jar.details.apiKey));
 
-  if (!jarDocs) return <LoadingIndicator waitForDocs />;
+  if (!jarDocs) return <LoadingIndicator waitForDocs className="py-8" />;
 
   const { description, obtain, social, risks } = jarDocs;
 
