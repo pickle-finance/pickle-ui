@@ -116,7 +116,7 @@ export const useJarsWithZap = (
 
         const inputTokens: Array<TokenDetails> = [
           {
-            symbol: chainDetails?.gasTokenSymbol.toUpperCase() || "NAT",
+            symbol: `${chainDetails?.gasTokenSymbol.toUpperCase()} (Native)` || "NAT",
             balance: nativebal,
             decimals: 18,
             isNative: true,

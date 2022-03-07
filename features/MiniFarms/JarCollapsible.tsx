@@ -25,7 +25,7 @@ import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { TokenDetails, ZapDetails } from "containers/Jars/useJarsWithZap";
+import { TokenDetails } from "containers/Jars/useJarsWithZap";
 import { formatUnits } from "picklefinance-core/node_modules/@ethersproject/units";
 import { neverExpireEpochTime } from "util/constants";
 import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
@@ -891,6 +891,7 @@ export const JarCollapsible: FC<{
       },
     });
   };
+  
   const multiFarmsDepositToken = Object.keys(JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON).includes(
     depositToken.address.toLowerCase(),
   );
@@ -1018,7 +1019,7 @@ export const JarCollapsible: FC<{
           )}
           <Spacer y={0.5} />
           <Button
-            onClick={() => deposit()}
+            onClick={deposit}
             disabled={depositButton.disabled}
             style={{ width: "100%" }}
           >
