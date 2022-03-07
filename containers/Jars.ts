@@ -5,7 +5,6 @@ import { Balances } from "./Balances";
 import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYPFCore } from "./Jars/useJarsWithAPYPFCore";
-import { useJarWithTVL } from "./Jars/useJarsWithTVL";
 import { BPAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
 import { PickleCore } from "./Jars/usePickleCore";
@@ -15,8 +14,7 @@ import { ChainNetwork } from "picklefinance-core";
 function useJars() {
   const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
-  const { jarsWithAPY } = useJarsWithAPYPFCore(chainName, rawJars);
-  const { jarsWithTVL } = useJarWithTVL(jarsWithAPY);
+  const { jarsWithAPY: jarsWithTVL } = useJarsWithAPYPFCore(chainName, rawJars);
   const { pickleCore } = PickleCore.useContainer();
 
   const { addTokens } = Balances.useContainer();

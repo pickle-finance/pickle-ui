@@ -10,7 +10,7 @@ import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
-import { pickleWhite } from "util/constants";
+import { pickleWhite, someFarms } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { getJarFarmMap } from "containers/Farms/farms";
@@ -106,10 +106,12 @@ export const nonCompoundedYieldsToTooltip = (
   apr: JarApy[],
   compounding: number,
   t: any,
+  chainName: ChainNetwork,
 ): string => {
   const beginning = `${t("farms.baseAPRs")}:`;
   const elements: string[] = apr.map((x) => {
-    const k = Object.keys(x)[0];
+    let k = Object.keys(x)[0];
+    if (chainName === ChainNetwork.Metis && k === "pickle") k = "Metis";
     const v = Object.values(x)[0];
     return `${k}: ${v.toFixed(2)}%`;
   });
@@ -131,6 +133,7 @@ export const MiniFarmList: FC = () => {
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
   const noFarm = noFarms(chainName);
+  const someFarm = someFarms(chainName);
   farmData = noFarm ? [] : farmData;
 
   if (!signer) return <h2>{t("connection.connectToContinue")}</h2>;
@@ -141,9 +144,7 @@ export const MiniFarmList: FC = () => {
     return (
       <>
         <h2>{t("connection.loading")}</h2>
-        <span style={{ color: pickleWhite }}>
-          {t("connection.polygonRpc")}
-        </span>{" "}
+        <span style={{ color: pickleWhite }}>{t("connection.polygonRpc")}</span>{" "}
       </>
     );
   }
@@ -164,37 +165,44 @@ export const MiniFarmList: FC = () => {
         if (farmingJar && farmingJar.APYs) {
           APYs = [...APYs, ...farmingJar.APYs];
         }
-        const jardef: JarDefinition | undefined = findJarDefinition(
-          pickleCore,
-          farmingJar.apiKey,
-        );
+        const jardef: JarDefinition | undefined = findJarDefinition(pickleCore, farmingJar.apiKey);
         if (jardef !== undefined) {
           let farmApyToUse = farm.apy * 100;
-          nonCompoundedYields = nonCompoundedYields.concat(
-            getJarAprPfcore(jardef),
-          );
+          nonCompoundedYields = nonCompoundedYields.concat(getJarAprPfcore(jardef));
           if (jardef.aprStats !== undefined) {
             const farmApyComponents = jardef.farm?.details?.farmApyComponents;
             if (farmApyComponents !== undefined) {
-              const farmApy:
-                | AssetAprComponent
-                | undefined = farmApyComponents.find(
+              const farmApy: AssetAprComponent | undefined = farmApyComponents.find(
                 (x) => x.name.toLowerCase() === "pickle",
               );
               if (farmApy !== undefined) {
                 farmApyToUse = farmApy.apr;
               }
+
+              // Can delete this chunk after Metis promo
+              if (chainName === ChainNetwork.Metis) {
+                const wbtcApr = farm.maticValuePerYear / (jardef?.farm?.details?.valueBalance || 1);
+                nonCompoundedYields = [
+                  ...nonCompoundedYields,
+                  {
+                    Wbtc: wbtcApr,
+                  },
+                ];
+                totalAPY += wbtcApr;
+              }
             }
-            totalAPY = jardef.aprStats.apy + farmApyToUse;
+            totalAPY += jardef.aprStats.apy + farmApyToUse;
             magicCompounding = jardef.aprStats.apy - jardef.aprStats.apr;
           }
         }
       }
     }
+
     const tooltipText = nonCompoundedYieldsToTooltip(
       nonCompoundedYields,
       magicCompounding,
       t,
+      chainName as ChainNetwork,
     );
     return {
       ...farm,
@@ -204,7 +212,13 @@ export const MiniFarmList: FC = () => {
     };
   });
 
-  const protocolList = [...new Set(jarData?.map((x) => x.protocol))];
+  const protocolList = [
+    ...new Set(
+      jarData?.map((x) => {
+        return x.stakingProtocol ?? x.protocol;
+      }),
+    ),
+  ];
 
   const activeJars = !jarData
     ? []
@@ -212,43 +226,32 @@ export const MiniFarmList: FC = () => {
         .filter((jar) => isJarActive(jar.apiKey, pickleCore))
         .sort((a, b) => b.totalAPY - a.totalAPY)
         .filter(
-          (jar) =>
-            isJarActive(jar.apiKey, pickleCore) &&
-            jar.protocol != AssetProtocol.UNISWAP_V3,
+          (jar) => isJarActive(jar.apiKey, pickleCore) && jar.protocol != AssetProtocol.UNISWAP_V3,
         )
         .sort((a, b) => b.totalAPY - a.totalAPY);
 
-  const userJars = jarData.filter((jar) => {
+  const userJars = jarData?.filter((jar) => {
     const farm = farmsWithAPY.find(
-      (x) =>
-        x.depositToken.address.toLowerCase() ===
-        jar.jarContract.address.toLowerCase(),
+      (x) => x.depositToken.address.toLowerCase() === jar.jarContract.address.toLowerCase(),
     );
-    return (
-      parseFloat(formatEther(jar.deposited)) ||
-      parseFloat(formatEther(farm?.staked || 0))
-    );
+    return parseFloat(formatEther(jar.deposited)) || parseFloat(formatEther(farm?.staked || 0));
   });
 
-  const uniV3Jars = jarData?.filter(
-    (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
-  );
+  const uniV3Jars = jarData?.filter((jar) => jar.protocol == AssetProtocol.UNISWAP_V3);
 
-  const protocolJars = (showUserJars ? userJars : activeJars).filter(
-    (jar) => jar.protocol === selectedProtocol,
-  );
+  const protocolJars = (showUserJars ? userJars : activeJars)?.filter((jar) => {
+    const stakingProtocol = jar.stakingProtocol;
+    if (stakingProtocol) return stakingProtocol === selectedProtocol;
+    return jar.protocol === selectedProtocol;
+  });
 
   const inactiveJars = !jarData
     ? []
     : jarData.filter((jar) => {
         const foundJar = pickleCore?.assets.jars.find(
-          (x) =>
-            x.contract.toLowerCase() === jar.jarContract.address.toLowerCase(),
+          (x) => x.contract.toLowerCase() === jar.jarContract.address.toLowerCase(),
         );
-        return (
-          foundJar === undefined ||
-          isJarDisabled(foundJar.details.apiKey, pickleCore)
-        );
+        return foundJar === undefined || isJarDisabled(foundJar.details.apiKey, pickleCore);
       });
 
   return (
@@ -286,9 +289,7 @@ export const MiniFarmList: FC = () => {
         {protocolList.map((protocol) => {
           return (
             <Grid md={6}>
-              <Button onClick={() => setSelectedProtocol(protocol)}>
-                {protocol}
-              </Button>
+              <Button onClick={() => setSelectedProtocol(protocol)}>{protocol}</Button>
             </Grid>
           );
         })}
@@ -297,9 +298,7 @@ export const MiniFarmList: FC = () => {
       <Grid.Container gap={1}>
         {uniV3Jars?.map((jar) => {
           const farm = farmsWithAPY.find(
-            (x) =>
-              x.depositToken.address.toLowerCase() ===
-              jar.jarContract.address.toLowerCase(),
+            (x) => x.depositToken.address.toLowerCase() === jar.jarContract.address.toLowerCase(),
           );
           return (
             <Grid xs={24} key={jar.name}>
@@ -307,23 +306,18 @@ export const MiniFarmList: FC = () => {
             </Grid>
           );
         })}
-        {(selectedProtocol
-          ? protocolJars
-          : showUserJars
-          ? userJars
-          : activeJars
-        ).map((jar) => {
+        {(selectedProtocol ? protocolJars : showUserJars ? userJars : activeJars)?.map((jar) => {
           const farm = farmsWithAPY.find(
-            (x) =>
-              x.depositToken.address.toLowerCase() ===
-              jar.jarContract.address.toLowerCase(),
+            (x) => x.depositToken.address.toLowerCase() === jar.jarContract.address.toLowerCase(),
           );
           return (
             <Grid xs={24} key={jar.name}>
-              {farm && !noFarm && (
+              {farm && !noFarm && !someFarm && (
                 <JarMiniFarmCollapsible farmData={farm} jarData={jar} />
               )}
               {noFarm && <JarCollapsible jarData={jar} />}
+              {someFarm && farm && <JarMiniFarmCollapsible farmData={farm} jarData={jar} />}
+              {someFarm && !farm && <JarCollapsible jarData={jar} />}
             </Grid>
           );
         })}
@@ -334,15 +328,11 @@ export const MiniFarmList: FC = () => {
         {showInactive &&
           inactiveJars.map((jar) => {
             const farm = farmsWithAPY.find(
-              (x) =>
-                x.depositToken.address.toLowerCase() ===
-                jar.jarContract.address.toLowerCase(),
+              (x) => x.depositToken.address.toLowerCase() === jar.jarContract.address.toLowerCase(),
             );
             return (
               <Grid xs={24} key={jar.name}>
-                {farm && (
-                  <JarMiniFarmCollapsible jarData={jar} farmData={farm} />
-                )}
+                {farm && <JarMiniFarmCollapsible jarData={jar} farmData={farm} />}
               </Grid>
             );
           })}

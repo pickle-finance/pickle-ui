@@ -35,9 +35,7 @@ const styles: StylesConfig<CurrentTheme> = {
   }),
   option: (styles, { isFocused }) => ({
     ...styles,
-    backgroundColor: isFocused
-      ? "rgb(var(--color-background-lightest))"
-      : undefined,
+    backgroundColor: isFocused ? "rgb(var(--color-background-lightest))" : undefined,
     borderRadius: 10,
     color: "rgb(var(--color-foreground-alt-200))",
     textAlign: "left",
@@ -65,7 +63,7 @@ const ThemeSelect: FC = () => {
       }}
       isMulti={false}
       noOptionsMessage={() => t("v2.farms.noResults")}
-      onChange={(newTheme) => dispatch(setCurrentTheme(newTheme!))}
+      onChange={(newTheme) => dispatch(setCurrentTheme(newTheme as CurrentTheme))}
       options={rareThemes}
       defaultValue={rareThemes[0]}
       styles={styles}

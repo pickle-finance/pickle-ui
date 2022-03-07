@@ -47,6 +47,7 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
             protocol: jar.protocol,
             apiKey: jar.apiKey,
             zapDetails: jar.zapDetails,
+            stakingProtocol: jar.stakingProtocol,
           };
         },
       );

@@ -4,7 +4,7 @@ import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/J
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { BigNumber, ethers } from "ethers";
-import { JarWithTVL } from "./useJarsWithTVL";
+import { JarWithAPY as JarWithTVL } from "./useJarsWithAPYPFCore";
 import { Balances } from "containers/Balances";
 import { ERC20Transfer } from "containers/Erc20Transfer";
 import { PickleCore } from "./usePickleCore";
