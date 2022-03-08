@@ -47,47 +47,111 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
 } = {
   // BOO FTM-BOO
   "0xec7178f4c41f346b2721907f5cf7628e388a7a58": {
-    "LQDR-BOO-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmboo.png"} />,
-    "BOO-FTM-BOO": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmboo.png"} />,
+    "LQDR-BOO-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmboo.png"} />
+    ),
+    "BOO-FTM-BOO": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmboo.png"} />
+    ),
   },
   // BOO FTM-DAI
   "0xe120ffbda0d14f3bb6d6053e90e63c572a66a428": {
-    "LQDR-BOO-DAI-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmdai.png"} />,
-    "BOO-FTM-DAI": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmdai.png"} />,
+    "LQDR-BOO-DAI-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmdai.png"} />
+    ),
+    "BOO-FTM-DAI": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmdai.png"} />
+    ),
   },
   // BOO FTM-USDT
   "0x5965e53aa80a0bcf1cd6dbdd72e6a9b2aa047410": {
-    "LQDR-BOO-USDT-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />,
-    "BOO-USDT-FTM": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />,
+    "LQDR-BOO-USDT-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />
+    ),
+    "BOO-USDT-FTM": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />
+    ),
   },
   // BOO FTM-SUSHI
   "0xf84e313b36e86315af7a06ff26c8b20e9eb443c3": {
     "LQDR-BOO-SUSHI-FTM": (
-      <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
     ),
     "BOO-FTM-SUSHI": (
-      <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
     ),
   },
   // BOO FTM-MIM
   "0x6f86e65b255c9111109d2d2325ca2dfc82456efc": {
-    "LQDR-BOO-MIM-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmmim.png"} />,
-    "BOO-FTM-MIM": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmmim.png"} />,
+    "LQDR-BOO-MIM-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmmim.png"} />
+    ),
+    "BOO-FTM-MIM": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmmim.png"} />
+    ),
   },
   // BOO FTM-USDC
   "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c": {
-    "LQDR-BOO-USDC-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/usdcftm.png"} />,
-    "BOO-USDC-FTM": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/usdcftm.png"} />,
+    "LQDR-BOO-USDC-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+    ),
+    "BOO-USDC-FTM": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+    ),
   },
   // BOO FTM-LINK
   "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29": {
-    "LQDR-BOO-LINK-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmlink.png"} />,
-    "BOO-FTM-LINK": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmlink.png"} />,
+    "LQDR-BOO-LINK-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmlink.png"} />
+    ),
+    "BOO-FTM-LINK": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmlink.png"} />
+    ),
   },
-  // BOO FTM
+  // BOO FTM-ETH
   "0xf0702249f4d3a25cd3ded7859a165693685ab577": {
-    "LQDR-BOO-ETH-FTM": <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmeth.png"} />,
-    "BOO-FTM-ETH": <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />,
+    "LQDR-BOO-ETH-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+    ),
+    "BOO-FTM-ETH": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+    ),
+  },
+  // SPIRIT FTM-SPIRIT
+  "0x30748322b6e34545dbe0788c421886aeb5297789": {
+    "LQDR-SPIRIT-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/spiritftm.png"} />
+    ),
+    "SPIRIT-FTM-SPIRIT": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/spiritftm.png"} />
+    ),
+  },
+  // SPIRIT FTM-LQDR
+  "0x4fe6f19031239f105f753d1df8a0d24857d0caa2": {
+    "LQDR-SPIRIT-LQDR-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+    ),
+    "SPIRIT-FTM-LQDR": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+    ),
+  },
+  // SPIRIT FTM-FRAX
+  "0x7ed0cddb9bb6c6dfea6fb63e117c8305479b8d7d": {
+    "LQDR-SPIRIT-FRAX-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/fraxftm.png"} />
+    ),
+    "SPIRIT-FTM-FRAX": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/fraxftm.png"} />
+    ),
+  },
+  // SPIRIT FTM-DEUS
+  "0x2599eba5fd1e49f294c76d034557948034d6c96e": {
+    "LQDR-SPIRIT-DEUS-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/deusftm.png"} />
+    ),
+    "SPIRIT-FTM-DEUS": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/deusftm.png"} />
+    ),
   },
 };
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
@@ -497,115 +561,126 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
 
   //BOO FTM-ICE
   "0x623ee4a7f290d11c11315994db70fb148b13021d": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmice.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmice.png"} />
   ),
   //BOO FTM-SPELL
   "0x78f82c16992932efdd18d93f889141ccf326dbc2": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmspell.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmspell.png"} />
   ),
   //BOO CRV-FTM
   "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/crvftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/crvftm.png"} />
   ),
   //BOO FTM-AVAX
   "0x5df809e410d9cc577f0d01b4e623c567c7ad56c1": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmavax.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmavax.png"} />
   ),
   //BOO FTM-ETH
   "0xf0702249f4d3a25cd3ded7859a165693685ab577": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
   ),
   //BOO FTM-BNB
   "0x956de13ea0fa5b577e4097be837bf4ac80005820": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmbnb.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmbnb.png"} />
   ),
   //BOO YFI-ETH
   "0x0845c0bfe75691b1e21b24351aac581a7fb6b7df": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/yfieth.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/yfieth.png"} />
   ),
   //BOO FTM-TREEB
   "0xe8b72a866b8d59f5c13d2adef96e40a3ef5b3152": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmtreeb.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmtreeb.png"} />
   ),
   //BOO FTM-ANY
   "0x5c021d9cfad40aafc57786b409a9ce571de375b4": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmany.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmany.png"} />
   ),
   //BOO FTM-MATIC
   "0x7051c6f0c1f1437498505521a3bd949654923fe1": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmatic.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmatic.png"} />
   ),
   //BOO FTM-BTC
   "0xfdb9ab8b9513ad9e419cf19530fee49d412c3ee3": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/tokens/ftmbtc.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmbtc.png"} />
   ),
   //BOO BTC-ETH
   "0xec454eda10accdd66209c57af8c12924556f3abd": (
-    <LpIcon swapIconSrc={"/spookyswap.png"} tokenIconSrc={"/ethbtc.png"} />
-  ),
-  //LQDR SPIRIT DEUS-FTM
-  "0x2599eba5fd1e49f294c76d034557948034d6c96e": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/deusftm.png"} />
-  ),
-  //LQDR SPIRIT FRAX-FTM
-  "0x7ed0cddb9bb6c6dfea6fb63e117c8305479b8d7d": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/fraxftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/ethbtc.png"} />
   ),
   //LQDR SPIRIT MIM-FTM
   "0xb32b31dfafbd53e310390f641c7119b5b9ea0488": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/mimftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/mimftm.png"} />
   ),
   //LQDR SPIRIT USDC-FTM
   "0xe7e90f5a767406eff87fdad7eb07ef407922ec1d": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
   ),
   //LQDR SPIRIT PILLS-FTM
   "0x9c775d3d66167685b2a3f4567b548567d2875350": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/pillftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/pillftm.png"} />
   ),
   //LQDR SPIRIT ETH-FTM
   "0x613bf4e46b4817015c01c6bb31c7ae9edaadc26e": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
-  ),
-  //LQDR SPIRIT SPIRIT-FTM
-  "0x30748322b6e34545dbe0788c421886aeb5297789": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/spiritftm.png"} />
-  ),
-  //LQDR SPIRIT LQDR-FTM
-  "0x4fe6f19031239f105f753d1df8a0d24857d0caa2": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
   ),
   //LQDR SPIRIT DEI-USDC
   "0x8efd36aa4afa9f4e157bec759f1744a7febaea0e": (
-    <LpIcon swapIconSrc={"/lqdr.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
   ),
   //BEETS FTM-BEETS
   "0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/ftmbeets.png"} />
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/ftmbeets.png"} />
   ),
   //BEETS BTC-ETH-FTM
   "0xd47d2791d3b46f9452709fa41855a045304d6f9d": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/ftmethbtc.png"} />
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/ftmethbtc.png"} />
   ),
   //BEETS LQDR-FTM
   "0x5e02ab5699549675a6d3beeb92a62782712d0509": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
   ),
   //BEETS FTM-MATIC-SOL-AVAX-LUNA-BNB
   "0x9af1f0e9ac9c844a4a4439d446c1437807183075": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/ftmmaticsolavaxlunabnb.png"} />
+    <LpIcon
+      swapIconSrc={"/protocols/beethovenx.png"}
+      tokenIconSrc={"/tokens/ftmmaticsolavaxlunabnb.png"}
+    />
   ),
   //BEETS FTM-USDC
   "0xcdf68a4d525ba2e90fe959c74330430a5a6b8226": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
   ),
   //BEETS USDC-DAI-MAI
   "0x2c580c6f08044d6dfaca8976a66c8fadddbd9901": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/usdcdaimai.png"} />
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/usdcdaimai.png"} />
   ),
   //BEETS USDC-FTM-BTC-ETH
   "0xf3a602d30dcb723a74a0198313a7551feaca7dac": (
-    <LpIcon swapIconSrc={"/beets.png"} tokenIconSrc={"/tokens/usdcftmbtceth.png"} />
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/usdcftmbtceth.png"} />
+  ),
+  // SPIRIT FTM-TREEB
+  "0x2ceff1982591c8b0a73b36d2a6c2a6964da0e869": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmtreeb.png"} />
+  ),
+  // SPIRIT FTM-MAI
+  "0x51eb93ecfeffbb2f6fe6106c4491b5a0b944e8bd": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmmai.png"} />
+  ),
+  // SPIRIT FTM-CRE8R
+  "0x459e7c947e04d73687e786e4a48815005dfbd49a": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmcre8r.png"} />
+  ),
+  // SPIRIT FTM-BIFI
+  "0xc28cf9aebfe1a07a27b3a4d722c841310e504fe3": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmbifi.png"} />
+  ),
+  // SPIRIT GSCARAB-SCARAB
+  "0x8e38543d4c764dbd8f8b98c73407457a3d3b4999": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/gscarabscarab.png"} />
+  ),
+  // SOLIDEX FTM-SEX
+  "0xfcec86af8774d69e2e4412b8de3f4abf1f671ecc": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
   ),
 };
 
@@ -683,9 +758,8 @@ export const JarCollapsible: FC<{
   let difference = totalAPY - totalAPR;
 
   if (!uncompounded) {
-    uncompounded = [{lp:0}];
+    uncompounded = [{ lp: 0 }];
   }
-
 
   const tooltipText = [
     `${t("farms.baseAPRs")}:`,
