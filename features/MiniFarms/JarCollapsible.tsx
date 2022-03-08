@@ -678,9 +678,157 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x8e38543d4c764dbd8f8b98c73407457a3d3b4999": (
     <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/gscarabscarab.png"} />
   ),
-  // SOLIDEX FTM-SEX
+  // SOLIDEX VOLATILE FTM-SEX
   "0xfcec86af8774d69e2e4412b8de3f4abf1f671ecc": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
+  ),
+  // SOLIDEX STABLE USDC-MIM
+  "0xbcab7d083Cf6a01e0DdA9ed7F8a02b47d125e682": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-TOMB
+  "0x60a861Cd30778678E3d613db96139440Bd333143": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmtomb.png"} />
+  ),
+  // SOLIDEX VOLATILE CRV-WFTM
+  "0xED7Fd242ce91a541ABcaE52f3d617dacA7fe6e34": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE FSX-FRAX
+  "0x4bBd8467ccd49D5360648CE14830f43a7fEB6e45": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-OXD
+  "0xEaFB5Ae6eEa34954eE5e5a27B068B8705CE926a6": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcoxd.png"} />
+  ),
+  // SOLIDEX VOLATILE YFI-WOOFY
+  "0x4b3a172283ecB7d07AB881a9443d38cB1c98F4d0": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-SYN
+  "0xB1b3B96cf35435b2518093acD50E02fe03A0131f": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-YFI
+  "0xEa5f4ECf6900833f9B7038e5D8d67142ABb09Dcc": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
+  ),
+  // SOLIDEX VOLATILE OATH-WFTM
+  "0x6B987e02Ca5eAE26D8B2bCAc724D4e03b3B0c295": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/oathwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-MULTI
+  "0x94bE7e51efE2A0C06c2281b6b385FCD12C84d6F9": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
+  ),
+  // SOLIDEX STABLE SOLIDSEX-SOLID
+  "0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/oathwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE LQDR-WFTM
+  "0x9861B8a9Acc9B4f249981164bFe7f84202068bfE": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE HND-WFTM
+  "0x6aAE93f2915b899e87b49a9254434D36ac9570d8": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE IB-WFTM
+  "0x304B61f3481C977Ffbe630B55f2aBeEe74792664": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-GEIST
+  "0xAe885ef155F2835Dce9c66b0A7a3A0c8c0622aa1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE BIFI-MAI
+  "0x8aeB0503E13F7bea02F80986a8FDb2AccE5C6b6C": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/bifimai.png"} />
+  ),
+  // SOLIDEX VOLATILE CRV-G3CRV
+  "0x6Ca598726d7c9Ed382A101789c5f086F7165eFa1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-BEFTM
+  "0x387a11D161f6855Bd3c801bA6C79Fe9b824Ce1f3": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmbeftm.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SOLIDSEX
+  "0xa66901D1965F5410dEeB4d0Bb43f7c1B628Cb20b": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolidsex.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-FRAX
+  "0x9ae95682bde174993ecb818Cc23E8607d2e54667": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmfrax.png"} />
+  ),
+  // SOLIDEX STABLE USDC-DAI
+  "0xC0240Ee4405f11EFb87A00B432A8be7b7Afc97CC": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdai.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SYN
+  "0x8aa410d8B0Cc3dE48AAC8eB5d928646A00e6ff04": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
+  ),
+  // SOLIDEX VOLATILE TAROT-XTAROT
+  "0x4FE782133af0f7604B9B89Bf95893ADDE265FEFD": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
+  ),
+  // SOLIDEX STABLE USDC-DEI
+  "0x5821573d8F04947952e76d94f3ABC6d7b43bF8d0": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/uscddei.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-RDL
+  "0x5ef8f0bd4F071B0199603a28ec9343F3651999c0": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
+  ),
+  // SOLIDEX VOLATILE G3CRV-GEIST
+  "0x6c90B69aF6DBD929458497a8D1013Aa255ac71F1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/g3crvgeist.png"} />
+  ),
+  // SOLIDEX VOLATILE CRV-G3CRV
+  "0x817CafF2dAC62BDCcE1EBE332cA128215Dbd9e9a": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-WFTM
+  "0xBad7D3DF8E1614d985C3D9ba9f6ecd32ae7Dc20a": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcwftm.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-RAINSPIRIT
+  "0xCa395560B6003D921D9408aF011C6C61399F66cA": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-LINSPIRIT
+  "0xd6be7592E5C424623c8C9557738970aE19ab5de2": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritlinspirit.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SOLID
+  "0xe4bc39fdD4618a76f6472079C329bdfa820afA75": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-SINSPIRIT
+  "0x742C384D6EDeC91466042ba84E5e751c4eAFf962": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-BINSPIRIT
+  "0xa7Ea870dc93ffB712ca74b43eFCA9B07556d1303": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritbinspirit.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-DAI
+  "0x4e9B80F91E954AE532fF765822fcB5a6bC36cAa6": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdai.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SCREAM
+  "0x86dD79265814756713e631Dde7E162bdD538b7B1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-TAROT
+  "0x783f1eDBE336981dFCb74Bd0B803655F55AaDF48": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
+  ),
+  // SOLIDEX VOLATILE CRE8R-BOMB
+  "0x5b3b8F8D92472c6cdC0c6a7d0acD29E53cc00d28": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/cre8rbomb.png"} />
   ),
 };
 
@@ -855,11 +1003,11 @@ export const JarCollapsible: FC<{
               src={
                 multiFarmsApiKey
                   ? JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON[
-                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
-                    ][multiFarmsApiKey]
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
+                  ][multiFarmsApiKey]
                   : JAR_DEPOSIT_TOKEN_TO_ICON[
-                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
-                    ]
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                  ]
               }
             />
             <div style={{ width: "100%" }}>
@@ -955,13 +1103,12 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
