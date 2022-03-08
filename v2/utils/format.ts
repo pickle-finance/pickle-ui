@@ -38,9 +38,11 @@ export const formatPercentage = (value: number, precision = 0): string =>
     maximumFractionDigits: precision,
   });
 
-export const shortenAddress = (address: string): string =>
-  address ? `${address.substring(0, 5)}…${address.substring(address.length - 4)}` : "";
-
+export const shortenAddress = (address: string): string => {
+  return address 
+    ? `${address.substring(0, 5)}…${address.substring(address.length - 4)}`
+    : ""
+}
 /*
  * This function needs cleanup and a more formulaic method, using logs
  * or string length to determine how to divide properly.

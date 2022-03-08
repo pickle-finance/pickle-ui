@@ -1,0 +1,61 @@
+import { FC, useState } from "react";
+import { useTranslation } from "next-i18next";
+import { useSelector } from "react-redux";
+
+import type { PickleFinancePage } from "v2/types";
+import { CoreSelectors } from "v2/store/core";
+import LoadingIndicator from "v2/components/LoadingIndicator";
+import JarSelect from "v2/features/dill/vote/JarSelect";
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
+import castVote from "v2/features/dill/vote/mainnet/CastVoteMainnet";
+import { VoteButton } from "v2/features/dill/vote/mainnet/VoteButtonMainnet";
+import PickleToastContainer from "v2/components/PickleToastContainer";
+import { JarTable } from "v2/features/dill/vote/JarTable";
+
+
+const Vote: PickleFinancePage = () => {
+  const core = useSelector(CoreSelectors.selectCore);
+  const { account, library } = useWeb3React<Web3Provider>();
+  const [selectedJars, setSelectedJars] = useState<string[]>([]);
+
+  return (
+    <>
+      {core ? (
+        <>
+          <JarSelect core={core} mainnet={true} setSelectedJars={setSelectedJars} />
+          {(selectedJars.length > 0) && (
+            <div>
+              <JarTable selectedJars={selectedJars} core={core} mainnet={true}/>
+              <VoteButton vote={castVote} provider={library} account={account} selectedJars={selectedJars} />
+            </div>
+          )}
+        </>
+      ) : (
+        <LoadingIndicator waitForCore />
+      )}
+      <PickleToastContainer />
+    </>
+  );
+};
+
+const PageTitle: FC = () => {
+  const { t } = useTranslation("common");
+
+  return (
+    <>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
+        {t("v2.dill.vote.title")}
+      </h1>
+      <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
+        {t("v2.dill.vote.description")}
+      </h2>
+    </>
+  );
+};
+
+Vote.PageTitle = PageTitle;
+
+export { getStaticProps } from "../../../../util/locales";
+
+export default Vote;

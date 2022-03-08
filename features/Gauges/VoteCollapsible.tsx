@@ -412,6 +412,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                         newTokens.push(tokens[i]);
                       }
                     }
+                    console.log([newTokens,
+                      newWeights.map((weight) =>
+                        ethers.BigNumber.from((weight * 100).toFixed(0)))])
                     transfer({
                       token: "vote",
                       recipient: gaugeProxy.address,

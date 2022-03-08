@@ -24,7 +24,7 @@ const RevRow: FC<{ recentHarvest: RecentHarvest; chainExplorer: string }> = ({
       {recentHarvest.transfers && formatTxLink(chainExplorer, recentHarvest.txid)}
     </td>
     <td className="text-center pt-2 pb-2">
-      {recentHarvest.transfers && formatDollars(sumHarvestTransfers(recentHarvest.transfers))}
+      {recentHarvest.transfers && formatDollars(sumHarvestTransfers(recentHarvest.transfers, recentHarvest.fee))}
     </td>
   </tr>
 );
@@ -37,10 +37,10 @@ const formatTxLink = (chainExplorer: string, txid: string): JSX.Element => (
   </Link>
 );
 
-const sumHarvestTransfers = (transfers: Transfer[]): number => {
+const sumHarvestTransfers = (transfers: Transfer[], fee: number): number => {
   let sum = 0;
   transfers.forEach((x) => (sum = sum + x.usdval));
-  return sum;
+  return sum / fee;
 };
 
 export default RevRow;
