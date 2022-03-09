@@ -12,6 +12,7 @@ import { PickleZapV1 } from "../Contracts/PickleZapV1";
 import { PickleZapV1__factory as pickleZapV1Factory } from "../Contracts/factories/PickleZapV1__factory";
 import { UniswapRouter } from "../Contracts/UniswapRouter";
 import { UniswapRouter__factory as uniswapRouterFactory } from "../Contracts/factories/UniswapRouter__factory";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface TokenDetails {
   symbol: string;
@@ -114,29 +115,18 @@ export const useJarsWithZap = (
           (x) => x.chainId === chainId,
         );
 
-        const inputTokens: Array<TokenDetails> = [
-          {
+        let inputTokens: Array<TokenDetails> = []
+
+        if (chainName != ChainNetwork.Metis) {
+          inputTokens.push({
             symbol: `${chainDetails?.gasTokenSymbol.toUpperCase()} (Native)` || "NAT",
             balance: nativebal,
             decimals: 18,
             isNative: true,
             address: ethers.constants.AddressZero,
-          },
-          {
-            symbol: symbol0.toUpperCase(),
-            balance: bal0,
-            decimals: token0Decimals,
-            address: Token0.address,
-          },
-          {
-            symbol: symbol1.toUpperCase(),
-            balance: bal1,
-            decimals: token1Decimals,
-            address: Token1.address,
-          },
-        ];
+          },)
+        }
 
-        // Get wrapped token details
         const wrappedTokenAddress = chainDetails?.wrappedNativeAddress;
 
         if (
@@ -162,6 +152,22 @@ export const useJarsWithZap = (
             isWrapped: true,
           });
         }
+
+        inputTokens = [
+          ...inputTokens,
+          {
+            symbol: symbol0.toUpperCase(),
+            balance: bal0,
+            decimals: token0Decimals,
+            address: Token0.address,
+          },
+          {
+            symbol: symbol1.toUpperCase(),
+            balance: bal1,
+            decimals: token1Decimals,
+            address: Token1.address,
+          },
+        ]
 
         return {
           ...jar,
