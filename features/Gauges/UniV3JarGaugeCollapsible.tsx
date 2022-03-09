@@ -77,8 +77,25 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x94981F69F7483AF3ae218CbfE65233cC3c60d93a": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/rbn.png"} />
   ),
+  // FRAX/DAI 0.05%
   "0x97e7d56A0408570bA1a7852De36350f7713906ec": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/frax.webp"} />
+  ),
+  // USDC/WETH 0.05%
+  "0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
+  // LOOKS/ETH 0.3%
+  "0x4b5Ab61593A2401B1075b90c04cBCDD3F87CE011": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/looks.png"} />
+  ),
+  // USDC/USDT 0.01%
+  "0x3416cF6C708Da44DB2624D63ea0AAef7113527C6": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/usdcusdt.png"} />
+  ),
+  // WBTC/WETH 0.05%
+  "0x4585FE77225b41b697C938B018E2Ac67Ac5a20c0": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/wbtc.png"} />
   ),
 };
 

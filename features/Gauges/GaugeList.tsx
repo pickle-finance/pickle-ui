@@ -259,7 +259,8 @@ export const GaugeList: FC = () => {
       <Grid.Container gap={1}>
         {chainName === ChainNetwork.Ethereum &&
           uniV3Jars?.map((jar) => {
-            const gauge = findGauge(jar)
+            const gauge = findGauge(jar);
+            if (!gauge) return;
             return (
               <Grid xs={24} key={jar.name}>
                 <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
