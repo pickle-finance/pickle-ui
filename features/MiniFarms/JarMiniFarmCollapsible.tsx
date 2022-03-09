@@ -27,6 +27,7 @@ import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleModelJson, ChainNetwork } from "picklefinance-core";
 import { TokenDetails } from "containers/Jars/useJarsWithZap";
+import { neverExpireEpochTime } from "util/constants";
 
 interface DataProps {
   isZero?: boolean;
@@ -527,11 +528,16 @@ export const JarMiniFarmCollapsible: FC<{
   };
 
   const depositAndStake = async () => {
-    if (balNum && minichef && address) {
+    if (depositAmount && minichef && address) {
       try {
         setIsEntryBatch(true);
+        setDepositStakeButton(t("farms.depositing"));
+
+        const initialLpBal = await farmDepositToken.balanceOf(address);
+
         const res = await deposit();
         if (!res) throw "Deposit Failed";
+
         const Token = jar?.attach(farmDepositToken.address).connect(signer);
         if (!approved) {
           setDepositStakeButton(t("farms.approving"));
@@ -543,8 +549,10 @@ export const JarMiniFarmCollapsible: FC<{
         }
         const realRatio = await Token.getRatio();
         setDepositStakeButton(t("farms.staking"));
-        const newBalance = getStakeableBalance(realRatio);
-        const farmTx = await minichef.deposit(poolIndex, newBalance, address);
+        const finalLpBal = await farmDepositToken.balanceOf(address);
+
+        // const newBalance = getStakeableBalance(realRatio, finalLpBal.sub(initialLpBal));
+        const farmTx = await minichef.deposit(poolIndex, finalLpBal.sub(initialLpBal), address);
         await farmTx.wait();
         await sleep(10000);
         setDepositStakeButton(null);
@@ -622,9 +630,12 @@ export const JarMiniFarmCollapsible: FC<{
   useEffect(() => {
     if (jarData && !isExitBatch) {
       const dStatus = getTransferStatus(
-        depositToken.address,
-        jarContract.address,
+        inputToken.address,
+        inputToken.symbol === depositTokenName || !zapDetails
+          ? jarContract.address
+          : zapDetails.pickleZapContract.address,
       );
+
       const wStatus = getTransferStatus(
         jarContract.address,
         jarContract.address,
