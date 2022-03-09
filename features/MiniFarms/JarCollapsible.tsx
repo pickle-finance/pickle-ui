@@ -724,7 +724,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   // SOLIDEX STABLE SOLIDSEX-SOLID
   "0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/oathwftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
   ),
   // SOLIDEX VOLATILE LQDR-WFTM
   "0x9861B8a9Acc9B4f249981164bFe7f84202068bfE": (
@@ -740,7 +740,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   // SOLIDEX VOLATILE WFTM-GEIST
   "0xAe885ef155F2835Dce9c66b0A7a3A0c8c0622aa1": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
   ),
   // SOLIDEX VOLATILE BIFI-MAI
   "0x8aeB0503E13F7bea02F80986a8FDb2AccE5C6b6C": (
