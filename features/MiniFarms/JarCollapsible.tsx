@@ -162,7 +162,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-sUSDC-MIM": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
     ),
-    "OxdSolidlyLP-USDC-MIM": (
+    "OXDSOLIDLYLP-USDC-MIM": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
     ),
   },
@@ -170,7 +170,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-CRV": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
     ),
-    "OxdSolidlyLP-CRV-WFTM": (
+    "OXDSOLIDLYLP-CRV-WFTM": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
     ),
   },
@@ -179,7 +179,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFXS-FRAX": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
     ),
-    "OxdSolidlyLP-FXS-FRAX": (
+    "OXDSOLIDLYLP-FXS-FRAX": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
     ),
   },
@@ -188,7 +188,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vYFI-WOOFY": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
     ),
-    "OxdSolidlyLP-YFI-WOOFY": (
+    "OXDSOLIDLYLP-YFI-WOOFY": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
     ),
   },
@@ -197,7 +197,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vUSDC-SYN": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
     ),
-    "OxdSolidlyLP-USDC-SYN": (
+    "OXDSOLIDLYLP-USDC-SYN": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
     ),
   },
@@ -206,7 +206,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-YFI": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
     ),
-    "OxdSolidlyLP-WFTM-YFI": (
+    "OXDSOLIDLYLP-WFTM-YFI": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
     ),
   },
@@ -215,7 +215,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-MULTI": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
     ),
-    "OxdSolidlyLP-WFTM-MULTI": (
+    "OXDSOLIDLYLP-WFTM-MULTI": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
     ),
   },
@@ -224,7 +224,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-sSOLID-SOLIDSEX": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
     ),
-    "OxdSolidlyLP-SOLIDSEX-SOLID": (
+    "OXDSOLIDLYLP-SOLIDSEX-SOLID": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
     ),
   },
@@ -233,7 +233,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-LQDR": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
     ),
-    "OxdSolidlyLP-LQDR-WFTM": (
+    "OXDSOLIDLYLP-LQDR-WFTM": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
     ),
   },
@@ -242,7 +242,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-HND": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
     ),
-    "OxdSolidlyLP-WFTM-HND": (
+    "OXDSOLIDLYLP-WFTM-HND": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
     ),
   },
@@ -251,7 +251,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-IB": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
     ),
-    "OxdSolidlyLP-IB-WFTM": (
+    "OXDSOLIDLYLP-IB-WFTM": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
     ),
   },
@@ -260,7 +260,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-GEIST": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
     ),
-    "OxdSolidlyLP-WFTM-GEIST": (
+    "OXDSOLIDLYLP-WFTM-GEIST": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
     ),
   },
@@ -269,7 +269,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vBIFI-MAI": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/bifimai.png"} />
     ),
-    "OxdSolidlyLP-BIFI-MAI": (
+    "OXDSOLIDLYLP-BIFI-MAI": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/bifimai.png"} />
     ),
   },
@@ -278,7 +278,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vCRV-G3CRV": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
     ),
-    "OxdSolidlyLP-CRV-G3CRV": (
+    "OXDSOLIDLYLP-CRV-G3CRV": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
     ),
   },
@@ -287,7 +287,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-SOLIDSEX": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolidsex.png"} />
     ),
-    "OxdSolidlyLP-WFTM-SOLIDSEX": (
+    "OXDSOLIDLYLP-WFTM-SOLIDSEX": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmsolidsex.png"} />
     ),
   },
@@ -296,7 +296,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-SYN": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
     ),
-    "OxdSolidlyLP-WFTM-SYN": (
+    "OXDSOLIDLYLP-WFTM-SYN": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
     ),
   },
@@ -305,7 +305,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vTAROT-XTAROT": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
     ),
-    "OxdSolidlyLP-XTAROT-TAROT": (
+    "OXDSOLIDLYLP-XTAROT-TAROT": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
     ),
   },
@@ -314,7 +314,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-sUSDC-DEI": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/uscddei.png"} />
     ),
-    "OxdSolidlyLP-USDC-DEI": (
+    "OXDSOLIDLYLP-USDC-DEI": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/uscddei.png"} />
     ),
   },
@@ -323,7 +323,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-RDL": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
     ),
-    "OxdSolidlyLP-WFTM-RDL": (
+    "OXDSOLIDLYLP-WFTM-RDL": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
     ),
   },
@@ -332,7 +332,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-sSPIRIT-RAINSPIRIT": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
     ),
-    "OxdSolidlyLP-SPIRIT-RAINSPIRIT": (
+    "OXDSOLIDLYLP-SPIRIT-RAINSPIRIT": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
     ),
   },
@@ -341,7 +341,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-SOLID": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
     ),
-    "OxdSolidlyLP-WFTM-SOLID": (
+    "OXDSOLIDLYLP-WFTM-SOLID": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
     ),
   },
@@ -350,13 +350,13 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-sSPIRIT-SINSPIRIT": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
     ),
-    "OxdSolidlyLP-SPIRIT-SINSPIRIT": (
+    "OXDSOLIDLYLP-SPIRIT-SINSPIRIT": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
     ),
   },
   // SOLIDEX VOLATILE WFTM-SCREAM
   "0x86dd79265814756713e631dde7e162bdd538b7b1": {
-    "OxdSolidlyLP-WFTM-SCREAM": (
+    "OXDSOLIDLYLP-WFTM-SCREAM": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
     ),
   },
@@ -365,7 +365,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-TAROT": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmtarot.png"} />
     ),
-    "OxdSolidlyLP-WFTM-TAROT": (
+    "OXDSOLIDLYLP-WFTM-TAROT": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmtarot.png"} />
     ),
   },
@@ -374,7 +374,7 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
     "SEX-SOLID-vFTM-SEX": (
       <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
     ),
-    "OxdSolidlyLP-SEX-WFTM": (
+    "OXDSOLIDLYLP-SEX-WFTM": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
     ),
   },
