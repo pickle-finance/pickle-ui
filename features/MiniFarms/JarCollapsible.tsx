@@ -441,13 +441,25 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x8121113eb9952086dec3113690af0538bb5506fd": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisusdt.png"} />
   ),
-  // TETHYS USDT/METIS
+  // TETHYS HADES/METIS
   "0x586f616bb811f1b0dfa953fbf6de3569e7919752": (
     <LpIcon swapIconSrc={"/hades.svg"} tokenIconSrc={"/metis.png"} />
   ),
-  // TETHYS USDT/METIS
+  // TETHYS HELLSHARE/METIS
   "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": (
     <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
+  ),
+  // TETHYS METIS/DAI
+  "0xcc15d8f93be780ad78fd1a016fb0f15f2543b5dc": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisdai.png"} />
+  ),
+  // TETHYS METIS/AVAX
+  "0x3Ca47677e7D8796e6470307Ad15c1fBFd43f0D6F": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisavax.png"} />
+  ),
+  // TETHYS METIS/FTM
+  "0x74Ca39F7aB9B685B8eA8c4ab19E7Ab6b474Dd22D": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metisftm.png"} />
   ),
 
   // Moonbeam
