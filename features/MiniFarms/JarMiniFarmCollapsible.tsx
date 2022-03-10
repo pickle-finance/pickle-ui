@@ -341,6 +341,106 @@ export const FARM_LP_TO_ICON: {
   "0x031adC001358eE1416C6B4AD8B8bf98a1C72EdD0": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/bstn.png"} />
   ),
+  // TRI ROSE-NEAR
+  "0xbe753E99D0dBd12FB39edF9b884eBF3B1B09f26C": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/rose.png"} />
+  ),
+  // TRI RUSD-NEAR
+  "0xbC0e71aE3Ef51ae62103E003A9Be2ffDe8421700": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/rusd.png"} />
+  ),
+  // TRI LINEAR-NEAR
+  "0xbceA13f9125b0E3B66e979FedBCbf7A4AfBa6fd1": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/linear.png"} />
+  ),
+  // TRI SOLACE-NEAR
+  "0xdDAdf88b007B95fEb42DDbd110034C9a8e9746F2": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/solace.png"} />
+  ),
+  // TRI XNL-AURORA
+  "0xb419ff9221039Bdca7bb92A131DD9CF7DEb9b8e5": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
+  ),
+  // TRI GBA-NEAR
+  "0x7B273238C6DD0453C160f305df35c350a123E505": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/gba.png"} />
+  ),
+  // TRI XNL-NEAR
+  "0xFBc4C42159A5575a772BebA7E3BF91DB508E127a": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
+  ),
+  // TRI BBT-NEAR
+  "0xadAbA7E2bf88Bd10ACb782302A568294566236dC": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/bbt.png"} />
+  ),
+  // TRI USDC-SHITZU
+  "0x5E74D85311fe2409c341Ce49Ce432BB950D221DE": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/shitzu.png"} />
+  ),
+  // PAD MODA-PAD
+  // "0xC8F45738e2900fCaB9B72EA624F48aE2c222e248": (
+  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/moda.png"} />
+  // ),
+  // // PAD DAI-PAD
+  // "0xaf3f197Ce82bf524dAb0e9563089d443cB950048": (
+  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/nearpad.png"} />
+  // ),
+  // // PAD AURORA-PAD
+  // "0xFE28a27a95e51BB2604aBD65375411A059371616": (
+  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/aurora.png"} />
+  // ),
+  // // PAD ETH-PAD
+  // "0x24886811d2d5E362FF69109aed0A6EE3EeEeC00B": (
+  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/nearpad.png"} />
+  // ),
+  // // PAD FRAX-NEAR
+  // "0xac187A18f9DaB50506fc8111aa7E86F5F55DefE9": (
+  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/frax.png"} />
+  // ),
+  // // PAD PAD-TRI
+  // "0x50F63D48a52397C1a469Ccd057905CC8d2609B85": (
+  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/tri.png"} />
+  // ),
+  // ROSE 3POOL
+  "0xfF79D5bff48e1C01b722560D6ffDfCe9FC883587": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  ),
+  // ROSE USTPOOL
+  "0x94A7644E4D9CA0e685226254f88eAdc957D3c263": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  ),
+  // ROSE FRAXPOOL
+  "0x4463A118A2fB34640ff8eF7Fe1B3abAcd4aC9fB7": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  ),
+  // ROSE ROSE-FRAX
+  "0xeD4C231b98b474f7cAeCAdD2736e5ebC642ad707": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
+  ),
+  // ROSE ROSE-PAD
+  "0xC6C3cc84EabD4643C382C988fA2830657fc70a6B": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
+  ),
+  // WANNA WANNAX-STNEAR
+  "0xE22606659ec950E0328Aa96c7f616aDC4907cBe3": (
+    <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/tokens/wannax.png"} />
+  ),
+  // ROSE MAIPOOL
+  "0xA7ae42224Bf48eCeFc5f838C230EE339E5fd8e62": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  ),
+  // ROSE RUSDPOOL
+  "0x56f87a0cB4713eB513BAf57D5E81750433F5fcB9": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  ),
+  // ROSE BUSDPOOL
+  "0x158f57CF9A4DBFCD1Bc521161d86AeCcFC5aF3Bc": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  ),
+  // TRI AURORA-NEAR
+  "0x1e0e812FBcd3EB75D8562AD6F310Ed94D258D008": (
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/aurora.png"} />
+  ),
 
   // Metis
 
@@ -491,22 +591,22 @@ export const JarMiniFarmCollapsible: FC<{
 
     const swapTx = inputToken.isWrapped
       ? await zapDetails.router
-          .connect(signer)
-          .populateTransaction.swapExactTokensForTokens(
-            depositAmt,
-            0,
-            zapDetails.nativePath.path,
-            zapDetails.pickleZapContract.address,
-            BigNumber.from(neverExpireEpochTime),
-          )
+        .connect(signer)
+        .populateTransaction.swapExactTokensForTokens(
+          depositAmt,
+          0,
+          zapDetails.nativePath.path,
+          zapDetails.pickleZapContract.address,
+          BigNumber.from(neverExpireEpochTime),
+        )
       : await zapDetails.router
-          .connect(signer)
-          .populateTransaction.swapExactETHForTokens(
-            0,
-            zapDetails.nativePath.path,
-            zapDetails.pickleZapContract.address,
-            BigNumber.from(neverExpireEpochTime),
-          );
+        .connect(signer)
+        .populateTransaction.swapExactETHForTokens(
+          0,
+          zapDetails.nativePath.path,
+          zapDetails.pickleZapContract.address,
+          BigNumber.from(neverExpireEpochTime),
+        );
 
     return transfer({
       token: inputToken.address,
@@ -932,9 +1032,8 @@ export const JarMiniFarmCollapsible: FC<{
               <div>
                 {t("balances.balance")}: {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
