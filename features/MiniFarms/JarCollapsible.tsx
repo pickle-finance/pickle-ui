@@ -457,6 +457,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
   // NET BYTE/USDC
+<<<<<<< HEAD
   "0x3ab6be89ed5a0d4fdd412c246f5e6ddd250dd45c": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
   ),
@@ -467,6 +468,14 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   // NET METIS/RELAY
   "0xa58bd557bfbc12f8ceaccc6e1668f5fbfb2118bb": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/relay.png"} />
+=======
+  "0x3Ab6be89ED5A0d4FDD412c246F5e6DdD250Dd45c": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
+  ),
+  // NET BUSD/USDC
+  "0x8014c801F6cF32445D503f7BaC30976B3161eE52": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
+>>>>>>> 5e50a391 (adding oxd jars)
   ),
   // TETHYS TETHYS/METIS
   "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
@@ -891,7 +900,139 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   // SOLIDEX VOLATILE CRE8R-BOMB
   "0x6058345a4d8b89ddac7042be08091f91a404b80b": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/renbtc.png"} />
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/token/renbtc.png"} />
+  ),
+  // StrategyOxdStableSpiritSinspiritLp
+  "0xC82374918807F6E9d5eB8118f4D62d9a4e690AFD": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/spiritsinspirit.png"} />
+  ),
+  // StrategyOxdStableSpiritRainspiritLp
+  "0xCa395560B6003D921D9408aF011C6C61399F66cA": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/spiritrainspirit.png"} />
+  ),
+  // StrategyOxdStableSpiritBinspiritLp
+  "0xa7Ea870dc93ffB712ca74b43eFCA9B07556d1303": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/spiritbinspirit.png"} />
+  ),
+  // StrategyOxdStableSpiritLinspiritLp
+  "0xd6be7592E5C424623c8C9557738970aE19ab5de2": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/spiritlinspirit.png"} />
+  ),
+  // StrategyOxdVolatileWftmGeistLp
+  "0xAe885ef155F2835Dce9c66b0A7a3A0c8c0622aa1": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmgeist.png"} />
+  ),
+  // StrategyOxdVolatileBeetsFbeetsLp
+  "0x5A3AA3284EE642152D4a2B55BE1160051c5eB932": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/beetsfbeets.png"} />
+  ),
+  // StrategyOxdVolatileHndWftmLp
+  "0x6aAE93f2915b899e87b49a9254434D36ac9570d8": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/hndwftm.png"} />
+  ),
+  // StrategyOxdVolatileSolidOxsolidLp
+  "0xa3bf7336FDbCe054c4B5Bad4FF8d79539dB2a2b3": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/solidoxsolid.png"} />
+  ),
+  // StrategyOxdVolatileWftmRdlLp
+  "0x5ef8f0bd4F071B0199603a28ec9343F3651999c0": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmrdl.png"} />
+  ),
+  // StrategyOxdVolatileCrvG3crvLp
+  "0x6Ca598726d7c9Ed382A101789c5f086F7165eFa1": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/crvg3crv.png"} />
+  ),
+  // StrategyOxdVolatileWftmMultiLp
+  "0x94bE7e51efE2A0C06c2281b6b385FCD12C84d6F9": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmmulti.png"} />
+  ),
+  // StrategyOxdVolatileLqdrWftmLp
+  "0x9861B8a9Acc9B4f249981164bFe7f84202068bfE": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/lqdrwftm.png"} />
+  ),
+  // StrategyOxdVolatileCrvWftmLp
+  "0xED7Fd242ce91a541ABcaE52f3d617dacA7fe6e34": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/crvwftm.png"} />
+  ),
+  // StrategyOxdVolatileIbWftmLp
+  "0x304B61f3481C977Ffbe630B55f2aBeEe74792664": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/ibwftm.png"} />
+  ),
+  // StrategyOxdVolatileTarotXtarotLp
+  "0x4FE782133af0f7604B9B89Bf95893ADDE265FEFD": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/tarotxtarot.png"} />
+  ),
+  // StrategyOxdVolatileDeiScreamLp
+  "0xd11e940c42e03d927cfd7426718bb4cA21d6015f": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/deiscream.png"} />
+  ),
+  // // StrategyOxdVolatileWpcWeveLp
+  // "0xd11e940c42e03d927cfd7426718bb4cA21d6015f": (
+  //   <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/renbtc.png"} />
+  // ),
+  // StrategyOxdVolatileWftmSynLp
+  "0x8aa410d8B0Cc3dE48AAC8eB5d928646A00e6ff04": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmsyn.png"} />
+  ),
+  // StrategyOxdVolatileWftmSolidLp
+  "0xe4bc39fdD4618a76f6472079C329bdfa820afA75": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmsolid.png"} />
+  ),
+  // StrategyOxdVolatileBifiMaiLp
+  "0x8aeB0503E13F7bea02F80986a8FDb2AccE5C6b6C": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/bifimai.png"} />
+  ),
+  // StrategyOxdVolatileYfiWoofyLp
+  "0x4b3a172283ecB7d07AB881a9443d38cB1c98F4d0": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/yfiwoofy.png"} />
+  ),
+  // StrategyOxdVolatileWftmTarotLp
+  "0x783f1eDBE336981dFCb74Bd0B803655F55AaDF48": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmtarot.png"} />
+  ),
+  // StrategyOxdVolatileWftmScreamLp
+  "0x86dD79265814756713e631Dde7E162bdD538b7B1": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmscream.png"} />
+  ),
+  // StrategyOxdStableSolidsexSolidLp
+  "0x62E2819Dd417F3b430B6fa5Fd34a49A377A02ac8": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/solidsolidsex.png"} />
+  ),
+  // StrategyOxdVolatileFxsFraxLp
+  "0x4bBd8467ccd49D5360648CE14830f43a7fEB6e45": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/fxsfrax.png"} />
+  ),
+  // StrategyOxdVolatileOxdDeiLp
+  "0x4303eDB91d23FC648bFEEb65349596bcf4DF0742": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/deioxd.png"} />
+  ),
+  // StrategyOxdSolidexVolatileDeiDeusLp
+  "0x817CafF2dAC62BDCcE1EBE332cA128215Dbd9e9a": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/deideus.png"} />
+  ),
+  // StrategyOxdSolidexVolatileSexWftmLp
+  "0xFCEC86aF8774d69e2e4412B8De3f4aBf1f671ecC": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/wftmsex.png"} />
+  ),
+  // StrategyOxdVolatileUsdcSynLp
+  "0xB1b3B96cf35435b2518093acD50E02fe03A0131f": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/usdcsyn.png"} />
+  ),
+  // StrategyOxdSolidexStableUsdcMimLp
+  "0xF42dBcf004a93ae6D5922282B304E2aEFDd50058": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/usdcmim.png"} />
+  ),
+  // StrategyOxdStableUsdcDeiLp
+  "0x5821573d8F04947952e76d94f3ABC6d7b43bF8d0": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/usdcdei.png"} />
+  ),
+  // StrategyOxdSolidlyVolatileSexG3crvLp
+  "0x966F6dfDfdC7FEF3271287a88cb53C77d8901C19": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/sexg3crv.png"} />
+  ),
+  // StrategyOxdSolidlyVolatileUsdcWeveLp
+  "0xD9A4108CBB40a12dE16dFFDc54aE5065878816d7": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/token/renbtc.png"} />
   ),
   // STAR USDC
   "0x12edea9cd262006cc3c4e77c90d2cd2dd4b1eb97": (
