@@ -81,7 +81,8 @@ export const isJarActive = (
 ) => {
   return (
     checkJarEnablement(AssetEnablement.ENABLED, jarApiKey, pfcore) ||
-    checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore)
+    checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore) ||
+    checkJarEnablement(AssetEnablement.DEV, jarApiKey, pfcore) 
   );
 };
 
