@@ -170,7 +170,7 @@ export const FARM_LP_TO_ICON: {
   ),
 
   // Aurora
-  "0xbD59171dA1c3a2624D60421bcb6c3c3270111656": (
+  "0x0FfE6fDf78450F777488678a03Fc6c99BA3C2cE0": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
   ),
   "0xF623c32828B40c89D5cf114A7186c6B8b25De4Ed": (
@@ -179,7 +179,7 @@ export const FARM_LP_TO_ICON: {
   "0xF49803dB604E118f3aFCF44beB0012f3c6684F05": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearwbtc.png"} />
   ),
-  "0xfc258cF7f1bf3739A04992D1c790aF20d60f44E9": (
+  "0x372d3dBE547f220311Ac996998B18eB287251644": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdt.png"} />
   ),
   "0x1E686d65031Ac75754Cd6AeAb5B71ac2257c6a9D": (
@@ -342,39 +342,39 @@ export const FARM_LP_TO_ICON: {
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/bstn.png"} />
   ),
   // TRI ROSE-NEAR
-  "0xbe753E99D0dBd12FB39edF9b884eBF3B1B09f26C": (
+  "0xFb56aecFb7eF86c524E70E090B15CD4a643BBEc5": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/rose.png"} />
   ),
   // TRI RUSD-NEAR
-  "0xbC0e71aE3Ef51ae62103E003A9Be2ffDe8421700": (
+  "0x471a605E4E2Eca369065da90110685d073CBFf1D": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/rusd.png"} />
   ),
   // TRI LINEAR-NEAR
-  "0xbceA13f9125b0E3B66e979FedBCbf7A4AfBa6fd1": (
+  "0x52C7Bc8a7F8dFF855ed4a8cEF6196c36D00E5cAA": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/linear.png"} />
   ),
   // TRI SOLACE-NEAR
-  "0xdDAdf88b007B95fEb42DDbd110034C9a8e9746F2": (
+  "0x0EA5D709851ae7A6856677b880b8c56e87e7877B": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/solace.png"} />
   ),
-  // TRI XNL-AURORA
-  "0xb419ff9221039Bdca7bb92A131DD9CF7DEb9b8e5": (
-    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
-  ),
-  // TRI GBA-NEAR
-  "0x7B273238C6DD0453C160f305df35c350a123E505": (
-    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/gba.png"} />
-  ),
-  // TRI XNL-NEAR
-  "0xFBc4C42159A5575a772BebA7E3BF91DB508E127a": (
-    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
-  ),
+  // // TRI XNL-AURORA
+  // "0xb419ff9221039Bdca7bb92A131DD9CF7DEb9b8e5": (
+  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
+  // ),
+  // // TRI GBA-NEAR
+  // "0x7B273238C6DD0453C160f305df35c350a123E505": (
+  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/gba.png"} />
+  // ),
+  // // TRI XNL-NEAR
+  // "0xFBc4C42159A5575a772BebA7E3BF91DB508E127a": (
+  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
+  // ),
   // TRI BBT-NEAR
-  "0xadAbA7E2bf88Bd10ACb782302A568294566236dC": (
+  "0xA3342A7CB3fc1Fb8de3Fb7ef5d4A30e0e56C36CD": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/bbt.png"} />
   ),
   // TRI USDC-SHITZU
-  "0x5E74D85311fe2409c341Ce49Ce432BB950D221DE": (
+  "0x7977844f44BFb9d33302FC4A99bB0247BA13478c": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/shitzu.png"} />
   ),
   // PAD MODA-PAD
@@ -402,43 +402,43 @@ export const FARM_LP_TO_ICON: {
   //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/tri.png"} />
   // ),
   // ROSE 3POOL
-  "0xfF79D5bff48e1C01b722560D6ffDfCe9FC883587": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  "0x0FeEc68AFB4716Af45349bcFdc317E872BD50335": (
+    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE USTPOOL
-  "0x94A7644E4D9CA0e685226254f88eAdc957D3c263": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  "0xe7a47b1Be32161736FE083E8425b7Be97099B2Ed": (
+    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE FRAXPOOL
-  "0x4463A118A2fB34640ff8eF7Fe1B3abAcd4aC9fB7": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+  "0xF25466cadAD7ACd09249A8e4baDF62C43c6e0375": (
+    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE ROSE-FRAX
-  "0xeD4C231b98b474f7cAeCAdD2736e5ebC642ad707": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
+  "0x566112Ba8Bf50218Ac5D485DcbE0eBF240707D11": (
+    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
   ),
   // ROSE ROSE-PAD
-  "0xC6C3cc84EabD4643C382C988fA2830657fc70a6B": (
+  "0x3F00480fB625Be95abf6c462C84Be1916baF6446": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
   ),
   // WANNA WANNAX-STNEAR
-  "0xE22606659ec950E0328Aa96c7f616aDC4907cBe3": (
+  "0x527F243112Cc6DE5A9879c93c2091C23E9a3afa5": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/tokens/wannax.png"} />
   ),
   // ROSE MAIPOOL
-  "0xA7ae42224Bf48eCeFc5f838C230EE339E5fd8e62": (
+  "0x4850d60B10520081653F012E000049Bc82dE365F": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE RUSDPOOL
-  "0x56f87a0cB4713eB513BAf57D5E81750433F5fcB9": (
+  "0x5ae33A37398Fe95131c2150D3D4A5D539C791d50": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE BUSDPOOL
-  "0x158f57CF9A4DBFCD1Bc521161d86AeCcFC5aF3Bc": (
+  "0x149228d9d745e5aBdeb0640aE4dB51BdEC7de1AA": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // TRI AURORA-NEAR
-  "0x1e0e812FBcd3EB75D8562AD6F310Ed94D258D008": (
+  "0x708C457199A699Ce7219d778353F9e82f5C49DC3": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/aurora.png"} />
   ),
 
