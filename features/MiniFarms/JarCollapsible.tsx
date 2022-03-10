@@ -269,37 +269,61 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
 
   // Cronos
   "0x1803e360393a472bec6e1a688bdf7048d3076b1a": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/beefy.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crobifi.png"} />
   ),
   "0x3eb9ff92e19b73235a393000c176c8bb150f1b20": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/dai.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crodai.png"} />
   ),
   "0xc9ea98736dbc94faa91abf9f4ad1eb41e7fb40f4": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/shib.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/croshib.png"} />
   ),
   "0xe61db569e231b3f5530168aa2c9d50246525b6d6": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crousdc.png"} />
   ),
   "0x3d2180db9e1b909f35c398bc39ef36108c0fc8c3": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crousdt.png"} />
   ),
   "0x814920d1b8007207db6cb5a2dd92bf0b082bdba1": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdc.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/vvsusdc.png"} />
   ),
   "0x280acad550b2d3ba63c8cbff51b503ea41a1c61b": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdt.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/vvsusdt.png"} />
   ),
   "0xbf62c67ea509e86f07c8c69d0286c0636c50270b": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/vvscro.png"} />
   ),
   "0x8f09fff247b8fdb80461e5cf5e82dd1ae2ebd6d7": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/wbtc.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crowbtc.png"} />
   ),
   "0x39cc0e14795a8e6e9d02a21091b81fe0d61d82f9": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/cronos.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
   "0xa111c17f8b8303280d3eb01bbcd61000aa7f39f9": (
-    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/weth.png"} />
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/croeth.png"} />
+  ),
+  // VVS CRO-DOGE
+  "0x2a560f2312cb56327ad5d65a03f1bfec10b62075": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crodoge.png"} />
+  ),
+  // VVS CRO-ATOM
+  "0x9e5bd780dff875dd85848a65549791445ae25de0": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/croatom.png"} />
+  ),
+  // VVS CRO-TONIC
+  "0x4b377121d968bf7a62d51b96523d59506e7c2bf0": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/crotonic.png"} />
+  ),
+  // VVS VVS-SINGLE
+  "0x6f72a3f6db6f486b50217f6e721f4388994b1fbe": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/vvssingle.png"} />
+  ),
+  // VVS USDC-SINGLE
+  "0x0fbab8a90cac61b481530aad3a64fe17b322c25d": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/usdcsingle.png"} />
+  ),
+  // VVS VVS-TONIC
+  "0xa922530960a1f94828a7e132ec1ba95717ed1eab": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/vvstonic.png"} />
   ),
 
   // Aurora
