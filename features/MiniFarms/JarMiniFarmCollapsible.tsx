@@ -28,6 +28,7 @@ import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleModelJson, ChainNetwork } from "picklefinance-core";
 import { TokenDetails } from "containers/Jars/useJarsWithZap";
 import { neverExpireEpochTime } from "util/constants";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 interface DataProps {
   isZero?: boolean;
@@ -533,8 +534,6 @@ export const JarMiniFarmCollapsible: FC<{
         setIsEntryBatch(true);
         setDepositStakeButton(t("farms.depositing"));
 
-        const initialLpBal = await farmDepositToken.balanceOf(address);
-
         const res = await deposit();
         if (!res) throw "Deposit Failed";
 
@@ -547,12 +546,11 @@ export const JarMiniFarmCollapsible: FC<{
           );
           await tx.wait();
         }
-        const realRatio = await Token.getRatio();
         setDepositStakeButton(t("farms.staking"));
-        const finalLpBal = await farmDepositToken.balanceOf(address);
+        const realRatio = await Token.getRatio();
 
-        // const newBalance = getStakeableBalance(realRatio, finalLpBal.sub(initialLpBal));
-        const farmTx = await minichef.deposit(poolIndex, finalLpBal.sub(initialLpBal), address);
+        const newBalance = getStakeableBalance(realRatio, res);
+        const farmTx = await minichef.deposit(poolIndex, newBalance, address);
         await farmTx.wait();
         await sleep(10000);
         setDepositStakeButton(null);
@@ -567,12 +565,29 @@ export const JarMiniFarmCollapsible: FC<{
   };
 
   // Necessary because querying pToken balance intros a race condition
-  const getStakeableBalance = (realRatio: ethers.BigNumber) =>
-    parseEther(depositAmount)
-      .mul(ethers.utils.parseUnits("1", 18))
-      .div(realRatio)
-      .add(deposited)
-      .sub("1");
+  const getStakeableBalance = (realRatio: ethers.BigNumber, zapInTxReceipt: TransactionReceipt) => {
+    if (!zapDetails) {
+      return parseEther(depositAmount)
+        .mul(ethers.utils.parseUnits("1", 18))
+        .div(realRatio)
+        .add(deposited)
+        .sub("1");
+    }
+
+    const pickleIface = zapDetails.pickleZapContract.interface;
+
+    for (const log of zapInTxReceipt.logs) {
+      try{
+        const decodedEvents = pickleIface.decodeEventLog("zapIn", log.data, log.topics);
+        if (decodedEvents) return decodedEvents["tokensRec"].add(deposited);
+      } catch(e) {
+        continue;
+      }
+    }
+
+    return deposited;
+  }
+
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
