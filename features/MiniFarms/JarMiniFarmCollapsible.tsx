@@ -317,6 +317,26 @@ export const FARM_LP_TO_ICON: {
   "0xC7201D4BA106F524AafBB93aBeac648016E17A06": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/ust.png"} />
   ),
+  // trisolaris FLX-NEAR
+  "0x48887cEEA1b8AD328d5254BeF774Be91B90FaA09": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/public/tokens/flxnear.png"} />
+  ),
+  // trisolaris USDO-USDT
+  "0x6277f94a69Df5df0Bc58b25917B9ECEFBf1b846A": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/usdousdt.png"} />
+  ),
+  // trisolaris STNEAR-NEAR
+  "0x47924Ae4968832984F4091EEC537dfF5c38948a4": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/public/tokens/stnearnear.png"} />
+  ),
+  // trisolaris STNEAR-XTRI
+  "0x5913f644A10d98c79F2e0b609988640187256373": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/stnearxtri.png"} />
+  ),
+  // trisolaris BSTN-NEAR
+  "0xBBf3D4281F10E537d5b13CA80bE22362310b2bf9": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/public/tokens/bstnnear.png"} />
+  ),
   // wannaswap WANNA-AURORA
   "0xf3EbeC4D691Bc5Ea7B0158228feCfC3de2aE3910": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/wanna.png"} />
@@ -471,22 +491,22 @@ export const JarMiniFarmCollapsible: FC<{
 
     const swapTx = inputToken.isWrapped
       ? await zapDetails.router
-          .connect(signer)
-          .populateTransaction.swapExactTokensForTokens(
-            depositAmt,
-            0,
-            zapDetails.nativePath.path,
-            zapDetails.pickleZapContract.address,
-            BigNumber.from(neverExpireEpochTime),
-          )
+        .connect(signer)
+        .populateTransaction.swapExactTokensForTokens(
+          depositAmt,
+          0,
+          zapDetails.nativePath.path,
+          zapDetails.pickleZapContract.address,
+          BigNumber.from(neverExpireEpochTime),
+        )
       : await zapDetails.router
-          .connect(signer)
-          .populateTransaction.swapExactETHForTokens(
-            0,
-            zapDetails.nativePath.path,
-            zapDetails.pickleZapContract.address,
-            BigNumber.from(neverExpireEpochTime),
-          );
+        .connect(signer)
+        .populateTransaction.swapExactETHForTokens(
+          0,
+          zapDetails.nativePath.path,
+          zapDetails.pickleZapContract.address,
+          BigNumber.from(neverExpireEpochTime),
+        );
 
     return transfer({
       token: inputToken.address,
@@ -912,9 +932,8 @@ export const JarMiniFarmCollapsible: FC<{
               <div>
                 {t("balances.balance")}: {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
