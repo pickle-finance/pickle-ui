@@ -403,19 +403,19 @@ export const FARM_LP_TO_ICON: {
   // ),
   // ROSE 3POOL
   "0x0FeEc68AFB4716Af45349bcFdc317E872BD50335": (
-    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE USTPOOL
   "0xe7a47b1Be32161736FE083E8425b7Be97099B2Ed": (
-    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE FRAXPOOL
   "0xF25466cadAD7ACd09249A8e4baDF62C43c6e0375": (
-    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE ROSE-FRAX
   "0x566112Ba8Bf50218Ac5D485DcbE0eBF240707D11": (
-    <LpIcon swapIconSrc={"/protocols/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
   ),
   // ROSE ROSE-PAD
   "0x3F00480fB625Be95abf6c462C84Be1916baF6446": (
