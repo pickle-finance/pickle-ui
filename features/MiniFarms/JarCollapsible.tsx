@@ -312,10 +312,10 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
   // SOLIDEX STABLE USDC-DEI
   "0x5821573d8f04947952e76d94f3abc6d7b43bf8d0": {
     "SEX-SOLID-sUSDC-DEI": (
-      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/uscddei.png"} />
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
     ),
     "OXDSOLIDLYLP-USDC-DEI": (
-      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/uscddei.png"} />
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
     ),
   },
   // SOLIDEX VOLATILE WFTM-RDL
@@ -1049,10 +1049,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   // StrategyOxdSolidexVolatileDeiDeusLp
   "0x817caff2dac62bdcce1ebe332ca128215dbd9e9a": (
     <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/deideus.png"} />
-  ),
-  // StrategyOxdStableUsdcDeiLp
-  "0x5821573d8f04947952e76d94f3abc6d7b43bf8d0": (
-    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
   ),
   // StrategyOxdSolidlyVolatileSexG3crvLp
   "0x966f6dfdfdc7fef3271287a88cb53c77d8901c19": (
