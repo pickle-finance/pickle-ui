@@ -12,6 +12,7 @@ import Button from "v2/components/Button";
 import Link from "v2/components/Link";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
+import FarmDocs from "./FarmDocs";
 interface Props {
   jar: JarWithData;
 }
@@ -44,7 +45,7 @@ const ComponentRow: FC<ComponentRowProps> = ({ property, value }) => (
 );
 
 const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
-  const { t, i18n } = useTranslation("common");
+  const { t } = useTranslation("common");
   const allCore = useSelector(CoreSelectors.selectCore);
   const chain = allCore?.chains.find((x) => x.network === jar.chain);
   const { library } = useWeb3React<Web3Provider>();
@@ -60,8 +61,6 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
     userShare *
     (jar.details.harvestStats?.harvestableUSD || 0) *
     (1 - (chain?.defaultPerformanceFee || 0.2));
-  const lang = i18n.language || "en";
-  // Url to fetch is https://api.pickle.finance/prod/protocol/docs/en
 
   const metamaskAdd = async () => {
     const tokenAddress = jar.contract;
@@ -102,8 +101,8 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
             leaveTo="opacity-0"
           >
             <Disclosure.Panel as="div" className="grid grid-cols-4 py-4 gap-2">
-              <div className="col-span-2 border-r border-foreground-alt-500">
-                <div className="flex">
+              <div className="pr-4 col-span-2 border-r border-foreground-alt-500">
+                <div className="flex justify-between">
                   <span className="font-title text-foreground-alt-200 inline-flex items-center font-medium text-base leading-5">
                     <Trans i18nKey="v2.farms.tokensDeposited">
                       You have
@@ -114,17 +113,13 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                     </Trans>
                     <MoreInfo secondaryText={t("v2.farms.pToken")} />
                   </span>
-                  <Button onClick={() => metamaskAdd()} type="secondary" className="ml-auto mr-5">
+                  <Button onClick={() => metamaskAdd()} type="secondary">
                     {t("v2.farms.metamaskAdd")}
                   </Button>
                 </div>
-                <p className="py-4 text-sm text-foreground">
-                  Description of what the jar does here... need docs for this info...
-                  <br />
-                  blah blah...
-                  <br />
-                  blah blah...
-                </p>
+                <div className="pt-2 mb-4">
+                  <FarmDocs jar={jar} />
+                </div>
                 <div className="grid grid-cols-3 py-1">
                   <div>
                     <span className="font-body font-bold text-foreground-alt-200">

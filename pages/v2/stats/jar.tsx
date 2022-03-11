@@ -19,8 +19,7 @@ const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
   const router = useRouter();
-  const jar: string =
-    typeof router.query.jar === "string" ? router.query.jar : "";
+  const jar: string = typeof router.query.jar === "string" ? router.query.jar : "";
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -33,18 +32,14 @@ const Stats: PickleFinancePage = () => {
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
         <ChartContainer jarData={jarData} />
         <br />
-        {jarData && jarData.documentation && (
-          <DocContainer docs={jarData.documentation} />
-        )}
+        {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
         <br />
-        {jarData &&
-          jarData.revenueExpenses &&
-          jarData.revenueExpenses.recentHarvests[0] && (
-            <RevContainer
-              revs={jarData.revenueExpenses}
-              pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
-            />
-          )}
+        {jarData && jarData.revenueExpenses && jarData.revenueExpenses.recentHarvests[0] && (
+          <RevContainer
+            revs={jarData.revenueExpenses}
+            pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
+          />
+        )}
       </div>
     </div>
   );
@@ -55,9 +50,7 @@ const PageTitle: FC = () => {
 
   return (
     <>
-      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
-        {t("v2.nav.stats")}
-      </h1>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats")}</h1>
       <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.stats.subtitle")}
       </h2>
