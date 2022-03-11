@@ -6,6 +6,7 @@ import { useTranslation } from "next-i18next";
 import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import Ping from "v2/features/connection/Ping";
+import { DocsSelectors } from "v2/store/docs";
 
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
@@ -16,12 +17,14 @@ const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
 interface Props {
   waitForCore?: boolean;
   waitForUserModel?: boolean;
+  waitForDocs?: boolean;
 }
 
-const LoadingIndicator: FC<Props> = ({ waitForCore, waitForUserModel }) => {
+const LoadingIndicator: FC<Props> = ({ waitForCore, waitForDocs, waitForUserModel }) => {
   const { t } = useTranslation("common");
   const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
   const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
+  const docs = useSelector(DocsSelectors.selectDocs);
 
   const isCoreLoading = coreLoadingState !== "fulfilled";
 
@@ -37,6 +40,12 @@ const LoadingIndicator: FC<Props> = ({ waitForCore, waitForUserModel }) => {
         <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={isUserModelLoading} />
           <span>{t("v2.farms.loadingUserModel")}</span>
+        </div>
+      )}
+      {waitForDocs && (
+        <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
+          <LoadStatusIcon isLoading={!docs} />
+          <span>{t("v2.farms.loadingDocs")}</span>
         </div>
       )}
     </div>

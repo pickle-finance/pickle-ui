@@ -1,18 +1,17 @@
 export * from "./format";
+export * from "./render";
 
 export const noop = () => {};
 
 /**
  * Tailwind
  */
-export const classNames = (...classes: any[]) =>
-  classes.filter(Boolean).join(" ");
+export const classNames = (...classes: any[]) => classes.filter(Boolean).join(" ");
 
 /**
  * SWR
  */
-export const fetcher = (...args: [string]) =>
-  fetch(...args).then((res) => res.json());
+export const fetcher = (...args: [string]) => fetch(...args).then((res) => res.json());
 
 /**
  * Responses
