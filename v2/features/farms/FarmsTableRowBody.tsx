@@ -63,6 +63,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const activeNetwork = networks?.find((network) => network.chainId === chainId);
   const isJarOnActiveNetwork = jar.chain === activeNetwork?.name;
   const jarNetwork = networks?.find((network) => network.name === jar.chain);
+  const analyticsUrl: string | undefined = jar.details?.apiKey ? "/v2/stats/jar?jar=" + jar.details.apiKey : undefined;
   return (
     <td
       colSpan={6}
@@ -77,6 +78,11 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           <Link href={jar.depositToken.link} className="font-bold" external primary>
             {t("v2.farms.getToken", { token: jar.depositToken.name })}
           </Link>
+          <br/>
+          {Boolean(analyticsUrl !== undefined) && 
+            <Link href={analyticsUrl as string} className="font-bold" external primary>
+              {t("v2.farms.analytics")}
+            </Link>}
         </div>
         <div className="grow border border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">

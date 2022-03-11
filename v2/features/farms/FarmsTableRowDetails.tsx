@@ -10,7 +10,6 @@ import Button from "v2/components/Button";
 import Link from "v2/components/Link";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
-
 interface Props {
   jar: JarWithData;
 }
@@ -43,7 +42,7 @@ const ComponentRow: FC<ComponentRowProps> = ({ property, value }) => (
 );
 
 const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const allCore = useSelector(CoreSelectors.selectCore);
   const chain = allCore?.chains.find((x) => x.network === jar.chain);
 
@@ -58,7 +57,8 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
     userShare *
     (jar.details.harvestStats?.harvestableUSD || 0) *
     (1 - (chain?.defaultPerformanceFee || 0.2));
-
+  const lang = i18n.language || "en";
+  // Url to fetch is https://api.pickle.finance/prod/protocol/docs/en
   return (
     <Disclosure as={Fragment}>
       {({ open }) => (
@@ -110,7 +110,27 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                     </span>
                   </div>
                 </div>
-                {jar.farm?.farmAddress != NULL_ADDRESS && (
+                {jar.details?.strategyAddr != NULL_ADDRESS && jar.details?.strategyAddr !== undefined && (
+                  <div className="grid grid-cols-3 py-1">
+                    <div>
+                      <span className="font-body font-bold text-foreground-alt-200">
+                        {t("v2.farms.strategyAddress")}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="ml-auto">
+                        <Link
+                          href={`${chain?.explorer}/address/${jar.details?.strategyAddr}`}
+                          external
+                          primary
+                        >
+                          {shortenAddress(jar.details?.strategyAddr!)}
+                        </Link>
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {jar.farm?.farmAddress != NULL_ADDRESS && jar.farm?.farmAddress != undefined && (
                   <div className="grid grid-cols-3 py-1">
                     <div>
                       <span className="font-body font-bold text-foreground-alt-200">

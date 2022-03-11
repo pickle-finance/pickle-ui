@@ -372,6 +372,7 @@
       "farmAddress": "Farm Address",
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
+      "analytics": "Analytics",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "jarAddress": "Jar Address",
@@ -393,6 +394,7 @@
       "ratioTooltip": "The jar's ratio is the amount of underlying deposit tokens per pToken",
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
+      "strategyAddress": "Strategy Address",
       "token": "Token",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "yieldRates": "Yield rates"
