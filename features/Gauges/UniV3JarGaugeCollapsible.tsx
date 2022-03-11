@@ -39,7 +39,7 @@ interface DataProps {
 const Data = styled.div<DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
-  color: ${(props) => (props.isZero ? "#444" : "unset")};
+  color: ${props => (props.isZero ? "#444" : "unset")};
 `;
 
 const Label = styled.div`
@@ -97,10 +97,14 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x4585FE77225b41b697C938B018E2Ac67Ac5a20c0": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/wbtc.png"} />
   ),
+  // PICKLE/WETH 1%
+  "0x11c4D3b9cd07807F455371d56B3899bBaE662788": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/pickle.png"} />
+  ),
 };
 
 function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export const UniV3JarGaugeCollapsible: FC<{
@@ -170,15 +174,15 @@ export const UniV3JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
-  const totalAPY1: number = APYs.map((x) => {
+  const totalAPY1: number = APYs.map(x => {
     return Object.values(x)
-      .filter((x) => !isNaN(x))
+      .filter(x => !isNaN(x))
       .reduce((acc, y) => acc + y, 0);
   }).reduce((acc, x) => acc + x, 0);
   const totalAPR1: number = uncompounded
-    .map((x) => {
+    .map(x => {
       return Object.values(x)
-        .filter((x) => !isNaN(x))
+        .filter(x => !isNaN(x))
         .reduce((acc, y) => acc + y, 0);
     })
     .reduce((acc, x) => acc + x, 0);
@@ -187,7 +191,7 @@ export const UniV3JarGaugeCollapsible: FC<{
   const apyRangeTooltipText = [
     `${t("farms.baseAPRs")}:`,
     `pickle: ${formatAPY(pickleAPYMin)} ~ ${formatAPY(pickleAPYMax)}`,
-    ...APYs.map((x) => {
+    ...APYs.map(x => {
       const k = Object.keys(x)[0];
       const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
@@ -198,19 +202,19 @@ export const UniV3JarGaugeCollapsible: FC<{
       2,
     )}%`,
   ]
-    .filter((x) => x)
+    .filter(x => x)
     .join(` <br/> `);
 
   const yourApyTooltipText = [
     `${t("farms.baseAPRs")}:`,
     `pickle: ${formatAPY(pickleAPY)}`,
-    ...APYs.map((x) => {
+    ...APYs.map(x => {
       const k = Object.keys(x)[0];
       const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
   ]
-    .filter((x) => x)
+    .filter(x => x)
     .join(` <br/> `);
 
   const [deposit0Amount, setDeposit0Amount] = useState("");
@@ -400,11 +404,11 @@ export const UniV3JarGaugeCollapsible: FC<{
   const [approved, setApproved] = useState(false);
 
   useEffect(() => {
-    getProtocolData().then((info) => setTVLData(info));
+    getProtocolData().then(info => setTVLData(info));
   }, []);
 
   const tvlJarData = pickleCore?.assets.jars.filter(
-    (x) =>
+    x =>
       x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   )[0];
   const tvlNum =
@@ -621,7 +625,7 @@ export const UniV3JarGaugeCollapsible: FC<{
               <Link
                 color
                 href="#"
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   setWithdrawAmount(formatEther(deposited));
                 }}
@@ -630,7 +634,7 @@ export const UniV3JarGaugeCollapsible: FC<{
               </Link>
             </div>
             <Input
-              onChange={(e) => setWithdrawAmount(e.target.value)}
+              onChange={e => setWithdrawAmount(e.target.value)}
               value={withdrawAmount}
               width="100%"
             ></Input>
@@ -704,7 +708,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                 <Link
                   color
                   href="#"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault();
                     setUnstakeAmount(formatEther(staked));
                   }}
@@ -713,7 +717,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                 </Link>
               </div>
               <Input
-                onChange={(e) => setUnstakeAmount(e.target.value)}
+                onChange={e => setUnstakeAmount(e.target.value)}
                 value={unstakeAmount}
                 width="100%"
                 type="number"
