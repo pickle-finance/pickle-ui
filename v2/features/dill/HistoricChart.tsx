@@ -69,10 +69,11 @@ const dateFormatter = (time: Date, chartMode: string): string => {
 const monthToDate = (month: number): Date =>
   new Date(`${(month % 12) + 1}/1/${Math.floor(month / 12 + 1970)}`);
 
-const labelFormatter = (month: number, data: any[]): string | ReactNode => {
-  const time = monthToDate(month);
+const labelFormatter = (monthOrDate: any, data: any[]): string | ReactNode => {
   const payload: MonthlyDistributionDataPoint | undefined = data[0]?.payload;
+
   const chartMode = payload?.distributionMonth ? "monthly" : "weekly";
+  const time = chartMode === "monthly" ? monthToDate(monthOrDate) : new Date(monthOrDate);
   const formattedTime = dateFormatter(time, chartMode);
 
   if (payload) {
@@ -246,10 +247,10 @@ const HistoricChart: FC = () => {
             (acc2, curr2, _, { length }) => {
               acc2 = {
                 monthlyPickleAmount: (acc2.monthlyPickleAmount || 0) + curr2.weeklyPickleAmount,
-                totalPickleAmount: curr2.totalPickleAmount,
+                totalPickleAmount: curr2.totalPickleAmount || acc2.totalPickleAmount,
                 monthlyDillAmount: (acc2.monthlyDillAmount || 0) + curr2.weeklyDillAmount,
                 totalDillAmount: curr2.totalDillAmount,
-                pickleDillRatio: curr2.pickleDillRatio,
+                pickleDillRatio: curr2.pickleDillRatio || acc2.pickleDillRatio,
                 isProjected: curr2.isProjected,
                 picklePriceUsd: (acc2.picklePriceUsd || 0) + curr2.picklePriceUsd / length,
                 distributionMonth: curr as number,
@@ -344,8 +345,12 @@ const HistoricChart: FC = () => {
                 fill="rgb(var(--color-primary-dark))"
                 radius={[10, 10, 0, 0]}
               >
-                {dataSeries.map((_, index) => (
-                  <Cell fill="rgb(var(--color-primary-dark))" key={`dill-${index}`} />
+                {dataSeries.map((point, index) => (
+                  <Cell
+                    fill="rgb(var(--color-primary-dark))"
+                    opacity={point.isProjected ? 0.25 : 1}
+                    key={`dill-${index}`}
+                  />
                 ))}
               </Bar>
               <Bar
@@ -353,8 +358,12 @@ const HistoricChart: FC = () => {
                 fill="rgb(var(--color-primary-light))"
                 radius={[10, 10, 0, 0]}
               >
-                {dataSeries.map((_, index) => (
-                  <Cell fill="rgb(var(--color-primary-light))" key={`pickle-${index}`} />
+                {dataSeries.map((point, index) => (
+                  <Cell
+                    fill="rgb(var(--color-primary-light))"
+                    opacity={point.isProjected ? 0.25 : 1}
+                    key={`pickle-${index}`}
+                  />
                 ))}
               </Bar>
               <Line
