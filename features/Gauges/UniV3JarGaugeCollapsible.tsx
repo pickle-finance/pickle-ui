@@ -303,6 +303,7 @@ export const UniV3JarGaugeCollapsible: FC<{
               .deposit(
                 convertDecimals(deposit0Amount, token0?.decimals),
                 convertDecimals(deposit1Amount, token1?.decimals),
+                false //TODO Add a section for true
               );
           },
           approval: false,
@@ -573,6 +574,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                           .deposit(
                             convertDecimals(deposit0Amount, token0?.decimals),
                             convertDecimals(deposit1Amount, token1?.decimals),
+                            false //TODO add a section for true
                           );
                       },
                       approval: false,
