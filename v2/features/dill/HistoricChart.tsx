@@ -104,6 +104,10 @@ const tooltipFormatter = (
       return [formattedDollarValue, t("v2.dill.monthlyPickleAmount")];
     case "monthlyDillAmount":
       return [formattedNumber, t("v2.dill.monthlyDillAmount")];
+    case "weeklyPickleAmount":
+      return [formattedDollarValue, t("v2.dill.weeklyPickleAmount")];
+    case "weeklyDillAmount":
+      return [formattedNumber, t("v2.dill.weeklyDillAmount")];
     case "pickleDillRatio":
       return [`${formattedNumber} (${formatDollarValue(amount, 2)})`, t("v2.dill.pickleDillRatio")];
     default:
@@ -120,6 +124,12 @@ const legendFormatter = (value: string, t: TFunction): ReactNode => {
       break;
     case "monthlyDillAmount":
       result = t("v2.dill.monthlyDillAmount");
+      break;
+    case "weeklyPickleAmount":
+      result = t("v2.dill.weeklyPickleAmount");
+      break;
+    case "weeklyDillAmount":
+      result = t("v2.dill.weeklyDillAmount");
       break;
     case "pickleDillRatio":
       result = t("v2.dill.pickleDillRatio");
@@ -269,7 +279,6 @@ const HistoricChart: FC = () => {
     }
   };
 
-  console.log(dataSeries);
   return (
     <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
