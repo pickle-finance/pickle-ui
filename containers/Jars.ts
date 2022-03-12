@@ -15,8 +15,7 @@ import { ChainNetwork } from "picklefinance-core";
 function useJars() {
   const { chainName } = Connection.useContainer();
   const { jars: rawJars } = useFetchJars();
-  const { jarsWithAPY } = useJarsWithAPYPFCore(chainName, rawJars);
-  const { jarsWithTVL } = useJarWithTVL(jarsWithAPY);
+  const { jarsWithAPY: jarsWithTVL } = useJarsWithAPYPFCore(chainName, rawJars);
   const { pickleCore } = PickleCore.useContainer();
 
   const { addTokens } = Balances.useContainer();

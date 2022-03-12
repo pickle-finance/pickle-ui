@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import fetch from "node-fetch";
-import { PoolData } from "../Jars/usePoolData";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
@@ -15,7 +13,6 @@ export function useProtocolIncome() {
   const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(
     null,
   );
-  const { poolData } = PoolData.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
   const getWeeklyIncome = async () => {
@@ -23,12 +20,15 @@ export function useProtocolIncome() {
       const jars = pickleCore.assets.jars;
       const profit = jars.reduce((acc, currJar: JarDefinition) => {
         const jarTVL = currJar.details?.harvestStats?.balanceUSD || 0;
-        let apr = currJar.aprStats?.components.filter((x)=>x.compoundable).reduce((acc, curr) => {
-          return acc + curr.apr;
-        }, 0);
-        if( apr === undefined )
-          apr = 0;
-        const chain = pickleCore.chains.find((x)=>x.network === currJar.chain);
+        let apr = currJar.aprStats?.components
+          .filter((x) => x.compoundable)
+          .reduce((acc, curr) => {
+            return acc + curr.apr;
+          }, 0);
+        if (apr === undefined) apr = 0;
+        const chain = pickleCore.chains.find(
+          (x) => x.network === currJar.chain,
+        );
         const perfFee = chain ? chain.defaultPerformanceFee : 0.2;
         const subtotal = (jarTVL * apr * 0.01 * perfFee) / 52;
         return acc + subtotal;
@@ -43,7 +43,7 @@ export function useProtocolIncome() {
 
   useEffect(() => {
     getWeeklyIncome();
-  }, [poolData, pickleCore]);
+  }, [pickleCore]);
 
   return {
     weeklyProfit,

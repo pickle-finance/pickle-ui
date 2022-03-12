@@ -19,11 +19,14 @@ export type Jar = {
   jarName: string;
   contract: JarContract;
   protocol: string;
+  stakingProtocol?: string;
   chain: ChainNetwork;
   apiKey: string;
   supply: number;
   isErc20: boolean;
-  ratio: number;
+  tvlUSD: number;
+  usdPerPToken: null | number;
+  ratio: null | number;
 };
 
 export const useFetchJars = (): { jars: Array<Jar> | null } => {
@@ -57,6 +60,8 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       );
 
       const possibleJars: (Jar | undefined)[] = chainJars.map((x) => {
+        const tvlUSD =
+          (x.details?.tokenBalance || 0) * (x.depositToken?.price || 0);
         const z: Jar = {
           depositToken: Erc20Factory.connect(x.depositToken.addr, provider),
           depositTokenName: x.depositToken.name,
@@ -65,10 +70,14 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           contract: JarFactory.connect(x.contract, provider),
           protocol: x.protocol,
           ratio: x.details?.ratio || 0,
+          stakingProtocol: x.stakingProtocol,
           chain: x.chain,
           apiKey: x.details.apiKey,
           supply: x.details.totalSupply || 0,
           isErc20: x.depositToken.style?.erc20 ?? true,
+          tvlUSD,
+          usdPerPToken: tvlUSD / (x.details.totalSupply || 1),
+          ratio: x.details.ratio || 0,
         };
 
         return z;

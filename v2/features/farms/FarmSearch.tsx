@@ -1,10 +1,5 @@
 import React, { FC, useState } from "react";
-import Select, {
-  components,
-  StylesConfig,
-  ControlProps,
-  OptionProps,
-} from "react-select";
+import Select, { components, StylesConfig, ControlProps, OptionProps } from "react-select";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import chroma from "chroma-js";
@@ -120,9 +115,7 @@ const styles: StylesConfig<Filter> = {
   multiValueRemove: (styles, { data }) => ({
     ...styles,
     color:
-      chroma.contrast(data.color, "white") >= 7
-        ? "white"
-        : chroma(data.color).darken(2.5).css(),
+      chroma.contrast(data.color, "white") >= 7 ? "white" : chroma(data.color).darken(2.5).css(),
     ":hover": {
       color: "white",
       backgroundColor: "rgb(var(--color-accent))",
@@ -130,9 +123,7 @@ const styles: StylesConfig<Filter> = {
   }),
   option: (styles, { data, isFocused }) => ({
     ...styles,
-    backgroundColor: isFocused
-      ? "rgb(var(--color-background-lightest))"
-      : undefined,
+    backgroundColor: isFocused ? "rgb(var(--color-background-lightest))" : undefined,
     borderRadius: 10,
     color: data.color,
     transition: "all 200ms ease-in-out",

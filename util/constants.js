@@ -19,6 +19,9 @@ export const noFarms = (chainName) =>
   chainName === ChainNetwork.OKEx ||
   chainName === ChainNetwork.Moonriver ||
   chainName === ChainNetwork.Cronos ||
-  chainName === ChainNetwork.Metis ||
   chainName === ChainNetwork.Moonbeam ||
-  chainName === ChainNetwork.Optimism;
+  chainName === ChainNetwork.Optimism ||
+  chainName === ChainNetwork.Fantom;
+
+export const someFarms = (chainName) => chainName === ChainNetwork.Metis;
+

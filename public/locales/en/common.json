@@ -47,7 +47,8 @@
       "aurora": "Aurora",
       "metis": "Metis",
       "moonbeam": "Moonbeam",
-      "optimism": "Optimism"
+      "optimism": "Optimism",
+      "fantom": "Fantom"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
@@ -196,7 +197,8 @@
     "looksDefault": "Migrate staked {{ amount }} LOOKS to Jar",
     "looksWithdraw": "Withdrawing your staked LOOKS tokens...",
     "looksDeposit": "Depositing in Jar...",
-    "looksSuccess": "Successfully migrated!"
+    "looksSuccess": "Successfully migrated!",
+    "metisPromo": "Earn bonus WBTC <1/> and METIS <3/> rewards until March 21 by staking select Netswap and Tethys WBTC LP jar tokens"
   },
   "gauges": {
     "chartPreview": "View allocation of PICKLE reward weights <1>(based on votes cast by DILL holders)</1>",
@@ -361,33 +363,54 @@
       "totalValueLocked": "Total value locked",
       "unlockDate": "Unlock date",
       "upcomingDistributionDate": "Upcoming distribution date",
-      "upcomingDistributionValue": "Upcoming distribution value"
+      "upcomingDistributionValue": "Upcoming distribution value",
+      "usdValue": "USD Value"
     },
     "farms": {
       "apy": "APY",
+      "apyBreakdown": "APY breakdown",
       "asset": "Asset",
+      "baseApr": "Base APR",
+      "baseAprTooltip": "This is the base APR of the jar, without the effects of compounding",
       "chain": "Chain",
+      "compounding": "Compounding",
+      "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
+      "details": "Details",
       "earned": "Earned",
       "earnedToken": "{{ token }} earned",
       "enable": "Enable",
       "expand": "Expand",
+      "farmAddress": "Farm Address",
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
+      "analytics": "Analytics",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
+      "jarAddress": "Jar Address",
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
       "loadingUserModel": "Loading your balances ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
+      "metamaskAdd": "Add to Metamask",
       "network": "Network",
       "noResults": "No results",
       "notMatchingAllFilters": "Showing farms matching at least one filter",
+      "pagination": "Page {{ current }} of {{ total }}",
+      "pending": "Pending",
+      "pendingTooltip": "This is the USD amount that your deposit is expected to grow upon the next re-investment of rewards",
       "protocol": "Protocol",
+      "pToken": "pTokens represent your appreciating share of the tokens in the Jar",
+      "ratio": "Ratio",
+      "ratioTooltip": "The jar's ratio is the amount of underlying deposit tokens per pToken",
+      "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
-      "token": "Token"
+      "strategyAddress": "Strategy Address",
+      "token": "Token",
+      "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
+      "yieldRates": "Yield rates"
     },
     "gasPrices": {
       "fast": "Fast",
@@ -403,11 +426,67 @@
       "feedback": "Feedback",
       "jarsAndFarms": "Jars & Farms",
       "networkSettings": "Network settings",
+      "next": "Next",
       "openMenu": "Open main menu",
+      "previous": "Prev",
       "stats": "Stats",
       "tokenAddress": "Token address"
     },
     "stats": {
+      "chain": {
+        "assetTableHeaders": {
+          "asset": "Asset",
+          "tvl": "TVL",
+          "tvlChange": "TVL Change WoW",
+          "apyRange": "APY Range"
+        },
+        "assetTableTitle": "Asset Stats",
+        "revsChartTitle": "Daily Revenue",
+        "revenueYLabel": "Revenue (USD)",
+        "tvlChartTitle": "Total Value Locked",
+        "tvlYLabel": "TVL (USD)"
+      },
+      "jar": {
+        "balanceYLabel": "Token Balance",
+        "balanceTooltipUnits": "Tokens",
+        "depositTokenPriceYLabel": "Deposit Token Price (USD)",
+        "depositTokenPriceTooltipUnits": "Tokens",
+        "farmAllocShareYLabel": "Alloc. Share",
+        "farmAllocShareTooltipUnits": "%",
+        "farmPicklePerDayYLabel": "Pickles",
+        "farmPicklePerDayTooltipUnits": "Pickles",
+        "harvestableYLabel": "Harvestable (USD)",
+        "harvestableTooltipUnits": "USD",
+        "pctYield": "Percent Yield",
+        "pctYieldTooltipUnits": "%",
+        "ptokensInFarmYLabel": "Percent",
+        "ptokensInFarmTooltipUnits": "%",
+        "ratioYLabel": "Ratio",
+        "ratioTooltipUnits": "",
+        "revenueYLabel": "Revenue (USD)",
+        "revsTableHeaders": {
+          "date": "Date",
+          "txLink": "Tx Link",
+          "value": "Value"
+        },
+        "revsTableTitle": "Recent Harvests",
+        "tokenPriceVNumYLabelLeft": "No. of Tokens",
+        "tokenPriceVNumYLabelRight": "Token Price (USD)",
+        "valueYLabel": "USD Value",
+        "valueTooltipUnits": "USD"
+      },
+      "platform": {
+        "chainTableHeaders": {
+          "chain": "Chain",
+          "currentRevs": "Current Revs",
+          "revsChange": "Revs Change WoW",
+          "tvl": "TVL",
+          "tvlChange": "TVL Change WoW"
+        },
+        "chainTableTitle": "Chain Stats",
+        "revsChartTitle": "Daily Revenue",
+        "tvlChartTitle": "Total Value Locked"
+      },
       "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol"
     },
     "theme": {
@@ -426,10 +505,12 @@
       "moment": "just a moment",
       "month": "1 month",
       "month_plural": "{{ count }} months",
+      "monthly": "Monthly",
       "second": "1 second",
       "second_plural": "{{ count }} seconds",
       "week": "1 week",
       "week_plural": "{{ count }} weeks",
+      "weekly": "Weekly",
       "year": "1 year",
       "year_plural": "{{ count }} years",
       "year_singular": "year"

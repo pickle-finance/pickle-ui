@@ -1,10 +1,6 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { QueryStatus } from "@reduxjs/toolkit/query";
-import { maxBy } from "lodash";
+import { maxBy, orderBy } from "lodash";
 import {
   AssetEnablement,
   ExternalAssetDefinition,
@@ -14,21 +10,30 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { RootState } from ".";
-import { Filter, FilterType, ControlsSelectors } from "./controls";
+import { Filter, FilterType, ControlsSelectors, SortType } from "./controls";
 import { getNetworks } from "v2/features/connection/networks";
 import { brandColor } from "v2/features/farms/colors";
+import {
+  getUserAssetDataWithPrices,
+  UserAssetDataWithPrices,
+} from "v2/features/farms/FarmsTableRowHeader";
+import { UserSelectors } from "./user";
 
 const apiHost = process.env.apiHost;
 
-export const fetchCore = createAsyncThunk<PickleModelJson>(
-  "core/fetch",
-  async () => {
-    const response = await fetch(`${apiHost}/protocol/pfcore`);
-    return await response.json();
-  },
-);
+export const fetchCore = createAsyncThunk<PickleModelJson>("core/fetch", async () => {
+  const response = await fetch(`${apiHost}/protocol/pfcore`);
+  return await response.json();
+});
 
 type Asset = JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition;
+
+export interface JarWithData extends JarDefinition, UserAssetDataWithPrices {
+  [SortType.Earned]: number | undefined;
+  [SortType.Deposited]: number | undefined;
+  [SortType.Apy]: number | undefined;
+  [SortType.Liquidity]: number | undefined;
+}
 
 interface CoreState {
   data: PickleModelJson | undefined;
@@ -128,9 +133,7 @@ const selectEnabledJars = (state: RootState) => {
 
   if (data === undefined) return [];
 
-  return data.assets.jars.filter(
-    (jar) => jar.enablement === AssetEnablement.ENABLED,
-  );
+  return data.assets.jars.filter((jar) => jar.enablement === AssetEnablement.ENABLED);
 };
 
 const selectFilteredAssets = createSelector(
@@ -167,6 +170,57 @@ const selectFilteredAssets = createSelector(
   },
 );
 
+/**
+ * This allows us to use the same selector on Farms page where we want filtered, paginated
+ * results, and on the dashboard page where we want all joined farms.
+ */
+interface MakeJarsSelectorOpts {
+  filtered?: boolean;
+  paginated?: boolean;
+}
+
+const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
+  const selectJarsFunction = options.filtered ? selectFilteredAssets : selectEnabledJars;
+
+  return createSelector(
+    selectJarsFunction,
+    selectCore,
+    ControlsSelectors.selectPaginateParams,
+    ControlsSelectors.selectSort,
+    UserSelectors.selectData,
+    (jars, allCore, pagination, sort, userModel) => {
+      // Sort first, and then compute pagination
+      let jarsWithData: JarWithData[] = jars.map((jar) => {
+        const data = getUserAssetDataWithPrices(jar, allCore, userModel);
+        const deposited = data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
+        const earned = data.earnedPickles.tokensUSD || 0;
+        const apy = jar.aprStats?.apy || 0;
+        const liquidity = jar.details.harvestStats?.balanceUSD || 0;
+        return {
+          ...jar,
+          ...data,
+          deposited,
+          earned,
+          apy,
+          liquidity,
+        };
+      });
+
+      if (sort && sort.type != SortType.None) {
+        jarsWithData = orderBy(jarsWithData, [sort.type], [sort.direction]);
+      }
+
+      if (options.paginated) {
+        const { offset, itemsPerPage } = pagination;
+        const endOffset = offset + itemsPerPage;
+        return jarsWithData.slice(offset, endOffset);
+      }
+
+      return jarsWithData;
+    },
+  );
+};
+
 const selectMaxApy = (state: RootState) => {
   const { data } = state.core;
 
@@ -186,8 +240,7 @@ const selectMaxApy = (state: RootState) => {
 
       return {
         name: jar.depositToken.name,
-        chain: data.chains.find((chain) => chain.network === jar.chain)!
-          .networkVisible,
+        chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
         apy: apy + farmApr,
       };
     });
@@ -211,6 +264,7 @@ const selectPrices = (state: RootState) => state.core.data?.prices;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
 export const CoreSelectors = {
+  makeJarsSelector,
   selectCore,
   selectEnabledJars,
   selectFilteredAssets,
