@@ -352,7 +352,9 @@
       "unlockDate": "Unlock date",
       "upcomingDistributionDate": "Upcoming distribution date",
       "upcomingDistributionValue": "Upcoming distribution value",
-      "usdValue": "USD Value"
+      "usdValue": "USD Value",
+      "weeklyDillAmount": "Weekly DILL 🔒",
+      "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
       "apy": "APY",
