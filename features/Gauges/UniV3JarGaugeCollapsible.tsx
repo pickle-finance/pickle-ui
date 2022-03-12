@@ -138,8 +138,6 @@ export const UniV3JarGaugeCollapsible: FC<{
       : ethToken.none;
 
   const depositBuilder = () => {
-    console.log("token0: ", token0.address);
-    console.log("token1: ", token1.address);
     if (useEth) return defaultDeposit();
     else {
       switch (isEthToken) {
