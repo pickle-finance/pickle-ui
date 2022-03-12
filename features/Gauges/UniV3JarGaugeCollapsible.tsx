@@ -301,8 +301,8 @@ export const UniV3JarGaugeCollapsible: FC<{
             return jarContract
               .connect(signer)
               .deposit(
-                convertDecimals(deposit0Amount),
-                convertDecimals(deposit1Amount),
+                convertDecimals(deposit0Amount, token0?.decimals),
+                convertDecimals(deposit1Amount, token1?.decimals),
               );
           },
           approval: false,
@@ -342,7 +342,8 @@ export const UniV3JarGaugeCollapsible: FC<{
     }
   };
 
-  const convertDecimals = (num: string) => ethers.utils.parseEther(num);
+  const convertDecimals = (num: string, decimals: number) =>
+    ethers.utils.parseUnits(num, decimals);
 
   useEffect(() => {
     if (jarData && !isExitBatch) {
@@ -539,6 +540,7 @@ export const UniV3JarGaugeCollapsible: FC<{
         >
           <TokenInput
             token={token0}
+            otherToken={token1}
             isToken0={true}
             setDepositThisAmount={setDeposit0Amount}
             setDepositOtherAmount={setDeposit1Amount}
@@ -548,6 +550,7 @@ export const UniV3JarGaugeCollapsible: FC<{
           />
           <TokenInput
             token={token1}
+            otherToken={token0}
             isToken0={false}
             setDepositThisAmount={setDeposit1Amount}
             setDepositOtherAmount={setDeposit0Amount}
@@ -568,8 +571,8 @@ export const UniV3JarGaugeCollapsible: FC<{
                         return jarContract
                           .connect(signer)
                           .deposit(
-                            convertDecimals(deposit0Amount),
-                            convertDecimals(deposit1Amount),
+                            convertDecimals(deposit0Amount, token0?.decimals),
+                            convertDecimals(deposit1Amount, token1?.decimals),
                           );
                       },
                       approval: false,

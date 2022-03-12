@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
 import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
@@ -11,6 +11,7 @@ import { Connection } from "containers/Connection";
 
 export const TokenInput: FC<{
   token: UniV3Token;
+  otherToken: UniV3Token;
   isToken0: boolean;
   setDepositThisAmount: any;
   setDepositOtherAmount: any;
@@ -19,6 +20,7 @@ export const TokenInput: FC<{
   jarAddr: string;
 }> = ({
   token,
+  otherToken,
   isToken0,
   setDepositThisAmount,
   setDepositOtherAmount,
@@ -53,12 +55,13 @@ export const TokenInput: FC<{
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            setDepositThisAmount(formatEther(balanceUsed));
+            setDepositThisAmount(formatUnits(balanceUsed, token?.decimals));
             setDepositOtherAmount(
-              formatEther(
+              formatUnits(
                 isToken0
                   ? balanceUsed.mul(proportion).div(parseEther("1"))
                   : balanceUsed.mul(parseEther("1")).div(proportion),
+                  otherToken?.decimals,
               ),
             );
           }}
@@ -96,14 +99,15 @@ export const TokenInput: FC<{
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
               setDepositOtherAmount(
-                formatEther(
+                formatUnits(
                   isToken0
-                    ? parseEther(e.target.value)
+                    ? parseUnits(e.target.value, token?.decimals)
                         .mul(proportion)
                         .div(parseEther("1"))
-                    : parseEther(e.target.value)
+                    : parseUnits(e.target.value, token?.decimals)
                         .mul(parseEther("1"))
                         .div(proportion),
+                        otherToken?.decimals,
                 ),
               );
             }}
