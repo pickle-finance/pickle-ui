@@ -18,6 +18,7 @@ export const TokenInput: FC<{
   proportion: BigNumber;
   depositAmount: string;
   jarAddr: string;
+  setUseEth: any;
 }> = ({
   token,
   otherToken,
@@ -27,6 +28,7 @@ export const TokenInput: FC<{
   proportion,
   depositAmount,
   jarAddr,
+  setUseEth,
 }) => {
   const { signer, address, blockNum } = Connection.useContainer();
   const ethOptions = ["ETH", "WETH"];
@@ -61,7 +63,7 @@ export const TokenInput: FC<{
                 isToken0
                   ? balanceUsed.mul(proportion).div(parseEther("1"))
                   : balanceUsed.mul(parseEther("1")).div(proportion),
-                  otherToken?.decimals,
+                otherToken?.decimals,
               ),
             );
           }}
@@ -78,17 +80,12 @@ export const TokenInput: FC<{
               value={inputToken}
               onChange={(e) => {
                 setInputToken(e.toString());
+                setUseEth(ethSelected);
               }}
             >
               {ethOptions.map((token) => (
-                <Select.Option
-                  style={{ fontSize: "1rem" }}
-                  value={token}
-                  key={token}
-                >
-                  <div style={{ display: `flex`, alignItems: `center` }}>
-                    {token}
-                  </div>
+                <Select.Option style={{ fontSize: "1rem" }} value={token} key={token}>
+                  <div style={{ display: `flex`, alignItems: `center` }}>{token}</div>
                 </Select.Option>
               ))}
             </Select>
@@ -107,7 +104,7 @@ export const TokenInput: FC<{
                     : parseUnits(e.target.value, token?.decimals)
                         .mul(parseEther("1"))
                         .div(proportion),
-                        otherToken?.decimals,
+                  otherToken?.decimals,
                 ),
               );
             }}
@@ -118,11 +115,7 @@ export const TokenInput: FC<{
                 depositTokenAddr={token.address}
                 jarAddr={jarAddr}
                 signer={signer}
-                approved={
-                  (isEth && inputToken === ethOptions[0]) ||
-                  token.approved ||
-                  userApproved
-                }
+                approved={(isEth && inputToken === ethOptions[0]) || token.approved || userApproved}
                 setUserApproved={setUserApproved}
               />
             }

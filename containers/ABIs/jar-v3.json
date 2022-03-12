@@ -141,7 +141,18 @@
     {
       "inputs": [
         { "internalType": "uint256", "name": "token0Amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "token1Amount", "type": "uint256" }
+        { "internalType": "uint256", "name": "token1Amount", "type": "uint256" },
+      ],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "token0Amount", "type": "uint256" },
+        { "internalType": "uint256", "name": "token1Amount", "type": "uint256" },
+        { "internalType": "bool", "name": "swap", "type": "bool" }
       ],
       "name": "deposit",
       "outputs": [],
@@ -378,4 +389,3 @@
       "type": "function"
     }
   ]
-  
