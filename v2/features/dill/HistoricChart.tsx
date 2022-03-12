@@ -224,7 +224,7 @@ const HistoricChart: FC = () => {
   const [dataSeries, setDataSeries] = useState<
     MonthlyDistributionDataPoint[] | WeeklyFeeDistributionDataPoint[]
   >([]);
-  const [chartMode, setChartMode] = useState<ChartMode>("weekly");
+  const [chartMode, setChartMode] = useState<ChartMode>("monthly");
 
   useEffect(() => {
     fetchFeeDistributionSeries(chartMode);
@@ -269,6 +269,7 @@ const HistoricChart: FC = () => {
     }
   };
 
+  console.log(dataSeries);
   return (
     <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
@@ -297,7 +298,7 @@ const HistoricChart: FC = () => {
                 padding={{ top: 50 }}
                 tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
                 type="number"
-                domain={[0, 300000]}
+                domain={[-3000, 250000]}
                 tickCount={9}
               >
                 <Label
