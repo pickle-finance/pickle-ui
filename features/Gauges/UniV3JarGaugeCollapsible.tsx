@@ -5,7 +5,8 @@ import { Trans, useTranslation } from "next-i18next";
 import React, { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
-
+import { withStyles } from "@material-ui/core/styles";
+import Switch from "@material-ui/core/Switch";
 import { Connection } from "../../containers/Connection";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
@@ -13,6 +14,7 @@ import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useDill } from "../../containers/Dill";
+import { backgroundColor, pickleGreen } from "../../util/constants";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
 import { getFormatString } from "./GaugeInfo";
@@ -98,6 +100,23 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const isFrax = (depositToken: string) =>
+  depositToken === "0x97e7d56A0408570bA1a7852De36350f7713906ec";
+
+export const GreenSwitch = withStyles({
+  switchBase: {
+    color: backgroundColor,
+    "&$checked": {
+      color: pickleGreen,
+    },
+    "&$checked + $track": {
+      backgroundColor: pickleGreen,
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
+
 export const UniV3JarGaugeCollapsible: FC<{
   jarData: UserJarData;
   gaugeData: UserGaugeDataWithAPY;
@@ -144,17 +163,27 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token0:
           return jarContract
             .connect(signer)
-            .deposit("0", convertDecimals(deposit1Amount, token1?.decimals), false, {
-              value: parseEther(deposit0Amount),
-              gasLimit: 850000,
-            });
+            .deposit(
+              "0",
+              convertDecimals(deposit1Amount, token1?.decimals),
+              ...(isFrax(depositToken.address) ? [shouldZap] : []),
+              {
+                value: parseEther(deposit0Amount),
+                gasLimit: 850000,
+              },
+            );
         case ethToken.token1:
           return jarContract
             .connect(signer)
-            .deposit(convertDecimals(deposit0Amount, token0?.decimals), "0", false, {
-              value: parseEther(deposit1Amount),
-              gasLimit: 850000,
-            });
+            .deposit(
+              convertDecimals(deposit0Amount, token0?.decimals),
+              "0",
+              ...(isFrax(depositToken.address) ? [shouldZap] : []),
+              {
+                value: parseEther(deposit1Amount),
+                gasLimit: 850000,
+              },
+            );
         case ethToken.none:
         default:
           return defaultDeposit();
@@ -168,7 +197,7 @@ export const UniV3JarGaugeCollapsible: FC<{
       .deposit(
         convertDecimals(deposit0Amount, token0?.decimals),
         convertDecimals(deposit1Amount, token1?.decimals),
-        false,
+        ...(isFrax(depositToken.address) ? [shouldZap] : []),
         { gasLimit: 850000 },
       );
 
@@ -256,6 +285,7 @@ export const UniV3JarGaugeCollapsible: FC<{
 
   const [deposit0Amount, setDeposit0Amount] = useState("");
   const [deposit1Amount, setDeposit1Amount] = useState("");
+  const [shouldZap, setShouldZap] = useState<boolean>(isFrax(depositToken.address) ? false : true);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
@@ -367,7 +397,8 @@ export const UniV3JarGaugeCollapsible: FC<{
     }
   };
 
-  const convertDecimals = (num: string, decimals: number) => ethers.utils.parseUnits(num, decimals);
+  const convertDecimals = (num: string, decimals: number | undefined) =>
+    ethers.utils.parseUnits(num, decimals || 18);
 
   useEffect(() => {
     if (jarData && !isExitBatch) {
@@ -515,6 +546,7 @@ export const UniV3JarGaugeCollapsible: FC<{
             depositAmount={deposit0Amount}
             jarAddr={jarContract.address}
             setUseEth={setUseEth}
+            shouldZap={shouldZap}
           />
           <TokenInput
             token={token1}
@@ -526,7 +558,14 @@ export const UniV3JarGaugeCollapsible: FC<{
             depositAmount={deposit1Amount}
             jarAddr={jarContract.address}
             setUseEth={setUseEth}
+            shouldZap={shouldZap}
           />
+          {!isFrax(depositToken.address) && (
+            <>
+              <GreenSwitch checked={shouldZap} onChange={() => setShouldZap(!shouldZap)} />
+              {t("farms.shouldZap")}
+            </>
+          )}
           <Grid.Container gap={1}>
             <Grid xs={24} md={12}>
               <Button
@@ -607,7 +646,9 @@ export const UniV3JarGaugeCollapsible: FC<{
                     token: jarContract.address,
                     recipient: jarContract.address,
                     transferCallback: async () => {
-                      return jarContract.connect(signer).withdraw(convertDecimals(withdrawAmount));
+                      return jarContract
+                        .connect(signer)
+                        .withdraw(convertDecimals(withdrawAmount, 18));
                     },
                     approval: false,
                   });
@@ -711,9 +752,9 @@ export const UniV3JarGaugeCollapsible: FC<{
                         recipient: gaugeDepositToken.address,
                         approval: false,
                         transferCallback: async () => {
-                          return convertDecimals(unstakeAmount).eq(staked)
+                          return convertDecimals(unstakeAmount, 18).eq(staked)
                             ? gauge.exit()
-                            : gauge.withdraw(convertDecimals(unstakeAmount));
+                            : gauge.withdraw(convertDecimals(unstakeAmount, 18));
                         },
                       });
                     }

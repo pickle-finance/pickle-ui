@@ -19,6 +19,7 @@ export const TokenInput: FC<{
   depositAmount: string;
   jarAddr: string;
   setUseEth: any;
+  shouldZap: boolean;
 }> = ({
   token,
   otherToken,
@@ -29,6 +30,7 @@ export const TokenInput: FC<{
   depositAmount,
   jarAddr,
   setUseEth,
+  shouldZap,
 }) => {
   const { signer, address, blockNum } = Connection.useContainer();
   const ethOptions = ["ETH", "WETH"];
@@ -58,14 +60,15 @@ export const TokenInput: FC<{
           onClick={(e) => {
             e.preventDefault();
             setDepositThisAmount(formatUnits(balanceUsed, token?.decimals));
-            setDepositOtherAmount(
-              formatUnits(
-                isToken0
-                  ? balanceUsed.mul(proportion).div(parseEther("1"))
-                  : balanceUsed.mul(parseEther("1")).div(proportion),
-                otherToken?.decimals,
-              ),
-            );
+            !shouldZap &&
+              setDepositOtherAmount(
+                formatUnits(
+                  isToken0
+                    ? balanceUsed.mul(proportion).div(parseEther("1"))
+                    : balanceUsed.mul(parseEther("1")).div(proportion),
+                  otherToken?.decimals,
+                ),
+              );
           }}
         >
           {t("balances.max")}
@@ -95,18 +98,6 @@ export const TokenInput: FC<{
           <Input
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
-              setDepositOtherAmount(
-                formatUnits(
-                  isToken0
-                    ? parseUnits(e.target.value, token?.decimals)
-                        .mul(proportion)
-                        .div(parseEther("1"))
-                    : parseUnits(e.target.value, token?.decimals)
-                        .mul(parseEther("1"))
-                        .div(proportion),
-                  otherToken?.decimals,
-                ),
-              );
             }}
             value={depositAmount}
             width="100%"

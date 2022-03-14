@@ -181,6 +181,7 @@
     "ratio": "Ratio",
     "showInactive": "Show Inactive",
     "showMyJars": "Show My Jars",
+    "shouldZap": "Zap to correct ratio",
     "stake": "Stake",
     "stakeUnstaked": "Stake Unstaked {{ amount }} Tokens in Farm",
     "staking": "Staking...",
