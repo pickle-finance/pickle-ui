@@ -2,9 +2,9 @@ import fetch from "node-fetch";
 
 const pickleApi = process.env.apiHost;
 const getJarChartData = async (asset) => {
-    return await fetch(
-      `${pickleApi}/chart/jar/${asset}?count=4400`,
-    ).then((response) => response.json());
+  return await fetch(
+    `${pickleApi}/chart/jar/${asset}?count=4400`,
+  ).then((response) => response.json());
 };
 
 export const getJarChart = async (assets) => {
@@ -54,12 +54,6 @@ export const getUserEarnings = async (userId) => {
       }
       return response.json();
     },
-  );
-};
-
-export const getPoolData = async () => {
-  return await fetch(`${pickleApi}/protocol/pools`).then((response) =>
-    response.json(),
   );
 };
 

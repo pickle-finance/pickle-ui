@@ -7,10 +7,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
 import ReactHtmlParser from "react-html-parser";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer, Status as ERC20TransferStatus } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
@@ -20,10 +17,7 @@ import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import {
-  getRatioStringAndPendingString,
-  RatioAndPendingStrings,
-} from "./JarMiniFarmCollapsible";
+import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
 
 interface DataProps {
   isZero?: boolean;
@@ -47,6 +41,119 @@ const JarName = styled(Grid)({
   display: "flex",
 });
 
+// For protocols that share the same deposit token
+export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
+  [key: string]: { [apiKey: string]: string | ReactNode };
+} = {
+  // BOO FTM-BOO
+  "0xec7178f4c41f346b2721907f5cf7628e388a7a58": {
+    "LQDR-BOO-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmboo.png"} />
+    ),
+    "BOO-FTM-BOO": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmboo.png"} />
+    ),
+  },
+  // BOO FTM-DAI
+  "0xe120ffbda0d14f3bb6d6053e90e63c572a66a428": {
+    "LQDR-BOO-DAI-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmdai.png"} />
+    ),
+    "BOO-FTM-DAI": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmdai.png"} />
+    ),
+  },
+  // BOO FTM-USDT
+  "0x5965e53aa80a0bcf1cd6dbdd72e6a9b2aa047410": {
+    "LQDR-BOO-USDT-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />
+    ),
+    "BOO-USDT-FTM": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmusdt.png"} />
+    ),
+  },
+  // BOO FTM-SUSHI
+  "0xf84e313b36e86315af7a06ff26c8b20e9eb443c3": {
+    "LQDR-BOO-SUSHI-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
+    ),
+    "BOO-FTM-SUSHI": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmsushi.png"} />
+    ),
+  },
+  // BOO FTM-MIM
+  "0x6f86e65b255c9111109d2d2325ca2dfc82456efc": {
+    "LQDR-BOO-MIM-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmmim.png"} />
+    ),
+    "BOO-FTM-MIM": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmmim.png"} />
+    ),
+  },
+  // BOO FTM-USDC
+  "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c": {
+    "LQDR-BOO-USDC-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+    ),
+    "BOO-USDC-FTM": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+    ),
+  },
+  // BOO FTM-LINK
+  "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29": {
+    "LQDR-BOO-LINK-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmlink.png"} />
+    ),
+    "BOO-FTM-LINK": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmlink.png"} />
+    ),
+  },
+  // BOO FTM-ETH
+  "0xf0702249f4d3a25cd3ded7859a165693685ab577": {
+    "LQDR-BOO-ETH-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+    ),
+    "BOO-FTM-ETH": (
+      <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+    ),
+  },
+  // SPIRIT FTM-SPIRIT
+  "0x30748322b6e34545dbe0788c421886aeb5297789": {
+    "LQDR-SPIRIT-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/spiritftm.png"} />
+    ),
+    "SPIRIT-FTM-SPIRIT": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/spiritftm.png"} />
+    ),
+  },
+  // SPIRIT FTM-LQDR
+  "0x4fe6f19031239f105f753d1df8a0d24857d0caa2": {
+    "LQDR-SPIRIT-LQDR-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+    ),
+    "SPIRIT-FTM-LQDR": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+    ),
+  },
+  // SPIRIT FTM-FRAX
+  "0x7ed0cddb9bb6c6dfea6fb63e117c8305479b8d7d": {
+    "LQDR-SPIRIT-FRAX-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/fraxftm.png"} />
+    ),
+    "SPIRIT-FTM-FRAX": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/fraxftm.png"} />
+    ),
+  },
+  // SPIRIT FTM-DEUS
+  "0x2599eba5fd1e49f294c76d034557948034d6c96e": {
+    "LQDR-SPIRIT-DEUS-FTM": (
+      <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/deusftm.png"} />
+    ),
+    "SPIRIT-FTM-DEUS": (
+      <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/deusftm.png"} />
+    ),
+  },
+};
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
 } = {
@@ -449,6 +556,280 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
   ),
+
+  // Fantom
+
+  //BOO FTM-ICE
+  "0x623ee4a7f290d11c11315994db70fb148b13021d": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmice.png"} />
+  ),
+  //BOO FTM-SPELL
+  "0x78f82c16992932efdd18d93f889141ccf326dbc2": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmspell.png"} />
+  ),
+  //BOO CRV-FTM
+  "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/crvftm.png"} />
+  ),
+  //BOO FTM-AVAX
+  "0x5df809e410d9cc577f0d01b4e623c567c7ad56c1": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmavax.png"} />
+  ),
+  //BOO FTM-ETH
+  "0xf0702249f4d3a25cd3ded7859a165693685ab577": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+  ),
+  //BOO FTM-BNB
+  "0x956de13ea0fa5b577e4097be837bf4ac80005820": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmbnb.png"} />
+  ),
+  //BOO YFI-ETH
+  "0x0845c0bfe75691b1e21b24351aac581a7fb6b7df": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/yfieth.png"} />
+  ),
+  //BOO FTM-TREEB
+  "0xe8b72a866b8d59f5c13d2adef96e40a3ef5b3152": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmtreeb.png"} />
+  ),
+  //BOO FTM-ANY
+  "0x5c021d9cfad40aafc57786b409a9ce571de375b4": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmany.png"} />
+  ),
+  //BOO FTM-MATIC
+  "0x7051c6f0c1f1437498505521a3bd949654923fe1": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmatic.png"} />
+  ),
+  //BOO FTM-BTC
+  "0xfdb9ab8b9513ad9e419cf19530fee49d412c3ee3": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/tokens/ftmbtc.png"} />
+  ),
+  //BOO BTC-ETH
+  "0xec454eda10accdd66209c57af8c12924556f3abd": (
+    <LpIcon swapIconSrc={"/protocols/spookyswap.png"} tokenIconSrc={"/ethbtc.png"} />
+  ),
+  //LQDR SPIRIT MIM-FTM
+  "0xb32b31dfafbd53e310390f641c7119b5b9ea0488": (
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/mimftm.png"} />
+  ),
+  //LQDR SPIRIT USDC-FTM
+  "0xe7e90f5a767406eff87fdad7eb07ef407922ec1d": (
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+  ),
+  //LQDR SPIRIT PILLS-FTM
+  "0x9c775d3d66167685b2a3f4567b548567d2875350": (
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/pillftm.png"} />
+  ),
+  //LQDR SPIRIT ETH-FTM
+  "0x613bf4e46b4817015c01c6bb31c7ae9edaadc26e": (
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/ftmeth.png"} />
+  ),
+  //LQDR SPIRIT DEI-USDC
+  "0x8efd36aa4afa9f4e157bec759f1744a7febaea0e": (
+    <LpIcon swapIconSrc={"/protocols/liquiddriver.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
+  ),
+  //BEETS FTM-BEETS
+  "0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1": (
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/ftmbeets.png"} />
+  ),
+  //BEETS BTC-ETH-FTM
+  "0xd47d2791d3b46f9452709fa41855a045304d6f9d": (
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/ftmethbtc.png"} />
+  ),
+  //BEETS LQDR-FTM
+  "0x5e02ab5699549675a6d3beeb92a62782712d0509": (
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/lqdrftm.png"} />
+  ),
+  //BEETS FTM-MATIC-SOL-AVAX-LUNA-BNB
+  "0x9af1f0e9ac9c844a4a4439d446c1437807183075": (
+    <LpIcon
+      swapIconSrc={"/protocols/beethovenx.png"}
+      tokenIconSrc={"/tokens/ftmmaticsolavaxlunabnb.png"}
+    />
+  ),
+  //BEETS FTM-USDC
+  "0xcdf68a4d525ba2e90fe959c74330430a5a6b8226": (
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/usdcftm.png"} />
+  ),
+  //BEETS USDC-DAI-MAI
+  "0x2c580c6f08044d6dfaca8976a66c8fadddbd9901": (
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/usdcdaimai.png"} />
+  ),
+  //BEETS USDC-FTM-BTC-ETH
+  "0xf3a602d30dcb723a74a0198313a7551feaca7dac": (
+    <LpIcon swapIconSrc={"/protocols/beethovenx.png"} tokenIconSrc={"/tokens/usdcftmbtceth.png"} />
+  ),
+  // SPIRIT FTM-TREEB
+  "0x2ceff1982591c8b0a73b36d2a6c2a6964da0e869": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmtreeb.png"} />
+  ),
+  // SPIRIT FTM-MAI
+  "0x51eb93ecfeffbb2f6fe6106c4491b5a0b944e8bd": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmmai.png"} />
+  ),
+  // SPIRIT FTM-CRE8R
+  "0x459e7c947e04d73687e786e4a48815005dfbd49a": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmcre8r.png"} />
+  ),
+  // SPIRIT FTM-BIFI
+  "0xc28cf9aebfe1a07a27b3a4d722c841310e504fe3": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/ftmbifi.png"} />
+  ),
+  // SPIRIT GSCARAB-SCARAB
+  "0x8e38543d4c764dbd8f8b98c73407457a3d3b4999": (
+    <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/gscarabscarab.png"} />
+  ),
+  // SOLIDEX VOLATILE FTM-SEX
+  "0xfcec86af8774d69e2e4412b8de3f4abf1f671ecc": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
+  ),
+  // SOLIDEX STABLE USDC-MIM
+  "0xbcab7d083cf6a01e0dda9ed7f8a02b47d125e682": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-TOMB
+  "0x60a861cd30778678e3d613db96139440bd333143": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmtomb.png"} />
+  ),
+  // SOLIDEX VOLATILE CRV-WFTM
+  "0xed7fd242ce91a541abcae52f3d617daca7fe6e34": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE FSX-FRAX
+  "0x4bbd8467ccd49d5360648ce14830f43a7feb6e45": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-OXD
+  "0xeafb5ae6eea34954ee5e5a27b068b8705ce926a6": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcoxd.png"} />
+  ),
+  // SOLIDEX VOLATILE YFI-WOOFY
+  "0x4b3a172283ecb7d07ab881a9443d38cb1c98f4d0": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-SYN
+  "0xb1b3b96cf35435b2518093acd50e02fe03a0131f": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-YFI
+  "0xea5f4ecf6900833f9b7038e5d8d67142abb09dcc": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
+  ),
+  // SOLIDEX VOLATILE OATH-WFTM
+  "0x6b987e02ca5eae26d8b2bcac724d4e03b3b0c295": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/oathwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-MULTI
+  "0x94be7e51efe2a0c06c2281b6b385fcd12c84d6f9": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
+  ),
+  // SOLIDEX STABLE SOLIDSEX-SOLID
+  "0x62e2819dd417f3b430b6fa5fd34a49a377a02ac8": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
+  ),
+  // SOLIDEX VOLATILE LQDR-WFTM
+  "0x9861b8a9acc9b4f249981164bfe7f84202068bfe": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE HND-WFTM
+  "0x6aae93f2915b899e87b49a9254434d36ac9570d8": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE IB-WFTM
+  "0x304b61f3481c977ffbe630b55f2abeee74792664": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-GEIST
+  "0xae885ef155f2835dce9c66b0a7a3a0c8c0622aa1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
+  ),
+  // SOLIDEX VOLATILE BIFI-MAI
+  "0x8aeb0503e13f7bea02f80986a8fdb2acce5c6b6c": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/bifimai.png"} />
+  ),
+  // SOLIDEX VOLATILE CRV-G3CRV
+  "0x6ca598726d7c9ed382a101789c5f086f7165efa1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-BEFTM
+  "0x387a11d161f6855bd3c801ba6c79fe9b824ce1f3": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmbeftm.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SOLIDSEX
+  "0xa66901d1965f5410deeb4d0bb43f7c1b628cb20b": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolidsex.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-FRAX
+  "0x9ae95682bde174993ecb818cc23e8607d2e54667": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmfrax.png"} />
+  ),
+  // SOLIDEX STABLE USDC-DAI
+  "0xc0240ee4405f11efb87a00b432a8be7b7afc97cc": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdai.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SYN
+  "0x8aa410d8b0cc3de48aac8eb5d928646a00e6ff04": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
+  ),
+  // SOLIDEX VOLATILE TAROT-XTAROT
+  "0x4fe782133af0f7604b9b89bf95893adde265fefd": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
+  ),
+  // SOLIDEX STABLE USDC-DEI
+  "0x5821573d8f04947952e76d94f3abc6d7b43bf8d0": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/uscddei.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-RDL
+  "0x5ef8f0bd4f071b0199603a28ec9343f3651999c0": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
+  ),
+  // SOLIDEX VOLATILE G3CRV-GEIST
+  "0x6c90b69af6dbd929458497a8d1013aa255ac71f1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/g3crvgeist.png"} />
+  ),
+  // SOLIDEX VOLATILE CRV-G3CRV
+  "0x817caff2dac62bdcce1ebe332ca128215dbd9e9a": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-WFTM
+  "0xbad7d3df8e1614d985c3d9ba9f6ecd32ae7dc20a": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcwftm.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-RAINSPIRIT
+  "0xca395560b6003d921d9408af011c6c61399f66ca": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-LINSPIRIT
+  "0xd6be7592e5c424623c8c9557738970ae19ab5de2": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritlinspirit.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SOLID
+  "0xe4bc39fdd4618a76f6472079c329bdfa820afa75": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-SINSPIRIT
+  "0x742c384d6edec91466042ba84e5e751c4eaff962": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
+  ),
+  // SOLIDEX STABLE SPIRIT-BINSPIRIT
+  "0xa7ea870dc93ffb712ca74b43efca9b07556d1303": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritbinspirit.png"} />
+  ),
+  // SOLIDEX VOLATILE USDC-DAI
+  "0x4e9b80f91e954ae532ff765822fcb5a6bc36caa6": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdai.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-SCREAM
+  "0x86dd79265814756713e631dde7e162bdd538b7b1": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
+  ),
+  // SOLIDEX VOLATILE WFTM-TAROT
+  "0x783f1edbe336981dfcb74bd0b803655f55aadf48": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
+  ),
+  // SOLIDEX VOLATILE CRE8R-BOMB
+  "0x6058345a4d8b89ddac7042be08091f91a404b80b": (
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/renbtc.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -508,12 +889,10 @@ export const JarCollapsible: FC<{
 
   const isUsdc = isUsdcToken(depositToken.address);
 
-  const uncompounded = APYs?.map((x) => {
+  let uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
     const shouldNotUncompound = k === "pickle" || k === "lp";
-    const v = shouldNotUncompound
-      ? Object.values(x)[0]
-      : uncompoundAPY(Object.values(x)[0]);
+    const v = shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]);
     const ret: JarApy = {};
     ret[k] = v;
     return ret;
@@ -524,7 +903,11 @@ export const JarCollapsible: FC<{
       return Object.values(x).reduce((acc, y) => acc + y, 0);
     })
     .reduce((acc, x) => acc + x, 0);
-  const difference = totalAPY - totalAPR;
+  let difference = totalAPY - totalAPR;
+
+  if (!uncompounded) {
+    uncompounded = [{ lp: 0 }];
+  }
 
   const tooltipText = [
     `${t("farms.baseAPRs")}:`,
@@ -536,16 +919,12 @@ export const JarCollapsible: FC<{
     ,
     `${t(
       "farms.compounding",
-    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(
-      2,
-    )}%`,
+    )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`,
   ]
     .filter((x) => x)
     .join(" <br/> ");
 
-  const balNum = parseFloat(
-    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
-  );
+  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
@@ -558,9 +937,7 @@ export const JarCollapsible: FC<{
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const depositedUnderlyingStr = (
-    parseFloat(
-      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-    ) * ratio
+    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
@@ -590,24 +967,11 @@ export const JarCollapsible: FC<{
   const { signer, chainName } = Connection.useContainer();
 
   useEffect(() => {
-    const dStatus = getTransferStatus(
-      depositToken.address,
-      jarContract.address,
-    );
+    const dStatus = getTransferStatus(depositToken.address, jarContract.address);
     const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
-    setButtonStatus(
-      dStatus,
-      t("farms.depositing"),
-      t("farms.deposit"),
-      setDepositButton,
-    );
-    setButtonStatus(
-      wStatus,
-      t("farms.withdrawing"),
-      t("farms.withdraw"),
-      setWithdrawButton,
-    );
+    setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
+    setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
   }, [erc20TransferStatuses]);
 
   const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
@@ -622,6 +986,12 @@ export const JarCollapsible: FC<{
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
 
+  const multiFarmsDepositToken = Object.keys(JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON).includes(
+    depositToken.address.toLowerCase(),
+  );
+  let multiFarmsApiKey: string | undefined;
+  if (multiFarmsDepositToken) multiFarmsApiKey = jarData.apiKey;
+
   return (
     <Collapse
       style={{ borderWidth: "1px", boxShadow: "none" }}
@@ -631,18 +1001,18 @@ export const JarCollapsible: FC<{
           <JarName xs={24} sm={12} md={5} lg={6}>
             <TokenIcon
               src={
-                JAR_DEPOSIT_TOKEN_TO_ICON[
+                multiFarmsApiKey
+                  ? JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON[
+                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
+                  ][multiFarmsApiKey]
+                  : JAR_DEPOSIT_TOKEN_TO_ICON[
                   depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
-                ]
+                  ]
               }
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{name}</div>
-              <a
-                href={depositTokenLink}
-                target="_"
-                style={{ fontSize: `1rem` }}
-              >
+              <a href={depositTokenLink} target="_" style={{ fontSize: `1rem` }}>
                 {depositTokenName}
               </a>
             </div>
@@ -658,12 +1028,8 @@ export const JarCollapsible: FC<{
           <Grid xs={24} sm={8} md={4} lg={3} css={{ textAlign: "center" }}>
             <Data isZero={usdPerPToken * depositedNum === 0}>${valueStr}</Data>
             <Label>{t("balances.depositValue")}</Label>
-            {Boolean(valueStrExplained !== undefined) && (
-              <Label>{valueStrExplained}</Label>
-            )}
-            {Boolean(userSharePendingStr !== undefined) && (
-              <Label>{userSharePendingStr}</Label>
-            )}
+            {Boolean(valueStrExplained !== undefined) && <Label>{valueStrExplained}</Label>}
+            {Boolean(userSharePendingStr !== undefined) && <Label>{userSharePendingStr}</Label>}
           </Grid>
 
           <Grid xs={24} sm={12} md={5} lg={4} css={{ textAlign: "center" }}>
@@ -671,11 +1037,7 @@ export const JarCollapsible: FC<{
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {getFormatString(totalAPY) + "%" || "--"}
               </Tooltip>
-              <img
-                src="./question.svg"
-                width="15px"
-                style={{ marginLeft: 5 }}
-              />
+              <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>
@@ -701,9 +1063,7 @@ export const JarCollapsible: FC<{
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatEther(
-                    isUsdc && balance ? balance.mul(USDC_SCALE) : balance,
-                  ),
+                  formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
                 );
               }}
             >
@@ -720,10 +1080,7 @@ export const JarCollapsible: FC<{
             onClick={() => {
               if (signer) {
                 // Allow Jar to get LP Token
-                const depositAmt = ethers.utils.parseUnits(
-                  depositAmount,
-                  isUsdc ? 6 : 18,
-                );
+                const depositAmt = ethers.utils.parseUnits(depositAmount, isUsdc ? 6 : 18);
                 transfer({
                   token: depositToken.address,
                   recipient: jarContract.address,
@@ -746,17 +1103,12 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? parseFloat(
-                          formatEther(
-                            isUsdc && deposited
-                              ? deposited.mul(USDC_SCALE)
-                              : deposited,
-                          ),
-                        ) * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio
+                    ? parseFloat(
+                      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                    ) * ratio
+                    : 0
+                    } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}
@@ -767,9 +1119,7 @@ export const JarCollapsible: FC<{
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  setWithdrawAmount(
-                    formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
-                  );
+                  setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
                 }}
               >
                 {t("balances.max")}
@@ -793,12 +1143,7 @@ export const JarCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(
-                          ethers.utils.parseUnits(
-                            withdrawAmount,
-                            isUsdc ? 6 : 18,
-                          ),
-                        );
+                        .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
                     },
                     approval: false,
                   });

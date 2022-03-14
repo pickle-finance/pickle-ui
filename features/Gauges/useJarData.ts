@@ -42,7 +42,8 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
             supply: jar.supply,
             tvlUSD: jar.tvlUSD || 0,
             protocol: jar.protocol,
-            apiKey: jar.apiKey
+            stakingProtocol: jar.stakingProtocol,
+            apiKey: jar.apiKey,
           };
         },
       );

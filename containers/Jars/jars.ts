@@ -6,7 +6,6 @@ import {
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
-
 // pUSDC jar token
 export const isPUsdcToken = (jarTokenAddress: string) => {
   return (
@@ -65,8 +64,8 @@ export const shouldJarBeInUi = (
   pfcore: PickleModelJson.PickleModelJson | null,
 ) => {
   return (
-    isJarActive(jar.details.apiKey, pfcore) ||
-    isJarDisabled(jar.details.apiKey, pfcore)
+    isJarActive(jar.details?.apiKey, pfcore) ||
+    isJarDisabled(jar.details?.apiKey, pfcore)
   );
 };
 
@@ -116,7 +115,7 @@ export const checkJarEnablement = (
     return true;
   }
   const found: JarDefinition | undefined = pfcore.assets.jars.find(
-    (x) => x.details.apiKey === jarApiKey,
+    (x) => x.details?.apiKey === jarApiKey,
   );
   if (found) {
     if (found.enablement === desired) {

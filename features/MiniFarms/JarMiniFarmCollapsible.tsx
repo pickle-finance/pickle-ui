@@ -6,7 +6,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
@@ -25,7 +25,7 @@ import { PickleCore } from "../../containers/Jars/usePickleCore";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-import { PickleModelJson } from "picklefinance-core";
+import { PickleModelJson, ChainNetwork } from "picklefinance-core";
 
 interface DataProps {
   isZero?: boolean;
@@ -313,6 +313,21 @@ export const FARM_LP_TO_ICON: {
   "0xf3EbeC4D691Bc5Ea7B0158228feCfC3de2aE3910": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/wanna.png"} />
   ),
+
+  // Metis
+
+  // Netswap WBTC/USDT
+  "0xC717887F87E9Eda909F85aD78682bc020f5232F1": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdtwbtc.png"} />
+  ),
+  // Netswap WBTC/METIS
+  "0x56A4ef91C841054B03a963b644F31F51F4Dcb1A5": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/metiswbtc.png"} />
+  ),
+  // Tethys WBTC/METIS
+  "0xd332b8B997ED54D2a3361c45dA9CDF05bc26C745": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metiswbtc.png"} />
+  ),
 };
 
 export const JarMiniFarmCollapsible: FC<{
@@ -398,9 +413,10 @@ export const JarMiniFarmCollapsible: FC<{
     parseFloat(formatEther(harvestable || 0)),
   );
 
-  const harvestableMaticStr = parseFloat(
-    formatEther(harvestableMatic || 0),
-  ).toLocaleString();
+  // 8 decimals for wbtc
+  const harvestableMaticStr = formatNumber(
+    +formatUnits(harvestableMatic || 0, 8),
+  );
 
   const balanceNum = parseFloat(formatEther(balance));
 
@@ -693,7 +709,7 @@ export const JarMiniFarmCollapsible: FC<{
           <Grid xs={24} sm={12} md={3} lg={3} style={{ textAlign: "center" }}>
             <Data isZero={balanceNum === 0}>{balanceStr}</Data>
             <br />
-            <Label>{t("balances.walletBalance")}</Label>
+            <Label>{t("balances.balance")}</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data
@@ -702,14 +718,21 @@ export const JarMiniFarmCollapsible: FC<{
                 +formatEther(harvestable) === 0
               }
             >
-              {harvestableStr} <MiniIcon source={"/pickle.png"} />
-              <Spacer y={1} />
-              {/* {!isArb && (
+              {harvestableStr}{" "}
+              <MiniIcon
+                source={
+                  chainName === ChainNetwork.Metis
+                    ? "/metis.png"
+                    : "/pickle.png"
+                }
+              />
+              <br />
+              {chainName === ChainNetwork.Metis && (
                 <>
-                  {harvestableMaticStr}{" "}
-                  <MiniIcon source={isOK ? "/okex.png" : "/matic.png"} />
+                  {harvestableMaticStr} <MiniIcon source={"/wbtc.png"} />
                 </>
-              )} */}
+              )}
+              <br />
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
@@ -983,7 +1006,8 @@ export const JarMiniFarmCollapsible: FC<{
                 }}
                 style={{ width: "100%" }}
               >
-                {harvestButton.text} {harvestableStr} $PICKLES
+                {harvestButton.text} {harvestableStr}{" "}
+                {chainName === ChainNetwork.Metis ? `$METIS` : `$PICKLES`}
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
