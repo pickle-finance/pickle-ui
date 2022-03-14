@@ -6,7 +6,7 @@ import { Modal, Grid, Button } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import { useTranslation } from "next-i18next";
 
-import { injected, walletconnect, walletlink } from "./Connectors";
+import { injected, walletconnect, walletlink, cloverconnect } from "./Connectors";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import {
@@ -50,6 +50,11 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
       icon: "coinbase.svg",
       title: t("connection.coinbase"),
       connector: walletlink,
+    },
+    {
+      icon: "clover.svg",
+      title: t("connection.clover"),
+      connector: cloverconnect,
     },
   ];
   const [activatingConnector, setActivatingConnector] = useState();
