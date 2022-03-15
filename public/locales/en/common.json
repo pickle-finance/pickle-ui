@@ -31,6 +31,7 @@
     "blockNumber": "This is the current block number. This page is updated with every new block.",
     "changeNetwork": "Change Network",
     "coinbase": "Coinbase",
+    "clover": "Clover",
     "connect": "Connect Wallet",
     "connectPrompt": "Please connect to MetaMask to use Pickle on this chain.",
     "connectToContinue": "Please connect wallet to continue",

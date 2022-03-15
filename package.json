@@ -20,6 +20,7 @@
     "typechain": "typechain --target ethers-v5 --outDir ./containers/Contracts ./containers/ABIs/**/*.json"
   },
   "dependencies": {
+    "@clover-network/clover-connector": "^1.0.0",
     "@davatar/react": "^1.8.1",
     "@ethersproject/abstract-provider": "^5.0.4",
     "@ethersproject/providers": "^5.1.0",
