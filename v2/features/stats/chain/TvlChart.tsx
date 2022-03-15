@@ -18,6 +18,7 @@ const Chart: FC<{ data: TvlData[] }> = ({ data }) => {
   const chartData = data
     ? data.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
     : [];
+  const dataMax = getDataMax(chartData);
 
   return (
     <ResponsiveContainer className="w-full">
@@ -38,6 +39,7 @@ const Chart: FC<{ data: TvlData[] }> = ({ data }) => {
               compactDisplay: "short",
             }).format(value)
           }
+          domain={[0, dataMax]}
           width={100}
           padding={{ top: 50 }}
           tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
@@ -66,5 +68,13 @@ const Chart: FC<{ data: TvlData[] }> = ({ data }) => {
     </ResponsiveContainer>
   );
 };
+
+const getDataMax = (o: any[]): number => {
+  let dataMax = 0;
+  for (let i = 0;i < o.length; i++)
+    if (o[i].value > dataMax)
+      dataMax = o[i].value
+  return dataMax;
+}
 
 export default Chart;

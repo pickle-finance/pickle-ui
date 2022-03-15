@@ -15,30 +15,13 @@ import {
 import { formatDollars } from "v2/utils/format";
 import { DailyRevExp, JarChartData } from "./types";
 
-const sortByDate = (assetData: DailyRevExp[]) =>
-  assetData ? assetData.sort((a, b) => (a.timeStart > b.timeStart ? 1 : -1)) : [];
-const getRevAverage = (data: DailyRevExp[]) =>
-  data.reduce((acc, val) => acc + val.revsUsd, 0) / data.length;
-
-const computeMovingAverage = (sortedData: DailyRevExp[], period: number): DailyRevExp[] => {
-  if (period > sortedData.length) {
-    for (let i = 0; i < sortedData.length; i++) {
-      sortedData[i].ma = getRevAverage(sortedData);
-    }
-  } else {
-    for (let i = 10; i < sortedData.length; i++) {
-      sortedData[i].ma = getRevAverage(sortedData.slice(i - period, i));
-    }
-  }
-  return sortedData;
-};
-
 const Chart: FC<{ data: JarChartData }> = ({ data }) => {
   const { t } = useTranslation("common");
   const assetData =
     data && data.revenueExpenses && data.revenueExpenses.daily ? data.revenueExpenses.daily : [];
   const sortedData: DailyRevExp[] = sortByDate(assetData);
   const chartData: DailyRevExp[] = computeMovingAverage(sortedData, 10);
+  const dataMax = getDataMax(chartData);
 
   return (
     <ResponsiveContainer className="w-full">
@@ -59,6 +42,7 @@ const Chart: FC<{ data: JarChartData }> = ({ data }) => {
               compactDisplay: "short",
             }).format(value)
           }
+          domain={[0, dataMax]}
           width={100}
           padding={{ top: 50 }}
           tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
@@ -88,6 +72,31 @@ const Chart: FC<{ data: JarChartData }> = ({ data }) => {
       </ComposedChart>
     </ResponsiveContainer>
   );
+};
+
+const computeMovingAverage = (sortedData: DailyRevExp[], period: number): DailyRevExp[] => {
+  if (period > sortedData.length) {
+    for (let i = 0; i < sortedData.length; i++) {
+      sortedData[i].ma = getRevAverage(sortedData);
+    }
+  } else {
+    for (let i = 10; i < sortedData.length; i++) {
+      sortedData[i].ma = getRevAverage(sortedData.slice(i - period, i));
+    }
+  }
+  return sortedData;
+};
+
+const sortByDate = (assetData: DailyRevExp[]) =>
+  assetData ? assetData.sort((a, b) => (a.timeStart > b.timeStart ? 1 : -1)) : [];
+
+const getRevAverage = (data: DailyRevExp[]) =>
+  data.reduce((acc, val) => acc + val.revsUsd, 0) / data.length;
+
+const getDataMax = (o: any[]): number => {
+  let dataMax = 0;
+  for (let i = 0; i < o.length; i++) if (o[i].value > dataMax) dataMax = o[i].value;
+  return dataMax;
 };
 
 export default Chart;
