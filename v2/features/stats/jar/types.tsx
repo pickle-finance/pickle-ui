@@ -42,9 +42,10 @@ export interface AssetDocs {
   social: string[];
 }
 
-interface DailyRevExp {
+export interface DailyRevExp {
   expensesUsd: number;
   revsUsd: number;
+  ma?: number;
   timeStart: number;
 }
 
