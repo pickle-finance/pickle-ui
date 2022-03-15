@@ -82,3 +82,10 @@ export interface JarChartData {
   documentation: AssetDocs;
   revenueExpenses: AssetRevs;
 }
+
+export interface ApyChartData {
+  timestamp: number;
+  jarApr: number;
+  minApy: number;
+  maxApy: number;
+}

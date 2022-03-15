@@ -15,28 +15,11 @@ import {
 import { formatDollars } from "v2/utils/format";
 import { RevenueData } from "./types";
 
-const sortByDate = (data: RevenueData[]) =>
-  data ? data.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)) : [];
-const getRevAverage = (data: RevenueData[]) =>
-  data.reduce((acc, val) => acc + val.revsUsd, 0) / data.length;
-
-const computeMovingAverage = (sortedData: RevenueData[], period: number): RevenueData[] => {
-  if (period > sortedData.length) {
-    for (let i = 0; i < sortedData.length; i++) {
-      sortedData[i].ma = getRevAverage(sortedData);
-    }
-  } else {
-    for (let i = 10; i < sortedData.length; i++) {
-      sortedData[i].ma = getRevAverage(sortedData.slice(i - period, i));
-    }
-  }
-  return sortedData;
-};
-
 const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
   const { t } = useTranslation("common");
   const sortedData: RevenueData[] = sortByDate(data);
   const chartData = computeMovingAverage(sortedData, 10);
+  const dataMax = getDataMax(chartData);
 
   return (
     <ResponsiveContainer className="w-full">
@@ -57,6 +40,7 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
               compactDisplay: "short",
             }).format(value)
           }
+          domain={[0, dataMax]}
           width={100}
           padding={{ top: 50 }}
           tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
@@ -87,5 +71,32 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
     </ResponsiveContainer>
   );
 };
+
+const computeMovingAverage = (sortedData: RevenueData[], period: number): RevenueData[] => {
+  if (period > sortedData.length) {
+    for (let i = 0; i < sortedData.length; i++) {
+      sortedData[i].ma = getRevAverage(sortedData);
+    }
+  } else {
+    for (let i = 10; i < sortedData.length; i++) {
+      sortedData[i].ma = getRevAverage(sortedData.slice(i - period, i));
+    }
+  }
+  return sortedData;
+};
+
+const sortByDate = (data: RevenueData[]) =>
+  data ? data.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)) : [];
+  
+const getRevAverage = (data: RevenueData[]) =>
+  data.reduce((acc, val) => acc + val.revsUsd, 0) / data.length;
+
+const getDataMax = (o: any[]): number => {
+  let dataMax = 0;
+  for (let i = 0;i < o.length; i++)
+    if (o[i].value > dataMax)
+      dataMax = o[i].value
+  return dataMax;
+}
 
 export default Chart;
