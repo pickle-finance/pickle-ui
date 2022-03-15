@@ -10,30 +10,43 @@ import {
   Tooltip,
   Label,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 import { formatDollars } from "v2/utils/format";
-import { JarChartData } from "./types";
+import { DailyRevExp, JarChartData } from "./types";
+
+const sortByDate = (assetData: DailyRevExp[]) =>
+  assetData ? assetData.sort((a, b) => (a.timeStart > b.timeStart ? 1 : -1)) : [];
+const getRevAverage = (data: DailyRevExp[]) =>
+  data.reduce((acc, val) => acc + val.revsUsd, 0) / data.length;
+
+const computeMovingAverage = (sortedData: DailyRevExp[], period: number): DailyRevExp[] => {
+  if (period > sortedData.length) {
+    for (let i = 0; i < sortedData.length; i++) {
+      sortedData[i].ma = getRevAverage(sortedData);
+    }
+  } else {
+    for (let i = 10; i < sortedData.length; i++) {
+      sortedData[i].ma = getRevAverage(sortedData.slice(i - period, i));
+    }
+  }
+  return sortedData;
+};
 
 const Chart: FC<{ data: JarChartData }> = ({ data }) => {
   const { t } = useTranslation("common");
-
   const assetData =
-    data && data.revenueExpenses && data.revenueExpenses.daily
-      ? data.revenueExpenses.daily
-      : [];
-  const chartData = assetData
-    ? assetData.sort((a, b) => (a.timeStart > b.timeStart ? 1 : -1))
-    : [];
+    data && data.revenueExpenses && data.revenueExpenses.daily ? data.revenueExpenses.daily : [];
+  const sortedData: DailyRevExp[] = sortByDate(assetData);
+  const chartData: DailyRevExp[] = computeMovingAverage(sortedData, 10);
 
   return (
     <ResponsiveContainer className="w-full">
       <ComposedChart data={chartData}>
-        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))"/>
+        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
         <XAxis
           dataKey="timeStart"
-          tickFormatter={(timeStart) =>
-            new Date(timeStart * 1000).toLocaleDateString()
-          }
+          tickFormatter={(timeStart) => new Date(timeStart * 1000).toLocaleDateString()}
           height={75}
           angle={300}
           tickMargin={35}
@@ -70,6 +83,8 @@ const Chart: FC<{ data: JarChartData }> = ({ data }) => {
           formatter={(value: number) => formatDollars(value)}
         />
         <Bar dataKey="revsUsd" fill="rgb(var(--color-primary-light))" />
+        <Line dataKey="ma" dot={false} stroke="rgb(var(--color-accent))" />
+        <Legend wrapperStyle={{ paddingTop: 25 }} />
       </ComposedChart>
     </ResponsiveContainer>
   );
