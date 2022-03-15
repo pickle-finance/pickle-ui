@@ -98,6 +98,19 @@ export const TokenInput: FC<{
           <Input
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
+              !shouldZap &&
+                setDepositOtherAmount(
+                  formatUnits(
+                    isToken0
+                      ? parseUnits(e.target.value, token?.decimals)
+                          .mul(proportion)
+                          .div(parseEther("1"))
+                      : parseUnits(e.target.value, token?.decimals)
+                          .mul(parseEther("1"))
+                          .div(proportion),
+                    otherToken?.decimals,
+                  ),
+                );
             }}
             value={depositAmount}
             width="100%"

@@ -163,10 +163,10 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token0:
           return jarContract
             .connect(signer)
-            .deposit(
+            [`deposit(uint256,uint256${!isFrax(depositToken.address) ? ",bool" : ""})`](
               "0",
               convertDecimals(deposit1Amount, token1?.decimals),
-              ...(isFrax(depositToken.address) ? [shouldZap] : []),
+              ...(isFrax(depositToken.address) ? [] : [shouldZap]),
               {
                 value: parseEther(deposit0Amount),
                 gasLimit: 850000,
@@ -175,10 +175,10 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token1:
           return jarContract
             .connect(signer)
-            .deposit(
+            [`deposit(uint256,uint256${!isFrax(depositToken.address) ? ",bool" : ""})`](
               convertDecimals(deposit0Amount, token0?.decimals),
               "0",
-              ...(isFrax(depositToken.address) ? [shouldZap] : []),
+              ...(isFrax(depositToken.address) ? [] : [shouldZap]),
               {
                 value: parseEther(deposit1Amount),
                 gasLimit: 850000,
@@ -194,10 +194,10 @@ export const UniV3JarGaugeCollapsible: FC<{
   const defaultDeposit = () =>
     jarContract
       .connect(signer)
-      .deposit(
+      [`deposit(uint256,uint256${!isFrax(depositToken.address) ? ",bool" : ""})`](
         convertDecimals(deposit0Amount, token0?.decimals),
         convertDecimals(deposit1Amount, token1?.decimals),
-        ...(isFrax(depositToken.address) ? [shouldZap] : []),
+        ...(isFrax(depositToken.address) ? [] : [shouldZap]),
         { gasLimit: 850000 },
       );
 
