@@ -3,17 +3,12 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
-import type { PickleFinancePage } from "v2/types";
-import { ChartContainer } from "v2/features/stats/jar/ChartContainer";
-import { JarChartData } from "v2/features/stats/jar/types";
-import { DocContainer } from "v2/features/stats/jar/DocContainer";
-import { RevContainer } from "v2/features/stats/jar/RevContainer";
+import type { PickleFinancePage, JarChartData } from "v2/types";
 import { PickleModelJson } from "picklefinance-core";
+import ChartContainer from "v2/features/stats/jar/ChartContainer";
+import DocContainer from "v2/features/stats/jar/DocContainer";
+import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 
-const getJarData = async (jarKey: string): Promise<JarChartData> => {
-  const url = `${process.env.apiJar}/${jarKey}/en`;
-  return await fetch(url).then((response) => response.json());
-};
 
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
@@ -35,7 +30,7 @@ const Stats: PickleFinancePage = () => {
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
         <br />
         {jarData && jarData.revenueExpenses && jarData.revenueExpenses.recentHarvests[0] && (
-          <RevContainer
+          <RevTableContainer
             revs={jarData.revenueExpenses}
             pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
           />
@@ -56,6 +51,11 @@ const PageTitle: FC = () => {
       </h2>
     </>
   );
+};
+
+const getJarData = async (jarKey: string): Promise<JarChartData> => {
+  const url = `${process.env.apiJar}/${jarKey}/en`;
+  return await fetch(url).then((response) => response.json());
 };
 
 Stats.PageTitle = PageTitle;

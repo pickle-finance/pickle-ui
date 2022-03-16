@@ -1,21 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
-import type { PickleFinancePage } from "v2/types";
-import { ChartContainer } from "v2/features/stats/chain/ChartContainer";
-import { ChainData } from "v2/features/stats/chain/types";
-import { AssetTableContainer } from "v2/features/stats/chain/AssetTableContainer";
-
-const getChainData = async (chain: string): Promise<ChainData> => {
-  const url = `${process.env.apiChain}/${chain}/en`
-  return await fetch(url).then((response) => response.json());
-};
+import { NextRouter, useRouter } from "next/router";
+import type { PickleFinancePage, ChainData } from "v2/types";
+import ChartContainer from "v2/features/stats/chain/ChartContainer";
+import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
 
 const Stats: PickleFinancePage = () => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
-  const router = useRouter();
-  const chain: string =
-    typeof router.query.chain === "string" ? router.query.chain : "";
+  const router: NextRouter = useRouter();
+  console.log(router.query);
+  const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -40,14 +34,17 @@ const PageTitle: FC = () => {
 
   return (
     <>
-      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
-        {t("v2.nav.stats")}
-      </h1>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats")}</h1>
       <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.stats.subtitle")}
       </h2>
     </>
   );
+};
+
+const getChainData = async (chain: string): Promise<ChainData> => {
+  const url = `${process.env.apiChain}/${chain}/en`;
+  return await fetch(url).then((response) => response.json());
 };
 
 Stats.PageTitle = PageTitle;

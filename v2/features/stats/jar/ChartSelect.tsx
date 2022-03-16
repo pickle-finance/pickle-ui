@@ -3,7 +3,7 @@ import Select from "react-select";
 
 const pickleWhite = "#ebebeb";
 
-const CHARTS: any = [
+const CHARTS = [
   {
     value: "value",
     label: "TVL",
@@ -52,7 +52,7 @@ const CHARTS: any = [
 
 // daily revenue chart = bar chart of revenueExpenses.daily with 100 days of data and 15 and 30 day moving average
 
-export const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
+const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
   return (
     <Select
       styles={{
@@ -101,3 +101,5 @@ export const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
     />
   );
 };
+
+export default ChartSelect;

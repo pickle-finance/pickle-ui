@@ -10,7 +10,7 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
-import { JarChartData, AssetCoreData } from "./types";
+import { JarChartData, AssetCoreData } from "v2/types";
 
 const Chart: FC<{ chartKey: string; data: JarChartData; timeUnit: string }> = ({
   chartKey,
