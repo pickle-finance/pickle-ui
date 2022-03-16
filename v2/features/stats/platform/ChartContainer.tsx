@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { ResponsiveContainer } from "recharts";
 import TvlChart from "./TvlChart";
 import RevsChart from "./RevsChart";
 import { PlatformData } from "v2/types";

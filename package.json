@@ -20,6 +20,7 @@
     "typechain": "typechain --target ethers-v5 --outDir ./containers/Contracts ./containers/ABIs/**/*.json"
   },
   "dependencies": {
+    "@clover-network/clover-connector": "^1.0.0",
     "@davatar/react": "^1.8.1",
     "@ethersproject/abstract-provider": "^5.0.4",
     "@ethersproject/providers": "^5.1.0",
@@ -80,7 +81,6 @@
     "recharts-scale": "^0.4.3",
     "rooks": "^5.8.0",
     "rxjs": "^6.6.3",
-    "sanitize-html": "^2.7.0",
     "sass": "^1.26.11",
     "styled-components": "^5.2.0",
     "swr": "^1.0.1",
@@ -104,7 +104,6 @@
     "@types/react-redux": "^7.1.20",
     "@types/recharts": "^1.8.19",
     "@types/recharts-scale": "^1.0.0",
-    "@types/sanitize-html": "^2.6.2",
     "@types/sass": "^1.16.0",
     "@types/styled-components": "^5.1.3",
     "@types/tailwindcss": "^3.0.4",

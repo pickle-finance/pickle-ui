@@ -12,6 +12,7 @@ export interface TvlData {
 
 export interface RevenueData {
   revsUsd: number;
+  ma?: number;
   jarKey: string;
   timestamp: number;
   harvestCount: number;

@@ -3,7 +3,7 @@ import { ChartSelect } from "./ChartSelect";
 import LineChart from "./LineChart";
 import BiaxialChart from "./BiaxialChart";
 import YieldChart from "./MultiLineChart";
-import BarChart from "./BarChart";
+import RevsChart from "./RevsChart";
 import { JarChartData } from "./types";
 import { TimeUnitPanel } from "./TimeUnitPanel";
 
@@ -50,7 +50,7 @@ export const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
         {selectedChart === "yield" && (
           <YieldChart data={jarData} timeUnit={selectedTimeUnit} />
         )}
-        {selectedChart === "revs" && <BarChart data={jarData} />}
+        {selectedChart === "revs" && <RevsChart data={jarData} />}
       </aside>
     </div>
   );

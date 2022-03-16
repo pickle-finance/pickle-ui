@@ -42,9 +42,10 @@ export interface AssetDocs {
   social: string[];
 }
 
-interface DailyRevExp {
+export interface DailyRevExp {
   expensesUsd: number;
   revsUsd: number;
+  ma?: number;
   timeStart: number;
 }
 
@@ -80,4 +81,11 @@ export interface JarChartData {
   assetData: AssetData;
   documentation: AssetDocs;
   revenueExpenses: AssetRevs;
+}
+
+export interface ApyChartData {
+  timestamp: number;
+  jarApr: number;
+  minApy: number;
+  maxApy: number;
 }

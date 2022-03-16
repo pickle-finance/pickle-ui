@@ -3,6 +3,8 @@ import { Disclosure, Transition } from "@headlessui/react";
 import { NULL_ADDRESS } from "picklefinance-core/lib/model/PickleModel";
 import { Trans, useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
+import type { Web3Provider } from "@ethersproject/providers";
 
 import { shortenAddress } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
@@ -10,6 +12,7 @@ import Button from "v2/components/Button";
 import Link from "v2/components/Link";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
+import FarmDocs from "./FarmDocs";
 interface Props {
   jar: JarWithData;
 }
@@ -42,9 +45,10 @@ const ComponentRow: FC<ComponentRowProps> = ({ property, value }) => (
 );
 
 const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
-  const { t, i18n } = useTranslation("common");
+  const { t } = useTranslation("common");
   const allCore = useSelector(CoreSelectors.selectCore);
   const chain = allCore?.chains.find((x) => x.network === jar.chain);
+  const { library } = useWeb3React<Web3Provider>();
 
   const totalTokensInJarAndFarm =
     parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
@@ -57,8 +61,32 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
     userShare *
     (jar.details.harvestStats?.harvestableUSD || 0) *
     (1 - (chain?.defaultPerformanceFee || 0.2));
-  const lang = i18n.language || "en";
-  // Url to fetch is https://api.pickle.finance/prod/protocol/docs/en
+
+  const metamaskAdd = async () => {
+    const tokenAddress = jar.contract;
+    const tokenSymbol = `p${jar.depositToken.name.replace(/[\s\/-]/g, "").substring(0, 10)}`;
+    const tokenDecimals = 18;
+    const tokenImage = new URL("/tokens/pickle.png", document.baseURI).href;
+
+    if (library?.provider.request !== undefined) {
+      try {
+        // Returns a boolean. Like any RPC method, an error may be thrown.
+        await library.provider.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage,
+            },
+          },
+        });
+      } catch (error) {}
+    }
+  };
+
   return (
     <Disclosure as={Fragment}>
       {({ open }) => (
@@ -73,8 +101,8 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
             leaveTo="opacity-0"
           >
             <Disclosure.Panel as="div" className="grid grid-cols-4 py-4 gap-2">
-              <div className="col-span-2 border-r border-foreground-alt-500">
-                <div className="flex">
+              <div className="pr-4 col-span-2 border-r border-foreground-alt-500">
+                <div className="flex justify-between">
                   <span className="font-title text-foreground-alt-200 inline-flex items-center font-medium text-base leading-5">
                     <Trans i18nKey="v2.farms.tokensDeposited">
                       You have
@@ -85,17 +113,13 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                     </Trans>
                     <MoreInfo secondaryText={t("v2.farms.pToken")} />
                   </span>
-                  <Button type="secondary" className="ml-auto mr-5">
+                  <Button onClick={() => metamaskAdd()} type="secondary">
                     {t("v2.farms.metamaskAdd")}
                   </Button>
                 </div>
-                <p className="py-4 text-sm text-foreground">
-                  Description of what the jar does here... need docs for this info...
-                  <br />
-                  blah blah...
-                  <br />
-                  blah blah...
-                </p>
+                <div className="pt-2 mb-4">
+                  <FarmDocs jar={jar} />
+                </div>
                 <div className="grid grid-cols-3 py-1">
                   <div>
                     <span className="font-body font-bold text-foreground-alt-200">
@@ -110,26 +134,27 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                     </span>
                   </div>
                 </div>
-                {jar.details?.strategyAddr != NULL_ADDRESS && jar.details?.strategyAddr !== undefined && (
-                  <div className="grid grid-cols-3 py-1">
-                    <div>
-                      <span className="font-body font-bold text-foreground-alt-200">
-                        {t("v2.farms.strategyAddress")}
-                      </span>
+                {jar.details?.strategyAddr != NULL_ADDRESS &&
+                  jar.details?.strategyAddr !== undefined && (
+                    <div className="grid grid-cols-3 py-1">
+                      <div>
+                        <span className="font-body font-bold text-foreground-alt-200">
+                          {t("v2.farms.strategyAddress")}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="ml-auto">
+                          <Link
+                            href={`${chain?.explorer}/address/${jar.details?.strategyAddr}`}
+                            external
+                            primary
+                          >
+                            {shortenAddress(jar.details?.strategyAddr!)}
+                          </Link>
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="ml-auto">
-                        <Link
-                          href={`${chain?.explorer}/address/${jar.details?.strategyAddr}`}
-                          external
-                          primary
-                        >
-                          {shortenAddress(jar.details?.strategyAddr!)}
-                        </Link>
-                      </span>
-                    </div>
-                  </div>
-                )}
+                  )}
                 {jar.farm?.farmAddress != NULL_ADDRESS && jar.farm?.farmAddress != undefined && (
                   <div className="grid grid-cols-3 py-1">
                     <div>
@@ -176,7 +201,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
               <div className="px-4">
                 <InfoRowContent label={t("v2.farms.apyBreakdown")} tooltipText={null} value="" />
                 {jar.aprStats?.components.map((x, idx) => (
-                  <>
+                  <div key={x.name}>
                     <ComponentRow property={x.name.toUpperCase()} value={`${x.apr}%`} />
                     {idx === jar.aprStats?.components?.length! - 1 &&
                       jar.aprStats?.apy != jar.aprStats?.apr && (
@@ -185,7 +210,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                           value={`${(jar.aprStats?.apy! - jar.aprStats?.apr!).toFixed(3)}%`}
                         />
                       )}
-                  </>
+                  </div>
                 ))}
                 <div className="mt-3">
                   <InfoRowContent label={t("v2.farms.yieldRates")} tooltipText={null} value="" />
