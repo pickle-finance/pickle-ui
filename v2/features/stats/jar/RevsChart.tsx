@@ -13,7 +13,7 @@ import {
   Legend,
 } from "recharts";
 import { formatDollars } from "v2/utils/format";
-import { DailyRevExp, JarChartData } from "./types";
+import { DailyRevExp, JarChartData } from "v2/types";
 
 const Chart: FC<{ data: JarChartData }> = ({ data }) => {
   const { t } = useTranslation("common");
