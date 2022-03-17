@@ -283,8 +283,8 @@ export const UniV3JarGaugeCollapsible: FC<{
     .filter((x) => x)
     .join(` <br/> `);
 
-  const [deposit0Amount, setDeposit0Amount] = useState("");
-  const [deposit1Amount, setDeposit1Amount] = useState("");
+  const [deposit0Amount, setDeposit0Amount] = useState("0");
+  const [deposit1Amount, setDeposit1Amount] = useState("0");
   const [shouldZap, setShouldZap] = useState<boolean>(isFrax(depositToken.address) ? false : true);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [tvlData, setTVLData] = useState();
