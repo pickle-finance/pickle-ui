@@ -133,7 +133,8 @@ export const GaugeList: FC = () => {
       return (
         foundJar &&
         isJarActive(foundJar.details.apiKey, pickleCore) &&
-        !(foundJar.protocol === AssetProtocol.YEARN)
+        !(foundJar.protocol === AssetProtocol.YEARN) &&
+        !(foundJar.protocol === AssetProtocol.UNISWAP_V3)
       );
     })
     .sort((a, b) => b.totalAPY - a.totalAPY);
