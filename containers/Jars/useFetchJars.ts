@@ -56,7 +56,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
       }
 
       const chainJars: JarDefinition[] = allJars.filter(
-        (x) => x.chain === chainName && shouldJarBeInUi(x, pickleCore) && x.id !== "pJar U3b",
+        (x) => x.chain === chainName && shouldJarBeInUi(x, pickleCore),
       );
 
       const possibleJars: (Jar | undefined)[] = chainJars.map((x) => {

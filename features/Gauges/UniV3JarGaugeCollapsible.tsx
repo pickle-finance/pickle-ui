@@ -74,6 +74,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x97e7d56A0408570bA1a7852De36350f7713906ec": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/frax.webp"} />
   ),
+  // FRAX/DAI 0.05%
+  "0xc63B0708E2F7e69CB8A1df0e1389A98C35A76D52": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/frax.webp"} />
+  ),
   // USDC/WETH 0.05%
   "0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/usdc.png"} />
