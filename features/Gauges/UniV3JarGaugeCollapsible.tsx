@@ -74,7 +74,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x97e7d56A0408570bA1a7852De36350f7713906ec": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/frax.webp"} />
   ),
-  // FRAX/DAI 0.05%
+  // FRAX/USDC 0.05%
   "0xc63B0708E2F7e69CB8A1df0e1389A98C35A76D52": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/frax.webp"} />
   ),
@@ -104,8 +104,11 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const FraxJars = ["0x97e7d56A0408570bA1a7852De36350f7713906ec",
+                  "0xc63B0708E2F7e69CB8A1df0e1389A98C35A76D52"];
+
 const isFrax = (depositToken: string) =>
-  depositToken === "0x97e7d56A0408570bA1a7852De36350f7713906ec";
+  FraxJars.some(x=>x === depositToken);
 
 export const GreenSwitch = withStyles({
   switchBase: {
@@ -551,6 +554,7 @@ export const UniV3JarGaugeCollapsible: FC<{
             jarAddr={jarContract.address}
             setUseEth={setUseEth}
             shouldZap={shouldZap}
+            isFrax={isFrax(depositToken.address)}
           />
           <TokenInput
             token={token1}
@@ -563,6 +567,7 @@ export const UniV3JarGaugeCollapsible: FC<{
             jarAddr={jarContract.address}
             setUseEth={setUseEth}
             shouldZap={shouldZap}
+            isFrax={isFrax(depositToken.address)}
           />
           {!isFrax(depositToken.address) && (
             <>
