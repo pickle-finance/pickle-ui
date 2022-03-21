@@ -113,10 +113,10 @@ export const getUserAssetDataWithPrices = (
   if (core === undefined || userModel === undefined) {
     return userAssetDataZeroEverything();
   }
-  const userTokenDetails: UserTokenData | undefined = userModel.tokens[jar.details.apiKey];
-  if (userTokenDetails === undefined) {
-    return userAssetDataZeroEverything();
-  }
+  const userTokenDetails = userModel.tokens[jar.details.apiKey];
+
+  if (userTokenDetails === undefined) return userAssetDataZeroEverything();
+
   const jarDecimals = jar.details.decimals
     ? jar.details.decimals
     : jar.depositToken.decimals

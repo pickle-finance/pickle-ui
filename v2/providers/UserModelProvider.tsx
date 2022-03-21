@@ -6,13 +6,12 @@ import { UserModel, IUserModelCallback } from "picklefinance-core/lib/client/Use
 import { useIntervalWhen } from "rooks";
 import { ChainNetwork } from "picklefinance-core";
 import { Signer } from "ethers";
-import dayjs from "dayjs";
 
 import { CoreSelectors } from "v2/store/core";
 import { useAppDispatch } from "v2/store";
 import { UserActions, UserSelectors } from "v2/store/user";
 
-const refreshInterval = 60 * 1000;
+const refreshInterval = 3 * 60 * 1000;
 
 const UserModelProvider: VFC = () => {
   const dispatch = useAppDispatch();
@@ -77,8 +76,7 @@ const UserModelProvider: VFC = () => {
   useIntervalWhen(
     () => refreshUserModel({ type: "full" }),
     refreshInterval,
-    // Only update if user model is stale.
-    typeof updatedAt === "number" && dayjs(updatedAt).isBefore(dayjs().subtract(60, "seconds")),
+    typeof updatedAt === "number",
     false,
   );
 
