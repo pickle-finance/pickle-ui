@@ -26,7 +26,7 @@ import { useTranslation } from "next-i18next";
 import { isUsdcToken } from "containers/Jars/jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { TokenDetails } from "containers/Jars/useJarsWithZap";
-import { formatUnits } from "picklefinance-core/node_modules/@ethersproject/units";
+import { formatUnits } from "@ethersproject/units";
 import { neverExpireEpochTime } from "util/constants";
 import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
 
