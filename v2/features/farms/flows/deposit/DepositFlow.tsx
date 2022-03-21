@@ -13,16 +13,20 @@ import { Jar } from "containers/Contracts/Jar";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
+import { stateMachine, Actions, States } from "../stateMachineUserInput";
+import Form from "./Form";
 
 interface Props {
   jar: JarWithData;
   visible: boolean;
+  depositTokenBalance: number;
 }
 
-const DepositFlow: FC<Props> = ({ jar, visible }) => {
+const DepositFlow: FC<Props> = ({ jar, visible, depositTokenBalance }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
+  const [current, send] = useMachine(stateMachine);
   const core = useSelector(CoreSelectors.selectCore);
   const chain = core?.chains.find((chain) => chain.network === jar.chain);
 
@@ -41,31 +45,33 @@ const DepositFlow: FC<Props> = ({ jar, visible }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const sendTransaction = async () => {
-    setError(undefined);
-
-    try {
-      const transaction = await jarContract.approve(contract, ethers.constants.MaxUint256);
-      await transaction.wait().then(
-        () => {},
-        (tx) => {},
-      );
-    } catch (error) {
-      setError(error as Error);
-    }
-  };
-
   if (!visible) return null;
 
   return (
-    <div className="grid grid-cols-2 gap-3">
-      <Button type="secondary" state="disabled" className="w-11">
-        +
-      </Button>
-      <Button type="secondary" state="disabled" className="w-11">
-        -
-      </Button>
-    </div>
+    <>
+      <div className="grid grid-cols-2 gap-3">
+        <Button
+          type="primary"
+          state={depositTokenBalance > 0 ? "enabled" : "disabled"}
+          onClick={() => {
+            if (depositTokenBalance > 0) openModal();
+          }}
+          className="w-11"
+        >
+          +
+        </Button>
+        <Button type="secondary" state="disabled" className="w-11">
+          -
+        </Button>
+      </div>
+      <Modal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        title={t("v2.farms.depositToken", { token: jar.depositToken.name })}
+      >
+        {current.matches(States.FORM) && <Form tokenBalance={depositTokenBalance} />}
+      </Modal>
+    </>
   );
 };
 

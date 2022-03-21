@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import { useWeb3React } from "@web3-react/core";
-import { useSelector } from "react-redux";
 
 import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
@@ -24,18 +23,19 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const pfcore = useAppSelector(CoreSelectors.selectCore);
   const userModel = useAppSelector(UserSelectors.selectData);
 
+  const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
   const userTokenData = useAppSelector((state) =>
     UserSelectors.selectTokenDataById(state, jar.details.apiKey),
   );
-  const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
-  const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
-
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
   const jarTokens = data.depositTokensInJar.tokensVisible;
   const farmTokens = data.depositTokensInFarm.tokensVisible;
   const tokensInWallet = data.depositTokensInWallet.tokens;
   const picklesPending = data.earnedPickles.tokensVisible;
   const depositTokenCountString = tokensInWallet + " Tokens";
+
+  const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
+  const userDepositTokenBalance = parseFloat(tokensInWallet);
 
   const networks = useAppSelector(CoreSelectors.selectNetworks);
   const { chainId } = useWeb3React();
@@ -79,7 +79,11 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             {isJarOnActiveNetwork ? (
               <>
                 <ApprovalFlow jar={jar} visible={!userHasJarAllowance} />
-                <DepositFlow jar={jar} visible={userHasJarAllowance} />
+                <DepositFlow
+                  jar={jar}
+                  visible={userHasJarAllowance}
+                  depositTokenBalance={userDepositTokenBalance}
+                />
               </>
             ) : (
               <ConnectButton network={jarNetwork} />

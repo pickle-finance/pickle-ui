@@ -306,6 +306,7 @@
       "retry": "Retry"
     },
     "balances": {
+      "amount": "Amount",
       "balance": "Balance",
       "fetching": "Fetching your balances",
       "lastUpdated": "Your balances updated <1 /> ago.",
@@ -335,7 +336,6 @@
       "unclaimedRewards": "Unclaimed rewards"
     },
     "dill": {
-      "amount": "Amount",
       "currentAPY": "Current APY",
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
       "dillAmount": "DILL amount",
@@ -371,6 +371,7 @@
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
+      "depositToken": "Deposit {{ token }}",
       "details": "Details",
       "docs": {
         "description": "Description",

@@ -41,9 +41,9 @@ const userSlice = createSlice({
       } else if (action.payload.type === "final") {
         /**
          * If the user model was updated in the last 30 seconds, it's because of partial
-         * token refreshes due to user activity. This is to avoid a race condition where
-         * we update current state with stale on-chain data from a full background
-         * refresh (a long-running process).
+         * token refreshes due to user activity (by itself, it will update every N minutes).
+         * This is to avoid a race condition where we update current state with stale
+         * on-chain data from a full background refresh (a long-running process).
          */
         if (dayjs(state.updatedAt).isBefore(dayjs().subtract(30, "seconds"))) {
           state.data = normalizedData(action.payload.data);
