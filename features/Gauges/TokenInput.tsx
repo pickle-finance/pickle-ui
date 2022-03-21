@@ -20,6 +20,7 @@ export const TokenInput: FC<{
   jarAddr: string;
   setUseEth: any;
   shouldZap: boolean;
+  isFrax: boolean;
 }> = ({
   token,
   otherToken,
@@ -31,7 +32,7 @@ export const TokenInput: FC<{
   jarAddr,
   setUseEth,
   shouldZap,
-  isFrax
+  isFrax,
 }) => {
   const { signer, address, blockNum } = Connection.useContainer();
   const ethOptions = ["ETH", "WETH"];
@@ -61,7 +62,8 @@ export const TokenInput: FC<{
           onClick={(e) => {
             e.preventDefault();
             setDepositThisAmount(formatUnits(balanceUsed, token?.decimals));
-            !shouldZap && !isFrax &&
+            !shouldZap &&
+              !isFrax &&
               setDepositOtherAmount(
                 formatUnits(
                   isToken0
@@ -99,7 +101,8 @@ export const TokenInput: FC<{
           <Input
             onChange={(e) => {
               setDepositThisAmount(e.target.value);
-              !shouldZap && !isFrax &&
+              !shouldZap &&
+                !isFrax &&
                 setDepositOtherAmount(
                   formatUnits(
                     isToken0

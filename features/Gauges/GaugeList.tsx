@@ -77,9 +77,7 @@ export const GaugeList: FC = () => {
 
   const findGauge = (jar: UserJarData) =>
     gaugesWithAPY.find(
-      (x) =>
-        x.depositToken.address.toLowerCase() ===
-        jar.jarContract.address.toLowerCase(),
+      (x) => x.depositToken.address.toLowerCase() === jar.jarContract.address.toLowerCase(),
     );
 
   const gaugesWithAPY = gaugeData.map((gauge) => {
@@ -91,28 +89,20 @@ export const GaugeList: FC = () => {
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
     }
 
-    if (
-      gauge.depositToken.address.toLowerCase() ===
-      PICKLE_ETH_GAUGE.toLowerCase()
-    ) {
+    if (gauge.depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()) {
       APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
     }
     const uncompounded = APYs.map((x) => {
       const k: string = Object.keys(x)[0];
       const shouldNotUncompound = k === "pickle" || k === "lp";
-      const v = shouldNotUncompound
-        ? Object.values(x)[0]
-        : uncompoundAPY(Object.values(x)[0]);
+      const v = shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]);
       const ret: JarApy = {};
       ret[k] = v;
       return ret;
     });
 
     const totalAPY = APYs.map((x) => {
-      return Object.values(x).reduce(
-        (acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y),
-        0,
-      );
+      return Object.values(x).reduce((acc, y) => acc + (isNaN(y) || y > 1e6 ? 0 : y), 0);
     }).reduce((acc, x) => acc + x, 0);
 
     return {
@@ -126,9 +116,7 @@ export const GaugeList: FC = () => {
   const activeJars = jarData
     .filter((jar) => {
       const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
-        (x) =>
-          x.depositToken.addr.toLowerCase() ===
-          jar.depositToken.address.toLowerCase(),
+        (x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase(),
       );
       return (
         foundJar &&
@@ -141,18 +129,14 @@ export const GaugeList: FC = () => {
 
   const inactiveJars = jarData.filter((jar) => {
     const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
-      (x) =>
-        x.depositToken.addr.toLowerCase() ===
-        jar.depositToken.address.toLowerCase(),
+      (x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase(),
     );
     return foundJar && isJarDisabled(foundJar.details.apiKey, pickleCore);
   });
 
   const yearnJars = jarData.filter((jar) => {
     const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
-      (x) =>
-        x.depositToken.addr.toLowerCase() ===
-        jar.depositToken.address.toLowerCase(),
+      (x) => x.depositToken.addr.toLowerCase() === jar.depositToken.address.toLowerCase(),
     );
     const gauge = findGauge(jar);
     const activeAndYearn =
@@ -161,31 +145,32 @@ export const GaugeList: FC = () => {
       foundJar.protocol === AssetProtocol.YEARN;
     return showUserJars
       ? activeAndYearn &&
-          (parseFloat(formatEther(jar.deposited)) ||
-            parseFloat(formatEther(gauge?.staked || 0)))
+          (parseFloat(formatEther(jar.deposited)) || parseFloat(formatEther(gauge?.staked || 0)))
       : activeAndYearn;
   });
 
+  const FraxJars = [
+    "0x97e7d56A0408570bA1a7852De36350f7713906ec",
+    "0xc63B0708E2F7e69CB8A1df0e1389A98C35A76D52",
+  ];
+
+  const isFrax = (depositToken: string) => FraxJars.some((x) => x === depositToken);
+
   const userJars = jarData.filter((jar) => {
     const gauge = findGauge(jar);
-    const pfCoreJarDef:
-      | JarDefinition
-      | undefined = pickleCore?.assets.jars.find(
-      (x) =>
-        jar.depositToken.address.toLowerCase() ===
-        x.depositToken.addr.toLowerCase(),
+    const pfCoreJarDef: JarDefinition | undefined = pickleCore?.assets.jars.find(
+      (x) => jar.depositToken.address.toLowerCase() === x.depositToken.addr.toLowerCase(),
     );
     return (
-      (parseFloat(formatEther(jar.deposited)) ||
-        parseFloat(formatEther(gauge?.staked || 0))) &&
+      (parseFloat(formatEther(jar.deposited)) || parseFloat(formatEther(gauge?.staked || 0))) &&
       pfCoreJarDef &&
       pfCoreJarDef.protocol !== AssetProtocol.YEARN
     );
   });
 
-  const uniV3Jars = jarData?.filter(
-    (jar) => jar.protocol == AssetProtocol.UNISWAP_V3,
-  );
+  const uniV3Jars = jarData
+    ?.filter((jar) => jar.protocol == AssetProtocol.UNISWAP_V3)
+    .sort((x, y) => +isFrax(y.depositToken.address) - +isFrax(x.depositToken.address));
 
   const activeGauges = gaugesWithAPY.sort(
     (a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy),
@@ -241,11 +226,9 @@ export const GaugeList: FC = () => {
       <VoteCollapsible
         gauges={activeGauges.filter(
           (x) =>
-            x.depositToken.address !=
-              "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48" && // pSUSHIETHYVECRV
+            x.depositToken.address != "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48" && // pSUSHIETHYVECRV
             x.depositToken.address.toLowerCase() != PICKLE_ETH_FARM &&
-            x.depositToken.address !=
-              "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C", // pMIMETH
+            x.depositToken.address != "0x993f35FaF4AEA39e1dfF28f45098429E0c87126C", // pMIMETH
         )}
       />
       <div
@@ -258,16 +241,27 @@ export const GaugeList: FC = () => {
         <h2>{t("farms.jarsAndFarms")}</h2>
       </div>
       <Grid.Container gap={1}>
-        {chainName === ChainNetwork.Ethereum &&
-          uniV3Jars?.map((jar) => {
-            const gauge = findGauge(jar);
-            if (!gauge) return;
-            return (
-              <Grid xs={24} key={jar.name}>
-                <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
-              </Grid>
-            );
-          })}
+        {chainName === ChainNetwork.Ethereum && (
+          <>
+            {t("farms.boostedBy")}&nbsp;
+            <a href="/frax" target="_">
+              Pickled veFXS
+            </a>
+            &nbsp;⚡
+            {uniV3Jars?.map((jar, idx) => {
+              const gauge = findGauge(jar);
+              if (!gauge) return;
+              return (
+                <>
+                  <Grid xs={24} key={jar.name}>
+                    <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
+                    {idx === FraxJars.length - 1 && <Spacer y={1} />}
+                  </Grid>
+                </>
+              );
+            })}
+          </>
+        )}
         {chainName === ChainNetwork.Ethereum && yearnJars.length > 0 && (
           <>
             {t("farms.poweredBy")}&nbsp;
@@ -280,11 +274,7 @@ export const GaugeList: FC = () => {
               return (
                 gauge && (
                   <Grid xs={24} key={jar.name}>
-                    <JarGaugeCollapsible
-                      jarData={jar}
-                      gaugeData={gauge}
-                      isYearnJar={true}
-                    />
+                    <JarGaugeCollapsible jarData={jar} gaugeData={gauge} isYearnJar={true} />
                     {idx === yearnJars.length - 1 && <Spacer y={1} />}
                   </Grid>
                 )
@@ -292,12 +282,8 @@ export const GaugeList: FC = () => {
             })}
           </>
         )}
-        {chainName === ChainNetwork.Ethereum && (
-          <BProtocol showUserJars={showUserJars} />
-        )}
-        {showUserJars
-          ? gaugesWithAPY[0].staked.gt(BigNumber.from(0)) && PicklePower
-          : PicklePower}
+        {chainName === ChainNetwork.Ethereum && <BProtocol showUserJars={showUserJars} />}
+        {showUserJars ? gaugesWithAPY[0].staked.gt(BigNumber.from(0)) && PicklePower : PicklePower}
 
         {(showUserJars ? userJars : activeJars).map((jar) => {
           const gauge = findGauge(jar);
@@ -317,9 +303,7 @@ export const GaugeList: FC = () => {
             const gauge = findGauge(jar);
             return (
               <Grid xs={24} key={jar.name}>
-                {gauge && (
-                  <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
-                )}
+                {gauge && <JarGaugeCollapsible jarData={jar} gaugeData={gauge} />}
               </Grid>
             );
           })}

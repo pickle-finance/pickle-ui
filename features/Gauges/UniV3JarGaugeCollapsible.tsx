@@ -104,12 +104,6 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const FraxJars = ["0x97e7d56A0408570bA1a7852De36350f7713906ec",
-                  "0xc63B0708E2F7e69CB8A1df0e1389A98C35A76D52"];
-
-const isFrax = (depositToken: string) =>
-  FraxJars.some(x=>x === depositToken);
-
 export const GreenSwitch = withStyles({
   switchBase: {
     color: backgroundColor,
@@ -127,7 +121,8 @@ export const GreenSwitch = withStyles({
 export const UniV3JarGaugeCollapsible: FC<{
   jarData: UserJarData;
   gaugeData: UserGaugeDataWithAPY;
-}> = ({ jarData, gaugeData }) => {
+  isFrax: boolean;
+}> = ({ jarData, gaugeData, isFrax }) => {
   const {
     name,
     jarContract,
@@ -170,10 +165,10 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token0:
           return jarContract
             .connect(signer)
-            [`deposit(uint256,uint256${!isFrax(depositToken.address) ? ",bool" : ""})`](
+            [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
               "0",
               convertDecimals(deposit1Amount, token1?.decimals),
-              ...(isFrax(depositToken.address) ? [] : [shouldZap]),
+              ...(isFrax ? [] : [shouldZap]),
               {
                 value: parseEther(deposit0Amount),
                 gasLimit: 850000,
@@ -182,10 +177,10 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token1:
           return jarContract
             .connect(signer)
-            [`deposit(uint256,uint256${!isFrax(depositToken.address) ? ",bool" : ""})`](
+            [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
               convertDecimals(deposit0Amount, token0?.decimals),
               "0",
-              ...(isFrax(depositToken.address) ? [] : [shouldZap]),
+              ...(isFrax ? [] : [shouldZap]),
               {
                 value: parseEther(deposit1Amount),
                 gasLimit: 850000,
@@ -201,10 +196,10 @@ export const UniV3JarGaugeCollapsible: FC<{
   const defaultDeposit = () =>
     jarContract
       .connect(signer)
-      [`deposit(uint256,uint256${!isFrax(depositToken.address) ? ",bool" : ""})`](
+      [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
         convertDecimals(deposit0Amount, token0?.decimals),
         convertDecimals(deposit1Amount, token1?.decimals),
-        ...(isFrax(depositToken.address) ? [] : [shouldZap]),
+        ...(isFrax ? [] : [shouldZap]),
         { gasLimit: 850000 },
       );
 
@@ -292,7 +287,7 @@ export const UniV3JarGaugeCollapsible: FC<{
 
   const [deposit0Amount, setDeposit0Amount] = useState("0");
   const [deposit1Amount, setDeposit1Amount] = useState("0");
-  const [shouldZap, setShouldZap] = useState<boolean>(isFrax(depositToken.address) ? false : true);
+  const [shouldZap, setShouldZap] = useState<boolean>(isFrax ? false : true);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [tvlData, setTVLData] = useState();
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
@@ -554,7 +549,7 @@ export const UniV3JarGaugeCollapsible: FC<{
             jarAddr={jarContract.address}
             setUseEth={setUseEth}
             shouldZap={shouldZap}
-            isFrax={isFrax(depositToken.address)}
+            isFrax={isFrax}
           />
           <TokenInput
             token={token1}
@@ -567,9 +562,9 @@ export const UniV3JarGaugeCollapsible: FC<{
             jarAddr={jarContract.address}
             setUseEth={setUseEth}
             shouldZap={shouldZap}
-            isFrax={isFrax(depositToken.address)}
+            isFrax={isFrax}
           />
-          {!isFrax(depositToken.address) && (
+          {!isFrax && (
             <>
               <GreenSwitch checked={shouldZap} onChange={() => setShouldZap(!shouldZap)} />
               {t("farms.shouldZap")}
