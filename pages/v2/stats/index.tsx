@@ -1,14 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { ChartContainer } from "v2/features/stats/platform/ChartContainer";
-import { ChainTableContainer } from "v2/features/stats/platform/ChainTableContainer";
-import { PlatformData } from "v2/types";
-import type { PickleFinancePage } from "v2/types";
-
-const getPlatformData = async (): Promise<PlatformData> => {
-  const url = `${process.env.apiPlatform}`
-  return await fetch(url).then((response) => response.json());
-};
+import { PickleFinancePage, PlatformData } from "v2/types";
+import ChartContainer from "v2/features/stats/platform/ChartContainer";
+import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
 
 const Stats: PickleFinancePage = () => {
   const [dataSeries, setDataSeries] = useState<PlatformData>(
@@ -46,6 +40,11 @@ const PageTitle: FC = () => {
       </h2>
     </>
   );
+};
+
+const getPlatformData = async (): Promise<PlatformData> => {
+  const url = `${process.env.apiPlatform}`
+  return await fetch(url).then((response) => response.json());
 };
 
 Stats.PageTitle = PageTitle;

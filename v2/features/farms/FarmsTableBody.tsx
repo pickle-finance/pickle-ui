@@ -21,8 +21,7 @@ interface Props {
 
 const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
   const { t } = useTranslation("common");
-  const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
-  const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
+  const core = useSelector(CoreSelectors.selectCore);
   const userModel = useSelector(UserSelectors.selectData);
   let jars = useSelector(CoreSelectors.makeJarsSelector({ filtered: !simple, paginated: !simple }));
 
@@ -32,8 +31,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
     jars = jars.filter((jar) => apiKeys.includes(jar.details.apiKey));
   }
 
-  const isCoreLoading = coreLoadingState !== "fulfilled";
-  const isLoading = isCoreLoading || (requiresUserModel && isUserModelLoading);
+  const isLoading = !core || (requiresUserModel && !userModel);
 
   if (isLoading) {
     return (

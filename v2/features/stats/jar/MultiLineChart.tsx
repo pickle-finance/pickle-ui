@@ -11,32 +11,23 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
-import { AssetCoreData, JarChartData } from "./types";
+import { ApyChartData, AssetCoreData, JarChartData } from "v2/types";
 
-const aprAndApyData = (sortedAssetData: AssetCoreData) => {
-  return {
-    timestamp: sortedAssetData.timestamp,
-    jarApr: sortedAssetData.jarApr,
-    minApy: sortedAssetData.jarApr + sortedAssetData.farmMinApy,
-    maxApy: sortedAssetData.jarApr + sortedAssetData.farmMaxApy,
-  };
-};
-
-const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
-  data,
-  timeUnit,
-}) => {
+const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit }) => {
   const { t } = useTranslation("common");
-  
-  const assetData = data && data.assetData ? data.assetData[timeUnit] : [];
-  const sortedData = assetData
+
+  const assetData: AssetCoreData[] = data && data.assetData ? data.assetData[timeUnit] : [];
+  const sortedData: AssetCoreData[] = assetData
     ? assetData.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
     : [];
-  const chartData = sortedData.map(aprAndApyData);
+  const chartData: ApyChartData[] = sortedData.map(aprAndApyData);
+  const dataMax = getDataMax(chartData);
+  const dataMin = getDataMin(chartData);
+
   return (
     <ResponsiveContainer className="w-full">
       <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))"/>
+        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
         <XAxis
           dataKey="timestamp"
           tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
@@ -47,11 +38,14 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
         />
         <YAxis
           tickFormatter={(value) => {
-            return new Intl.NumberFormat("en", {
-              notation: "compact",
-              compactDisplay: "short",
-            }).format(value) + "%"
+            return (
+              new Intl.NumberFormat("en", {
+                notation: "compact",
+                compactDisplay: "short",
+              }).format(value) + "%"
+            );
           }}
+          domain={[dataMin - dataMin * 0.1, dataMax]}
           width={100}
           padding={{ top: 50 }}
           tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
@@ -70,9 +64,7 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
           cursor={false}
           contentStyle={{ backgroundColor: "black", color: "#26ff91" }}
           labelFormatter={(label) =>
-            new Date(label).toLocaleDateString() +
-            " " +
-            new Date(label).toLocaleTimeString()
+            new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
           }
           formatter={(value: number) => value.toFixed(3) + "%"}
         />
@@ -82,12 +74,7 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
           stroke="rgb(var(--color-primary-dark))"
           dot={false}
         />
-        <Line
-          type="monotone"
-          dataKey="minApy"
-          stroke="rgb(var(--color-primary))"
-          dot={false}
-        />
+        <Line type="monotone" dataKey="minApy" stroke="rgb(var(--color-primary))" dot={false} />
         <Line
           type="monotone"
           dataKey="maxApy"
@@ -97,6 +84,27 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
       </LineChart>
     </ResponsiveContainer>
   );
+};
+
+const aprAndApyData = (sortedAssetData: AssetCoreData): ApyChartData => {
+  return {
+    timestamp: sortedAssetData.timestamp,
+    jarApr: sortedAssetData.jarApr,
+    minApy: sortedAssetData.jarApr + sortedAssetData.farmMinApy,
+    maxApy: sortedAssetData.jarApr + sortedAssetData.farmMaxApy,
+  };
+};
+
+const getDataMax = (o: ApyChartData[]): number => {
+  let dataMax = 0;
+  for (let i = 0; i < o.length; i++) if (o[i].maxApy > dataMax) dataMax = o[i].maxApy;
+  return dataMax;
+};
+
+const getDataMin = (o: ApyChartData[]): number => {
+  let dataMin = getDataMax(o);
+  for (let i = 0; i < o.length; i++) if (o[i].jarApr < dataMin) dataMin = o[i].jarApr;
+  return dataMin;
 };
 
 export default Chart;

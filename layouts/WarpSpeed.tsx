@@ -8,11 +8,15 @@ import LeftNavbar from "v2/components/LeftNavbar";
 import TopNavbar from "v2/components/TopNavbar";
 import { store } from "v2/store";
 import CoreProvider from "v2/providers/CoreProvider";
+import DocsProvider from "v2/providers/DocsProvider";
 import Web3Provider from "v2/providers/Web3Provider";
 import UserModelProvider from "v2/providers/UserModelProvider";
 import ConnectionStatus from "v2/features/connection/ConnectionStatus";
 import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
+
+// Custom polyfills
+import "core-js/proposals/string-match-all";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -42,6 +46,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
           </div>
         </main>
         <CoreProvider />
+        <DocsProvider />
         <UserModelProvider />
       </Web3Provider>
     </Provider>

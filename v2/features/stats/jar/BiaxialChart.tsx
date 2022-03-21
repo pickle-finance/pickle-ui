@@ -11,25 +11,9 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
-import { AssetCoreData, JarChartData } from "./types";
+import { AssetCoreData, JarChartData } from "v2/types";
 
-const formatDates = (jarData: JarChartData, timeUnit: string) => {
-  const assetData =
-    jarData && jarData.assetData ? jarData.assetData[timeUnit] : [];
-  const sortedData = assetData
-    ? assetData.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
-    : [];
-  return sortedData;
-};
-
-const formatBigNumber = (value: number): string => {
-  return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
-  data,
-  timeUnit,
-}) => {
+const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit }) => {
   const { t } = useTranslation("common");
 
   const assetData: AssetCoreData[] = formatDates(data, timeUnit);
@@ -41,7 +25,7 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
   return (
     <ResponsiveContainer className="w-full">
       <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))"/>
+        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
         <XAxis
           dataKey="timestamp"
           tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
@@ -97,9 +81,7 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
           cursor={false}
           contentStyle={{ backgroundColor: "black", color: "#26ff91" }}
           labelFormatter={(label) =>
-            new Date(label).toLocaleDateString() +
-            " " +
-            new Date(label).toLocaleTimeString()
+            new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
           }
           formatter={(value: number) => formatBigNumber(value)}
         />
@@ -121,6 +103,18 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({
       </LineChart>
     </ResponsiveContainer>
   );
+};
+
+const formatDates = (jarData: JarChartData, timeUnit: string) => {
+  const assetData = jarData && jarData.assetData ? jarData.assetData[timeUnit] : [];
+  const sortedData = assetData
+    ? assetData.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+    : [];
+  return sortedData;
+};
+
+const formatBigNumber = (value: number): string => {
+  return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 export default Chart;

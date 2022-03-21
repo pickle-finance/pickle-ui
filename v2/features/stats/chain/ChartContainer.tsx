@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { ChainData } from "./types";
+import { ChainData } from "v2/types";
 import TvlChart from "./TvlChart";
 import RevsChart from "./RevsChart";
 import { useTranslation } from "next-i18next";
 
-export const ChartContainer: FC<{ chart: string; dataSeries: ChainData }> = ({
+const ChartContainer: FC<{ chart: string; dataSeries: ChainData }> = ({
   chart,
   dataSeries,
 }) => {
@@ -32,3 +32,5 @@ export const ChartContainer: FC<{ chart: string; dataSeries: ChainData }> = ({
     </div>
   );
 };
+
+export default ChartContainer;

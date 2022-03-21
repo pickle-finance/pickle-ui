@@ -1,17 +1,13 @@
 import React, { FC } from "react";
-import { AssetDocs } from "./types";
-import sanitizeHtml from "sanitize-html";
+import { renderHtmlFromString } from "v2/utils";
+import { AssetDocs } from "v2/types";
 
-export const DocContainer: FC<{ docs: AssetDocs }> = ({ docs }) => {
-  const createMarkup = () => {
-    if (docs.description) return { __html: sanitizeHtml(docs.description) };
-  };
+const DocContainer: FC<{ docs: AssetDocs }> = ({ docs }) => (
+  <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
+    <h2 className="font-body font-bold text-xl">Documentation</h2>
+    <br />
+    <p className="text-sm">{renderHtmlFromString(docs.description)}</p>
+  </div>
+);
 
-  return (
-    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
-      <h2 className="font-body font-bold text-xl">Documentation</h2>
-      <br />
-      <div dangerouslySetInnerHTML={createMarkup()} />
-    </div>
-  );
-};
+export default DocContainer;

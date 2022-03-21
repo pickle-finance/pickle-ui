@@ -173,7 +173,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
   const picklesPending = jar.earnedPickles.tokensVisible;
   const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
-  const aprRangeString = jar.aprStats?.apy.toFixed(3) + "%";
+  const aprRangeString = (jar.aprStats?.apy || 0).toFixed(3) + "%";
 
   return (
     <>

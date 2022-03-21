@@ -1,13 +1,14 @@
 import React, { FC, useState } from "react";
-import { ChartSelect } from "./ChartSelect";
+import ChartSelect from "./ChartSelect";
 import LineChart from "./LineChart";
 import BiaxialChart from "./BiaxialChart";
 import YieldChart from "./MultiLineChart";
-import BarChart from "./BarChart";
-import { JarChartData } from "./types";
-import { TimeUnitPanel } from "./TimeUnitPanel";
+import RevsChart from "./RevsChart";
+import TimeUnitPanel from "./TimeUnitPanel";
+import { JarChartData } from "v2/types";
 
-export const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
+
+const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
   const [selectedChart, setSelectedChart] = useState("value");
   const chartChange = (e: HTMLSelectElement): void => setSelectedChart(e.value);
 
@@ -50,8 +51,10 @@ export const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
         {selectedChart === "yield" && (
           <YieldChart data={jarData} timeUnit={selectedTimeUnit} />
         )}
-        {selectedChart === "revs" && <BarChart data={jarData} />}
+        {selectedChart === "revs" && <RevsChart data={jarData} />}
       </aside>
     </div>
   );
 };
+
+export default ChartContainer;

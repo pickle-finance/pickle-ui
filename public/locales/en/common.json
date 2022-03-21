@@ -31,6 +31,7 @@
     "blockNumber": "This is the current block number. This page is updated with every new block.",
     "changeNetwork": "Change Network",
     "coinbase": "Coinbase",
+    "clover": "Clover",
     "connect": "Connect Wallet",
     "connectPrompt": "Please connect to MetaMask to use Pickle on this chain.",
     "connectToContinue": "Please connect wallet to continue",
@@ -351,7 +352,9 @@
       "unlockDate": "Unlock date",
       "upcomingDistributionDate": "Upcoming distribution date",
       "upcomingDistributionValue": "Upcoming distribution value",
-      "usdValue": "USD Value"
+      "usdValue": "USD Value",
+      "weeklyDillAmount": "Weekly DILL 🔒",
+      "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
       "apy": "APY",
@@ -365,6 +368,12 @@
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
       "details": "Details",
+      "docs": {
+        "description": "Description",
+        "obtain": "How to obtain",
+        "risks": "Risks",
+        "social": "Social"
+      },
       "earned": "Earned",
       "earnedToken": "{{ token }} earned",
       "enable": "Enable",
@@ -372,11 +381,13 @@
       "farmAddress": "Farm Address",
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
+      "analytics": "Analytics",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "jarAddress": "Jar Address",
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
+      "loadingDocs": "Loading docs ...",
       "loadingUserModel": "Loading your balances ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
@@ -393,6 +404,7 @@
       "ratioTooltip": "The jar's ratio is the amount of underlying deposit tokens per pToken",
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
+      "strategyAddress": "Strategy Address",
       "token": "Token",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "yieldRates": "Yield rates"

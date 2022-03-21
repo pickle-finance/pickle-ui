@@ -17,6 +17,7 @@ import { TvlData } from "v2/types";
 const Chart: FC<{data: TvlData[]}> = ({data}) => {
   const { t } = useTranslation("common");
   const chartData = data ? data.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)) : [];
+  const dataMax: number = getDataMax(chartData);
 
   return (
     <ResponsiveContainer>
@@ -31,6 +32,7 @@ const Chart: FC<{data: TvlData[]}> = ({data}) => {
           tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx:-20 }}
         />
         <YAxis 
+          domain={[0, dataMax]}
           tickFormatter={(value) => new Intl.NumberFormat('en', { notation: "compact", compactDisplay: "short" }).format(value)} 
           width={100}
           padding={{ top: 50 }}
@@ -60,6 +62,14 @@ const Chart: FC<{data: TvlData[]}> = ({data}) => {
       </LineChart>
     </ResponsiveContainer>
   );
+}
+
+const getDataMax = (o: any[]): number => {
+  let dataMax = 0;
+  for (let i = 0;i < o.length; i++)
+    if (o[i].value > dataMax)
+      dataMax = o[i].value
+  return dataMax;
 }
 
 export default Chart;

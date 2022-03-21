@@ -1,11 +1,20 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
+import { FC, useEffect, useState } from "react";
 import { CubeIcon } from "@heroicons/react/solid";
-
-import { ConnectionSelectors } from "v2/store/connection";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 const BlockNumber: FC = () => {
-  const blockNumber = useSelector(ConnectionSelectors.selectBlockNumber);
+  const { library } = useWeb3React<Web3Provider>();
+  const [blockNumber, setBlockNumber] = useState<number>();
+
+  useEffect(() => {
+    if (library) {
+      library.on("block", setBlockNumber);
+      return () => {
+        library.removeAllListeners("block");
+      };
+    }
+  }, [library]);
 
   if (!blockNumber) return null;
 

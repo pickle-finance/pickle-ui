@@ -16,9 +16,11 @@ import {
 import { useSelector } from "react-redux";
 import { DillWeek } from "picklefinance-core/lib/model/PickleModelJson";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { RadioGroup } from "@headlessui/react";
 
 import { CoreSelectors } from "v2/store/core";
 import { roundNumber } from "util/number";
+import { classNames } from "v2/utils";
 
 interface Entry {
   payload: MonthlyDistributionDataPoint;
@@ -32,7 +34,7 @@ export type WeeklyFeeDistributionDataPoint = {
   pickleDillRatio: number;
   isProjected: boolean;
   picklePriceUsd: number;
-  distributionTime: Date;
+  distributionTime: string;
 };
 
 export type MonthlyDistributionDataPoint = {
@@ -46,7 +48,7 @@ export type MonthlyDistributionDataPoint = {
   distributionMonth: number;
 };
 
-const groupMonth = (dillStats: DillWeek[]) => {
+const groupMonth = (dillStats: WeeklyFeeDistributionDataPoint[]) => {
   let bymonth: { [key: string]: Array<WeeklyFeeDistributionDataPoint> } = {};
   dillStats?.map((week) => {
     const date = new Date(week["distributionTime"]);
@@ -59,15 +61,20 @@ const groupMonth = (dillStats: DillWeek[]) => {
 const formatDollarValue = (amount: number, digits: number) =>
   `$${roundNumber(amount, digits).toLocaleString()}`;
 
-const dateFormatter = (time: Date): string => dayjs(time).format("MMM YYYY");
+const dateFormatter = (time: Date, chartMode: string): string => {
+  if (!time) return "";
+  return chartMode === "monthly" ? dayjs(time).format("MMM YYYY") : dayjs(time).format("DD MMM");
+};
 
 const monthToDate = (month: number): Date =>
   new Date(`${(month % 12) + 1}/1/${Math.floor(month / 12 + 1970)}`);
 
-const labelFormatter = (month: number, data: any[]): string | ReactNode => {
-  const time = monthToDate(month);
+const labelFormatter = (monthOrDate: any, data: any[]): string | ReactNode => {
   const payload: MonthlyDistributionDataPoint | undefined = data[0]?.payload;
-  const formattedTime = dateFormatter(time);
+
+  const chartMode = payload?.distributionMonth ? "monthly" : "weekly";
+  const time = chartMode === "monthly" ? monthToDate(monthOrDate) : new Date(monthOrDate);
+  const formattedTime = dateFormatter(time, chartMode);
 
   if (payload) {
     return (
@@ -90,21 +97,19 @@ const tooltipFormatter = (
   const { picklePriceUsd } = entry.payload;
   const amount = value * picklePriceUsd;
   const formattedNumber = value.toLocaleString();
-  const formattedDollarValue = `${formattedNumber} (${formatDollarValue(
-    amount,
-    0,
-  )})`;
+  const formattedDollarValue = `${formattedNumber} (${formatDollarValue(amount, 0)})`;
 
   switch (name) {
     case "monthlyPickleAmount":
       return [formattedDollarValue, t("v2.dill.monthlyPickleAmount")];
     case "monthlyDillAmount":
       return [formattedNumber, t("v2.dill.monthlyDillAmount")];
+    case "weeklyPickleAmount":
+      return [formattedDollarValue, t("v2.dill.weeklyPickleAmount")];
+    case "weeklyDillAmount":
+      return [formattedNumber, t("v2.dill.weeklyDillAmount")];
     case "pickleDillRatio":
-      return [
-        `${formattedNumber} (${formatDollarValue(amount, 2)})`,
-        t("v2.dill.pickleDillRatio"),
-      ];
+      return [`${formattedNumber} (${formatDollarValue(amount, 2)})`, t("v2.dill.pickleDillRatio")];
     default:
       return [formattedNumber, name];
   }
@@ -120,6 +125,12 @@ const legendFormatter = (value: string, t: TFunction): ReactNode => {
     case "monthlyDillAmount":
       result = t("v2.dill.monthlyDillAmount");
       break;
+    case "weeklyPickleAmount":
+      result = t("v2.dill.weeklyPickleAmount");
+      break;
+    case "weeklyDillAmount":
+      result = t("v2.dill.weeklyDillAmount");
+      break;
     case "pickleDillRatio":
       result = t("v2.dill.pickleDillRatio");
       break;
@@ -131,11 +142,16 @@ const legendFormatter = (value: string, t: TFunction): ReactNode => {
 };
 
 interface FootnoteProps {
-  series: MonthlyDistributionDataPoint[];
+  series: MonthlyDistributionDataPoint[] | WeeklyFeeDistributionDataPoint[];
+  chartMode: ChartMode;
 }
 
-const Footnote: FC<FootnoteProps> = ({ series }) => {
-  const projectedEntry = series.find((entry) => entry.isProjected);
+const Footnote: FC<FootnoteProps> = ({ series, chartMode }) => {
+  const projectedEntry:
+    | MonthlyDistributionDataPoint
+    | WeeklyFeeDistributionDataPoint = (series as Array<any>).find(
+    (entry: { isProjected: any }) => entry.isProjected,
+  );
   const { t } = useTranslation("common");
 
   if (!projectedEntry) return null;
@@ -144,71 +160,142 @@ const Footnote: FC<FootnoteProps> = ({ series }) => {
     <aside className="px-4">
       *{" "}
       {t("dill.projectedData", {
-        date: dateFormatter(monthToDate(projectedEntry.distributionMonth)),
+        date:
+          chartMode === "monthly"
+            ? dateFormatter(
+                monthToDate((projectedEntry as MonthlyDistributionDataPoint).distributionMonth),
+                chartMode,
+              )
+            : dateFormatter(
+                new Date((projectedEntry as WeeklyFeeDistributionDataPoint).distributionTime),
+                chartMode,
+              ),
       })}
     </aside>
   );
 };
 
-// TODO: add toggle to switch between monthly and weekly view
+interface DillToggleProps {
+  chartMode: string;
+  setChartMode: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const DillToggle: FC<DillToggleProps> = ({ chartMode, setChartMode }) => {
+  const { t } = useTranslation("common");
+
+  const options = [
+    { value: t("v2.time.weekly"), key: "weekly" },
+    { value: t("v2.time.monthly"), key: "monthly" },
+  ];
+  const [option, setOption] = useState<any>(options[0]);
+
+  return (
+    <RadioGroup value={chartMode} onChange={setChartMode} className="pt-4">
+      <div className="flex">
+        <RadioGroup.Option
+          key="weekly"
+          value="weekly"
+          className={({ checked }) =>
+            classNames(
+              checked ? "bg-accent" : "bg-background-light hover:bg-background-lightest",
+              "border-y border-l border-accent font-title rounded-l-full cursor-pointer text-foreground py-3 px-6 flex items-center justify-center text-sm font-medium",
+            )
+          }
+        >
+          <RadioGroup.Label as="div">
+            <p>{t("v2.time.weekly")}</p>
+          </RadioGroup.Label>
+        </RadioGroup.Option>
+
+        <RadioGroup.Option
+          key="monthly"
+          value="monthly"
+          className={({ checked }) =>
+            classNames(
+              checked ? "bg-accent" : "bg-background-light hover:bg-background-lightest",
+              "border-y border-r border-accent font-title rounded-r-full cursor-pointer text-foreground py-3 px-6 flex items-center justify-center text-sm font-medium",
+            )
+          }
+        >
+          <RadioGroup.Label as="div">
+            <p>{t("v2.time.monthly")}</p>
+          </RadioGroup.Label>
+        </RadioGroup.Option>
+      </div>
+    </RadioGroup>
+  );
+};
+
 type ChartMode = "monthly" | "weekly";
 
 const HistoricChart: FC = () => {
   const { t } = useTranslation("common");
   const core = useSelector(CoreSelectors.selectCore);
-  const [dataSeries, setDataSeries] = useState<MonthlyDistributionDataPoint[]>(
-    [],
-  );
-  const [chartMode] = useState<ChartMode>("monthly");
+  const [dataSeries, setDataSeries] = useState<
+    MonthlyDistributionDataPoint[] | WeeklyFeeDistributionDataPoint[]
+  >([]);
+  const [chartMode, setChartMode] = useState<ChartMode>("monthly");
 
   useEffect(() => {
-    fetchFeeDistributionSeries();
-  }, [core]);
+    fetchFeeDistributionSeries(chartMode);
+  }, [core, chartMode]);
 
-  const fetchFeeDistributionSeries = async () => {
+  const fetchFeeDistributionSeries = async (chartMode: ChartMode) => {
     const dillStats = core?.dill?.dillWeeks!;
-    const dillByMonth = groupMonth(dillStats);
-    const monthKeys = Object.keys(dillByMonth) as Array<
-      keyof typeof dillByMonth
-    >;
-    const dillByMonthAggregated = monthKeys.reduce<
-      Array<MonthlyDistributionDataPoint>
-    >((acc, curr) => {
-      const monthData = dillByMonth[curr].reduce<MonthlyDistributionDataPoint>(
-        (acc2, curr2, _, { length }) => {
-          acc2 = {
-            monthlyPickleAmount:
-              (acc2.monthlyPickleAmount || 0) + curr2.weeklyPickleAmount,
-            totalPickleAmount: curr2.totalPickleAmount,
-            monthlyDillAmount:
-              (acc2.monthlyDillAmount || 0) + curr2.weeklyDillAmount,
-            totalDillAmount: curr2.totalDillAmount,
-            pickleDillRatio: curr2.pickleDillRatio,
-            isProjected: curr2.isProjected,
-            picklePriceUsd:
-              (acc2.picklePriceUsd || 0) + curr2.picklePriceUsd / length,
-            distributionMonth: curr as number,
-          };
-          return acc2;
+    const dillByWeek: WeeklyFeeDistributionDataPoint[] = dillStats.map((x) => {
+      return {
+        ...x,
+        distributionTime: x.distributionTime.toString().split("T")[0],
+      };
+    });
+    if (chartMode === "monthly") {
+      const dillByMonth = groupMonth(dillByWeek);
+      const monthKeys = Object.keys(dillByMonth) as Array<keyof typeof dillByMonth>;
+      const dillByMonthAggregated = monthKeys.reduce<Array<MonthlyDistributionDataPoint>>(
+        (acc, curr) => {
+          const monthData = dillByMonth[curr].reduce<MonthlyDistributionDataPoint>(
+            (acc2, curr2, _, { length }) => {
+              acc2 = {
+                monthlyPickleAmount: (acc2.monthlyPickleAmount || 0) + curr2.weeklyPickleAmount,
+                totalPickleAmount: curr2.totalPickleAmount || acc2.totalPickleAmount,
+                monthlyDillAmount: (acc2.monthlyDillAmount || 0) + curr2.weeklyDillAmount,
+                totalDillAmount: curr2.totalDillAmount,
+                pickleDillRatio: curr2.pickleDillRatio || acc2.pickleDillRatio,
+                isProjected: curr2.isProjected,
+                picklePriceUsd: (acc2.picklePriceUsd || 0) + curr2.picklePriceUsd / length,
+                distributionMonth: curr as number,
+              };
+              return acc2;
+            },
+            {} as MonthlyDistributionDataPoint,
+          );
+          return acc.concat(monthData);
         },
-        {} as MonthlyDistributionDataPoint,
+        [],
       );
-      return acc.concat(monthData);
-    }, []);
-    setDataSeries(dillByMonthAggregated);
+      setDataSeries(dillByMonthAggregated);
+    } else {
+      setDataSeries(dillByWeek);
+    }
   };
 
   return (
     <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.dill.historic")}</h2>
-      <aside className="h-[600px] px-3 py-10">
+      <DillToggle chartMode={chartMode} setChartMode={setChartMode} />
+      <aside className="h-[600px] px-3 py-2">
         {dataSeries.length > 0 ? (
           <ResponsiveContainer>
             {/* Passing in a new array object every time ensures transitions work correctly. */}
             <ComposedChart data={[...dataSeries]}>
               <XAxis
-                dataKey="distributionMonth"
-                tickFormatter={(x) => dateFormatter(monthToDate(x))}
+                dataKey={chartMode === "monthly" ? "distributionMonth" : "distributionTime"}
+                tickFormatter={(x, index) =>
+                  dateFormatter(
+                    chartMode === "monthly" ? monthToDate(x) : index % 2 ? x : null,
+                    chartMode,
+                  )
+                }
                 height={75}
                 angle={300}
                 interval={0}
@@ -220,7 +307,7 @@ const HistoricChart: FC = () => {
                 padding={{ top: 50 }}
                 tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
                 type="number"
-                domain={[0, 300000]}
+                domain={[-3000, 250000]}
                 tickCount={9}
               >
                 <Label
@@ -264,33 +351,27 @@ const HistoricChart: FC = () => {
                 formatter={(value: string) => legendFormatter(value, t)}
               />
               <Bar
-                dataKey={
-                  chartMode === "monthly"
-                    ? "monthlyDillAmount"
-                    : "weeklyDillAmount"
-                }
+                dataKey={chartMode === "monthly" ? "monthlyDillAmount" : "weeklyDillAmount"}
                 fill="rgb(var(--color-primary-dark))"
                 radius={[10, 10, 0, 0]}
               >
-                {dataSeries.map((_, index) => (
+                {dataSeries.map((point, index) => (
                   <Cell
                     fill="rgb(var(--color-primary-dark))"
+                    opacity={point.isProjected ? 0.25 : 1}
                     key={`dill-${index}`}
                   />
                 ))}
               </Bar>
               <Bar
-                dataKey={
-                  chartMode === "monthly"
-                    ? "monthlyPickleAmount"
-                    : "weeklyPickleAmount"
-                }
+                dataKey={chartMode === "monthly" ? "monthlyPickleAmount" : "weeklyPickleAmount"}
                 fill="rgb(var(--color-primary-light))"
                 radius={[10, 10, 0, 0]}
               >
-                {dataSeries.map((_, index) => (
+                {dataSeries.map((point, index) => (
                   <Cell
                     fill="rgb(var(--color-primary-light))"
+                    opacity={point.isProjected ? 0.25 : 1}
                     key={`pickle-${index}`}
                   />
                 ))}
@@ -317,7 +398,7 @@ const HistoricChart: FC = () => {
           />
         )}
       </aside>
-      <Footnote series={dataSeries} />
+      <Footnote series={dataSeries} chartMode={chartMode} />
     </div>
   );
 };

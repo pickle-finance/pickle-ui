@@ -10,6 +10,7 @@ import { PICKLE_ETH_SLP } from "./Contracts";
 import { PickleCore } from "./Jars/usePickleCore";
 import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 import { ChainNetwork } from "picklefinance-core";
+import { getComponentTokenAddresses } from "./Jars/useJarsWithUniV3";
 
 function useJars() {
   const { chainName } = Connection.useContainer();
@@ -30,8 +31,12 @@ function useJars() {
       const uniV3Jars = pickleCore?.assets.jars.filter(
         (x) => x.protocol === AssetProtocol.UNISWAP_V3 && x.chain === chainName,
       );
-      const uniV3Underlying = uniV3Jars
-        ?.map((x) => x.depositToken.componentAddresses)
+      const uniV3Underlying: string[] = uniV3Jars === undefined ? [] : uniV3Jars.map((x): string[] => {
+          const r: string[] | undefined = getComponentTokenAddresses(pickleCore, x);
+          if( r === undefined )
+            return [];
+          return r as string[];
+        })
         .flat()
         .filter((x) => x);
       const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
