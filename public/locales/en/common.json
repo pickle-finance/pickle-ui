@@ -438,6 +438,11 @@
           "apyRange": "APY Range"
         },
         "assetTableTitle": "Asset Stats",
+        "bigMoversTableHeader": {
+          "asset": "Asset",
+          "gain": "Gain",
+          "loss": "Loss"
+        },
         "revsChartTitle": "Daily Revenue",
         "revenueYLabel": "Revenue (USD)",
         "tvlChartTitle": "Total Value Locked",

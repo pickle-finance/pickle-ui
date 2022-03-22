@@ -47,6 +47,28 @@ export interface PlatformData {
   revenues: RevenueData[];
   chains: PlatformChainData;
 }
+
+export interface AssetCoreData {
+  asset: string;
+  balance: number;
+  depositTokenComponents: Component[];
+  depositTokenPrice: number;
+  farmAllocShare: number;
+  farmMaxApy: number;
+  farmMinApy: number;
+  farmPicklePerDay: number;
+  harvestable: number;
+  height: number;
+  interval: number;
+  jarApr: number;
+  jarApy: number;
+  ptokensInFarm: number;
+  ratio: number;
+  supply: number;
+  timestamp: number;
+  value: number;
+}
+
 // CHAIN
 export interface ChainData {
   chainId: string;
@@ -63,27 +85,6 @@ export interface AssetChangeData {
   previous: AssetCoreData;
 }
 
-export interface AssetCoreData {
-  asset: string;
-  balance: number;
-  depositTokenComponents: Component[];
-  depositTokenPrice: number;
-  farmAllocShare: number;
-  farmMaxApy: number;
-  farmMinApy: number;
-  farmPicklePerDay: number;
-  harvestable: number;
-  height: number;
-  interval: number;
-  jarApr: number;
-  jarApy: number;
-  ptokensInFarm: number;
-  ratio: number;
-  supply: number;
-  timestamp: number;
-  value: number;
-}
-
 interface Component {
   count: number;
   id: string;
@@ -98,26 +99,6 @@ export interface JarChartData {
 }
 interface JarAssetData {
   [key: string]: AssetCoreData[];
-}
-export interface AssetCoreData {
-  asset: string;
-  balance: number;
-  depositTokenComponents: Component[];
-  depositTokenPrice: number;
-  farmAllocShare: number;
-  farmMaxApy: number;
-  farmMinApy: number;
-  farmPicklePerDay: number;
-  harvestable: number;
-  height: number;
-  interval: number;
-  jarApr: number;
-  jarApy: number;
-  ptokensInFarm: number;
-  ratio: number;
-  supply: number;
-  timestamp: number;
-  value: number;
 }
 
 interface Component {
