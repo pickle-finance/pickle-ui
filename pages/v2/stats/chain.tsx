@@ -4,22 +4,36 @@ import { NextRouter, useRouter } from "next/router";
 import type { PickleFinancePage, ChainData } from "v2/types";
 import ChartContainer from "v2/features/stats/chain/ChartContainer";
 import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
+import { PctGainsTable} from "v2/features/stats/chain/BigMoverTables";
+import { getTokenPriceChangeBal, getTokenPriceChangePct } from "v2/features/stats/chain/BigMoverUtils";
+import BigMoverTableContainer from "v2/features/stats/chain/BigMoverTableContainer";
+
 
 const Stats: PickleFinancePage = () => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
+  const [tokenPctChangeData, setTokenPctChangeData] = useState<iTokenPriceChange[]>([]);
+  const [tokenBalChangeData, setTokenBalChangeData] = useState<iTokenPriceChange[]>([]);
+
   const router: NextRouter = useRouter();
   const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
-
   useEffect(() => {
     const getData = async (): Promise<void> => {
       getChainData(chain).then((data) => setChainData(data));
+      const tokenPriceChangePct = getTokenPriceChangePct(chainData)
+      setTokenPctChangeData(tokenPriceChangePct);
+      const tokenPriceChangeBal = getTokenPriceChangeBal(chainData)
+      setTokenBalChangeData(tokenPriceChangeBal);
     };
     getData();
-  }, [chain]);
-
+  }, [chain, chainData]);
+  
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
+        <span>
+          <BigMoverTableContainer type="pct" tableData={tokenPctChangeData}/>
+          <BigMoverTableContainer type="bal" tableData={tokenBalChangeData}/>
+        </span>
         <ChartContainer chart="tvl" dataSeries={chainData} />
         <ChartContainer chart="revs" dataSeries={chainData} />
         <AssetTableContainer assets={chainData.assets} />
@@ -47,6 +61,11 @@ const getChainData = async (chain: string): Promise<ChainData> => {
 };
 
 Stats.PageTitle = PageTitle;
+
+interface iTokenPriceChange {
+  apiKey: string;
+  tokenPriceChange: number;
+}
 
 export { getStaticProps } from "../../../util/locales";
 
