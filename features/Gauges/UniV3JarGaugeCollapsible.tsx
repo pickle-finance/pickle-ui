@@ -244,6 +244,10 @@ export const UniV3JarGaugeCollapsible: FC<{
 
   const realAPY = totalAPY + pickleAPY;
 
+  const multiplier = pickleCore?.assets.jars.find(
+    (x) => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+  )?.details?.harvestStats?.multiplier;
+
   const totalAPY1: number = APYs.map((x) => {
     return Object.values(x)
       .filter((x) => !isNaN(x))
@@ -266,6 +270,7 @@ export const UniV3JarGaugeCollapsible: FC<{
       const v = uncompoundAPY(Object.values(x)[0]);
       return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
     }),
+    ...(multiplier ? [`${t("frax.multiplier")}: ${multiplier.toFixed(1)}x`] : []),
     `${t(
       "farms.compounding",
     )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`,
