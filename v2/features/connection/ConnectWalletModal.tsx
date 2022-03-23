@@ -1,26 +1,22 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
+import { useSelector } from "react-redux";
 
 import Modal from "v2/components/Modal";
-import {
-  Connectors,
-  Connector,
-  injected,
-  walletconnect,
-  walletlink,
-} from "./connectors";
+import { Connectors, Connector, injected, walletconnect, walletlink } from "./connectors";
 import ConnectorItem from "./ConnectorItem";
 import coinbase from "public/wallet/coinbase.svg";
 import metamask from "public/wallet/metamask.svg";
 import walletConnect from "public/wallet/walletconnect.svg";
+import { ConnectionSelectors, setIsModalOpen } from "v2/store/connection";
+import { useAppDispatch } from "v2/store";
 
-interface Props {
-  isOpen: boolean;
-  closeModal: () => void;
-}
-
-const ConnectWalletModal: FC<Props> = ({ isOpen, closeModal }) => {
+const ConnectWalletModal: FC = () => {
   const { t } = useTranslation("common");
+  const dispatch = useAppDispatch();
+  const isOpen = useSelector(ConnectionSelectors.selectIsModalOpen);
+
+  const closeModal = () => dispatch(setIsModalOpen(false));
 
   const connectors: Connector[] = [
     {
@@ -44,11 +40,7 @@ const ConnectWalletModal: FC<Props> = ({ isOpen, closeModal }) => {
   ];
 
   return (
-    <Modal
-      isOpen={isOpen}
-      closeModal={closeModal}
-      title={t("v2.connection.connectWallet")}
-    >
+    <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.connection.connectWallet")}>
       <div className="grid gap-2">
         {connectors.map((connector) => (
           <ConnectorItem key={connector.title} connector={connector} />
