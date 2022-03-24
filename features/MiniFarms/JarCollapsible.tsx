@@ -302,6 +302,33 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/weth.png"} />
   ),
 
+  "0x2a560f2312cb56327ad5d65a03f1bfec10b62075": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/tokens/doge.png"} />
+  ),
+  "0x9e5bd780dff875dd85848a65549791445ae25de0": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/tokens/atom.png"} />
+  ),
+  "0x4b377121d968bf7a62d51b96523d59506e7c2bf0": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"tokens/tonic.png"} />
+  ),
+  "0x6f72a3f6db6f486b50217f6e721f4388994b1fbe": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/singlevvs.png"} />
+  ),
+  "0x0fbab8a90cac61b481530aad3a64fe17b322c25d": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/singleusdc.png"} />
+  ),
+  "0xa922530960a1f94828a7e132ec1ba95717ed1eab": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/tokens/tonic.png"} />
+  ),
+
+
+  "0xe44fd7fcb2b1581822d0c862b68222998a0c299a": (
+    <LpIcon swapIconSrc={"/protocols/tectonic.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23": (
+    <LpIcon swapIconSrc={"/protocols/tectonic.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+
   // Aurora
   "0x20f8aefb5697b77e0bb835a8518be70775cda1b0": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
