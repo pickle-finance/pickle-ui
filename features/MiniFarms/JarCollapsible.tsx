@@ -436,6 +436,18 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x1cad5f8f5d4c0ad49646b2565cc0ca725e4280ea": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
+  // NET BYTE/USDC
+  "0x3ab6be89ed5a0d4fdd412c246f5e6ddd250dd45c": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
+  ),
+  // NET BUSD/USDC
+  "0x8014c801f6cf32445d503f7bac30976b3161ee52": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/busdusdc.png"} />
+  ),
+  // NET METIS/RELAY
+  "0xa58bd557bfbc12f8ceaccc6e1668f5fbfb2118bb": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/relay.png"} />
+  ),
   // TETHYS TETHYS/METIS
   "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metis.png"} />

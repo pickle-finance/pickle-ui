@@ -4,15 +4,12 @@ import { useWeb3React } from "@web3-react/core";
 
 import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
-import Button from "v2/components/Button";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices } from "./FarmsTableRowHeader";
 import FarmsTableRowDetails from "./FarmsTableRowDetails";
-import ApprovalFlow from "./flows/approval/ApprovalFlow";
+import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionControls";
 import ConnectButton from "./ConnectButton";
-import DepositFlow from "./flows/deposit/DepositFlow";
-import LoadingIndicator from "v2/components/LoadingIndicator";
 
 interface Props {
   jar: JarWithData;
@@ -23,25 +20,15 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
   const pfcore = useAppSelector(CoreSelectors.selectCore);
   const userModel = useAppSelector(UserSelectors.selectData);
 
-  const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
-  const userTokenData = useAppSelector((state) =>
-    UserSelectors.selectTokenDataById(state, jar.details.apiKey),
-  );
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
-  const jarTokens = data.depositTokensInJar.tokensVisible;
-  const farmTokens = data.depositTokensInFarm.tokensVisible;
   const tokensInWallet = data.depositTokensInWallet.tokens;
-  const picklesPending = data.earnedPickles.tokensVisible;
   const depositTokenCountString = tokensInWallet + " Tokens";
-
-  const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
-  const userDepositTokenBalance = parseFloat(tokensInWallet);
 
   const networks = useAppSelector(CoreSelectors.selectNetworks);
   const { chainId } = useWeb3React();
 
   const activeNetwork = networks?.find((network) => network.chainId === chainId);
-  const isJarOnActiveNetwork = jar.chain === activeNetwork?.name;
+  const needsNetworkSwitch = jar.chain !== activeNetwork?.name;
   const jarNetwork = networks?.find((network) => network.name === jar.chain);
   const analyticsUrl: string | undefined = jar.details?.apiKey
     ? "/v2/stats/jar?jar=" + jar.details.apiKey
@@ -52,8 +39,8 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
       colSpan={6}
       className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
-      <div className="block sm:flex">
-        <div className="py-4 flex-shrink-0 sm:mr-6">
+      <div className="flex">
+        <div className="pt-4 pb-6 flex-shrink-0 mr-6">
           <p className="font-title font-medium text-base leading-5">{depositTokenCountString}</p>
           <p className="font-normal text-xs text-foreground-alt-200 mb-6">
             {t("v2.balances.balance")}
@@ -68,65 +55,13 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
             </Link>
           )}
         </div>
-        <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
-          <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-            {t("v2.farms.depositedToken", { token: jar.depositToken.name })}
-          </p>
-          <div className="flex items-end justify-between">
-            <span className="font-title text-primary font-medium text-base leading-5">
-              {jarTokens}
-            </span>
-            {isJarOnActiveNetwork ? (
-              <>
-                <ApprovalFlow jar={jar} visible={!userHasJarAllowance} />
-                <DepositFlow
-                  jar={jar}
-                  visible={userHasJarAllowance}
-                  depositTokenBalance={userDepositTokenBalance}
-                />
-              </>
-            ) : (
+        <div className="relative w-full mb-2">
+          <FarmsTableRowBodyTransactionControls jar={jar} />
+          {needsNetworkSwitch && (
+            <div className="absolute inset-0 flex grow justify-center items-center border border-foreground-alt-500 rounded-xl bg-background-light bg-opacity-90 backdrop-filter backdrop-blur-sm">
               <ConnectButton network={jarNetwork} />
-            )}
-          </div>
-        </div>
-        <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 sm:mr-6">
-          <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-            {t("v2.farms.stakedToken", { token: jar.depositToken.name })}
-          </p>
-          <div className="flex items-end justify-between">
-            <span className="font-title text-primary font-medium text-base leading-5">
-              {farmTokens}
-            </span>
-            <div className="grid grid-cols-2 gap-3">
-              <Button type="secondary" state="disabled" className="w-11">
-                +
-              </Button>
-              <Button type="secondary" state="disabled" className="w-11">
-                -
-              </Button>
             </div>
-          </div>
-        </div>
-        <div className="grow self-start">
-          <div className="border border-foreground-alt-500 rounded-xl p-4">
-            <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-              {t("v2.farms.earnedToken", { token: "PICKLEs" })}
-            </p>
-            <div className="flex items-end justify-between">
-              <span className="font-title text-primary font-medium text-base leading-5">
-                {picklesPending}
-              </span>
-              <Button type="primary" state="disabled">
-                {t("v2.farms.harvest")}
-              </Button>
-            </div>
-          </div>
-          <div className="relative">
-            {isUserModelLoading && (
-              <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-3" />
-            )}
-          </div>
+          )}
         </div>
       </div>
       <FarmsTableRowDetails jar={jar} />
