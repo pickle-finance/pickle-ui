@@ -24,7 +24,7 @@
     "@davatar/react": "^1.8.1",
     "@ethersproject/abstract-provider": "^5.0.4",
     "@ethersproject/providers": "^5.1.0",
-    "@geist-ui/react": "^2.0.2",
+    "@geist-ui/react": "2.0.2",
     "@geist-ui/react-icons": "^1.0.0",
     "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.5",

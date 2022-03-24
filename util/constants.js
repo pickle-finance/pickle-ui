@@ -23,5 +23,6 @@ export const noFarms = (chainName) =>
   chainName === ChainNetwork.Optimism ||
   chainName === ChainNetwork.Fantom;
 
-export const someFarms = (chainName) => chainName === ChainNetwork.Metis;
+export const neverExpireEpochTime = "33202513960";
 
+export const someFarms = (chainName) => chainName === ChainNetwork.Metis;
