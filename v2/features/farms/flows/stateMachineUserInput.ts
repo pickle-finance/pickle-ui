@@ -1,8 +1,8 @@
-import { createMachine, assign, State } from "xstate";
+import { createMachine, assign } from "xstate";
 
 interface DepositContext {
   txHash: string | undefined;
-  amount: number | undefined;
+  amount: string;
 }
 
 export enum States {
@@ -23,30 +23,35 @@ export enum Actions {
 }
 
 export const stateMachine = createMachine<DepositContext>({
-  id: "deposit",
   initial: States.FORM,
   context: {
     txHash: undefined,
-    amount: 0,
+    amount: "0",
   },
   states: {
     [States.FORM]: {
-      on: { [Actions.SUBMIT_FORM]: States.AWAITING_CONFIRMATION },
+      on: { [Actions.SUBMIT_FORM]: { target: States.AWAITING_CONFIRMATION } },
     },
     [States.AWAITING_CONFIRMATION]: {
       entry: assign({
         amount: (_context, event) => event.amount,
       }),
-      on: { [Actions.TRANSACTION_SENT]: States.AWAITING_RECEIPT, [Actions.EDIT]: States.FORM },
+      on: {
+        [Actions.TRANSACTION_SENT]: { target: States.AWAITING_RECEIPT },
+        [Actions.EDIT]: { target: States.FORM },
+      },
     },
     [States.AWAITING_RECEIPT]: {
       entry: assign({
         txHash: (_context, event) => event.txHash,
       }),
-      on: { [Actions.SUCCESS]: States.SUCCESS, [Actions.FAILURE]: States.FAILURE },
+      on: {
+        [Actions.SUCCESS]: { target: States.SUCCESS },
+        [Actions.FAILURE]: { target: States.FAILURE },
+      },
     },
     [States.FAILURE]: {
-      on: { [Actions.RETRY]: States.AWAITING_CONFIRMATION },
+      on: { [Actions.RETRY]: { target: States.AWAITING_CONFIRMATION } },
     },
     [States.SUCCESS]: {
       type: "final",

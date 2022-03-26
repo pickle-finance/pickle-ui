@@ -29,7 +29,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
   if (requiresUserModel && userModel) {
     const apiKeys = Object.entries(userModel.tokens)
       .filter(([_, data]) => hasBalances(data!))
-      .map(([apiKey]) => apiKey);
+      .map(([apiKey]) => apiKey.toUpperCase());
     jars = jars.filter((jar) => apiKeys.includes(jar.details.apiKey));
   }
 

@@ -2,29 +2,27 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { CashIcon, ClockIcon } from "@heroicons/react/solid";
+import { BigNumber } from "ethers";
+import { useSelector } from "react-redux";
+import { PickleModelJson } from "picklefinance-core";
+import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "./Button";
 import HarvestModal, { RewardRowProps } from "./HarvestModal";
-import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
-import { UserSelectors, UserDataV2 } from "v2/store/user";
-import { PickleModelJson } from "picklefinance-core";
-import {
-  getUserAssetDataWithPrices,
-  UserAssetDataWithPrices,
-} from "v2/features/farms/FarmsTableRowHeader";
-import { BigNumber } from "ethers";
+import { UserSelectors } from "v2/store/user";
+import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
 import { formatUsd } from "util/api";
-import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 
 export const getTotalBalances = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserDataV2,
+  userdata: UserData,
 ): string => {
   let runningUsd = 0;
 
   Object.entries(userdata.tokens).forEach(([key]) => {
-    const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
+    const jar = core.assets.jars.find((x) => x.details?.apiKey === key.toUpperCase());
     if (jar) {
       const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
       if (data) {
@@ -39,7 +37,7 @@ export const getTotalBalances = (
 
 export const getPendingRewardsUsd = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserDataV2,
+  userdata: UserData,
 ): string => {
   const jarData = getUserAssetDataWithPricesForJars(core, userdata);
   let runningUsd = 0;
@@ -56,19 +54,20 @@ export const getPendingRewardsUsd = (
 
 export const getPendingHarvestsUsd = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserDataV2,
+  userdata: UserData,
 ): string => {
   let runningUsd = 0;
 
   Object.entries(userdata.tokens).forEach(([key, tokenData]) => {
-    const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
+    const jar = core.assets.jars.find((x) => x.details?.apiKey === key.toUpperCase());
 
     if (!jar) return;
 
     const totalPTokens = jar.details?.tokenBalance;
     if (totalPTokens) {
       const userShare =
-        (parseFloat(tokenData!.pAssetBalance) + parseFloat(tokenData!.pStakedBalance)) /
+        (parseFloat(tokenData!.pAssetBalance || "0") +
+          parseFloat(tokenData!.pStakedBalance || "0")) /
         (totalPTokens * 1e18);
       const pendingHarvest = jar.details.harvestStats?.harvestableUSD;
       if (pendingHarvest) {
@@ -83,12 +82,12 @@ export const getPendingHarvestsUsd = (
 
 export const getUserAssetDataWithPricesForJars = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserDataV2,
+  userdata: UserData,
 ): UserAssetDataWithPrices[] => {
   const ret: UserAssetDataWithPrices[] = [];
 
   Object.entries(userdata.tokens).forEach(([key]) => {
-    const jar = core.assets.jars.find((x) => x.details?.apiKey === key);
+    const jar = core.assets.jars.find((x) => x.details?.apiKey === key.toUpperCase());
     if (jar) {
       const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
       if (data) {
@@ -111,13 +110,15 @@ export const userVisibleStringForPickleAsset = (
   core: PickleModelJson.PickleModelJson,
 ): string | undefined => {
   const allAssets: PickleAsset[] = getAllPickleAssets(core);
-  const asset: PickleAsset | undefined = allAssets.find((x) => x.details?.apiKey === apiKey);
+  const asset: PickleAsset | undefined = allAssets.find(
+    (x) => x.details?.apiKey === apiKey.toUpperCase(),
+  );
   return asset ? asset.depositToken.name : undefined;
 };
 
 export const getRewardRowPropertiesForRewards = (
   core: PickleModelJson.PickleModelJson,
-  userdata: UserDataV2,
+  userdata: UserData,
 ): RewardRowProps[] => {
   const ret: RewardRowProps[] = [];
   const jarData = getUserAssetDataWithPricesForJars(core, userdata);
