@@ -99,11 +99,6 @@ export const NavItems: FC = () => {
             {t("nav.dill")}
           </NavItem>
         </Link>
-        <Link href="/frax" passHref>
-          <NavItem active={router.pathname.startsWith("/frax")}>
-            {t("nav.frax")}
-          </NavItem>
-        </Link>
         <Popover
           content={infoItems(router)}
           trigger="hover"
