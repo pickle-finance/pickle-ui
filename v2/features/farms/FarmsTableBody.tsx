@@ -21,25 +21,25 @@ interface Props {
 
 const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
   const { t } = useTranslation("common");
-  const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
-  const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
+  const core = useSelector(CoreSelectors.selectCore);
   const userModel = useSelector(UserSelectors.selectData);
   let jars = useSelector(CoreSelectors.makeJarsSelector({ filtered: !simple, paginated: !simple }));
 
   // TODO Should be all assets, not just jars
   if (requiresUserModel && userModel) {
-    const apiKeys = userModel.tokens.filter(hasBalances).map((asset) => asset.assetKey);
+    const apiKeys = Object.entries(userModel.tokens)
+      .filter(([_, data]) => hasBalances(data!))
+      .map(([apiKey]) => apiKey);
     jars = jars.filter((jar) => apiKeys.includes(jar.details.apiKey));
   }
 
-  const isCoreLoading = coreLoadingState !== "fulfilled";
-  const isLoading = isCoreLoading || (requiresUserModel && isUserModelLoading);
+  const isLoading = !core || (requiresUserModel && !userModel);
 
   if (isLoading) {
     return (
       <tr>
         <td colSpan={6}>
-          <LoadingIndicator waitForCore waitForUserModel />
+          <LoadingIndicator waitForCore waitForUserModel className="py-8" />
         </td>
       </tr>
     );

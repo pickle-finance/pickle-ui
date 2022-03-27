@@ -5,6 +5,7 @@ import GasPriceIndicator from "./GasPriceIndicator";
 import NetworkToggle from "v2/features/connection/NetworkToggle";
 import WalletToggle from "v2/features/connection/WalletToggle";
 import ThemeToggle from "v2/features/theme/ThemeToggle";
+import ConnectWalletModal from "v2/features/connection/ConnectWalletModal";
 
 interface Props {
   PageTitle: FC;
@@ -21,6 +22,7 @@ const TopNavbar: FC<Props> = ({ PageTitle }) => (
       <NetworkToggle />
       <GasPriceIndicator />
       <WalletToggle />
+      <ConnectWalletModal />
     </div>
   </div>
 );

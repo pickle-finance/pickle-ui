@@ -13,7 +13,7 @@ import {
   Legend,
 } from "recharts";
 import { formatDollars } from "v2/utils/format";
-import { RevenueData } from "./types";
+import { RevenueData } from "v2/types";
 
 const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
   const { t } = useTranslation("common");

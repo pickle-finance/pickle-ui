@@ -11,6 +11,7 @@ import CoreProvider from "v2/providers/CoreProvider";
 import DocsProvider from "v2/providers/DocsProvider";
 import Web3Provider from "v2/providers/Web3Provider";
 import UserModelProvider from "v2/providers/UserModelProvider";
+import UserFlowsAnimationsProvider from "v2/providers/UserFlowsAnimationsProvider";
 import ConnectionStatus from "v2/features/connection/ConnectionStatus";
 import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
@@ -48,6 +49,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
         <CoreProvider />
         <DocsProvider />
         <UserModelProvider />
+        <UserFlowsAnimationsProvider />
       </Web3Provider>
     </Provider>
   );

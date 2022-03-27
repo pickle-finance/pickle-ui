@@ -3,12 +3,11 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { UserSelectors } from "v2/store/user";
-import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { BigNumber } from "@ethersproject/bignumber";
 
 const PickleBalanceCard: FC = () => {
   const { t } = useTranslation("common");
-  const userModel: UserData | undefined = useSelector(UserSelectors.selectData);
+  const userModel = useSelector(UserSelectors.selectData);
   let pickles = 0;
   let chains = 0;
   if (userModel) {
@@ -37,9 +36,7 @@ const PickleBalanceCard: FC = () => {
             />
           </div>
           <div>
-            <p className="font-title font-medium text-2xl leading-7 mb-1">
-              {pickles}
-            </p>
+            <p className="font-title font-medium text-2xl leading-7 mb-1">{pickles}</p>
             <p className="text-foreground-alt-200 text-sm">
               {chains > 1
                 ? t("v2.dashboard.picklesInWallet", { chains: chains })

@@ -19,7 +19,7 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickleBalance }) => {
       <div className="bg-background-lightest rounded-xl px-4 py-2">
         <div className="flex justify-between mb-2">
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.dill.amount")}
+            {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
             {t("v2.dill.pickleBalance")}: {pickleBalance}

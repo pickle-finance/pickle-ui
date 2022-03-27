@@ -314,12 +314,15 @@
   },
   "v2": {
     "actions": {
+      "approve": "Approve",
       "close": "Close",
       "confirm": "Confirm",
       "enable": "Enable",
-      "harvest": "Harvest"
+      "harvest": "Harvest",
+      "retry": "Retry"
     },
     "balances": {
+      "amount": "Amount",
       "balance": "Balance",
       "fetching": "Fetching your balances",
       "lastUpdated": "Your balances updated <1 /> ago.",
@@ -349,7 +352,6 @@
       "unclaimedRewards": "Unclaimed rewards"
     },
     "dill": {
-      "amount": "Amount",
       "currentAPY": "Current APY",
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
       "dillAmount": "DILL amount",
@@ -368,9 +370,13 @@
       "unlockDate": "Unlock date",
       "upcomingDistributionDate": "Upcoming distribution date",
       "upcomingDistributionValue": "Upcoming distribution value",
-      "usdValue": "USD Value"
+      "usdValue": "USD Value",
+      "weeklyDillAmount": "Weekly DILL 🔒",
+      "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
+      "analytics": "Analytics",
+      "approveToken": "Approve {{ token }}",
       "apy": "APY",
       "apyBreakdown": "APY breakdown",
       "asset": "Asset",
@@ -381,6 +387,7 @@
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
+      "depositToken": "Deposit {{ token }}",
       "details": "Details",
       "docs": {
         "description": "Description",
@@ -395,7 +402,7 @@
       "farmAddress": "Farm Address",
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
-      "analytics": "Analytics",
+      "givePermission": "Give Pickle Finance permission to access your {{ token }}?",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
       "jarAddress": "Jar Address",
@@ -419,8 +426,11 @@
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
       "strategyAddress": "Strategy Address",
+      "success": "Success!",
       "token": "Token",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
+      "transactionFailed": "Transaction failed",
+      "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "yieldRates": "Yield rates"
     },
     "gasPrices": {
