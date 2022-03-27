@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { BigNumber } from "@ethersproject/bignumber";
 import { JarDefinition, PickleModelJson } from "picklefinance-core/lib/model/PickleModelJson";
-import { UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import FarmComponentsIcons from "./FarmComponentsIcons";
 import { Network } from "../connection/networks";
+import { UserDataV2 } from "v2/store/user";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -107,17 +108,15 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => {
 export const getUserAssetDataWithPrices = (
   jar: JarDefinition,
   core: PickleModelJson | undefined,
-  userModel: UserData | undefined,
+  userModel: UserDataV2 | undefined,
 ): UserAssetDataWithPrices => {
   if (core === undefined || userModel === undefined) {
     return userAssetDataZeroEverything();
   }
-  const userTokenDetails: UserTokenData | undefined = userModel.tokens.find(
-    (x) => x.assetKey === jar.details.apiKey,
-  );
-  if (userTokenDetails === undefined) {
-    return userAssetDataZeroEverything();
-  }
+  const userTokenDetails = userModel.tokens[jar.details.apiKey];
+
+  if (userTokenDetails === undefined) return userAssetDataZeroEverything();
+
   const jarDecimals = jar.details.decimals
     ? jar.details.decimals
     : jar.depositToken.decimals

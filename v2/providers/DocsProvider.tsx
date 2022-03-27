@@ -1,10 +1,10 @@
-import { FC, useEffect } from "react";
+import { VFC, useEffect } from "react";
 import { useTranslation } from "next-i18next";
 
 import { useAppDispatch } from "v2/store";
 import { fetchDocs } from "v2/store/docs";
 
-const DocsProvider: FC = ({ children }) => {
+const DocsProvider: VFC = () => {
   const dispatch = useAppDispatch();
   const { i18n } = useTranslation();
 
@@ -12,7 +12,7 @@ const DocsProvider: FC = ({ children }) => {
     dispatch(fetchDocs(i18n.language));
   }, [i18n.language]);
 
-  return <>{children}</>;
+  return null;
 };
 
 export default DocsProvider;

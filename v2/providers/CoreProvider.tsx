@@ -1,16 +1,17 @@
-import { FC, useEffect } from "react";
+import { VFC } from "react";
+import { useIntervalWhen } from "rooks";
 
 import { useAppDispatch } from "v2/store";
 import { fetchCore } from "v2/store/core";
 
-const CoreProvider: FC = ({ children }) => {
+const refreshInterval = 5 * 60 * 1000;
+
+const CoreProvider: VFC = () => {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchCore());
-  }, []);
+  useIntervalWhen(() => dispatch(fetchCore()), refreshInterval, true, true);
 
-  return <>{children}</>;
+  return null;
 };
 
 export default CoreProvider;

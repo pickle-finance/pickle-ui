@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { formatDollars } from "v2/utils/format";
-import { TvlData } from "./types";
+import { TvlData } from "v2/types";
 
 const Chart: FC<{ data: TvlData[] }> = ({ data }) => {
   const { t } = useTranslation("common");

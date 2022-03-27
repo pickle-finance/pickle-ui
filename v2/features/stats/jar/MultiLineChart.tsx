@@ -11,13 +11,13 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
-import { ApyChartData, AssetCoreData, JarChartData } from "./types";
+import { ApyChartData, AssetCoreData, JarChartData } from "v2/types";
 
 const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit }) => {
   const { t } = useTranslation("common");
 
-  const assetData = data && data.assetData ? data.assetData[timeUnit] : [];
-  const sortedData = assetData
+  const assetData: AssetCoreData[] = data && data.assetData ? data.assetData[timeUnit] : [];
+  const sortedData: AssetCoreData[] = assetData
     ? assetData.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
     : [];
   const chartData: ApyChartData[] = sortedData.map(aprAndApyData);

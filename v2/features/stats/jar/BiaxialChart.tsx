@@ -11,7 +11,7 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
-import { AssetCoreData, JarChartData } from "./types";
+import { AssetCoreData, JarChartData } from "v2/types";
 
 const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit }) => {
   const { t } = useTranslation("common");

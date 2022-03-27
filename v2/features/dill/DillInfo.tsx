@@ -14,7 +14,7 @@ const DillInfo: FC = () => {
   if (!userData)
     return (
       <div className="col-span-3">
-        <LoadingIndicator waitForUserModel />
+        <LoadingIndicator waitForUserModel className="py-8" />
       </div>
     );
 

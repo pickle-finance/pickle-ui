@@ -4,7 +4,7 @@ import RevsChart from "./RevsChart";
 import { PlatformData } from "v2/types";
 import { useTranslation } from "next-i18next";
 
-export const ChartContainer: FC<{
+const ChartContainer: FC<{
   chart: string;
   dataSeries: PlatformData;
 }> = ({ chart, dataSeries }) => {
@@ -32,3 +32,5 @@ export const ChartContainer: FC<{
     </div>
   );
 };
+
+export default ChartContainer;
