@@ -19,7 +19,7 @@ import { formatEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { UserJarData } from "../../containers/UserJars";
+import { UserJarData } from "containers/UserJars";
 import {
   LpIcon,
   TokenIcon,

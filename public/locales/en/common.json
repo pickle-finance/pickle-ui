@@ -56,6 +56,19 @@
     "unsupportedNetwork": "Please Connect to one of the following supported chains:",
     "connectTo": "Connect to"
   },
+  "frax": {
+    "connectionPrompt": "Please switch to Ethereum network to use FRAX features.",
+    "description": "Convert your FXS to pveFXS and earn FXS fee distribution rewards plus a shared of boosted FXS rewards",
+    "frax": "Frax Backscratcher",
+    "deposit": "This vault accepts FXS in exchange for a perpetual claim on Frax protocol fees. Your initially locked FXS cannot be redeemed, but a receipt token pveFXS is issued to represent your proportionate share of locked FXS",
+    "apy": "FXS APR",
+    "locked": "FXS locked with Pickle",
+    "tvl": "FXS value locked with Pickle",
+    "info": "Info",
+    "userLocked": "Your locked FXS",
+    "lockFxs": "Lock FXS",
+    "multiplier": "multiplier"
+  },
   "dill": {
     "approveAndCreateLock": "Approve and Create Lock",
     "apy": "DILL holder APY",
@@ -167,9 +180,11 @@
       "rewards": "Rewards are automatically harvested on staking and unstaking."
     },
     "poweredBy": "Powered by",
+    "boostedBy": "Boosted by",
     "ratio": "Ratio",
     "showInactive": "Show Inactive",
     "showMyJars": "Show My Jars",
+    "shouldZap": "Zap to correct ratio",
     "stake": "Stake",
     "stakeUnstaked": "Stake Unstaked {{ amount }} Tokens in Farm",
     "staking": "Staking...",
@@ -260,6 +275,7 @@
     "docs": "Docs",
     "feedback": "Feedback",
     "forum": "Forum",
+    "frax": "Frax",
     "github": "Github",
     "info": "Info",
     "jars": "Jars",
@@ -327,11 +343,11 @@
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",
-      "pendingHarvests": "Pending harvests",
       "performance": "Performance",
-      "picklesInWallet": "PICKLEs on {{ chains }} chains",
       "picklesInWalletZeroOrOne": "PICKLEs in wallet",
+      "picklesInWallet": "PICKLEs on {{ chains }} chains",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
+      "pendingHarvests": "Pending harvests",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
     },

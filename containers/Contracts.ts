@@ -102,6 +102,12 @@ import { PickleCore } from "./Jars/usePickleCore";
 import { ADDRESSES } from "picklefinance-core/lib/model/PickleModel";
 import { ChainNetwork } from "picklefinance-core";
 
+import { ControllerUniv3 } from "./Contracts/ControllerUniv3";
+import { ControllerUniv3__factory as ControllerUniv3Factory } from "./Contracts/factories/ControllerUniv3__factory";
+
+import { VefxsVault } from "./Contracts/VefxsVault";
+import { VefxsVault__factory as VefxsVaultFactory } from "./Contracts/factories/VefxsVault__factory";
+
 export const PICKLE_STAKING_SCRV_REWARDS =
   "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
 export const PICKLE_STAKING_WETH_REWARDS =
@@ -223,6 +229,9 @@ export const JSWAPCHEF = "0x83C35EA2C32293aFb24aeB62a14fFE920C2259ab";
 export const DODO_REWARDS = "0x06633cd8E46C3048621A517D6bb5f0A84b4919c6";
 export const LOOKS_STAKING = "0xBcD7254A1D759EFA08eC7c3291B2E85c5dCC12ce";
 
+export const CONTROLLER_UNIV3 = "0x7B5916C61bCEeaa2646cf49D9541ac6F5DCe3637";
+export const VEFXS_VAULT = "0x62826760CC53AE076a7523Fd9dCF4f8Dbb1dA140";
+
 function useContracts() {
   const { signer, chainId, multicallProvider } = Connection.useContainer();
   const { pickleCore } = PickleCore.useContainer();
@@ -338,9 +347,16 @@ function useContracts() {
   const [looksStaking, setLooksStaking] = useState<LooksStaking | null>(null);
 
   const [
+    controllerUniV3,
+    setControllerUniV3,
+  ] = useState<ControllerUniv3 | null>(null);
+
+  const [
     rallyRewardPools,
     setRallyRewardPools,
   ] = useState<RallyRewardPools | null>(null);
+
+  const [vefxsVault, setVefxsVault] = useState<VefxsVault | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
@@ -495,6 +511,14 @@ function useContracts() {
       );
       setDodoRewards(DodoRewardsFactory.connect(DODO_REWARDS, signer));
 
+      setControllerUniV3(
+        ControllerUniv3Factory.connect(CONTROLLER_UNIV3, signer),
+      );
+
+      setVefxsVault(
+        VefxsVaultFactory.connect(VEFXS_VAULT, signer)
+      )
+
       setLooksStaking(LooksStakingFactory.connect(LOOKS_STAKING, signer))
     }
   };
@@ -559,6 +583,8 @@ function useContracts() {
     rallyRewardPools,
     dodoPair,
     dodoRewards,
+    controllerUniV3,
+    vefxsVault,
     looksStaking
   };
 }
