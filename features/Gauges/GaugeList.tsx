@@ -172,6 +172,14 @@ export const GaugeList: FC = () => {
     ?.filter((jar) => jar.protocol == AssetProtocol.UNISWAP_V3 && !isFrax(jar.depositToken.address))
     .sort((x, y) => +isFrax(y.depositToken.address) - +isFrax(x.depositToken.address));
 
+  const uniV3JarsFiltered = uniV3Jars?.filter((jar) => {
+    const gauge = findGauge(jar);
+    return showUserJars ?
+       jar &&
+          (parseFloat(formatEther(jar.deposited)) || parseFloat(formatEther(gauge?.staked || 0)))
+          : jar;
+  })
+
   const activeGauges = gaugesWithAPY.sort(
     (a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy),
   );
@@ -241,7 +249,7 @@ export const GaugeList: FC = () => {
         <h2>{t("farms.jarsAndFarms")}</h2>
       </div>
       <Grid.Container gap={1}>
-        {chainName === ChainNetwork.Ethereum && (
+        {chainName === ChainNetwork.Ethereum && uniV3JarsFiltered.length > 0 && (
           /*<>
             {t("farms.boostedBy")}&nbsp;
             <a href="/frax" target="_">
@@ -249,7 +257,7 @@ export const GaugeList: FC = () => {
             </a>
             &nbsp;⚡ */
             <>
-            {uniV3Jars?.map((jar, idx) => {
+            {uniV3JarsFiltered?.map((jar, idx) => {
               const gauge = findGauge(jar);
               if (!gauge) return;
               return (
