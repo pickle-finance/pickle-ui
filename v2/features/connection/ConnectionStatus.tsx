@@ -79,7 +79,6 @@ export const switchChain = async (
 };
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
-  const { t } = useTranslation("common");
   const { activate, connector, library } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
@@ -139,7 +138,6 @@ const ConnectionStatus: FC = () => {
   let { error, chainId } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  console.log(chainId);
   if (!isRelevantError(error) && chainId && supportedChains.includes(chainId)) return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {
     // App will function with all known chains
