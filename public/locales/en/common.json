@@ -315,6 +315,7 @@
     "connection": {
       "coinbase": "Coinbase",
       "connectWallet": "Connect wallet",
+      "disconnectedWallet": "Please connect your wallet to interact. Pickle supports the following networks: ",
       "errorTitle": "Uh oh, we're in a pickle here!",
       "metamask": "Metamask",
       "unauthorized": "Please <1>authorize</1> Pickle Finance to access your Ethereum account.",
