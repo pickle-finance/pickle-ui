@@ -41,7 +41,7 @@ const castVote = (
     toast.error("Sum of Jar Vote Absolute Values Must Equal 100", toastSettings);
   } else {
     sendRequestToDillVoter(msg, account, provider);
-    console.log(voteData);
+    // console.log(voteData);
   }
 };
 

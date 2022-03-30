@@ -8,7 +8,6 @@ import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
 const Stats: PickleFinancePage = () => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const router: NextRouter = useRouter();
-  console.log(router.query);
   const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
 
   useEffect(() => {

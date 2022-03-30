@@ -4,6 +4,7 @@ import { AssetAprComponent, JarDefinition } from "picklefinance-core/lib/model/P
 import { classNames, formatPercentage } from "v2/utils";
 import TableSpacerRow from "./TableSpacerRow";
 import { iOffchainVoteData, UserVote } from "v2/store/offchainVotes";
+import { UserDataV2 } from "v2/store/user";
 
 export const JarTableRow: FC<{
   jar: string;
@@ -11,7 +12,8 @@ export const JarTableRow: FC<{
   mainnet: boolean;
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
-}> = ({ jar, core, mainnet, offchainVoteData, wallet }) => {
+  user?: UserDataV2;
+}> = ({ jar, core, mainnet, offchainVoteData, wallet, user }) => {
   const jarData: JarDefinition = core
     ? core.assets.jars.filter((x) => {
         if (x && x.details && x.details.apiKey) return x.details.apiKey === jar;
@@ -46,7 +48,7 @@ export const JarTableRow: FC<{
         </JarTableCell>
         <JarTableCell>
           {mainnet ? (
-            <JarTableP text={"-"} />
+            <JarTableP text={getMainnetUserWeight(jar, core, user)} />
           ) : (
             <JarTableP text={getOffchainUserWeight(jar, offchainVoteData, wallet)} />
           )}
@@ -138,4 +140,20 @@ const getOffchainUserWeight = (
     (j) => j.jarKey.toLowerCase() === jarKey.toLowerCase(),
   );
   return thisJarUserVote ? thisJarUserVote.weight.toString() + "%" : "0%";
+};
+
+const getMainnetUserWeight = (
+  jarKey: string,
+  core: PickleModelJson.PickleModelJson,
+  user: UserDataV2 | undefined
+) => {
+  const jarFromPfcore = core.assets.jars.find((j) => j.details?.apiKey === jarKey);
+  const jarContract = jarFromPfcore?.contract || "";
+  console.log(user);
+  if (user) {
+    const userVote = user.votes.find(v => v.farmDepositToken === jarContract);
+    const weight = userVote?.weight
+    return weight ? weight : "0%"
+  }
+  return "0%"
 };

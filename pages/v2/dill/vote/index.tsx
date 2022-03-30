@@ -12,11 +12,12 @@ import castVote from "v2/features/dill/vote/mainnet/CastVoteMainnet";
 import { VoteButton } from "v2/features/dill/vote/mainnet/VoteButtonMainnet";
 import PickleToastContainer from "v2/components/PickleToastContainer";
 import { JarTable } from "v2/features/dill/vote/JarTable";
-
+import { UserSelectors } from "v2/store/user";
 
 const Vote: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
-  const { account, library } = useWeb3React<Web3Provider>();
+  const user = useSelector(UserSelectors.selectData);
+  const { library } = useWeb3React<Web3Provider>();
   const [selectedJars, setSelectedJars] = useState<string[]>([]);
 
   return (
@@ -24,10 +25,15 @@ const Vote: PickleFinancePage = () => {
       {core ? (
         <>
           <JarSelect core={core} mainnet={true} setSelectedJars={setSelectedJars} />
-          {(selectedJars.length > 0) && (
+          {selectedJars.length > 0 && (
             <div>
-              <JarTable selectedJars={selectedJars} core={core} mainnet={true}/>
-              <VoteButton vote={castVote} provider={library} account={account} selectedJars={selectedJars} />
+              <JarTable selectedJars={selectedJars} core={core} mainnet={true} user={user} />
+              <VoteButton
+                vote={castVote}
+                provider={library}
+                selectedJars={selectedJars}
+                core={core}
+              />
             </div>
           )}
         </>

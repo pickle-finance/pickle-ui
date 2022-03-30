@@ -23,7 +23,6 @@ export const ChainTableRow: FC<{
       )
     : [];
   const blendedApr = getBlendedApr(chainJars);
-  // console.log(chainJars);
 
   return (
     <>
