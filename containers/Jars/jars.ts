@@ -43,6 +43,13 @@ export const isQlpQiToken = (depositTokenAddress: string) => {
   );
 };
 
+export const isCroToken = (depositTokenAddress: string) => {
+  return (
+    depositTokenAddress.toLowerCase() ===
+    "0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23".toLowerCase()
+  );
+};
+
 export const isQlpQiMaticOrUsdcToken = (depositTokenAddress: string) => {
   return (
     depositTokenAddress.toLowerCase() ===
