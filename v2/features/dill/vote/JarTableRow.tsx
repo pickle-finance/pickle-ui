@@ -5,6 +5,7 @@ import { classNames, formatPercentage } from "v2/utils";
 import TableSpacerRow from "./TableSpacerRow";
 import { iOffchainVoteData, UserVote } from "v2/store/offchainVotes";
 import { UserDataV2 } from "v2/store/user";
+import { BigNumber } from "ethers";
 
 export const JarTableRow: FC<{
   jar: string;
@@ -151,9 +152,15 @@ const getMainnetUserWeight = (
   const jarContract = jarFromPfcore?.contract || "";
   console.log(user);
   if (user) {
-    const userVote = user.votes.find(v => v.farmDepositToken === jarContract);
-    const weight = userVote?.weight
-    return weight ? weight : "0%"
+    let totalWeight = BigNumber.from("0");
+    user.votes.forEach(v => totalWeight = totalWeight.add(BigNumber.from(v.weight)));
+    if (+totalWeight > 1) {
+      const userVote = user.votes.find(v => v.farmDepositToken === jarContract);
+      const jarWeight = userVote ? BigNumber.from(userVote.weight) : 0;
+      const weightPct = jarWeight ? jarWeight.mul(10000).div(totalWeight).toNumber() / 10000 : 0;
+      const weightPctFormatted = weightPct !== 0 ? formatPercentage(weightPct) : "0%"
+      return weightPctFormatted
+    }
   }
   return "0%"
 };
