@@ -13,11 +13,8 @@ import { RootState } from ".";
 import { Filter, FilterType, ControlsSelectors, SortType } from "./controls";
 import { getNetworks } from "v2/features/connection/networks";
 import { brandColor } from "v2/features/farms/colors";
-import {
-  getUserAssetDataWithPrices,
-  UserAssetDataWithPrices,
-} from "v2/features/farms/FarmsTableRowHeader";
 import { UserSelectors } from "./user";
+import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
 
 const apiHost = process.env.apiHost;
 

@@ -27,16 +27,19 @@ export const stateMachine = createMachine<ApprovalContext>({
   states: {
     [States.AWAITING_CONFIRMATION]: {
       entry: assign({ txHash: undefined }),
-      on: { [Actions.TRANSACTION_SENT]: States.AWAITING_RECEIPT },
+      on: { [Actions.TRANSACTION_SENT]: { target: States.AWAITING_RECEIPT } },
     },
     [States.AWAITING_RECEIPT]: {
       entry: assign({
         txHash: (_context, event) => event.txHash,
       }),
-      on: { [Actions.SUCCESS]: States.SUCCESS, [Actions.FAILURE]: States.FAILURE },
+      on: {
+        [Actions.SUCCESS]: { target: States.SUCCESS },
+        [Actions.FAILURE]: { target: States.FAILURE },
+      },
     },
     [States.FAILURE]: {
-      on: { [Actions.RETRY]: States.AWAITING_CONFIRMATION },
+      on: { [Actions.RETRY]: { target: States.AWAITING_CONFIRMATION } },
     },
     [States.SUCCESS]: {
       type: "final",

@@ -1,17 +1,15 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { BigNumber } from "@ethersproject/bignumber";
-import { JarDefinition, PickleModelJson } from "picklefinance-core/lib/model/PickleModelJson";
-import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { useTranslation } from "next-i18next";
 
-import { bigNumberToTokenNumber, classNames, formatDollars } from "v2/utils";
+import { classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import FarmComponentsIcons from "./FarmComponentsIcons";
 import { Network } from "../connection/networks";
-import { UserDataV2 } from "v2/store/user";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -52,108 +50,6 @@ interface Props {
   open: boolean;
   jar: JarWithData;
 }
-export interface UserAssetDataWithPricesComponent {
-  wei: BigNumber;
-  tokens: string;
-  tokensVisible: string;
-  tokensUSD: number;
-}
-export interface UserAssetDataWithPrices {
-  assetId: string;
-  depositTokensInWallet: UserAssetDataWithPricesComponent;
-  depositTokensInJar: UserAssetDataWithPricesComponent;
-  depositTokensInFarm: UserAssetDataWithPricesComponent;
-  earnedPickles: UserAssetDataWithPricesComponent;
-}
-const userAssetDataZeroComponent = (): UserAssetDataWithPricesComponent => {
-  return {
-    wei: BigNumber.from(0),
-    tokens: "0",
-    tokensVisible: "0.00",
-    tokensUSD: 0,
-  };
-};
-
-const createUserAssetDataComponent = (
-  wei: BigNumber,
-  decimals: number,
-  price: number,
-  ratio: number,
-): UserAssetDataWithPricesComponent => {
-  const log = Math.log(price) / Math.log(10);
-  const precisionAdjust = log > 4 ? 0 : 5 - Math.floor(log);
-  const precisionAsNumber = Math.pow(10, precisionAdjust);
-  const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
-
-  const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
-
-  return {
-    wei: depositTokenWei,
-    tokens: bigNumberToTokenNumber(depositTokenWei, decimals, decimals).toString(),
-    tokensVisible: bigNumberToTokenNumber(depositTokenWei, decimals, 3).toString(),
-    tokensUSD: bigNumberToTokenNumber(weiMulPrice, decimals, 3),
-  };
-};
-
-const userAssetDataZeroEverything = (): UserAssetDataWithPrices => {
-  return {
-    assetId: "",
-    depositTokensInWallet: userAssetDataZeroComponent(),
-    depositTokensInJar: userAssetDataZeroComponent(),
-    depositTokensInFarm: userAssetDataZeroComponent(),
-    earnedPickles: userAssetDataZeroComponent(),
-  };
-};
-export const getUserAssetDataWithPrices = (
-  jar: JarDefinition,
-  core: PickleModelJson | undefined,
-  userModel: UserDataV2 | undefined,
-): UserAssetDataWithPrices => {
-  if (core === undefined || userModel === undefined) {
-    return userAssetDataZeroEverything();
-  }
-  const userTokenDetails = userModel.tokens[jar.details.apiKey];
-
-  if (userTokenDetails === undefined) return userAssetDataZeroEverything();
-
-  const jarDecimals = jar.details.decimals
-    ? jar.details.decimals
-    : jar.depositToken.decimals
-    ? jar.depositToken.decimals
-    : 18;
-  const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
-    BigNumber.from(userTokenDetails.depositTokenBalance),
-    jarDecimals,
-    jar.depositToken.price || 0,
-    1.0,
-  );
-  const jarComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
-    BigNumber.from(userTokenDetails.pAssetBalance),
-    jarDecimals,
-    jar.depositToken.price || 0,
-    jar.details.ratio || 0,
-  );
-  const farmComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
-    BigNumber.from(userTokenDetails.pStakedBalance),
-    jarDecimals,
-    jar.depositToken.price || 0,
-    jar.details.ratio || 0,
-  );
-  const pickleComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
-    BigNumber.from(userTokenDetails.picklePending),
-    18,
-    core.prices.pickle || 0,
-    1.0,
-  );
-  return {
-    assetId: jar.details.apiKey,
-    earnedPickles: pickleComponent,
-    depositTokensInWallet: wallet,
-    depositTokensInJar: jarComponent,
-    depositTokensInFarm: farmComponent,
-  };
-};
 
 const formatImagePath = (chain: string, networks: Network[] | undefined): string => {
   const thisNetwork = networks?.find((network) => network.name === chain);
@@ -165,13 +61,14 @@ const formatImagePath = (chain: string, networks: Network[] | undefined): string
 };
 
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
+  const { t } = useTranslation("common");
   const networks = useSelector(CoreSelectors.selectNetworks);
   const totalTokensInJarAndFarm =
     parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
   const depositTokenUSD = jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
   const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
   const picklesPending = jar.earnedPickles.tokensVisible;
-  const depositTokenCountString = totalTokensInJarAndFarm + " Tokens";
+  const depositTokenCountString = t("v2.farms.tokens", { amount: totalTokensInJarAndFarm });
   const aprRangeString = (jar.aprStats?.apy || 0).toFixed(3) + "%";
 
   return (

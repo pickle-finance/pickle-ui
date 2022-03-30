@@ -315,8 +315,10 @@
   "v2": {
     "actions": {
       "approve": "Approve",
+      "back": "Back",
       "close": "Close",
       "confirm": "Confirm",
+      "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
       "retry": "Retry"
@@ -396,6 +398,7 @@
       "chain": "Chain",
       "compounding": "Compounding",
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
+      "confirmDeposit": "Please confirm your deposit amount",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
       "depositToken": "Deposit {{ token }}",
@@ -416,6 +419,7 @@
       "givePermission": "Give Pickle Finance permission to access your {{ token }}?",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
+      "invalidAmount": "Please enter a valid deposit amount",
       "jarAddress": "Jar Address",
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
@@ -439,8 +443,11 @@
       "strategyAddress": "Strategy Address",
       "success": "Success!",
       "token": "Token",
+      "tokens": "{{ amount }} Tokens",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "transactionFailed": "Transaction failed",
+      "transactionPending": "Transaction pending...",
+      "waitingForBlockConfirmation": "Waiting for block confirmation...",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "yieldRates": "Yield rates"
     },

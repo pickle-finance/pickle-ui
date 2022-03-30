@@ -31,6 +31,7 @@ import {
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 import { ChainNetwork } from "picklefinance-core";
 import { UniV3JarGaugeCollapsible } from "./UniV3JarGaugeCollapsible";
+import { JarWithAPY } from "containers/Jars/useJarsWithAPYPFCore";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;
@@ -83,9 +84,10 @@ export const GaugeList: FC = () => {
   const gaugesWithAPY = gaugeData.map((gauge) => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
+    let gaugeingJar: JarWithAPY;
     const maybeJar = getJarFarmMap(pickleCore)[gauge.depositToken.address];
     if (jars && maybeJar) {
-      const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
+      gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
     }
 
@@ -94,7 +96,8 @@ export const GaugeList: FC = () => {
     }
     const uncompounded = APYs.map((x) => {
       const k: string = Object.keys(x)[0];
-      const shouldNotUncompound = k === "pickle" || k === "lp";
+      const shouldNotUncompound =
+        k === "pickle" || (k === "lp" && gaugeingJar.protocol != AssetProtocol.UNISWAP_V3);
       const v = shouldNotUncompound ? Object.values(x)[0] : uncompoundAPY(Object.values(x)[0]);
       const ret: JarApy = {};
       ret[k] = v;
@@ -175,11 +178,11 @@ export const GaugeList: FC = () => {
 
   const uniV3JarsFiltered = uniV3Jars?.filter((jar) => {
     const gauge = findGauge(jar);
-    return showUserJars ?
-       jar &&
+    return showUserJars
+      ? jar &&
           (parseFloat(formatEther(jar.deposited)) || parseFloat(formatEther(gauge?.staked || 0)))
-          : jar;
-  })
+      : jar;
+  });
 
   const activeGauges = gaugesWithAPY.sort(
     (a, b) => b.totalAPY + b.fullApy - (a.totalAPY + a.fullApy),
@@ -257,7 +260,7 @@ export const GaugeList: FC = () => {
               Pickled veFXS
             </a>
             &nbsp;⚡ */
-            <>
+          <>
             {uniV3JarsFiltered?.map((jar, idx) => {
               const gauge = findGauge(jar);
               if (!gauge) return;

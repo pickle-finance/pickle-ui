@@ -38,11 +38,22 @@ export const formatPercentage = (value: number, precision = 0): string =>
     maximumFractionDigits: precision,
   });
 
-export const shortenAddress = (address: string): string => {
-  return address 
-    ? `${address.substring(0, 5)}…${address.substring(address.length - 4)}`
-    : ""
-}
+export const shortenAddress = (address: string): string =>
+  address ? `${address.substring(0, 5)}…${address.substring(address.length - 4)}` : "";
+
+export const round = (value: number, decimals: number) =>
+  Math.round(value * 10 ** decimals) / 10 ** decimals;
+
+export const roundToSignificantDigits = (value: number, digits?: number): number => {
+  if (typeof digits === "undefined") return value;
+  if (value >= 1) return round(value, digits);
+
+  const string = value.toString();
+  const firstSignificantDigitIndex = string.split("").findIndex((value) => parseInt(value) > 0);
+
+  return round(value, firstSignificantDigitIndex + digits - 2);
+};
+
 /*
  * This function needs cleanup and a more formulaic method, using logs
  * or string length to determine how to divide properly.
