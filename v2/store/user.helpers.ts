@@ -27,13 +27,13 @@ export const normalizeUserTokens = (data: UserData): TokensById => {
   return result;
 };
 
+
 /**
  * A deep clone is important because if we dispatch data
  * passed to user model callbacks, Redux will make it
  * read-only, thus breaking the internals of UserModel.
  *
  */
-export const normalizedData = (data: UserData): UserDataV2 => ({
+export const normalizedData = (data: UserData): UserData => ({
   ...cloneDeep(data),
-  tokens: normalizeUserTokens(data),
 });

@@ -16,11 +16,13 @@ import DocsProvider from "v2/providers/DocsProvider";
 import OffchainVotesProvider from "v2/providers/OffchainVotesProvider";
 import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
+import Confetti from "v2/components/Confetti";
 
 import 'react-toastify/dist/ReactToastify.css'
 
 // Custom polyfills
 import "core-js/proposals/string-match-all";
+import "core-js/stable/array/find-index";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -36,6 +38,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
   return (
     <Provider store={store}>
       <Web3Provider>
+        <Confetti />
         <NavbarMobile />
         <LeftNavbar />
         <main className="sm:pl-64">

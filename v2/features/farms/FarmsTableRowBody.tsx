@@ -6,7 +6,7 @@ import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { getUserAssetDataWithPrices } from "./FarmsTableRowHeader";
+import { getUserAssetDataWithPrices } from "v2/utils/user";
 import FarmsTableRowDetails from "./FarmsTableRowDetails";
 import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionControls";
 import ConnectButton from "./ConnectButton";
@@ -22,7 +22,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
 
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
   const tokensInWallet = data.depositTokensInWallet.tokens;
-  const depositTokenCountString = tokensInWallet + " Tokens";
+  const depositTokenCountString = t("v2.farms.tokens", { amount: tokensInWallet });
 
   const networks = useAppSelector(CoreSelectors.selectNetworks);
   const { chainId } = useWeb3React();

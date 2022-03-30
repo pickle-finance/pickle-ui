@@ -1,6 +1,9 @@
 import { FC, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
+import { useAppSelector } from "v2/store";
+import { ThemeSelectors } from "v2/store/theme";
+import { classNames } from "v2/utils";
 
 interface Props {
   isOpen: boolean;
@@ -9,13 +12,11 @@ interface Props {
 }
 
 const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
+  const isConfettiOn = useAppSelector(ThemeSelectors.selectIsConfettiOn);
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className="fixed inset-0 z-50 overflow-y-auto"
-        onClose={closeModal}
-      >
+      <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={closeModal}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
@@ -26,14 +27,17 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 z-40 transition-all bg-background-light bg-opacity-50 backdrop-filter backdrop-blur-sm" />
+            <Dialog.Overlay
+              className={classNames(
+                "fixed inset-0 z-40 transition-all bg-background-light bg-opacity-50",
+                // Impossible to render smoothly over a blurred background.
+                !isConfettiOn && "backdrop-filter backdrop-blur-sm",
+              )}
+            />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
-          <span
-            className="inline-block h-screen align-middle"
-            aria-hidden="true"
-          >
+          <span className="inline-block h-screen align-middle" aria-hidden="true">
             &#8203;
           </span>
           <Transition.Child
