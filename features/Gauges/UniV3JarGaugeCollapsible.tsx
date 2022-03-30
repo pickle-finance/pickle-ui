@@ -98,6 +98,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x11c4D3b9cd07807F455371d56B3899bBaE662788": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/pickle.png"} />
   ),
+  // PICKLE/WETH 1%
+  "0xFCfDFC98062d13a11cec48c44E4613eB26a34293": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/cow.png"} />
+  ),
 };
 
 function sleep(ms: number) {
