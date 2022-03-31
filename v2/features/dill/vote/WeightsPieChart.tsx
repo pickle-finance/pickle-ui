@@ -6,6 +6,7 @@ import { iOffchainVoteData, JarVote, UserVote } from "v2/store/offchainVotes";
 
 import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList } from "recharts";
 import { formatPercentage } from "v2/utils";
+import { BigNumber } from "ethers";
 
 const Chart: FC<{
   platformOrUser: "platform" | "user";
@@ -102,15 +103,21 @@ const getMainnetUserWeights = (
   core: PickleModelJson.PickleModelJson | undefined,
 ): PieChartData[] => {
   let chartData = [];
-  const userVotes = user ? user.votes : [];
-  for (let i = 0; i < userVotes.length; i++) {
-    let jar: JarDefinition | undefined = core
-      ? core.assets.jars.find((j) => j.depositToken.addr === userVotes[i].farmDepositToken)
-      : undefined
-    chartData.push({
-      jar: jar ? jar.id : "",
-      weight: +userVotes[i].weight,
-    });
+  if (user) {
+    let totalWeight = BigNumber.from("0");
+    for (let i = 0; i < user.votes.length; i++)
+      totalWeight = totalWeight.add(BigNumber.from(user.votes[i].weight));
+    for (let i = 0; i < user.votes.length; i++) {
+      let jar: JarDefinition | undefined = core
+        ? core.assets.jars.find((j) => j.depositToken.addr === user.votes[i].farmDepositToken)
+        : undefined;
+      let jarWeight = BigNumber.from(user.votes[i].weight).mul(10000).div(totalWeight).toNumber() / 10000
+      if (jar)
+        chartData.push({
+          jar: jar.id,
+          weight: jarWeight,
+        });
+    }
   }
   return chartData;
 };
@@ -119,24 +126,24 @@ const getSidechainUserWeights = (
   offchainVoteData: iOffchainVoteData | undefined,
   wallet: string | undefined | null,
 ): PieChartData[] => {
-
   let userVote: UserVote = {} as UserVote;
   const allVotes = offchainVoteData ? offchainVoteData.votes : [];
   if (offchainVoteData && wallet) {
     for (let i = 0; i < allVotes.length; i++) {
-      if (allVotes[i].wallet.toLowerCase() === wallet.toLowerCase())
-        userVote = allVotes[i]
+      if (allVotes[i].wallet.toLowerCase() === wallet.toLowerCase()) userVote = allVotes[i];
     }
   }
   const chartData: PieChartData[] | undefined = userVote?.jarWeights?.map((v) => ({
     jar: v.jarKey,
-    weight: (v.weight > 0 ? v.weight : v.weight * -1) * .01,
+    weight: (v.weight > 0 ? v.weight : v.weight * -1) * 0.01,
   }));
   return chartData ? chartData : [];
 };
 
 const sortByWeight = (data: PieChartData[]) =>
   data ? data.sort((a, b) => (a.weight > b.weight ? 1 : -1)) : [];
+
+const getTotalWeight = (user) => {};
 
 interface PieChartData {
   jar: string;
