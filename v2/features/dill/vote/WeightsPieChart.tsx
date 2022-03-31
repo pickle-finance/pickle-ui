@@ -1,7 +1,9 @@
+import React, { FC } from "react";
 import { PickleModelJson } from "picklefinance-core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-import React, { FC } from "react";
+import { iOffchainVoteData, JarVote, UserVote } from "v2/store/offchainVotes";
+
 import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList } from "recharts";
 import { formatPercentage } from "v2/utils";
 
@@ -10,19 +12,26 @@ const Chart: FC<{
   mainnet: boolean;
   user?: UserData | undefined;
   core?: PickleModelJson.PickleModelJson;
-}> = ({ platformOrUser, mainnet, user, core }) => {
+  wallet?: string | undefined | null;
+  offchainVoteData?: iOffchainVoteData | undefined;
+}> = ({ platformOrUser, mainnet, user, core, wallet, offchainVoteData }) => {
   // useState for chartData, setChartData
   const data: PieChartData[] =
     platformOrUser === "platform"
       ? mainnet
         ? getMainnetPlatformWeights(core)
-        : getSidechainPlatformWeights()
+        : getSidechainPlatformWeights(offchainVoteData)
       : platformOrUser === "user"
       ? mainnet
         ? getMainnetUserWeights(user, core)
-        : getSidechainUserWeights()
+        : getSidechainUserWeights(offchainVoteData, wallet)
       : [];
-
+  if (data.length < 1)
+    return (
+      <div className="h-full">
+        <p className="text-center">Vote Data Unavailable</p>
+      </div>
+    );
   return (
     <ResponsiveContainer>
       <PieChart>
@@ -62,13 +71,30 @@ const getMainnetPlatformWeights = (
       });
     }
   }
-  chartData = sortByWeight(chartData).slice(-15);
-  console.log(chartData);
+  chartData = sortByWeight(chartData)
+    .filter((v) => v.weight > 0.01)
+    .slice(-15);
   return chartData;
 };
 
-const getSidechainPlatformWeights = (): PieChartData[] => {
-  return [];
+const getSidechainPlatformWeights = (
+  offchainVoteData: iOffchainVoteData | undefined,
+): PieChartData[] => {
+  const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
+  let chartData = [];
+  for (let c = 0; c < platformWeights.length; c++) {
+    const jarVotes: JarVote[] = platformWeights[c].jarVotes;
+    for (let j = 0; j < jarVotes.length; j++) {
+      chartData.push({
+        jar: jarVotes[j].key,
+        weight: jarVotes[j].jarVoteAsEmissionShare,
+      });
+    }
+  }
+  chartData = sortByWeight(chartData)
+    .filter((v) => v.weight > 0.01)
+    .slice(-15);
+  return chartData;
 };
 
 const getMainnetUserWeights = (
@@ -78,10 +104,9 @@ const getMainnetUserWeights = (
   let chartData = [];
   const userVotes = user ? user.votes : [];
   for (let i = 0; i < userVotes.length; i++) {
-    let jar: JarDefinition = core
-      ? core.assets.jars.find((j) => j.depositToken.addr === userVotes[i].farmDepositToken) ||
-        ({} as JarDefinition)
-      : ({} as JarDefinition);
+    let jar: JarDefinition | undefined = core
+      ? core.assets.jars.find((j) => j.depositToken.addr === userVotes[i].farmDepositToken)
+      : undefined
     chartData.push({
       jar: jar ? jar.id : "",
       weight: +userVotes[i].weight,
@@ -90,8 +115,24 @@ const getMainnetUserWeights = (
   return chartData;
 };
 
-const getSidechainUserWeights = (): PieChartData[] => {
-  return [];
+const getSidechainUserWeights = (
+  offchainVoteData: iOffchainVoteData | undefined,
+  wallet: string | undefined | null,
+): PieChartData[] => {
+
+  let userVote: UserVote = {} as UserVote;
+  const allVotes = offchainVoteData ? offchainVoteData.votes : [];
+  if (offchainVoteData && wallet) {
+    for (let i = 0; i < allVotes.length; i++) {
+      if (allVotes[i].wallet.toLowerCase() === wallet.toLowerCase())
+        userVote = allVotes[i]
+    }
+  }
+  const chartData: PieChartData[] | undefined = userVote?.jarWeights?.map((v) => ({
+    jar: v.jarKey,
+    weight: (v.weight > 0 ? v.weight : v.weight * -1) * .01,
+  }));
+  return chartData ? chartData : [];
 };
 
 const sortByWeight = (data: PieChartData[]) =>
