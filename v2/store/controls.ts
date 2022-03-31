@@ -45,7 +45,7 @@ const initialState: ControlsState = {
   matchAllFilters: false,
   currentPage: 0,
   sort: {
-    type: SortType.Earned,
+    type: SortType.Deposited,
     direction: "desc",
   },
 };

@@ -69,6 +69,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
             ? JarNativeFactory.connect(x.contract, provider)
             : JarFactory.connect(x.contract, provider),
           protocol: x.protocol,
+          ratio: x.details?.ratio || 0,
           stakingProtocol: x.stakingProtocol,
           chain: x.chain,
           apiKey: x.details.apiKey,

@@ -3,12 +3,10 @@ import dayjs from "dayjs";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
-import { baseTokenObject, normalizedData, normalizeUserTokens, TokensById } from "./user.helpers";
-
-export type UserDataV2 = Omit<UserData, "tokens"> & { tokens: TokensById };
+import { normalizedData } from "./user.helpers";
 
 interface UserState {
-  data: UserDataV2 | undefined;
+  data: UserData | undefined;
   isFetching: boolean;
   updatedAt: number | undefined;
   nonce: number;
@@ -61,16 +59,8 @@ const userSlice = createSlice({
     setTokenData: (state, action: PayloadAction<UserData>) => {
       if (!state.data) return;
 
-      state.data.tokens = { ...state.data.tokens, ...normalizeUserTokens(action.payload) };
+      state.data.tokens = { ...state.data.tokens, ...action.payload.tokens };
       state.updatedAt = +new Date();
-    },
-    setTokenAllowance: (state, action: PayloadAction<{ apiKey: string; value: string }>) => {
-      if (!state.data) return;
-
-      const { apiKey, value } = action.payload;
-      const token = state.data.tokens[apiKey] || baseTokenObject;
-
-      state.data.tokens = { ...state.data.tokens, [apiKey]: { ...token, jarAllowance: value } };
     },
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
@@ -81,12 +71,11 @@ const userSlice = createSlice({
   },
 });
 
-const { refresh, setData, setIsFetching, setTokenAllowance, setTokenData } = userSlice.actions;
+const { refresh, setData, setIsFetching, setTokenData } = userSlice.actions;
 export const UserActions = {
   refresh,
   setData,
   setIsFetching,
-  setTokenAllowance,
   setTokenData,
 };
 
@@ -96,7 +85,8 @@ export const UserActions = {
 const selectData = (state: RootState) => state.user.data;
 const selectIsFetching = (state: RootState) => state.user.isFetching;
 const selectNonce = (state: RootState) => state.user.nonce;
-const selectTokenDataById = (state: RootState, apiKey: string) => state.user.data?.tokens[apiKey];
+const selectTokenDataById = (state: RootState, apiKey: string) =>
+  state.user.data?.tokens[apiKey.toLowerCase()];
 const selectUpdatedAt = (state: RootState) => state.user.updatedAt;
 
 export const UserSelectors = {

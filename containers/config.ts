@@ -1,4 +1,13 @@
 
+export const FraxAddresses = {
+  FXS: "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0",
+  FXSDistribution: "0xc6764e58b36e26b08Fd1d2AeD4538c02171fA872",
+  locker: "0xd639C2eA4eEFfAD39b599410d00252E6c80008DF",
+  veFXS: "0xc8418af6358ffdda74e09ca9cc3fe03ca6adc5b0",
+  veFXSVault: "0x62826760CC53AE076a7523Fd9dCF4f8Dbb1dA140"
+};
+
+
 export const BPAddresses = {
   LUSD: "0x5f98805a4e8be255a32880fdec7f6728c6568ba0",
   pBAMM: "0x54bC9113f1f55cdBDf221daf798dc73614f6D972",

@@ -646,7 +646,7 @@
 
 "@ethersproject/wordlists@5.5.0", "@ethersproject/wordlists@^5.5.0":
   version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@ethersproject/wordlists/-/wordlists-5.5.0.tgz#aac74963aa43e643638e5172353d931b347d584f"
+  resolved "https://registry.npmjs.org/@ethersproject/wordlists/-/wordlists-5.5.0.tgz"
   integrity sha512-bL0UTReWDiaQJJYOC9sh/XcRu/9i2jMrzf8VLRmPKx58ckSlOJiohODkECCO50dtLZHcGU6MLXQ4OOrgBwP77Q==
   dependencies:
     "@ethersproject/bytes" "^5.5.0"
@@ -660,9 +660,9 @@
   resolved "https://registry.npmjs.org/@geist-ui/react-icons/-/react-icons-1.0.0.tgz"
   integrity sha512-6mNGTLu+EDcyDmf2BLMqKbne3bNX9wbHl4YTSj4nVy4GaMvC8IAIXpxfhdTBBHiTZ1Bm3+9PxQqtyvJvYl0WXQ==
 
-"@geist-ui/react@^2.0.2":
+"@geist-ui/react@2.0.2":
   version "2.0.2"
-  resolved "https://registry.npmjs.org/@geist-ui/react/-/react-2.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/@geist-ui/react/-/react-2.0.2.tgz#6e786920600afe077dceb3474f4283ceb2050555"
   integrity sha512-g8rDTc4siR/96bmIbUYaw5+khZ9hn7Eha/PuvtuT61eO7Hg9jBcGIJTw5pn333MF2/bkJy4LKjousgMvOTBaWA==
   dependencies:
     styled-jsx "^3.2.5"
@@ -1929,9 +1929,17 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
 
-anymatch@~3.1.1, anymatch@~3.1.2:
+anymatch@~3.1.1:
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/anymatch/-/anymatch-3.1.1.tgz"
+  integrity sha512-mM8522psRCqzV+6LhomX5wgp25YVibjh8Wj23I5RPkPppSVSjyKD2A2mBJmWGa+KN7f2D6LNh9jkBCeyLktzjg==
+  dependencies:
+    normalize-path "^3.0.0"
+    picomatch "^2.0.4"
+
+anymatch@~3.1.2:
   version "3.1.2"
-  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
+  resolved "https://registry.npmjs.org/anymatch/-/anymatch-3.1.2.tgz"
   integrity sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==
   dependencies:
     normalize-path "^3.0.0"
@@ -6532,10 +6540,10 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.3.70:
-  version "0.3.71"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.71.tgz#675e8a83f61806a785973a45a98e710745653255"
-  integrity sha512-5ercibB0XAruEKkHldLBwP0unK+b43/kPwqBHo2S2WcGtqhcTX8wBj9FyDO4UGM+5P/8R2IIsWyzb2ezaD0Pig==
+picklefinance-core@^0.3.86:
+  version "0.3.86"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.3.86.tgz#a19426d784428150105128a3b3b044fbf8c459a2"
+  integrity sha512-F7oGhg1cQBd/uYt35RD5sGf3gw2Q1RqfMEUiz8UK7DvIw/WBX7YXpBQVxv31pmnbGefq+s5tUfUDayy6hA/QUQ==
   dependencies:
     "@ethersproject/abstract-provider" "^5.1.0"
     "@ethersproject/providers" "^5.1.0"
@@ -6552,6 +6560,7 @@ picklefinance-core@^0.3.70:
     i18n "^0.13.3"
     moment "^2.29.1"
     tslib "~2.3.0"
+    uuid "^8.3.2"
     web3-utils "^1.6.1"
 
 picocolors@^1.0.0:
@@ -6888,6 +6897,13 @@ react-blockies@^1.4.1:
   integrity sha512-4N015X5oPNnD3xQPsiqolOFzPZSSWyc5mJhJUZShUCHtiGUxVN+1qsWTcglkHMNySux9hUofaispqcw9QkWP5Q==
   dependencies:
     prop-types "^15.5.10"
+
+react-confetti@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/react-confetti/-/react-confetti-6.0.1.tgz#d4f57b5a021dd908a6243b8f63b6009b00818d10"
+  integrity sha512-ZpOTBrqSNhWE4rRXCZ6E6U+wGd7iYHF5MGrqwikoiBpgBq9Akdu0DcLW+FdFnLjyZYC+VfAiV2KeFgYRMyMrkA==
+  dependencies:
+    tween-functions "^1.2.0"
 
 react-day-picker@^7.4.8:
   version "7.4.10"
@@ -8142,6 +8158,11 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
+tween-functions@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
+  integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
+
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.5.tgz"
@@ -8325,6 +8346,11 @@ uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.0.3:
   version "2.1.1"

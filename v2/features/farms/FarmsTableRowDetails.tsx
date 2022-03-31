@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import type { Web3Provider } from "@ethersproject/providers";
 
-import { shortenAddress } from "v2/utils";
+import { roundToSignificantDigits, shortenAddress } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 import Button from "v2/components/Button";
 import Link from "v2/components/Link";
@@ -107,7 +107,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                     <Trans i18nKey="v2.farms.tokensDeposited">
                       You have
                       <span className="text-primary mx-2">
-                        {{ amount: totalTokensInJarAndFarm.toFixed(3) }}
+                        {{ amount: roundToSignificantDigits(totalTokensInJarAndFarm, 4) }}
                       </span>
                       pTokens
                     </Trans>
