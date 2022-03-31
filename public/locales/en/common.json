@@ -331,6 +331,7 @@
       "max": "Max"
     },
     "connection": {
+      "clover": "Clover",
       "coinbase": "Coinbase",
       "connectWallet": "Connect wallet",
       "errorTitle": "Uh oh, we're in a pickle here!",

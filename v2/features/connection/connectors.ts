@@ -2,7 +2,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { Chains } from "picklefinance-core";
+import { CloverConnector } from "@clover-network/clover-connector";
 import chains from "./chainIds.json";
 
 export interface Connector {
@@ -16,6 +16,7 @@ export enum Connectors {
   Metamask,
   WalletConnect,
   Coinbase,
+  Clover
 }
 
 const POLLING_INTERVAL = 12000;
@@ -44,4 +45,8 @@ export const walletlink = new WalletLinkConnector({
   url: RPC_URLS[1],
   appName: "Pickle Finance",
   appLogoUrl: "pickle.png",
+});
+
+export const cloverconnect = new CloverConnector({
+  supportedChainIds: [1],
 });
