@@ -8,14 +8,17 @@ import LeftNavbar from "v2/components/LeftNavbar";
 import TopNavbar from "v2/components/TopNavbar";
 import { store } from "v2/store";
 import CoreProvider from "v2/providers/CoreProvider";
-import DocsProvider from "v2/providers/DocsProvider";
 import Web3Provider from "v2/providers/Web3Provider";
 import UserModelProvider from "v2/providers/UserModelProvider";
 import UserFlowsAnimationsProvider from "v2/providers/UserFlowsAnimationsProvider";
 import ConnectionStatus from "v2/features/connection/ConnectionStatus";
+import DocsProvider from "v2/providers/DocsProvider";
+import OffchainVotesProvider from "v2/providers/OffchainVotesProvider";
 import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 import Confetti from "v2/components/Confetti";
+
+import 'react-toastify/dist/ReactToastify.css'
 
 // Custom polyfills
 import "core-js/proposals/string-match-all";
@@ -51,6 +54,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
         </main>
         <CoreProvider />
         <DocsProvider />
+        <OffchainVotesProvider />
         <UserModelProvider />
         <UserFlowsAnimationsProvider />
       </Web3Provider>

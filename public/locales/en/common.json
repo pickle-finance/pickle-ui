@@ -375,8 +375,19 @@
       "upcomingDistributionDate": "Upcoming distribution date",
       "upcomingDistributionValue": "Upcoming distribution value",
       "usdValue": "USD Value",
-      "weeklyDillAmount": "Weekly DILL 🔒",
-      "weeklyPickleAmount": "Weekly PICKLEs distributed"
+      "vote": {
+        "apy":"APY",
+        "blendedApr": "Blended APR",
+        "castVote": "Cast Vote",
+        "currentWeight": "Platform Weight",
+        "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
+        "newVote": "Your New Vote",
+        "pickleApy": "Pickle APY",
+        "rowAssetName": "Asset Name",
+        "rowChainName": "Chain Name",
+        "title": "PICKLE Reward Weight Voting",
+        "yourVote": "Your Current Vote"
+      }
     },
     "farms": {
       "analytics": "Analytics",

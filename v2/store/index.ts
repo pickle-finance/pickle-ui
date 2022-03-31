@@ -7,6 +7,7 @@ import connectionReducer from "./connection";
 import userReducer from "./user";
 import controlsReducer from "./controls";
 import themeReducer from "./theme";
+import voteReducer from "./offchainVotes";
 import { listenerMiddleware } from "./listenerMiddleware";
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     user: userReducer,
     controls: controlsReducer,
     theme: themeReducer,
+    offchainVotes: voteReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(listenerMiddleware.middleware),
