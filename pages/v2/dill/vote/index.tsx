@@ -13,7 +13,7 @@ import { VoteButton } from "v2/features/dill/vote/mainnet/VoteButtonMainnet";
 import PickleToastContainer from "v2/components/PickleToastContainer";
 import { JarTable } from "v2/features/dill/vote/JarTable";
 import { UserSelectors } from "v2/store/user";
-import ChartContainer from "v2/features/dill/vote/mainnet/ChartContainer";
+import ChartContainer from "v2/features/dill/vote/ChartContainer";
 
 const Vote: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);

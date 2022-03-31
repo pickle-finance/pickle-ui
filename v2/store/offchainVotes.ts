@@ -25,7 +25,7 @@ export interface ChainVote {
   jarVotes: JarVote[];
 }
 
-interface JarVote {
+export interface JarVote {
   key: string;
   rawJarVote: number;
   adjustedJarVote: number;
