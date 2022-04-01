@@ -8,24 +8,37 @@ export const JarSelect: FC<{
   mainnet: boolean;
   setSelectedJars: SetJarsFunction;
 }> = ({ core, mainnet, setSelectedJars }) => {
-  const [activeJars, setActiveJars] = useState([] as SelectData[]);
+  const [selectData, setSelectData] = useState<SelectData[]>([
+    {
+      label: "Delegate to the Pickle Team",
+      value: "strategy.delegate.team"
+    },{
+      label: "Vote By TVL",
+      value: "strategy.tvl"
+    },{
+      label: "Vote By Profit",
+      value: "strategy.profitm"
+    }
+  ]);
 
   const jarChange = (jars: SelectData[]): void => {
     setSelectedJars(jars.map((jar: SelectData) => jar.value));
   };
   useEffect(() => {
     const getData = async () => {
-      let activeJars: SelectData[] = [];
+      const tmpSelectData = [...selectData]
       if (core) {
-        activeJars = core?.assets?.jars
+        const activeJars = core?.assets?.jars
           .filter((x) =>
             mainnet ? x.chain === ChainNetwork.Ethereum : x.chain !== ChainNetwork.Ethereum,
           )
           .filter((x) => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
           .filter((x) => x.details?.apiKey !== undefined)
           .map(dataToSelect);
+        for (let i = 0; i < activeJars.length; i++)
+          tmpSelectData.push(activeJars[i])
       }
-      setActiveJars(activeJars);
+      setSelectData(tmpSelectData);
     };
     getData();
 
@@ -39,7 +52,7 @@ export const JarSelect: FC<{
       isSearchable={true}
       closeMenuOnSelect={false}
       onChange={(jars) => jarChange(jars as SelectData[])}
-      options={activeJars}
+      options={selectData}
     />
   );
 };

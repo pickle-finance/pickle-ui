@@ -21,10 +21,10 @@ export const JarTableRow: FC<{
       })[0]
     : ({} as JarDefinition);
   const { apyFormatted, pickleApyRange } = getApyData(jarData);
-  const thisChain = jarData.chain;
+  const thisChain = jarData && jarData.chain ? jarData.chain : "strategy";
   // Change this once off-chain is figured out, do away with mainnet bool
   const allocPoints: string =
-    mainnet && jarData.farm?.details?.allocShare
+    mainnet && jarData?.farm?.details?.allocShare
       ? formatPercentage(jarData.farm.details.allocShare)
       : "0%";
 
