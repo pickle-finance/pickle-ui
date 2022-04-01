@@ -599,6 +599,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
   ),
+  //STG USDC
+  "0xdecc0c09c3b5f6e92ef4184125d5648a66e35298":(
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc/png"}/>
+  ),
 
   // Fantom
 
@@ -872,6 +876,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   // SOLIDEX VOLATILE CRE8R-BOMB
   "0x6058345a4d8b89ddac7042be08091f91a404b80b": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/renbtc.png"} />
+  ),
+  // STAR USDC
+  "0x12edea9cd262006cc3c4e77c90d2cd2dd4b1eb97": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
 };
 

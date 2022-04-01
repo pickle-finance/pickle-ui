@@ -122,6 +122,12 @@ export const FARM_LP_TO_ICON: {
   "0x5E5D7739ea3B6787587E129E4A508FfDAF180923": (
     <LpIcon swapIconSrc={"/aurum.png"} tokenIconSrc={"/usdc.png"} />
   ),
+  "0x363e7CD14AEcf4f7d0e66Ae1DEff830343D760a7": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdt.png"} />
+  ),
+  "0x49DA51435329847b369829873b04b537D2DAc302": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
 
   //Arbitrum
   "0x94fEadE0D3D832E4A05d459eBeA9350c6cDd3bCa": (
@@ -162,6 +168,12 @@ export const FARM_LP_TO_ICON: {
       swapIconSrc={"/protocols/balancer.png"}
       tokenIconSrc={"/tokens/vsta.png"}
     />
+  ),
+  "0xA23d9E5094ac9582f9f09AAa017B79dEccab5404": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdt.png"} />
+  ),
+  "0x1c498531310C0f81561F4723314EF54049d3a9ef": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
 
   // Aurora

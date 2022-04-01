@@ -185,6 +185,14 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x27fD0857F0EF224097001E87e61026E39e1B04d1": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/rally.jpeg"} />
   ),
+  // STAR USDC
+  "0xdf0770dF86a8034b3EFEf0A1Bb3c889B8332FF56": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
+  // STAR USDT
+  "0x38EA452219524Bb87e18dE1C24D3bB59510BD783": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdt.png"} />
+  ),
 
   // Polygon Jars
 
