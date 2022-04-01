@@ -376,7 +376,7 @@
       "upcomingDistributionValue": "Upcoming distribution value",
       "usdValue": "USD Value",
       "vote": {
-        "apy":"APY",
+        "apy": "APY",
         "blendedApr": "Blended APR",
         "castVote": "Cast Vote",
         "currentWeight": "Platform Weight",
@@ -450,8 +450,6 @@
       "tokens": "{{ amount }} Tokens",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "transactionFailed": "Transaction failed",
-      "transactionPending": "Transaction pending...",
-      "waitingForBlockConfirmation": "Waiting for block confirmation...",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "yieldRates": "Yield rates"
     },

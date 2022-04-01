@@ -1,23 +1,20 @@
 import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
-import type { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React } from "@web3-react/core";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
-import { useSelector } from "react-redux";
 
-import { useAppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
-import { UserActions } from "v2/store/user";
-import { sleep } from "v2/utils";
 import { stateMachine, Actions, States } from "../stateMachineNoUserInput";
 import AwaitingConfirmation from "./AwaitingConfirmation";
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
-import { useTokenContract } from "../hooks";
+import { useTokenContract, useTransaction } from "../hooks";
+import { useAppDispatch, useAppSelector } from "v2/store";
+import { UserActions } from "v2/store/user";
+import { ApprovalEvent } from "containers/Contracts/Erc20";
 
 interface Props {
   jar: JarWithData;
@@ -27,63 +24,46 @@ interface Props {
 const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isWaiting, setIsWaiting] = useState<boolean>(false);
-  const [error, setError] = useState<Error | undefined>();
-  const [progressStatus, setProgressStatus] = useState<string>(t("v2.farms.transactionPending"));
-  const core = useSelector(CoreSelectors.selectCore);
+  const core = useAppSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const dispatch = useAppDispatch();
-  const { account } = useWeb3React<Web3Provider>();
   const TokenContract = useTokenContract(jar.depositToken.addr);
 
-  const chain = core?.chains.find((chain) => chain.network === jar.chain);
   const { contract } = jar;
+  const chain = core?.chains.find((chain) => chain.network === jar.chain);
+  const amount = ethers.constants.MaxUint256;
 
-  if (!TokenContract || !account) return null;
+  const transactionFactory = () => {
+    if (!TokenContract) return;
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const sendTransaction = async () => {
-    setError(undefined);
-    setIsWaiting(true);
-
-    try {
-      const amount = ethers.constants.MaxUint256;
-      const transaction = await TokenContract.approve(contract, amount);
-
-      send(Actions.TRANSACTION_SENT, { txHash: transaction.hash });
-
-      transaction
-        .wait()
-        .then(
-          async () => {
-            setProgressStatus(t("v2.farms.waitingForBlockConfirmation"));
-
-            let allowance: BigNumber;
-
-            while (true) {
-              allowance = await TokenContract.allowance(account, contract);
-              const success = allowance.gt(ethers.constants.Zero);
-
-              if (success) break;
-
-              await sleep(1000);
-            }
-
-            dispatch(UserActions.refresh());
-            send(Actions.SUCCESS);
-          },
-          () => {
-            send(Actions.FAILURE);
-          },
-        )
-        .finally(() => setIsWaiting(false));
-    } catch (error) {
-      setError(error as Error);
-      setIsWaiting(false);
-    }
+    return () => TokenContract.approve(contract, amount);
   };
+
+  const callback = (receipt: ethers.ContractReceipt) => {
+    const approvalEvent = receipt.events?.find(
+      ({ event }) => event === "Approval",
+    ) as ApprovalEvent;
+    const approvedAmount = approvalEvent.args[2];
+
+    dispatch(
+      UserActions.setTokenData({
+        apiKey: jar.details.apiKey,
+        data: { jarAllowance: approvedAmount.toString() },
+      }),
+    );
+  };
+
+  const { sendTransaction, error, isWaiting } = useTransaction(
+    transactionFactory(),
+    callback,
+    send,
+  );
+
+  const openModal = () => {
+    send(Actions.RESET);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <>
@@ -102,11 +82,7 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (
-          <AwaitingReceipt
-            chainExplorer={chain?.explorer}
-            txHash={current.context.txHash}
-            progressStatus={progressStatus}
-          />
+          <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
         )}
         {current.matches(States.SUCCESS) && (
           <Success
@@ -119,7 +95,7 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
           <Failure
             chainExplorer={chain?.explorer}
             txHash={current.context.txHash}
-            retry={() => send(Actions.RETRY)}
+            retry={() => send(Actions.RESET)}
           />
         )}
       </Modal>
