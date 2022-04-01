@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
-import { UserData } from "picklefinance-core/lib/client/UserModel";
+import { UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
-import { normalizedData } from "./user.helpers";
+import { baseTokenObject, normalizedData } from "./user.helpers";
 
 interface UserState {
   data: UserData | undefined;
@@ -56,11 +56,22 @@ const userSlice = createSlice({
      * protects us against losing state that doesn't exist on the current chain, e.g.
      * PICKLE balances.
      */
-    setTokenData: (state, action: PayloadAction<UserData>) => {
+    setTokens: (state, action: PayloadAction<UserData>) => {
       if (!state.data) return;
 
       state.data.tokens = { ...state.data.tokens, ...action.payload.tokens };
       state.updatedAt = +new Date();
+    },
+    setTokenData: (
+      state,
+      action: PayloadAction<{ apiKey: string; data: Partial<UserTokenData> }>,
+    ) => {
+      if (!state.data) return;
+
+      const { apiKey, data } = action.payload;
+      const token = state.data.tokens[apiKey.toLowerCase()] || baseTokenObject;
+
+      state.data.tokens = { ...state.data.tokens, [apiKey.toLowerCase()]: { ...token, ...data } };
     },
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
@@ -71,11 +82,12 @@ const userSlice = createSlice({
   },
 });
 
-const { refresh, setData, setIsFetching, setTokenData } = userSlice.actions;
+const { refresh, setData, setIsFetching, setTokenData, setTokens } = userSlice.actions;
 export const UserActions = {
   refresh,
   setData,
   setIsFetching,
+  setTokens,
   setTokenData,
 };
 

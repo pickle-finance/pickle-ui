@@ -36,7 +36,7 @@ const UserModelProvider: VFC = () => {
         if (type === "full") {
           dispatch(UserActions.setData({ data, type: "final" }));
         } else if (type === "minimal") {
-          dispatch(UserActions.setTokenData(data));
+          dispatch(UserActions.setTokens(data));
         }
         dispatch(UserActions.setIsFetching(false));
       },

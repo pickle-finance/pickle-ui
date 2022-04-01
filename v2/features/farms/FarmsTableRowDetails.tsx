@@ -107,7 +107,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                     <Trans i18nKey="v2.farms.tokensDeposited">
                       You have
                       <span className="text-primary mx-2">
-                        {{ amount: roundToSignificantDigits(totalTokensInJarAndFarm, 4) }}
+                        {{ amount: roundToSignificantDigits(totalTokensInJarAndFarm, 7) }}
                       </span>
                       pTokens
                     </Trans>

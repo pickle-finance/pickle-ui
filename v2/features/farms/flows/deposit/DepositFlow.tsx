@@ -1,27 +1,26 @@
 import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { useMachine } from "@xstate/react";
+import type { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ethers } from "ethers";
+import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 
+import { useAppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
 import Form from "./Form";
 import { jarDecimals } from "v2/utils/user";
-import AwaitingConfirmation from "../deposit/AwaitingConfirmation";
-import { useAppDispatch } from "v2/store";
+import AwaitingConfirmation from "./AwaitingConfirmation";
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
-import { useJarContract } from "../hooks";
-import { sleep } from "v2/utils";
+import { useJarContract, useTransaction } from "../hooks";
+import { TransferEvent } from "containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
-import { ThemeActions } from "v2/store/theme";
 
 interface Props {
   jar: JarWithData;
@@ -32,72 +31,69 @@ interface Props {
 const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [error, setError] = useState<Error | undefined>();
-  const [isWaiting, setIsWaiting] = useState<boolean>(false);
-  const [progressStatus, setProgressStatus] = useState<string>(t("v2.farms.transactionPending"));
-  const [current, send] = useMachine(stateMachine);
   const core = useSelector(CoreSelectors.selectCore);
+  const [current, send] = useMachine(stateMachine);
+  const { account } = useWeb3React<Web3Provider>();
   const dispatch = useAppDispatch();
-  const chain = core?.chains.find((chain) => chain.network === jar.chain);
 
   const { contract } = jar;
+  const JarContract = useJarContract(contract);
+
+  const chain = core?.chains.find((chain) => chain.network === jar.chain);
+
   const decimals = jarDecimals(jar);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
   const depositTokenBalance = parseFloat(ethers.utils.formatUnits(depositTokenBalanceBN, decimals));
-  const pAssetTokenBalance = parseFloat(
-    ethers.utils.formatUnits(balances?.pAssetBalance || "0", 18),
-  );
+  const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
+  const pTokenBalance = parseFloat(ethers.utils.formatUnits(pTokenBalanceBN, 18));
 
-  const { account } = useWeb3React<Web3Provider>();
-  const JarContract = useJarContract(contract);
+  const transactionFactory = () => {
+    if (!JarContract) return;
 
-  if (!JarContract || !account) return null;
+    const amount = ethers.utils.parseUnits(current.context.amount, decimals);
 
-  const sendTransaction = async () => {
-    setError(undefined);
-    setIsWaiting(true);
-
-    try {
-      const amountBN = ethers.utils.parseUnits(current.context.amount.toString(), decimals);
-      const pAssetBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
-
-      const transaction = await JarContract.deposit(amountBN);
-
-      send(Actions.TRANSACTION_SENT, { txHash: transaction.hash });
-
-      transaction
-        .wait()
-        .then(
-          async () => {
-            setProgressStatus(t("v2.farms.waitingForBlockConfirmation"));
-
-            while (true) {
-              const balance = await JarContract.balanceOf(account);
-
-              const success = balance.gt(pAssetBalanceBN);
-
-              if (success) break;
-
-              await sleep(1000);
-            }
-
-            dispatch(UserActions.refresh());
-
-            send(Actions.SUCCESS);
-            dispatch(ThemeActions.setIsConfettiOn(true));
-          },
-          () => {
-            send(Actions.FAILURE);
-          },
-        )
-        .finally(() => setIsWaiting(false));
-    } catch (error) {
-      setError(error as Error);
-      setIsWaiting(false);
-    }
+    return () => JarContract.deposit(amount);
   };
 
-  const openModal = () => setIsModalOpen(true);
+  const callback = (receipt: ethers.ContractReceipt) => {
+    if (!account) return;
+
+    /**
+     * This will generate two events:
+     * 1) Transfer of LP tokens from user's wallet to the jar
+     * 2) Mint of pTokens sent to user's wallet
+     */
+    const events = receipt.events?.filter(({ event }) => event === "Transfer") as TransferEvent[];
+    const depositTokenTransferEvent = events.find((event) => event.args.from === account)!;
+    const pTokenTransferEvent = events.find((event) => event.args.to === account)!;
+
+    const depositTokenBalance = depositTokenBalanceBN
+      .sub(depositTokenTransferEvent.args.value)
+      .toString();
+    const pAssetBalance = pTokenBalanceBN.add(pTokenTransferEvent.args.value).toString();
+
+    dispatch(
+      UserActions.setTokenData({
+        apiKey: jar.details.apiKey,
+        data: {
+          depositTokenBalance,
+          pAssetBalance,
+        },
+      }),
+    );
+  };
+
+  const { sendTransaction, error, setError, isWaiting } = useTransaction(
+    transactionFactory(),
+    callback,
+    send,
+    true,
+  );
+
+  const openModal = () => {
+    send(Actions.RESET);
+    setIsModalOpen(true);
+  };
   const closeModal = () => setIsModalOpen(false);
 
   if (!visible) return null;
@@ -117,7 +113,7 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
         </Button>
         <Button
           type="secondary"
-          state={pAssetTokenBalance > 0 ? "enabled" : "disabled"}
+          state={pTokenBalance > 0 ? "enabled" : "disabled"}
           className="w-11"
         >
           -
@@ -149,11 +145,7 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (
-          <AwaitingReceipt
-            chainExplorer={chain?.explorer}
-            txHash={current.context.txHash}
-            progressStatus={progressStatus}
-          />
+          <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
         )}
         {current.matches(States.SUCCESS) && (
           <Success
@@ -166,7 +158,7 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
           <Failure
             chainExplorer={chain?.explorer}
             txHash={current.context.txHash}
-            retry={() => send(Actions.RETRY)}
+            retry={() => send(Actions.RESET)}
           />
         )}
       </Modal>

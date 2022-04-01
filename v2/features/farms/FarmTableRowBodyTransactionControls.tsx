@@ -1,11 +1,12 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
+import { ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
 import Button from "v2/components/Button";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { getUserAssetDataWithPrices } from "v2/utils/user";
+import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
@@ -24,11 +25,14 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
     UserSelectors.selectTokenDataById(state, jar.details.apiKey),
   );
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
-  const jarTokens = data.depositTokensInJar.tokens;
   const farmTokens = data.depositTokensInFarm.tokens;
   const picklesPending = data.earnedPickles.tokensVisible;
 
+  const decimals = jarDecimals(jar);
   const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
+  const jarTokens = parseFloat(
+    ethers.utils.formatUnits(userTokenData?.pAssetBalance || "0", decimals),
+  );
 
   return (
     <div className="flex">
