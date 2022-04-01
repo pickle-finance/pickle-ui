@@ -49,9 +49,10 @@ interface Props {
   jar: JarWithData;
   type: ApprovalType;
   visible: boolean;
+  entryTrigger: boolean;
 }
 
-const ApprovalFlow: FC<Props> = ({ jar, visible, type }) => {
+const ApprovalFlow: FC<Props> = ({ jar, visible, type, entryTrigger }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useAppSelector(CoreSelectors.selectCore);
@@ -89,6 +90,8 @@ const ApprovalFlow: FC<Props> = ({ jar, visible, type }) => {
   );
 
   const openModal = () => {
+    // Hack to skip straight to AWAITING_RECEIPT
+    if (entryTrigger) sendTransaction();
     send(Actions.RESET);
     setIsModalOpen(true);
   };

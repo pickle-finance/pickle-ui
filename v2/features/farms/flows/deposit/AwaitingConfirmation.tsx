@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import { PencilIcon } from "@heroicons/react/outline";
+import dayjs from "dayjs";
 
 import Button from "v2/components/Button";
 import Error from "../Error";
@@ -39,13 +40,22 @@ const AwaitingConfirmation: FC<Props> = ({
         <PencilIcon className="w-20 h-20 text-primary" />
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg mt-6 mb-4">{title}</h2>
-      <p className="text-foreground-alt-200 text-sm mb-8">
+      <p className="text-foreground-alt-200 text-sm mb-4">
         <span className="font-title text-primary text-base mr-2">{amount}</span>
         {tokenName}
         {equivalentValue && <MoreInfo secondaryText={equivalentValue} />}
       </p>
+      {lockEnd && (
+        <p className="text-foreground-alt-200 text-sm mb-4">
+          {" "}
+          {t("v2.dill.lockingUntil")}{" "}
+          <span className="font-title text-primary text-base mr-2">
+            {dayjs(lockEnd).format("LL")}
+          </span>
+        </p>
+      )}
       <Error error={error} />
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center pt-4">
         <Button type="secondary" onClick={previousStep} className="mr-3">
           {t("v2.actions.back")}
         </Button>
