@@ -7,6 +7,7 @@ import LoadingIndicator from "v2/components/LoadingIndicator";
 import DillAmount from "./DillAmount";
 import UnlockDate from "./UnlockDate";
 import Harvest from "./Harvest";
+import { useAppSelector } from "v2/store";
 
 const DillInfo: FC = () => {
   const userData = useSelector(UserSelectors.selectData);
@@ -18,16 +19,14 @@ const DillInfo: FC = () => {
       </div>
     );
 
-  const userBalance = ethers.utils.formatUnits(userData.dill.balance);
+  const userBalance = parseFloat(ethers.utils.formatUnits(userData.dill.balance));
+  const { pickles, dill } = userData;
 
   return (
     <>
-      <DillAmount
-        pickleBalance={19} // TODO: fetch real value
-        dillBalance={parseFloat(userBalance)}
-      />
-      <UnlockDate />
-      <Harvest />
+      <DillAmount pickles={pickles} dill={dill} />
+      <UnlockDate dill={dill} />
+      <Harvest dill={dill}/>
     </>
   );
 };

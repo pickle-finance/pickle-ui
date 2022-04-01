@@ -1,28 +1,84 @@
-import { FC } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { useTranslation } from "next-i18next";
+import { IUserDillStats, UserPickles } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import LockTimeOptions from "./LockTimeOptions";
+import { ChainNetwork } from "picklefinance-core";
+import { formatEther, formatUnits } from "ethers/lib/utils";
+import ApprovalFlow from "../farms/flows/approval/ApprovalFlow";
+import DillDepositFlow from "./flows/deposit/DillDepositFlow";
+import { estimateDillForDate, getDayOffset } from "./flows/utils";
+import LockTimeSlider from "./LockTimeSlider";
+import { ArrowRightIcon } from "@heroicons/react/outline";
+import dayjs from "dayjs";
+
+// TODO refactor into constants file
+export const PICKLE_ADDR = "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5";
+export const DILL_ADDR = "0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf";
+export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
 
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
-  pickleBalance: number;
+  pickles: UserPickles;
+  dill: IUserDillStats;
 }
 
-const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickleBalance }) => {
+const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
   const { t } = useTranslation("common");
 
+  const [error, setError] = useState<Error | undefined>();
+  const invalidAmountError = Error(t("v2.farms.invalidAmount"));
+
+  const pickleBalanceNum = pickles[ChainNetwork.Ethereum]
+    ? parseFloat(formatEther(pickles[ChainNetwork.Ethereum]))
+    : 0;
+
+  const [amount, setAmount] = useState<string>(pickleBalanceNum.toString());
+  const [lockTime, setLockTime] = useState<Date>(getDayOffset(new Date(), 365 * 4 - 1));
+
+  const validate = (value: string) => {
+    if (!value) {
+      setError(invalidAmountError);
+      return;
+    }
+
+    const amount = parseFloat(value);
+    const isValid = amount > 0 && amount <= pickleBalanceNum;
+
+    isValid ? setError(undefined) : setError(invalidAmountError);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setAmount(value);
+    validate(value);
+  };
+
+  const userHasDillAllowance = parseInt(dill?.dillApproval || "0") > 0;
+
+  const handleFormSubmit = () => {
+    if (error) return;
+
+    // nextStep(amount);
+  };
+
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.dill.getDill")}>
+    <Modal
+      isOpen={isOpen}
+      closeModal={closeModal}
+      title={Boolean(dill.balance) ? t("v2.dill.addDill") : t("v2.dill.getDill")}
+    >
       <div className="bg-background-lightest rounded-xl px-4 py-2">
         <div className="flex justify-between mb-2">
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.dill.pickleBalance")}: {pickleBalance}
+            {t("v2.dill.pickleBalance")}: {pickleBalanceNum.toFixed(3)}
           </p>
         </div>
 
@@ -30,14 +86,59 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickleBalance }) => {
           <input
             type="number"
             className="w-3/5 bg-transparent focus:outline-none flex-shrink-0 font-medium text-primary leading-7"
+            value={amount}
+            onChange={handleChange}
           />
-          <Button size="small">{t("v2.balances.max")}</Button>
+          <Button
+            size="small"
+            onClick={() => {
+              setAmount(pickleBalanceNum.toString());
+              validate(pickleBalanceNum.toString());
+            }}
+          >
+            {t("v2.balances.max")}
+          </Button>{" "}
         </div>
       </div>
+
       <div className="my-6">
-        <LockTimeOptions showValue />
+        {!parseFloat(dill.balance) && (
+          <>
+            <LockTimeOptions showValue setLockTime={setLockTime} />
+            <LockTimeSlider lockTime={lockTime} setLockTime={setLockTime} dill={dill} />
+            <p className="text-foreground-alt-200 text-sm mb-4">
+              {" "}
+              {t("v2.dill.lockingUntil")}{" "}
+              <span className="font-title text-primary text-base mr-2">
+                {dayjs(lockTime).format("LL")}
+              </span>
+            </p>
+
+            <p className={"text-foreground-alt-200 text-sm mb-4"}>
+              {t("v2.dill.estimatedDill")}{" "}
+              <span className={"font-title text-primary text-base mr-2"}>
+                {estimateDillForDate(parseFloat(amount), lockTime).toFixed(3)} DILL
+              </span>
+            </p>
+          </>
+        )}
       </div>
-      <Button>{t("v2.actions.confirm")}</Button>
+      <ApprovalFlow
+        name={"PICKLE"}
+        depositTokenAddress={PICKLE_ADDR}
+        targetAddress={DILL_ADDR}
+        chain={ChainNetwork.Ethereum}
+        visible={!userHasDillAllowance}
+        entryTrigger={true}
+      />
+      <DillDepositFlow
+        visible={userHasDillAllowance}
+        lockTime={lockTime}
+        userInput={amount}
+        error={error}
+        dillBalance={+dill.balance}
+        closeParentModal={closeModal}
+      />
     </Modal>
   );
 };
