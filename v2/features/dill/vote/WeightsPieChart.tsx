@@ -103,15 +103,18 @@ const getMainnetUserWeights = (
   core: PickleModelJson.PickleModelJson | undefined,
 ): PieChartData[] => {
   let chartData = [];
-  if (user) {
+  if (user && core) {
+    console.log(core)
+    console.log(user)
     let totalWeight = BigNumber.from("0");
     for (let i = 0; i < user.votes.length; i++)
       totalWeight = totalWeight.add(BigNumber.from(user.votes[i].weight));
     for (let i = 0; i < user.votes.length; i++) {
-      let jar: JarDefinition | undefined = core
-        ? core.assets.jars.find((j) => j.depositToken.addr === user.votes[i].farmDepositToken)
-        : undefined;
-      let jarWeight = BigNumber.from(user.votes[i].weight).mul(10000).div(totalWeight).toNumber() / 10000
+      let jar: JarDefinition | undefined = core.assets.jars.find(
+        (j) => j.depositToken.addr.toLowerCase() === user.votes[i].farmDepositToken.toLowerCase(),
+      );
+      let jarWeight =
+        BigNumber.from(user.votes[i].weight).mul(10000).div(totalWeight).toNumber() / 10000;
       if (jar)
         chartData.push({
           jar: jar.id,
@@ -142,8 +145,6 @@ const getSidechainUserWeights = (
 
 const sortByWeight = (data: PieChartData[]) =>
   data ? data.sort((a, b) => (a.weight > b.weight ? 1 : -1)) : [];
-
-const getTotalWeight = (user) => {};
 
 interface PieChartData {
   jar: string;
