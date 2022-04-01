@@ -387,7 +387,9 @@
         "rowChainName": "Chain Name",
         "title": "PICKLE Reward Weight Voting",
         "yourVote": "Your Current Vote"
-      }
+      },
+      "weeklyDillAmount": "Weekly DILL 🔒",
+      "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
       "analytics": "Analytics",
