@@ -140,6 +140,14 @@ export const FARM_LP_TO_ICON = {
   "0x0989a227E7c50311f7De61e5e61F7c28Df8936f0": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/rally.jpeg"} />
   ),
+  // STAR USDC
+  "0x81740AAc02ae2F3c61D5a0c012b3e18f9dc02b5c": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
+  // STAR USDT
+  "0x363e7CD14AEcf4f7d0e66Ae1DEff830343D760a7": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdt.png"} />
+  ),
 };
 
 export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
