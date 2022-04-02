@@ -267,6 +267,7 @@ export const GaugeList: FC = () => {
                 <>
                   <Grid xs={24} key={jar.name}>
                     <UniV3JarGaugeCollapsible jarData={jar} gaugeData={gauge} />
+                    {idx === FraxJars.length - 1 && <Spacer y={1} />}
                   </Grid>
                 </>
               );
