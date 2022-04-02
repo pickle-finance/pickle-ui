@@ -173,7 +173,7 @@ export const GaugeList: FC = () => {
   });
 
   const uniV3Jars = jarData
-    ?.filter((jar) => jar.protocol == AssetProtocol.UNISWAP_V3 && !isFrax(jar.depositToken.address))
+    ?.filter((jar) => jar.protocol == AssetProtocol.UNISWAP_V3)
     .sort((x, y) => +isFrax(y.depositToken.address) - +isFrax(x.depositToken.address));
 
   const uniV3JarsFiltered = uniV3Jars?.filter((jar) => {
@@ -260,7 +260,6 @@ export const GaugeList: FC = () => {
               Pickled veFXS
             </a>
             &nbsp;⚡
-          <>
             {uniV3JarsFiltered?.map((jar, idx) => {
               const gauge = findGauge(jar);
               if (!gauge) return;
