@@ -1,25 +1,23 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
-
-// TODO: use pf-core files when they're included in the distribution
-import { Erc20__factory as Erc20Factory } from "containers/Contracts/factories/Erc20__factory";
-import { Erc20 } from "containers/Contracts/Erc20";
 
 import { useAppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserActions } from "v2/store/user";
+import { sleep } from "v2/utils";
 import { stateMachine, Actions, States } from "../stateMachineNoUserInput";
 import AwaitingConfirmation from "./AwaitingConfirmation";
-import AwaitingReceipt from "./AwaitingReceipt";
-import Success from "./Success";
-import Failure from "./Failure";
+import AwaitingReceipt from "../AwaitingReceipt";
+import Success from "../Success";
+import Failure from "../Failure";
+import { useTokenContract } from "../hooks";
 
 interface Props {
   jar: JarWithData;
@@ -31,28 +29,20 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
+  const [progressStatus, setProgressStatus] = useState<string>(t("v2.farms.transactionPending"));
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const dispatch = useAppDispatch();
-  const { library } = useWeb3React<Web3Provider>();
+  const { account } = useWeb3React<Web3Provider>();
+  const TokenContract = useTokenContract(jar.depositToken.addr);
 
   const chain = core?.chains.find((chain) => chain.network === jar.chain);
-
   const { contract } = jar;
 
-  const TokenContract = useMemo<Erc20 | undefined>(() => {
-    if (!library) return;
-
-    return Erc20Factory.connect(jar.depositToken.addr, library.getSigner());
-  }, [library, contract]);
-
-  if (!TokenContract) return null;
+  if (!TokenContract || !account) return null;
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    dispatch(UserActions.refresh());
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   const sendTransaction = async () => {
     setError(undefined);
@@ -64,18 +54,25 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
 
       send(Actions.TRANSACTION_SENT, { txHash: transaction.hash });
 
-      await transaction
+      transaction
         .wait()
         .then(
-          () => {
+          async () => {
+            setProgressStatus(t("v2.farms.waitingForBlockConfirmation"));
+
+            let allowance: BigNumber;
+
+            while (true) {
+              allowance = await TokenContract.allowance(account, contract);
+              const success = allowance.gt(ethers.constants.Zero);
+
+              if (success) break;
+
+              await sleep(1000);
+            }
+
+            dispatch(UserActions.refresh());
             send(Actions.SUCCESS);
-            // Optimistic UI update.
-            dispatch(
-              UserActions.setTokenAllowance({
-                apiKey: jar.details.apiKey,
-                value: amount.toString(),
-              }),
-            );
           },
           () => {
             send(Actions.FAILURE);
@@ -105,7 +102,11 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (
-          <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
+          <AwaitingReceipt
+            chainExplorer={chain?.explorer}
+            txHash={current.context.txHash}
+            progressStatus={progressStatus}
+          />
         )}
         {current.matches(States.SUCCESS) && (
           <Success

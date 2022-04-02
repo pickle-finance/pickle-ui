@@ -7,6 +7,7 @@ import { PickleCore } from "containers/Jars/usePickleCore";
 import { getFarmData } from "../../util/api";
 import { getJarFarmMap } from "containers/Farms/farms";
 import { isPUsdcToken } from "../Jars/jars";
+import { Connection } from "containers/Connection";
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;
@@ -16,21 +17,22 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
   const { jars } = Jars.useContainer();
   const { prices } = Prices.useContainer();
   const { pickleCore } = PickleCore.useContainer();
+  const { chainName } = Connection.useContainer();
 
   const [farmData, setFarmData] = useState<any | null>(null);
 
   const [gauges, setGauges] = useState<GaugeWithApy[] | null>(null);
 
   const calculateApy = () => {
-    if (!inputGauges || !prices || !jars || !farmData) {
+    if (!inputGauges || !prices || !jars || !farmData || !chainName) {
       return;
     }
     const jarGauges = inputGauges.filter(
-      (gauge) => getJarFarmMap(pickleCore)[gauge.token],
+      (gauge) => getJarFarmMap(pickleCore, chainName)[gauge.token],
     );
 
     const res = jarGauges.map((gauge, idx) => {
-      const { jarName } = getJarFarmMap(pickleCore)[gauge.token];
+      const { jarName } = getJarFarmMap(pickleCore, chainName)[gauge.token];
       const gaugeingJar = jars.filter((x) => x.jarName === jarName)[0];
       // early return for gauges based on deactivated jars
       if (!gaugeingJar) {
@@ -44,9 +46,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
         };
       }
 
-      const farmInfo = Object.values(farmData).filter(
-        (farm) => farm.address === gauge.token,
-      );
+      const farmInfo = Object.values(farmData).filter((farm) => farm.address === gauge.token);
       // calculate APY
       const valueStakedInGauge = farmInfo.valueBalance;
       const fullApy = gaugeingJar.usdPerPToken

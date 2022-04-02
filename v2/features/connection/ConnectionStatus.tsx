@@ -61,9 +61,7 @@ export const switchChain = async (
       params = [{ chainId: "0x1" }];
     } else {
       method = "wallet_addEthereumChain";
-      const param = chainToChainParams(
-        pfcore.chains.find((x) => x.chainId === chainId),
-      );
+      const param = chainToChainParams(pfcore.chains.find((x) => x.chainId === chainId));
       if (param === undefined || param === null) return false;
       params = [param];
     }
@@ -81,65 +79,56 @@ export const switchChain = async (
 };
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
-  const { t } = useTranslation("common");
   const { activate, connector, library } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
 
   resetWalletConnectState(connector);
-
-  if (error instanceof UnsupportedChainIdError) {
-    return (
-      <>
-        <p>{t("v2.connection.unsupportedNetwork")}</p>
-        <div className="mt-4">
-          {networks?.map((network) => (
-            <div
-              key={network.name}
-              className="inline-flex group justify-between items-center bg-background p-2 rounded-lg mr-2"
-            >
-              <div className="w-5 h-5 mr-3">
-                <Image
-                  src={`/networks/${network.name}.png`}
-                  width={200}
-                  height={200}
-                  layout="responsive"
-                  alt={network.name}
-                  title={network.name}
-                  className="rounded-full"
-                  priority
-                />
-              </div>
-              <span
-                className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
-                onClick={() => switchChain(library, network.chainId, allCore)}
-              >
-                {network.visibleName}
-              </span>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  } else if (
+  if (
     error instanceof UserRejectedRequestErrorInjected ||
     error instanceof UserRejectedRequestErrorWalletConnect
   ) {
     return (
       <Trans i18nKey="v2.connection.unauthorized">
         Please
-        <Link
-          href="#"
-          className="text-lg"
-          onClick={() => activate(connector || injected)}
-          primary
-        >
+        <Link href="#" className="text-lg" onClick={() => activate(connector || injected)} primary>
           authorize
         </Link>
         Pickle Finance to access your Ethereum account.
       </Trans>
     );
   }
+  return (
+    <>
+      <div className="mt-4">
+        {networks?.map((network) => (
+          <div
+            key={network.name}
+            className="inline-flex group justify-between items-center bg-background p-2 rounded-lg mr-2 mb-2"
+          >
+            <div className="w-5 h-5 mr-3">
+              <Image
+                src={`/networks/${network.name}.png`}
+                width={200}
+                height={200}
+                layout="responsive"
+                alt={network.name}
+                title={network.name}
+                className="rounded-full"
+                priority
+              />
+            </div>
+            <span
+              className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
+              onClick={() => switchChain(library, network.chainId, allCore)}
+            >
+              {network.visibleName}
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 
   return null;
 };
@@ -149,17 +138,14 @@ const ConnectionStatus: FC = () => {
   let { error, chainId } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!chainId) return null;
-  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId))
-    return null;
+  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId)) return null;
   if (!error && !(chainId && supportedChains.includes(chainId))) {
     // App will function with all known chains
     // supportedChains contains all chains Pickle supports
     // we want error if chainId is not in supportedChains
-    error = new UnsupportedChainIdError(
-      chainId ? chainId : -1,
-      supportedChains,
-    );
+    error = new UnsupportedChainIdError(chainId ? chainId : -1, supportedChains);
+  } else if (!chainId) {
+    error = undefined;
   } else return null;
   return (
     <div className="bg-background-lightest px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-foreground-alt-500">
@@ -168,6 +154,9 @@ const ConnectionStatus: FC = () => {
         {t("v2.connection.errorTitle")}
       </div>
       <div className="text-foreground-alt-200">
+        <p>
+          {chainId ? t("v2.connection.unsupportedNetwork") : t("v2.connection.disconnectedWallet")}
+        </p>
         <ErrorMessage error={error} />
       </div>
     </div>

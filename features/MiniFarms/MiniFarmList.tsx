@@ -156,7 +156,7 @@ export const MiniFarmList: FC = () => {
     let nonCompoundedYields: JarApy[] = [pickleRewards];
     let totalAPY = 0;
     let magicCompounding = 0;
-    const jar = getJarFarmMap(pickleCore)[farm.depositToken.address];
+    const jar = getJarFarmMap(pickleCore, chainName!)[farm.depositToken.address];
     if (jar) {
       const farmingJar: UserJarData | undefined = jarData
         ? jarData.filter((x) => x.name === jar.jarName)[0]

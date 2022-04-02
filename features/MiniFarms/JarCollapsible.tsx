@@ -2,15 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import {
-  Button,
-  Link,
-  Input,
-  Grid,
-  Spacer,
-  Tooltip,
-  Select,
-} from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -23,12 +15,14 @@ import { getFormatString } from "../Gauges/GaugeInfo";
 import { uncompoundAPY } from "util/jars";
 import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
-import { isUsdcToken } from "containers/Jars/jars";
+import { isCroToken, isUsdcToken } from "containers/Jars/jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { TokenDetails } from "containers/Jars/useJarsWithZap";
 import { formatUnits } from "@ethersproject/units";
 import { neverExpireEpochTime } from "util/constants";
 import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
+import { Jar } from "containers/Contracts/Jar";
+import { JarNative } from "containers/Contracts/JarNative";
 
 interface DataProps {
   isZero?: boolean;
@@ -313,6 +307,32 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/weth.png"} />
   ),
 
+  "0x2a560f2312cb56327ad5d65a03f1bfec10b62075": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/tokens/doge.png"} />
+  ),
+  "0x9e5bd780dff875dd85848a65549791445ae25de0": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/tokens/atom.png"} />
+  ),
+  "0x4b377121d968bf7a62d51b96523d59506e7c2bf0": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"tokens/tonic.png"} />
+  ),
+  "0x6f72a3f6db6f486b50217f6e721f4388994b1fbe": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/singlevvs.png"} />
+  ),
+  "0x0fbab8a90cac61b481530aad3a64fe17b322c25d": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/singleusdc.png"} />
+  ),
+  "0xa922530960a1f94828a7e132ec1ba95717ed1eab": (
+    <LpIcon swapIconSrc={"/vvs.png"} tokenIconSrc={"/tokens/tonic.png"} />
+  ),
+
+  "0xe44fd7fcb2b1581822d0c862b68222998a0c299a": (
+    <LpIcon swapIconSrc={"/protocols/tectonic.png"} tokenIconSrc={"/weth.png"} />
+  ),
+  "0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23": (
+    <LpIcon swapIconSrc={"/protocols/tectonic.png"} tokenIconSrc={"/cronos.png"} />
+  ),
+
   // Aurora
   "0x20f8aefb5697b77e0bb835a8518be70775cda1b0": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/nearusdc.png"} />
@@ -578,6 +598,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   //ZIP ETH/ZIP
   "0xd7f6ecf4371eddbd60c1080bfaec3d1d60d415d0": (
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
+  ),
+  //STG USDC
+  "0xdecc0c09c3b5f6e92ef4184125d5648a66e35298":(
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc/png"}/>
   ),
 
   // Fantom
@@ -853,6 +877,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x6058345a4d8b89ddac7042be08091f91a404b80b": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/renbtc.png"} />
   ),
+  // STAR USDC
+  "0x12edea9cd262006cc3c4e77c90d2cd2dd4b1eb97": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
+  ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
@@ -906,11 +934,14 @@ export const JarCollapsible: FC<{
     tvlUSD,
     zapDetails,
   } = jarData;
+
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
+  const [ethBalance, setEthBalance] = useState(BigNumber.from(0));
 
   const isUsdc = isUsdcToken(depositToken.address);
 
+  const isNative = isCroToken(depositToken.address);
   const jarTokenDetails: TokenDetails = {
     symbol: depositTokenName,
     balance: balance,
@@ -919,9 +950,7 @@ export const JarCollapsible: FC<{
   };
 
   const [inputToken, setInputToken] = useState<TokenDetails>(jarTokenDetails);
-  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([
-    jarTokenDetails,
-  ]);
+  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([jarTokenDetails]);
 
   let uncompounded = APYs?.map((x) => {
     const k: string = Object.keys(x)[0];
@@ -958,7 +987,9 @@ export const JarCollapsible: FC<{
     .filter((x) => x)
     .join(" <br/> ");
 
-  const balNum = parseFloat(formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance));
+  const balNum = parseFloat(
+    formatEther(isNative ? ethBalance : isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+  );
   const depositedNum = parseFloat(
     formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
   );
@@ -998,7 +1029,7 @@ export const JarCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const { signer, chainName } = Connection.useContainer();
+  const { signer, address, blockNum } = Connection.useContainer();
 
   useEffect(() => {
     // Update tokens and balances
@@ -1006,8 +1037,7 @@ export const JarCollapsible: FC<{
     if (zapDetails) inputTokens = [...inputTokens, ...zapDetails.inputTokens];
 
     const updatedBalance =
-      inputTokens.find((x) => x.symbol === inputToken.symbol)?.balance ||
-      BigNumber.from("0");
+      inputTokens.find((x) => x.symbol === inputToken.symbol)?.balance || BigNumber.from("0");
     setAllInputTokens(inputTokens);
     setInputToken({
       ...inputToken,
@@ -1028,6 +1058,11 @@ export const JarCollapsible: FC<{
     setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
   }, [erc20TransferStatuses]);
 
+  useEffect(() => {
+    const setBalance = async () => setEthBalance(await signer.getBalance());
+    setBalance();
+  }, [address, blockNum]);
+
   const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
     usdPerPToken,
     depositedNum,
@@ -1041,9 +1076,7 @@ export const JarCollapsible: FC<{
   const userSharePendingStr = explanations.pendingString;
 
   const getInputTokenBalStr = (inputToken: TokenDetails) => {
-    const bal = parseFloat(
-      formatUnits(inputToken.balance, inputToken.decimals),
-    );
+    const bal = parseFloat(formatUnits(inputToken.balance, inputToken.decimals));
 
     return bal.toLocaleString(undefined, {
       minimumFractionDigits: 0,
@@ -1060,10 +1093,7 @@ export const JarCollapsible: FC<{
   const deposit = async () => {
     if (!signer) return;
 
-    const depositAmt = ethers.utils.parseUnits(
-      depositAmount,
-      inputToken.decimals,
-    );
+    const depositAmt = ethers.utils.parseUnits(depositAmount, inputToken.decimals);
 
     // Deposit token
     if (inputToken.symbol === depositTokenName) {
@@ -1072,31 +1102,33 @@ export const JarCollapsible: FC<{
         recipient: jarContract.address,
         approvalAmountRequired: depositAmt,
         transferCallback: async () => {
-          return jarContract.connect(signer).deposit(depositAmt);
+          return isNative
+            ? jarContract.connect(signer).deposit({ value: depositAmt })
+            : jarContract.connect(signer).deposit(depositAmt);
         },
       });
     }
 
     if (!zapDetails) return;
 
-    const swapTx = inputToken.isWrapped ?
-      await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactTokensForTokens(
-          depositAmt,
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        ) :
-      await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactETHForTokens(
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        );
+    const swapTx = inputToken.isWrapped
+      ? await zapDetails.router
+          .connect(signer)
+          .populateTransaction.swapExactTokensForTokens(
+            depositAmt,
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          )
+      : await zapDetails.router
+          .connect(signer)
+          .populateTransaction.swapExactETHForTokens(
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          );
 
     return transfer({
       token: inputToken.address,
@@ -1118,14 +1150,13 @@ export const JarCollapsible: FC<{
             zapDetails.router.address,
             false,
             {
-              value:
-                inputToken.isNative === true ? depositAmt : BigNumber.from(0),
+              value: inputToken.isNative === true ? depositAmt : BigNumber.from(0),
             },
           );
       },
     });
   };
-  
+
   const multiFarmsDepositToken = Object.keys(JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON).includes(
     depositToken.address.toLowerCase(),
   );
@@ -1143,11 +1174,11 @@ export const JarCollapsible: FC<{
               src={
                 multiFarmsApiKey
                   ? JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
-                  ][multiFarmsApiKey]
+                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
+                    ][multiFarmsApiKey]
                   : JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
-                  ]
+                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                    ]
               }
             />
             <div style={{ width: "100%" }}>
@@ -1195,7 +1226,7 @@ export const JarCollapsible: FC<{
         <Grid xs={24} md={depositedNum ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              {t("balances.balance")}: {getInputTokenBalStr(inputToken)}{" "}
+              {t("balances.balance")}: {isNative ? balStr : getInputTokenBalStr(inputToken)}{" "}
               {inputToken.symbol}
             </div>
             <Link
@@ -1204,7 +1235,9 @@ export const JarCollapsible: FC<{
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatUnits(inputToken.balance, inputToken.decimals),
+                  isNative
+                    ? formatEther(ethBalance)
+                    : formatUnits(inputToken.balance, inputToken.decimals),
                 );
               }}
             >
@@ -1229,9 +1262,7 @@ export const JarCollapsible: FC<{
                       value={token.symbol}
                       key={token.symbol}
                     >
-                      <div style={{ display: `flex`, alignItems: `center` }}>
-                        {token.symbol}
-                      </div>
+                      <div style={{ display: `flex`, alignItems: `center` }}>{token.symbol}</div>
                     </Select.Option>
                   ))}
                 </Select>
@@ -1252,11 +1283,7 @@ export const JarCollapsible: FC<{
             ></Input>
           )}
           <Spacer y={0.5} />
-          <Button
-            onClick={deposit}
-            disabled={depositButton.disabled}
-            style={{ width: "100%" }}
-          >
+          <Button onClick={deposit} disabled={depositButton.disabled} style={{ width: "100%" }}>
             {depositButton.text}
           </Button>
         </Grid>
@@ -1266,12 +1293,13 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${deposited && ratio
-                    ? parseFloat(
-                      formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-                    ) * ratio
-                    : 0
-                    } ${depositTokenName}`}
+                  text={`${
+                    deposited && ratio
+                      ? parseFloat(
+                          formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+                        ) * ratio
+                      : 0
+                  } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}

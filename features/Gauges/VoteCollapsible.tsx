@@ -77,7 +77,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const { pickleCore } = PickleCore.useContainer();
   const [votingFarms, setVotingFarms] = useState<UserGaugeData[]>([]);
   const { gaugeProxy } = Contracts.useContainer();
-  const { signer } = Connection.useContainer();
+  const { signer, chainName } = Connection.useContainer();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState<Weights[]>([]);
   const { t } = useTranslation("common");
@@ -262,7 +262,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       const pickleAPYMin = fullApy * 100 * 0.4;
       const pickleAPYMax = fullApy * 100;
 
-      const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
+      const maybeJar = getJarFarmMap(pickleCore, chainName!)[depositToken.address];
       if (jars && maybeJar) {
         const gaugeingJar = jars.filter(
           (x) => x.jarName === maybeJar.jarName,

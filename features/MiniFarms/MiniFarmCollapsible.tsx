@@ -72,9 +72,7 @@ export const FARM_LP_TO_ICON: {
   ),
 };
 
-export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
-  farmData,
-}) => {
+export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({ farmData }) => {
   const { pickleCore } = PickleCore.useContainer();
   const { jars } = Jars.useContainer();
   const { t } = useTranslation("common");
@@ -107,13 +105,9 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     minimumFractionDigits: 0,
     maximumFractionDigits: stakedNum < 1 ? 8 : 4,
   });
-  const harvestableStr = parseFloat(
-    formatEther(harvestable || 0),
-  ).toLocaleString();
+  const harvestableStr = parseFloat(formatEther(harvestable || 0)).toLocaleString();
 
-  const harvestableMaticStr = parseFloat(
-    formatEther(harvestableMatic || 0),
-  ).toLocaleString();
+  const harvestableMaticStr = parseFloat(formatEther(harvestableMatic || 0)).toLocaleString();
 
   const {
     status: erc20TransferStatuses,
@@ -121,7 +115,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
     getTransferStatus,
   } = ERC20Transfer.useContainer();
   const { minichef } = Contracts.useContainer();
-  const { signer, address } = Connection.useContainer();
+  const { signer, address, chainName } = Connection.useContainer();
   const [stakeAmount, setStakeAmount] = useState("");
   const [unstakeAmount, setUnstakeAmount] = useState("");
   const { setButtonStatus } = useButtonStatus();
@@ -142,7 +136,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }, { matic: maticApy * 100 }];
 
-  const maybeJar = getJarFarmMap(pickleCore)[depositToken.address];
+  const maybeJar = getJarFarmMap(pickleCore, chainName!)[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;
@@ -159,37 +153,13 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
 
   useEffect(() => {
     if (minichef) {
-      const stakeStatus = getTransferStatus(
-        depositToken.address,
-        minichef.address,
-      );
-      const unstakeStatus = getTransferStatus(
-        minichef.address,
-        depositToken.address,
-      );
-      const harvestStatus = getTransferStatus(
-        minichef.address,
-        poolIndex.toString(),
-      );
+      const stakeStatus = getTransferStatus(depositToken.address, minichef.address);
+      const unstakeStatus = getTransferStatus(minichef.address, depositToken.address);
+      const harvestStatus = getTransferStatus(minichef.address, poolIndex.toString());
 
-      setButtonStatus(
-        stakeStatus,
-        t("farms.staking"),
-        t("farms.stake"),
-        setStakeButton,
-      );
-      setButtonStatus(
-        unstakeStatus,
-        t("farms.unstaking"),
-        t("farms.unstake"),
-        setUnstakeButton,
-      );
-      setButtonStatus(
-        harvestStatus,
-        t("farms.harvesting"),
-        t("farms.harvest"),
-        setHarvestButton,
-      );
+      setButtonStatus(stakeStatus, t("farms.staking"), t("farms.stake"), setStakeButton);
+      setButtonStatus(unstakeStatus, t("farms.unstaking"), t("farms.unstake"), setUnstakeButton);
+      setButtonStatus(harvestStatus, t("farms.harvesting"), t("farms.harvest"), setHarvestButton);
     }
   }, [erc20TransferStatuses]);
 
@@ -201,11 +171,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
         <Grid.Container gap={1}>
           <Grid xs={24} sm={12} md={5} lg={5}>
             <TokenIcon
-              src={
-                FARM_LP_TO_ICON[
-                  depositToken.address as keyof typeof FARM_LP_TO_ICON
-                ]
-              }
+              src={FARM_LP_TO_ICON[depositToken.address as keyof typeof FARM_LP_TO_ICON]}
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{poolName}</div>
@@ -282,11 +248,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({
                   transferCallback: async () => {
                     return minichef
                       .connect(signer)
-                      .deposit(
-                        poolIndex,
-                        ethers.utils.parseEther(stakeAmount),
-                        address,
-                      );
+                      .deposit(poolIndex, ethers.utils.parseEther(stakeAmount), address);
                   },
                 });
               }

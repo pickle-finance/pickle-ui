@@ -19,7 +19,7 @@ const DashboardCalloutCard: FC = () => {
     };
 
   return (
-    <Link href="/v2/farms">
+    <Link href="/v2/farms" passHref>
       <div className="group bg-background-light rounded-xl border border-foreground-alt-500 shadow cursor-pointer transition duration-300 ease-in-out hover:bg-background-lightest">
         <div className="flex justify-between px-5 py-4 sm:px-8 sm:py-5">
           <div className="pr-4">

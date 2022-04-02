@@ -5,7 +5,7 @@ import { useAppSelector } from "v2/store";
 import Button from "v2/components/Button";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { getUserAssetDataWithPrices } from "./FarmsTableRowHeader";
+import { getUserAssetDataWithPrices } from "v2/utils/user";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
@@ -24,13 +24,11 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
     UserSelectors.selectTokenDataById(state, jar.details.apiKey),
   );
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
-  const jarTokens = data.depositTokensInJar.tokensVisible;
-  const farmTokens = data.depositTokensInFarm.tokensVisible;
-  const tokensInWallet = data.depositTokensInWallet.tokens;
+  const jarTokens = data.depositTokensInJar.tokens;
+  const farmTokens = data.depositTokensInFarm.tokens;
   const picklesPending = data.earnedPickles.tokensVisible;
 
   const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
-  const userDepositTokenBalance = parseFloat(tokensInWallet);
 
   return (
     <div className="flex">
@@ -43,11 +41,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
             {jarTokens}
           </span>
           <ApprovalFlow jar={jar} visible={!userHasJarAllowance} />
-          <DepositFlow
-            jar={jar}
-            visible={userHasJarAllowance}
-            depositTokenBalance={userDepositTokenBalance}
-          />
+          <DepositFlow jar={jar} visible={userHasJarAllowance} balances={userTokenData} />
         </div>
       </div>
       <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 mr-3 sm:mr-6">

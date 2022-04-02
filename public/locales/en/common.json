@@ -315,8 +315,10 @@
   "v2": {
     "actions": {
       "approve": "Approve",
+      "back": "Back",
       "close": "Close",
       "confirm": "Confirm",
+      "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
       "retry": "Retry"
@@ -329,8 +331,10 @@
       "max": "Max"
     },
     "connection": {
+      "clover": "Clover",
       "coinbase": "Coinbase",
       "connectWallet": "Connect wallet",
+      "disconnectedWallet": "Please connect your wallet to interact. Pickle supports the following networks: ",
       "errorTitle": "Uh oh, we're in a pickle here!",
       "metamask": "Metamask",
       "unauthorized": "Please <1>authorize</1> Pickle Finance to access your Ethereum account.",
@@ -371,6 +375,19 @@
       "upcomingDistributionDate": "Upcoming distribution date",
       "upcomingDistributionValue": "Upcoming distribution value",
       "usdValue": "USD Value",
+      "vote": {
+        "apy":"APY",
+        "blendedApr": "Blended APR",
+        "castVote": "Cast Vote",
+        "currentWeight": "Platform Weight",
+        "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
+        "newVote": "Your New Vote",
+        "pickleApy": "Pickle APY",
+        "rowAssetName": "Asset Name",
+        "rowChainName": "Chain Name",
+        "title": "PICKLE Reward Weight Voting",
+        "yourVote": "Your Current Vote"
+      },
       "weeklyDillAmount": "Weekly DILL 🔒",
       "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
@@ -385,6 +402,7 @@
       "chain": "Chain",
       "compounding": "Compounding",
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
+      "confirmDeposit": "Please confirm your deposit amount",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
       "depositToken": "Deposit {{ token }}",
@@ -405,6 +423,7 @@
       "givePermission": "Give Pickle Finance permission to access your {{ token }}?",
       "harvest": "Harvest",
       "harvestRewards": "Harvest rewards",
+      "invalidAmount": "Please enter a valid deposit amount",
       "jarAddress": "Jar Address",
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
@@ -428,8 +447,11 @@
       "strategyAddress": "Strategy Address",
       "success": "Success!",
       "token": "Token",
+      "tokens": "{{ amount }} Tokens",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "transactionFailed": "Transaction failed",
+      "transactionPending": "Transaction pending...",
+      "waitingForBlockConfirmation": "Waiting for block confirmation...",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "yieldRates": "Yield rates"
     },

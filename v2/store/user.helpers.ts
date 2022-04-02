@@ -19,11 +19,14 @@ export const baseTokenObject: Partial<UserTokenData> = {
 export const normalizeUserTokens = (data: UserData): TokensById => {
   const { tokens } = data;
   let result: TokensById = {};
-
-  tokens.forEach((tokenData) => (result[tokenData.assetKey] = tokenData));
+  const tokenNames = Object.keys(tokens);
+  for (let i = 0; i < tokenNames.length; i++) {
+    result[tokens[tokenNames[i]].assetKey] = tokens[tokenNames[i]]
+  }
 
   return result;
 };
+
 
 /**
  * A deep clone is important because if we dispatch data
@@ -31,7 +34,6 @@ export const normalizeUserTokens = (data: UserData): TokensById => {
  * read-only, thus breaking the internals of UserModel.
  *
  */
-export const normalizedData = (data: UserData): UserDataV2 => ({
+export const normalizedData = (data: UserData): UserData => ({
   ...cloneDeep(data),
-  tokens: normalizeUserTokens(data),
 });
