@@ -14,12 +14,11 @@ export enum States {
 export enum Actions {
   TRANSACTION_SENT = "TRANSACTION_SENT",
   FAILURE = "FAILURE",
-  RETRY = "RETRY",
   SUCCESS = "SUCCESS",
+  RESET = "RESET",
 }
 
 export const stateMachine = createMachine<ApprovalContext>({
-  id: "approval",
   initial: States.AWAITING_CONFIRMATION,
   context: {
     txHash: undefined,
@@ -39,10 +38,10 @@ export const stateMachine = createMachine<ApprovalContext>({
       },
     },
     [States.FAILURE]: {
-      on: { [Actions.RETRY]: { target: States.AWAITING_CONFIRMATION } },
+      on: { [Actions.RESET]: { target: States.AWAITING_CONFIRMATION } },
     },
     [States.SUCCESS]: {
-      type: "final",
+      on: { [Actions.RESET]: { target: States.AWAITING_CONFIRMATION } },
     },
   },
 });

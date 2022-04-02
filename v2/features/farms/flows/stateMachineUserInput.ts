@@ -18,8 +18,8 @@ export enum Actions {
   EDIT = "EDIT",
   TRANSACTION_SENT = "TRANSACTION_SENT",
   FAILURE = "FAILURE",
-  RETRY = "RETRY",
   SUCCESS = "SUCCESS",
+  RESET = "RESET",
 }
 
 export const stateMachine = createMachine<DepositContext>({
@@ -51,10 +51,10 @@ export const stateMachine = createMachine<DepositContext>({
       },
     },
     [States.FAILURE]: {
-      on: { [Actions.RETRY]: { target: States.AWAITING_CONFIRMATION } },
+      on: { [Actions.RESET]: { target: States.FORM } },
     },
     [States.SUCCESS]: {
-      type: "final",
+      on: { [Actions.RESET]: { target: States.FORM } },
     },
   },
 });

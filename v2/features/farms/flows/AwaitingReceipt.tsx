@@ -8,10 +8,9 @@ import Ping from "v2/features/connection/Ping";
 interface Props {
   txHash: string | undefined;
   chainExplorer: string | undefined;
-  progressStatus: string;
 }
 
-const AwaitingReceipt: FC<Props> = ({ txHash, chainExplorer, progressStatus }) => {
+const AwaitingReceipt: FC<Props> = ({ txHash, chainExplorer }) => {
   const { t } = useTranslation("common");
 
   const title = t("v2.farms.waitingToBeProcessed");
@@ -24,8 +23,7 @@ const AwaitingReceipt: FC<Props> = ({ txHash, chainExplorer, progressStatus }) =
           <img src="/animations/waiting.gif" alt={title} title={title} />
         </div>
       </div>
-      <h2 className="text-foreground-alt-100 font-title text-lg mt-6">{title}</h2>
-      <p className="text-foreground-alt-300 text-sm my-4">{progressStatus}</p>
+      <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>
       <div className="flex items-center justify-center space-x-3">
         <Ping />
         <Link href={txUrl} external primary className="grow-0">
