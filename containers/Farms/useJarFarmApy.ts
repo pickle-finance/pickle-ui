@@ -19,7 +19,7 @@ type Output = { jarFarmWithApy: FarmWithApy[] | null };
 export const useJarFarmApy = (inputFarms: Input): Output => {
   const { jars } = Jars.useContainer();
   const { masterchef } = Contracts.useContainer();
-  const { multicallProvider } = Connection.useContainer();
+  const { multicallProvider, chainName } = Connection.useContainer();
 
   const [farms, setFarms] = useState<FarmWithApy[] | null>(null);
   const { pickleCore } = PickleCore.useContainer();
@@ -27,10 +27,10 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
   const { prices } = Prices.useContainer();
 
   const calculateApy = async () => {
-    if (inputFarms && masterchef && jars && prices && multicallProvider) {
+    if (inputFarms && masterchef && jars && prices && multicallProvider && chainName) {
       const jarAddresses = jars.map((x) => getAddress(x.contract.address));
       const jarFarms = inputFarms
-        .filter((farm) => getJarFarmMap(pickleCore)[getAddress(farm.lpToken)])
+        .filter((farm) => getJarFarmMap(pickleCore, chainName)[getAddress(farm.lpToken)])
         .filter((x) => jarAddresses.includes(x.lpToken))
         .reduce((p, c) => {
           if (!p.some((el) => el.lpToken === c.lpToken)) p.push(c);
@@ -38,7 +38,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         }, []);
 
       const farmingJarsMCContracts = jarFarms.map((farm) => {
-        const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
+        const { jarName } = getJarFarmMap(pickleCore, chainName)[farm.lpToken];
 
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 
@@ -60,7 +60,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
       );
 
       const res = jarFarms.map((farm, idx) => {
-        const { jarName } = getJarFarmMap(pickleCore)[farm.lpToken];
+        const { jarName } = getJarFarmMap(pickleCore, chainName)[farm.lpToken];
 
         const farmingJar = jars.filter((x) => x.jarName === jarName)[0];
 

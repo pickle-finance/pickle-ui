@@ -74,7 +74,7 @@ export const GaugeList: FC = () => {
 
   if (!signer) <h2>{t("connection.connectToContinue")}</h2>;
 
-  if (!jarData || !gaugeData) return <h2>{t("connection.loading")}</h2>;
+  if (!jarData || !gaugeData || !chainName) return <h2>{t("connection.loading")}</h2>;
 
   const findGauge = (jar: UserJarData) =>
     gaugesWithAPY.find(
@@ -85,7 +85,7 @@ export const GaugeList: FC = () => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
     let gaugeingJar: JarWithAPY;
-    const maybeJar = getJarFarmMap(pickleCore)[gauge.depositToken.address];
+    const maybeJar = getJarFarmMap(pickleCore, chainName)[gauge.depositToken.address];
     if (jars && maybeJar) {
       gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
