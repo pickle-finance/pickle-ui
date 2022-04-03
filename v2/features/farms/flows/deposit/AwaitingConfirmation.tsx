@@ -5,31 +5,33 @@ import { PencilIcon } from "@heroicons/react/outline";
 import Button from "v2/components/Button";
 import Error from "../Error";
 import Spinner from "v2/components/Spinner";
-import { classNames, formatDollars } from "v2/utils";
+import { classNames } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 
 interface Props {
-  error: Error | undefined;
-  sendTransaction: () => void;
-  tokenName: string;
   amount: string;
-  depositTokenPrice: number | undefined;
+  cta: string;
+  error: Error | undefined;
+  equivalentValue: string | undefined;
   isWaiting: boolean;
   previousStep: () => void;
+  sendTransaction: () => void;
+  title: string;
+  tokenName: string | undefined;
 }
 
 const AwaitingConfirmation: FC<Props> = ({
-  error,
-  sendTransaction,
-  tokenName,
   amount,
-  depositTokenPrice,
+  cta,
+  equivalentValue,
+  error,
   isWaiting,
   previousStep,
+  sendTransaction,
+  title,
+  tokenName,
 }) => {
   const { t } = useTranslation("common");
-  const title = t("v2.farms.confirmDeposit");
-  const valueUSD = parseFloat(amount) * (depositTokenPrice || 0);
 
   return (
     <>
@@ -40,7 +42,7 @@ const AwaitingConfirmation: FC<Props> = ({
       <p className="text-foreground-alt-200 text-sm mb-8">
         <span className="font-title text-primary text-base mr-2">{amount}</span>
         {tokenName}
-        {valueUSD && <MoreInfo secondaryText={`~ ${formatDollars(valueUSD)}`} />}
+        {equivalentValue && <MoreInfo secondaryText={equivalentValue} />}
       </p>
       <Error error={error} />
       <div className="flex justify-center items-center">
@@ -57,7 +59,7 @@ const AwaitingConfirmation: FC<Props> = ({
               <Spinner />
             </div>
           )}
-          {t("v2.actions.deposit")}
+          {cta}
         </Button>
       </div>
     </>

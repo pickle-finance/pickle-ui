@@ -10,6 +10,7 @@ import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
+import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 
 interface Props {
   jar: JarWithData;
@@ -45,7 +46,10 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
             {jarTokens}
           </span>
           <ApprovalFlow jar={jar} visible={!userHasJarAllowance} />
-          <DepositFlow jar={jar} visible={userHasJarAllowance} balances={userTokenData} />
+          <div className="grid grid-cols-2 gap-3">
+            <DepositFlow jar={jar} visible={userHasJarAllowance} balances={userTokenData} />
+            <WithdrawFlow jar={jar} visible={userHasJarAllowance} balances={userTokenData} />
+          </div>
         </div>
       </div>
       <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 mr-3 sm:mr-6">
