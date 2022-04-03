@@ -10,7 +10,7 @@ import { classNames } from "v2/utils";
 interface Props {
   error: Error | undefined;
   sendTransaction: () => void;
-  tokenName: string;
+  tokenName: string | undefined;
   isWaiting: boolean;
 }
 

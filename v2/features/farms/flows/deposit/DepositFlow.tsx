@@ -25,11 +25,10 @@ import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 
 interface Props {
   jar: JarWithData;
-  visible: boolean;
   balances: UserTokenData | undefined;
 }
 
-const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
+const DepositFlow: FC<Props> = ({ jar, balances }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
@@ -89,8 +88,6 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
     send,
     true,
   );
-
-  if (!visible) return null;
 
   const openModal = () => {
     send(Actions.RESET);
