@@ -3,15 +3,16 @@ import { useTranslation } from "next-i18next";
 
 import Button from "v2/components/Button";
 import ErrorMessage from "../Error";
+import AmountSteps from "v2/components/AmountSteps";
 
 interface Props {
-  depositTokenBalance: number;
+  balance: number;
   nextStep: (amount: string) => void;
 }
 
-const Form: FC<Props> = ({ depositTokenBalance, nextStep }) => {
+const Form: FC<Props> = ({ balance, nextStep }) => {
   const { t } = useTranslation("common");
-  const [amount, setAmount] = useState<string>(depositTokenBalance.toString());
+  const [amount, setAmount] = useState<string>(balance.toString());
 
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
   const [error, setError] = useState<Error | undefined>();
@@ -23,7 +24,7 @@ const Form: FC<Props> = ({ depositTokenBalance, nextStep }) => {
     }
 
     const amount = parseFloat(value);
-    const isValid = amount > 0 && amount <= depositTokenBalance;
+    const isValid = amount > 0 && amount <= balance;
 
     isValid ? setError(undefined) : setError(invalidAmountError);
   };
@@ -49,7 +50,7 @@ const Form: FC<Props> = ({ depositTokenBalance, nextStep }) => {
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {depositTokenBalance}
+            {t("v2.balances.balance")}: {balance}
           </p>
         </div>
 
@@ -63,13 +64,18 @@ const Form: FC<Props> = ({ depositTokenBalance, nextStep }) => {
           <Button
             size="small"
             onClick={() => {
-              setAmount(depositTokenBalance.toString());
-              validate(depositTokenBalance.toString());
+              setAmount(balance.toString());
+              validate(balance.toString());
             }}
           >
             {t("v2.balances.max")}
           </Button>
         </div>
+      </div>
+      <div className="mb-5">
+        <AmountSteps
+          setTransactionAmount={(amountShare) => setAmount((balance * amountShare).toString())}
+        />
       </div>
       <ErrorMessage error={error} />
       <Button state={error ? "disabled" : "enabled"} onClick={handleFormSubmit}>

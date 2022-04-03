@@ -321,7 +321,8 @@
       "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
-      "retry": "Retry"
+      "retry": "Retry",
+      "withdraw": "Withdraw"
     },
     "balances": {
       "amount": "Amount",
@@ -403,6 +404,7 @@
       "compounding": "Compounding",
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
       "confirmDeposit": "Please confirm your deposit amount",
+      "confirmWithdrawal": "Please confirm your withdrawal amount",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
       "depositToken": "Deposit {{ token }}",
@@ -451,6 +453,7 @@
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "transactionFailed": "Transaction failed",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
+      "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates"
     },
     "gasPrices": {

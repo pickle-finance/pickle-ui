@@ -44,6 +44,17 @@ export const shortenAddress = (address: string): string =>
 export const round = (value: number, decimals: number) =>
   Math.round(value * 10 ** decimals) / 10 ** decimals;
 
+/**
+ * Ethers won't parse a string with more than 18 decimals.
+ */
+export const truncateToMaxDecimals = (value: string) => {
+  const decimalPointIndex = value.indexOf(".");
+
+  if (decimalPointIndex < 0) return value;
+
+  return value.substring(0, decimalPointIndex + 19);
+};
+
 export const roundToSignificantDigits = (value: number, digits?: number): number => {
   if (typeof digits === "undefined") return value;
   if (value >= 1) return round(value, digits);

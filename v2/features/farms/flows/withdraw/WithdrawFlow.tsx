@@ -12,16 +12,16 @@ import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
-import Form from "./Form";
+import Form from "../deposit/Form";
 import { jarDecimals } from "v2/utils/user";
-import AwaitingConfirmation from "./AwaitingConfirmation";
+import AwaitingConfirmation from "../deposit/AwaitingConfirmation";
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
 import { useJarContract, useTransaction } from "../hooks";
 import { TransferEvent } from "containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
-import { formatDollars, truncateToMaxDecimals } from "v2/utils";
+import { truncateToMaxDecimals } from "v2/utils";
 
 interface Props {
   jar: JarWithData;
@@ -29,7 +29,7 @@ interface Props {
   balances: UserTokenData | undefined;
 }
 
-const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
+const WithdrawFlow: FC<Props> = ({ jar, visible, balances }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
@@ -44,33 +44,34 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
 
   const decimals = jarDecimals(jar);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
-  const depositTokenBalance = parseFloat(ethers.utils.formatUnits(depositTokenBalanceBN, decimals));
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
+  const pTokenBalance = parseFloat(ethers.utils.formatUnits(pTokenBalanceBN, 18));
 
   const transactionFactory = () => {
     if (!JarContract) return;
 
     const amount = ethers.utils.parseUnits(truncateToMaxDecimals(current.context.amount), decimals);
 
-    return () => JarContract.deposit(amount);
+    return () => JarContract.withdraw(amount);
   };
 
   const callback = (receipt: ethers.ContractReceipt) => {
     if (!account) return;
 
     /**
-     * This will generate two events:
-     * 1) Transfer of LP tokens from user's wallet to the jar
-     * 2) Mint of pTokens sent to user's wallet
+     * This will generate a larger number of transfer events but the two we care about are:
+     * 1) Burn of pTokens taken out of user's wallet
+     * 2) Transfer of LP tokens back to user's wallet
      */
     const events = receipt.events?.filter(({ event }) => event === "Transfer") as TransferEvent[];
-    const depositTokenTransferEvent = events.find((event) => event.args.from === account)!;
-    const pTokenTransferEvent = events.find((event) => event.args.to === account)!;
+
+    const pTokenTransferEvent = events.find((event) => event.args.from === account)!;
+    const depositTokenTransferEvent = events.find((event) => event.args.to === account)!;
 
     const depositTokenBalance = depositTokenBalanceBN
-      .sub(depositTokenTransferEvent.args.value)
+      .add(depositTokenTransferEvent.args.value)
       .toString();
-    const pAssetBalance = pTokenBalanceBN.add(pTokenTransferEvent.args.value).toString();
+    const pAssetBalance = pTokenBalanceBN.sub(pTokenTransferEvent.args.value).toString();
 
     dispatch(
       UserActions.setTokenData({
@@ -87,7 +88,6 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
     transactionFactory(),
     callback,
     send,
-    true,
   );
 
   if (!visible) return null;
@@ -99,43 +99,42 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
   const closeModal = () => setIsModalOpen(false);
 
   const equivalentValue = () => {
-    const depositTokenPrice = jar.depositToken.price;
+    const jarDepositTokenName = jar.depositToken.name;
+    const ratio = jar.details.ratio;
 
-    if (!depositTokenPrice) return;
+    if (!ratio) return;
 
-    const valueUSD = parseFloat(current.context.amount) * depositTokenPrice;
-
-    return `~ ${formatDollars(valueUSD)}`;
+    return `~ ${parseFloat(current.context.amount) * ratio} ${jarDepositTokenName}`;
   };
 
   return (
     <>
       <Button
-        type="primary"
-        state={depositTokenBalance > 0 ? "enabled" : "disabled"}
+        type="secondary"
+        state={pTokenBalance > 0 ? "enabled" : "disabled"}
         onClick={() => {
-          if (depositTokenBalance > 0) openModal();
+          if (pTokenBalance > 0) openModal();
         }}
         className="w-11"
       >
-        +
+        -
       </Button>
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        title={t("v2.farms.depositToken", { token: jar.depositToken.name })}
+        title={t("v2.farms.withdrawToken", { token: jar.farm?.farmDepositTokenName })}
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={depositTokenBalance}
+            balance={pTokenBalance}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
           />
         )}
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmation
-            title={t("v2.farms.confirmDeposit")}
-            cta={t("v2.actions.deposit")}
-            tokenName={jar.depositToken.name}
+            title={t("v2.farms.confirmWithdrawal")}
+            cta={t("v2.actions.withdraw")}
+            tokenName={jar.farm?.farmDepositTokenName}
             amount={current.context.amount}
             equivalentValue={equivalentValue()}
             error={error}
@@ -169,4 +168,4 @@ const DepositFlow: FC<Props> = ({ jar, visible, balances }) => {
   );
 };
 
-export default DepositFlow;
+export default WithdrawFlow;
