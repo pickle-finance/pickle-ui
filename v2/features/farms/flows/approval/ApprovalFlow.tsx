@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
+import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -16,27 +17,57 @@ import { useAppDispatch, useAppSelector } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { ApprovalEvent } from "containers/Contracts/Erc20";
 
+type ApprovalType = "jar" | "farm";
+
+interface ApprovalData {
+  tokenAddress: string;
+  tokenName: string | undefined;
+  spenderAddress: string | undefined;
+  storeAttribute: keyof UserTokenData;
+}
+
+const approvalData = (jar: JarWithData, type: ApprovalType): ApprovalData => {
+  if (type === "jar") {
+    return {
+      tokenAddress: jar.depositToken.addr,
+      tokenName: jar.depositToken.name,
+      spenderAddress: jar.contract,
+      storeAttribute: "jarAllowance",
+    };
+  }
+
+  return {
+    tokenAddress: jar.contract,
+    tokenName: jar.farm?.farmDepositTokenName,
+    spenderAddress: jar.farm?.farmAddress,
+    storeAttribute: "farmAllowance",
+  };
+};
+
 interface Props {
   jar: JarWithData;
+  type: ApprovalType;
   visible: boolean;
 }
 
-const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
+const ApprovalFlow: FC<Props> = ({ jar, visible, type }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useAppSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const dispatch = useAppDispatch();
-  const TokenContract = useTokenContract(jar.depositToken.addr);
+  const approvalConfig = approvalData(jar, type);
+  const TokenContract = useTokenContract(approvalConfig.tokenAddress);
 
-  const { contract } = jar;
   const chain = core?.chains.find((chain) => chain.network === jar.chain);
   const amount = ethers.constants.MaxUint256;
 
   const transactionFactory = () => {
-    if (!TokenContract) return;
+    const { spenderAddress } = approvalConfig;
 
-    return () => TokenContract.approve(contract, amount);
+    if (!TokenContract || !spenderAddress) return;
+
+    return () => TokenContract.approve(spenderAddress, amount);
   };
 
   const callback = (receipt: ethers.ContractReceipt) => {
@@ -48,7 +79,7 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
     dispatch(
       UserActions.setTokenData({
         apiKey: jar.details.apiKey,
-        data: { jarAllowance: approvedAmount.toString() },
+        data: { [approvalConfig.storeAttribute]: approvedAmount.toString() },
       }),
     );
   };
@@ -71,11 +102,11 @@ const ApprovalFlow: FC<Props> = ({ jar, visible }) => {
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        title={t("v2.farms.approveToken", { token: jar.depositToken.name })}
+        title={t("v2.farms.approveToken", { token: approvalConfig.tokenName })}
       >
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmation
-            tokenName={jar.depositToken.name}
+            tokenName={approvalConfig.tokenName}
             error={error}
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}

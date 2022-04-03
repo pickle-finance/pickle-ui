@@ -34,6 +34,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
   const jarTokens = parseFloat(
     ethers.utils.formatUnits(userTokenData?.pAssetBalance || "0", decimals),
   );
+  const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
   return (
     <div className="flex">
@@ -45,11 +46,13 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
           <span className="font-title text-primary font-medium text-base leading-5">
             {jarTokens}
           </span>
-          <ApprovalFlow jar={jar} visible={!userHasJarAllowance} />
-          <div className="grid grid-cols-2 gap-3">
-            <DepositFlow jar={jar} visible={userHasJarAllowance} balances={userTokenData} />
-            <WithdrawFlow jar={jar} visible={userHasJarAllowance} balances={userTokenData} />
-          </div>
+          <ApprovalFlow type="jar" jar={jar} visible={!userHasJarAllowance} />
+          {userHasJarAllowance && (
+            <div className="grid grid-cols-2 gap-3">
+              <DepositFlow jar={jar} balances={userTokenData} />
+              <WithdrawFlow jar={jar} balances={userTokenData} />
+            </div>
+          )}
         </div>
       </div>
       <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 mr-3 sm:mr-6">
@@ -60,14 +63,13 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
           <span className="font-title text-primary font-medium text-base leading-5">
             {farmTokens}
           </span>
-          <div className="grid grid-cols-2 gap-3">
-            <Button type="secondary" state="disabled" className="w-11">
-              +
-            </Button>
-            <Button type="secondary" state="disabled" className="w-11">
-              -
-            </Button>
-          </div>
+          <ApprovalFlow type="farm" jar={jar} visible={!userHasFarmAllowance} />
+          {userHasFarmAllowance && (
+            <div className="grid grid-cols-2 gap-3">
+              <DepositFlow jar={jar} balances={userTokenData} />
+              <WithdrawFlow jar={jar} balances={userTokenData} />
+            </div>
+          )}
         </div>
       </div>
       <div className="grow self-start">

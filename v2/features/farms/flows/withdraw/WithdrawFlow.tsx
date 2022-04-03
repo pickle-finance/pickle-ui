@@ -25,11 +25,10 @@ import { truncateToMaxDecimals } from "v2/utils";
 
 interface Props {
   jar: JarWithData;
-  visible: boolean;
   balances: UserTokenData | undefined;
 }
 
-const WithdrawFlow: FC<Props> = ({ jar, visible, balances }) => {
+const WithdrawFlow: FC<Props> = ({ jar, balances }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
@@ -89,8 +88,6 @@ const WithdrawFlow: FC<Props> = ({ jar, visible, balances }) => {
     callback,
     send,
   );
-
-  if (!visible) return null;
 
   const openModal = () => {
     send(Actions.RESET);
