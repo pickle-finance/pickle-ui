@@ -32,7 +32,6 @@ const Vote: PickleFinancePage = () => {
   const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>([]);
   const [isMainnet, setIsMainnet] = useState(false);
   library?.getNetwork().then((n) => (n.chainId === 1 ? setIsMainnet(true) : setIsMainnet(false)));
-  console.log(isMainnet);
   return (
     <>
       {core ?
