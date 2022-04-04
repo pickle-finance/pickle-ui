@@ -78,7 +78,7 @@ const Vote: PickleFinancePage = () => {
                   wallet={account}
                 />
               )}
-              {selectedChains.length > 0 && selectedSidechainJars.length > 0 && (
+              {selectedChains.length > 0 && (selectedStrategies.length > 0 || selectedSidechainJars.length > 0) && (
                 <OffchainVoteButton
                   vote={castVoteSideChain}
                   provider={library}
