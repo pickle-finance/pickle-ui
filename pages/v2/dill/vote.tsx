@@ -17,8 +17,9 @@ import castVoteSideChain from "v2/features/dill/vote/CastVoteSideChain";
 import MainnetVoteButton from "v2/features/dill/vote/VoteButtonMainnet";
 import OffchainVoteButton from "v2/features/dill/vote/VoteButtonSideChain";
 
+import ChainTable from "v2/features/dill/vote/ChainTable";
 import JarTable from "v2/features/dill/vote/JarTable";
-import { ChainTable } from "v2/features/dill/vote/ChainTable";
+import StratTable from "v2/features/dill/vote/StratTable";
 
 const Vote: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
@@ -30,6 +31,7 @@ const Vote: PickleFinancePage = () => {
   const [selectedJars, setSelectedJars] = useState<string[]>([]);
   const [selectedChains, setSelectedChains] = useState<string[]>([]);
   const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>([]);
+  const [selectedStrategies, setSelectedStrategies] = useState<string[]>([]);
   const [isMainnet, setIsMainnet] = useState(false);
   library?.getNetwork().then((n) => (n.chainId === 1 ? setIsMainnet(true) : setIsMainnet(false)));
   return (
@@ -50,12 +52,19 @@ const Vote: PickleFinancePage = () => {
               </div>
             )}
             <ChainSelect core={core} setSelectedChains={setSelectedChains} />
-            <JarSelect core={core} mainnet={false} setSelectedJars={setSelectedSidechainJars} />
+            <JarSelect core={core} mainnet={false} setSelectedJars={setSelectedSidechainJars} setSelectedStrategies={setSelectedStrategies}/>
             <div>
               {selectedChains.length > 0 && (
                 <ChainTable
                   selectedChains={selectedChains}
                   core={core}
+                  offchainVoteData={offchainVoteData}
+                  wallet={account}
+                />
+              )}
+              {selectedStrategies.length > 0 && (
+                <StratTable
+                  selectedStrats={selectedStrategies}
                   offchainVoteData={offchainVoteData}
                   wallet={account}
                 />
@@ -76,6 +85,7 @@ const Vote: PickleFinancePage = () => {
                   account={account}
                   selectedChains={selectedChains}
                   selectedJars={selectedSidechainJars}
+                  selectedStrats={selectedStrategies}
                 />
               )}
             </div>

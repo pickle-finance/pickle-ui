@@ -20,8 +20,6 @@ const JarTableRow: FC<{
         if (x && x.details && x.details.apiKey) return x.details.apiKey === jar;
       })[0]
     : ({} as JarDefinition);
-  const isStrat = Object.keys(strategyTranslation).includes(jar) ? true : false;
-  const assetName = isStrat ? strategyTranslation[jar] : jar;
   const { apyFormatted, pickleApyRange } = getApyData(jarData);
   const thisChain = jarData && jarData.chain ? jarData.chain : "strategy";
 
@@ -29,7 +27,7 @@ const JarTableRow: FC<{
     <>
       <tr className="group">
         <JarTableCell className="rounded-l-xl">
-          <JarTableP text={assetName} className="text-left" />
+          <JarTableP text={jar} className="text-left" />
         </JarTableCell>
         <JarTableCell>
           <JarTableP text={apyFormatted} />

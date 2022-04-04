@@ -7,7 +7,8 @@ export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
   setSelectedJars: SetJarsFunction;
-}> = ({ core, mainnet, setSelectedJars }) => {
+  setSelectedStrategies?: SetStratsFunction;
+}> = ({ core, mainnet, setSelectedJars, setSelectedStrategies }) => {
   const [selectData, setSelectData] = useState<SelectData[]>(
     mainnet
       ? []
@@ -30,6 +31,17 @@ export const JarSelect: FC<{
   const jarChange = (jars: SelectData[]): void => {
     setSelectedJars(jars.map((jar: SelectData) => jar.value));
   };
+  const stratChange = (strats: SelectData[]): void => {
+    setSelectedStrategies ? setSelectedStrategies(strats.map((strat: SelectData) => strat.value)) : 0;
+  };
+  const change = (selections: SelectData[]): void => {
+    console.log(selections);
+    const strategies = ["strategy.delegate.team", "strategy.tvl", "strategy.profit"]
+    const strats = selections.filter(s => strategies.includes(s.value))
+    const jars = selections.filter(s => !strategies.includes(s.value))
+    jarChange(jars);
+    stratChange(strats);
+  }
   useEffect(() => {
     const getData = async () => {
       const tmpSelectData = [...selectData];
@@ -51,12 +63,12 @@ export const JarSelect: FC<{
   }, [core]);
   return (
     <Select
-      placeholder={mainnet ? "Select Mainnet Jars" : "Select Sidechain Jars"}
+      placeholder={mainnet ? "Select Mainnet Jars" : "Select Sidechain Strategy and/or Jars"}
       styles={styles}
       isMulti={true}
       isSearchable={true}
       closeMenuOnSelect={false}
-      onChange={(jars) => jarChange(jars as SelectData[])}
+      onChange={s => change(s as SelectData[])}
       options={selectData}
     />
   );
@@ -121,5 +133,6 @@ interface SelectData {
 }
 
 type SetJarsFunction = (property: string[]) => void;
+type SetStratsFunction = (property: string[]) => void;
 
 export default JarSelect;
