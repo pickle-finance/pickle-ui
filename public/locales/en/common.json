@@ -378,7 +378,8 @@
       "vote": {
         "apy":"APY",
         "blendedApr": "Blended APR",
-        "castVote": "Cast Vote",
+        "castMainnetVote": "Cast Mainnet Vote",
+        "castOffchainVote": "Cast Offchain Vote",
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
         "newVote": "Your New Vote",

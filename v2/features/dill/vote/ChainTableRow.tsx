@@ -1,10 +1,10 @@
 import { FC, HTMLAttributes } from "react";
 import { PickleModelJson } from "picklefinance-core";
-import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-import { classNames, formatPercentage } from "v2/utils";
-import TableSpacerRow from "../TableSpacerRow";
+import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { ChainVote, iOffchainVoteData, UserVote } from "v2/store/offchainVotes";
+import { classNames, formatPercentage } from "v2/utils";
+import TableSpacerRow from "./TableSpacerRow";
 
 export const ChainTableRow: FC<{
   network: string;

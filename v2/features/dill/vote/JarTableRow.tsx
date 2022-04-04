@@ -4,16 +4,16 @@ import { AssetAprComponent, JarDefinition } from "picklefinance-core/lib/model/P
 import { classNames, formatPercentage } from "v2/utils";
 import TableSpacerRow from "./TableSpacerRow";
 import { iOffchainVoteData, UserVote } from "v2/store/offchainVotes";
-import { UserDataV2 } from "v2/store/user";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { BigNumber } from "ethers";
 
-export const JarTableRow: FC<{
+const JarTableRow: FC<{
   jar: string;
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
-  user?: UserDataV2;
+  user?: UserData;
 }> = ({ jar, core, mainnet, offchainVoteData, wallet, user }) => {
   const jarData: JarDefinition = core
     ? core.assets.jars.filter((x) => {
@@ -22,11 +22,6 @@ export const JarTableRow: FC<{
     : ({} as JarDefinition);
   const { apyFormatted, pickleApyRange } = getApyData(jarData);
   const thisChain = jarData && jarData.chain ? jarData.chain : "strategy";
-  // Change this once off-chain is figured out, do away with mainnet bool
-  const allocPoints: string =
-    mainnet && jarData?.farm?.details?.allocShare
-      ? formatPercentage(jarData.farm.details.allocShare)
-      : "0%";
 
   return (
     <>
@@ -42,7 +37,7 @@ export const JarTableRow: FC<{
         </JarTableCell>
         <JarTableCell>
           {mainnet ? (
-            <JarTableP text={allocPoints} />
+            <JarTableP text={getMainnetPlatformWeight(jarData)} />
           ) : (
             <JarTableP text={getOffchainPlatformWeight(thisChain, jar, offchainVoteData)} />
           )}
@@ -143,10 +138,16 @@ const getOffchainUserWeight = (
   return thisJarUserVote ? thisJarUserVote.weight.toString() + "%" : "0%";
 };
 
+const getMainnetPlatformWeight = (jarData: JarDefinition | undefined) => {
+  return jarData?.farm?.details?.allocShare
+    ? formatPercentage(jarData.farm.details.allocShare)
+    : "0%";
+}
+
 const getMainnetUserWeight = (
   jarKey: string,
   core: PickleModelJson.PickleModelJson,
-  user: UserDataV2 | undefined
+  user: UserData | undefined
 ) => {
   const jarFromPfcore = core.assets.jars.find((j) => j.details?.apiKey === jarKey);
   const jarContract = jarFromPfcore?.contract || "";
@@ -164,3 +165,5 @@ const getMainnetUserWeight = (
   }
   return "0%"
 };
+
+export default JarTableRow;

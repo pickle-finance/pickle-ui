@@ -8,25 +8,31 @@ export const JarSelect: FC<{
   mainnet: boolean;
   setSelectedJars: SetJarsFunction;
 }> = ({ core, mainnet, setSelectedJars }) => {
-  const [selectData, setSelectData] = useState<SelectData[]>([
-    {
-      label: "Delegate to the Pickle Team",
-      value: "strategy.delegate.team"
-    },{
-      label: "Vote By TVL",
-      value: "strategy.tvl"
-    },{
-      label: "Vote By Profit",
-      value: "strategy.profitm"
-    }
-  ]);
+  const [selectData, setSelectData] = useState<SelectData[]>(
+    mainnet
+      ? []
+      : [
+          {
+            label: "Delegate to the Pickle Team",
+            value: "strategy.delegate.team",
+          },
+          {
+            label: "Vote By TVL",
+            value: "strategy.tvl",
+          },
+          {
+            label: "Vote By Profit",
+            value: "strategy.profit",
+          },
+        ],
+  );
 
   const jarChange = (jars: SelectData[]): void => {
     setSelectedJars(jars.map((jar: SelectData) => jar.value));
   };
   useEffect(() => {
     const getData = async () => {
-      const tmpSelectData = [...selectData]
+      const tmpSelectData = [...selectData];
       if (core) {
         const activeJars = core?.assets?.jars
           .filter((x) =>
@@ -35,8 +41,7 @@ export const JarSelect: FC<{
           .filter((x) => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
           .filter((x) => x.details?.apiKey !== undefined)
           .map(dataToSelect);
-        for (let i = 0; i < activeJars.length; i++)
-          tmpSelectData.push(activeJars[i])
+        for (let i = 0; i < activeJars.length; i++) tmpSelectData.push(activeJars[i]);
       }
       setSelectData(tmpSelectData);
     };
@@ -46,7 +51,7 @@ export const JarSelect: FC<{
   }, [core]);
   return (
     <Select
-      placeholder="Select Jars"
+      placeholder={mainnet ? "Select Mainnet Jars" : "Select Sidechain Jars"}
       styles={styles}
       isMulti={true}
       isSearchable={true}
