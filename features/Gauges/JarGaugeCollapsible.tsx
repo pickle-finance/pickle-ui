@@ -15,7 +15,7 @@ import {
 import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
@@ -27,7 +27,6 @@ import {
   MiniIcon,
 } from "../../components/TokenIcon";
 import {
-  isUsdcToken,
   isYveCrvEthJarToken,
   isMainnetMimEthJarDepositToken,
   isJarWithdrawOnly,
@@ -263,7 +262,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
 };
 
-const USDC_SCALE = ethers.utils.parseUnits("1", 12);
+const DECIMALS_SCALE = (decimals:number) => ethers.utils.parseUnits("1", 18-decimals);
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -280,6 +279,7 @@ export const JarGaugeCollapsible: FC<{
     depositToken,
     ratio,
     depositTokenName,
+    depositTokenDecimals,
     balance,
     deposited,
     usdPerPToken,
@@ -294,13 +294,11 @@ export const JarGaugeCollapsible: FC<{
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 
-  const isUsdc = isUsdcToken(depositToken.address);
-
   const balNum = parseFloat(
-    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+    formatUnits(balance, depositTokenDecimals),
   );
   const depositedNum = parseFloat(
-    formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+    formatUnits(deposited, depositTokenDecimals),
   );
 
   const balStr = formatValue(balNum);
@@ -309,7 +307,7 @@ export const JarGaugeCollapsible: FC<{
 
   const underlyingStr = (num: BigNumber): string => {
     return formatValue(
-      parseFloat(formatEther(isUsdc && num ? num.mul(USDC_SCALE) : num)) *
+      parseFloat(formatUnits(num, depositTokenDecimals)) *
         ratio,
     );
   };
@@ -325,7 +323,7 @@ export const JarGaugeCollapsible: FC<{
   } = gaugeData;
   const stakedUnderlyingStr = underlyingStr(staked);
   const stakedNum = parseFloat(
-    formatEther(isUsdc && staked ? staked.mul(USDC_SCALE) : staked),
+    formatUnits(staked, depositTokenDecimals),
   );
 
   const explanations: RatioAndPendingStrings = getRatioStringAndPendingString(
@@ -361,7 +359,7 @@ export const JarGaugeCollapsible: FC<{
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
   const _adjusted =
-    (gaugeData.totalSupply / (isUsdc ? 1e6 : 1e18)) * dillRatio * 0.6;
+    (gaugeData.totalSupply / (10**depositTokenDecimals)) * dillRatio * 0.6;
 
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
@@ -462,7 +460,7 @@ export const JarGaugeCollapsible: FC<{
   ).toLocaleString();
 
   const balanceNum = parseFloat(
-    formatEther(isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+    formatUnits(balance, depositTokenDecimals),
   );
 
   const balanceStr = formatValue(balanceNum);
@@ -504,9 +502,7 @@ export const JarGaugeCollapsible: FC<{
 
   const depositBalance = zapBalanceStr
     ? balanceRaw
-    : isUsdc && balance
-    ? balance.mul(USDC_SCALE)
-    : balance;
+    : balance.mul(DECIMALS_SCALE(depositTokenDecimals));
 
   const isZap = inputToken != zapInputTokens[0].symbol;
 
@@ -650,7 +646,7 @@ export const JarGaugeCollapsible: FC<{
   };
 
   const convertDecimals = (num: string) =>
-    ethers.utils.parseUnits(num, isUsdc ? 6 : 18);
+    ethers.utils.parseUnits(num, depositTokenDecimals);
 
   useEffect(() => {
     if (jarData && !isExitBatch) {
@@ -885,8 +881,8 @@ export const JarGaugeCollapsible: FC<{
               onClick={(e) => {
                 e.preventDefault();
                 setDepositAmount(
-                  formatEther(
-                    isUsdc ? depositBalance.mul(USDC_SCALE) : depositBalance,
+                  formatUnits(
+                    depositBalance, depositTokenDecimals
                   ),
                 );
               }}
@@ -996,7 +992,7 @@ export const JarGaugeCollapsible: FC<{
                 onClick={(e) => {
                   e.preventDefault();
                   setWithdrawAmount(
-                    formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited),
+                    formatUnits(deposited,depositTokenDecimals),
                   );
                 }}
               >
@@ -1088,7 +1084,7 @@ export const JarGaugeCollapsible: FC<{
                   onClick={(e) => {
                     e.preventDefault();
                     setUnstakeAmount(
-                      formatEther(isUsdc ? staked.mul(USDC_SCALE) : staked),
+                      formatUnits(staked, depositTokenDecimals),
                     );
                   }}
                 >

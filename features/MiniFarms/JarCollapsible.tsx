@@ -601,7 +601,7 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   ),
   //STG USDC
   "0xdecc0c09c3b5f6e92ef4184125d5648a66e35298":(
-    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc/png"}/>
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"}/>
   ),
 
   // Fantom
@@ -925,6 +925,7 @@ export const JarCollapsible: FC<{
     depositToken,
     ratio,
     depositTokenName,
+    depositTokenDecimals,
     balance,
     deposited,
     usdPerPToken,
@@ -939,13 +940,11 @@ export const JarCollapsible: FC<{
   const { pickleCore } = PickleCore.useContainer();
   const [ethBalance, setEthBalance] = useState(BigNumber.from(0));
 
-  const isUsdc = isUsdcToken(depositToken.address);
-
   const isNative = isCroToken(depositToken.address);
   const jarTokenDetails: TokenDetails = {
     symbol: depositTokenName,
     balance: balance,
-    decimals: isUsdc ? 6 : 18,
+    decimals: depositTokenDecimals,
     address: depositToken.address,
   };
 
@@ -988,10 +987,10 @@ export const JarCollapsible: FC<{
     .join(" <br/> ");
 
   const balNum = parseFloat(
-    formatEther(isNative ? ethBalance : isUsdc && balance ? balance.mul(USDC_SCALE) : balance),
+    isNative ? formatEther(ethBalance) : formatUnits(balance,depositTokenDecimals),
   );
   const depositedNum = parseFloat(
-    formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
+    formatUnits(deposited, depositTokenDecimals),
   );
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
@@ -1002,7 +1001,7 @@ export const JarCollapsible: FC<{
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
   const depositedUnderlyingStr = (
-    parseFloat(formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited)) * ratio
+    depositedNum * ratio
   ).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
@@ -1295,9 +1294,7 @@ export const JarCollapsible: FC<{
                 <Tooltip
                   text={`${
                     deposited && ratio
-                      ? parseFloat(
-                          formatEther(isUsdc && deposited ? deposited.mul(USDC_SCALE) : deposited),
-                        ) * ratio
+                      ? depositedNum * ratio
                       : 0
                   } ${depositTokenName}`}
                 >
@@ -1310,7 +1307,7 @@ export const JarCollapsible: FC<{
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  setWithdrawAmount(formatEther(isUsdc ? deposited.mul(USDC_SCALE) : deposited));
+                  setWithdrawAmount(formatUnits(deposited, depositTokenDecimals));
                 }}
               >
                 {t("balances.max")}
@@ -1334,7 +1331,7 @@ export const JarCollapsible: FC<{
                     transferCallback: async () => {
                       return jarContract
                         .connect(signer)
-                        .withdraw(ethers.utils.parseUnits(withdrawAmount, isUsdc ? 6 : 18));
+                        .withdraw(ethers.utils.parseUnits(withdrawAmount, depositTokenDecimals));
                     },
                     approval: false,
                   });

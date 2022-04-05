@@ -16,7 +16,7 @@ import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/facto
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
-import { isUsdcToken, isYveCrvEthJarToken } from "../../containers/Jars/jars";
+import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
@@ -38,7 +38,6 @@ const Label = styled.div`
 `;
 
 const GAUGE_LP_TO_ICON = FARM_LP_TO_ICON;
-const USDC_SCALE = ethers.utils.parseUnits("1", 12);
 
 const formatAPY = (apy: number) => {
   if (apy > 1e6) return "∞%";
@@ -61,7 +60,6 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     usdPerToken,
     fullApy,
   } = gaugeData;
-  const isUsdcJar = isUsdcToken(depositToken.address.toLowerCase());
 
   const { pickleCore } = PickleCore.useContainer();
   const { t } = useTranslation("common");
@@ -160,7 +158,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
   const _adjusted =
-    (gaugeData.totalSupply / (isUsdcJar ? 1e6 : 1e18)) * dillRatio * 0.6;
+    (gaugeData.totalSupply / (10**depositTokenDecimals)) * dillRatio * 0.6;
   const pickleAPY =
     (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
   const realAPY = gaugeData.totalAPY + pickleAPY;
@@ -386,8 +384,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
               onClick={(e) => {
                 e.preventDefault();
                 setStakeAmount(
-                  formatEther(
-                    isUsdcJar && balance ? balance.mul(USDC_SCALE) : balance,
+                  formatUnits(
+                    balance, depositTokenDecimals
                   ),
                 );
               }}
@@ -412,7 +410,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                   recipient: gauge.address,
                   transferCallback: async () => {
                     return gauge.deposit(
-                      ethers.utils.parseUnits(stakeAmount, isUsdcJar ? 6 : 18),
+                      ethers.utils.parseUnits(stakeAmount, depositTokenDecimals),
                     );
                   },
                 });
@@ -435,7 +433,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   setUnstakeAmount(
-                    formatEther(isUsdcJar ? staked.mul(USDC_SCALE) : staked),
+                    formatUnits(staked, depositTokenDecimals),
                   );
                 }}
               >
@@ -462,7 +460,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                       return gauge.withdraw(
                         ethers.utils.parseUnits(
                           unstakeAmount,
-                          isUsdcJar ? 6 : 18,
+                          depositTokenDecimals,
                         ),
                       );
                     },
