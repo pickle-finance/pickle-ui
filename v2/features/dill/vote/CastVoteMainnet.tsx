@@ -2,39 +2,23 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Contract, BigNumber } from "ethers";
 import { toast, ToastOptions } from "react-toastify";
 import { PickleModelJson } from "picklefinance-core";
-<<<<<<< HEAD:v2/features/dill/vote/CastVoteMainnet.tsx
 import gaugeProxyAbi from "../../../../containers/ABIs/gauge-proxy.json"
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
-=======
-import gaugeProxyAbi from "../../../../../containers/ABIs/gauge-proxy.json";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
->>>>>>> d020fbb (platform charts functional and displaying data):v2/features/dill/vote/mainnet/CastVoteMainnet.tsx
 
 const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 
 const castVote = (
   provider: Web3Provider | undefined,
   selectedJars: string[],
-<<<<<<< HEAD:v2/features/dill/vote/CastVoteMainnet.tsx
   core: PickleModelJson.PickleModelJson | undefined
-=======
-  core: PickleModelJson.PickleModelJson | undefined,
->>>>>>> d020fbb (platform charts functional and displaying data):v2/features/dill/vote/mainnet/CastVoteMainnet.tsx
 ): void => {
   const newTokens: string[] = [];
   const newWeights: BigNumber[] = [];
 
   selectedJars.forEach((jar) => {
-<<<<<<< HEAD:v2/features/dill/vote/CastVoteMainnet.tsx
     const jarFromPfcore: JarDefinition | undefined = core ? core.assets.jars.find(j => j.details.apiKey === jar) : undefined;
     const jarContract = jarFromPfcore ? jarFromPfcore?.contract : "";
-=======
-    const jarFromPfcore: JarDefinition = core
-      ? core.assets.jars.find((j) => j.details.apiKey === jar) || ({} as JarDefinition)
-      : ({} as JarDefinition);
-    const jarContract = jarFromPfcore.contract || "";
->>>>>>> d020fbb (platform charts functional and displaying data):v2/features/dill/vote/mainnet/CastVoteMainnet.tsx
     if (jarContract === "")
       toast.error(`Unable to locate address of ${jar}.`, toastSettings);
     const inputElement = document.getElementById(jar) as HTMLInputElement;
