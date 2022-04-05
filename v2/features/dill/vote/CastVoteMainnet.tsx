@@ -2,25 +2,25 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Contract, BigNumber } from "ethers";
 import { toast, ToastOptions } from "react-toastify";
 import { PickleModelJson } from "picklefinance-core";
-import gaugeProxyAbi from "../../../../containers/ABIs/gauge-proxy.json"
+import gaugeProxyAbi from "../../../../containers/ABIs/gauge-proxy.json";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-
 
 const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 
-const castVote = (
+const castVoteMainnet = (
   provider: Web3Provider | undefined,
   selectedJars: string[],
-  core: PickleModelJson.PickleModelJson | undefined
+  core: PickleModelJson.PickleModelJson | undefined,
 ): void => {
   const newTokens: string[] = [];
   const newWeights: BigNumber[] = [];
 
   selectedJars.forEach((jar) => {
-    const jarFromPfcore: JarDefinition | undefined = core ? core.assets.jars.find(j => j.details.apiKey === jar) : undefined;
+    const jarFromPfcore: JarDefinition | undefined = core
+      ? core.assets.jars.find((j) => j.details.apiKey === jar)
+      : undefined;
     const jarContract = jarFromPfcore ? jarFromPfcore?.contract : "";
-    if (jarContract === "")
-      toast.error(`Unable to locate address of ${jar}.`, toastSettings);
+    if (jarContract === "") toast.error(`Unable to locate address of ${jar}.`, toastSettings);
     const inputElement = document.getElementById(jar) as HTMLInputElement;
     const voteWeight = +inputElement.value;
 
@@ -73,4 +73,4 @@ const toastSettings: ToastOptions = {
   progress: undefined,
 };
 
-export default castVote;
+export default castVoteMainnet;

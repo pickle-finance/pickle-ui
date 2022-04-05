@@ -9,23 +9,23 @@ const JarTableHeader: FC<{}> = () => {
         <HeaderCell>
           <p className="text-left">{t("v2.dill.vote.rowAssetName")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.apy")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.pickleApy")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.currentWeight")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.yourVote")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.newVote")}</p>
         </HeaderCell>

@@ -9,11 +9,11 @@ const StratTableHeader: FC<{}> = () => {
         <HeaderCell>
           <p className="text-left">{t("v2.dill.vote.stratName")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.yourVote")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.newVote")}</p>
         </HeaderCell>

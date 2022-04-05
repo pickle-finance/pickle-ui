@@ -7,7 +7,7 @@ const StratTable: FC<{
   selectedStrats: string[];
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
-}> = ({ selectedStrats, offchainVoteData, wallet}) => (
+}> = ({ selectedStrats, offchainVoteData, wallet }) => (
   <div className="flex flex-col mt-10">
     <div className="-my-2 overflow-x-auto">
       <div className="py-2 align-middle inline-block min-w-full">

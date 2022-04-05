@@ -63,14 +63,15 @@ const styles: StylesConfig<SelectData> = {
 
 type SetChainsFunction = (property: string[]) => void;
 
-export const ChainSelect: FC<{
+const ChainSelect: FC<{
   core: PickleModelJson.PickleModelJson;
+  selectedChains: string[];
   setSelectedChains: SetChainsFunction;
-}> = ({ core, setSelectedChains }) => {
+}> = ({ core, selectedChains, setSelectedChains }) => {
   const [chains, setChains] = useState<SelectData[]>([]);
 
   const chainChange = (chains: SelectData[]): void => {
-    setSelectedChains(chains.map(chain => chain.value));
+    setSelectedChains(chains.map((chain) => chain.value));
   };
   useEffect(() => {
     const getData = async () => {
@@ -88,6 +89,7 @@ export const ChainSelect: FC<{
     <Select
       className="mt-5 mb-5"
       placeholder="Select Chains"
+      value={selectedChains.map((c) => stringToSelect(c, chains))}
       closeMenuOnSelect={false}
       styles={styles}
       isMulti={true}
@@ -96,6 +98,15 @@ export const ChainSelect: FC<{
       options={chains}
     />
   );
+};
+
+const stringToSelect = (str: string, selectData: SelectData[]): SelectData => {
+  let s = selectData.find((s) => s.value === str);
+  const label = s ? s.label : "";
+  return {
+    value: str,
+    label: label,
+  };
 };
 
 export default ChainSelect;

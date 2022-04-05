@@ -44,7 +44,10 @@ export const ChainTableRow: FC<{
         </ChainTableCell>
 
         <ChainTableCell className="rounded-r-xl">
-          <ChainTableCellInput chain={network} val={getUserWeight(chainData.network, offchainVoteData, wallet)}/>
+          <ChainTableCellInput
+            chain={network}
+            val={getUserWeight(chainData.network, offchainVoteData, wallet)}
+          />
         </ChainTableCell>
       </tr>
       <TableSpacerRow />
@@ -63,14 +66,14 @@ const ChainTableCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }
   </td>
 );
 
-const ChainTableCellInput: FC<{ chain: string, val: string }> = ({ chain, val }) => (
+const ChainTableCellInput: FC<{ chain: string; val: string }> = ({ chain, val }) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
       type="number"
       min="-100"
       max="100"
-      defaultValue={val.slice(0,val.length -1)}
+      defaultValue={val.slice(0, val.length - 1)}
       id={chain}
     />
     <span className="text-foreground-alt-200"> %</span>
@@ -112,7 +115,9 @@ const getUserWeight = (
   offchainVoteData: iOffchainVoteData | undefined,
   wallet: string | undefined | null,
 ): string => {
-  const thisUserVotes: UserVote | undefined = offchainVoteData?.votes.find(v => v.wallet.toLowerCase() === wallet?.toLowerCase());
-  const thisChainUserVote = thisUserVotes?.chainWeights?.find(c => c.chain === currentChain);
+  const thisUserVotes: UserVote | undefined = offchainVoteData?.votes.find(
+    (v) => v.wallet.toLowerCase() === wallet?.toLowerCase(),
+  );
+  const thisChainUserVote = thisUserVotes?.chainWeights?.find((c) => c.chain === currentChain);
   return thisChainUserVote ? thisChainUserVote.weight.toString() + "%" : "0%";
 };

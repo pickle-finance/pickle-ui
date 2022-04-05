@@ -391,6 +391,8 @@
         "rowChainName": "Chain Name",
         "stratName": "Strategy Name",
         "title": "PICKLE Reward Weight Voting",
+        "subtitleMainnet": "Mainnet Voting",
+        "subtitleOffchain": "Offchain Voting",
         "yourVote": "Your Current Vote"
       },
       "weeklyDillAmount": "Weekly DILL 🔒",
