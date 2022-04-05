@@ -17,7 +17,7 @@ const MainnetVote: FC<{ core: PickleModelJson.PickleModelJson; user: UserData | 
   const { library } = useWeb3React<Web3Provider>();
   const { t } = useTranslation("common");
 
-  const [selectedJars, setSelectedJars] = useState<string[]>([]);
+  const [selectedJars, setSelectedJars] = useState<string[]>(getUserJars(user, core));
 
   return (
     <>
@@ -26,7 +26,12 @@ const MainnetVote: FC<{ core: PickleModelJson.PickleModelJson; user: UserData | 
         <ChartContainer platformOrUser="platform" mainnet={true} core={core} />
         <ChartContainer platformOrUser="user" mainnet={true} core={core} user={user} />
       </div>
-      <JarSelect core={core} mainnet={true} setSelectedJars={setSelectedJars} />
+      <JarSelect
+        core={core}
+        mainnet={true}
+        selectedJars={selectedJars}
+        setSelectedJars={setSelectedJars}
+      />
       {selectedJars.length > 0 && (
         <div>
           <JarTable selectedJars={selectedJars} core={core} mainnet={true} user={user} />
@@ -40,6 +45,19 @@ const MainnetVote: FC<{ core: PickleModelJson.PickleModelJson; user: UserData | 
       )}
     </>
   );
+};
+
+const getUserJars = (user: UserData | undefined, core: PickleModelJson.PickleModelJson) => {
+  const tokens = user ? user.votes.map((v) => v.farmDepositToken) : [];
+  const jarNames: string[] = [];
+  for (let i = 0; i < tokens.length; i++) {
+    let token = tokens[i];
+    const j = core.assets.jars.find(
+      (j) => j.farm?.farmAddress.toLowerCase() === token.toLowerCase(),
+    );
+    if (j && j.farm) jarNames.push(j.details.apiKey);
+  }
+  return jarNames;
 };
 
 export default MainnetVote;

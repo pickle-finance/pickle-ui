@@ -7,7 +7,7 @@ export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
   selectedJars: string[];
-  selectedStrats: string[];
+  selectedStrats?: string[];
   setSelectedJars: SetJarsFunction;
   setSelectedStrategies?: SetStratsFunction;
 }> = ({ core, mainnet, selectedJars, selectedStrats, setSelectedJars, setSelectedStrategies }) => {

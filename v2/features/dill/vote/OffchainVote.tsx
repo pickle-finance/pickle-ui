@@ -47,7 +47,11 @@ const OffchainVote: FC<{
           wallet={account}
         />
       </div>
-      <ChainSelect core={core} selectedChains={selectedChains} setSelectedChains={setSelectedChains} />
+      <ChainSelect
+        core={core}
+        selectedChains={selectedChains}
+        setSelectedChains={setSelectedChains}
+      />
       <JarSelect
         core={core}
         mainnet={false}
@@ -104,12 +108,14 @@ const getUserChains = (
   account: string | undefined | null,
 ) => {
   const nullVote = {} as UserVote;
-  console.log(offchainVoteData)
-  console.log(account)
-  const userVotes = offchainVoteData && account
-    ? offchainVoteData.votes.find((v) => v.wallet.toLowerCase() === account.toLowerCase()) || nullVote
-    : nullVote;
-  console.log(userVotes)
+  console.log(offchainVoteData);
+  console.log(account);
+  const userVotes =
+    offchainVoteData && account
+      ? offchainVoteData.votes.find((v) => v.wallet.toLowerCase() === account.toLowerCase()) ||
+        nullVote
+      : nullVote;
+  console.log(userVotes);
   const chainNames = [];
   if (userVotes && userVotes.chainWeights)
     for (let i = 0; i < userVotes?.chainWeights?.length; i++)
@@ -123,9 +129,11 @@ const getUserJarsOrStrats = (
 ) => {
   const nullVote = {} as UserVote;
   const strategies = ["strategy.tvl", "strategy.profit", "strategy.delegate.team"];
-  const userVotes = offchainVoteData && account
-    ? offchainVoteData.votes.find((v) => v.wallet.toLowerCase() === account.toLowerCase()) || nullVote
-    : nullVote;
+  const userVotes =
+    offchainVoteData && account
+      ? offchainVoteData.votes.find((v) => v.wallet.toLowerCase() === account.toLowerCase()) ||
+        nullVote
+      : nullVote;
   const stratNames: string[] = [];
   const jarNames: string[] = [];
   if (userVotes && userVotes.jarWeights) {
@@ -134,7 +142,7 @@ const getUserJarsOrStrats = (
       if (strategies.includes(name)) stratNames.push(name);
       else jarNames.push(name);
     }
-    console.log({stratNames, jarNames});
+    console.log({ stratNames, jarNames });
   }
   return { stratNames, jarNames };
 };

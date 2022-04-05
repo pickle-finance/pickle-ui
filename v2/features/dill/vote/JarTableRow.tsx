@@ -51,9 +51,9 @@ const JarTableRow: FC<{
         </JarTableCell>
         <JarTableCell className="rounded-r-xl">
           {mainnet ? (
-            <JarTableInput jar={jar} val={getMainnetUserWeight(jar, core, user)}/>
+            <JarTableInput jar={jar} val={getMainnetUserWeight(jar, core, user)} />
           ) : (
-            <JarTableInput jar={jar} val={getOffchainUserWeight(jar, offchainVoteData, wallet)}/>
+            <JarTableInput jar={jar} val={getOffchainUserWeight(jar, offchainVoteData, wallet)} />
           )}
         </JarTableCell>
       </tr>
@@ -77,14 +77,14 @@ const JarTableP: FC<{ text: string; className?: string }> = ({ text, className }
   <p className={classNames("font-title font-medium text-base leading-5", className)}>{text}</p>
 );
 
-const JarTableInput: FC<{ jar: string, val:string}> = ({ jar, val }) => (
+const JarTableInput: FC<{ jar: string; val: string }> = ({ jar, val }) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
       type="number"
       min="-100"
       max="100"
-      defaultValue={val.slice(0,val.length -1)}
+      defaultValue={val.slice(0, val.length - 1)}
       id={jar}
     />
     <span className="text-foreground-alt-200"> %</span>
@@ -147,34 +147,34 @@ const getMainnetPlatformWeight = (jarData: JarDefinition | undefined) => {
   return jarData?.farm?.details?.allocShare
     ? formatPercentage(jarData.farm.details.allocShare)
     : "0%";
-}
+};
 
 const getMainnetUserWeight = (
   jarKey: string,
   core: PickleModelJson.PickleModelJson,
-  user: UserData | undefined
+  user: UserData | undefined,
 ) => {
   const jarFromPfcore = core.assets.jars.find((j) => j.details?.apiKey === jarKey);
   const jarContract = jarFromPfcore?.contract || "";
   console.log(user);
   if (user) {
     let totalWeight = BigNumber.from("0");
-    user.votes.forEach(v => totalWeight = totalWeight.add(BigNumber.from(v.weight)));
+    user.votes.forEach((v) => (totalWeight = totalWeight.add(BigNumber.from(v.weight))));
     if (+totalWeight > 1) {
-      const userVote = user.votes.find(v => v.farmDepositToken === jarContract);
+      const userVote = user.votes.find((v) => v.farmDepositToken === jarContract);
       const jarWeight = userVote ? BigNumber.from(userVote.weight) : 0;
       const weightPct = jarWeight ? jarWeight.mul(10000).div(totalWeight).toNumber() / 10000 : 0;
-      const weightPctFormatted = weightPct !== 0 ? formatPercentage(weightPct) : "0%"
-      return weightPctFormatted
+      const weightPctFormatted = weightPct !== 0 ? formatPercentage(weightPct) : "0%";
+      return weightPctFormatted;
     }
   }
-  return "0%"
+  return "0%";
 };
 
 const strategyTranslation = {
   "strategy.delegate.team": "Delegate to the Team",
   "strategy.tvl": "Vote by TVL",
-  "strategy.profit": "Vote by Profit"
-}
+  "strategy.profit": "Vote by Profit",
+};
 
 export default JarTableRow;

@@ -71,7 +71,7 @@ const ChainSelect: FC<{
   const [chains, setChains] = useState<SelectData[]>([]);
 
   const chainChange = (chains: SelectData[]): void => {
-    setSelectedChains(chains.map(chain => chain.value));
+    setSelectedChains(chains.map((chain) => chain.value));
   };
   useEffect(() => {
     const getData = async () => {
@@ -89,7 +89,7 @@ const ChainSelect: FC<{
     <Select
       className="mt-5 mb-5"
       placeholder="Select Chains"
-      value={selectedChains.map(c => stringToSelect(c, chains))}
+      value={selectedChains.map((c) => stringToSelect(c, chains))}
       closeMenuOnSelect={false}
       styles={styles}
       isMulti={true}
@@ -101,12 +101,12 @@ const ChainSelect: FC<{
 };
 
 const stringToSelect = (str: string, selectData: SelectData[]): SelectData => {
-  let s = selectData.find(s => s.value === str);
+  let s = selectData.find((s) => s.value === str);
   const label = s ? s.label : "";
-  return ({
+  return {
     value: str,
-    label: label
-  })
-}
+    label: label,
+  };
+};
 
 export default ChainSelect;

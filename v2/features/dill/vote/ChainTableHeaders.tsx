@@ -9,19 +9,19 @@ const ChainTableHeader: FC<{}> = () => {
         <HeaderCell>
           <p className="text-left">{t("v2.dill.vote.rowChainName")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.blendedApr")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.currentWeight")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.yourVote")}</p>
         </HeaderCell>
-        
+
         <HeaderCell>
           <p className="text-center">{t("v2.dill.vote.newVote")}</p>
         </HeaderCell>

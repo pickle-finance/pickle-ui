@@ -28,7 +28,7 @@ export type voteFunction = (
   account: string | null | undefined,
   selectedChain: string[],
   selectedJars: string[],
-  selectedStrats: string[]
+  selectedStrats: string[],
 ) => void;
 
 export default OffchainVoteButton;

@@ -3,12 +3,11 @@ import { iOffchainVoteData, UserVote } from "v2/store/offchainVotes";
 import { classNames } from "v2/utils";
 import TableSpacerRow from "./TableSpacerRow";
 
-
 const StratTableRow: FC<{
   strat: keyof iStrategyTranslation;
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
-}> = ({ strat, offchainVoteData, wallet}) => {
+}> = ({ strat, offchainVoteData, wallet }) => {
   const strategyName = strategyTranslation[strat];
 
   return (
@@ -18,10 +17,10 @@ const StratTableRow: FC<{
           <StratTableP text={strategyName} className="text-left" />
         </StratTableCell>
         <StratTableCell>
-            <StratTableP text={getUserWeight(strat, offchainVoteData, wallet)} />
+          <StratTableP text={getUserWeight(strat, offchainVoteData, wallet)} />
         </StratTableCell>
         <StratTableCell className="rounded-r-xl">
-          <StratTableInput strat={strat} />
+          <StratTableInput strat={strat} val={getUserWeight(strat, offchainVoteData, wallet)} />
         </StratTableCell>
       </tr>
       <TableSpacerRow />
@@ -44,13 +43,14 @@ const StratTableP: FC<{ text: string; className?: string }> = ({ text, className
   <p className={classNames("font-title font-medium text-base leading-5", className)}>{text}</p>
 );
 
-const StratTableInput: FC<{ strat: string }> = ({ strat }) => (
+const StratTableInput: FC<{ strat: string; val: string }> = ({ strat, val }) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
       type="number"
       min="-100"
       max="100"
+      defaultValue={val.slice(0, val.length - 1)}
       id={strat}
     />
     <span className="text-foreground-alt-200"> %</span>
@@ -74,8 +74,8 @@ const getUserWeight = (
 const strategyTranslation = {
   "strategy.delegate.team": "Delegate to the Team",
   "strategy.tvl": "Vote by TVL",
-  "strategy.profit": "Vote by Profit"
-}
+  "strategy.profit": "Vote by Profit",
+};
 
 export interface iStrategyTranslation {
   "strategy.delegate.team": string;

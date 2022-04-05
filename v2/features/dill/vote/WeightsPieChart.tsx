@@ -58,7 +58,7 @@ const Chart: FC<{
 };
 
 const stringForAsset = (asset: PickleAsset): string => {
-  return asset.details?.apiKey ? (asset.details.apiKey + " (" + asset.id + ")") : asset.id;
+  return asset.details?.apiKey ? asset.details.apiKey + " (" + asset.id + ")" : asset.id;
 };
 
 const getMainnetPlatformWeights = (
@@ -111,7 +111,6 @@ const getMainnetUserWeights = (
     let totalWeight = BigNumber.from("0");
     for (let i = 0; i < user.votes.length; i++)
       totalWeight = totalWeight.add(BigNumber.from(user.votes[i].weight));
-  
 
     for (let i = 0; i < user.votes.length; i++) {
       let jar: JarDefinition | undefined = core.assets.jars.find(
