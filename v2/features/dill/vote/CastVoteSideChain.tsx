@@ -2,7 +2,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { recoverPersonalSignature } from "eth-sig-util";
 import { toast, ToastOptions } from "react-toastify";
 
-const castVote = (
+const castVoteSideChain = (
   provider: Web3Provider | undefined,
   account: string | null | undefined,
   selectedChains: string[],
@@ -155,4 +155,4 @@ const toastSettings: ToastOptions = {
   progress: undefined,
 };
 
-export default castVote;
+export default castVoteSideChain;

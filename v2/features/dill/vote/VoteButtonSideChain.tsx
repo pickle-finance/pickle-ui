@@ -2,7 +2,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useTranslation } from "next-i18next";
 import { FC } from "react";
 
-const VoteButton: FC<{
+const OffchainVoteButton: FC<{
   vote: voteFunction;
   provider: Web3Provider | undefined;
   account: string | null | undefined;
@@ -31,4 +31,4 @@ export type voteFunction = (
   selectedStrats: string[]
 ) => void;
 
-export default VoteButton;
+export default OffchainVoteButton;

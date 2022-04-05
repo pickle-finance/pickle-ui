@@ -8,7 +8,7 @@ import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 
-const castVote = (
+const castVoteMainnet = (
   provider: Web3Provider | undefined,
   selectedJars: string[],
   core: PickleModelJson.PickleModelJson | undefined
@@ -73,4 +73,4 @@ const toastSettings: ToastOptions = {
   progress: undefined,
 };
 
-export default castVote;
+export default castVoteMainnet;

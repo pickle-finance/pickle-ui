@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { PickleModelJson } from "picklefinance-core";
 import { FC } from "react";
 
-const VoteButton: FC<{
+const MainnetVoteButton: FC<{
   vote: voteFunction, 
   provider: Web3Provider | undefined,
   selectedJars: string[],
@@ -27,4 +27,4 @@ export type voteFunction = (
   core: PickleModelJson.PickleModelJson | undefined
 ) => void;
 
-export default VoteButton;
+export default MainnetVoteButton;

@@ -6,9 +6,18 @@ import Select, { StylesConfig } from "react-select";
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
+  selectedJars: string[];
+  selectedStrats: string[];
   setSelectedJars: SetJarsFunction;
   setSelectedStrategies?: SetStratsFunction;
-}> = ({ core, mainnet, setSelectedJars, setSelectedStrategies }) => {
+}> = ({ core, mainnet, selectedJars, selectedStrats, setSelectedJars, setSelectedStrategies }) => {
+  const selected = selectedJars 
+    ? selectedStrats 
+      ? selectedJars.concat(selectedStrats)
+      : selectedJars
+    : selectedStrats
+      ? selectedStrats
+      : [];
   const [selectData, setSelectData] = useState<SelectData[]>(
     mainnet
       ? []
@@ -64,6 +73,7 @@ export const JarSelect: FC<{
   return (
     <Select
       placeholder={mainnet ? "Select Mainnet Jars" : "Select Sidechain Strategy and/or Jars"}
+      value={selected ? selected.map(s => stringToSelect(s, selectData)) : []}
       styles={styles}
       isMulti={true}
       isSearchable={true}
@@ -78,6 +88,15 @@ const dataToSelect = (data: JarDefinition): SelectData => ({
   value: data.details && data.details.apiKey ? data.details.apiKey : "",
   label: data.details ? `${data.id} (${data.details.apiKey})` : data.id,
 });
+
+const stringToSelect = (str: string, selectData: SelectData[]): SelectData => {
+  let s = selectData.find(s => s.value === str);
+  const label = s ? s.label : "";
+  return ({
+    value: str,
+    label: label
+  })
+}
 
 const styles: StylesConfig<SelectData> = {
   clearIndicator: (styles) => ({
