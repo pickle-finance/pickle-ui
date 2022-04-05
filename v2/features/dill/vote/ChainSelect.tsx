@@ -86,7 +86,7 @@ export const ChainSelect: FC<{
   }, [core]);
   return (
     <Select
-      className="mb-5"
+      className="mt-5 mb-5"
       placeholder="Select Chains"
       closeMenuOnSelect={false}
       styles={styles}

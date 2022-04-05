@@ -1,17 +1,18 @@
-import { PickleModelJson } from "picklefinance-core";
 import { FC } from "react";
-import { JarTableRow } from "./JarTableRow";
-import JarTableHeader from "./JarTableHeader";
+import { PickleModelJson } from "picklefinance-core";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { iOffchainVoteData } from "v2/store/offchainVotes";
-import { UserDataV2 } from "v2/store/user";
 
-export const JarTable: FC<{
+import JarTableHeader from "./JarTableHeader";
+import JarTableRow from "./JarTableRow";
+
+const JarTable: FC<{
   selectedJars: string[];
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
   offchainVoteData?: iOffchainVoteData | undefined;
   wallet?: string | undefined | null;
-  user?: UserDataV2;
+  user?: UserData;
 }> = ({ selectedJars, core, mainnet, offchainVoteData, wallet, user }) => (
   <div className="flex flex-col mt-10">
     <div className="-my-2 overflow-x-auto">
@@ -38,3 +39,5 @@ export const JarTable: FC<{
     </div>
   </div>
 );
+
+export default JarTable;

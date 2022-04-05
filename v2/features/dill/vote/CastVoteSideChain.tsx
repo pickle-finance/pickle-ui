@@ -1,13 +1,13 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { recoverPersonalSignature } from "eth-sig-util";
-import {toast, ToastOptions} from "react-toastify";
-
+import { toast, ToastOptions } from "react-toastify";
 
 const castVote = (
   provider: Web3Provider | undefined,
   account: string | null | undefined,
   selectedChains: string[],
   selectedJars: string[],
+  selectedStrats: string[],
 ): void => {
   const voteData: VoteData = {
     timestamp: Date.now(),
@@ -21,7 +21,7 @@ const castVote = (
     voteData.chainWeights.push({
       chain: chain,
       weight: voteWeight,
-      });
+    });
   });
 
   selectedJars.forEach((jar) => {
@@ -30,13 +30,23 @@ const castVote = (
     voteData.jarWeights.push({
       jarKey: jar,
       weight: voteWeight,
-      });
+    });
   });
+
+  selectedStrats.forEach((strat) => {
+    const inputElement = document.getElementById(strat) as HTMLInputElement;
+    const voteWeight = +inputElement.value;
+    voteData.jarWeights.push({
+      jarKey: strat,
+      weight: voteWeight,
+    });
+  });
+
   const msg = JSON.stringify(voteData, null, 2);
   if (sumVotes(selectedChains) !== 100) {
     console.log(`Sum of chain votes (${sumVotes(selectedChains)}) is not equal to 100`);
     toast.error("Sum of Chain Vote Values Must Equal 100", toastSettings);
-  } else if (sumVotes(selectedJars) !== 100) {
+  } else if (sumVotes(selectedJars, selectedStrats) !== 100) {
     console.log(`Sum of jar vote absolute values (${sumVotes(selectedJars)}) is not equal to 100`);
     toast.error("Sum of Jar Vote Absolute Values Must Equal 100", toastSettings);
   } else {
@@ -79,7 +89,7 @@ const sendRequestToDillVoter = async (
       });
       console.log("Sent to api");
       let text: string = await res.text();
-      text = text.replaceAll("\"", "")
+      text = text.replaceAll('"', "");
       console.log("Response is: " + text);
       const status: number = res.status;
       if (status !== 200) {
@@ -100,15 +110,20 @@ const sendRequestToDillVoter = async (
   }
 };
 
-const sumVotes = (selected: string[]): number => {
+const sumVotes = (selected: string[], selected2?: string[]): number => {
   let sum = 0;
   selected.forEach((s) => {
     const inputElement = document.getElementById(s) as HTMLInputElement;
-    if (+inputElement.value < 0)
-      sum += +inputElement.value * -1;
-    else
-      sum += +inputElement.value;
+    if (+inputElement.value < 0) sum += +inputElement.value * -1;
+    else sum += +inputElement.value;
   });
+  if (selected2) {
+    selected2.forEach((s) => {
+      const inputElement = document.getElementById(s) as HTMLInputElement;
+      if (+inputElement.value < 0) sum += +inputElement.value * -1;
+      else sum += +inputElement.value;
+    });
+  }
   return sum;
 };
 
@@ -138,7 +153,6 @@ const toastSettings: ToastOptions = {
   pauseOnHover: true,
   draggable: false,
   progress: undefined,
-}
-
+};
 
 export default castVote;

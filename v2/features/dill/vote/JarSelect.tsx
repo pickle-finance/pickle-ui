@@ -7,25 +7,55 @@ export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
   setSelectedJars: SetJarsFunction;
-}> = ({ core, mainnet, setSelectedJars }) => {
-  const [activeJars, setActiveJars] = useState([] as SelectData[]);
+  setSelectedStrategies?: SetStratsFunction;
+}> = ({ core, mainnet, setSelectedJars, setSelectedStrategies }) => {
+  const [selectData, setSelectData] = useState<SelectData[]>(
+    mainnet
+      ? []
+      : [
+          {
+            label: "Delegate to the Pickle Team",
+            value: "strategy.delegate.team",
+          },
+          {
+            label: "Vote By TVL",
+            value: "strategy.tvl",
+          },
+          {
+            label: "Vote By Profit",
+            value: "strategy.profit",
+          },
+        ],
+  );
 
   const jarChange = (jars: SelectData[]): void => {
     setSelectedJars(jars.map((jar: SelectData) => jar.value));
   };
+  const stratChange = (strats: SelectData[]): void => {
+    setSelectedStrategies ? setSelectedStrategies(strats.map((strat: SelectData) => strat.value)) : 0;
+  };
+  const change = (selections: SelectData[]): void => {
+    console.log(selections);
+    const strategies = ["strategy.delegate.team", "strategy.tvl", "strategy.profit"]
+    const strats = selections.filter(s => strategies.includes(s.value))
+    const jars = selections.filter(s => !strategies.includes(s.value))
+    jarChange(jars);
+    stratChange(strats);
+  }
   useEffect(() => {
     const getData = async () => {
-      let activeJars: SelectData[] = [];
+      const tmpSelectData = [...selectData];
       if (core) {
-        activeJars = core?.assets?.jars
+        const activeJars = core?.assets?.jars
           .filter((x) =>
             mainnet ? x.chain === ChainNetwork.Ethereum : x.chain !== ChainNetwork.Ethereum,
           )
           .filter((x) => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
           .filter((x) => x.details?.apiKey !== undefined)
           .map(dataToSelect);
+        for (let i = 0; i < activeJars.length; i++) tmpSelectData.push(activeJars[i]);
       }
-      setActiveJars(activeJars);
+      setSelectData(tmpSelectData);
     };
     getData();
 
@@ -33,13 +63,13 @@ export const JarSelect: FC<{
   }, [core]);
   return (
     <Select
-      placeholder="Select Jars"
+      placeholder={mainnet ? "Select Mainnet Jars" : "Select Sidechain Strategy and/or Jars"}
       styles={styles}
       isMulti={true}
       isSearchable={true}
       closeMenuOnSelect={false}
-      onChange={(jars) => jarChange(jars as SelectData[])}
-      options={activeJars}
+      onChange={s => change(s as SelectData[])}
+      options={selectData}
     />
   );
 };
@@ -103,5 +133,6 @@ interface SelectData {
 }
 
 type SetJarsFunction = (property: string[]) => void;
+type SetStratsFunction = (property: string[]) => void;
 
 export default JarSelect;
