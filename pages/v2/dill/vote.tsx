@@ -20,6 +20,7 @@ import OffchainVoteButton from "v2/features/dill/vote/VoteButtonSideChain";
 import ChainTable from "v2/features/dill/vote/ChainTable";
 import JarTable from "v2/features/dill/vote/JarTable";
 import StratTable from "v2/features/dill/vote/StratTable";
+import ChartContainer from "v2/features/dill/vote/ChartContainer";
 
 const Vote: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
@@ -39,7 +40,11 @@ const Vote: PickleFinancePage = () => {
       {core ?
         isMainnet ? (
           <>
-            <h3 className="mb-5">Mainnet Voting</h3>
+            <h1 className="mb-5">Mainnet Voting</h1>
+            <div className="w-full inline-grid grid-cols-2 gap-4">
+              <ChartContainer platformOrUser="platform" mainnet={true} core={core} />
+              <ChartContainer platformOrUser="user" mainnet={true} core={core} user={user} />
+            </div>
             <JarSelect core={core} mainnet={true} setSelectedJars={setSelectedJars} />
             {selectedJars.length > 0 && (
               <div>
@@ -53,7 +58,11 @@ const Vote: PickleFinancePage = () => {
               </div>
             )}
             <hr className="border-foreground-alt-500 mt-5 mb-5" />
-            <h3>Offchain Voting</h3>
+            <h1 className="mb-5">Offchain Voting</h1>
+            <div className="w-full inline-grid grid-cols-2 gap-4">
+              <ChartContainer platformOrUser="platform" mainnet={false} offchainVoteData={offchainVoteData}/>
+              <ChartContainer platformOrUser="user" mainnet={false} offchainVoteData={offchainVoteData} wallet={account}/>
+            </div>
             <ChainSelect core={core} setSelectedChains={setSelectedChains} />
             <JarSelect core={core} mainnet={false} setSelectedJars={setSelectedSidechainJars} setSelectedStrategies={setSelectedStrategies}/>
             <div>

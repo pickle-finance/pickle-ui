@@ -332,10 +332,8 @@
       "max": "Max"
     },
     "connection": {
-      "clover": "Clover",
       "coinbase": "Coinbase",
       "connectWallet": "Connect wallet",
-      "disconnectedWallet": "Please connect your wallet to interact. Pickle supports the following networks: ",
       "errorTitle": "Uh oh, we're in a pickle here!",
       "metamask": "Metamask",
       "unauthorized": "Please <1>authorize</1> Pickle Finance to access your Ethereum account.",
@@ -381,6 +379,10 @@
         "blendedApr": "Blended APR",
         "castMainnetVote": "Cast Mainnet Vote",
         "castOffchainVote": "Cast Offchain Vote",
+        "charts": {
+          "platformTitle": "Platform Vote Weights",
+          "userTitle": "Your Vote Weights"
+        },
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
         "newVote": "Your New Vote",
