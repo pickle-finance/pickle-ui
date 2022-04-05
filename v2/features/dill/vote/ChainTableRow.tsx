@@ -44,7 +44,7 @@ export const ChainTableRow: FC<{
         </ChainTableCell>
 
         <ChainTableCell className="rounded-r-xl">
-          <ChainTableCellInput chain={network} />
+          <ChainTableCellInput chain={network} val={getUserWeight(chainData.network, offchainVoteData, wallet)}/>
         </ChainTableCell>
       </tr>
       <TableSpacerRow />
@@ -63,13 +63,14 @@ const ChainTableCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }
   </td>
 );
 
-const ChainTableCellInput: FC<{ chain: string }> = ({ chain }) => (
+const ChainTableCellInput: FC<{ chain: string, val: string }> = ({ chain, val }) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
       type="number"
       min="-100"
       max="100"
+      defaultValue={val.slice(0,val.length -1)}
       id={chain}
     />
     <span className="text-foreground-alt-200"> %</span>

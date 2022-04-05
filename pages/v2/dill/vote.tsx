@@ -39,6 +39,7 @@ const Vote: PickleFinancePage = () => {
       {core ?
         isMainnet ? (
           <>
+            <h3 className="mb-5">Mainnet Voting</h3>
             <JarSelect core={core} mainnet={true} setSelectedJars={setSelectedJars} />
             {selectedJars.length > 0 && (
               <div>
@@ -51,6 +52,8 @@ const Vote: PickleFinancePage = () => {
                 />
               </div>
             )}
+            <hr className="border-foreground-alt-500 mt-5 mb-5" />
+            <h3>Offchain Voting</h3>
             <ChainSelect core={core} setSelectedChains={setSelectedChains} />
             <JarSelect core={core} mainnet={false} setSelectedJars={setSelectedSidechainJars} setSelectedStrategies={setSelectedStrategies}/>
             <div>
@@ -62,22 +65,24 @@ const Vote: PickleFinancePage = () => {
                   wallet={account}
                 />
               )}
-              {selectedStrategies.length > 0 && (
-                <StratTable
-                  selectedStrats={selectedStrategies}
-                  offchainVoteData={offchainVoteData}
-                  wallet={account}
-                />
-              )}
-              {selectedSidechainJars.length > 0 && (
-                <JarTable
-                  selectedJars={selectedSidechainJars}
-                  core={core}
-                  mainnet={false}
-                  offchainVoteData={offchainVoteData}
-                  wallet={account}
-                />
-              )}
+              <div className="mt-10 pr-5 pl-5 border border-foreground-alt-500 rounded">
+                {selectedStrategies.length > 0 && (
+                  <StratTable
+                    selectedStrats={selectedStrategies}
+                    offchainVoteData={offchainVoteData}
+                    wallet={account}
+                  />
+                )}
+                {selectedSidechainJars.length > 0 && (
+                  <JarTable
+                    selectedJars={selectedSidechainJars}
+                    core={core}
+                    mainnet={false}
+                    offchainVoteData={offchainVoteData}
+                    wallet={account}
+                  />
+                )}
+              </div>
               {selectedChains.length > 0 && (selectedStrategies.length > 0 || selectedSidechainJars.length > 0) && (
                 <OffchainVoteButton
                   vote={castVoteSideChain}

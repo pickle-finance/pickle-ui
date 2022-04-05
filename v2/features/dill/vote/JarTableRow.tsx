@@ -50,7 +50,11 @@ const JarTableRow: FC<{
           )}
         </JarTableCell>
         <JarTableCell className="rounded-r-xl">
-          <JarTableInput jar={jar} />
+          {mainnet ? (
+            <JarTableInput jar={jar} val={getMainnetUserWeight(jar, core, user)}/>
+          ) : (
+            <JarTableInput jar={jar} val={getOffchainUserWeight(jar, offchainVoteData, wallet)}/>
+          )}
         </JarTableCell>
       </tr>
       <TableSpacerRow />
@@ -73,13 +77,14 @@ const JarTableP: FC<{ text: string; className?: string }> = ({ text, className }
   <p className={classNames("font-title font-medium text-base leading-5", className)}>{text}</p>
 );
 
-const JarTableInput: FC<{ jar: string }> = ({ jar }) => (
+const JarTableInput: FC<{ jar: string, val:string}> = ({ jar, val }) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
       type="number"
       min="-100"
       max="100"
+      defaultValue={val.slice(0,val.length -1)}
       id={jar}
     />
     <span className="text-foreground-alt-200"> %</span>

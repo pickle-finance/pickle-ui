@@ -12,7 +12,7 @@ const VoteButton: FC<{
 }> = ({ vote, provider, account, selectedChains, selectedJars, selectedStrats }) => {
   const { t } = useTranslation("common");
   return (
-    <div className="pb-10">
+    <div className="pb-10 mb-5 mt-10">
       <button
         className="float-right rounded p-2 border border-foreground-alt-400 bg-background text-foreground-alt-200"
         onClick={() => vote(provider, account, selectedChains, selectedJars, selectedStrats)}
