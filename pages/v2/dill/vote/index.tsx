@@ -25,7 +25,7 @@ const Vote: PickleFinancePage = () => {
     <>
       <div className="w-full inline-grid grid-cols-2 gap-4">
         <ChartContainer platformOrUser="platform" mainnet={true} core={core} />
-        <ChartContainer platformOrUser="user" mainnet={true} user={user} />
+        <ChartContainer platformOrUser="user" mainnet={true} core={core} user={user} />
       </div>
       {core ? (
         <>

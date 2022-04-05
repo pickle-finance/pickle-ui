@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { PickleModelJson } from "picklefinance-core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { JarDefinition, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 import { iOffchainVoteData, JarVote, UserVote } from "v2/store/offchainVotes";
 
 import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList } from "recharts";
@@ -57,6 +57,10 @@ const Chart: FC<{
   );
 };
 
+const stringForAsset = (asset: PickleAsset): string => {
+  return asset.details?.apiKey ? (asset.details.apiKey + " (" + asset.id + ")") : asset.id;
+};
+
 const getMainnetPlatformWeights = (
   core: PickleModelJson.PickleModelJson | undefined,
 ): PieChartData[] => {
@@ -67,7 +71,7 @@ const getMainnetPlatformWeights = (
   for (let i = 0; i < mainnetJars.length; i++) {
     if (mainnetJars[i].farm?.details?.allocShare !== undefined) {
       chartData.push({
-        jar: mainnetJars[i].id,
+        jar: stringForAsset(mainnetJars[i]),
         weight: mainnetJars[i].farm?.details?.allocShare || 0,
       });
     }
@@ -104,20 +108,20 @@ const getMainnetUserWeights = (
 ): PieChartData[] => {
   let chartData = [];
   if (user && core) {
-    console.log(core)
-    console.log(user)
     let totalWeight = BigNumber.from("0");
     for (let i = 0; i < user.votes.length; i++)
       totalWeight = totalWeight.add(BigNumber.from(user.votes[i].weight));
+  
+
     for (let i = 0; i < user.votes.length; i++) {
       let jar: JarDefinition | undefined = core.assets.jars.find(
-        (j) => j.depositToken.addr.toLowerCase() === user.votes[i].farmDepositToken.toLowerCase(),
+        (j) => j.contract.toLowerCase() === user.votes[i].farmDepositToken.toLowerCase(),
       );
       let jarWeight =
         BigNumber.from(user.votes[i].weight).mul(10000).div(totalWeight).toNumber() / 10000;
       if (jar)
         chartData.push({
-          jar: jar.id,
+          jar: stringForAsset(jar),
           weight: jarWeight,
         });
     }
