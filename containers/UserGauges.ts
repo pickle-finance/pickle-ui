@@ -16,6 +16,7 @@ export interface UserGaugeData {
   address: string;
   depositToken: Erc20Contract;
   depositTokenName: string;
+  depositTokenDecimals: number;
   balance: ethers.BigNumber;
   staked: ethers.BigNumber;
   harvestable: ethers.BigNumber;
@@ -80,6 +81,9 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
         const harvestable = balancesUserInfosHarvestables[idx * 5 + 2];
         const userWeight = balancesUserInfosHarvestables[idx * 5 + 3];
         const userCurrentWeights = balancesUserInfosHarvestables[idx * 5 + 4];
+        const depositTokenDecimals = jars?.filter(
+          (jar) => jar.depositToken.address.toLowerCase() === gauge?.token,
+        )[0]?.depositTokenDecimals?? 18;
 
         return {
           allocPoint: gauge.allocPoint,
@@ -87,6 +91,7 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
           address: gauge.gaugeAddress,
           depositToken: erc20.attach(gauge.token),
           depositTokenName: gauge.tokenName,
+          depositTokenDecimals: depositTokenDecimals,
           balance,
           staked: staked,
           usdPerToken: gauge.usdPerToken,

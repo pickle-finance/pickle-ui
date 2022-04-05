@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 
 import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
@@ -160,19 +160,20 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     poolIndex,
     depositToken,
     depositTokenName,
+    depositTokenDecimals,
     balance,
     staked,
     harvestable,
     usdPerToken,
     apy,
   } = farmData;
-  const stakedNum = parseFloat(formatEther(staked));
-  const balanceNum = parseFloat(formatEther(balance));
+  const stakedNum = parseFloat(formatUnits(staked, depositTokenDecimals));
+  const balanceNum = parseFloat(formatUnits(balance, depositTokenDecimals));
   const valueStr = (stakedNum * usdPerToken).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  const bal = parseFloat(formatEther(balance));
+  const bal = parseFloat(formatUnits(balance, depositTokenDecimals));
   const balStr = bal.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: bal < 1 ? 8 : 4,

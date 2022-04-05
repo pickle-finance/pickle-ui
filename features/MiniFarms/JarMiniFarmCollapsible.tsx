@@ -354,6 +354,7 @@ export const JarMiniFarmCollapsible: FC<{
     name,
     jarContract,
     depositToken,
+    depositTokenDecimals,
     ratio,
     depositTokenName,
     balance,
@@ -372,7 +373,7 @@ export const JarMiniFarmCollapsible: FC<{
 
   const depositedStr = formatNumber(depositedNum);
   const underlyingStr = (num: BigNumber): string => {
-    return formatNumber(parseFloat(formatEther(num)) * ratio);
+    return formatNumber(parseFloat(formatUnits(num, depositTokenDecimals)) * ratio);
   };
 
   const depositedUnderlyingStr = underlyingStr(deposited);
@@ -391,7 +392,7 @@ export const JarMiniFarmCollapsible: FC<{
   } = farmData;
   const stakedUnderlyingStr = underlyingStr(staked);
 
-  const stakedNum = parseFloat(formatEther(staked));
+  const stakedNum = parseFloat(formatUnits(staked, depositTokenDecimals));
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [isExitBatch, setIsExitBatch] = useState<Boolean>(false);
@@ -434,7 +435,7 @@ export const JarMiniFarmCollapsible: FC<{
     +formatUnits(harvestableMatic || 0, 8),
   );
 
-  const balanceNum = parseFloat(formatEther(balance));
+  const balanceNum = parseFloat(formatUnits(balance, depositTokenDecimals));
 
   const balanceStr = formatNumber(balanceNum);
 

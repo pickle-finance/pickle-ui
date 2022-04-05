@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Trans, useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
@@ -54,6 +54,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     poolName,
     depositToken,
     depositTokenName,
+    depositTokenDecimals,
     balance,
     staked,
     harvestable,
@@ -66,7 +67,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const { t } = useTranslation("common");
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const stakedNum = parseFloat(
-    formatEther(isUsdcJar && staked ? staked.mul(USDC_SCALE) : staked),
+    formatUnits(staked, depositTokenDecimals),
   );
 
   const stakedStr = stakedNum.toLocaleString(undefined, {
@@ -75,7 +76,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   });
 
   const balanceNum = parseFloat(
-    formatEther(isUsdcJar && balance ? balance.mul(USDC_SCALE) : balance),
+    formatUnits(balance, depositTokenDecimals),
   );
 
   const balanceStr = balanceNum.toLocaleString(undefined, {

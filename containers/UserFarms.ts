@@ -17,6 +17,7 @@ export interface UserFarmData {
   poolIndex: number;
   depositToken: Erc20Contract;
   depositTokenName: string;
+  depositTokenDecimals: number;
   balance: ethers.BigNumber;
   staked: ethers.BigNumber;
   harvestable: ethers.BigNumber;
@@ -61,6 +62,7 @@ export const updateFarmData = async (
         poolIndex: farm.poolIndex,
         depositToken: erc20.attach(farm.lpToken),
         depositTokenName: farm.tokenName,
+        depositTokenDecimals: farm.depositTokenDecimals??18,
         balance,
         staked: userInfo[0],
         usdPerToken: farm.usdPerToken,

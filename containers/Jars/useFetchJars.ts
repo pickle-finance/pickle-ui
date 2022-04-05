@@ -18,6 +18,7 @@ export type Jar = {
   depositToken: Erc20Contract;
   depositTokenName: string;
   depositTokenLink: string;
+  depositTokenDecimals: number;
   jarName: string;
   contract: JarContract | JarNativeContract;
   protocol: string;
@@ -65,6 +66,7 @@ export const useFetchJars = (): { jars: Array<Jar> | null } => {
           depositTokenName: x.depositToken.name,
           jarName: x.id,
           depositTokenLink: x.depositToken.link,
+          depositTokenDecimals: x.depositToken.decimals ?? 18,
           contract: isNative(x.depositToken.addr)
             ? JarNativeFactory.connect(x.contract, provider)
             : JarFactory.connect(x.contract, provider),

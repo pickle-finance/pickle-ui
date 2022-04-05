@@ -29,6 +29,7 @@ export const useJarData = (): { jarData: UserJarData[] | null } => {
             jarContract: jar.contract,
             depositToken: jar.depositToken,
             depositTokenName: jar.depositTokenName,
+            depositTokenDecimals: jar.depositTokenDecimals,
             ratio: jar.ratio || 0,
             balance,
             deposited,

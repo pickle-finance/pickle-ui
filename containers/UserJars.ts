@@ -12,6 +12,7 @@ export interface UserJarData {
   jarContract: JarContract | jarV3Contract;
   depositToken: Erc20Contract;
   depositTokenName: string;
+  depositTokenDecimals: number;
   balance: ethers.BigNumber;
   deposited: ethers.BigNumber;
   usdPerPToken: number;
