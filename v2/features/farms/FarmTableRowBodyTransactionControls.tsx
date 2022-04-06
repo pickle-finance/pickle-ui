@@ -28,13 +28,15 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
     UserSelectors.selectTokenDataById(state, jar.details.apiKey),
   );
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
-  const farmTokens = data.depositTokensInFarm.tokens;
   const picklesPending = data.earnedPickles.tokensVisible;
 
   const decimals = jarDecimals(jar);
   const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
   const jarTokens = parseFloat(
     ethers.utils.formatUnits(userTokenData?.pAssetBalance || "0", decimals),
+  );
+  const farmTokens = parseFloat(
+    ethers.utils.formatUnits(userTokenData?.pStakedBalance || "0", decimals),
   );
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
