@@ -13,6 +13,7 @@ import Link from "v2/components/Link";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
 import FarmDocs from "./FarmDocs";
+import { jarSupportsStaking } from "v2/store/core.helpers";
 interface Props {
   jar: JarWithData;
 }
@@ -155,7 +156,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                       </div>
                     </div>
                   )}
-                {jar.farm?.farmAddress != NULL_ADDRESS && jar.farm?.farmAddress != undefined && (
+                {jarSupportsStaking(jar) && (
                   <div className="grid grid-cols-3 py-1">
                     <div>
                       <span className="font-body font-bold text-foreground-alt-200">

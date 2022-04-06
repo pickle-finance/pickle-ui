@@ -11,6 +11,8 @@ import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
+import StakeFlow from "./flows/stake/StakeFlow";
+import { jarSupportsStaking } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
@@ -37,8 +39,8 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
   return (
-    <div className="flex">
-      <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 mr-3 sm:mr-6">
+    <div className="flex space-x-3">
+      <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4">
         <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
           {t("v2.farms.depositedToken", { token: jar.depositToken.name })}
         </p>
@@ -55,43 +57,52 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
           )}
         </div>
       </div>
-      <div className="grow border self-start border-foreground-alt-500 rounded-xl p-4 mb-2 sm:mb-0 mr-3 sm:mr-6">
-        <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-          {t("v2.farms.stakedToken", { token: jar.depositToken.name })}
-        </p>
-        <div className="flex items-end justify-between">
-          <span className="font-title text-primary font-medium text-base leading-5">
-            {farmTokens}
-          </span>
-          <ApprovalFlow type="farm" jar={jar} visible={!userHasFarmAllowance} />
-          {userHasFarmAllowance && (
-            <div className="grid grid-cols-2 gap-3">
-              <DepositFlow jar={jar} balances={userTokenData} />
-              <WithdrawFlow jar={jar} balances={userTokenData} />
-            </div>
-          )}
-        </div>
-      </div>
       <div className="grow self-start">
         <div className="border border-foreground-alt-500 rounded-xl p-4">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-            {t("v2.farms.earnedToken", { token: "PICKLEs" })}
+            {t("v2.farms.stakedToken", { token: jar.depositToken.name })}
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-primary font-medium text-base leading-5">
-              {picklesPending}
+              {farmTokens}
             </span>
-            <Button type="primary" state="disabled">
-              {t("v2.farms.harvest")}
-            </Button>
+            <ApprovalFlow type="farm" jar={jar} visible={!userHasFarmAllowance} />
+            {userHasFarmAllowance && (
+              <div className="grid grid-cols-2 gap-3">
+                <StakeFlow jar={jar} balances={userTokenData} />
+                <WithdrawFlow jar={jar} balances={userTokenData} />
+              </div>
+            )}
           </div>
         </div>
         <div className="relative">
-          {isUserModelLoading && (
+          {!jarSupportsStaking(jar) && isUserModelLoading && (
             <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-1" />
           )}
         </div>
       </div>
+      {jarSupportsStaking(jar) && (
+        <div className="grow self-start">
+          <div className="border border-foreground-alt-500 rounded-xl p-4">
+            <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
+              {t("v2.farms.earnedToken", { token: "PICKLEs" })}
+            </p>
+            <div className="flex items-end justify-between">
+              <span className="font-title text-primary font-medium text-base leading-5">
+                {picklesPending}
+              </span>
+              <Button type="primary" state="disabled">
+                {t("v2.farms.harvest")}
+              </Button>
+            </div>
+          </div>
+          <div className="relative">
+            {isUserModelLoading && (
+              <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-1" />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
