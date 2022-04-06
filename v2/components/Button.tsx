@@ -34,7 +34,7 @@ const Button: FC<Props> = ({
           state === "enabled" &&
           "text-accent bg-transparent border-accent cursor-pointer hover:bg-accent-light hover:bg-opacity-20 hover:border-accent-light hover:text-accent-light",
         state === "disabled" &&
-          "bg-foreground-alt-400 text-foreground-alt-300 border-transparent cursor-not-allowed",
+          "bg-foreground-alt-400 text-foreground-alt-300 border-transparent cursor-not-allowed pointer-events-none",
         "inline-flex justify-center items-center border-2 text-sm font-bold shadow-sm focus:outline-none transition duration-300 ease-in-out",
         className,
       )}

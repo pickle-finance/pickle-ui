@@ -6,6 +6,7 @@ import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { ChainNetwork } from "picklefinance-core";
 
 import { useAppDispatch } from "v2/store";
 import Button from "v2/components/Button";
@@ -19,12 +20,10 @@ import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
 import { useFarmContract, useTransaction } from "../hooks";
-import { TransferEvent } from "containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
-import { formatDollars, truncateToMaxDecimals } from "v2/utils";
-import { ChainNetwork } from "picklefinance-core";
-import { Gauge } from "containers/Contracts/Gauge";
-import { Minichef } from "containers/Contracts/Minichef";
+import { truncateToMaxDecimals } from "v2/utils";
+import { Gauge, StakedEvent } from "containers/Contracts/Gauge";
+import { DepositEvent, Minichef } from "containers/Contracts/Minichef";
 
 interface Props {
   jar: JarWithData;
@@ -43,15 +42,15 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
   const FarmContract = useFarmContract(jar.farm?.farmAddress, chain);
 
   const decimals = jarDecimals(jar);
-  const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
-  const depositTokenBalance = parseFloat(ethers.utils.formatUnits(depositTokenBalanceBN, decimals));
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
+  const pTokenBalance = parseFloat(ethers.utils.formatUnits(pTokenBalanceBN, decimals));
+  const pStakedBalanceBN = BigNumber.from(balances?.pStakedBalance || "0");
 
   const transactionFactory = () => {
+    if (!FarmContract || !account) return;
+
     const { chain } = jar;
     const amount = ethers.utils.parseUnits(truncateToMaxDecimals(current.context.amount), decimals);
-
-    if (!FarmContract || !chain || !account) return;
 
     if (chain === ChainNetwork.Ethereum) {
       return () => (FarmContract as Gauge).deposit(amount);
@@ -66,26 +65,31 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
   const callback = (receipt: ethers.ContractReceipt) => {
     if (!account) return;
 
-    /**
-     * This will generate two events:
-     * 1) Transfer of LP tokens from user's wallet to the jar
-     * 2) Mint of pTokens sent to user's wallet
-     */
-    const events = receipt.events?.filter(({ event }) => event === "Transfer") as TransferEvent[];
-    const depositTokenTransferEvent = events.find((event) => event.args.from === account)!;
-    const pTokenTransferEvent = events.find((event) => event.args.to === account)!;
+    const { chain } = jar;
+    let amount: BigNumber;
 
-    const depositTokenBalance = depositTokenBalanceBN
-      .sub(depositTokenTransferEvent.args.value)
-      .toString();
-    const pAssetBalance = pTokenBalanceBN.add(pTokenTransferEvent.args.value).toString();
+    /**
+     * This will generate different events on mainnet and on sidechains.
+     * On mainnet, read amount from the StakedEvent.
+     * On sidechains, read amount from the DepositEvent.
+     */
+    if (chain === ChainNetwork.Ethereum) {
+      const events = receipt.events?.filter(({ event }) => event === "Staked") as StakedEvent[];
+      amount = events[0].args.amount;
+    } else {
+      const events = receipt.events?.filter(({ event }) => event === "Deposit") as DepositEvent[];
+      amount = events[0].args.amount;
+    }
+
+    const pAssetBalance = pTokenBalanceBN.sub(amount).toString();
+    const pStakedBalance = pStakedBalanceBN.add(amount).toString();
 
     dispatch(
       UserActions.setTokenData({
         apiKey: jar.details.apiKey,
         data: {
-          depositTokenBalance,
           pAssetBalance,
+          pStakedBalance,
         },
       }),
     );
@@ -104,24 +108,12 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
   };
   const closeModal = () => setIsModalOpen(false);
 
-  const equivalentValue = () => {
-    const depositTokenPrice = jar.depositToken.price;
-
-    if (!depositTokenPrice) return;
-
-    const valueUSD = parseFloat(current.context.amount) * depositTokenPrice;
-
-    return `~ ${formatDollars(valueUSD)}`;
-  };
-
   return (
     <>
       <Button
         type="primary"
-        state={depositTokenBalance > 0 ? "enabled" : "disabled"}
-        onClick={() => {
-          if (depositTokenBalance > 0) openModal();
-        }}
+        state={pTokenBalance > 0 ? "enabled" : "disabled"}
+        onClick={openModal}
         className="w-11"
       >
         +
@@ -129,21 +121,20 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        title={t("v2.farms.depositToken", { token: jar.depositToken.name })}
+        title={t("v2.farms.stakeToken", { token: jar.farm?.farmDepositTokenName })}
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={depositTokenBalance}
+            balance={pTokenBalance}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
           />
         )}
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmation
-            title={t("v2.farms.confirmDeposit")}
-            cta={t("v2.actions.deposit")}
-            tokenName={jar.depositToken.name}
+            title={t("v2.farms.confirmStake")}
+            cta={t("v2.actions.stake")}
+            tokenName={jar.farm?.farmDepositTokenName}
             amount={current.context.amount}
-            equivalentValue={equivalentValue()}
             error={error}
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}

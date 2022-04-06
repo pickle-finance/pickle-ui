@@ -12,7 +12,7 @@ interface Props {
   amount: string;
   cta: string;
   error: Error | undefined;
-  equivalentValue: string | undefined;
+  equivalentValue?: string | undefined;
   isWaiting: boolean;
   previousStep: () => void;
   sendTransaction: () => void;
