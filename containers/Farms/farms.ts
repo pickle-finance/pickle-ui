@@ -1,5 +1,8 @@
 import { PickleModelJson } from "picklefinance-core";
 import { getAddress } from "@ethersproject/address";
+import { Connection } from "containers/Connection";
+import { PickleCore } from "containers/Jars/usePickleCore";
+import { useEffect, useState } from "react";
 
 export const PICKLE_ETH_FARM = "0xdc98556ce24f007a5ef6dc1ce96322d65832a819";
 
@@ -8,25 +11,34 @@ export interface FarmMap {
     jarName: string | null;
   };
 }
-export const getJarFarmMap = (
-  pfcore: PickleModelJson.PickleModelJson | null,
-  chainName: string,
-): FarmMap => {
-  if (!pfcore || !chainName) {
-    return {};
-  }
+export const useJarFarmMap = (): FarmMap => {
+  const { pickleCore } = PickleCore.useContainer();
+  const { chainName } = Connection.useContainer();
+  const [jarFarmMap, setJarFarmMap] = useState<FarmMap>({});
 
-  const ret: FarmMap = {};
-  for (let i = 0; i < pfcore.assets.jars.length; i++) {
-    if (
-      pfcore.assets.jars[i].id !== undefined &&
-      pfcore.assets.jars[i].contract !== undefined &&
-      pfcore.assets.jars[i].chain == chainName
-    ) {
-      ret[getAddress(pfcore.assets.jars[i].contract)] = {
-        jarName: pfcore.assets.jars[i].id,
-      };
+  const getJarFarmMap = async () => {
+    if (!pickleCore || !chainName) {
+      setJarFarmMap({});
+      return;
     }
-  }
-  return ret;
+
+    const ret: FarmMap = {};
+    for (let i = 0; i < pickleCore.assets.jars.length; i++) {
+      if (
+        pickleCore.assets.jars[i].id !== undefined &&
+        pickleCore.assets.jars[i].contract !== undefined &&
+        pickleCore.assets.jars[i].chain == chainName
+      ) {
+        ret[getAddress(pickleCore.assets.jars[i].contract)] = {
+          jarName: pickleCore.assets.jars[i].id,
+        };
+      }
+    }
+    setJarFarmMap(ret);
+  };
+
+  useEffect(() => {
+    getJarFarmMap();
+  }, [pickleCore, chainName]);
+  return jarFarmMap;
 };

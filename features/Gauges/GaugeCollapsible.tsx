@@ -18,7 +18,7 @@ import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
 import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
-import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
@@ -64,6 +64,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const { pickleCore } = PickleCore.useContainer();
   const { t } = useTranslation("common");
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
+  const jarFarmMap = useJarFarmMap();
+
   const stakedNum = parseFloat(
     formatUnits(staked, depositTokenDecimals),
   );
@@ -145,7 +147,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const pickleAPYMin = fullApy * 100 * 0.4;
   const pickleAPYMax = fullApy * 100;
 
-  const maybeJar = getJarFarmMap(pickleCore, chainName!)[depositToken.address];
+  const maybeJar = jarFarmMap[depositToken.address];
   if (jars && maybeJar) {
     const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;

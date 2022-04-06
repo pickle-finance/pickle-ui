@@ -4,7 +4,7 @@ import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 
-import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { UserFarmData } from "../../containers/UserFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -154,6 +154,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   farmData,
 }) => {
   const { jars } = Jars.useContainer();
+  const jarFarmMap = useJarFarmMap();
 
   const {
     poolName,
@@ -225,7 +226,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }];
 
-  const maybeJar = getJarFarmMap(pickleCore, chainName!)[depositToken.address];
+  const maybeJar = jarFarmMap[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;

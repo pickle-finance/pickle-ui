@@ -13,7 +13,7 @@ import { useJarData } from "./useJarData";
 import { GaugeCollapsible } from "./GaugeCollapsible";
 import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
-import { getJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { uncompoundAPY } from "../../util/jars";
 import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
@@ -68,6 +68,7 @@ export const GaugeList: FC = () => {
   const [showInactive, setShowInactive] = useState(false);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
   const { getUniPairDayAPY } = useUniPairDayData();
+  const jarFarmMap = useJarFarmMap();
   const { pickleCore } = PickleCore.useContainer();
   const { jars } = Jars.useContainer();
   const { t } = useTranslation("common");
@@ -85,7 +86,7 @@ export const GaugeList: FC = () => {
     // Get Jar APY (if its from a Jar)
     let APYs: JarApy[] = [];
     let gaugeingJar: JarWithAPY;
-    const maybeJar = getJarFarmMap(pickleCore, chainName)[gauge.depositToken.address];
+    const maybeJar = jarFarmMap[gauge.depositToken.address];
     if (jars && maybeJar) {
       gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
       APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;

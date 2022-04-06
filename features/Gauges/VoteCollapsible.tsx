@@ -23,7 +23,7 @@ import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { Jars } from "../../containers/Jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
-import { getJarFarmMap } from "containers/Farms/farms";
+import { useJarFarmMap } from "containers/Farms/farms";
 import { PickleCore } from "containers/Jars/usePickleCore";
 
 interface Weights {
@@ -78,6 +78,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const [votingFarms, setVotingFarms] = useState<UserGaugeData[]>([]);
   const { gaugeProxy } = Contracts.useContainer();
   const { signer, chainName } = Connection.useContainer();
+  const jarFarmMap = useJarFarmMap();
   const [voteWeights, setVoteWeights] = useState<Weights>({});
   const [newWeights, setNewWeights] = useState<Weights[]>([]);
   const { t } = useTranslation("common");
@@ -94,6 +95,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const [currWeights, setCurrWeights] = useState(
     gauges.map((x) => x.allocPoint),
   );
+
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -262,7 +264,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       const pickleAPYMin = fullApy * 100 * 0.4;
       const pickleAPYMax = fullApy * 100;
 
-      const maybeJar = getJarFarmMap(pickleCore, chainName!)[depositToken.address];
+      const maybeJar = jarFarmMap[depositToken.address];
       if (jars && maybeJar) {
         const gaugeingJar = jars.filter(
           (x) => x.jarName === maybeJar.jarName,

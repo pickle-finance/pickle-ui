@@ -5,7 +5,7 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { getJarFarmMap } from "../../containers/Farms/farms";
+import { useJarFarmMap } from "../../containers/Farms/farms";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { Connection } from "../../containers/Connection";
 import { Contracts } from "../../containers/Contracts";
@@ -75,6 +75,8 @@ export const FARM_LP_TO_ICON: {
 export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({ farmData }) => {
   const { pickleCore } = PickleCore.useContainer();
   const { jars } = Jars.useContainer();
+  const jarFarmMap = useJarFarmMap();
+
   const { t } = useTranslation("common");
 
   const {
@@ -137,7 +139,7 @@ export const MiniFarmCollapsible: FC<{ farmData: UserFarmDataMatic }> = ({ farmD
   // Get Jar APY (if its from a Jar)
   let APYs: JarApy[] = [{ pickle: apy * 100 }, { matic: maticApy * 100 }];
 
-  const maybeJar = getJarFarmMap(pickleCore, chainName!)[depositToken.address];
+  const maybeJar = jarFarmMap[depositToken.address];
   if (jars && maybeJar) {
     const farmingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
     APYs = farmingJar?.APYs ? [...APYs, ...farmingJar.APYs] : APYs;

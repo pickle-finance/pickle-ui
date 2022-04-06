@@ -13,7 +13,7 @@ import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsibl
 import { pickleWhite, someFarms } from "util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { getJarFarmMap } from "containers/Farms/farms";
+import { useJarFarmMap } from "containers/Farms/farms";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
 import { noFarms } from "util/constants";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
@@ -127,6 +127,8 @@ export const MiniFarmList: FC = () => {
   const { signer, chainName } = Connection.useContainer();
   let { farmData } = UserMiniFarms.useContainer();
   const { jarData } = useJarData();
+  const jarFarmMap = useJarFarmMap();
+
   const [showInactive, setShowInactive] = useState<boolean>(false);
   const [selectedProtocol, setSelectedProtocol] = useState<string | null>(null);
   const [showUserJars, setShowUserJars] = useState<boolean>(false);
@@ -156,7 +158,7 @@ export const MiniFarmList: FC = () => {
     let nonCompoundedYields: JarApy[] = [pickleRewards];
     let totalAPY = 0;
     let magicCompounding = 0;
-    const jar = getJarFarmMap(pickleCore, chainName!)[farm.depositToken.address];
+    const jar = jarFarmMap[farm.depositToken.address];
     if (jar) {
       const farmingJar: UserJarData | undefined = jarData
         ? jarData.filter((x) => x.name === jar.jarName)[0]
