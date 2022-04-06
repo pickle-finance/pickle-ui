@@ -18,7 +18,6 @@ export const getJarFarmMap = (
 
   const ret: FarmMap = {};
   for (let i = 0; i < pfcore.assets.jars.length; i++) {
-    console.log(pfcore.assets.jars[i].chain, chainName);
     if (
       pfcore.assets.jars[i].id !== undefined &&
       pfcore.assets.jars[i].contract !== undefined &&
