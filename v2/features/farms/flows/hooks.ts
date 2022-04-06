@@ -3,10 +3,15 @@ import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { useMachine } from "@xstate/react";
 import { ethers } from "ethers";
+import { RawChain, ChainNetwork } from "picklefinance-core/lib/chain/Chains";
 
 // TODO: use pf-core files when they're included in the distribution
 import { Erc20__factory as Erc20Factory } from "containers/Contracts/factories/Erc20__factory";
 import { Erc20 } from "containers/Contracts/Erc20";
+import { Gauge__factory as GaugeFactory } from "containers/Contracts/factories/Gauge__factory";
+import { Gauge } from "containers/Contracts/Gauge";
+import { Minichef__factory as MinichefFactory } from "containers/Contracts/factories/Minichef__factory";
+import { Minichef } from "containers/Contracts/Minichef";
 import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__factory";
 import { Jar } from "containers/Contracts/Jar";
 
@@ -36,6 +41,20 @@ export const useJarContract = (address: string) => {
   }, [library, address]);
 
   return JarContract;
+};
+
+export const useFarmContract = (address: string | undefined, chain: RawChain | undefined) => {
+  const { library } = useWeb3React<Web3Provider>();
+
+  const FarmContract = useMemo<Gauge | Minichef | undefined>(() => {
+    if (!library || !chain || !address) return;
+
+    const Contract = chain.network === ChainNetwork.Ethereum ? GaugeFactory : MinichefFactory;
+
+    return Contract.connect(address, library.getSigner());
+  }, [library, address, chain]);
+
+  return FarmContract;
 };
 
 export const useTransaction = (

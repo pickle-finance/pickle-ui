@@ -14,7 +14,6 @@ import { PickleModelJson } from "picklefinance-core";
 import { RawChain, Chains } from "picklefinance-core/lib/chain/Chains";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
-import { getNetworks, Network } from "./networks";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (
