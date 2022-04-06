@@ -44,7 +44,6 @@ export const JarSelect: FC<{
     setSelectedStrategies ? setSelectedStrategies(strats.map((strat: SelectData) => strat.value)) : 0;
   };
   const change = (selections: SelectData[]): void => {
-    console.log(selections);
     const strategies = ["strategy.delegate.team", "strategy.tvl", "strategy.profit"]
     const strats = selections.filter(s => strategies.includes(s.value))
     const jars = selections.filter(s => !strategies.includes(s.value))
@@ -56,11 +55,12 @@ export const JarSelect: FC<{
       const tmpSelectData = [...selectData];
       if (core) {
         const activeJars = core?.assets?.jars
-          .filter((x) =>
+          .filter(x =>
             mainnet ? x.chain === ChainNetwork.Ethereum : x.chain !== ChainNetwork.Ethereum,
           )
-          .filter((x) => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
-          .filter((x) => x.details?.apiKey !== undefined)
+          .filter(x => x.farm !== undefined)
+          .filter(x => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
+          .filter(x => x.details?.apiKey !== undefined)
           .map(dataToSelect);
         for (let i = 0; i < activeJars.length; i++) tmpSelectData.push(activeJars[i]);
       }

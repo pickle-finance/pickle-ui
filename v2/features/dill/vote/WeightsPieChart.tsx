@@ -16,7 +16,6 @@ const Chart: FC<{
   wallet?: string | undefined | null;
   offchainVoteData?: iOffchainVoteData | undefined;
 }> = ({ platformOrUser, mainnet, user, core, wallet, offchainVoteData }) => {
-  // useState for chartData, setChartData
   const data: PieChartData[] =
     platformOrUser === "platform"
       ? mainnet
@@ -43,6 +42,7 @@ const Chart: FC<{
           cx="50%"
           cy="50%"
           outerRadius={140}
+          strokeWidth={data.length >= 1 ? 1 : 10}
         >
           {
             data.map((entry, index) => (
@@ -92,7 +92,7 @@ const getSidechainPlatformWeights = (
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
-    const jarVotes: JarVote[] = platformWeights[c].jarVotes;
+    let jarVotes: JarVote[] = platformWeights[c].jarVotes;
     for (let j = 0; j < jarVotes.length; j++) {
       chartData.push({
         jar: jarVotes[j].key,
