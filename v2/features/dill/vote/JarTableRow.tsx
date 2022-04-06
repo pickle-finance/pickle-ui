@@ -156,7 +156,6 @@ const getMainnetUserWeight = (
 ) => {
   const jarFromPfcore = core.assets.jars.find((j) => j.details?.apiKey === jarKey);
   const jarContract = jarFromPfcore?.contract || "";
-  console.log(user);
   if (user) {
     let totalWeight = BigNumber.from("0");
     user.votes.forEach((v) => (totalWeight = totalWeight.add(BigNumber.from(v.weight))));
@@ -169,12 +168,6 @@ const getMainnetUserWeight = (
     }
   }
   return "0%";
-};
-
-const strategyTranslation = {
-  "strategy.delegate.team": "Delegate to the Team",
-  "strategy.tvl": "Vote by TVL",
-  "strategy.profit": "Vote by Profit",
 };
 
 export default JarTableRow;

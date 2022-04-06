@@ -108,14 +108,11 @@ const getUserChains = (
   account: string | undefined | null,
 ) => {
   const nullVote = {} as UserVote;
-  console.log(offchainVoteData);
-  console.log(account);
   const userVotes =
     offchainVoteData && account
       ? offchainVoteData.votes.find((v) => v.wallet.toLowerCase() === account.toLowerCase()) ||
         nullVote
       : nullVote;
-  console.log(userVotes);
   const chainNames = [];
   if (userVotes && userVotes.chainWeights)
     for (let i = 0; i < userVotes?.chainWeights?.length; i++)
@@ -142,7 +139,6 @@ const getUserJarsOrStrats = (
       if (strategies.includes(name)) stratNames.push(name);
       else jarNames.push(name);
     }
-    console.log({ stratNames, jarNames });
   }
   return { stratNames, jarNames };
 };

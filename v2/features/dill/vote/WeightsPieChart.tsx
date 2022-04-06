@@ -4,7 +4,7 @@ import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { JarDefinition, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 import { iOffchainVoteData, JarVote, UserVote } from "v2/store/offchainVotes";
 
-import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList } from "recharts";
+import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList, Cell } from "recharts";
 import { formatPercentage } from "v2/utils";
 import { BigNumber } from "ethers";
 
@@ -16,7 +16,6 @@ const Chart: FC<{
   wallet?: string | undefined | null;
   offchainVoteData?: iOffchainVoteData | undefined;
 }> = ({ platformOrUser, mainnet, user, core, wallet, offchainVoteData }) => {
-  // useState for chartData, setChartData
   const data: PieChartData[] =
     platformOrUser === "platform"
       ? mainnet
@@ -43,8 +42,13 @@ const Chart: FC<{
           cx="50%"
           cy="50%"
           outerRadius={140}
-          fill="rgb(var(--color-primary))"
+          strokeWidth={data.length >= 1 ? 1 : 10}
         >
+          {
+            data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colorPicker(data, entry, index)}/>
+            ))
+          }
           <LabelList dataKey="weight" position="inside" formatter={formatPercentage} />
           <LabelList dataKey="jar" position="outside" offset={20} />
         </Pie>
@@ -88,7 +92,7 @@ const getSidechainPlatformWeights = (
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
-    const jarVotes: JarVote[] = platformWeights[c].jarVotes;
+    let jarVotes: JarVote[] = platformWeights[c].jarVotes;
     for (let j = 0; j < jarVotes.length; j++) {
       chartData.push({
         jar: jarVotes[j].key,
@@ -145,6 +149,14 @@ const getSidechainUserWeights = (
   }));
   return chartData ? chartData : [];
 };
+
+const colorPicker = (d: PieChartData[], e: PieChartData,  n: number) => {
+  const evenColors = ["rgb(var(--color-primary-light))", "rgb(var(--color-primary))"]
+  const oddColors = ["rgb(var(--color-primary-light))", "rgb(var(--color-primary))", "rgb(var(--color-primary-dark))"]
+  if (d.length % 2 === 0) return evenColors[n % 2]
+  if (d.indexOf(e) === d.length - 1 && n % 3 == 0) return oddColors[1]
+  return oddColors[n % 3]
+}
 
 const sortByWeight = (data: PieChartData[]) =>
   data ? data.sort((a, b) => (a.weight > b.weight ? 1 : -1)) : [];
