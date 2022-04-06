@@ -53,7 +53,7 @@ const getUserJars = (user: UserData | undefined, core: PickleModelJson.PickleMod
   for (let i = 0; i < tokens.length; i++) {
     let token = tokens[i];
     const j = core.assets.jars.find(
-      (j) => j.farm?.farmAddress.toLowerCase() === token.toLowerCase(),
+      (j) => j.farm?.farmAddress?.toLowerCase() === token.toLowerCase(),
     );
     if (j && j.farm) jarNames.push(j.details.apiKey);
   }
