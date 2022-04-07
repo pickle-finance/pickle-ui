@@ -7,16 +7,14 @@ import FarmsTable from "v2/features/farms/FarmsTable";
 const Farms: PickleFinancePage = () => {
   const { t } = useTranslation("common");
 
-  return <FarmsTable title={t("v2.dashboard.joinedFarms")} />;
+  return <FarmsTable />;
 };
 
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
 
   return (
-    <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
-      {t("v2.nav.jarsAndFarms")}
-    </h1>
+    <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.jarsAndFarms")}</h1>
   );
 };
 

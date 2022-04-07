@@ -8,7 +8,7 @@ import { SortType } from "v2/store/controls";
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
-  title: string;
+  title?: string;
 }
 
 const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
@@ -16,7 +16,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
 
   return (
     <>
-      <h2 className="font-body font-bold text-xl mb-6">{title}</h2>
+      {title && <h2 className="font-body font-bold text-xl mb-6">{title}</h2>}
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
@@ -39,10 +39,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
                     label={t("v2.farms.deposited")}
                   />
 
-                  <FarmsTableHeaderCellSortable
-                    sortType={SortType.Apy}
-                    label={t("v2.farms.apy")}
-                  />
+                  <FarmsTableHeaderCellSortable sortType={SortType.Apy} label={t("v2.farms.apy")} />
 
                   <FarmsTableHeaderCellSortable
                     sortType={SortType.Liquidity}
@@ -52,10 +49,7 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
                 </tr>
               </thead>
               <tbody className="text-foreground">
-                <FarmsTableBody
-                  simple={simple}
-                  requiresUserModel={requiresUserModel}
-                />
+                <FarmsTableBody simple={simple} requiresUserModel={requiresUserModel} />
               </tbody>
             </table>
           </div>

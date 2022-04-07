@@ -6,6 +6,7 @@ import { UserModel, IUserModelCallback } from "picklefinance-core/lib/client/Use
 import { useIntervalWhen } from "rooks";
 import { ChainNetwork } from "picklefinance-core";
 import { Signer } from "ethers";
+import { useRouter } from "next/router";
 
 import { CoreSelectors } from "v2/store/core";
 import { useAppDispatch } from "v2/store";
@@ -20,6 +21,10 @@ const UserModelProvider: VFC = () => {
   const { account, chainId, library } = useWeb3React<Web3Provider>();
   const nonce = useSelector(UserSelectors.selectNonce);
   const updatedAt = useSelector(UserSelectors.selectUpdatedAt);
+
+  // This helps us debug issues by passing in user address to the URL.
+  const router = useRouter();
+  const impersonatedUserAddress = router.query.debug as string;
 
   interface Options {
     type: "full" | "minimal";
@@ -50,7 +55,7 @@ const UserModelProvider: VFC = () => {
       const map: Map<ChainNetwork, Signer> = new Map();
       map.set(chainName as ChainNetwork, library.getSigner());
 
-      const user = new UserModel(core, account, map, callback);
+      const user = new UserModel(core, impersonatedUserAddress || account, map, callback);
 
       dispatch(UserActions.setIsFetching(true));
 
