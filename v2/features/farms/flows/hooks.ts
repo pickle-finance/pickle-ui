@@ -15,7 +15,7 @@ import { Minichef } from "containers/Contracts/Minichef";
 import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__factory";
 import { Jar } from "containers/Contracts/Jar";
 
-import { useAppDispatch } from "v2/store";
+import { AppDispatch, useAppDispatch } from "v2/store";
 import { Actions } from "./stateMachineUserInput";
 import { ThemeActions } from "v2/store/theme";
 
@@ -59,7 +59,7 @@ export const useFarmContract = (address: string | undefined, chain: RawChain | u
 
 export const useTransaction = (
   transactionFactory: (() => Promise<ethers.ContractTransaction>) | undefined,
-  callback: (receipt: ethers.ContractReceipt) => void,
+  callback: (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => void,
   send: ReturnType<typeof useMachine>[1],
   showConfetti: boolean = false,
 ) => {
@@ -81,7 +81,7 @@ export const useTransaction = (
       tx.wait()
         .then(
           (receipt) => {
-            callback(receipt);
+            callback(receipt, dispatch);
             send(Actions.SUCCESS);
 
             if (showConfetti) dispatch(ThemeActions.setIsConfettiOn(true));

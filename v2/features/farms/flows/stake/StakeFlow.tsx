@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import { ChainNetwork } from "picklefinance-core";
 
-import { useAppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
@@ -24,6 +23,7 @@ import { UserActions } from "v2/store/user";
 import { truncateToMaxDecimals } from "v2/utils";
 import { Gauge, StakedEvent } from "containers/Contracts/Gauge";
 import { DepositEvent, Minichef } from "containers/Contracts/Minichef";
+import { AppDispatch } from "v2/store";
 
 interface Props {
   jar: JarWithData;
@@ -36,7 +36,6 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
-  const dispatch = useAppDispatch();
 
   const chain = core?.chains.find((chain) => chain.network === jar.chain);
   const FarmContract = useFarmContract(jar.farm?.farmAddress, chain);
@@ -62,7 +61,7 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
     return () => (FarmContract as Minichef).deposit(poolId, amount, account);
   };
 
-  const callback = (receipt: ethers.ContractReceipt) => {
+  const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     if (!account) return;
 
     const { chain } = jar;
