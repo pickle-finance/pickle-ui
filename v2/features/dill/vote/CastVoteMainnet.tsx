@@ -28,8 +28,8 @@ const castVoteMainnet = (
     newWeights.push(BigNumber.from((voteWeight * 100).toFixed(0)));
   });
   if (sumVotes(selectedJars) !== 100) {
-    console.log(`Sum of jar vote absolute values (${sumVotes(selectedJars)}) is not equal to 100`);
-    toast.error("Sum of Jar Vote Absolute Values Must Equal 100", toastSettings);
+    console.log(`Sum of jar vote values (${sumVotes(selectedJars)}) is not equal to 100`);
+    toast.error("Sum of Jar Vote Values Must Equal 100", toastSettings);
   } else {
     sendRequestToDillVoter(newTokens, newWeights, provider);
   }

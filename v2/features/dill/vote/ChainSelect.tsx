@@ -3,15 +3,74 @@ import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 
-interface SelectData {
-  value: string;
-  label: string;
-}
 
-const dataToSelect = (chain: RawChain): SelectData => ({
-  value: chain.network,
-  label: chain.networkVisible,
-});
+const ChainSelect: FC<{
+  core: PickleModelJson.PickleModelJson;
+  selectedChains: string[];
+  selectedChainStrats?: string[];
+  setSelectedChains: SetChainsFunction;
+  setSelectedChainStrats: SetStratsFunction;
+}> = ({ core, selectedChains, selectedChainStrats, setSelectedChains, setSelectedChainStrats }) => {
+  const selected = selectedChains
+    ? selectedChainStrats
+      ? selectedChains.concat(selectedChainStrats)
+      : selectedChains
+    : selectedChainStrats
+    ? selectedChainStrats
+    : [];
+  
+  const [selectData, setSelectData] = useState<SelectData[]>([
+    {
+      label: "Delegate to the Pickle Team",
+      value: "strategy.chain.delegate.team",
+    },
+    {
+      label: "Distribute Equally to Sidechains",
+      value: "strategy.chain.sidechains.equal",
+    },
+  ]);
+
+  const chainChange = (chains: SelectData[]): void => {
+    setSelectedChains(chains.map((chain) => chain.value));
+  };
+  const stratChange = (strats: SelectData[]): void => {
+    setSelectedChainStrats(strats.map((strat) => strat.value));
+  }
+  const change = (selections: SelectData[]): void => {
+    const strategies = ["strategy.chain.delegate.team", "strategy.chain.sidechains.equal"];
+    const strats = selections.filter((s) => strategies.includes(s.value));
+    const chains = selections.filter((s) => !strategies.includes(s.value));
+    chainChange(chains);
+    stratChange(strats);
+  };
+  useEffect(() => {
+    const getData = async () => {
+      let tmpSelectData: SelectData[] = [...selectData];
+      if (core) {
+        const chains = core?.chains.map(dataToSelect);
+        for (let i = 0; i < chains.length; i++)
+          tmpSelectData.push(chains[i])
+      }
+      setSelectData(tmpSelectData);
+    };
+    getData();
+
+    setInterval(getData, 180000); // Updates every 3 minutes seconds
+  }, [core]);
+  return (
+    <Select
+      className="mt-5 mb-5"
+      placeholder="Select Chains"
+      value={selected ? selected.map((c) => stringToSelect(c, selectData)) : []}
+      closeMenuOnSelect={false}
+      styles={styles}
+      isMulti={true}
+      isSearchable={true}
+      onChange={(s) => change(s as SelectData[])}
+      options={selectData}
+    />
+  );
+};
 
 const styles: StylesConfig<SelectData> = {
   clearIndicator: (styles) => ({
@@ -61,44 +120,11 @@ const styles: StylesConfig<SelectData> = {
   }),
 };
 
-type SetChainsFunction = (property: string[]) => void;
 
-const ChainSelect: FC<{
-  core: PickleModelJson.PickleModelJson;
-  selectedChains: string[];
-  setSelectedChains: SetChainsFunction;
-}> = ({ core, selectedChains, setSelectedChains }) => {
-  const [chains, setChains] = useState<SelectData[]>([]);
-
-  const chainChange = (chains: SelectData[]): void => {
-    setSelectedChains(chains.map((chain) => chain.value));
-  };
-  useEffect(() => {
-    const getData = async () => {
-      let chains: SelectData[] = [];
-      if (core) {
-        chains = core?.chains.map(dataToSelect);
-      }
-      setChains(chains);
-    };
-    getData();
-
-    setInterval(getData, 180000); // Updates every 3 minutes seconds
-  }, [core]);
-  return (
-    <Select
-      className="mt-5 mb-5"
-      placeholder="Select Chains"
-      value={selectedChains.map((c) => stringToSelect(c, chains))}
-      closeMenuOnSelect={false}
-      styles={styles}
-      isMulti={true}
-      isSearchable={true}
-      onChange={(chains) => chainChange(chains as SelectData[])}
-      options={chains}
-    />
-  );
-};
+const dataToSelect = (chain: RawChain): SelectData => ({
+  value: chain.network,
+  label: chain.networkVisible,
+});
 
 const stringToSelect = (str: string, selectData: SelectData[]): SelectData => {
   let s = selectData.find((s) => s.value === str);
@@ -108,5 +134,13 @@ const stringToSelect = (str: string, selectData: SelectData[]): SelectData => {
     label: label,
   };
 };
+
+interface SelectData {
+  value: string;
+  label: string;
+}
+
+type SetChainsFunction = (property: string[]) => void;
+type SetStratsFunction = (property: string[]) => void;
 
 export default ChainSelect;

@@ -1,23 +1,23 @@
-import { ChainNetwork, PickleModelJson } from "picklefinance-core";
-import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { FC, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
+import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson;
   mainnet: boolean;
   selectedJars: string[];
-  selectedStrats?: string[];
+  selectedJarStrats?: string[];
   setSelectedJars: SetJarsFunction;
-  setSelectedStrategies?: SetStratsFunction;
-}> = ({ core, mainnet, selectedJars, selectedStrats, setSelectedJars, setSelectedStrategies }) => {
-  const selected = selectedJars 
-    ? selectedStrats 
-      ? selectedJars.concat(selectedStrats)
+  setSelectedJarStrategies?: SetStratsFunction;
+}> = ({ core, mainnet, selectedJars, selectedJarStrats, setSelectedJars, setSelectedJarStrategies }) => {
+  const selected = selectedJars
+    ? selectedJarStrats
+      ? selectedJars.concat(selectedJarStrats)
       : selectedJars
-    : selectedStrats
-      ? selectedStrats
-      : [];
+    : selectedJarStrats
+    ? selectedJarStrats
+    : [];
   const [selectData, setSelectData] = useState<SelectData[]>(
     mainnet
       ? []
@@ -41,26 +41,29 @@ export const JarSelect: FC<{
     setSelectedJars(jars.map((jar: SelectData) => jar.value));
   };
   const stratChange = (strats: SelectData[]): void => {
-    setSelectedStrategies ? setSelectedStrategies(strats.map((strat: SelectData) => strat.value)) : 0;
+    setSelectedJarStrategies
+      ? setSelectedJarStrategies(strats.map((strat: SelectData) => strat.value))
+      : 0;
   };
   const change = (selections: SelectData[]): void => {
-    const strategies = ["strategy.delegate.team", "strategy.tvl", "strategy.profit"]
-    const strats = selections.filter(s => strategies.includes(s.value))
-    const jars = selections.filter(s => !strategies.includes(s.value))
+    const strategies = ["strategy.delegate.team", "strategy.tvl", "strategy.profit"];
+    const strats = selections.filter((s) => strategies.includes(s.value));
+    const jars = selections.filter((s) => !strategies.includes(s.value));
     jarChange(jars);
     stratChange(strats);
-  }
+  };
   useEffect(() => {
     const getData = async () => {
       const tmpSelectData = [...selectData];
       if (core) {
         const activeJars = core?.assets?.jars
-          .filter(x =>
+          .filter((x) =>
             mainnet ? x.chain === ChainNetwork.Ethereum : x.chain !== ChainNetwork.Ethereum,
           )
-          .filter(x => x.farm !== undefined)
-          .filter(x => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
-          .filter(x => x.details?.apiKey !== undefined)
+          .filter((x) => x.farm !== undefined)
+          .filter((x) => x.farm?.farmAddress !== "0x0000000000000000000000000000000000000000")
+          .filter((x) => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
+          .filter((x) => x.details?.apiKey !== undefined)
           .map(dataToSelect);
         for (let i = 0; i < activeJars.length; i++) tmpSelectData.push(activeJars[i]);
       }
@@ -73,12 +76,12 @@ export const JarSelect: FC<{
   return (
     <Select
       placeholder={mainnet ? "Select Mainnet Jars" : "Select Sidechain Strategy and/or Jars"}
-      value={selected ? selected.map(s => stringToSelect(s, selectData)) : []}
+      value={selected ? selected.map((s) => stringToSelect(s, selectData)) : []}
       styles={styles}
       isMulti={true}
       isSearchable={true}
       closeMenuOnSelect={false}
-      onChange={s => change(s as SelectData[])}
+      onChange={(s) => change(s as SelectData[])}
       options={selectData}
     />
   );
@@ -90,13 +93,13 @@ const dataToSelect = (data: JarDefinition): SelectData => ({
 });
 
 const stringToSelect = (str: string, selectData: SelectData[]): SelectData => {
-  let s = selectData.find(s => s.value === str);
+  let s = selectData.find((s) => s.value === str);
   const label = s ? s.label : "";
-  return ({
+  return {
     value: str,
-    label: label
-  })
-}
+    label: label,
+  };
+};
 
 const styles: StylesConfig<SelectData> = {
   clearIndicator: (styles) => ({
