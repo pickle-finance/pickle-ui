@@ -4,7 +4,6 @@ import { NextRouter, useRouter } from "next/router";
 import type { PickleFinancePage, ChainData } from "v2/types";
 import ChartContainer from "v2/features/stats/chain/ChartContainer";
 import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
-import { PctGainsTable} from "v2/features/stats/chain/BigMoverTables";
 import { getTokenPriceChangeBal, getTokenPriceChangePct } from "v2/features/stats/chain/BigMoverUtils";
 import BigMoverTableContainer from "v2/features/stats/chain/BigMoverTableContainer";
 
@@ -25,10 +24,12 @@ const Stats: PickleFinancePage = () => {
       setTokenBalChangeData(tokenPriceChangeBal);
     };
     getData();
-  }, [chain, chainData]);
-  
+  }, [chain]);
+  tokenPctChangeData.sort((a, b) => a.tokenPriceChange > b.tokenPriceChange ? -1 : 1)
+  tokenBalChangeData.sort((a, b) => a.tokenPriceChange > b.tokenPriceChange ? -1 : 1)
+
   return (
-    <div className="block lg:flex mb-8 sm:mb-10">
+    <div className="block lg:flex mb-5 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
         <span>
           <BigMoverTableContainer type="pct" tableData={tokenPctChangeData}/>
@@ -57,7 +58,9 @@ const PageTitle: FC = () => {
 
 const getChainData = async (chain: string): Promise<ChainData> => {
   const url = `${process.env.apiChain}/${chain}/en`;
-  return await fetch(url).then((response) => response.json());
+  return await fetch(url)
+    .then((response) => response.json())
+    .catch(e => console.log(e));
 };
 
 Stats.PageTitle = PageTitle;

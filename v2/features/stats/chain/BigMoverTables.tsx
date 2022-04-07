@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { formatPercentage } from "v2/utils";
 import BigMoverTableHead from "./BigMoverTableHead";
 
 
@@ -9,7 +10,7 @@ export const GainsTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
       {data.slice(0,5).map(data => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
-          <td>{data.tokenPriceChange}</td>
+          <td>{formatPercentage(data.tokenPriceChange, 3)}</td>
         </tr>
       ))}
     </tbody>
@@ -23,7 +24,7 @@ export const LossesTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
       {data.slice(-5).map(data => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
-          <td>{data.tokenPriceChange}</td>
+          <td>{formatPercentage(data.tokenPriceChange, 3)}</td>
         </tr>
       ))}
     </tbody>
