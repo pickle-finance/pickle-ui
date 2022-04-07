@@ -3,6 +3,7 @@ import { ChainData } from "v2/types";
 export const getTokenPriceChangePct = (dataSeries: ChainData) => {
   const assetData = dataSeries ? dataSeries.assets : {};
   const assetKeys = Object.keys(assetData ? assetData : {}); 
+  console.log(assetKeys);
   const wowSummary: tokenPriceChangePct[] = []
   if (assetData) {  
     for (let i=0; i < assetKeys.length; i++) {
