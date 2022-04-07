@@ -7,7 +7,7 @@ import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
-import { useAppDispatch } from "v2/store";
+import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
@@ -34,7 +34,6 @@ const WithdrawFlow: FC<Props> = ({ jar, balances }) => {
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
-  const dispatch = useAppDispatch();
 
   const { contract } = jar;
   const JarContract = useJarContract(contract);
@@ -54,7 +53,7 @@ const WithdrawFlow: FC<Props> = ({ jar, balances }) => {
     return () => JarContract.withdraw(amount);
   };
 
-  const callback = (receipt: ethers.ContractReceipt) => {
+  const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     if (!account) return;
 
     /**
@@ -109,9 +108,7 @@ const WithdrawFlow: FC<Props> = ({ jar, balances }) => {
       <Button
         type="secondary"
         state={pTokenBalance > 0 ? "enabled" : "disabled"}
-        onClick={() => {
-          if (pTokenBalance > 0) openModal();
-        }}
+        onClick={openModal}
         className="w-11"
       >
         -
