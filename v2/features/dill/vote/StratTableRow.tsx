@@ -72,12 +72,16 @@ const getUserWeight = (
 };
 
 const strategyTranslation = {
+  "strategy.chain.delegate.team": "Delegate to the Team",
+  "strategy.chain.sidechains.equal": "Distribute Equally to Sidechains",
   "strategy.delegate.team": "Delegate to the Team",
   "strategy.tvl": "Vote by TVL",
   "strategy.profit": "Vote by Profit",
 };
 
 export interface iStrategyTranslation {
+  "strategy.chain.delegate.team": string;
+  "strategy.chain.sidechains.equal": string;
   "strategy.delegate.team": string;
   "strategy.tvl": string;
   "strategy.profit": string;

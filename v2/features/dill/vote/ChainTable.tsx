@@ -10,7 +10,7 @@ const ChainTable: FC<{
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
 }> = ({ selectedChains, core, offchainVoteData, wallet }) => (
-  <div className="flex flex-col mt-10">
+  <div className="flex flex-col mt-10 mb-10">
     <div className="-my-2 overflow-x-auto">
       <div className="py-2 align-middle inline-block min-w-full">
         <table className="min-w-full table-auto border-collapse">

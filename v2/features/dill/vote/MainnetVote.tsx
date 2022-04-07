@@ -33,16 +33,14 @@ const MainnetVote: FC<{ core: PickleModelJson.PickleModelJson; user: UserData | 
         setSelectedJars={setSelectedJars}
       />
       {selectedJars.length > 0 && (
-        <div>
-          <JarTable selectedJars={selectedJars} core={core} mainnet={true} user={user} />
-          <MainnetVoteButton
-            vote={castVoteMainnet}
-            provider={library}
-            selectedJars={selectedJars}
-            core={core}
-          />
-        </div>
+        <JarTable selectedJars={selectedJars} core={core} mainnet={true} user={user} />
       )}
+      <MainnetVoteButton
+        vote={castVoteMainnet}
+        provider={library}
+        selectedJars={selectedJars}
+        core={core}
+      />
     </>
   );
 };

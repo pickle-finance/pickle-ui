@@ -11,7 +11,7 @@ const MainnetVoteButton: FC<{
 }> = ({ vote, provider, selectedJars, core }) => {
   const { t } = useTranslation("common");
   return (
-    <div className="pb-10">
+    <div className="mt-5 pb-10">
       <button
         className="float-right rounded p-2 border border-foreground-alt-400 bg-background text-foreground-alt-200"
         onClick={() => vote(provider, selectedJars, core)}

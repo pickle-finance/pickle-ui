@@ -6,7 +6,7 @@ import BigMoverTableHead from "./BigMoverTableHead";
 export const GainsTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
   <table className="w-1/2 inline-table">
     <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.gain"/>
-    <tbody className="border border-foreground-alt-400">
+    <tbody className="border border-foreground-alt-400 text-center">
       {data.slice(0,5).map(data => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
@@ -20,7 +20,7 @@ export const GainsTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
 export const LossesTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
   <table className="w-1/2 inline-table">
     <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.loss"/>
-    <tbody className="border border-foreground-alt-400">
+    <tbody className="border border-foreground-alt-400 text-center">
       {data.slice(-5).map(data => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
