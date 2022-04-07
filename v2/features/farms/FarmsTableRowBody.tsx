@@ -10,6 +10,8 @@ import FarmsTableRowDetails from "./FarmsTableRowDetails";
 import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionControls";
 import ConnectButton from "./ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
+import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
 
 interface Props {
   jar: JarWithData;
@@ -30,6 +32,12 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
     ? "/v2/stats/jar?jar=" + jar.details.apiKey
     : undefined;
 
+  const isUniV3 = jar.protocol === AssetProtocol.UNISWAP_V3;
+  const token0Name = jar.depositToken.components?.[0];
+  const token1Name = jar.depositToken.components?.[1];
+  const userBalanceToken0 = data.walletComponentTokens[token0Name || ""]?.tokens;
+  const userBalanceToken1 = data.walletComponentTokens[token1Name || ""]?.tokens;
+
   return (
     <td
       colSpan={6}
@@ -37,7 +45,18 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
     >
       <div className="flex">
         <div className="pt-4 pb-6 flex-shrink-0 mr-6">
-          <p className="font-title font-medium text-base leading-5">{depositTokenCountString}</p>
+          {(isUniV3 && (
+            <>
+              <p className="font-title font-medium text-base leading-5">
+                {`${userBalanceToken0 || "0"} ${token0Name?.toUpperCase()}`}
+              </p>
+              <p className="my-2 font-title font-medium text-base leading-5">
+                {`${userBalanceToken1 || "0"} ${token1Name?.toUpperCase()}`}
+              </p>
+            </>
+          )) || (
+            <p className="font-title font-medium text-base leading-5">{depositTokenCountString}</p>
+          )}
           <p className="font-normal text-xs text-foreground-alt-200 mb-6">
             {t("v2.balances.balance")}
           </p>
@@ -52,7 +71,11 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
           )}
         </div>
         <div className="relative w-full mb-2">
-          <FarmsTableRowBodyTransactionControls jar={jar} />
+          {isUniV3 ? (
+            <FarmsTableRowBodyV3TransactionControls jar={jar} />
+          ) : (
+            <FarmsTableRowBodyTransactionControls jar={jar} />
+          )}
           {needsNetworkSwitch && (
             <div className="absolute inset-0 flex grow justify-center items-center border border-foreground-alt-500 rounded-xl bg-background-light bg-opacity-90 backdrop-filter backdrop-blur-sm">
               <ConnectButton network={network} />

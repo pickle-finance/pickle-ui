@@ -1,5 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { JarDefinition, PickleModelJson } from "picklefinance-core/lib/model/PickleModelJson";
+import {
+  AssetProtocol,
+  JarDefinition,
+  PickleModelJson,
+} from "picklefinance-core/lib/model/PickleModelJson";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber } from "../format";
@@ -17,6 +21,9 @@ export interface UserAssetDataWithPrices {
   depositTokensInJar: UserAssetDataWithPricesComponent;
   depositTokensInFarm: UserAssetDataWithPricesComponent;
   earnedPickles: UserAssetDataWithPricesComponent;
+  walletComponentTokens: {
+    [key: string]: UserAssetDataWithPricesComponent;
+  };
 }
 
 const userAssetDataZeroComponent = (): UserAssetDataWithPricesComponent => ({
@@ -54,6 +61,7 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => ({
   depositTokensInJar: userAssetDataZeroComponent(),
   depositTokensInFarm: userAssetDataZeroComponent(),
   earnedPickles: userAssetDataZeroComponent(),
+  walletComponentTokens: {},
 });
 
 export const jarDecimals = (jar: JarDefinition): number =>
@@ -72,10 +80,42 @@ export const getUserAssetDataWithPrices = (
     return userAssetDataZeroEverything();
   }
   const userTokenDetails = userModel.tokens[jar.details.apiKey.toLowerCase()];
-
   if (userTokenDetails === undefined) return userAssetDataZeroEverything();
 
   const decimals = jarDecimals(jar);
+
+  let token0,
+    token1,
+    token0Balance,
+    token1Balance,
+    walletComponentTokens: { [key: string]: UserAssetDataWithPricesComponent } = {};
+
+  if (jar.protocol === AssetProtocol.UNISWAP_V3) {
+    token0 = jar.depositToken.components?.[0];
+    token1 = jar.depositToken.components?.[1];
+
+    token0Balance = userTokenDetails.componentTokenBalances[token0 || ""].balance;
+    token1Balance = userTokenDetails.componentTokenBalances[token1 || ""].balance;
+
+    const token0Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+      BigNumber.from(token0Balance?.toString() || "0"),
+      decimals,
+      core.prices[token0 || 0],
+      1.0,
+    );
+
+    const token1Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+      BigNumber.from(token1Balance?.toString() || "0"),
+      decimals,
+      core.prices[token1 || 0],
+      1.0,
+    );
+
+    if (token0 && token1) {
+      walletComponentTokens[token0] = token0Wallet;
+      walletComponentTokens[token1] = token1Wallet;
+    }
+  }
 
   const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
     BigNumber.from(userTokenDetails.depositTokenBalance),
@@ -111,5 +151,6 @@ export const getUserAssetDataWithPrices = (
     depositTokensInWallet: wallet,
     depositTokensInJar: jarComponent,
     depositTokensInFarm: farmComponent,
+    walletComponentTokens,
   };
 };

@@ -70,6 +70,7 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescr
         jar={asset}
         simple={simple}
         hideDescription={hideDescription}
+        userDillRatio={userDillRatio}
       />
     );
 
