@@ -3,6 +3,7 @@ import { QueryStatus } from "@reduxjs/toolkit/query";
 import { maxBy, orderBy } from "lodash";
 import {
   AssetEnablement,
+  AssetProtocol,
   ExternalAssetDefinition,
   JarDefinition,
   PickleModelJson,
@@ -15,6 +16,7 @@ import { getNetworks } from "v2/features/connection/networks";
 import { brandColor } from "v2/features/farms/colors";
 import { UserSelectors } from "./user";
 import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
+import { getUniV3Tokens } from "v2/utils/univ3";
 
 const apiHost = process.env.apiHost;
 
@@ -25,11 +27,21 @@ export const fetchCore = createAsyncThunk<PickleModelJson>("core/fetch", async (
 
 type Asset = JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition;
 
+export interface UniV3Token {
+  address: string;
+  approved: boolean;
+  name: string;
+  decimals: number;
+  isNative: boolean;
+}
+
 export interface JarWithData extends JarDefinition, UserAssetDataWithPrices {
   [SortType.Earned]: number | undefined;
   [SortType.Deposited]: number | undefined;
   [SortType.Apy]: number | undefined;
   [SortType.Liquidity]: number | undefined;
+  token0: UniV3Token | undefined;
+  token1: UniV3Token | undefined;
 }
 
 interface CoreState {
@@ -188,6 +200,9 @@ const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
     (jars, allCore, pagination, sort, userModel) => {
       // Sort first, and then compute pagination
       let jarsWithData: JarWithData[] = jars.map((jar) => {
+        let token0, token1;
+        if (jar.protocol === AssetProtocol.UNISWAP_V3)
+          [token0, token1] = getUniV3Tokens(jar, allCore);
         const data = getUserAssetDataWithPrices(jar, allCore, userModel);
         const deposited = data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
         const earned = data.earnedPickles.tokensUSD || 0;
@@ -200,6 +215,8 @@ const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
           earned,
           apy,
           liquidity,
+          token0,
+          token1,
         };
       });
 

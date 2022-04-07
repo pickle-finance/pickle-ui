@@ -426,8 +426,11 @@
       "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
-      "statsAndDocs": "Stats & Docs",
+      "allApproved": "All approved!",
+      "approvalBalanceError": "Please get your hands on some deposit tokens first!",
+      "analytics": "Analytics",
       "approveToken": "Approve {{ token }}",
+      "approveTokens": "Approve Tokens",
       "apy": "APY",
       "apyBreakdown": "APY breakdown",
       "apyUnavailable": "APY Range Unavailable",
@@ -460,6 +463,7 @@
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
       "givePermission": "Give Pickle Finance permission to access your {{ token }}?",
+      "givePermissionV3": "Give Pickle Finance permission to access your tokens",
       "harvest": "Harvest",
       "harvesting": "Harvesting",
       "harvestRewards": "Harvest rewards",
@@ -485,6 +489,7 @@
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
       "stakeToken": "Stake {{ token }}",
+      "statsAndDocs": "Stats & Docs",
       "strategyAddress": "Strategy Address",
       "success": "Success!",
       "token": "Token",
