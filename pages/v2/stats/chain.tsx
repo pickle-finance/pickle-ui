@@ -40,14 +40,14 @@ const Stats: PickleFinancePage = () => {
   return (
     <div className="block lg:flex mb-5 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
-        {tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 ? (
-          <span>
-            <BigMoverTableContainer type="pct" tableData={tokenPctChangeData} />
-            <BigMoverTableContainer type="bal" tableData={tokenBalChangeData} />
-          </span>
-        ) : (
-          <></>
-        )}
+        {tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 
+          ? 
+            <span>
+              <BigMoverTableContainer type="pct" tableData={tokenPctChangeData}/>
+              <BigMoverTableContainer type="bal" tableData={tokenBalChangeData}/>
+            </span>
+          : <></> //add loading component here?
+        }
         <ChartContainer chart="tvl" dataSeries={chainData} />
         <ChartContainer chart="revs" dataSeries={chainData} />
         <AssetTableContainer assets={chainData?.assets} />
@@ -58,10 +58,12 @@ const Stats: PickleFinancePage = () => {
 
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
+  const router: NextRouter = useRouter();
+  const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
 
   return (
     <>
-      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats")}</h1>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats").concat(chain ? ` - ${chain.toUpperCase()}` : "")}</h1>
       <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.stats.subtitle")}
       </h2>

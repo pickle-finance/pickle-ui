@@ -28,10 +28,10 @@ const OffchainVote: FC<{
     getUserChainsOrStrats(offchainVoteData, account).stratNames,
   );
   const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>(
-    getUserJarsOrStrats(offchainVoteData, account).jarNames,
+    getUserJarsOrStrats(offchainVoteData, account).jarNames
   );
-  const [selectedJarStrategies, setSelectedJarStrategies] = useState<string[]>(
-    getUserJarsOrStrats(offchainVoteData, account).stratNames,
+  const [selectedJarStrats, setSelectedJarStrats] = useState<string[]>(
+    getUserJarsOrStrats(offchainVoteData, account).stratNames
   );
 
   return (
@@ -78,15 +78,15 @@ const OffchainVote: FC<{
         <JarSelect
           core={core}
           mainnet={false}
-          selectedJarStrats={selectedJarStrategies}
+          selectedJarStrats={selectedJarStrats}
           selectedJars={selectedSidechainJars}
+          setSelectedJarStrats={setSelectedJarStrats}
           setSelectedJars={setSelectedSidechainJars}
-          setSelectedJarStrategies={setSelectedJarStrategies}
         />
         <div className="mt-10 pr-5 pl-5 border border-foreground-alt-500 rounded">
-          {selectedJarStrategies.length > 0 && (
+          {selectedJarStrats.length > 0 && (
             <StratTable
-              selectedStrats={selectedJarStrategies}
+              selectedStrats={selectedJarStrats}
               offchainVoteData={offchainVoteData}
               wallet={account}
             />
@@ -105,7 +105,9 @@ const OffchainVote: FC<{
           vote={castVoteSideChain}
           provider={library}
           account={account}
+          selectedChainStrats={selectedChainStrats}
           selectedChains={selectedChains}
+          selectedJarStrats={selectedJarStrats}
           selectedJars={selectedSidechainJars}
           selectedStrats={selectedJarStrategies}
         />
@@ -131,7 +133,7 @@ const getUserChainsOrStrats = (
     for (let i = 0; i < userVotes?.chainWeights?.length; i++) {
       let name = userVotes?.chainWeights[i].chain;
       if (strategies.includes(name)) stratNames.push();
-      chainNames.push(name);
+      else chainNames.push(name)
     }
   return { stratNames, chainNames };
 };
@@ -153,7 +155,7 @@ const getUserJarsOrStrats = (
     for (let i = 0; i < userVotes?.jarWeights?.length; i++) {
       let name = userVotes?.jarWeights[i].jarKey;
       if (strategies.includes(name)) stratNames.push(name);
-      jarNames.push(name);
+      else jarNames.push(name);
     }
   }
   return { stratNames, jarNames };

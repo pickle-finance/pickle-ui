@@ -492,6 +492,22 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xcd1cc85dc7b4deef34247ccb5d7c42a58039b1ba": (
     <LpIcon swapIconSrc={"/hellshare.svg"} tokenIconSrc={"/metis.png"} />
   ),
+  // NETSWAP HERA/USDC
+  "0x948f9614628d761f86b672f134fc273076c4d623": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/tokens/hera.png"} />
+  ),
+  // TETHYS METIS/AVAX
+  "0x3ca47677e7d8796e6470307ad15c1fbfd43f0d6f": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/avax.png"} />
+  ),
+  // TETHYS METIS/FTM
+  "0x74ca39f7ab9b685b8ea8c4ab19e7ab6b474dd22d": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/fantom.png"} />
+  ),
+  // TETHYS METIS/DAI
+  "0xcc15d8f93be780ad78fd1a016fb0f15f2543b5dc": (
+    <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/dai.png"} />
+  ),
 
   // Moonbeam
 

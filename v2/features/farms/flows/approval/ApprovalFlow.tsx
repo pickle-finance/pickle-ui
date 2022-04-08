@@ -13,7 +13,7 @@ import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
 import { useTokenContract, useTransaction } from "../hooks";
-import { useAppDispatch, useAppSelector } from "v2/store";
+import { AppDispatch, useAppSelector } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { ApprovalEvent } from "containers/Contracts/Erc20";
 
@@ -55,7 +55,6 @@ const ApprovalFlow: FC<Props> = ({ jar, visible, type }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useAppSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
-  const dispatch = useAppDispatch();
   const approvalConfig = approvalData(jar, type);
   const TokenContract = useTokenContract(approvalConfig.tokenAddress);
 
@@ -70,7 +69,7 @@ const ApprovalFlow: FC<Props> = ({ jar, visible, type }) => {
     return () => TokenContract.approve(spenderAddress, amount);
   };
 
-  const callback = (receipt: ethers.ContractReceipt) => {
+  const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     const approvalEvent = receipt.events?.find(
       ({ event }) => event === "Approval",
     ) as ApprovalEvent;

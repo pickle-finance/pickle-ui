@@ -5,15 +5,25 @@ import { toast, ToastOptions } from "react-toastify";
 const castVoteSideChain = (
   provider: Web3Provider | undefined,
   account: string | null | undefined,
+  selectedChainStrats: string[],
   selectedChains: string[],
+  selectedJarStrats: string[],
   selectedJars: string[],
-  selectedStrats: string[],
 ): void => {
   const voteData: VoteData = {
     timestamp: Date.now(),
     chainWeights: [],
     jarWeights: [],
   };
+
+  selectedChainStrats.forEach((strat) => {
+    const inputElement = document.getElementById(strat) as HTMLInputElement;
+    const voteWeight = +inputElement.value;
+    voteData.chainWeights.push({
+      chain: strat,
+      weight: voteWeight,
+    });
+  });
 
   selectedChains.forEach((chain) => {
     const inputElement = document.getElementById(chain) as HTMLInputElement;
@@ -33,7 +43,7 @@ const castVoteSideChain = (
     });
   });
 
-  selectedStrats.forEach((strat) => {
+  selectedJarStrats.forEach((strat) => {
     const inputElement = document.getElementById(strat) as HTMLInputElement;
     const voteWeight = +inputElement.value;
     voteData.jarWeights.push({
@@ -43,12 +53,12 @@ const castVoteSideChain = (
   });
 
   const msg = JSON.stringify(voteData, null, 2);
-  if (sumVotes(selectedChains) !== 100) {
-    console.log(`Sum of chain votes (${sumVotes(selectedChains)}) is not equal to 100`);
-    toast.error("Sum of Chain Vote Values Must Equal 100", toastSettings);
-  } else if (sumVotes(selectedJars, selectedStrats) !== 100) {
-    console.log(`Sum of jar vote absolute values (${sumVotes(selectedJars)}) is not equal to 100`);
-    toast.error("Sum of Jar Vote Absolute Values Must Equal 100", toastSettings);
+  if (sumVotes(selectedChains, selectedChainStrats) !== 100) {
+    console.log(`Sum of chain votes (${sumVotes(selectedChains, selectedChainStrats)}) is not equal to 100`);
+    toast.error(`Sum of Chain Vote Values Must Equal 100. (Current Vote: ${sumVotes(selectedChains, selectedChainStrats)})`, toastSettings);
+  } else if (sumVotes(selectedJars, selectedJarStrats) !== 100) {
+    console.log(`Sum of jar vote absolute values (${sumVotes(selectedJars, selectedJarStrats)}) is not equal to 100`);
+    toast.error(`Sum of Jar Vote Absolute Values Must Equal 100. (Current Vote: ${sumVotes(selectedJars, selectedJarStrats)})`, toastSettings);
   } else {
     sendRequestToDillVoter(msg, account, provider);
     // console.log(voteData);

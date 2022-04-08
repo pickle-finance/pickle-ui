@@ -6,16 +6,17 @@ const OffchainVoteButton: FC<{
   vote: voteFunction;
   provider: Web3Provider | undefined;
   account: string | null | undefined;
+  selectedChainStrats: string[];
   selectedChains: string[];
+  selectedJarStrats: string[];
   selectedJars: string[];
-  selectedStrats: string[];
-}> = ({ vote, provider, account, selectedChains, selectedJars, selectedStrats }) => {
+}> = ({ vote, provider, account, selectedChainStrats, selectedChains, selectedJarStrats, selectedJars }) => {
   const { t } = useTranslation("common");
   return (
     <div className="pb-10 mb-5 mt-10">
       <button
         className="float-right rounded p-2 border border-foreground-alt-400 bg-background text-foreground-alt-200"
-        onClick={() => vote(provider, account, selectedChains, selectedJars, selectedStrats)}
+        onClick={() => vote(provider, account, selectedChainStrats, selectedChains, selectedJarStrats, selectedJars)}
       >
         {t("v2.dill.vote.castOffchainVote")}
       </button>
@@ -26,9 +27,10 @@ const OffchainVoteButton: FC<{
 export type voteFunction = (
   provider: Web3Provider | undefined,
   account: string | null | undefined,
+  selectedChainStrats: string[],
   selectedChain: string[],
+  selectedJarStrats: string[],
   selectedJars: string[],
-  selectedStrats: string[],
 ) => void;
 
 export default OffchainVoteButton;

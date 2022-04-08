@@ -322,6 +322,7 @@
       "enable": "Enable",
       "harvest": "Harvest",
       "retry": "Retry",
+      "stake": "Stake",
       "withdraw": "Withdraw"
     },
     "balances": {
@@ -410,6 +411,7 @@
       "compounding": "Compounding",
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
       "confirmDeposit": "Please confirm your deposit amount",
+      "confirmStake": "Please confirm the amount to be staked",
       "confirmWithdrawal": "Please confirm your withdrawal amount",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
@@ -452,6 +454,7 @@
       "ratioTooltip": "The jar's ratio is the amount of underlying deposit tokens per pToken",
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
+      "stakeToken": "Stake {{ token }}",
       "strategyAddress": "Strategy Address",
       "success": "Success!",
       "token": "Token",
