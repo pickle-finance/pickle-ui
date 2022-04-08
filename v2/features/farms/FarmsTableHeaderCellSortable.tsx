@@ -1,11 +1,6 @@
 import { FC } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
-import {
-  ControlsSelectors,
-  SortDirection,
-  SortType,
-  setSort,
-} from "v2/store/controls";
+import { ControlsSelectors, SortDirection, SortType, setSort } from "v2/store/controls";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "v2/store";
 import { classNames } from "v2/utils";

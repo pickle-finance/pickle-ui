@@ -3,15 +3,11 @@ import { DayPickerInputProps } from "react-day-picker/types/Props";
 import styled from "styled-components";
 import { colors } from "../styles/theme";
 
-interface DayPickerInputWrapperProps
-  extends Omit<DayPickerInputProps, "classNames"> {
+interface DayPickerInputWrapperProps extends Omit<DayPickerInputProps, "classNames"> {
   className?: string;
 }
 
-const DayPickerInputWrapper = ({
-  className = "",
-  ...rest
-}: DayPickerInputWrapperProps) => {
+const DayPickerInputWrapper = ({ className = "", ...rest }: DayPickerInputWrapperProps) => {
   return (
     <DayPickerInput
       classNames={{

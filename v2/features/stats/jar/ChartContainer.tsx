@@ -7,7 +7,6 @@ import RevsChart from "./RevsChart";
 import TimeUnitPanel from "./TimeUnitPanel";
 import { JarChartData } from "v2/types";
 
-
 const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
   const [selectedChart, setSelectedChart] = useState("value");
   const chartChange = (e: HTMLSelectElement): void => setSelectedChart(e.value);
@@ -39,18 +38,12 @@ const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
       </span>
       <aside className="h-[600px] px-3 py-10">
         {lineChartOptions.includes(selectedChart) && (
-          <LineChart
-            chartKey={selectedChart}
-            data={jarData}
-            timeUnit={selectedTimeUnit}
-          />
+          <LineChart chartKey={selectedChart} data={jarData} timeUnit={selectedTimeUnit} />
         )}
         {selectedChart === "tokenPriceVNum" && (
           <BiaxialChart data={jarData} timeUnit={selectedTimeUnit} />
         )}
-        {selectedChart === "yield" && (
-          <YieldChart data={jarData} timeUnit={selectedTimeUnit} />
-        )}
+        {selectedChart === "yield" && <YieldChart data={jarData} timeUnit={selectedTimeUnit} />}
         {selectedChart === "revs" && <RevsChart data={jarData} />}
       </aside>
     </div>

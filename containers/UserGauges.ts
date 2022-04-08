@@ -41,28 +41,18 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
   const [gaugeData, setGaugeData] = useState<Array<UserGaugeData> | null>(null);
 
   const updateJarAndGaugeData = async () => {
-    if (
-      gauges &&
-      erc20 &&
-      gauge &&
-      address &&
-      gaugeProxy &&
-      multicallProvider
-    ) {
+    if (gauges && erc20 && gauge && address && gaugeProxy && multicallProvider) {
       const balancesUserInfosHarvestables = await multicallProvider.all(
         gauges.flatMap((x) => {
           if (x?.token && x?.gaugeAddress) {
-            const c = new MulticallContract(x.token, [
-              ...erc20.interface.fragments,
-            ]);
+            const c = new MulticallContract(x.token, [...erc20.interface.fragments]);
             const gaugeContract = new MulticallContract(x.gaugeAddress, [
               ...gauge.interface.fragments,
             ]);
 
-            const gaugeProxyContract = new MulticallContract(
-              gaugeProxy.address,
-              [...gaugeProxy.interface.fragments],
-            );
+            const gaugeProxyContract = new MulticallContract(gaugeProxy.address, [
+              ...gaugeProxy.interface.fragments,
+            ]);
 
             return [
               c.balanceOf(address),
@@ -81,9 +71,9 @@ const useUserGauges = (): { gaugeData: UserGaugeData[] | null } => {
         const harvestable = balancesUserInfosHarvestables[idx * 5 + 2];
         const userWeight = balancesUserInfosHarvestables[idx * 5 + 3];
         const userCurrentWeights = balancesUserInfosHarvestables[idx * 5 + 4];
-        const depositTokenDecimals = jars?.filter(
-          (jar) => jar.depositToken.address.toLowerCase() === gauge?.token,
-        )[0]?.depositTokenDecimals?? 18;
+        const depositTokenDecimals =
+          jars?.filter((jar) => jar.depositToken.address.toLowerCase() === gauge?.token)[0]
+            ?.depositTokenDecimals ?? 18;
 
         return {
           allocPoint: gauge.allocPoint,

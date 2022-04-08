@@ -58,10 +58,7 @@ const tooltipFormatter = (
   const { picklePriceUsd } = entry.payload;
   const amount = value * picklePriceUsd;
   const formattedNumber = value.toLocaleString();
-  const formattedDollarValue = `${formattedNumber} (${formatDollarValue(
-    amount,
-    0,
-  )})`;
+  const formattedDollarValue = `${formattedNumber} (${formatDollarValue(amount, 0)})`;
 
   switch (name) {
     case "weeklyPickleAmount":
@@ -73,10 +70,7 @@ const tooltipFormatter = (
     case "totalDillAmount":
       return [formattedNumber, t("dill.totalDillAmount")];
     case "pickleDillRatio":
-      return [
-        `${formattedNumber} (${formatDollarValue(amount, 2)})`,
-        t("dill.pickleDillRatio"),
-      ];
+      return [`${formattedNumber} (${formatDollarValue(amount, 2)})`, t("dill.pickleDillRatio")];
     default:
       return [formattedNumber, name];
   }
@@ -130,11 +124,7 @@ export const FeeDistributionsChart: FC = () => {
   return (
     <Card>
       <h2>{t("dill.historic")}</h2>
-      <Radio.Group
-        value={chartMode}
-        useRow
-        onChange={(value) => setChartMode(value as ChartMode)}
-      >
+      <Radio.Group value={chartMode} useRow onChange={(value) => setChartMode(value as ChartMode)}>
         <Radio value="weekly">{t("dill.weekly")}</Radio>
         <Radio value="total">{t("dill.total")}</Radio>
       </Radio.Group>
@@ -167,12 +157,7 @@ export const FeeDistributionsChart: FC = () => {
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
-              <YAxis
-                width={70}
-                yAxisId="right"
-                orientation="right"
-                padding={{ top: 20 }}
-              >
+              <YAxis width={70} yAxisId="right" orientation="right" padding={{ top: 20 }}>
                 <Label
                   value={t("dill.pickleDillRatio") as string}
                   position="insideRight"
@@ -192,16 +177,9 @@ export const FeeDistributionsChart: FC = () => {
                 labelFormatter={labelFormatter}
                 labelStyle={{ fontWeight: "bold", color: "#666666" }}
               />
-              <Legend
-                align="left"
-                formatter={(value: string) => legendFormatter(value, t)}
-              />
+              <Legend align="left" formatter={(value: string) => legendFormatter(value, t)} />
               <Bar
-                dataKey={
-                  chartMode === "weekly"
-                    ? "weeklyPickleAmount"
-                    : "totalPickleAmount"
-                }
+                dataKey={chartMode === "weekly" ? "weeklyPickleAmount" : "totalPickleAmount"}
                 fill={accentColor}
               >
                 {dataSeries.map((point, index) => (
@@ -213,11 +191,7 @@ export const FeeDistributionsChart: FC = () => {
                 ))}
               </Bar>
               <Bar
-                dataKey={
-                  chartMode === "weekly"
-                    ? "weeklyDillAmount"
-                    : "totalDillAmount"
-                }
+                dataKey={chartMode === "weekly" ? "weeklyDillAmount" : "totalDillAmount"}
                 fill="#ebebeb"
               >
                 {dataSeries.map((point, index) => (

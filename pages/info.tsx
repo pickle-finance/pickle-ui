@@ -19,12 +19,7 @@ import { useTranslation } from "next-i18next";
 import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
 import { cardColor, pickleGreen, materialBlack } from "../util/constants";
-import {
-  getProtocolData,
-  getFarmData,
-  getPerformanceData,
-  getCoinData,
-} from "../util/api";
+import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "../util/api";
 import { powerPool, jars } from "../util/jars";
 import clsx from "clsx";
 
@@ -155,18 +150,10 @@ const PicklePerDayCell = (props: any) => {
   const { val, precision, apy } = props;
 
   return (
-    <Tooltip
-      title={
-        <span>{t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}</span>
-      }
-    >
+    <Tooltip title={<span>{t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}</span>}>
       <TableCell className={classes.farmTableCell}>
         <div className={clsx(classes.cardTitle, classes.cardContent)}>
-          <Avatar
-            variant="square"
-            src="./assets/pickle.png"
-            className={classes.emissionIcon}
-          />
+          <Avatar variant="square" src="./assets/pickle.png" className={classes.emissionIcon} />
           {val.toFixed(precision)} / day
         </div>
       </TableCell>
@@ -188,32 +175,21 @@ const ApyCell = (props: any) => {
 
   return (
     <TableCell className={classes.farmTableCell}>
-      <div className={clsx(classes.cardTitle, classes.cardContent)}>
-        {cellData}
-      </div>
+      <div className={clsx(classes.cardTitle, classes.cardContent)}>{cellData}</div>
     </TableCell>
   );
 };
 
 const TooltipAndApyCell = (props: any) => {
   const { t } = useTranslation("common");
-  const {
-    val,
-    frequency,
-    jarIndex,
-    farmIndex,
-    isFarm,
-    Ndays,
-    precision,
-  } = props;
+  const { val, frequency, jarIndex, farmIndex, isFarm, Ndays, precision } = props;
   const tooltipTitle = () => {
     return (
       <span>
         {t(frequency, {
-          percent: `${(
-            (isFarm ? val[farmIndex] : val[jarIndex]) /
-            (365 / Ndays)
-          ).toFixed(precision)}`,
+          percent: `${((isFarm ? val[farmIndex] : val[jarIndex]) / (365 / Ndays)).toFixed(
+            precision,
+          )}`,
         })}
       </span>
     );
@@ -226,9 +202,7 @@ const FarmRow = (props: any) => {
   const { t } = useTranslation("common");
 
   const { farm, item, jar, isFarm = true } = props;
-  const farmName = jarOptions.find(
-    (jar) => jar.toLowerCase() === farm.toLowerCase(),
-  );
+  const farmName = jarOptions.find((jar) => jar.toLowerCase() === farm.toLowerCase());
   const icon = `./assets/${farm.toLowerCase()}.png`;
   const picklePerDay = (1000 / item.valueBalance) * item.picklePerDay;
 
@@ -255,9 +229,7 @@ const FarmRow = (props: any) => {
           {`${getUSD(item.valueBalance)}`}
         </div>
       </TableCell>
-      {isFarm && (
-        <PicklePerDayCell apy={item.apy} val={picklePerDay} precision="3" />
-      )}
+      {isFarm && <PicklePerDayCell apy={item.apy} val={picklePerDay} precision="3" />}
       <TooltipAndApyCell
         val={jar}
         frequency="info.daily"
@@ -294,11 +266,7 @@ const SkeletonCell = () => {
   return (
     <TableCell>
       <Skeleton className={classes.skeletonRow}>
-        <Avatar
-          variant="square"
-          src={"./assets/pickle.png"}
-          className={classes.farmIcon}
-        />
+        <Avatar variant="square" src={"./assets/pickle.png"} className={classes.farmIcon} />
       </Skeleton>
     </TableCell>
   );
@@ -412,16 +380,14 @@ export default function Brining() {
 
   useEffect(() => {
     const updateProtocol = async () => setProtocolInfo(await getProtocolData());
-    const updateJars = async () =>
-      setJarInfo(await getPerformanceData(jarOptions));
+    const updateJars = async () => setJarInfo(await getPerformanceData(jarOptions));
     const updateFarms = async () => {
       const farms = await getFarmData();
       setPicklePerBlock(farms.picklePerBlock);
       delete farms.picklePerBlock;
       setFarmInfo(farms);
     };
-    const updatePickleData = async () =>
-      setPickleData(await getCoinData("pickle-finance"));
+    const updatePickleData = async () => setPickleData(await getCoinData("pickle-finance"));
     const updateInfo = async () => {
       updateProtocol();
       updateFarms();
@@ -443,15 +409,11 @@ export default function Brining() {
             <Card>
               <h2>{t("balances.totalValueLocked")}</h2>
               <DataPoint>
-                <span>
-                  {protocolInfo ? getUSD(protocolInfo.totalValue) : "--"}
-                </span>
+                <span>{protocolInfo ? getUSD(protocolInfo.totalValue) : "--"}</span>
               </DataPoint>
               <Card.Footer>
                 {protocolInfo
-                  ? `${t("info.jarValueLocked")}: ${getUSD(
-                      protocolInfo.jarValue,
-                    )}`
+                  ? `${t("info.jarValueLocked")}: ${getUSD(protocolInfo.jarValue)}`
                   : "--"}
               </Card.Footer>
             </Card>
@@ -459,24 +421,17 @@ export default function Brining() {
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>
-                <img
-                  src="/pickle.png"
-                  style={{ width: "24px", verticalAlign: `text-bottom` }}
-                />{" "}
+                <img src="/pickle.png" style={{ width: "24px", verticalAlign: `text-bottom` }} />{" "}
                 {t("info.picklePrice")}
               </h2>
               <DataPoint>
                 <span>
-                  {pickleData
-                    ? `$${pickleData.market_data.current_price.usd}`
-                    : undefined}
+                  {pickleData ? `$${pickleData.market_data.current_price.usd}` : undefined}
                 </span>
               </DataPoint>
               <Card.Footer>
                 {pickleData
-                  ? `${t("info.dailyVolume")}: ${getUSD(
-                      pickleData.market_data.total_volume.usd,
-                    )}`
+                  ? `${t("info.dailyVolume")}: ${getUSD(pickleData.market_data.total_volume.usd)}`
                   : undefined}
               </Card.Footer>
             </Card>
@@ -489,17 +444,11 @@ export default function Brining() {
             <TableBody>
               {farmInfo && jarInfo ? (
                 Object.keys(farmInfo)
-                  .sort(
-                    (a, b) => farmInfo[b].allocShare - farmInfo[a].allocShare,
-                  )
+                  .sort((a, b) => farmInfo[b].allocShare - farmInfo[a].allocShare)
                   .map((farm, i) => {
                     const item = farmInfo[farm];
-                    const jar = jarInfo.find(
-                      (jar: any) => jar.asset.toLowerCase() === farm,
-                    );
-                    return jar ? (
-                      <FarmRow key={farm} farm={farm} item={item} jar={jar} />
-                    ) : null;
+                    const jar = jarInfo.find((jar: any) => jar.asset.toLowerCase() === farm);
+                    return jar ? <FarmRow key={farm} farm={farm} item={item} jar={jar} /> : null;
                   })
               ) : (
                 <SkeletonChart length={8} />
@@ -521,9 +470,7 @@ export default function Brining() {
             <TableBody>
               {protocolInfo && farmInfo && jarInfo ? (
                 jarInfo
-                  .filter(
-                    (jar: any) => jar.asset.toLowerCase() !== "pickle-eth",
-                  )
+                  .filter((jar: any) => jar.asset.toLowerCase() !== "pickle-eth")
                   .sort((a: any, b: any) => {
                     const aBalance = protocolInfo[a.asset.toLowerCase()];
                     const bBalance = protocolInfo[b.asset.toLowerCase()];

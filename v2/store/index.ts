@@ -18,7 +18,7 @@ export const store = configureStore({
     user: userReducer,
     controls: controlsReducer,
     theme: themeReducer,
-    offchainVotes: voteReducer
+    offchainVotes: voteReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(listenerMiddleware.middleware),

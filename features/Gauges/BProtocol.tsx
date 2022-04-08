@@ -82,8 +82,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
   const plqtyStr = formatString(+formatEther(plqtyBalance));
   const pendingPLqtyStr = formatString(userPendingPLqty);
   const pendingLqtyStr = formatString(userPendingLqty);
-  const liquidationApy =
-    duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
+  const liquidationApy = duneData?.data?.get_result_by_result_id[0].data?.apr / 100;
 
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
     disabled: false,
@@ -101,23 +100,10 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
   useEffect(() => {
     const dStatus = getTransferStatus(BPAddresses.LUSD, BPAddresses.pBAMM);
     const wStatus = getTransferStatus(BPAddresses.pBAMM, BPAddresses.pBAMM);
-    const stakeStatus = getTransferStatus(
-      BPAddresses.pLQTY,
-      BPAddresses.LQTY_GAUGE,
-    );
+    const stakeStatus = getTransferStatus(BPAddresses.pLQTY, BPAddresses.LQTY_GAUGE);
 
-    setButtonStatus(
-      dStatus,
-      t("farms.depositing"),
-      t("farms.deposit"),
-      setDepositButton,
-    );
-    setButtonStatus(
-      wStatus,
-      t("farms.withdrawing"),
-      t("farms.withdraw"),
-      setWithdrawButton,
-    );
+    setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
+    setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
     setButtonStatus(
       stakeStatus,
       t("farms.staking"),
@@ -168,27 +154,16 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               <CenteredGrid xs={24} sm={8} md={3} lg={3}>
                 <Data isZero={depositedNum === 0}>
                   <Tooltip text={`${valueStr} LUSD + ${pendingPLqtyStr} pLQTY`}>
-                    $
-                    {formatString(
-                      (userValue + +pendingLqtyStr * prices?.lqty).toFixed(2),
-                    )}
-                    <img
-                      src="./question.svg"
-                      width="15px"
-                      style={{ marginLeft: 5 }}
-                    />
+                    ${formatString((userValue + +pendingLqtyStr * prices?.lqty).toFixed(2))}
+                    <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
                   </Tooltip>
                 </Data>
                 <Label>{t("balances.depositValue")}</Label>
               </CenteredGrid>
               <CenteredGrid xs={24} sm={12} md={5} lg={5}>
                 <Data>
-                  {lqtyApr.toFixed(2)}% lqty +{" "}
-                  {((liquidationApy * 0.8 * lqtyApr) / 2).toFixed(2)}%{" "}
-                  <a
-                    href="https://docs.liquity.org/faq/stability-pool-and-liquidations"
-                    target="_"
-                  >
+                  {lqtyApr.toFixed(2)}% lqty + {((liquidationApy * 0.8 * lqtyApr) / 2).toFixed(2)}%{" "}
+                  <a href="https://docs.liquity.org/faq/stability-pool-and-liquidations" target="_">
                     {t("farms.bProtocol.liquidation")}
                   </a>
                 </Data>
@@ -252,13 +227,11 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
               </Button>
             </Grid>
             <Grid xs={24} md={12}>
-              <div
-                style={{ display: "flex", justifyContent: "space-between" }}
-              ></div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}></div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.balance")}: {depositedStr} ({valueStr} LUSD +{" "}
-                  {pendingPLqtyStr} pLQTY)
+                  {t("balances.balance")}: {depositedStr} ({valueStr} LUSD + {pendingPLqtyStr}{" "}
+                  pLQTY)
                 </div>
                 <Link
                   color

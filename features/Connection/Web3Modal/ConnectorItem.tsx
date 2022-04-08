@@ -49,13 +49,7 @@ const LoaderContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const ConnectorItem: FC<ConnectorItemProps> = ({
-  icon,
-  title,
-  onClick,
-  loading,
-  disabled,
-}) => {
+const ConnectorItem: FC<ConnectorItemProps> = ({ icon, title, onClick, loading, disabled }) => {
   return (
     <StyledContainer onClick={onClick} disabled={loading || disabled}>
       {loading && (

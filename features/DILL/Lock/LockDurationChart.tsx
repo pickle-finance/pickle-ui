@@ -65,8 +65,8 @@ export const LockDurationChart: FC<Props> = ({ dillStats }) => {
       <div>
         <Trans i18nKey="dill.averageLockDuration">
           The average lock duration is currently
-          <span style={{ color: accentColor }}>{{ years }}</span> years (based
-          on {{ dill: formatNumber(dillSupply) }} DILL and
+          <span style={{ color: accentColor }}>{{ years }}</span> years (based on{" "}
+          {{ dill: formatNumber(dillSupply) }} DILL and
           {{ pickle: formatNumber(pickleLocked) }} PICKLEs locked).
         </Trans>
       </div>

@@ -1,8 +1,6 @@
 const withOpacityValue = (variable) => {
   return ({ opacityValue }) =>
-    opacityValue
-      ? `rgba(var(${variable}), ${opacityValue})`
-      : `rgb(var(${variable}))`;
+    opacityValue ? `rgba(var(${variable}), ${opacityValue})` : `rgb(var(${variable}))`;
 };
 
 module.exports = {

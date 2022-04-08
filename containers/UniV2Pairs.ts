@@ -105,8 +105,7 @@ function useUniV2Pairs() {
   const { prices } = Prices.useContainer();
 
   // don't return a function if it's not ready to be used
-  if (!multicallProvider || !prices)
-    return { getPairData: null, getPairDataPrefill: null };
+  if (!multicallProvider || !prices) return { getPairData: null, getPairDataPrefill: null };
 
   const getPairData = async (pairAddress: string) => {
     // setup contracts
@@ -115,11 +114,7 @@ function useUniV2Pairs() {
     const tokenB = new MulticallContract(b.address, erc20.abi);
     const pair = new MulticallContract(pairAddress, erc20.abi);
 
-    const [
-      numAInPairBN,
-      numBInPairBN,
-      totalSupplyBN,
-    ] = await multicallProvider?.all([
+    const [numAInPairBN, numBInPairBN, totalSupplyBN] = await multicallProvider?.all([
       tokenA.balanceOf(pairAddress),
       tokenB.balanceOf(pairAddress),
       pair.totalSupply(),
@@ -157,12 +152,8 @@ function useUniV2Pairs() {
     const { a, b } = PAIR_INFO[pairAddress];
 
     // get num of tokens
-    const numAInPair = parseFloat(
-      ethers.utils.formatUnits(numAInPairBN, a.decimals),
-    );
-    const numBInPair = parseFloat(
-      ethers.utils.formatUnits(numBInPairBN, b.decimals),
-    );
+    const numAInPair = parseFloat(ethers.utils.formatUnits(numAInPairBN, a.decimals));
+    const numBInPair = parseFloat(ethers.utils.formatUnits(numBInPairBN, b.decimals));
 
     // get prices
     const priceA = prices[a.priceId];

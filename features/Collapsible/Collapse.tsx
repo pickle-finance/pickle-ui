@@ -33,9 +33,7 @@ const Collapse: React.FC<React.PropsWithChildren<CollapseProps>> = ({
   ...props
 }) => {
   const theme = useTheme();
-  const [visible, setVisible, visibleRef] = useCurrentState<boolean>(
-    initialVisible,
-  );
+  const [visible, setVisible, visibleRef] = useCurrentState<boolean>(initialVisible);
   const { values, updateValues } = useCollapseContext();
 
   useEffect(() => {
@@ -51,10 +49,7 @@ const Collapse: React.FC<React.PropsWithChildren<CollapseProps>> = ({
   };
 
   return (
-    <div
-      className={`collapse ${shadow ? "shadow" : ""} ${className}`}
-      {...props}
-    >
+    <div className={`collapse ${shadow ? "shadow" : ""} ${className}`} {...props}>
       <div className="view" role="button" onClick={clickHandler}>
         <div className="preview">
           {preview}

@@ -1,8 +1,6 @@
 [
   {
-    "inputs": [
-      { "internalType": "address", "name": "coreAddress", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "coreAddress", "type": "address" }],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -368,9 +366,7 @@
   {
     "inputs": [],
     "name": "TRIBE",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -413,9 +409,7 @@
   {
     "inputs": [],
     "name": "core",
-    "outputs": [
-      { "internalType": "contract ICore", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract ICore", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -458,9 +452,7 @@
   {
     "inputs": [],
     "name": "fei",
-    "outputs": [
-      { "internalType": "contract IFei", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IFei", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -497,9 +489,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
     "name": "governorWithdrawTribe",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -526,27 +516,21 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_admin", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_admin", "type": "address" }],
     "name": "isContractAdmin",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "lockPool",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256[]", "name": "pids", "type": "uint256[]" }
-    ],
+    "inputs": [{ "internalType": "uint256[]", "name": "pids", "type": "uint256[]" }],
     "name": "massUpdatePools",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -619,9 +603,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "resetRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -640,9 +622,7 @@
   {
     "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "rewarder",
-    "outputs": [
-      { "internalType": "contract IRewarder", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IRewarder", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -676,9 +656,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newCore", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newCore", "type": "address" }],
     "name": "setCore",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -687,9 +665,7 @@
   {
     "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "stakedToken",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -703,9 +679,7 @@
   {
     "inputs": [],
     "name": "tribe",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -724,9 +698,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "unlockPool",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -740,9 +712,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "newBlockReward", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "newBlockReward", "type": "uint256" }],
     "name": "updateBlockReward",
     "outputs": [],
     "stateMutability": "nonpayable",

@@ -14,11 +14,7 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal }) => {
   const { t } = useTranslation("common");
 
   return (
-    <Modal
-      isOpen={isOpen}
-      closeModal={closeModal}
-      title={t("v2.dill.increaseLockDate")}
-    >
+    <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.dill.increaseLockDate")}>
       <div className="mb-6">
         <LockTimeOptions />
       </div>

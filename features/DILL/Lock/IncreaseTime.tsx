@@ -32,11 +32,7 @@ export const IncreaseTime: FC<{
 }> = ({ dillStats }) => {
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
   const { setButtonStatus } = useButtonStatus();
   const { t } = useTranslation("common");
 
@@ -52,9 +48,7 @@ export const IncreaseTime: FC<{
   } else {
     dateAfter = roundDateByDillEpoch(getDayOffset(new Date(), 14));
   }
-  const dateBefore = roundDateByDillEpoch(
-    getDayOffset(new Date(), 365 * 4 - 1),
-  );
+  const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4 - 1));
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -70,12 +64,7 @@ export const IncreaseTime: FC<{
     if (pickle && dill && address) {
       const extendStatus = getTransferStatus("extend", dill.address);
 
-      setButtonStatus(
-        extendStatus,
-        t("dill.extending"),
-        t("dill.extendLockTime"),
-        setExtendButton,
-      );
+      setButtonStatus(extendStatus, t("dill.extending"), t("dill.extendLockTime"), setExtendButton);
     }
   }, [blockNum, transferStatus]);
 
@@ -98,8 +87,7 @@ export const IncreaseTime: FC<{
     return (null as unknown) as Date;
   };
 
-  const unlockTimeRounded =
-    Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
+  const unlockTimeRounded = Math.floor(getEpochSecondForDay(unlockTime) / WEEK) * WEEK;
 
   const maxDateRounded = new Date(
     Math.floor(getEpochSecondForDay(dateBefore) / WEEK) * WEEK * 1000,
@@ -117,10 +105,7 @@ export const IncreaseTime: FC<{
         </Trans>
       );
     } else {
-      const years =
-        Math.round(
-          ((+unlockTime - +lockEndDate) / 365 / 1000 / 3600 / 24) * 100,
-        ) / 100;
+      const years = Math.round(((+unlockTime - +lockEndDate) / 365 / 1000 / 3600 / 24) * 100) / 100;
       return (
         <Trans i18nKey="time.year" count={years}>
           {years} years
@@ -137,10 +122,7 @@ export const IncreaseTime: FC<{
         </Trans>
       );
     } else {
-      const years =
-        Math.round(
-          ((+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24) * 100,
-        ) / 100;
+      const years = Math.round(((+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24) * 100) / 100;
       return (
         <>
           <Trans i18nKey="time.year" count={years}>
@@ -170,8 +152,7 @@ export const IncreaseTime: FC<{
   }, [dateRadioValue]);
 
   useEffect(() => {
-    if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(1)))
-      setDateRadioValue(1);
+    if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(1))) setDateRadioValue(1);
     else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(2)))
       setDateRadioValue(2);
     else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(3)))
@@ -190,9 +171,7 @@ export const IncreaseTime: FC<{
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             {t("dill.extendLockBy")}:{" "}
-            <span style={isInvalidLockDate ? { color: "red" } : {}}>
-              {displayLockExtend()}
-            </span>
+            <span style={isInvalidLockDate ? { color: "red" } : {}}>{displayLockExtend()}</span>
           </div>
           <Link
             color
@@ -207,9 +186,7 @@ export const IncreaseTime: FC<{
         </div>
         <div style={{ marginTop: 5 }}>
           {t("dill.lockExpiration")}:{" "}
-          <span style={isInvalidLockDate ? { color: "red" } : {}}>
-            {displayTotalLock()}
-          </span>
+          <span style={isInvalidLockDate ? { color: "red" } : {}}>{displayTotalLock()}</span>
         </div>
         <Spacer y={0.5} />
         <DayPicker
@@ -258,8 +235,7 @@ export const IncreaseTime: FC<{
               2 years
             </Trans>
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, 2 * DAY * 365).toFixed(4)}{" "}
-              DILL
+              1 PICKLE = {estimateDillForPeriod(1, 2 * DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value={4} checked={dateRadioValue === 4}>
@@ -267,8 +243,7 @@ export const IncreaseTime: FC<{
               4 years
             </Trans>
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}
-              DILL
+              1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
         </Radio.Group>

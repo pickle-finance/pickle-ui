@@ -18,31 +18,18 @@ export interface MC2Apy {
 }
 
 export const useMC2 = () => {
-  const {
-    signer,
-    provider,
-    address,
-    multicallProvider,
-  } = Connection.useContainer();
+  const { signer, provider, address, multicallProvider } = Connection.useContainer();
   const { masterchefV2, pickleSushiRewarder } = Contracts.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
   const { prices } = Prices.useContainer();
   const { getPairData } = SushiPairs.useContainer();
-  const [slpBalance, setSlpBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
+  const [slpBalance, setSlpBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [pricePerToken, setPricePerToken] = useState<number>(0);
   const [userValue, setUserValue] = useState<number>(0);
   const [apy, setApy] = useState<MC2Apy>();
-  const [pendingPickle, setPendingPickle] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
-  const [pendingSushi, setPendingSushi] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
-  const [slpStaked, setSlpStaked] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
+  const [pendingPickle, setPendingPickle] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+  const [pendingSushi, setPendingSushi] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+  const [slpStaked, setSlpStaked] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [tvl, setTvl] = useState<number>(0);
 
   const updateData = async () => {
@@ -89,9 +76,7 @@ export const useMC2 = () => {
       const totalSupply = parseFloat(formatEther(totalSupplyBN));
       setTvl(pricePerToken * totalSupply);
       const sushiRewardsPerBlock =
-        (parseFloat(formatEther(sushiPerBlockBN)) *
-          0.9 *
-          poolInfo.allocPoint.toNumber()) /
+        (parseFloat(formatEther(sushiPerBlockBN)) * 0.9 * poolInfo.allocPoint.toNumber()) /
         totalAllocPointBN.toNumber();
 
       const sushiRewardsPerYear =
@@ -117,10 +102,7 @@ export const useMC2 = () => {
       setApy(APY);
 
       // Pending Rewards
-      const harvestablePickle = await pickleSushiRewarder.pendingToken(
-        PID,
-        address,
-      );
+      const harvestablePickle = await pickleSushiRewarder.pendingToken(PID, address);
       const harvestableSushi = await masterchefV2.pendingSushi(PID, address);
       setPendingPickle(harvestablePickle);
       setPendingSushi(harvestableSushi);

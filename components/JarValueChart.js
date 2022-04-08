@@ -64,8 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const formatValue = (value) =>
-  new Intl.NumberFormat("en").format(value.toFixed(2));
+const formatValue = (value) => new Intl.NumberFormat("en").format(value.toFixed(2));
 const formatLabel = (label) => dayjs(label).format("lll");
 const formatY = (value) => {
   if (value > 1000000) {
@@ -131,12 +130,7 @@ export default function JarValueChart(props) {
       {data.length > 0 ? (
         <>
           <div className={classes.chartHeader}>
-            <Avatar
-              variant="square"
-              alt={asset}
-              src={icon}
-              className={classes.avatar}
-            />
+            <Avatar variant="square" alt={asset} src={icon} className={classes.avatar} />
             <Typography variant="h6" className={classes.chartHeader}>
               {name ? name : asset}: {value}
             </Typography>
@@ -145,11 +139,7 @@ export default function JarValueChart(props) {
       ) : (
         <>
           <div className={classes.chartHeaderSkeleton}>
-            <Skeleton
-              variant="circle"
-              animation="wave"
-              className={classes.chartAvatarSkeleton}
-            />
+            <Skeleton variant="circle" animation="wave" className={classes.chartAvatarSkeleton} />
             <Skeleton
               variant="rect"
               animation="wave"
@@ -168,17 +158,8 @@ export default function JarValueChart(props) {
               data={data}
               margin={{ top: 15, right: 10, left: 0, bottom: 0 }}
             >
-              <Area
-                type="monotone"
-                dataKey="y"
-                stroke={pickleNeon}
-                fill={graphFill}
-              />
-              <YAxis
-                tickFormatter={formatY}
-                domain={[0, "auto"]}
-                tick={{ fill: materialBlack }}
-              />
+              <Area type="monotone" dataKey="y" stroke={pickleNeon} fill={graphFill} />
+              <YAxis tickFormatter={formatY} domain={[0, "auto"]} tick={{ fill: materialBlack }} />
               <XAxis
                 dataKey="x"
                 domain={["dataMin", "dataMax"]}
@@ -197,12 +178,7 @@ export default function JarValueChart(props) {
             </AreaChart>
           </>
         ) : (
-          <Skeleton
-            variant="rect"
-            animation="wave"
-            width={width}
-            height={300}
-          />
+          <Skeleton variant="rect" animation="wave" width={width} height={300} />
         )}
       </Paper>
     </>

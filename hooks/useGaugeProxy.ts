@@ -9,9 +9,7 @@ export enum TransactionStatus {
 
 export const useGaugeProxy = () => {
   const { gaugeProxy } = Contracts.useContainer();
-  const [status, setStatus] = useState<TransactionStatus>(
-    TransactionStatus.Confirmed,
-  );
+  const [status, setStatus] = useState<TransactionStatus>(TransactionStatus.Confirmed);
 
   const vote = async (tokens: string[], weights: number[]) => {
     if (!gaugeProxy) return;

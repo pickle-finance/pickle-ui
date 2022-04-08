@@ -537,9 +537,7 @@
   {
     "inputs": [],
     "name": "activePool",
-    "outputs": [
-      { "internalType": "contract IActivePool", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IActivePool", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -586,9 +584,7 @@
   {
     "inputs": [],
     "name": "defaultPool",
-    "outputs": [
-      { "internalType": "contract IDefaultPool", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IDefaultPool", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -666,36 +662,28 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_frontEnd", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_frontEnd", "type": "address" }],
     "name": "getCompoundedFrontEndStake",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_depositor", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_depositor", "type": "address" }],
     "name": "getCompoundedLUSDDeposit",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_depositor", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_depositor", "type": "address" }],
     "name": "getDepositorETHGain",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_depositor", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_depositor", "type": "address" }],
     "name": "getDepositorLQTYGain",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -735,9 +723,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_frontEnd", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_frontEnd", "type": "address" }],
     "name": "getFrontEndLQTYGain",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -781,9 +767,7 @@
   {
     "inputs": [],
     "name": "lusdToken",
-    "outputs": [
-      { "internalType": "contract ILUSDToken", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract ILUSDToken", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -807,9 +791,7 @@
   {
     "inputs": [],
     "name": "priceFeed",
-    "outputs": [
-      { "internalType": "contract IPriceFeed", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IPriceFeed", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -824,9 +806,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_kickbackRate", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_kickbackRate", "type": "uint256" }],
     "name": "registerFrontEnd",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -912,9 +892,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }],
     "name": "withdrawFromSP",
     "outputs": [],
     "stateMutability": "nonpayable",

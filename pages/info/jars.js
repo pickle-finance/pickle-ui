@@ -5,13 +5,7 @@ import { Page } from "@geist-ui/react";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import {
-  crvJars,
-  sushiJars,
-  uniJars,
-  polyJars,
-  arbJars,
-} from "../../util/jars";
+import { crvJars, sushiJars, uniJars, polyJars, arbJars } from "../../util/jars";
 import { getAllJarsChart, getProtocolData } from "../../util/api";
 import { materialBlack } from "../../util/constants";
 import JarValueChart from "../../components/JarValueChart";
@@ -47,13 +41,7 @@ export default function Dashboard() {
     uniJars: chartSkeletons(uniJars),
     polyJars: chartSkeletons(polyJars),
     arbJars: chartSkeletons(arbJars),
-    allJars: chartSkeletons([
-      ...crvJars,
-      ...uniJars,
-      ...sushiJars,
-      ...polyJars,
-      ...arbJars,
-    ]),
+    allJars: chartSkeletons([...crvJars, ...uniJars, ...sushiJars, ...polyJars, ...arbJars]),
   });
 
   useEffect(() => {
@@ -72,9 +60,7 @@ export default function Dashboard() {
 
       const filterJars = (jarsList, allJars) => {
         const jarsListLower = jarsList.map((jar) => jar.toLowerCase());
-        const filtered = allJars.filter((jar) =>
-          jarsListLower.includes(jar.asset.toLowerCase()),
-        );
+        const filtered = allJars.filter((jar) => jarsListLower.includes(jar.asset.toLowerCase()));
         return filtered;
       };
 
@@ -149,11 +135,7 @@ export default function Dashboard() {
             <JarValueChart jar={tvlJar} />
           </Grid>
 
-          <Grid
-            item
-            xs={12}
-            className={clsx(classes.section, classes.separator)}
-          >
+          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>{t("info.polyJars")}</h1>
           </Grid>
           {dashboardData.polyJars.map((jar) => {
@@ -164,11 +146,7 @@ export default function Dashboard() {
             );
           })}
 
-          <Grid
-            item
-            xs={12}
-            className={clsx(classes.section, classes.separator)}
-          >
+          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>{t("info.arbJars")}</h1>
           </Grid>
           {dashboardData.arbJars.map((jar) => {
@@ -179,11 +157,7 @@ export default function Dashboard() {
             );
           })}
 
-          <Grid
-            item
-            xs={12}
-            className={clsx(classes.section, classes.separator)}
-          >
+          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>pJar 0</h1>
           </Grid>
           {dashboardData.crvJars.map((jar) => {
@@ -193,22 +167,16 @@ export default function Dashboard() {
               </Grid>
             );
           })}
-          <Grid
-            item
-            xs={12}
-            className={clsx(classes.section, classes.separator)}
-          >
+          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>pJar 0.99</h1>
           </Grid>
-          {dashboardData.sushiJars
-            .concat(dashboardData.uniJars)
-            .map((jar, i) => {
-              return (
-                <Grid item xs={12} sm={6} key={i}>
-                  <JarValueChart jar={jar} />
-                </Grid>
-              );
-            })}
+          {dashboardData.sushiJars.concat(dashboardData.uniJars).map((jar, i) => {
+            return (
+              <Grid item xs={12} sm={6} key={i}>
+                <JarValueChart jar={jar} />
+              </Grid>
+            );
+          })}
         </Grid>
         <Footer />
       </Page>

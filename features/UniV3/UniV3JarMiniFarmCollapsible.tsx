@@ -3,15 +3,7 @@ import styled from "styled-components";
 import { Trans, useTranslation } from "next-i18next";
 
 import React, { useState, FC, useEffect, ReactNode } from "react";
-import {
-  Button,
-  Link,
-  Input,
-  Grid,
-  Spacer,
-  Tooltip,
-  Select,
-} from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";
@@ -138,9 +130,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   const stakedNum = parseFloat(formatEther(staked));
 
   const totalNum = parseFloat(
-    formatEther(
-      (deposited || BigNumber.from("0")).add(staked || BigNumber.from("0)")),
-    ),
+    formatEther((deposited || BigNumber.from("0")).add(staked || BigNumber.from("0)"))),
   );
 
   const valueStr = (usdPerPToken * totalNum).toLocaleString(undefined, {
@@ -175,9 +165,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
 
   const harvestableNum = parseFloat(formatEther(harvestable || 0));
 
-  const harvestableStr = parseFloat(
-    formatEther(harvestable || 0),
-  ).toLocaleString();
+  const harvestableStr = parseFloat(formatEther(harvestable || 0)).toLocaleString();
 
   const balanceNum = parseFloat(formatEther(balance));
 
@@ -198,9 +186,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     text: t("farms.harevest"),
   });
 
-  const [depositStakeButton, setDepositStakeButton] = useState<string | null>(
-    null,
-  );
+  const [depositStakeButton, setDepositStakeButton] = useState<string | null>(null);
   const [exitButton, setExitButton] = useState<string | null>(null);
   const [useEth, setUseEth] = useState<boolean>(false);
 
@@ -269,10 +255,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
         const Token = jar?.attach(farmDepositToken.address).connect(signer);
         if (!approved) {
           setDepositStakeButton(t("farms.approving"));
-          const tx = await Token.approve(
-            minichef.address,
-            ethers.constants.MaxUint256,
-          );
+          const tx = await Token.approve(minichef.address, ethers.constants.MaxUint256);
           await tx.wait();
         }
         setDepositStakeButton(t("farms.staking"));
@@ -294,9 +277,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
   // Necessary because querying pToken balance intros a race condition
   // TODO use event to get pTokens returned to user
   const getStakeableBalance = (res: ethers.ContractReceipt) => {
-    const pTokenAmount = res.logs.filter(
-      (x) => x.address === farmDepositToken.address,
-    )[0]?.data;
+    const pTokenAmount = res.logs.filter((x) => x.address === farmDepositToken.address)[0]?.data;
     return BigNumber.from(pTokenAmount);
   };
 
@@ -305,16 +286,10 @@ export const UniV3JarMiniFarmCollapsible: FC<{
       try {
         setIsExitBatch(true);
         setExitButton(t("farms.unstakingFromFarm"));
-        const exitTx = await minichef.withdrawAndHarvest(
-          poolIndex,
-          staked,
-          address,
-        );
+        const exitTx = await minichef.withdrawAndHarvest(poolIndex, staked, address);
         await exitTx.wait();
         setExitButton(t("farms.withdrawingFromJar"));
-        const withdrawTx = await jarContract
-          .connect(signer)
-          .withdrawAll({ gasLimit: 600000 });
+        const withdrawTx = await jarContract.connect(signer).withdrawAll({ gasLimit: 600000 });
         await withdrawTx.wait();
         await sleep(10000);
         setExitButton(null);
@@ -327,42 +302,19 @@ export const UniV3JarMiniFarmCollapsible: FC<{
       }
     }
   };
-  const convertDecimals = (num: string, decimals: number) =>
-    ethers.utils.parseUnits(num, decimals);
+  const convertDecimals = (num: string, decimals: number) => ethers.utils.parseUnits(num, decimals);
 
   useEffect(() => {
     if (jarData && !isExitBatch) {
-      const dStatus = getTransferStatus(
-        depositToken.address,
-        jarContract.address,
-      );
-      const wStatus = getTransferStatus(
-        jarContract.address,
-        jarContract.address,
-      );
+      const dStatus = getTransferStatus(depositToken.address, jarContract.address);
+      const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
-      setButtonStatus(
-        dStatus,
-        t("farms.depositing"),
-        t("farms.deposit"),
-        setDepositButton,
-      );
-      setButtonStatus(
-        wStatus,
-        t("farms.withdrawing"),
-        t("farms.withdraw"),
-        setWithdrawButton,
-      );
+      setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
+      setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
     }
     if (minichef && !isExitBatch) {
-      const stakeStatus = getTransferStatus(
-        farmDepositToken.address,
-        minichef.address,
-      );
-      const unstakeStatus = getTransferStatus(
-        minichef.address,
-        farmDepositToken.address,
-      );
+      const stakeStatus = getTransferStatus(farmDepositToken.address, minichef.address);
+      const unstakeStatus = getTransferStatus(minichef.address, farmDepositToken.address);
       const harvestStatus = getTransferStatus(minichef.address, "harvest");
       const exitStatus = getTransferStatus(minichef.address, "exit");
 
@@ -372,18 +324,8 @@ export const UniV3JarMiniFarmCollapsible: FC<{
         t("farms.stakeUnstaked", { amount: depositedStr }),
         setStakeButton,
       );
-      setButtonStatus(
-        unstakeStatus,
-        t("farms.unstaking"),
-        t("farms.unstake"),
-        setUnstakeButton,
-      );
-      setButtonStatus(
-        harvestStatus,
-        t("farms.harvesting"),
-        t("farms.harvest"),
-        setHarvestButton,
-      );
+      setButtonStatus(unstakeStatus, t("farms.unstaking"), t("farms.unstake"), setUnstakeButton);
+      setButtonStatus(harvestStatus, t("farms.harvesting"), t("farms.harvest"), setHarvestButton);
     }
   }, [erc20TransferStatuses, jarData, tokenBalances, blockNum, address]);
   const { erc20, minichef, jar } = Contracts.useContainer();
@@ -419,19 +361,14 @@ export const UniV3JarMiniFarmCollapsible: FC<{
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{name}</div>
-              <a
-                href={depositTokenLink}
-                target="_"
-                style={{ fontSize: `1rem` }}
-              >
+              <a href={depositTokenLink} target="_" style={{ fontSize: `1rem` }}>
                 {depositTokenName}
               </a>
             </div>
           </JarName>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
             <Data isZero={harvestableNum === 0}>
-              {harvestableStr}{" "}
-              {Boolean(harvestableNum) && <MiniIcon source={"/pickle.png"} />}
+              {harvestableStr} {Boolean(harvestableNum) && <MiniIcon source={"/pickle.png"} />}
             </Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
@@ -446,11 +383,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {totalAPY.toFixed(2) + "%" || "--"}
               </Tooltip>
-              <img
-                src="./question.svg"
-                width="15px"
-                style={{ marginLeft: 5 }}
-              />
+              <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>
@@ -465,10 +398,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid
-          xs={24}
-          md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}
-        >
+        <Grid xs={24} md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}>
           <TokenInput
             token={token0}
             otherToken={token1}
@@ -525,11 +455,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
           </Grid.Container>
         </Grid>
         {depositedNum !== 0 && (!isEntryBatch || stakedNum) && (
-          <Grid
-            xs={24}
-            md={12}
-            style={{ display: "flex", flexDirection: "column" }}
-          >
+          <Grid xs={24} md={12} style={{ display: "flex", flexDirection: "column" }}>
             <div
               style={{
                 display: "flex",
@@ -537,11 +463,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                 marginTop: "auto",
               }}
             >
-              <div>
-                {`${t(
-                  "balances.balance",
-                )}: ${depositedStr} p${depositTokenName}`}
-              </div>
+              <div>{`${t("balances.balance")}: ${depositedStr} p${depositTokenName}`}</div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
@@ -579,11 +501,9 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                     token: jarContract.address,
                     recipient: jarContract.address,
                     transferCallback: async () => {
-                      return jarContract
-                        .connect(signer)
-                        .withdraw(convertDecimals(withdrawAmount), {
-                          gasLimit: 600000,
-                        });
+                      return jarContract.connect(signer).withdraw(convertDecimals(withdrawAmount), {
+                        gasLimit: 600000,
+                      });
                     },
                     approval: false,
                   });
@@ -600,10 +520,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
       {Boolean(depositedNum || stakedNum) && (
         <Grid.Container gap={2}>
           {depositedNum && !isExitBatch && !isEntryBatch && (
-            <Grid
-              xs={24}
-              md={(depositedNum && !stakedNum) || isEntryBatch ? 24 : 12}
-            >
+            <Grid xs={24} md={(depositedNum && !stakedNum) || isEntryBatch ? 24 : 12}>
               <Spacer y={1.2} />
               <Button
                 disabled={stakeButton.disabled}
@@ -614,11 +531,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
                       recipient: minichef.address,
                       approvalAmountRequired: farmBalance,
                       transferCallback: async () => {
-                        return minichef.deposit(
-                          poolIndex,
-                          farmBalance,
-                          address,
-                        );
+                        return minichef.deposit(poolIndex, farmBalance, address);
                       },
                     });
                   }
@@ -632,11 +545,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
           {Boolean(stakedNum) && (
             <Grid
               xs={24}
-              md={
-                (!depositedNum || isEntryBatch || isExitBatch) && stakedNum
-                  ? 24
-                  : 12
-              }
+              md={(!depositedNum || isEntryBatch || isExitBatch) && stakedNum ? 24 : 12}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
@@ -731,11 +640,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
         {Boolean(stakedNum || isExitBatch) && (
           <>
             <Grid xs={24} md={24}>
-              <Button
-                disabled={exitButton || isExitBatch}
-                onClick={exit}
-                style={{ width: "100%" }}
-              >
+              <Button disabled={exitButton || isExitBatch} onClick={exit} style={{ width: "100%" }}>
                 {exitButton || t("farms.harvestAndExit")}
               </Button>
             </Grid>

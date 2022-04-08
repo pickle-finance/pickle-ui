@@ -35,21 +35,13 @@ export const CalcCollapsible: FC<{
   const gauges = gaugeData?.filter((x) => true);
 
   const handleSelect = async (depositToken: string) => {
-    const selectedGauge = gauges?.find(
-      (x) => x.depositTokenName === depositToken,
-    );
+    const selectedGauge = gauges?.find((x) => x.depositTokenName === depositToken);
 
     if (selectedGauge) {
       const isPUsdcJar = isPUsdcToken(selectedGauge.depositToken.address);
 
-      const balance = +formatEther(
-        selectedGauge.balance.add(selectedGauge.staked),
-      );
-      const balanceUSD = (
-        balance *
-        selectedGauge.usdPerToken *
-        (isPUsdcJar ? 1e12 : 1)
-      ).toFixed(2);
+      const balance = +formatEther(selectedGauge.balance.add(selectedGauge.staked));
+      const balanceUSD = (balance * selectedGauge.usdPerToken * (isPUsdcJar ? 1e12 : 1)).toFixed(2);
 
       setBalance(balanceUSD);
       setTotalBalance(
@@ -71,10 +63,8 @@ export const CalcCollapsible: FC<{
     const _baseBalance = +balance || 0;
     const _derived = _baseBalance * 0.4;
     const _adjusted = +totalBalance * dillRatio * 0.6;
-    const boostFactor =
-      Math.min(_baseBalance, _derived + _adjusted) / (_baseBalance * 0.4);
-    const dillRequired =
-      ((_baseBalance - _derived) * dillSupplyNum) / (+totalBalance * 0.6);
+    const boostFactor = Math.min(_baseBalance, _derived + _adjusted) / (_baseBalance * 0.4);
+    const dillRequired = ((_baseBalance - _derived) * dillSupplyNum) / (+totalBalance * 0.6);
     setBoostFactor(boostFactor);
     setDillRequired(dillRequired);
   };
@@ -89,15 +79,11 @@ export const CalcCollapsible: FC<{
     }
     const depositTokenAddr: string = gauge.depositToken.address.toLowerCase();
     let val = gauge.depositTokenName;
-    const findFarm = votable.find(
-      (x) => x.depositToken.addr.toLowerCase() === depositTokenAddr,
-    );
+    const findFarm = votable.find((x) => x.depositToken.addr.toLowerCase() === depositTokenAddr);
     if (findFarm !== undefined) {
       val = val + " (" + findFarm.id + ")";
     } else {
-      const findJar = votable.find(
-        (x) => x.contract.toLowerCase() === depositTokenAddr,
-      );
+      const findJar = votable.find((x) => x.contract.toLowerCase() === depositTokenAddr);
       if (findJar !== undefined) {
         val = val + " (" + findJar.id + ")";
       }
@@ -175,11 +161,7 @@ export const CalcCollapsible: FC<{
             size="large"
           />
           <Spacer />
-          <Button
-            disabled={false}
-            onClick={calculateBoost}
-            style={{ width: "100%" }}
-          >
+          <Button disabled={false} onClick={calculateBoost} style={{ width: "100%" }}>
             {t("dill.calculate")}
           </Button>
         </Grid>
@@ -189,8 +171,7 @@ export const CalcCollapsible: FC<{
           </div>
           <Spacer y={0.5} />
           <div>
-            {t("dill.dillRequired")}:{" "}
-            <strong>{dillRequired?.toFixed(3) || null}</strong>
+            {t("dill.dillRequired")}: <strong>{dillRequired?.toFixed(3) || null}</strong>
           </div>
           <Spacer y={0.5} />
           <div>

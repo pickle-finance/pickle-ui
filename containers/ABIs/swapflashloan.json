@@ -362,13 +362,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
     "name": "calculateRemoveLiquidity",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -443,9 +439,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "index", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "index", "type": "uint256" }],
     "name": "getAdminBalance",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -454,9 +448,7 @@
   {
     "inputs": [{ "internalType": "uint8", "name": "index", "type": "uint8" }],
     "name": "getToken",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -468,9 +460,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "tokenAddress", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "tokenAddress", "type": "address" }],
     "name": "getTokenIndex",
     "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
     "stateMutability": "view",
@@ -556,9 +546,7 @@
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
     "name": "removeLiquidity",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -593,9 +581,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "newAdminFee", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "newAdminFee", "type": "uint256" }],
     "name": "setAdminFee",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -620,9 +606,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "newSwapFee", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "newSwapFee", "type": "uint256" }],
     "name": "setSwapFee",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -668,9 +652,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",

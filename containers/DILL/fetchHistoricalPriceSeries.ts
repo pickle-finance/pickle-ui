@@ -26,17 +26,12 @@ export const fetchHistoricalPriceSeries = async ({ from }: Options) => {
    * resulting in a much smaller payload.
    */
   const fromDate =
-    getDayDiff(from, toDate) > 90
-      ? from
-      : new Date(toDate.getTime() - 91 * 24 * 60 * 60 * 1000);
-  const response: Payload = await coinGecko.coins.fetchMarketChartRange(
-    "pickle-finance",
-    {
-      vs_currency: "usd",
-      from: Math.round(fromDate.getTime() / 1000),
-      to: Math.round(toDate.getTime() / 1000),
-    },
-  );
+    getDayDiff(from, toDate) > 90 ? from : new Date(toDate.getTime() - 91 * 24 * 60 * 60 * 1000);
+  const response: Payload = await coinGecko.coins.fetchMarketChartRange("pickle-finance", {
+    vs_currency: "usd",
+    from: Math.round(fromDate.getTime() / 1000),
+    to: Math.round(toDate.getTime() / 1000),
+  });
 
   return response.data.prices;
 };

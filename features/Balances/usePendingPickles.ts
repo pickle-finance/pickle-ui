@@ -12,22 +12,16 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
   const { minichef } = Contracts.useContainer();
   const { gaugeData } = UserGauges.useContainer();
   const [pendingPickles, setPendingPickles] = useState<number | null>(null);
-  const [pendingPicklesMatic, setPendingPicklesMatic] = useState<number | null>(
-    null,
-  );
+  const [pendingPicklesMatic, setPendingPicklesMatic] = useState<number | null>(null);
   const dillStats = Dill.useContainer();
 
   const getData = async () => {
     if (address && gaugeData && chainName === ChainNetwork.Ethereum && dillStats) {
       const totalPendingPickles =
         gaugeData.reduce(
-          (a, b) =>
-            a + parseFloat(ethers.utils.formatEther(b.harvestable || 0)),
+          (a, b) => a + parseFloat(ethers.utils.formatEther(b.harvestable || 0)),
           0,
-        ) +
-        (dillStats.userClaimable
-          ? parseFloat(formatEther(dillStats.userClaimable))
-          : 0);
+        ) + (dillStats.userClaimable ? parseFloat(formatEther(dillStats.userClaimable)) : 0);
 
       setPendingPickles(totalPendingPickles);
     }
@@ -41,9 +35,7 @@ export const usePendingPickles = (): { pendingPickles: number | null } => {
       const poolLength = poolLengthBN.toNumber();
 
       // create array of promises, one for each pool
-      const promises: Array<Promise<BigNumber>> = Array(
-        parseInt(poolLength.toString()),
-      )
+      const promises: Array<Promise<BigNumber>> = Array(parseInt(poolLength.toString()))
         .fill(0)
         .map((_, poolIndex) => minichef.pendingPickle(poolIndex, address));
 

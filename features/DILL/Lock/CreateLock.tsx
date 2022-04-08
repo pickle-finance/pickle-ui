@@ -12,11 +12,7 @@ import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { DayPicker } from "../../../components/DayPicker";
 import { InputProps } from "@geist-ui/react/dist/input/input";
 import { UseDillOutput } from "../../../containers/Dill";
-import {
-  getDayOffset,
-  getEpochSecondForDay,
-  getWeekDiff,
-} from "../../../util/date";
+import { getDayOffset, getEpochSecondForDay, getWeekDiff } from "../../../util/date";
 import {
   estimateDillForDate,
   estimateDillForPeriod,
@@ -43,11 +39,7 @@ export const CreateLock: FC<{
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
 
   const [lockButton, setLockButton] = useState<ButtonStatus>({
     disabled: false,
@@ -56,9 +48,7 @@ export const CreateLock: FC<{
   const [dateRadioValue, setDateRadioValue] = useState<number | undefined>(1);
 
   const dateAfter = roundDateByDillEpoch(getDayOffset(new Date(), 14));
-  const dateBefore = roundDateByDillEpoch(
-    getDayOffset(new Date(), 365 * 4 - 1),
-  );
+  const dateBefore = roundDateByDillEpoch(getDayOffset(new Date(), 365 * 4 - 1));
 
   const [unlockTime, setUnlockTime] = useState(dateAfter);
 
@@ -95,10 +85,7 @@ export const CreateLock: FC<{
         </Trans>
       );
     } else {
-      const years =
-        Math.round(
-          ((+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24) * 100,
-        ) / 100;
+      const years = Math.round(((+unlockTime - +new Date()) / 365 / 1000 / 3600 / 24) * 100) / 100;
       return (
         <Trans i18nKey="time.year" count={years}>
           {years} years
@@ -147,8 +134,7 @@ export const CreateLock: FC<{
   }, [dateRadioValue]);
 
   useEffect(() => {
-    if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(1)))
-      setDateRadioValue(1);
+    if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(1))) setDateRadioValue(1);
     else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(2)))
       setDateRadioValue(2);
     else if (unlockTimeRounded === roundDateByDillEpochSeconds(getLockTime(3)))
@@ -259,8 +245,7 @@ export const CreateLock: FC<{
               2 years
             </Trans>
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, 2 * DAY * 365).toFixed(4)}{" "}
-              DILL
+              1 PICKLE = {estimateDillForPeriod(1, 2 * DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
           <Radio value={4}>
@@ -268,8 +253,7 @@ export const CreateLock: FC<{
               4 years
             </Trans>
             <Radio.Desc style={{ color: "grey" }}>
-              1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)}{" "}
-              DILL
+              1 PICKLE = {estimateDillForPeriod(1, 4 * DAY * 365).toFixed(4)} DILL
             </Radio.Desc>
           </Radio>
         </Radio.Group>
@@ -277,9 +261,7 @@ export const CreateLock: FC<{
         <p>
           {t("dill.youWillReceive")}{" "}
           <strong>
-            {lockAmount
-              ? estimateDillForDate(+lockAmount, unlockTime).toFixed(4)
-              : 0}{" "}
+            {lockAmount ? estimateDillForDate(+lockAmount, unlockTime).toFixed(4) : 0}{" "}
           </strong>
           DILL
         </p>
@@ -295,13 +277,9 @@ export const CreateLock: FC<{
                 transferCallback: async () => {
                   return dill
                     .connect(signer)
-                    .create_lock(
-                      parseEther(lockAmount),
-                      getEpochSecondForDay(unlockTime),
-                      {
-                        gasLimit: 600000,
-                      },
-                    );
+                    .create_lock(parseEther(lockAmount), getEpochSecondForDay(unlockTime), {
+                      gasLimit: 600000,
+                    });
                 },
               });
             }

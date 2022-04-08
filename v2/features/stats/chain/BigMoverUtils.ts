@@ -2,16 +2,22 @@ import { ChainData } from "v2/types";
 
 export const getTokenPriceChangePct = (dataSeries: ChainData) => {
   const assetData = dataSeries ? dataSeries.assets : {};
-  const assetKeys = Object.keys(assetData ? assetData : {}); 
-  const wowSummary: tokenPriceChangePct[] = []
-  if (assetData) {  
-    for (let i=0; i < assetKeys.length; i++) {
-      let currentTokenPrice = assetData && assetData[assetKeys[i]]?.now ? assetData[assetKeys[i]]?.now.depositTokenPrice : 0;
-      let previousTokenPrice = assetData && assetData[assetKeys[i]]?.previous ? assetData[assetKeys[i]]?.previous.depositTokenPrice : 0;
+  const assetKeys = Object.keys(assetData ? assetData : {});
+  const wowSummary: tokenPriceChangePct[] = [];
+  if (assetData) {
+    for (let i = 0; i < assetKeys.length; i++) {
+      let currentTokenPrice =
+        assetData && assetData[assetKeys[i]]?.now
+          ? assetData[assetKeys[i]]?.now.depositTokenPrice
+          : 0;
+      let previousTokenPrice =
+        assetData && assetData[assetKeys[i]]?.previous
+          ? assetData[assetKeys[i]]?.previous.depositTokenPrice
+          : 0;
       let tokenChange = {
         apiKey: assetKeys[i],
-        tokenPriceChange: (currentTokenPrice - previousTokenPrice)/previousTokenPrice
-      }
+        tokenPriceChange: (currentTokenPrice - previousTokenPrice) / previousTokenPrice,
+      };
       wowSummary.push(tokenChange);
     }
   }
@@ -20,16 +26,22 @@ export const getTokenPriceChangePct = (dataSeries: ChainData) => {
 
 export const getTokenPriceChangeBal = (dataSeries: ChainData) => {
   const assetData = dataSeries ? dataSeries.assets : {};
-  const assetKeys = Object.keys(assetData ? assetData : {}); 
-  const wowSummary: tokenPriceChangePct[] = []
-  if (assetData) {  
-    for (let i=0; i < assetKeys.length; i++) {
-      let currentTokenPrice = assetData && assetData[assetKeys[i]] && assetData[assetKeys[i]]?.now ? assetData[assetKeys[i]].now.depositTokenPrice : 0;
-      let previousTokenPrice = assetData && assetData[assetKeys[i]] && assetData[assetKeys[i]].previous ? assetData[assetKeys[i]].previous.depositTokenPrice : 0;
+  const assetKeys = Object.keys(assetData ? assetData : {});
+  const wowSummary: tokenPriceChangePct[] = [];
+  if (assetData) {
+    for (let i = 0; i < assetKeys.length; i++) {
+      let currentTokenPrice =
+        assetData && assetData[assetKeys[i]] && assetData[assetKeys[i]]?.now
+          ? assetData[assetKeys[i]].now.depositTokenPrice
+          : 0;
+      let previousTokenPrice =
+        assetData && assetData[assetKeys[i]] && assetData[assetKeys[i]].previous
+          ? assetData[assetKeys[i]].previous.depositTokenPrice
+          : 0;
       let tokenChange = {
         apiKey: assetKeys[i],
-        tokenPriceChange: (currentTokenPrice - previousTokenPrice)/previousTokenPrice
-      }
+        tokenPriceChange: (currentTokenPrice - previousTokenPrice) / previousTokenPrice,
+      };
       wowSummary.push(tokenChange);
     }
   }

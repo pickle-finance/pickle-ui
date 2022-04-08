@@ -15,15 +15,9 @@ const Dill: FC = () => {
     <>
       <Page>
         <Page.Content>
-          <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-            {t("dill.dill")}
-          </h1>
+          <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>{t("dill.dill")}</h1>
           <p>{t("dill.description")}</p>
-          {chainName !== ChainNetwork.Ethereum ? (
-            t("dill.connectionPrompt")
-          ) : (
-            <DillFeature />
-          )}
+          {chainName !== ChainNetwork.Ethereum ? t("dill.connectionPrompt") : <DillFeature />}
         </Page.Content>
         <Footer />
       </Page>

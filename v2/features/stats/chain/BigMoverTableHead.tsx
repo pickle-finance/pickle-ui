@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 import { FC } from "react";
 
-const BigMoverTableHead: FC<{colB: string}> = ({colB}) => {
+const BigMoverTableHead: FC<{ colB: string }> = ({ colB }) => {
   const { t } = useTranslation("common");
   return (
     <thead className="rounded-t-md">

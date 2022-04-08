@@ -5,9 +5,7 @@ import ChartContainer from "v2/features/stats/platform/ChartContainer";
 import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
 
 const Stats: PickleFinancePage = () => {
-  const [dataSeries, setDataSeries] = useState<PlatformData>(
-    {} as PlatformData,
-  );
+  const [dataSeries, setDataSeries] = useState<PlatformData>({} as PlatformData);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -32,9 +30,7 @@ const PageTitle: FC = () => {
 
   return (
     <>
-      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
-        {t("v2.nav.stats")}
-      </h1>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats")}</h1>
       <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.stats.subtitle")}
       </h2>
@@ -43,7 +39,7 @@ const PageTitle: FC = () => {
 };
 
 const getPlatformData = async (): Promise<PlatformData> => {
-  const url = `${process.env.apiPlatform}`
+  const url = `${process.env.apiPlatform}`;
   return await fetch(url).then((response) => response.json());
 };
 

@@ -39,10 +39,7 @@ export const BalFarm: FC = () => {
             <Grid xs={14} md={16}>
               <div style={{ fontSize: "large" }}>
                 {t("farms.arbitrum.balancer")}
-                <img
-                  style={{ width: "50px", verticalAlign: "middle" }}
-                  src="balancer.png"
-                />
+                <img style={{ width: "50px", verticalAlign: "middle" }} src="balancer.png" />
               </div>
               <Trans i18nKey="farms.arbitrum.balancerApr">
                 at

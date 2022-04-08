@@ -10,9 +10,7 @@ type Jar = {
 
 export function useProtocolIncome() {
   const [weeklyProfit, setWeeklyProfit] = useState<number | null>(null);
-  const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(
-    null,
-  );
+  const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(null);
   const { pickleCore } = PickleCore.useContainer();
 
   const getWeeklyIncome = async () => {
@@ -26,9 +24,7 @@ export function useProtocolIncome() {
             return acc + curr.apr;
           }, 0);
         if (apr === undefined) apr = 0;
-        const chain = pickleCore.chains.find(
-          (x) => x.network === currJar.chain,
-        );
+        const chain = pickleCore.chains.find((x) => x.network === currJar.chain);
         const perfFee = chain ? chain.defaultPerformanceFee : 0.2;
         const subtotal = (jarTVL * apr * 0.01 * perfFee) / 52;
         return acc + subtotal;

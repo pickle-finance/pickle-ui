@@ -54,9 +54,7 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
         farmingJarsMCContracts.map((x) => {
           if (!x) return Promise.resolve(ethers.BigNumber.from(0));
 
-          return x
-            .balanceOf(masterchef.address)
-            .catch(() => ethers.BigNumber.from(0));
+          return x.balanceOf(masterchef.address).catch(() => ethers.BigNumber.from(0));
         }),
       );
 
@@ -79,16 +77,11 @@ export const useJarFarmApy = (inputFarms: Input): Output => {
 
         const farmBalance = farmBalances[idx];
 
-        const numTokensInPool = farmBalance
-          ? parseFloat(ethers.utils.formatEther(farmBalance))
-          : 0;
+        const numTokensInPool = farmBalance ? parseFloat(ethers.utils.formatEther(farmBalance)) : 0;
 
-        const valueStakedInFarm =
-          (farmingJar.usdPerPToken || 0) * numTokensInPool;
+        const valueStakedInFarm = (farmingJar.usdPerPToken || 0) * numTokensInPool;
 
-        let apy =
-          farm.valueRewarded.perYear &&
-          farm.valueRewarded.perYear / valueStakedInFarm;
+        let apy = farm.valueRewarded.perYear && farm.valueRewarded.perYear / valueStakedInFarm;
         if (farm.poolIndex === 16) {
           apy = 0;
         }

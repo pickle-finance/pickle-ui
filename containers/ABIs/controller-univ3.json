@@ -83,9 +83,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_pool", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_pool", "type": "address" }],
     "name": "liquidityOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -104,9 +102,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_pool", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_pool", "type": "address" }],
     "name": "removeStrategy",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -123,18 +119,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_devfund", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_devfund", "type": "address" }],
     "name": "setDevFund",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_governance", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_governance", "type": "address" }],
     "name": "setGovernance",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -151,9 +143,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_strategist", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_strategist", "type": "address" }],
     "name": "setStrategist",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -170,18 +160,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_timelock", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_timelock", "type": "address" }],
     "name": "setTimelock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_treasury", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_treasury", "type": "address" }],
     "name": "setTreasury",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -229,9 +215,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_pool", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_pool", "type": "address" }],
     "name": "withdrawAll",
     "outputs": [
       { "internalType": "uint256", "name": "a0", "type": "uint256" },

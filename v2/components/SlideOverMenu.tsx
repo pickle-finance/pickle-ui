@@ -15,11 +15,7 @@ const SlideOverMenu: FC = () => {
       <div className="-mr-2 flex sm:hidden">
         <div className="inline-flex items-center justify-center p-2 rounded-md text-foreground-alt-200 hover:bg-background-light focus:outline-none focus:ring-2 focus:ring-inset">
           <span className="sr-only">{t("v2.nav.openMenu")}</span>
-          <MenuIcon
-            onClick={() => setIsOpen(true)}
-            className="block h-6 w-6"
-            aria-hidden="true"
-          />
+          <MenuIcon onClick={() => setIsOpen(true)} className="block h-6 w-6" aria-hidden="true" />
         </div>
       </div>
       <Transition.Root show={isOpen} as={Fragment}>

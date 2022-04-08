@@ -20,9 +20,7 @@ function useGauges() {
 
   const uniGauges = uniV2GaugesWithApy?.map((gauge) => {
     if (ifarmInfo[chain][gauge?.token.toLowerCase()]) {
-      const { tokenName, poolName } = ifarmInfo[chain][
-        gauge.token.toLowerCase()
-      ];
+      const { tokenName, poolName } = ifarmInfo[chain][gauge.token.toLowerCase()];
       return {
         ...gauge,
         tokenName,
@@ -32,24 +30,18 @@ function useGauges() {
   });
   const jarGauges2 = jarGaugeWithApy?.map((gauge) => {
     if (ifarmInfo[chain][gauge?.token.toLowerCase()]) {
-      const { tokenName, poolName } = ifarmInfo[chain][
-        gauge.token.toLowerCase()
-      ];
+      const { tokenName, poolName } = ifarmInfo[chain][gauge.token.toLowerCase()];
       return {
         ...gauge,
         tokenName,
         poolName,
       };
     } else {
-      console.log(
-        "FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo",
-      );
+      console.log("FIXME: token " + gauge.token.toLowerCase() + " MISSING in gaugeInfo");
       return undefined;
     }
   });
-  const jarGauges = jarGauges2
-    ? jarGauges2.filter((x) => x !== undefined && x !== null)
-    : [];
+  const jarGauges = jarGauges2 ? jarGauges2.filter((x) => x !== undefined && x !== null) : [];
   const gauges = uniGauges && jarGauges ? [...uniGauges, ...jarGauges] : null;
 
   return {

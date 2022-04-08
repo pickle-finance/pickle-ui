@@ -32,9 +32,7 @@ export const DesktopConnect: FC = () => {
 
   return (
     <>
-      <Connect onClick={() => setVisible(true)}>
-        {t("connection.connect")}
-      </Connect>
+      <Connect onClick={() => setVisible(true)}>{t("connection.connect")}</Connect>
       <Web3Modal setVisible={setVisible} {...bindings} />
     </>
   );

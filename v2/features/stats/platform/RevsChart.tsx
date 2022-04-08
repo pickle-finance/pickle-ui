@@ -39,7 +39,7 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
               value,
             )
           }
-          domain={[0,dataMax]}
+          domain={[0, dataMax]}
           width={100}
           padding={{ top: 50 }}
           tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
@@ -92,12 +92,8 @@ const getRevAverage = (data: RevenueData[]) =>
 
 const getDataMax = (o: any[]): number => {
   let dataMax = 0;
-  for (let i = 0;i < o.length; i++)
-    if (o[i].value > dataMax)
-      dataMax = o[i].value
+  for (let i = 0; i < o.length; i++) if (o[i].value > dataMax) dataMax = o[i].value;
   return dataMax;
-}
-
-
+};
 
 export default Chart;

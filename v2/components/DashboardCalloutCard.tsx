@@ -29,10 +29,7 @@ const DashboardCalloutCard: FC = () => {
                 <span className="text-primary">
                   {{ percent: formatPercentage(coreMaxApy.apy) }}
                 </span>
-                <MoreInfo
-                  primaryText={coreMaxApy.name}
-                  secondaryText={coreMaxApy.chain}
-                />
+                <MoreInfo primaryText={coreMaxApy.name} secondaryText={coreMaxApy.chain} />
                 APY
               </Trans>
             </p>

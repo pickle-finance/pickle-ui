@@ -342,9 +342,7 @@
   {
     "inputs": [],
     "name": "WETH",
-    "outputs": [
-      { "internalType": "contract IWETH", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IWETH", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -407,9 +405,7 @@
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
     "name": "batchSwap",
-    "outputs": [
-      { "internalType": "int256[]", "name": "assetDeltas", "type": "int256[]" }
-    ],
+    "outputs": [{ "internalType": "int256[]", "name": "assetDeltas", "type": "int256[]" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -486,9 +482,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "bytes4", "name": "selector", "type": "bytes4" }
-    ],
+    "inputs": [{ "internalType": "bytes4", "name": "selector", "type": "bytes4" }],
     "name": "getActionId",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
@@ -497,9 +491,7 @@
   {
     "inputs": [],
     "name": "getAuthorizer",
-    "outputs": [
-      { "internalType": "contract IAuthorizer", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IAuthorizer", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -520,16 +512,12 @@
       }
     ],
     "name": "getInternalBalance",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "balances", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "balances", "type": "uint256[]" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "user", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
     "name": "getNextNonce",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -555,9 +543,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "poolId", "type": "bytes32" }
-    ],
+    "inputs": [{ "internalType": "bytes32", "name": "poolId", "type": "bytes32" }],
     "name": "getPool",
     "outputs": [
       { "internalType": "address", "name": "", "type": "address" },
@@ -590,9 +576,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "poolId", "type": "bytes32" }
-    ],
+    "inputs": [{ "internalType": "bytes32", "name": "poolId", "type": "bytes32" }],
     "name": "getPoolTokens",
     "outputs": [
       {

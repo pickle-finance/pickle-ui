@@ -22,11 +22,11 @@ const OffchainVote: FC<{
   const { t } = useTranslation("common");
 
   const [selectedChains, setSelectedChains] = useState<string[]>(
-    getUserChainsOrStrats(offchainVoteData, account).chainNames
+    getUserChainsOrStrats(offchainVoteData, account).chainNames,
   );
   const [selectedChainStrats, setSelectecChainStrats] = useState<string[]>(
-    getUserChainsOrStrats(offchainVoteData, account).stratNames
-  )
+    getUserChainsOrStrats(offchainVoteData, account).stratNames,
+  );
   const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>(
     getUserJarsOrStrats(offchainVoteData, account).jarNames,
   );
@@ -108,7 +108,7 @@ const OffchainVote: FC<{
           selectedChains={selectedChains}
           selectedJars={selectedSidechainJars}
           selectedStrats={selectedJarStrategies}
-            />
+        />
       </div>
     </>
   );
@@ -129,11 +129,11 @@ const getUserChainsOrStrats = (
   const chainNames: string[] = [];
   if (userVotes && userVotes.chainWeights)
     for (let i = 0; i < userVotes?.chainWeights?.length; i++) {
-      let name = userVotes?.chainWeights[i].chain
+      let name = userVotes?.chainWeights[i].chain;
       if (strategies.includes(name)) stratNames.push();
-      chainNames.push(name)
+      chainNames.push(name);
     }
-  return {stratNames, chainNames};
+  return { stratNames, chainNames };
 };
 
 const getUserJarsOrStrats = (

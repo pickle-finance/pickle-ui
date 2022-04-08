@@ -53,8 +53,5 @@ export const TokenIcon = ({ src }: { src: string | ReactNode }) => (
 );
 
 export const ZapperIcon = (
-  <img
-    src="/zapper.png"
-    style={{ width: `24px`, marginRight: `12px`, marginLeft: `12px` }}
-  />
+  <img src="/zapper.png" style={{ width: `24px`, marginRight: `12px`, marginLeft: `12px` }} />
 );

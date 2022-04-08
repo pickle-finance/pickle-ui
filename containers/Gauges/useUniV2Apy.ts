@@ -44,9 +44,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
       multicallProvider
     ) {
       // filter for only uniswap v2 gauges
-      const uniV2Gauges = inputGauges?.filter(
-        (gauge) => uniV2PairMap[gauge.token],
-      );
+      const uniV2Gauges = inputGauges?.filter((gauge) => uniV2PairMap[gauge.token]);
 
       // Batch-call
       const prefilledDatas = uniV2Gauges
@@ -86,8 +84,7 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
 
         // calculate APY
         const valueStakedInGauge = pricePerToken * numTokensInPool;
-        const fullApy =
-          (gauge.rewardRatePerYear * prices.pickle) / pricePerToken;
+        const fullApy = (gauge.rewardRatePerYear * prices.pickle) / pricePerToken;
 
         return {
           ...gauge,

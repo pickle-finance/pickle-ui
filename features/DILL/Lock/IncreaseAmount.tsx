@@ -27,11 +27,7 @@ export const IncreaseAmount: FC<{
 
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
 
   const [increaseButton, setIncreaseButton] = useState<ButtonStatus>({
     disabled: false,
@@ -59,8 +55,7 @@ export const IncreaseAmount: FC<{
       <Grid xs={24} md={24}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
-            {t("balances.balance")}:{" "}
-            {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
+            {t("balances.balance")}: {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
           </div>
           <Link
             color
@@ -92,11 +87,9 @@ export const IncreaseAmount: FC<{
                 token: pickle.address,
                 recipient: dill.address,
                 transferCallback: async () => {
-                  return dill
-                    .connect(signer)
-                    .increase_amount(parseEther(lockAmount), {
-                      gasLimit: 350000,
-                    });
+                  return dill.connect(signer).increase_amount(parseEther(lockAmount), {
+                    gasLimit: 350000,
+                  });
                 },
               });
             }

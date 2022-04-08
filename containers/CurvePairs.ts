@@ -13,10 +13,7 @@ function useCurvePairs() {
   if (!multicallProvider) return { getCurveLpPriceData: null };
 
   const getCurveLpPriceData = async (tokenAddress: string) => {
-    const multicallPoolContract = new MulticallContract(
-      tokenAddress,
-      CurvePoolABI,
-    );
+    const multicallPoolContract = new MulticallContract(tokenAddress, CurvePoolABI);
 
     const [pricePerToken] = (
       await multicallProvider.all([multicallPoolContract.get_virtual_price()])

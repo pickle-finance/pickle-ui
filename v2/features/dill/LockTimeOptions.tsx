@@ -39,9 +39,7 @@ const LockTimeOptions: FC<Props> = ({ showValue = false }) => {
             <RadioGroup.Label as="div">
               <p>{opt.count}</p>
               <p>{opt.unit}</p>
-              {showValue && (
-                <p className="mt-4 text-primary">{opt.value.toFixed(4)}</p>
-              )}
+              {showValue && <p className="mt-4 text-primary">{opt.value.toFixed(4)}</p>}
             </RadioGroup.Label>
           </RadioGroup.Option>
         ))}

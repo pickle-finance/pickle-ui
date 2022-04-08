@@ -600,8 +600,8 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/zipswap.webp"} tokenIconSrc={"/ethzip.png"} />
   ),
   //STG USDC
-  "0xdecc0c09c3b5f6e92ef4184125d5648a66e35298":(
-    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"}/>
+  "0xdecc0c09c3b5f6e92ef4184125d5648a66e35298": (
+    <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
 
   // Fantom
@@ -987,11 +987,9 @@ export const JarCollapsible: FC<{
     .join(" <br/> ");
 
   const balNum = parseFloat(
-    isNative ? formatEther(ethBalance) : formatUnits(balance,depositTokenDecimals),
+    isNative ? formatEther(ethBalance) : formatUnits(balance, depositTokenDecimals),
   );
-  const depositedNum = parseFloat(
-    formatUnits(deposited, depositTokenDecimals),
-  );
+  const depositedNum = parseFloat(formatUnits(deposited, depositTokenDecimals));
   const balStr = balNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: balNum < 1 ? 8 : 4,
@@ -1000,9 +998,7 @@ export const JarCollapsible: FC<{
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
-  const depositedUnderlyingStr = (
-    depositedNum * ratio
-  ).toLocaleString(undefined, {
+  const depositedUnderlyingStr = (depositedNum * ratio).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: depositedNum < 1 ? 8 : 4,
   });
@@ -1292,11 +1288,7 @@ export const JarCollapsible: FC<{
               <div>
                 {t("balances.balance")} {depositedStr} (
                 <Tooltip
-                  text={`${
-                    deposited && ratio
-                      ? depositedNum * ratio
-                      : 0
-                  } ${depositTokenName}`}
+                  text={`${deposited && ratio ? depositedNum * ratio : 0} ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}

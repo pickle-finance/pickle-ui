@@ -170,9 +170,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "claimReward",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -189,9 +187,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "exit",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -205,9 +201,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256[]", "name": "_pids", "type": "uint256[]" }
-    ],
+    "inputs": [{ "internalType": "uint256[]", "name": "_pids", "type": "uint256[]" }],
     "name": "massUpdate",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -252,13 +246,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_token", "type": "address" }],
     "name": "poolIdsOf",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -300,9 +290,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "rewardPerToken",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -323,9 +311,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "rewardRatePerPool",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -342,9 +328,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }],
     "name": "setReward",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -381,52 +365,40 @@
   {
     "inputs": [],
     "name": "store",
-    "outputs": [
-      { "internalType": "contract IPoolStore", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IPoolStore", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "tokenOf",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "totalSupply",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newOperator_", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOperator_", "type": "address" }],
     "name": "transferOperator",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "update",
     "outputs": [],
     "stateMutability": "nonpayable",

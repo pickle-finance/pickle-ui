@@ -24,8 +24,7 @@ const Farms: FC = () => {
           <Spacer />
           <Note type="warning" style={{ textAlign: "center" }}>
             <Trans i18nKey="oldFarms.disclaimer">
-              These Farms stopped earning $PICKLEs on Thu, Apr 22, 2021 (12 AM
-              GMT)
+              These Farms stopped earning $PICKLEs on Thu, Apr 22, 2021 (12 AM GMT)
               <br />
               To earn $PICKLEs, migrate any tokens here to the new Farms
               <br />
@@ -34,9 +33,7 @@ const Farms: FC = () => {
             </Trans>
           </Note>
 
-          <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-            {t("info.farms")}
-          </h1>
+          <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>{t("info.farms")}</h1>
           <FarmList />
         </Page.Content>
         <Footer />

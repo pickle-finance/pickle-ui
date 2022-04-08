@@ -15,14 +15,9 @@ export const SYMBOL_TO_TOKEN = {
   FRAX: "/frax.webp",
 };
 
-export const getTokenLabel = (
-  symbol: keyof typeof SYMBOL_TO_TOKEN,
-): ReactNode => (
+export const getTokenLabel = (symbol: keyof typeof SYMBOL_TO_TOKEN): ReactNode => (
   <>
-    <img
-      src={SYMBOL_TO_TOKEN[symbol]}
-      style={{ width: `24px`, marginRight: `12px` }}
-    />
+    <img src={SYMBOL_TO_TOKEN[symbol]} style={{ width: `24px`, marginRight: `12px` }} />
     <span>{symbol}</span>
   </>
 );
@@ -35,10 +30,7 @@ export const SYMBOL_TO_LP = {
 
 export const getLPLabel = (symbol: keyof typeof SYMBOL_TO_LP): ReactNode => (
   <>
-    <img
-      src={SYMBOL_TO_LP[symbol].imgSrc}
-      style={{ width: `24px`, marginRight: `12px` }}
-    />
+    <img src={SYMBOL_TO_LP[symbol].imgSrc} style={{ width: `24px`, marginRight: `12px` }} />
     <span>
       {SYMBOL_TO_LP[symbol].jarName} ({symbol})
     </span>

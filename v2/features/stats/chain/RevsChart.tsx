@@ -87,16 +87,14 @@ const computeMovingAverage = (sortedData: RevenueData[], period: number): Revenu
 
 const sortByDate = (data: RevenueData[]) =>
   data ? data.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)) : [];
-  
+
 const getRevAverage = (data: RevenueData[]) =>
   data.reduce((acc, val) => acc + val.revsUsd, 0) / data.length;
 
 const getDataMax = (o: any[]): number => {
   let dataMax = 0;
-  for (let i = 0;i < o.length; i++)
-    if (o[i].value > dataMax)
-      dataMax = o[i].value
+  for (let i = 0; i < o.length; i++) if (o[i].value > dataMax) dataMax = o[i].value;
   return dataMax;
-}
+};
 
 export default Chart;

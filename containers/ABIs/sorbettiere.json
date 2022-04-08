@@ -118,9 +118,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint32", "name": "addSeconds", "type": "uint32" }
-    ],
+    "inputs": [{ "internalType": "uint32", "name": "addSeconds", "type": "uint32" }],
     "name": "changeEndTime",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -144,9 +142,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "emergencyWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -172,9 +168,7 @@
   {
     "inputs": [],
     "name": "ice",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -295,9 +289,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_pid", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
     "name": "updatePool",
     "outputs": [],
     "stateMutability": "nonpayable",

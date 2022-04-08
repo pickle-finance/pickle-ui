@@ -71,9 +71,7 @@ const ProtocolIcon: FC<ProtocolIconProps> = ({ protocol }) => {
     <div
       className="absolute -top-3 -right-3 z-50 w-7 h-7 rounded-full border-3 border-foreground-alt-400 -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200"
       style={{
-        background: isLoaded
-          ? defaultBackgroundColor
-          : brandColor(sanitizedProtocolName),
+        background: isLoaded ? defaultBackgroundColor : brandColor(sanitizedProtocolName),
       }}
     >
       <Image
