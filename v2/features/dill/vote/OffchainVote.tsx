@@ -30,7 +30,7 @@ const OffchainVote: FC<{
   const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>(
     getUserJarsOrStrats(offchainVoteData, account).jarNames
   );
-  const [selectedJarStrategies, setSelectedJarStrategies] = useState<string[]>(
+  const [selectedJarStrats, setSelectedJarStrats] = useState<string[]>(
     getUserJarsOrStrats(offchainVoteData, account).stratNames
   );
 
@@ -78,15 +78,15 @@ const OffchainVote: FC<{
         <JarSelect
           core={core}
           mainnet={false}
-          selectedJarStrats={selectedJarStrategies}
+          selectedJarStrats={selectedJarStrats}
           selectedJars={selectedSidechainJars}
-          setSelectedJarStrategies={setSelectedJarStrategies}
+          setSelectedJarStrats={setSelectedJarStrats}
           setSelectedJars={setSelectedSidechainJars}
         />
         <div className="mt-10 pr-5 pl-5 border border-foreground-alt-500 rounded">
-          {selectedJarStrategies.length > 0 && (
+          {selectedJarStrats.length > 0 && (
             <StratTable
-              selectedStrats={selectedJarStrategies}
+              selectedStrats={selectedJarStrats}
               offchainVoteData={offchainVoteData}
               wallet={account}
             />
@@ -105,9 +105,10 @@ const OffchainVote: FC<{
           vote={castVoteSideChain}
           provider={library}
           account={account}
+          selectedChainStrats={selectedChainStrats}
           selectedChains={selectedChains}
+          selectedJarStrats={selectedJarStrats}
           selectedJars={selectedSidechainJars}
-          selectedStrats={selectedJarStrategies}
             />
       </div>
     </>

@@ -54,11 +54,11 @@ const castVoteSideChain = (
 
   const msg = JSON.stringify(voteData, null, 2);
   if (sumVotes(selectedChains, selectedChainStrats) !== 100) {
-    console.log(`Sum of chain votes (${sumVotes(selectedChains)}) is not equal to 100`);
-    toast.error("Sum of Chain Vote Values Must Equal 100", toastSettings);
+    console.log(`Sum of chain votes (${sumVotes(selectedChains, selectedChainStrats)}) is not equal to 100`);
+    toast.error(`Sum of Chain Vote Values Must Equal 100. (Current Vote: ${sumVotes(selectedChains, selectedChainStrats)})`, toastSettings);
   } else if (sumVotes(selectedJars, selectedJarStrats) !== 100) {
-    console.log(`Sum of jar vote absolute values (${sumVotes(selectedJars)}) is not equal to 100`);
-    toast.error("Sum of Jar Vote Absolute Values Must Equal 100", toastSettings);
+    console.log(`Sum of jar vote absolute values (${sumVotes(selectedJars, selectedJarStrats)}) is not equal to 100`);
+    toast.error(`Sum of Jar Vote Absolute Values Must Equal 100. (Current Vote: ${sumVotes(selectedJars, selectedJarStrats)})`, toastSettings);
   } else {
     sendRequestToDillVoter(msg, account, provider);
     // console.log(voteData);
