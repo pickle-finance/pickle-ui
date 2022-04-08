@@ -3,7 +3,6 @@ import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 
-
 const ChainSelect: FC<{
   core: PickleModelJson.PickleModelJson;
   selectedChains: string[];
@@ -18,7 +17,7 @@ const ChainSelect: FC<{
     : selectedChainStrats
     ? selectedChainStrats
     : [];
-  
+
   const [selectData, setSelectData] = useState<SelectData[]>([
     {
       label: "Delegate to the Pickle Team",
@@ -35,7 +34,7 @@ const ChainSelect: FC<{
   };
   const stratChange = (strats: SelectData[]): void => {
     setSelectedChainStrats(strats.map((strat) => strat.value));
-  }
+  };
   const change = (selections: SelectData[]): void => {
     const strategies = ["strategy.chain.delegate.team", "strategy.chain.sidechains.equal"];
     const strats = selections.filter((s) => strategies.includes(s.value));
@@ -48,8 +47,7 @@ const ChainSelect: FC<{
       let tmpSelectData: SelectData[] = [...selectData];
       if (core) {
         const chains = core?.chains.map(dataToSelect);
-        for (let i = 0; i < chains.length; i++)
-          tmpSelectData.push(chains[i])
+        for (let i = 0; i < chains.length; i++) tmpSelectData.push(chains[i]);
       }
       setSelectData(tmpSelectData);
     };
@@ -119,7 +117,6 @@ const styles: StylesConfig<SelectData> = {
     transition: "all 200ms ease-in-out",
   }),
 };
-
 
 const dataToSelect = (chain: RawChain): SelectData => ({
   value: chain.network,

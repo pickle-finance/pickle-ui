@@ -41,10 +41,7 @@ export const useCurveSNXAPY = (
 
   const getSNXAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.snx) {
-      const mcPool = new MulticallContract(
-        pool.address,
-        pool.interface.fragments,
-      );
+      const mcPool = new MulticallContract(pool.address, pool.interface.fragments);
 
       const mcStakingRewards = new MulticallContract(
         stakingRewards.address,
@@ -69,8 +66,7 @@ export const useCurveSNXAPY = (
 
       // https://github.com/curvefi/curve-dao/blob/2850af67abb42cbd50d940ae6280fc34659e8142/src/components/common/DailyAPYChart.vue
       const snxAPY =
-        (0.725 * 100 * (((365 * reward) / 7) * prices.snx)) /
-        (0.98 * totalSupply * virtualPrice);
+        (0.725 * 100 * (((365 * reward) / 7) * prices.snx)) / (0.98 * totalSupply * virtualPrice);
 
       setSNXAPY(snxAPY * 0.725);
     }

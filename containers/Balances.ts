@@ -27,9 +27,7 @@ function useBalances() {
       );
 
       const newTokenBalances: TokenBalances = {};
-      tokenAddresses.forEach(
-        (address, index) => (newTokenBalances[address] = balances[index]),
-      );
+      tokenAddresses.forEach((address, index) => (newTokenBalances[address] = balances[index]));
       setTokenBalances(newTokenBalances);
     }
   };

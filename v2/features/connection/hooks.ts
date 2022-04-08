@@ -10,9 +10,7 @@ import { ConnectionSelectors } from "v2/store/connection";
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
   const [tried, setTried] = useState(false);
-  const isManuallyDeactivated = useSelector(
-    ConnectionSelectors.selectIsManuallyDeactivated,
-  );
+  const isManuallyDeactivated = useSelector(ConnectionSelectors.selectIsManuallyDeactivated);
 
   useEffect(() => {
     if (!active && !isManuallyDeactivated) {

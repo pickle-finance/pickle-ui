@@ -16,7 +16,7 @@ export enum Connectors {
   Metamask,
   WalletConnect,
   Coinbase,
-  Clover
+  Clover,
 }
 
 const POLLING_INTERVAL = 12000;

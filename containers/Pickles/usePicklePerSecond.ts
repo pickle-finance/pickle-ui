@@ -14,14 +14,10 @@ export const usePicklePerSecond = (): {
 
   const getData = async () => {
     if (minichef && pickleRewarder) {
-      const pps = await minichef
-        .picklePerSecond()
-        .catch(() => ethers.BigNumber.from(0));
+      const pps = await minichef.picklePerSecond().catch(() => ethers.BigNumber.from(0));
       setPicklePerSecond(parseFloat(ethers.utils.formatEther(pps)));
 
-      const mps = await pickleRewarder
-        .rewardPerSecond()
-        .catch(() => ethers.BigNumber.from(0));
+      const mps = await pickleRewarder.rewardPerSecond().catch(() => ethers.BigNumber.from(0));
       // only wbtc using this now, so hacking it...
       setMaticPerSecond(parseFloat(ethers.utils.formatUnits(mps, 8)));
     }

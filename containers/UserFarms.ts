@@ -34,10 +34,7 @@ export const updateFarmData = async (
   setFarmData: any,
 ) => {
   if (farms && erc20 && masterchef && address && multicallProvider) {
-    const mcMasterchef = new MulticallContract(
-      masterchef.address,
-      masterchef.interface.fragments,
-    );
+    const mcMasterchef = new MulticallContract(masterchef.address, masterchef.interface.fragments);
 
     const balancesUserInfosHarvestables = await multicallProvider.all(
       farms
@@ -62,7 +59,7 @@ export const updateFarmData = async (
         poolIndex: farm.poolIndex,
         depositToken: erc20.attach(farm.lpToken),
         depositTokenName: farm.tokenName,
-        depositTokenDecimals: farm.depositTokenDecimals??18,
+        depositTokenDecimals: farm.depositTokenDecimals ?? 18,
         balance,
         staked: userInfo[0],
         usdPerToken: farm.usdPerToken,
@@ -76,12 +73,7 @@ export const updateFarmData = async (
 };
 
 const useUserFarms = (): { farmData: UserFarmData[] | null } => {
-  const {
-    blockNum,
-    address,
-    multicallProvider,
-    chainName,
-  } = Connection.useContainer();
+  const { blockNum, address, multicallProvider, chainName } = Connection.useContainer();
   const { masterchef, erc20 } = Contracts.useContainer();
   const { jars } = Jars.useContainer();
   const { farms } = Farms.useContainer();
@@ -91,14 +83,7 @@ const useUserFarms = (): { farmData: UserFarmData[] | null } => {
   const [farmData, setFarmData] = useState<Array<UserFarmData> | null>(null);
 
   useEffect(() => {
-    updateFarmData(
-      farms,
-      erc20,
-      masterchef,
-      address,
-      multicallProvider,
-      setFarmData,
-    );
+    updateFarmData(farms, erc20, masterchef, address, multicallProvider, setFarmData);
   }, [jars, blockNum, tokenBalances, transferStatus]);
 
   return { farmData };

@@ -74,9 +74,7 @@ export const MobileNetworkIndicator: FC = () => {
   const { pickleCore } = PickleCore.useContainer();
 
   const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
-  const networkName = chainId
-    ? pickleCore?.chains.find((x) => x.chainId === chainId)?.network
-    : "";
+  const networkName = chainId ? pickleCore?.chains.find((x) => x.chainId === chainId)?.network : "";
   return (
     <Container>
       <Left>

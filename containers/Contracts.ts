@@ -108,10 +108,8 @@ import { ControllerUniv3__factory as ControllerUniv3Factory } from "./Contracts/
 import { VefxsVault } from "./Contracts/VefxsVault";
 import { VefxsVault__factory as VefxsVaultFactory } from "./Contracts/factories/VefxsVault__factory";
 
-export const PICKLE_STAKING_SCRV_REWARDS =
-  "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
-export const PICKLE_STAKING_WETH_REWARDS =
-  "0xa17a8883dA1aBd57c690DF9Ebf58fC194eDAb66F";
+export const PICKLE_STAKING_SCRV_REWARDS = "0xd86f33388bf0bfdf0ccb1ecb4a48a1579504dc0a";
+export const PICKLE_STAKING_WETH_REWARDS = "0xa17a8883dA1aBd57c690DF9Ebf58fC194eDAb66F";
 
 export const DILL = "0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf";
 
@@ -125,12 +123,10 @@ export const MASTERCHEFV2_ADDR = "0xef0881ec094552b2e128cf945ef17a6752b4ec5d";
 
 export const CONTROLLER_ADDR = "0x6847259b2B3A4c17e7c43C54409810aF48bA5210";
 
-export const UNISWAPV2_PROXY_LOGIC =
-  "0x0a536ca30B9E20a3D89c91c22Ef77E1AeBBd6944";
+export const UNISWAPV2_PROXY_LOGIC = "0x0a536ca30B9E20a3D89c91c22Ef77E1AeBBd6944";
 export const CURVE_PROXY_LOGIC = "0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8";
 
-export const GAUGE_CONTROLLER_ADDR =
-  "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB";
+export const GAUGE_CONTROLLER_ADDR = "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB";
 
 export const SUSD_GAUGE_ADDR = "0xA90996896660DEcC6E997655E065b23788857849";
 export const SUSD_POOL_ADDR = "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD";
@@ -153,43 +149,28 @@ export const RENBTC_CRV = "0x49849C98ae39Fff122806C06791Fa73784FB3675";
 
 export const SORBETTIERE_REWARDS = "0xF43480afE9863da4AcBD4419A47D9Cc7d25A647F";
 
-export const SCRV_STAKING_REWARDS =
-  "0xDCB6A51eA3CA5d3Fd898Fd6564757c7aAeC3ca92";
-export const STECRV_STAKING_REWARDS =
-  "0x99ac10631F69C753DDb595D074422a0922D9056B";
+export const SCRV_STAKING_REWARDS = "0xDCB6A51eA3CA5d3Fd898Fd6564757c7aAeC3ca92";
+export const STECRV_STAKING_REWARDS = "0x99ac10631F69C753DDb595D074422a0922D9056B";
 
-export const LQTY_LUSD_ETH_STAKING_REWARDS =
-  "0xd37a77E71ddF3373a79BE2eBB76B6c4808bDF0d5";
+export const LQTY_LUSD_ETH_STAKING_REWARDS = "0xd37a77E71ddF3373a79BE2eBB76B6c4808bDF0d5";
 
-export const UNI_ETH_DAI_STAKING_REWARDS =
-  "0xa1484c3aa22a66c62b77e0ae78e15258bd0cb711";
-export const UNI_ETH_USDC_STAKING_REWARDS =
-  "0x7fba4b8dc5e7616e59622806932dbea72537a56b";
-export const UNI_ETH_USDT_STAKING_REWARDS =
-  "0x6c3e4cb2e96b01f4b866965a91ed4437839a121a";
-export const UNI_ETH_WBTC_STAKING_REWARDS =
-  "0xCA35e32e7926b96A9988f61d510E038108d8068e";
-export const MIRROR_MIR_UST_STAKING_REWARDS =
-  "0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF";
+export const UNI_ETH_DAI_STAKING_REWARDS = "0xa1484c3aa22a66c62b77e0ae78e15258bd0cb711";
+export const UNI_ETH_USDC_STAKING_REWARDS = "0x7fba4b8dc5e7616e59622806932dbea72537a56b";
+export const UNI_ETH_USDT_STAKING_REWARDS = "0x6c3e4cb2e96b01f4b866965a91ed4437839a121a";
+export const UNI_ETH_WBTC_STAKING_REWARDS = "0xCA35e32e7926b96A9988f61d510E038108d8068e";
+export const MIRROR_MIR_UST_STAKING_REWARDS = "0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF";
 
-export const MIRROR_MTSLA_UST_STAKING_REWARDS =
-  "0x43DFb87a26BA812b0988eBdf44e3e341144722Ab";
-export const MIRROR_MAAPL_UST_STAKING_REWARDS =
-  "0x735659C8576d88A2Eb5C810415Ea51cB06931696";
-export const MIRROR_MQQQ_UST_STAKING_REWARDS =
-  "0xc1d2ca26A59E201814bF6aF633C3b3478180E91F";
-export const MIRROR_MSLV_UST_STAKING_REWARDS =
-  "0xDB278fb5f7d4A7C3b83F80D18198d872Bbf7b923";
-export const MIRROR_MBABA_UST_STAKING_REWARDS =
-  "0x769325E8498bF2C2c3cFd6464A60fA213f26afcc";
+export const MIRROR_MTSLA_UST_STAKING_REWARDS = "0x43DFb87a26BA812b0988eBdf44e3e341144722Ab";
+export const MIRROR_MAAPL_UST_STAKING_REWARDS = "0x735659C8576d88A2Eb5C810415Ea51cB06931696";
+export const MIRROR_MQQQ_UST_STAKING_REWARDS = "0xc1d2ca26A59E201814bF6aF633C3b3478180E91F";
+export const MIRROR_MSLV_UST_STAKING_REWARDS = "0xDB278fb5f7d4A7C3b83F80D18198d872Bbf7b923";
+export const MIRROR_MBABA_UST_STAKING_REWARDS = "0x769325E8498bF2C2c3cFd6464A60fA213f26afcc";
 
 export const FEI_MASTERCHEF = "0x9e1076cC0d19F9B0b8019F384B0a29E48Ee46f7f";
 
-export const FOX_ETH_STAKING_REWARDS =
-  "0xc54B9F82C1c54E9D4d274d633c7523f2299c42A0";
+export const FOX_ETH_STAKING_REWARDS = "0xc54B9F82C1c54E9D4d274d633c7523f2299c42A0";
 
-export const ALCHEMIX_ALCX_ETH_STAKING_POOLS =
-  "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
+export const ALCHEMIX_ALCX_ETH_STAKING_POOLS = "0xab8e74017a8cc7c15ffccd726603790d26d7deca";
 
 export const COMMUNAL_FARM = "0x0639076265e9f88542C91DCdEda65127974A5CA5";
 export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
@@ -204,15 +185,11 @@ export const YEARN_REGISTRY = "0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804";
 export const RALLY_REWARD_POOLS = "0x9cf178df8ddb65b9ea7d4c2f5d1610eb82927230";
 
 // Polygon
-export const COMETH_USDC_WETH_REWARDS =
-  "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
-export const COMETH_PICKLE_MUST_REWARDS =
-  "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
-export const COMETH_MATIC_MUST_REWARDS =
-  "0x2328c83431a29613b1780706E0Af3679E3D04afd";
+export const COMETH_USDC_WETH_REWARDS = "0x1c30Cfe08506BA215c02bc2723C6D310671BAb62";
+export const COMETH_PICKLE_MUST_REWARDS = "0x52f68a09aee9503367bc0cda0748c4d81807ae9a";
+export const COMETH_MATIC_MUST_REWARDS = "0x2328c83431a29613b1780706E0Af3679E3D04afd";
 export const FOSSIL_FARMS = "0x1948abc5400aa1d72223882958da3bec643fb4e5";
-export const MATIC_COMPLEX_REWARDER =
-  "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
+export const MATIC_COMPLEX_REWARDER = "0xa3378Ca78633B3b9b2255EAa26748770211163AE";
 
 export const AM3CRV_POOL_ADDR = "0x445FE580eF8d70FF569aB36e80c647af338db351";
 
@@ -221,8 +198,7 @@ export const CONTROLLER_MAI = "0x7749fbd85f388f4a186b1d339c2fd270dd0aa647";
 export const IRON_CHEF = "0x1fd1259fa8cdc60c6e8c86cfa592ca1b8403dfad";
 export const SUSHI_MIGRATOR = "0x16e58463eb9792bc236d8860f5bc69a81e26e32b";
 export const PICKLE_ETH_SLP = "0x269db91fc3c7fcc275c2e6f22e5552504512811c";
-export const PICKLE_SUSHI_REWARDER =
-  "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
+export const PICKLE_SUSHI_REWARDER = "0x7512105dbb4c0e0432844070a45b7ea0d83a23fd";
 
 export const CHERRYCHEF = "0x8cddB4CD757048C4380ae6A69Db8cD5597442f7b";
 export const JSWAPCHEF = "0x83C35EA2C32293aFb24aeB62a14fFE920C2259ab";
@@ -237,8 +213,7 @@ function useContracts() {
   const { pickleCore } = PickleCore.useContainer();
 
   const addresses = ADDRESSES.get(
-    pickleCore?.chains.find((x) => x.chainId === chainId)
-      ?.network as ChainNetwork,
+    pickleCore?.chains.find((x) => x.chainId === chainId)?.network as ChainNetwork,
   );
 
   const [pickle, setPickle] = useState<Erc20 | null>(null);
@@ -249,10 +224,7 @@ function useContracts() {
 
   const providerOrSigner = signer || multicallProvider;
 
-  const [
-    gaugeController,
-    setGaugeController,
-  ] = useState<GaugeController | null>(null);
+  const [gaugeController, setGaugeController] = useState<GaugeController | null>(null);
   const [susdGauge, setSUSDGauge] = useState<CurveGauge | null>(null);
   const [susdPool, setSUSDPool] = useState<Pool | null>(null);
   const [steCRVGauge, setSteCRVGauge] = useState<CurveGauge | null>(null);
@@ -268,73 +240,42 @@ function useContracts() {
   const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
   const [gauge, setGauge] = useState<Gauge | null>(null);
   const [communalFarm, setCommunalFarm] = useState<CommunalFarm | null>(null);
-  const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(
-    null,
-  );
+  const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(null);
 
-  const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(
-    null,
-  );
-  const [sorbettiereFarm, setSorbettiereFarm] = useState<Sorbettiere | null>(
-    null,
-  );
-  const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(
-    null,
-  );
+  const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(null);
+  const [sorbettiereFarm, setSorbettiereFarm] = useState<Sorbettiere | null>(null);
+  const [uniswapv2Pair, setUniswapv2Pair] = useState<Uniswapv2Pair | null>(null);
   const [dodoPair, setDodoPair] = useState<DodoPair | null>(null);
   const [erc20, setERC20] = useState<Erc20 | null>(null);
   const [strategy, setStrategy] = useState<Strategy | null>(null);
-  const [
-    curveProxyLogic,
-    setCurveProxyLogic,
-  ] = useState<CurveProxyLogic | null>(null);
-  const [
-    uniswapv2ProxyLogic,
-    setUniswapv2ProxyLogic,
-  ] = useState<Uniswapv2ProxyLogic | null>(null);
+  const [curveProxyLogic, setCurveProxyLogic] = useState<CurveProxyLogic | null>(null);
+  const [uniswapv2ProxyLogic, setUniswapv2ProxyLogic] = useState<Uniswapv2ProxyLogic | null>(null);
 
   const [instabrine, setInstabrine] = useState<Instabrine | null>(null);
 
   const [stakingPools, setStakingPools] = useState<StakingPools | null>(null);
-  const [yearnRegistry, setYearnRegistry] = useState<YearnRegistry | null>(
-    null,
-  );
+  const [yearnRegistry, setYearnRegistry] = useState<YearnRegistry | null>(null);
   const [lusdPool, setLusdPool] = useState<Pool | null>(null);
   const [fraxPool, setFraxPool] = useState<Pool | null>(null);
   const [ibPool, setIBPool] = useState<Pool | null>(null);
-  const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(
-    null,
-  );
+  const [sushiMinichef, setSushiMinichef] = useState<SushiMinichef | null>(null);
   const [minichef, setMinichef] = useState<Minichef | null>(null);
   const [fossilFarms, setFossilFarms] = useState<FossilFarms | null>(null);
-  const [
-    sushiComplexRewarder,
-    setSushiComplexRewarder,
-  ] = useState<SushiComplexRewarder | null>(null);
-
-  const [pickleRewarder, setPickleRewarder] = useState<PickleRewarder | null>(
+  const [sushiComplexRewarder, setSushiComplexRewarder] = useState<SushiComplexRewarder | null>(
     null,
   );
 
-  const [
-    pickleSushiRewarder,
-    setPickleSushiRewarder,
-  ] = useState<PickleRewarder | null>(null);
+  const [pickleRewarder, setPickleRewarder] = useState<PickleRewarder | null>(null);
+
+  const [pickleSushiRewarder, setPickleSushiRewarder] = useState<PickleRewarder | null>(null);
 
   const [am3crvPool, setAm3crvPool] = useState<Pool | null>(null);
-  const [
-    yvBoostMigrator,
-    setyvBoostMigrator,
-  ] = useState<YvboostMigrator | null>(null);
+  const [yvBoostMigrator, setyvBoostMigrator] = useState<YvboostMigrator | null>(null);
   const [pBAMM, setPBAMM] = useState<Jar | null>(null);
-  const [stabilityPool, setStabilityPool] = useState<StabilityPool | null>(
-    null,
-  );
+  const [stabilityPool, setStabilityPool] = useState<StabilityPool | null>(null);
 
   const [ironchef, setIronchef] = useState<Ironchef | null>(null);
-  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(
-    null,
-  );
+  const [sushiMigrator, setSushiMigrator] = useState<SushiMigrator | null>(null);
 
   const [cherrychef, setCherrychef] = useState<Cherrychef | null>(null);
   const [jswapchef, setJswapchef] = useState<Jswapchef | null>(null);
@@ -346,60 +287,33 @@ function useContracts() {
   const [dodoRewards, setDodoRewards] = useState<DodoRewards | null>(null);
   const [looksStaking, setLooksStaking] = useState<LooksStaking | null>(null);
 
-  const [
-    controllerUniV3,
-    setControllerUniV3,
-  ] = useState<ControllerUniv3 | null>(null);
+  const [controllerUniV3, setControllerUniV3] = useState<ControllerUniv3 | null>(null);
 
-  const [
-    rallyRewardPools,
-    setRallyRewardPools,
-  ] = useState<RallyRewardPools | null>(null);
+  const [rallyRewardPools, setRallyRewardPools] = useState<RallyRewardPools | null>(null);
 
   const [vefxsVault, setVefxsVault] = useState<VefxsVault | null>(null);
 
   const initContracts = async () => {
     if (providerOrSigner && addresses) {
       setPickle(Erc20Factory.connect(addresses.pickle, providerOrSigner));
-      setMasterchef(
-        MasterchefFactory.connect(addresses.masterChef, providerOrSigner),
-      );
-      setController(
-        ControllerFactory.connect(addresses.controller, providerOrSigner),
-      );
-      setControllerMai(
-        ControllerFactory.connect(CONTROLLER_MAI, providerOrSigner),
-      );
+      setMasterchef(MasterchefFactory.connect(addresses.masterChef, providerOrSigner));
+      setController(ControllerFactory.connect(addresses.controller, providerOrSigner));
+      setControllerMai(ControllerFactory.connect(CONTROLLER_MAI, providerOrSigner));
       setMasterchefV2(Masterchefv2Factory.connect(MASTERCHEFV2_ADDR, signer));
-      setGaugeController(
-        GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, providerOrSigner),
-      );
-      setSUSDGauge(
-        CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, providerOrSigner),
-      );
+      setGaugeController(GaugeControllerFactory.connect(GAUGE_CONTROLLER_ADDR, providerOrSigner));
+      setSUSDGauge(CurveGaugeFactory.connect(SUSD_GAUGE_ADDR, providerOrSigner));
       setSUSDPool(PoolFactory.connect(SUSD_POOL_ADDR, providerOrSigner));
-      setSteCRVGauge(
-        CurveGaugeFactory.connect(STETH_GAUGE_ADDR, providerOrSigner),
-      );
+      setSteCRVGauge(CurveGaugeFactory.connect(STETH_GAUGE_ADDR, providerOrSigner));
       setSteCRVPool(PoolFactory.connect(STETH_POOL_ADDR, providerOrSigner));
-      setRENGauge(
-        CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, providerOrSigner),
-      );
+      setRENGauge(CurveGaugeFactory.connect(RENBTC_GAUGE_ADDR, providerOrSigner));
       setRENPool(PoolFactory.connect(RENBTC_POOL_ADDR, providerOrSigner));
-      setThreeGauge(
-        CurveGaugeFactory.connect(THREE_GAUGE_ADDR, providerOrSigner),
-      );
+      setThreeGauge(CurveGaugeFactory.connect(THREE_GAUGE_ADDR, providerOrSigner));
       setThreePool(PoolFactory.connect(THREE_POOL_ADDR, providerOrSigner));
 
       setStakingRewards(
-        StakingRewardsFactory.connect(
-          ethers.constants.AddressZero,
-          providerOrSigner,
-        ),
+        StakingRewardsFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
-      setCommunalFarm(
-        CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner),
-      );
+      setCommunalFarm(CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner));
       setSorbettiereFarm(
         SorbettiereFactory.connect(
           addresses.sorbettiere || ethers.constants.AddressZero,
@@ -407,60 +321,32 @@ function useContracts() {
         ),
       );
       setUniswapv2Pair(
-        Uniswapv2PairFactory.connect(
-          ethers.constants.AddressZero,
-          providerOrSigner,
-        ),
+        Uniswapv2PairFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
-      setDodoPair(
-        DodoPairFactory.connect(ethers.constants.AddressZero, providerOrSigner),
-      );
-      setERC20(
-        Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner),
-      );
-      setJar(
-        JarFactory.connect(ethers.constants.AddressZero, providerOrSigner),
-      );
-      setCToken(
-        CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner),
-      );
-      setComptroller(
-        ComptrollerFactory.connect(COMPTROLLER_ADDR, providerOrSigner),
-      );
-      setStrategy(
-        StrategyFactory.connect(ethers.constants.AddressZero, providerOrSigner),
-      );
-      setCurveProxyLogic(
-        CurveProxyLogicFactory.connect(CURVE_PROXY_LOGIC, providerOrSigner),
-      );
+      setDodoPair(DodoPairFactory.connect(ethers.constants.AddressZero, providerOrSigner));
+      setERC20(Erc20Factory.connect(ethers.constants.AddressZero, providerOrSigner));
+      setJar(JarFactory.connect(ethers.constants.AddressZero, providerOrSigner));
+      setCToken(CtokenFactory.connect(ethers.constants.AddressZero, providerOrSigner));
+      setComptroller(ComptrollerFactory.connect(COMPTROLLER_ADDR, providerOrSigner));
+      setStrategy(StrategyFactory.connect(ethers.constants.AddressZero, providerOrSigner));
+      setCurveProxyLogic(CurveProxyLogicFactory.connect(CURVE_PROXY_LOGIC, providerOrSigner));
       setUniswapv2ProxyLogic(
-        Uniswapv2ProxyLogicFactory.connect(
-          UNISWAPV2_PROXY_LOGIC,
-          providerOrSigner,
-        ),
+        Uniswapv2ProxyLogicFactory.connect(UNISWAPV2_PROXY_LOGIC, providerOrSigner),
       );
       setInstabrine(InstabrineFactory.connect(INSTABRINE, providerOrSigner));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, providerOrSigner));
       setDill(DillFactory.connect(DILL, providerOrSigner));
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, providerOrSigner));
-      setGauge(
-        GaugeFactory.connect(ethers.constants.AddressZero, providerOrSigner),
-      );
-      setFeeDistributor(
-        FeeDistributorFactory.connect(FEE_DISTRIBUTOR, providerOrSigner),
-      );
+      setGauge(GaugeFactory.connect(ethers.constants.AddressZero, providerOrSigner));
+      setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, providerOrSigner));
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
       setDill(DillFactory.connect(DILL, signer));
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
-      setyvBoostMigrator(
-        YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer),
-      );
-      setStakingPools(
-        StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer),
-      );
+      setyvBoostMigrator(YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer));
+      setStakingPools(StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer));
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
 
       setLusdPool(PoolFactory.connect(LUSD_POOL_ADDR, signer));
@@ -476,50 +362,33 @@ function useContracts() {
         ),
       );
       setFossilFarms(FossilFarmsFactory.connect(FOSSIL_FARMS, signer));
-      setSushiComplexRewarder(
-        SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer),
-      );
+      setSushiComplexRewarder(SushiComplexRewarderFactory.connect(MATIC_COMPLEX_REWARDER, signer));
       setPickleRewarder(
-        PickleRewarderFactory.connect(
-          addresses.rewarder || ethers.constants.AddressZero,
-          signer,
-        ),
+        PickleRewarderFactory.connect(addresses.rewarder || ethers.constants.AddressZero, signer),
       );
       setAm3crvPool(PoolFactory.connect(AM3CRV_POOL_ADDR, signer));
       setMinichef(MinichefFatory.connect(addresses.masterChef, signer));
       setPBAMM(JarFactory.connect(BPAddresses.pBAMM, signer));
-      setStabilityPool(
-        StabilityPoolFactory.connect(BPAddresses.STABILITY_POOL, signer),
-      );
+      setStabilityPool(StabilityPoolFactory.connect(BPAddresses.STABILITY_POOL, signer));
 
       setIronchef(IronchefFactory.connect(IRON_CHEF, signer));
       setSushiMigrator(SushiMigratorFactory.connect(SUSHI_MIGRATOR, signer));
-      setPickleSushiRewarder(
-        PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer),
-      );
+      setPickleSushiRewarder(PickleRewarderFactory.connect(PICKLE_SUSHI_REWARDER, signer));
 
       setCherrychef(CherrychefFactory.connect(CHERRYCHEF, signer));
       setJswapchef(JswapFactory.connect(JSWAPCHEF, signer));
 
       setCvxBooster(CvxBoosterFactory.connect(CVX_BOOSTER, signer));
       setFeichef(FeichefFactory.connect(FEI_MASTERCHEF, signer));
-      setRallyRewardPools(
-        RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
-      );
-      setRallyRewardPools(
-        RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer),
-      );
+      setRallyRewardPools(RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer));
+      setRallyRewardPools(RallyRewardPoolsFactory.connect(RALLY_REWARD_POOLS, signer));
       setDodoRewards(DodoRewardsFactory.connect(DODO_REWARDS, signer));
 
-      setControllerUniV3(
-        ControllerUniv3Factory.connect(CONTROLLER_UNIV3, signer),
-      );
+      setControllerUniV3(ControllerUniv3Factory.connect(CONTROLLER_UNIV3, signer));
 
-      setVefxsVault(
-        VefxsVaultFactory.connect(VEFXS_VAULT, signer)
-      )
+      setVefxsVault(VefxsVaultFactory.connect(VEFXS_VAULT, signer));
 
-      setLooksStaking(LooksStakingFactory.connect(LOOKS_STAKING, signer))
+      setLooksStaking(LooksStakingFactory.connect(LOOKS_STAKING, signer));
     }
   };
 
@@ -585,7 +454,7 @@ function useContracts() {
     dodoRewards,
     controllerUniV3,
     vefxsVault,
-    looksStaking
+    looksStaking,
   };
 }
 

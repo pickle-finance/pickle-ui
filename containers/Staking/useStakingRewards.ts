@@ -29,13 +29,8 @@ export function useStakingRewards(
   const [staked, setStaked] = useState<ethers.BigNumber | null>(null);
   const [earned, setEarned] = useState<ethers.BigNumber | null>(null);
   const [APY, setAPY] = useState<number | null>(null);
-  const [
-    rewardForDuration,
-    setRewardForDuration,
-  ] = useState<ethers.BigNumber | null>(null);
-  const [rewardsDurationInDays, setRewardsDurationInDays] = useState<
-    number | null
-  >(null);
+  const [rewardForDuration, setRewardForDuration] = useState<ethers.BigNumber | null>(null);
+  const [rewardsDurationInDays, setRewardsDurationInDays] = useState<number | null>(null);
 
   const getAPY = async () => {
     if (stakingRewards && pickle && prices) {
@@ -71,9 +66,7 @@ export function useStakingRewards(
           pickleRewards.periodFinish(),
         ]);
 
-        const rewardsDuration = dayjs
-          .duration(rewardsStats[2].toNumber(), "seconds")
-          .asDays();
+        const rewardsDuration = dayjs.duration(rewardsStats[2].toNumber(), "seconds").asDays();
 
         setEarned(rewardsStats[0]);
 
@@ -100,8 +93,6 @@ export function useStakingRewards(
     earned,
     rewardForDuration,
     rewardsDurationInDays,
-    pickleStakingRewards: stakingRewards
-      ? stakingRewards.attach(stakingRewardsAddress)
-      : null,
+    pickleStakingRewards: stakingRewards ? stakingRewards.attach(stakingRewardsAddress) : null,
   };
 }

@@ -34,9 +34,7 @@ export const MobileConnect: FC = () => {
 
   return (
     <>
-      <Container onClick={() => setVisible(true)}>
-        {t("connection.connect")}
-      </Container>
+      <Container onClick={() => setVisible(true)}>{t("connection.connect")}</Container>
       <Web3Modal setVisible={setVisible} {...bindings} />
     </>
   );

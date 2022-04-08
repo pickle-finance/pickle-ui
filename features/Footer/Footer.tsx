@@ -59,46 +59,22 @@ export const Footer: FC = () => {
       >
         {t("nav.github")}
       </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://snapshot.org/#/pickle.eth"
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href="https://snapshot.org/#/pickle.eth">
         {t("nav.vote")}
       </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://forum.pickle.finance"
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href="https://forum.pickle.finance">
         {t("nav.forum")}
       </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="http://discord.gg/uG6WhYkM8n"
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href="http://discord.gg/uG6WhYkM8n">
         {t("nav.discord")}
       </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://twitter.com/picklefinance"
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href="https://twitter.com/picklefinance">
         {t("nav.twitter")}
       </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://picklefinance.medium.com/"
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href="https://picklefinance.medium.com/">
         {t("nav.medium")}
       </NavItem>
-      <NavItem
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://docs.pickle.finance"
-      >
+      <NavItem target="_blank" rel="noopener noreferrer" href="https://docs.pickle.finance">
         {t("nav.docs")}
       </NavItem>
     </Container>

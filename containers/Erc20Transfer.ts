@@ -47,10 +47,7 @@ function useERC20Transfer() {
           setTransferStatus(token, recipient, Status.Approving);
 
           try {
-            const tx = await Token.approve(
-              recipient,
-              ethers.constants.MaxUint256,
-            );
+            const tx = await Token.approve(recipient, ethers.constants.MaxUint256);
             await tx.wait();
           } catch (e) {
             setTransferStatus(token, recipient, Status.Failed);

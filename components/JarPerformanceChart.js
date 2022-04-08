@@ -145,11 +145,7 @@ export default function JarPerformanceChart(props) {
                 tick={{ fill: materialBlack }}
                 ticks={yTicks}
               />
-              <XAxis
-                dataKey="x"
-                tickFormatter={formatDate}
-                tick={{ fill: materialBlack }}
-              />
+              <XAxis dataKey="x" tickFormatter={formatDate} tick={{ fill: materialBlack }} />
               <Legend />
               {chartData.lines.map((d) => (
                 <Line

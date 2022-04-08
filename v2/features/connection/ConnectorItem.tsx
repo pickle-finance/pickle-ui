@@ -19,10 +19,7 @@ interface ConnectorItemIconProps extends Props {
   isLoading: boolean;
 }
 
-const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({
-  connector,
-  isLoading,
-}) => (
+const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({ connector, isLoading }) => (
   <div className="relative w-12 h-12 p-1 bg-foreground-alt-400 rounded-full mr-4">
     <Image
       src={connector.icon}
@@ -48,8 +45,7 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
 
   const disabled =
     connector.id === Connectors.Metamask &&
-    (error instanceof NoEthereumProviderError ||
-      error instanceof UnsupportedChainIdError);
+    (error instanceof NoEthereumProviderError || error instanceof UnsupportedChainIdError);
 
   resetWalletConnectState(connector.connector);
 
@@ -57,9 +53,7 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
     if (disabled) return;
 
     setIsLoading(true);
-    activate(connector.connector).finally(() =>
-      dispatch(setIsModalOpen(false)),
-    );
+    activate(connector.connector).finally(() => dispatch(setIsModalOpen(false)));
   };
 
   return (

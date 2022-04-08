@@ -23,11 +23,7 @@ export const useFetchFarms = (): { rawFarms: Array<RawFarm> | null } => {
   const [farms, setFarms] = useState<Array<RawFarm> | null>(null);
 
   const getFarms = async () => {
-    if (
-      masterchef &&
-      masterchef?.address != NULL_ADDRESS &&
-      multicallProvider
-    ) {
+    if (masterchef && masterchef?.address != NULL_ADDRESS && multicallProvider) {
       const poolLengthBN = (await masterchef?.poolLength()) as BigNumber;
       const poolLength = parseInt(poolLengthBN.toString());
 

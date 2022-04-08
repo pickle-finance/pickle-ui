@@ -70,8 +70,7 @@ export const useFetchGauges = (): { rawGauges: Array<RawGauge> | null } => {
       // extract response and convert to something we can use
       const gauges = tokens.map((token, idx) => {
         return {
-          allocPoint:
-            +gaugeWeights[idx].toString() / +totalWeight.toString() || 0,
+          allocPoint: +gaugeWeights[idx].toString() / +totalWeight.toString() || 0,
           token: token,
           gaugeAddress: gaugeAddresses[idx],
           gaugeWeight: +gaugeWeights[idx].toString(),

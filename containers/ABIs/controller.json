@@ -11,9 +11,7 @@
     "type": "constructor"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_converter", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_converter", "type": "address" }],
     "name": "approveJarConverter",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -47,9 +45,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_token", "type": "address" }],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -110,9 +106,7 @@
       { "internalType": "uint256", "name": "parts", "type": "uint256" }
     ],
     "name": "getExpectedReturn",
-    "outputs": [
-      { "internalType": "uint256", "name": "expected", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "expected", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -165,9 +159,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_converter", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_converter", "type": "address" }],
     "name": "revokeJarConverter",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -197,18 +189,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_devfund", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_devfund", "type": "address" }],
     "name": "setDevFund",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_governance", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_governance", "type": "address" }],
     "name": "setGovernance",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -225,27 +213,21 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_onesplit", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_onesplit", "type": "address" }],
     "name": "setOneSplit",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_split", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_split", "type": "uint256" }],
     "name": "setSplit",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_strategist", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_strategist", "type": "address" }],
     "name": "setStrategist",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -262,18 +244,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_timelock", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_timelock", "type": "address" }],
     "name": "setTimelock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_treasury", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_treasury", "type": "address" }],
     "name": "setTreasury",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -351,9 +329,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_token", "type": "address" }],
     "name": "withdrawAll",
     "outputs": [],
     "stateMutability": "nonpayable",

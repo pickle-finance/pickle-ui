@@ -14,10 +14,7 @@ import { Dill } from "../../containers/Dill";
 import { TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
-import {
-  ERC20Transfer,
-  Status as ERC20TransferStatus,
-} from "../../containers/Erc20Transfer";
+import { ERC20Transfer, Status as ERC20TransferStatus } from "../../containers/Erc20Transfer";
 import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
@@ -70,9 +67,7 @@ const compare = (otherArray: UserGaugeData[]) => (current: UserGaugeData) => {
   otherArray.filter((other) => other.address == current.address).length == 0;
 };
 
-export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
-  gauges,
-}) => {
+export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({ gauges }) => {
   const { balance: dillBalanceBN } = Dill.useContainer();
   const { pickleCore } = PickleCore.useContainer();
   const [votingFarms, setVotingFarms] = useState<UserGaugeData[]>([]);
@@ -86,16 +81,9 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
     disabled: false,
     text: t("gauges.submitVote"),
   });
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
   const { setButtonStatus } = useButtonStatus();
-  const [currWeights, setCurrWeights] = useState(
-    gauges.map((x) => x.allocPoint),
-  );
-
+  const [currWeights, setCurrWeights] = useState(gauges.map((x) => x.allocPoint));
 
   let totalGaugeWeight = 0;
   for (let i = 0; i < gauges?.length; i++) {
@@ -145,9 +133,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       const dillBalance = +dillBalanceBN.toString();
       // Revise user's weight distribution for new estimate
       const estimatedWeight =
-        (gauge.gaugeWeight -
-          gauge.userWeight +
-          (dillBalance * Object.values(x)[0]) / 100) /
+        (gauge.gaugeWeight - gauge.userWeight + (dillBalance * Object.values(x)[0]) / 100) /
         (gauge.totalWeight - gauge.userCurrentWeights + dillBalance);
 
       return { [gauge.address]: estimatedWeight };
@@ -224,12 +210,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         : t("gauges.dillNeeded");
 
       if (voteStatus === ERC20TransferStatus.Transfering) {
-        setButtonStatus(
-          voteStatus,
-          t("gauges.voting"),
-          buttonText,
-          setVoteButton,
-        );
+        setButtonStatus(voteStatus, t("gauges.voting"), buttonText, setVoteButton);
       } else {
         setVoteButton({
           disabled: !balance || !weightsValid,
@@ -243,20 +224,11 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
   const { jars } = Jars.useContainer();
 
   const renderVotingOption = (gauge: UserGaugeData) => {
-    const {
-      poolName,
-      depositToken,
-      depositTokenName,
-      fullApy,
-      allocPoint,
-      address,
-    } = gauge;
+    const { poolName, depositToken, depositTokenName, fullApy, allocPoint, address } = gauge;
     if (pickleCore) {
       let APYs: JarApy[] = [];
 
-      if (
-        depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()
-      ) {
+      if (depositToken.address.toLowerCase() === PICKLE_ETH_GAUGE.toLowerCase()) {
         APYs = [...APYs, ...getUniPairDayAPY(PICKLE_ETH_GAUGE)];
       }
 
@@ -266,9 +238,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
 
       const maybeJar = jarFarmMap[depositToken.address];
       if (jars && maybeJar) {
-        const gaugeingJar = jars.filter(
-          (x) => x.jarName === maybeJar.jarName,
-        )[0];
+        const gaugeingJar = jars.filter((x) => x.jarName === maybeJar.jarName)[0];
         APYs = gaugeingJar?.APYs ? [...APYs, ...gaugeingJar.APYs] : APYs;
       }
 
@@ -280,17 +250,10 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
       const newWeight = newWeightMaybe ? newWeightMaybe[address] : null;
 
       return (
-        <Grid.Container
-          style={{ width: "100%", paddingBottom: "10px" }}
-          key={address}
-        >
+        <Grid.Container style={{ width: "100%", paddingBottom: "10px" }} key={address}>
           <Grid xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
-              src={
-                GAUGE_LP_TO_ICON[
-                  depositToken.address as keyof typeof GAUGE_LP_TO_ICON
-                ]
-              }
+              src={GAUGE_LP_TO_ICON[depositToken.address as keyof typeof GAUGE_LP_TO_ICON]}
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{poolName}</div>
@@ -299,8 +262,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           </Grid>
           <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
             <Data isZero={fullApy === 0}>
-              {formatAPY(totalAPY + pickleAPYMin)}~
-              {formatAPY(totalAPY + pickleAPYMax)}
+              {formatAPY(totalAPY + pickleAPYMin)}~{formatAPY(totalAPY + pickleAPYMax)}
             </Data>
             <Label>{t("gauges.totalApyRange")}</Label>
           </Grid>
@@ -312,8 +274,7 @@ export const VoteCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
           </Grid>
           <Grid xs={24} sm={6} md={5} lg={5} style={{ textAlign: "center" }}>
             <Data>
-              {formatPercent(allocPoint)}%{" "}
-              {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
+              {formatPercent(allocPoint)}% {newWeight ? `-> ${formatPercent(newWeight)}%` : null}
             </Data>
             <Label>{t("gauges.currentWeight")}</Label>
           </Grid>

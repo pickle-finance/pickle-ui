@@ -18,7 +18,7 @@ import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 import Confetti from "v2/components/Confetti";
 
-import 'react-toastify/dist/ReactToastify.css'
+import "react-toastify/dist/ReactToastify.css";
 
 // Custom polyfills
 import "core-js/proposals/string-match-all";

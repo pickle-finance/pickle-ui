@@ -17,15 +17,9 @@ export const usePBAMM = () => {
   const { status: transferStatus } = ERC20Transfer.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
   const { prices } = Prices.useContainer();
-  const [lusdBalance, setLusdBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
-  const [pbammBalance, setPbammBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
-  const [plqtyBalance, setplqtyBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
+  const [lusdBalance, setLusdBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+  const [pbammBalance, setPbammBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
+  const [plqtyBalance, setplqtyBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [pricePerToken, setPricePerToken] = useState<number>(0);
   const [userValue, setUserValue] = useState<number>(0);
   const [lqtyApr, setLqtyApr] = useState<number>(0);
@@ -34,13 +28,8 @@ export const usePBAMM = () => {
   const [tvl, setTvl] = useState<number>(0);
 
   const lusdToken = new Contract(BPAddresses.LUSD, erc20.abi, provider);
-  const bLens = new Contract(
-    "0x9dcc156dfdc09bb52c7489e6ce5c1a9c90572064",
-    BLensABI,
-    provider,
-  );
-  const pLQTYContract =
-    provider && JarFactory.connect(BPAddresses.pLQTY, provider);
+  const bLens = new Contract("0x9dcc156dfdc09bb52c7489e6ce5c1a9c90572064", BLensABI, provider);
+  const pLQTYContract = provider && JarFactory.connect(BPAddresses.pLQTY, provider);
 
   const updateData = async () => {
     if (stabilityPool && pBAMM && prices && address) {
@@ -53,15 +42,12 @@ export const usePBAMM = () => {
       if (_plqty) setplqtyBalance(_plqty);
 
       // LUSD value calc
-      const lusdNum = await stabilityPool.getCompoundedLUSDDeposit(
-        BPAddresses.pBAMM,
-      );
+      const lusdNum = await stabilityPool.getCompoundedLUSDDeposit(BPAddresses.pBAMM);
 
       const ethNum = await provider.getBalance(BPAddresses.pBAMM);
       const totalShares = await pBAMM.totalSupply();
       const ppt =
-        (+formatEther(lusdNum) * prices.lusd +
-          +formatEther(ethNum) * prices.eth) /
+        (+formatEther(lusdNum) * prices.lusd + +formatEther(ethNum) * prices.eth) /
         +formatEther(totalShares);
 
       setPricePerToken(ppt);
@@ -71,8 +57,7 @@ export const usePBAMM = () => {
       // LQTY APR calc
       const remainingLQTY = 13344950;
       const lusdInSP = await lusdToken.balanceOf(BPAddresses.STABILITY_POOL);
-      const lqtyApr =
-        (remainingLQTY * prices.lqty) / (+formatEther(lusdInSP) * prices.lusd);
+      const lqtyApr = (remainingLQTY * prices.lqty) / (+formatEther(lusdInSP) * prices.lusd);
       setLqtyApr(lqtyApr * 100);
 
       // Pending pLQTY

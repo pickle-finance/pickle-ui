@@ -24,7 +24,8 @@ const RevRow: FC<{ recentHarvest: RecentHarvest; chainExplorer: string }> = ({
       {recentHarvest.transfers && formatTxLink(chainExplorer, recentHarvest.txid)}
     </td>
     <td className="text-center pt-2 pb-2">
-      {recentHarvest.transfers && formatDollars(sumHarvestTransfers(recentHarvest.transfers, recentHarvest.fee))}
+      {recentHarvest.transfers &&
+        formatDollars(sumHarvestTransfers(recentHarvest.transfers, recentHarvest.fee))}
     </td>
   </tr>
 );

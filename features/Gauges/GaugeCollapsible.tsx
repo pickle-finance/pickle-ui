@@ -44,9 +44,7 @@ const formatAPY = (apy: number) => {
   return apy.toFixed(2) + "%";
 };
 
-export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
-  gaugeData,
-}) => {
+export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({ gaugeData }) => {
   const { jars } = Jars.useContainer();
 
   const {
@@ -66,18 +64,14 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const jarFarmMap = useJarFarmMap();
 
-  const stakedNum = parseFloat(
-    formatUnits(staked, depositTokenDecimals),
-  );
+  const stakedNum = parseFloat(formatUnits(staked, depositTokenDecimals));
 
   const stakedStr = stakedNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: stakedNum < 1 ? 8 : 4,
   });
 
-  const balanceNum = parseFloat(
-    formatUnits(balance, depositTokenDecimals),
-  );
+  const balanceNum = parseFloat(formatUnits(balance, depositTokenDecimals));
 
   const balanceStr = balanceNum.toLocaleString(undefined, {
     minimumFractionDigits: 0,
@@ -99,9 +93,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     maximumFractionDigits: 2,
   });
 
-  const harvestableStr = parseFloat(
-    formatEther(harvestable || 0),
-  ).toLocaleString();
+  const harvestableStr = parseFloat(formatEther(harvestable || 0)).toLocaleString();
 
   const {
     status: erc20TransferStatuses,
@@ -136,9 +128,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
   const [yvMigrateState, setYvMigrateState] = useState<string | null>(null);
   const [isSuccess, setSuccess] = useState<boolean>(false);
 
-  const [pickleMigrateState, setPickleMigrateState] = useState<string | null>(
-    null,
-  );
+  const [pickleMigrateState, setPickleMigrateState] = useState<string | null>(null);
 
   const gauge = signer && GaugeFactory.connect(gaugeData.address, signer);
 
@@ -159,10 +149,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
 
   const _balance = stakedNum;
   const _derived = _balance * 0.4;
-  const _adjusted =
-    (gaugeData.totalSupply / (10**depositTokenDecimals)) * dillRatio * 0.6;
-  const pickleAPY =
-    (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
+  const _adjusted = (gaugeData.totalSupply / 10 ** depositTokenDecimals) * dillRatio * 0.6;
+  const pickleAPY = (pickleAPYMax * Math.min(_balance, _derived + _adjusted)) / _balance;
   const realAPY = gaugeData.totalAPY + pickleAPY;
 
   const pickleItem =
@@ -180,8 +168,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
     .filter((x) => x)
     .join(" + ");
 
-  const yourPickles =
-    pickleAPY === 0 ? [] : [`pickle: ${formatAPY(pickleAPY)}`];
+  const yourPickles = pickleAPY === 0 ? [] : [`pickle: ${formatAPY(pickleAPY)}`];
   const yourApyTooltipText = [
     ...yourPickles,
     ...gaugeData.APYs.map((x) => {
@@ -243,14 +230,8 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
 
   useEffect(() => {
     if (gaugeData) {
-      const stakeStatus = getTransferStatus(
-        depositToken.address,
-        gaugeData.address,
-      );
-      const unstakeStatus = getTransferStatus(
-        gaugeData.address,
-        depositToken.address,
-      );
+      const stakeStatus = getTransferStatus(depositToken.address, gaugeData.address);
+      const unstakeStatus = getTransferStatus(gaugeData.address, depositToken.address);
       const harvestStatus = getTransferStatus(gaugeData.address, "harvest");
       const exitStatus = getTransferStatus(gaugeData.address, "exit");
 
@@ -260,24 +241,9 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
         approved ? t("farms.stake") : t("farms.approveAndStake"),
         setStakeButton,
       );
-      setButtonStatus(
-        unstakeStatus,
-        t("farms.unstaking"),
-        t("farms.unstake"),
-        setUnstakeButton,
-      );
-      setButtonStatus(
-        harvestStatus,
-        t("farms.harvesting"),
-        t("farms.harvest"),
-        setHarvestButton,
-      );
-      setButtonStatus(
-        exitStatus,
-        t("farms.exiting"),
-        t("farms.harvestAndExit"),
-        setExitButton,
-      );
+      setButtonStatus(unstakeStatus, t("farms.unstaking"), t("farms.unstake"), setUnstakeButton);
+      setButtonStatus(harvestStatus, t("farms.harvesting"), t("farms.harvest"), setHarvestButton);
+      setButtonStatus(exitStatus, t("farms.exiting"), t("farms.harvestAndExit"), setExitButton);
     }
   }, [erc20TransferStatuses]);
 
@@ -308,11 +274,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
         <Grid.Container gap={1}>
           <Grid xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
-              src={
-                GAUGE_LP_TO_ICON[
-                  depositToken.address as keyof typeof GAUGE_LP_TO_ICON
-                ]
-              }
+              src={GAUGE_LP_TO_ICON[depositToken.address as keyof typeof GAUGE_LP_TO_ICON]}
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{poolName}</div>
@@ -324,9 +286,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
             <Label>{t("balances.walletBalance")}</Label>
           </Grid>
           <Grid xs={24} sm={12} md={3} lg={3} css={{ textAlign: "center" }}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
-            </Data>
+            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>{harvestableStr}</Data>
             <Label>{t("balances.earned")}</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
@@ -335,19 +295,13 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4} css={{ textAlign: "center" }}>
             <>
-              <Tooltip
-                text={
-                  gaugeData.totalAPY + fullApy === 0
-                    ? "--"
-                    : apyRangeTooltipText
-                }
-              >
+              <Tooltip text={gaugeData.totalAPY + fullApy === 0 ? "--" : apyRangeTooltipText}>
                 <div>
                   {gaugeData.totalAPY + fullApy === 0
                     ? "--%"
-                    : `${formatAPY(
-                        gaugeData.totalAPY + pickleAPYMin,
-                      )}~${formatAPY(gaugeData.totalAPY + pickleAPYMax)}`}
+                    : `${formatAPY(gaugeData.totalAPY + pickleAPYMin)}~${formatAPY(
+                        gaugeData.totalAPY + pickleAPYMax,
+                      )}`}
                 </div>
                 <Label>{t("balances.apyRange")}</Label>
               </Tooltip>
@@ -385,11 +339,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setStakeAmount(
-                  formatUnits(
-                    balance, depositTokenDecimals
-                  ),
-                );
+                setStakeAmount(formatUnits(balance, depositTokenDecimals));
               }}
             >
               {t("balances.max")}
@@ -434,9 +384,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  setUnstakeAmount(
-                    formatUnits(staked, depositTokenDecimals),
-                  );
+                  setUnstakeAmount(formatUnits(staked, depositTokenDecimals));
                 }}
               >
                 {t("balances.max")}
@@ -460,10 +408,7 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                     approval: false,
                     transferCallback: async () => {
                       return gauge.withdraw(
-                        ethers.utils.parseUnits(
-                          unstakeAmount,
-                          depositTokenDecimals,
-                        ),
+                        ethers.utils.parseUnits(unstakeAmount, depositTokenDecimals),
                       );
                     },
                   });
@@ -542,16 +487,13 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 }}
               >
                 <Trans i18nKey="farms.yvBOOSTMigration">
-                  Your tokens will be unstaked and migrated to the yvBOOST pJar
-                  and staked in the Farm.
+                  Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the
+                  Farm.
                   <br />
                   This process will require a number of transactions.
                   <br />
                   Learn more about yvBOOST
-                  <a
-                    target="_"
-                    href="https://twitter.com/iearnfinance/status/1388131568481411077"
-                  >
+                  <a target="_" href="https://twitter.com/iearnfinance/status/1388131568481411077">
                     here
                   </a>
                   .
@@ -593,10 +535,10 @@ export const GaugeCollapsible: FC<{ gaugeData: UserGaugeDataWithAPY }> = ({
                 }}
               >
                 <Trans i18nKey="farms.sushiMigration">
-                  Your PICKLE/ETH LP tokens will be unstaked and migrated from
-                  Uniswap LP tokens to Sushi LP tokens
-                  <br /> and then staked in Sushi's MasterChef v2. This process
-                  will require a number of transactions.
+                  Your PICKLE/ETH LP tokens will be unstaked and migrated from Uniswap LP tokens to
+                  Sushi LP tokens
+                  <br /> and then staked in Sushi's MasterChef v2. This process will require a
+                  number of transactions.
                 </Trans>
                 {isSuccess && (
                   <p style={{ fontWeight: "bold" }}>

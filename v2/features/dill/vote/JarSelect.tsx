@@ -10,7 +10,14 @@ export const JarSelect: FC<{
   selectedJarStrats?: string[];
   setSelectedJars: SetJarsFunction;
   setSelectedJarStrategies?: SetStratsFunction;
-}> = ({ core, mainnet, selectedJars, selectedJarStrats, setSelectedJars, setSelectedJarStrategies }) => {
+}> = ({
+  core,
+  mainnet,
+  selectedJars,
+  selectedJarStrats,
+  setSelectedJars,
+  setSelectedJarStrategies,
+}) => {
   const selected = selectedJars
     ? selectedJarStrats
       ? selectedJars.concat(selectedJarStrats)

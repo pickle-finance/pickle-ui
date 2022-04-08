@@ -34,11 +34,7 @@ export const Claim: FC<{
       amount: claimable ? formatNumber(claimable, 3) : 0,
     }),
   });
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
 
   const dillAPY =
     dillStats.weeklyDistribution && dillStats.lockedValue
@@ -85,13 +81,11 @@ export const Claim: FC<{
           <Card>
             <h2>{t("dill.claim")}</h2>
             <div>
-              {t("dill.weeklyRevenue")}: $
-              {formatNumber(dillStats?.weeklyProfit || 0)}
+              {t("dill.weeklyRevenue")}: ${formatNumber(dillStats?.weeklyProfit || 0)}
             </div>
             &nbsp;
             <div>
-              {t("dill.projected")}: $
-              {formatNumber(dillStats?.weeklyDistribution || 0)}
+              {t("dill.projected")}: ${formatNumber(dillStats?.weeklyDistribution || 0)}
             </div>
             &nbsp;
             <div>
@@ -99,15 +93,12 @@ export const Claim: FC<{
             </div>
             &nbsp;
             <div>
-              {t("dill.nextDistribution")}:{" "}
-              {dillStats.nextDistribution?.toDateString()}
+              {t("dill.nextDistribution")}: {dillStats.nextDistribution?.toDateString()}
             </div>
             &nbsp;
             <div>
-              {t("dill.lastDistribution")}: $
-              {formatNumber(dillStats?.lastDistributionValue || 0)} (
-              {formatNumber(dillStats?.lastDistribution || 0)}{" "}
-              <PickleIcon size={16} />)
+              {t("dill.lastDistribution")}: ${formatNumber(dillStats?.lastDistributionValue || 0)} (
+              {formatNumber(dillStats?.lastDistribution || 0)} <PickleIcon size={16} />)
             </div>
             &nbsp;
             <Spacer />
@@ -119,9 +110,7 @@ export const Claim: FC<{
                     token: "claim",
                     recipient: feeDistributor.address,
                     transferCallback: async () => {
-                      const tx = await feeDistributor
-                        .connect(signer)
-                        ["claim()"]();
+                      const tx = await feeDistributor.connect(signer)["claim()"]();
                       tx.wait(0).then(() =>
                         setClaimButton({
                           disabled: true,

@@ -63,14 +63,9 @@ export const Balances: FC = () => {
         "https://api.coingecko.com/api/v3/simple/price?ids=pickle-finance&vs_currencies=usd&include_market_cap=true",
       ).then((x) => x.json());
       setMarketCap(res["pickle-finance"].usd_market_cap);
-      if (picklePerBlock)
-        setTooltipText(
-          t("balances.picklePerBlock", { amount: picklePerBlock }),
-        );
+      if (picklePerBlock) setTooltipText(t("balances.picklePerBlock", { amount: picklePerBlock }));
       if (picklePerSecond)
-        setTooltipText(
-          t("balances.picklePerSecond", { amount: picklePerSecond }),
-        );
+        setTooltipText(t("balances.picklePerSecond", { amount: picklePerSecond }));
     };
     updateInfo();
   }, [blockNum]);
@@ -82,9 +77,7 @@ export const Balances: FC = () => {
           <Card>
             <h2>{t("balances.yourBalance")}</h2>
             <DataPoint>
-              <span>
-                {pickleBalance !== null ? formatPickles(pickleBalance) : "--"}
-              </span>
+              <span>{pickleBalance !== null ? formatPickles(pickleBalance) : "--"}</span>
               <PickleIcon size={24} margin="0 0 0 0.5rem" />
               {pickleBalance !== null && prices?.pickle && (
                 <HideOnMobile>
@@ -118,22 +111,14 @@ export const Balances: FC = () => {
             <h2>{t("balances.marketCap")}</h2>
             <DataPoint>
               <span>
-                {prices?.pickle && totalSupply && marketCap
-                  ? formatDollars(marketCap)
-                  : "--"}
+                {prices?.pickle && totalSupply && marketCap ? formatDollars(marketCap) : "--"}
               </span>
             </DataPoint>
             <Card.Footer>
               {totalSupply && tooltipText && marketCap ? (
-                <Tooltip
-                  placement="bottom"
-                  style={{ cursor: `help` }}
-                  text={tooltipText}
-                >
+                <Tooltip placement="bottom" style={{ cursor: `help` }} text={tooltipText}>
                   {t("balances.totalSupply")}:{" "}
-                  {totalSupply && prices?.pickle
-                    ? formatPickles(marketCap / prices?.pickle)
-                    : "--"}
+                  {totalSupply && prices?.pickle ? formatPickles(marketCap / prices?.pickle) : "--"}
                   <PickleIcon size={14} />
                 </Tooltip>
               ) : (
@@ -149,9 +134,7 @@ export const Balances: FC = () => {
           <Card>
             <h2>{t("balances.totalValueLocked")}</h2>
             <DataPoint>
-              <span>
-                {protocolInfo ? formatDollars(protocolInfo.totalValue) : "--"}
-              </span>
+              <span>{protocolInfo ? formatDollars(protocolInfo.totalValue) : "--"}</span>
             </DataPoint>
             <Card.Footer>
               <Tooltip
@@ -161,9 +144,7 @@ export const Balances: FC = () => {
               >
                 {t("balances.poolSize")}:{" "}
                 {protocolInfo
-                  ? formatDollars(
-                      protocolInfo.totalValue - protocolInfo.jarValue,
-                    )
+                  ? formatDollars(protocolInfo.totalValue - protocolInfo.jarValue)
                   : "--"}
               </Tooltip>
             </Card.Footer>

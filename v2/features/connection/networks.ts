@@ -7,9 +7,7 @@ export type Network = {
   chainId: number;
 };
 
-export const getNetworks = (
-  core: PickleModelJson.PickleModelJson | undefined,
-): Network[] => {
+export const getNetworks = (core: PickleModelJson.PickleModelJson | undefined): Network[] => {
   if (!core) return [];
   const chains: RawChain[] = [...core.chains].sort((first, second) =>
     first.network > second.network ? 1 : -1,
@@ -17,7 +15,7 @@ export const getNetworks = (
   let returns: Network[] = [];
   for (let i = 0; i < chains.length; i++) {
     const name = chains[i].network;
-    const visibleName = chains[i].networkVisible
+    const visibleName = chains[i].networkVisible;
     returns.push({
       name,
       visibleName,

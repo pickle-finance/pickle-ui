@@ -2,11 +2,14 @@ import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { NextRouter, useRouter } from "next/router";
 import type { PickleFinancePage, ChainData } from "v2/types";
+
 import ChartContainer from "v2/features/stats/chain/ChartContainer";
 import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
-import { getTokenPriceChangeBal, getTokenPriceChangePct } from "v2/features/stats/chain/BigMoverUtils";
 import BigMoverTableContainer from "v2/features/stats/chain/BigMoverTableContainer";
-
+import {
+  getTokenPriceChangeBal,
+  getTokenPriceChangePct,
+} from "v2/features/stats/chain/BigMoverUtils";
 
 const Stats: PickleFinancePage = () => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
@@ -17,25 +20,25 @@ const Stats: PickleFinancePage = () => {
   const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
   useEffect(() => {
     const getData = async (): Promise<void> => {
+      console.log(chain);
       if (chain) {
-        await getChainData(chain).then((data) => {
-          console.log(data)
+        getChainData(chain).then((data) => {
+          console.log(data);
           setChainData(data);
         });
-        const tokenPriceChangePct = getTokenPriceChangePct(chainData)
+        const tokenPriceChangePct = getTokenPriceChangePct(chainData);
         setTokenPctChangeData(tokenPriceChangePct);
-        const tokenPriceChangeBal = getTokenPriceChangeBal(chainData)
+        const tokenPriceChangeBal = getTokenPriceChangeBal(chainData);
         setTokenBalChangeData(tokenPriceChangeBal);
       }
     };
     getData();
   }, [chain]);
-  tokenPctChangeData.sort((a, b) => a.tokenPriceChange > b.tokenPriceChange ? -1 : 1)
-  tokenBalChangeData.sort((a, b) => a.tokenPriceChange > b.tokenPriceChange ? -1 : 1)
-
+  tokenPctChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
+  tokenBalChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
 
   return (
-    <div className="block lg:flex mb-5 sm:mb-10"> 
+    <div className="block lg:flex mb-5 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
         {tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 
           ? 
@@ -69,11 +72,11 @@ const PageTitle: FC = () => {
 };
 
 const getChainData = async (chain: string): Promise<ChainData> => {
+  // https://api.pickle.finance/prod/protocol/analytics/chain/{chain}/en
   const url = `${process.env.apiChain}/${chain}/en`;
-  console.log(url);
   return await fetch(url)
     .then((response) => response.json())
-    .catch(e => console.log(e));
+    .catch((e) => console.log(e));
 };
 
 Stats.PageTitle = PageTitle;

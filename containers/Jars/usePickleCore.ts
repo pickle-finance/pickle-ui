@@ -17,10 +17,7 @@ const blocksPerMinute: Record<number, number> = {
 };
 
 const usePickleCore = () => {
-  const [
-    pickleCore,
-    setPickleCore,
-  ] = useState<PickleModelJson.PickleModelJson | null>(null);
+  const [pickleCore, setPickleCore] = useState<PickleModelJson.PickleModelJson | null>(null);
 
   const fetchPickleCore = async () => {
     setPickleCore(<PickleModelJson.PickleModelJson>await getPickleCore());

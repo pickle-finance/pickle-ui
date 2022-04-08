@@ -150,9 +150,7 @@ export const FARM_LP_TO_ICON = {
   ),
 };
 
-export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
-  farmData,
-}) => {
+export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({ farmData }) => {
   const { jars } = Jars.useContainer();
   const jarFarmMap = useJarFarmMap();
 
@@ -183,9 +181,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
     minimumFractionDigits: 0,
     maximumFractionDigits: stakedNum < 1 ? 8 : 4,
   });
-  const harvestableStr = parseFloat(
-    formatEther(harvestable || 0),
-  ).toLocaleString();
+  const harvestableStr = parseFloat(formatEther(harvestable || 0)).toLocaleString();
 
   const {
     status: erc20TransferStatuses,
@@ -306,8 +302,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
               fontSize: "1rem",
             }}
           >
-            Your tokens will be unstaked and migrated to the yvBOOST pJar and
-            staked in the new{" "}
+            Your tokens will be unstaked and migrated to the yvBOOST pJar and staked in the new{" "}
             <Link color href="/farms">
               Farms
             </Link>
@@ -315,10 +310,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             This process will require a number of transactions.
             <br />
             Learn more about yvBOOST{" "}
-            <a
-              target="_"
-              href="https://twitter.com/iearnfinance/status/1376912409688956932"
-            >
+            <a target="_" href="https://twitter.com/iearnfinance/status/1376912409688956932">
               here
             </a>
             .
@@ -353,8 +345,8 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
               fontSize: "1rem",
             }}
           >
-            Your tokens will be unstaked and deposited in the new Farms. This
-            process requires a number of transactions.
+            Your tokens will be unstaked and deposited in the new Farms. This process requires a
+            number of transactions.
           </div>
         </>
       );
@@ -363,32 +355,13 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
 
   useEffect(() => {
     if (masterchef) {
-      const stakeStatus = getTransferStatus(
-        depositToken.address,
-        masterchef.address,
-      );
-      const unstakeStatus = getTransferStatus(
-        masterchef.address,
-        depositToken.address,
-      );
-      const harvestStatus = getTransferStatus(
-        masterchef.address,
-        poolIndex.toString(),
-      );
+      const stakeStatus = getTransferStatus(depositToken.address, masterchef.address);
+      const unstakeStatus = getTransferStatus(masterchef.address, depositToken.address);
+      const harvestStatus = getTransferStatus(masterchef.address, poolIndex.toString());
 
       setButtonStatus(stakeStatus, "Staking...", "Stake", setStakeButton);
-      setButtonStatus(
-        unstakeStatus,
-        "Unstaking...",
-        "Unstake",
-        setUnstakeButton,
-      );
-      setButtonStatus(
-        harvestStatus,
-        "Harvesting...",
-        "Harvest",
-        setHarvestButton,
-      );
+      setButtonStatus(unstakeStatus, "Unstaking...", "Unstake", setUnstakeButton);
+      setButtonStatus(harvestStatus, "Harvesting...", "Harvest", setHarvestButton);
     }
   }, [erc20TransferStatuses]);
 
@@ -400,11 +373,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
         <Grid.Container gap={1}>
           <Grid xs={24} sm={12} md={5} lg={5}>
             <TokenIcon
-              src={
-                FARM_LP_TO_ICON[
-                  depositToken.address as keyof typeof FARM_LP_TO_ICON
-                ]
-              }
+              src={FARM_LP_TO_ICON[depositToken.address as keyof typeof FARM_LP_TO_ICON]}
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{poolName}</div>
@@ -418,9 +387,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
             </Tooltip>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
-            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>
-              {harvestableStr}
-            </Data>
+            <Data isZero={parseFloat(formatEther(harvestable || 0)) === 0}>{harvestableStr}</Data>
             <Label>Earned</Label>
           </Grid>
           <Grid xs={24} sm={6} md={4} lg={4}>
@@ -515,10 +482,7 @@ export const FarmCollapsible: FC<{ farmData: UserFarmData }> = ({
                   transferCallback: async () => {
                     return masterchef
                       .connect(signer)
-                      .withdraw(
-                        poolIndex,
-                        ethers.utils.parseEther(unstakeAmount),
-                      );
+                      .withdraw(poolIndex, ethers.utils.parseEther(unstakeAmount));
                   },
                 });
               }

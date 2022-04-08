@@ -344,16 +344,12 @@
   {
     "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "lpToken",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256[]", "name": "pids", "type": "uint256[]" }
-    ],
+    "inputs": [{ "internalType": "uint256[]", "name": "pids", "type": "uint256[]" }],
     "name": "massUpdatePools",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -372,9 +368,7 @@
       { "internalType": "address", "name": "_user", "type": "address" }
     ],
     "name": "pendingReward",
-    "outputs": [
-      { "internalType": "uint256", "name": "pending", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "pending", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -400,9 +394,7 @@
   {
     "inputs": [],
     "name": "poolLength",
-    "outputs": [
-      { "internalType": "uint256", "name": "pools", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "pools", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -416,9 +408,7 @@
   {
     "inputs": [],
     "name": "reward",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -432,9 +422,7 @@
   {
     "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "rewarder",
-    "outputs": [
-      { "internalType": "contract IRewarder", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IRewarder", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -488,9 +476,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",

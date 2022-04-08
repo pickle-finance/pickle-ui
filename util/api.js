@@ -2,9 +2,9 @@ import fetch from "node-fetch";
 
 const pickleApi = process.env.apiHost;
 const getJarChartData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/chart/jar/${asset}?count=4400`,
-  ).then((response) => response.json());
+  return await fetch(`${pickleApi}/chart/jar/${asset}?count=4400`).then((response) =>
+    response.json(),
+  );
 };
 
 export const getJarChart = async (assets) => {
@@ -41,32 +41,26 @@ export const getPerformanceData = async (assets) => {
 };
 
 export const getAssetPerformanceData = async (asset) => {
-  return await fetch(
-    `${pickleApi}/protocol/jar/${asset}/performance`,
-  ).then((response) => response.json());
+  return await fetch(`${pickleApi}/protocol/jar/${asset}/performance`).then((response) =>
+    response.json(),
+  );
 };
 
 export const getUserEarnings = async (userId) => {
-  return await fetch(`${pickleApi}/protocol/earnings/${userId}`).then(
-    (response) => {
-      if (response.status === 404) {
-        return undefined;
-      }
-      return response.json();
-    },
-  );
+  return await fetch(`${pickleApi}/protocol/earnings/${userId}`).then((response) => {
+    if (response.status === 404) {
+      return undefined;
+    }
+    return response.json();
+  });
 };
 
 export const getProtocolData = async () => {
-  return await fetch(
-    `${pickleApi}/protocol/value?tokens=true`,
-  ).then((response) => response.json());
+  return await fetch(`${pickleApi}/protocol/value?tokens=true`).then((response) => response.json());
 };
 
 export const getFarmData = async () => {
-  return await fetch(`${pickleApi}/protocol/farm`).then((response) =>
-    response.json(),
-  );
+  return await fetch(`${pickleApi}/protocol/farm`).then((response) => response.json());
 };
 
 export const formatUsd = (value) => {
@@ -84,13 +78,9 @@ export const formatUsd = (value) => {
 const coingeckoApi = "https://api.coingecko.com/api/v3";
 
 export const getCoinData = async (coin) => {
-  return await fetch(`${coingeckoApi}/coins/${coin}`).then((response) =>
-    response.json(),
-  );
+  return await fetch(`${coingeckoApi}/coins/${coin}`).then((response) => response.json());
 };
 
 export const getPickleCore = async () => {
-  return await fetch(`${pickleApi}/protocol/pfcore/`).then((response) =>
-    response.json(),
-  );
+  return await fetch(`${pickleApi}/protocol/pfcore/`).then((response) => response.json());
 };

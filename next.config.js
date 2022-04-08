@@ -27,7 +27,7 @@ const moduleExports = {
     apiChain: "https://api.pickle.finance/prod/protocol/analytics/chain",
     apiHost: "https://api.pickle.finance/prod",
     apiJar: "https://api.pickle.finance/prod/protocol/analytics/jar",
-    apiPlatform: "https://api.pickle.finance/prod/protocol/analytics/platform/en"
+    apiPlatform: "https://api.pickle.finance/prod/protocol/analytics/platform/en",
   },
   i18n,
   async rewrites() {

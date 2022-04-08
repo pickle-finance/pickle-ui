@@ -43,23 +43,10 @@ export const useCurveCrvAPY = (
   const [CRVAPY, setCRVAPY] = useState<number | null>(null);
 
   const getCRVAPY = async () => {
-    if (
-      gaugeController &&
-      gauge &&
-      pool &&
-      underlyingPrice &&
-      prices?.crv &&
-      multicallProvider
-    ) {
-      const mcGauge = new MulticallContract(
-        gauge.address,
-        gauge.interface.fragments,
-      );
+    if (gaugeController && gauge && pool && underlyingPrice && prices?.crv && multicallProvider) {
+      const mcGauge = new MulticallContract(gauge.address, gauge.interface.fragments);
 
-      const mcPool = new MulticallContract(
-        pool.address,
-        pool.interface.fragments,
-      );
+      const mcPool = new MulticallContract(pool.address, pool.interface.fragments);
 
       const weight = await gaugeController["gauge_relative_weight(address)"](
         gauge.address,

@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 
-import {
-  Contracts,
-  PICKLE_STAKING_SCRV_REWARDS,
-  PICKLE_STAKING_WETH_REWARDS,
-} from "./Contracts";
+import { Contracts, PICKLE_STAKING_SCRV_REWARDS, PICKLE_STAKING_WETH_REWARDS } from "./Contracts";
 import { Connection } from "./Connection";
 import { Prices } from "./Prices";
 import { ethers } from "ethers";
@@ -21,18 +17,13 @@ function usePickleStaking() {
   const [scrvPrice, setSCRVPrice] = useState<null | number>(null);
 
   const SCRVRewards = useStakingRewards(PICKLE_STAKING_SCRV_REWARDS, scrvPrice);
-  const WETHRewards = useStakingRewards(
-    PICKLE_STAKING_WETH_REWARDS,
-    prices ? prices.eth : null,
-  );
+  const WETHRewards = useStakingRewards(PICKLE_STAKING_WETH_REWARDS, prices ? prices.eth : null);
 
   useEffect(() => {
     if (susdPool && chainName === ChainNetwork.Ethereum) {
       const f = async () => {
         const virtualPriceBN = await susdPool.get_virtual_price();
-        const virtualPrice = parseFloat(
-          ethers.utils.formatEther(virtualPriceBN),
-        );
+        const virtualPrice = parseFloat(ethers.utils.formatEther(virtualPriceBN));
 
         setSCRVPrice(virtualPrice);
       };

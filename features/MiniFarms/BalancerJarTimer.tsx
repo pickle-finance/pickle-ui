@@ -45,9 +45,7 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
   };
 
   const startTimer = (cooldownEndTime: number) => {
-    let { total, days, hours, minutes, seconds } = getTimeRemaining(
-      cooldownEndTime,
-    );
+    let { total, days, hours, minutes, seconds } = getTimeRemaining(cooldownEndTime);
     if (total >= 0) {
       // update the timer
       // check if less than 10 then we need to
@@ -83,9 +81,7 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
   return (
     <StyledNotice>
       <h2>{t("farms.balancer.cooldown") + `: (${timer})`}</h2>
-      <h2>
-        {t("farms.balancer.exit") + `: ${getWithdrawalFee().toFixed(2)}%`}
-      </h2>
+      <h2>{t("farms.balancer.exit") + `: ${getWithdrawalFee().toFixed(2)}%`}</h2>
     </StyledNotice>
   );
 };

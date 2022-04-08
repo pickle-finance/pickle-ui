@@ -1,8 +1,6 @@
 [
   {
-    "inputs": [
-      { "internalType": "address", "name": "_yearnZapIn", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_yearnZapIn", "type": "address" }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -33,9 +31,7 @@
       { "internalType": "uint256", "name": "minPTokens", "type": "uint256" }
     ],
     "name": "Migrate",
-    "outputs": [
-      { "internalType": "uint256", "name": "pTokensRec", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "pTokensRec", "type": "uint256" }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -87,9 +83,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "payable": false,
@@ -98,9 +92,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address", "name": "_yearnZapIn", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_yearnZapIn", "type": "address" }],
     "name": "updateYearnZapIn",
     "outputs": [],
     "payable": false,
@@ -109,9 +101,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address[]", "name": "tokens", "type": "address[]" }
-    ],
+    "inputs": [{ "internalType": "address[]", "name": "tokens", "type": "address[]" }],
     "name": "withdrawTokens",
     "outputs": [],
     "payable": false,

@@ -31,14 +31,17 @@ function useJars() {
       const uniV3Jars = pickleCore?.assets.jars.filter(
         (x) => x.protocol === AssetProtocol.UNISWAP_V3 && x.chain === chainName,
       );
-      const uniV3Underlying: string[] = uniV3Jars === undefined ? [] : uniV3Jars.map((x): string[] => {
-          const r: string[] | undefined = getComponentTokenAddresses(pickleCore, x);
-          if( r === undefined )
-            return [];
-          return r as string[];
-        })
-        .flat()
-        .filter((x) => x);
+      const uniV3Underlying: string[] =
+        uniV3Jars === undefined
+          ? []
+          : uniV3Jars
+              .map((x): string[] => {
+                const r: string[] | undefined = getComponentTokenAddresses(pickleCore, x);
+                if (r === undefined) return [];
+                return r as string[];
+              })
+              .flat()
+              .filter((x) => x);
       const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
 
       if (chainName === ChainNetwork.Ethereum)

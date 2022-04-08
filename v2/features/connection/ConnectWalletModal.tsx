@@ -3,7 +3,14 @@ import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 
 import Modal from "v2/components/Modal";
-import { Connectors, Connector, injected, walletconnect, walletlink, cloverconnect } from "./connectors";
+import {
+  Connectors,
+  Connector,
+  injected,
+  walletconnect,
+  walletlink,
+  cloverconnect,
+} from "./connectors";
 import ConnectorItem from "./ConnectorItem";
 import coinbase from "public/wallet/coinbase.svg";
 import metamask from "public/wallet/metamask.svg";

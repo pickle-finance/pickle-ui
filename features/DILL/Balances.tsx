@@ -48,12 +48,13 @@ export const Balances: FC<{
           <DataPoint>
             <span>
               {pickleBalance !== null
-                ? Number(
-                    formatEther(dillStats.totalLocked?.toString() || "0"),
-                  ).toLocaleString(undefined, {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  })
+                ? Number(formatEther(dillStats.totalLocked?.toString() || "0")).toLocaleString(
+                    undefined,
+                    {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    },
+                  )
                 : "--"}
             </span>
             <PickleIcon size={24} margin="0 0 0 0.5rem" />
@@ -61,9 +62,7 @@ export const Balances: FC<{
             <span>
               $
               {pickleBalance !== null
-                ? Number(
-                    dillStats.totalPickleValue?.toString() || "0",
-                  ).toLocaleString(undefined, {
+                ? Number(dillStats.totalPickleValue?.toString() || "0").toLocaleString(undefined, {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
                   })

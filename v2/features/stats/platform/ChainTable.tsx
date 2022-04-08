@@ -3,9 +3,7 @@ import { PlatformChainData } from "v2/types";
 import ChainHead from "./ChainTableHead";
 import ChainRow from "./ChainTableRow";
 
-const ChainTable: FC<{ chains: PlatformChainData; }> = ({
-  chains
-}) => {
+const ChainTable: FC<{ chains: PlatformChainData }> = ({ chains }) => {
   const chainNames: string[] = chains ? Object.keys(chains) : [];
   return (
     <table className="w-full">

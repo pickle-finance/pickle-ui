@@ -34,12 +34,7 @@ const NavItems: FC<Props> = ({ onClick }) => {
   return (
     <nav className="flex-1 space-y-2">
       {navigation.map((item) => (
-        <NavItem
-          key={item.name}
-          Icon={item.icon}
-          href={item.href}
-          onClick={onClick}
-        >
+        <NavItem key={item.name} Icon={item.icon} href={item.href} onClick={onClick}>
           {item.name}
         </NavItem>
       ))}

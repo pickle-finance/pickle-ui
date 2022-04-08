@@ -268,9 +268,7 @@
   {
     "inputs": [],
     "name": "_BASE_TOKEN_",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -346,9 +344,7 @@
   {
     "inputs": [],
     "name": "_QUOTE_TOKEN_",
-    "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -360,9 +356,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_addr", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_addr", "type": "address" }],
     "name": "addressToShortString",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "pure",
@@ -389,13 +383,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "owner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
     "name": "balanceOf",
-    "outputs": [
-      { "internalType": "uint256", "name": "balance", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "balance", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -439,18 +429,14 @@
   {
     "inputs": [],
     "name": "getBaseInput",
-    "outputs": [
-      { "internalType": "uint256", "name": "input", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "input", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getMidPrice",
-    "outputs": [
-      { "internalType": "uint256", "name": "midPrice", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "midPrice", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -498,16 +484,12 @@
   {
     "inputs": [],
     "name": "getQuoteInput",
-    "outputs": [
-      { "internalType": "uint256", "name": "input", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "input", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "user", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
     "name": "getUserFeeRate",
     "outputs": [
       { "internalType": "uint256", "name": "lpFeeRate", "type": "uint256" },

@@ -20,9 +20,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
 
   return (
     <>
-      <h1 className="font-body font-bold text-xl mb-4">
-        {t("v2.dill.revenueShareStats")}
-      </h1>
+      <h1 className="font-body font-bold text-xl mb-4">{t("v2.dill.revenueShareStats")}</h1>
       <div className="grid grid-cols-2 xl:grid-cols-4 bg-background-light rounded-xl border border-foreground-alt-500 shadow px-6 py-7">
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
@@ -30,9 +28,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
             <MoreInfo
               secondaryText={
                 <div className="flex items-center font-bold">
-                  <span className="text-foreground mr-1">
-                    {formatNumber(dill.pickleLocked)}
-                  </span>
+                  <span className="text-foreground mr-1">{formatNumber(dill.pickleLocked)}</span>
                   <div className="inline-block w-6 h-6">
                     <Image
                       src="/pickle-icon.svg"
@@ -44,9 +40,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                     />
                   </div>
                   <span className="mr-2 text-foreground-alt-200">=</span>
-                  <span className="text-foreground mr-1">
-                    {formatNumber(dill.totalDill)}
-                  </span>
+                  <span className="text-foreground mr-1">{formatNumber(dill.totalDill)}</span>
                   <div className="inline-block w-6 h-6">
                     <Image
                       src="/dill-icon.png"
@@ -76,9 +70,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         </div>
         <div>
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
-            {formatDollars(
-              upcomingDistribution.weeklyPickleAmount * picklePrice,
-            )}
+            {formatDollars(upcomingDistribution.weeklyPickleAmount * picklePrice)}
             <MoreInfo
               secondaryText={
                 <div className="flex items-center font-bold">

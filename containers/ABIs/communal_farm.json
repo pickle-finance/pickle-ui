@@ -262,9 +262,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "calcCurCombinedWeight",
     "outputs": [
       {
@@ -300,40 +298,30 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "combinedWeightOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "earned",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "new_earned", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "new_earned", "type": "uint256[]" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getAllRewardTokens",
-    "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
-    ],
+    "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getReward",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -365,9 +353,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_address", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_address", "type": "address" }],
     "name": "greylistAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -402,9 +388,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "secs", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "secs", "type": "uint256" }],
     "name": "lockMultiplier",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -432,18 +416,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "lockedLiquidityOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "lockedStakesOf",
     "outputs": [
       {
@@ -475,9 +455,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_owner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_owner", "type": "address" }],
     "name": "nominateNewOwner",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -705,9 +683,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "kek_id", "type": "bytes32" }
-    ],
+    "inputs": [{ "internalType": "bytes32", "name": "kek_id", "type": "bytes32" }],
     "name": "withdrawLocked",
     "outputs": [],
     "stateMutability": "nonpayable",

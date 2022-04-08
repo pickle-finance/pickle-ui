@@ -41,14 +41,7 @@ export interface JarZap extends JarV3 {
 export const useJarsWithZap = (
   jars: Array<JarV3> | null,
 ): { jarsWithZap: Array<JarZap> | null } => {
-  const {
-    blockNum,
-    chainName,
-    signer,
-    address,
-    provider,
-    chainId,
-  } = Connection.useContainer();
+  const { blockNum, chainName, signer, address, provider, chainId } = Connection.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
   const { erc20 } = Contracts.useContainer();
@@ -83,10 +76,7 @@ export const useJarsWithZap = (
         }
 
         const tokens = pickleCore.tokens.filter((token) => {
-          return (
-            found.depositToken.components?.includes(token.id) &&
-            token.chain == chainName
-          );
+          return found.depositToken.components?.includes(token.id) && token.chain == chainName;
         });
 
         if (tokens.length === 0) {
@@ -111,11 +101,9 @@ export const useJarsWithZap = (
           provider.getBalance(address),
         ]);
 
-        const chainDetails = pickleCore.chains.find(
-          (x) => x.chainId === chainId,
-        );
+        const chainDetails = pickleCore.chains.find((x) => x.chainId === chainId);
 
-        let inputTokens: Array<TokenDetails> = []
+        let inputTokens: Array<TokenDetails> = [];
 
         if (chainName != ChainNetwork.Metis) {
           inputTokens.push({
@@ -124,7 +112,7 @@ export const useJarsWithZap = (
             decimals: 18,
             isNative: true,
             address: ethers.constants.AddressZero,
-          },)
+          });
         }
 
         const wrappedTokenAddress = chainDetails?.wrappedNativeAddress;
@@ -135,9 +123,7 @@ export const useJarsWithZap = (
             wrappedTokenAddress.toLowerCase(),
           )
         ) {
-          const WrappedToken = erc20
-            .attach(wrappedTokenAddress)
-            .connect(signer);
+          const WrappedToken = erc20.attach(wrappedTokenAddress).connect(signer);
 
           const [wBal, wSym] = await Promise.all([
             WrappedToken.balanceOf(address),
@@ -167,16 +153,13 @@ export const useJarsWithZap = (
             decimals: token1Decimals,
             address: Token1.address,
           },
-        ]
+        ];
 
         return {
           ...jar,
           zapDetails: {
             zappable: swapProtocol.zappable,
-            pickleZapContract: pickleZapV1Factory.connect(
-              swapProtocol.pickleZapAddress,
-              provider,
-            ),
+            pickleZapContract: pickleZapV1Factory.connect(swapProtocol.pickleZapAddress, provider),
             router: uniswapRouterFactory.connect(swapProtocol.router, provider),
             nativePath: found.depositToken.nativePath,
             inputTokens,

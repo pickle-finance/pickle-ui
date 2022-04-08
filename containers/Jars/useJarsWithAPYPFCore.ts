@@ -27,9 +27,7 @@ type Output = {
 export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
   const { pickleCore } = PickleCore.useContainer();
   const { prices } = Prices.useContainer();
-  const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(
-    null,
-  );
+  const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(null);
 
   const calculateJarAPYs = (jar: Jar) => {
     if (pickleCore) {
@@ -38,19 +36,15 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
       )[0]?.aprStats;
       let lp = 0;
       if (aprStats) {
-        const componentsAPYs: JarApy[] = aprStats.components.map(
-          (component) => {
-            const apr = !isNaN(component.apr) ? +component.apr : 0; // protect against non-numeric values
-            if (component.name.toLowerCase() === "lp") {
-              lp = apr;
-            }
-            return {
-              [component.name]: component.compoundable
-                ? getCompoundingAPY(component.apr / 100)
-                : apr,
-            };
-          },
-        );
+        const componentsAPYs: JarApy[] = aprStats.components.map((component) => {
+          const apr = !isNaN(component.apr) ? +component.apr : 0; // protect against non-numeric values
+          if (component.name.toLowerCase() === "lp") {
+            lp = apr;
+          }
+          return {
+            [component.name]: component.compoundable ? getCompoundingAPY(component.apr / 100) : apr,
+          };
+        });
 
         return {
           APYs: componentsAPYs,

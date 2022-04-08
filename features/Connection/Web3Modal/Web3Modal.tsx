@@ -9,11 +9,7 @@ import { useTranslation } from "next-i18next";
 import { injected, walletconnect, walletlink, cloverconnect } from "./Connectors";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import {
-  ChainNetwork,
-  Chains,
-  RawChain,
-} from "picklefinance-core/lib/chain/Chains";
+import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
 import { chainToChainParams } from "containers/Connection";
 
 interface Web3ModalProps {
@@ -60,14 +56,9 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   const [activatingConnector, setActivatingConnector] = useState();
   const [ethereum, setEthereum] = useState();
   const [isSupportedChain, setIsSupportedChain] = useState<boolean>(true);
-  const {
-    connector,
-    activate,
-    deactivate,
-    error,
-    account,
-    chainId,
-  } = useWeb3React<providers.Web3Provider>();
+  const { connector, activate, deactivate, error, account, chainId } = useWeb3React<
+    providers.Web3Provider
+  >();
 
   useEffect(() => {
     if (chainId && chainId !== 1) {
@@ -128,24 +119,22 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
       <Modal.Content>
         {isSupportedChain ? (
           <Grid.Container gap={2}>
-            {itemList.map(
-              ({ icon, title, connector: web3connector }, index) => {
-                const currentConnector = web3connector;
-                const activating = currentConnector === activatingConnector;
+            {itemList.map(({ icon, title, connector: web3connector }, index) => {
+              const currentConnector = web3connector;
+              const activating = currentConnector === activatingConnector;
 
-                return (
-                  <Grid xs={12} key={index}>
-                    <ConnectorItem
-                      icon={icon}
-                      disabled={title === t("connection.metamask") && !ethereum}
-                      title={title}
-                      loading={activating}
-                      onClick={() => onConnectClick(web3connector)}
-                    />
-                  </Grid>
-                );
-              },
-            )}
+              return (
+                <Grid xs={12} key={index}>
+                  <ConnectorItem
+                    icon={icon}
+                    disabled={title === t("connection.metamask") && !ethereum}
+                    title={title}
+                    loading={activating}
+                    onClick={() => onConnectClick(web3connector)}
+                  />
+                </Grid>
+              );
+            })}
           </Grid.Container>
         ) : (
           <div>

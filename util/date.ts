@@ -13,9 +13,7 @@ export const getEpochSecondForDay = (date: Date): number => {
 };
 
 export const getWeekDiff = (date1: Date, date2: Date): number => {
-  return Math.ceil(
-    (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24 * 7),
-  );
+  return Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24 * 7));
 };
 
 export const getTimeEpoch = (): number => {

@@ -44,11 +44,9 @@ const Chart: FC<{
           outerRadius={140}
           strokeWidth={data.length >= 1 ? 1 : 10}
         >
-          {
-            data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colorPicker(data, entry, index)}/>
-            ))
-          }
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={colorPicker(data, entry, index)} />
+          ))}
           <LabelList dataKey="weight" position="inside" formatter={formatPercentage} />
           <LabelList dataKey="jar" position="outside" offset={20} />
         </Pie>
@@ -150,13 +148,17 @@ const getSidechainUserWeights = (
   return chartData ? chartData : [];
 };
 
-const colorPicker = (d: PieChartData[], e: PieChartData,  n: number) => {
-  const evenColors = ["rgb(var(--color-primary-light))", "rgb(var(--color-primary))"]
-  const oddColors = ["rgb(var(--color-primary-light))", "rgb(var(--color-primary))", "rgb(var(--color-primary-dark))"]
-  if (d.length % 2 === 0) return evenColors[n % 2]
-  if (d.indexOf(e) === d.length - 1 && n % 3 == 0) return oddColors[1]
-  return oddColors[n % 3]
-}
+const colorPicker = (d: PieChartData[], e: PieChartData, n: number) => {
+  const evenColors = ["rgb(var(--color-primary-light))", "rgb(var(--color-primary))"];
+  const oddColors = [
+    "rgb(var(--color-primary-light))",
+    "rgb(var(--color-primary))",
+    "rgb(var(--color-primary-dark))",
+  ];
+  if (d.length % 2 === 0) return evenColors[n % 2];
+  if (d.indexOf(e) === d.length - 1 && n % 3 == 0) return oddColors[1];
+  return oddColors[n % 3];
+};
 
 const sortByWeight = (data: PieChartData[]) =>
   data ? data.sort((a, b) => (a.weight > b.weight ? 1 : -1)) : [];

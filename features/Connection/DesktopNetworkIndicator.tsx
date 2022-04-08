@@ -203,12 +203,10 @@ export const DesktopNetworkIndicator: FC = () => {
           <MiniIcon source="/okex.png" /> {t("connection.networks.okex")}
         </Select.Option>
         <Select.Option value="42161">
-          <MiniIcon source="/arbitrum.svg" />{" "}
-          {t("connection.networks.arbitrum")}
+          <MiniIcon source="/arbitrum.svg" /> {t("connection.networks.arbitrum")}
         </Select.Option>
         <Select.Option value="1285">
-          <MiniIcon source="/moonriver.png" />{" "}
-          {t("connection.networks.moonriver")}
+          <MiniIcon source="/moonriver.png" /> {t("connection.networks.moonriver")}
         </Select.Option>
         <Select.Option value="25">
           <MiniIcon source="/cronos.png" /> {t("connection.networks.cronos")}
@@ -220,26 +218,18 @@ export const DesktopNetworkIndicator: FC = () => {
           <MiniIcon source="/metis.png" /> {t("connection.networks.metis")}
         </Select.Option>
         <Select.Option value="1284">
-          <MiniIcon source="/moonbeam.png" />{" "}
-          {t("connection.networks.moonbeam")}
+          <MiniIcon source="/moonbeam.png" /> {t("connection.networks.moonbeam")}
         </Select.Option>
         <Select.Option value="10">
-          <MiniIcon source="/optimism.png" />{" "}
-          {t("connection.networks.optimism")}
+          <MiniIcon source="/optimism.png" /> {t("connection.networks.optimism")}
         </Select.Option>
         <Select.Option value="250">
           <MiniIcon source="/fantom.png" /> {t("connection.networks.fantom")}
         </Select.Option>
       </Select>
-      <AddressContainer
-        href={renderAddress()}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <AddressContainer href={renderAddress()} target="_blank" rel="noopener noreferrer">
         <Address>
-          <AddressLabel title={address || ""}>
-            {ensName || shortAddress}
-          </AddressLabel>
+          <AddressLabel title={address || ""}>{ensName || shortAddress}</AddressLabel>
           <div>
             {address && (
               <Davatar
@@ -253,11 +243,7 @@ export const DesktopNetworkIndicator: FC = () => {
         </Address>
         <Block>
           <Tooltip text={t("connection.blockNumber")} placement="left">
-            <BlockBox
-              href={renderBlock()}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <BlockBox href={renderBlock()} target="_blank" rel="noopener noreferrer">
               <BlockNumber>
                 {blockNum ? (
                   blockNum

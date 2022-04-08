@@ -9,7 +9,6 @@ import ChartContainer from "v2/features/stats/jar/ChartContainer";
 import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 
-
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);

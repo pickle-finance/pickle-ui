@@ -39,9 +39,7 @@ const TableContainer = styled.div`
   justify-content: center;
 `;
 
-export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
-  gauges,
-}) => {
+export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({ gauges }) => {
   const { t } = useTranslation("common");
 
   const gaugeChartData = gauges
@@ -79,9 +77,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
         <div>
           <Trans i18nKey="gauges.chartPreview">
             View allocation of PICKLE reward weights
-            <p style={{ margin: "0px" }}>
-              (based on votes cast by DILL holders)
-            </p>
+            <p style={{ margin: "0px" }}>(based on votes cast by DILL holders)</p>
           </Trans>
         </div>
       }
@@ -104,10 +100,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                   {dataForChart.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={shadeColor(
-                        colors[index % colors.length],
-                        -index * 3,
-                      )}
+                      fill={shadeColor(colors[index % colors.length], -index * 3)}
                     />
                   ))}
                 </Pie>
@@ -123,10 +116,7 @@ export const GaugeChartCollapsible: FC<{ gauges: UserGaugeData[] }> = ({
                   allocPoint: formatter(entry.allocPoint),
                 }))}
               >
-                <Table.Column
-                  prop="depositTokenName"
-                  label={t("gauges.token")}
-                />
+                <Table.Column prop="depositTokenName" label={t("gauges.token")} />
                 <Table.Column prop="allocPoint" label={t("gauges.weight")} />
               </Table>
             </div>

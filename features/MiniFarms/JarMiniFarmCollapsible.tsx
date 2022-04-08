@@ -15,11 +15,7 @@ import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
-import {
-  isJarWithdrawOnly,
-  isQlpQiMaticOrUsdcToken,
-  isQlpQiToken,
-} from "containers/Jars/jars";
+import { isJarWithdrawOnly, isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
@@ -164,10 +160,7 @@ export const FARM_LP_TO_ICON: {
     <LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/magic.png"} />
   ),
   "0x0c02883103e64b62c4b52ABe7E743Cc50EB2D4C7": (
-    <LpIcon
-      swapIconSrc={"/protocols/balancer.png"}
-      tokenIconSrc={"/tokens/vsta.png"}
-    />
+    <LpIcon swapIconSrc={"/protocols/balancer.png"} tokenIconSrc={"/tokens/vsta.png"} />
   ),
   "0xA23d9E5094ac9582f9f09AAa017B79dEccab5404": (
     <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdt.png"} />
@@ -414,26 +407,16 @@ export const JarMiniFarmCollapsible: FC<{
     transfer,
     getTransferStatus,
   } = ERC20Transfer.useContainer();
-  const {
-    signer,
-    address,
-    blockNum,
-    chainName,
-    multicallProvider,
-  } = Connection.useContainer();
+  const { signer, address, blockNum, chainName, multicallProvider } = Connection.useContainer();
   const { minichef, jar } = Contracts.useContainer();
   const { pickleCore } = PickleCore.useContainer();
 
   const stakedStr = formatNumber(stakedNum);
 
-  const harvestableStr = formatNumber(
-    parseFloat(formatEther(harvestable || 0)),
-  );
+  const harvestableStr = formatNumber(parseFloat(formatEther(harvestable || 0)));
 
   // 8 decimals for wbtc
-  const harvestableMaticStr = formatNumber(
-    +formatUnits(harvestableMatic || 0, 8),
-  );
+  const harvestableMaticStr = formatNumber(+formatUnits(harvestableMatic || 0, 8));
 
   const balanceNum = parseFloat(formatUnits(balance, depositTokenDecimals));
 
@@ -454,31 +437,23 @@ export const JarMiniFarmCollapsible: FC<{
     text: t("farms.harvest"),
   });
 
-  const [depositStakeButton, setDepositStakeButton] = useState<string | null>(
-    null,
-  );
+  const [depositStakeButton, setDepositStakeButton] = useState<string | null>(null);
   const [exitButton, setExitButton] = useState<string | null>(null);
 
   const isMaiJar = isQlpQiMaticOrUsdcToken(depositToken.address);
 
   const isQiMaiJar = isQlpQiToken(depositToken.address);
   const foundJar: JarDefinition | undefined = pickleCore?.assets.jars.find(
-    (x) =>
-      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+    (x) => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   );
-  const isClosingOnly = foundJar
-    ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore)
-    : false;
+  const isClosingOnly = foundJar ? isJarWithdrawOnly(foundJar.details.apiKey, pickleCore) : false;
 
   const isCooldownJar = foundJar?.tags?.includes("cooldown") ? true : false;
 
   const deposit = async () => {
     if (!signer) return;
 
-    const depositAmt = ethers.utils.parseUnits(
-      depositAmount,
-      inputToken.decimals,
-    );
+    const depositAmt = ethers.utils.parseUnits(depositAmount, inputToken.decimals);
 
     // Deposit token
     if (inputToken.symbol === depositTokenName) {
@@ -494,24 +469,24 @@ export const JarMiniFarmCollapsible: FC<{
 
     if (!zapDetails) return;
 
-    const swapTx = inputToken.isWrapped ?
-      await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactTokensForTokens(
-          depositAmt,
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        ) :
-      await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactETHForTokens(
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        );
+    const swapTx = inputToken.isWrapped
+      ? await zapDetails.router
+          .connect(signer)
+          .populateTransaction.swapExactTokensForTokens(
+            depositAmt,
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          )
+      : await zapDetails.router
+          .connect(signer)
+          .populateTransaction.swapExactETHForTokens(
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          );
 
     return transfer({
       token: inputToken.address,
@@ -533,8 +508,7 @@ export const JarMiniFarmCollapsible: FC<{
             zapDetails.router.address,
             false,
             {
-              value:
-                inputToken.isNative === true ? depositAmt : BigNumber.from(0),
+              value: inputToken.isNative === true ? depositAmt : BigNumber.from(0),
             },
           );
       },
@@ -553,10 +527,7 @@ export const JarMiniFarmCollapsible: FC<{
         const Token = jar?.attach(farmDepositToken.address).connect(signer);
         if (!approved) {
           setDepositStakeButton(t("farms.approving"));
-          const tx = await Token.approve(
-            minichef.address,
-            ethers.constants.MaxUint256,
-          );
+          const tx = await Token.approve(minichef.address, ethers.constants.MaxUint256);
           await tx.wait();
         }
         setDepositStakeButton(t("farms.staking"));
@@ -590,28 +561,23 @@ export const JarMiniFarmCollapsible: FC<{
     const pickleIface = zapDetails.pickleZapContract.interface;
 
     for (const log of zapInTxReceipt.logs) {
-      try{
+      try {
         const decodedEvents = pickleIface.decodeEventLog("zapIn", log.data, log.topics);
         if (decodedEvents) return decodedEvents["tokensRec"].add(deposited);
-      } catch(e) {
+      } catch (e) {
         continue;
       }
     }
 
     return deposited;
-  }
-
+  };
 
   const exit = async () => {
     if (stakedNum && minichef && address) {
       try {
         setIsExitBatch(true);
         setExitButton(t("farms.unstakingFromFarm"));
-        const exitTx = await minichef.withdrawAndHarvest(
-          poolIndex,
-          staked,
-          address,
-        );
+        const exitTx = await minichef.withdrawAndHarvest(poolIndex, staked, address);
         await exitTx.wait();
         setExitButton(t("farms.withdrawingFromJar"));
         const withdrawTx = await jarContract.connect(signer).withdrawAll();
@@ -636,9 +602,7 @@ export const JarMiniFarmCollapsible: FC<{
   };
 
   const [inputToken, setInputToken] = useState<TokenDetails>(jarTokenDetails);
-  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([
-    jarTokenDetails,
-  ]);
+  const [allInputTokens, setAllInputTokens] = useState<Array<TokenDetails>>([jarTokenDetails]);
 
   useEffect(() => {
     // Update tokens and balances
@@ -646,8 +610,7 @@ export const JarMiniFarmCollapsible: FC<{
     if (zapDetails) inputTokens = [...inputTokens, ...zapDetails.inputTokens];
 
     const updatedBalance =
-      inputTokens.find((x) => x.symbol === inputToken.symbol)?.balance ||
-      BigNumber.from("0");
+      inputTokens.find((x) => x.symbol === inputToken.symbol)?.balance || BigNumber.from("0");
     setAllInputTokens(inputTokens);
     setInputToken({
       ...inputToken,
@@ -664,33 +627,14 @@ export const JarMiniFarmCollapsible: FC<{
           : zapDetails.pickleZapContract.address,
       );
 
-      const wStatus = getTransferStatus(
-        jarContract.address,
-        jarContract.address,
-      );
+      const wStatus = getTransferStatus(jarContract.address, jarContract.address);
 
-      setButtonStatus(
-        dStatus,
-        t("farms.depositing"),
-        t("farms.deposit"),
-        setDepositButton,
-      );
-      setButtonStatus(
-        wStatus,
-        t("farms.withdrawing"),
-        t("farms.withdraw"),
-        setWithdrawButton,
-      );
+      setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
+      setButtonStatus(wStatus, t("farms.withdrawing"), t("farms.withdraw"), setWithdrawButton);
     }
     if (minichef && !isExitBatch) {
-      const stakeStatus = getTransferStatus(
-        farmDepositToken.address,
-        minichef.address,
-      );
-      const unstakeStatus = getTransferStatus(
-        minichef.address,
-        farmDepositToken.address,
-      );
+      const stakeStatus = getTransferStatus(farmDepositToken.address, minichef.address);
+      const unstakeStatus = getTransferStatus(minichef.address, farmDepositToken.address);
       const harvestStatus = getTransferStatus(minichef.address, "harvest");
       const exitStatus = getTransferStatus(minichef.address, "exit");
 
@@ -700,18 +644,8 @@ export const JarMiniFarmCollapsible: FC<{
         t("farms.stakeUnstaked", { amount: depositedStr }),
         setStakeButton,
       );
-      setButtonStatus(
-        unstakeStatus,
-        t("farms.unstaking"),
-        t("farms.unstake"),
-        setUnstakeButton,
-      );
-      setButtonStatus(
-        harvestStatus,
-        t("farms.harvesting"),
-        t("farms.harvest"),
-        setHarvestButton,
-      );
+      setButtonStatus(unstakeStatus, t("farms.unstaking"), t("farms.unstake"), setUnstakeButton);
+      setButtonStatus(harvestStatus, t("farms.harvesting"), t("farms.harvest"), setHarvestButton);
     }
   }, [erc20TransferStatuses, jarData, depositedStr]);
 
@@ -732,22 +666,15 @@ export const JarMiniFarmCollapsible: FC<{
   }, [blockNum, address, erc20]);
 
   const tvlJarData = pickleCore?.assets.jars.filter(
-    (x) =>
-      x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
+    (x) => x.depositToken.addr.toLowerCase() === depositToken.address.toLowerCase(),
   )[0];
 
-  const [
-    balancerTimerProps,
-    setBalancerTimerProps,
-  ] = useState<BalancerJarTimerProps | null>(null);
+  const [balancerTimerProps, setBalancerTimerProps] = useState<BalancerJarTimerProps | null>(null);
 
   useEffect(() => {
     const checkCooldown = async () => {
       if (isCooldownJar && signer && multicallProvider) {
-        const jarMulticall = new MulticallContract(
-          jarContract.address,
-          jarTimelockABI,
-        );
+        const jarMulticall = new MulticallContract(jarContract.address, jarTimelockABI);
         const [
           cdStartTimeRes,
           cdTimeRes,
@@ -759,14 +686,10 @@ export const JarMiniFarmCollapsible: FC<{
           jarMulticall.initialWithdrawalFee(),
           jarMulticall.initialWithdrawalFeeMax(),
         ]);
-        const cdStartTime = parseFloat(
-          ethers.utils.formatUnits(cdStartTimeRes, 0),
-        );
+        const cdStartTime = parseFloat(ethers.utils.formatUnits(cdStartTimeRes, 0));
         const cdTime = parseFloat(ethers.utils.formatUnits(cdTimeRes, 0));
         const initialWF = parseFloat(ethers.utils.formatUnits(initialWFRes, 0));
-        const initialWFMax = parseFloat(
-          ethers.utils.formatUnits(initialWFMaxRes, 0),
-        );
+        const initialWFMax = parseFloat(ethers.utils.formatUnits(initialWFMaxRes, 0));
         const endTime = cdStartTime + cdTime;
         const timerProps: BalancerJarTimerProps = {
           endTime: endTime,
@@ -803,17 +726,12 @@ export const JarMiniFarmCollapsible: FC<{
     });
   };
 
-  const valueStr = toLocaleNdigits(
-    usdPerPToken * (depositedNum + stakedNum),
-    2,
-  );
+  const valueStr = toLocaleNdigits(usdPerPToken * (depositedNum + stakedNum), 2);
   const valueStrExplained = explanations.ratioString;
   const userSharePendingStr = explanations.pendingString;
 
   const getInputTokenBalStr = (inputToken: TokenDetails) => {
-    const bal = parseFloat(
-      formatUnits(inputToken.balance, inputToken.decimals),
-    );
+    const bal = parseFloat(formatUnits(inputToken.balance, inputToken.decimals));
 
     return bal.toLocaleString(undefined, {
       minimumFractionDigits: 0,
@@ -835,19 +753,11 @@ export const JarMiniFarmCollapsible: FC<{
         <Grid.Container gap={1}>
           <JarName xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
-              src={
-                FARM_LP_TO_ICON[
-                  farmDepositToken.address as keyof typeof FARM_LP_TO_ICON
-                ]
-              }
+              src={FARM_LP_TO_ICON[farmDepositToken.address as keyof typeof FARM_LP_TO_ICON]}
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{name}</div>
-              <a
-                href={depositTokenLink}
-                target="_"
-                style={{ fontSize: `1rem` }}
-              >
+              <a href={depositTokenLink} target="_" style={{ fontSize: `1rem` }}>
                 {depositTokenName}
               </a>
             </div>
@@ -858,20 +768,9 @@ export const JarMiniFarmCollapsible: FC<{
             <Label>{t("balances.balance")}</Label>
           </Grid>
           <Grid xs={24} sm={12} md={4} lg={4} css={{ textAlign: "center" }}>
-            <Data
-              isZero={
-                +formatEther(harvestableMatic) === 0 &&
-                +formatEther(harvestable) === 0
-              }
-            >
+            <Data isZero={+formatEther(harvestableMatic) === 0 && +formatEther(harvestable) === 0}>
               {harvestableStr}{" "}
-              <MiniIcon
-                source={
-                  chainName === ChainNetwork.Metis
-                    ? "/metis.png"
-                    : "/pickle.png"
-                }
-              />
+              <MiniIcon source={chainName === ChainNetwork.Metis ? "/metis.png" : "/pickle.png"} />
               <br />
               {chainName === ChainNetwork.Metis && (
                 <>
@@ -886,12 +785,8 @@ export const JarMiniFarmCollapsible: FC<{
             <>
               <Data isZero={+valueStr == 0}>${valueStr}</Data>
               <Label>{t("balances.depositValue")}</Label>
-              {Boolean(valueStrExplained !== undefined) && (
-                <Label>{valueStrExplained}</Label>
-              )}
-              {Boolean(userSharePendingStr !== undefined) && (
-                <Label>{userSharePendingStr}</Label>
-              )}
+              {Boolean(valueStrExplained !== undefined) && <Label>{valueStrExplained}</Label>}
+              {Boolean(userSharePendingStr !== undefined) && <Label>{userSharePendingStr}</Label>}
             </>
           </Grid>
           <Grid xs={24} sm={24} md={4} lg={4} style={{ textAlign: "center" }}>
@@ -902,11 +797,7 @@ export const JarMiniFarmCollapsible: FC<{
                 <Tooltip text={ReactHtmlParser(tooltipText)}>
                   {totalAPY.toFixed(2) + "%" || "--"}
                 </Tooltip>
-                <img
-                  src="./question.svg"
-                  width="15px"
-                  style={{ marginLeft: 5 }}
-                />
+                <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
                 <Spacer y={1} />
                 <div>
                   <span>{t("balances.apy")}</span>
@@ -924,14 +815,10 @@ export const JarMiniFarmCollapsible: FC<{
     >
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        <Grid
-          xs={24}
-          md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}
-        >
+        <Grid xs={24} md={depositedNum && (!isEntryBatch || stakedNum) ? 12 : 24}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              {t("balances.balance")}: {getInputTokenBalStr(inputToken)}{" "}
-              {inputToken.symbol}
+              {t("balances.balance")}: {getInputTokenBalStr(inputToken)} {inputToken.symbol}
             </div>
             <Link
               color
@@ -962,9 +849,7 @@ export const JarMiniFarmCollapsible: FC<{
                       value={token.symbol}
                       key={token.symbol}
                     >
-                      <div style={{ display: `flex`, alignItems: `center` }}>
-                        {token.symbol}
-                      </div>
+                      <div style={{ display: `flex`, alignItems: `center` }}>{token.symbol}</div>
                     </Select.Option>
                   ))}
                 </Select>
@@ -999,9 +884,7 @@ export const JarMiniFarmCollapsible: FC<{
               ) : isQiMaiJar ? (
                 <StyledNotice>{t("farms.mai.rewardsEnded")}</StyledNotice>
               ) : null}
-              {isClosingOnly ? (
-                <StyledNotice>{t("farms.closingOnly")}</StyledNotice>
-              ) : null}
+              {isClosingOnly ? <StyledNotice>{t("farms.closingOnly")}</StyledNotice> : null}
             </Grid>
             <Grid xs={24} md={12}>
               <Button
@@ -1030,9 +913,7 @@ export const JarMiniFarmCollapsible: FC<{
                 {t("balances.balance")}: {depositedStr} (
                 <Tooltip
                   text={`${
-                    deposited && ratio
-                      ? parseFloat(formatEther(deposited)) * ratio
-                      : 0
+                    deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
                   } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
@@ -1066,9 +947,7 @@ export const JarMiniFarmCollapsible: FC<{
                     token: jarContract.address,
                     recipient: jarContract.address,
                     transferCallback: async () => {
-                      return jarContract
-                        .connect(signer)
-                        .withdraw(parseEther(withdrawAmount));
+                      return jarContract.connect(signer).withdraw(parseEther(withdrawAmount));
                     },
                     approval: false,
                   });
@@ -1088,10 +967,7 @@ export const JarMiniFarmCollapsible: FC<{
       {Boolean(depositedNum || stakedNum) && (
         <Grid.Container gap={2}>
           {depositedNum && !isExitBatch && !isEntryBatch && (
-            <Grid
-              xs={24}
-              md={(depositedNum && !stakedNum) || isEntryBatch ? 24 : 12}
-            >
+            <Grid xs={24} md={(depositedNum && !stakedNum) || isEntryBatch ? 24 : 12}>
               <Spacer y={1.2} />
               <Button
                 disabled={stakeButton.disabled}
@@ -1102,11 +978,7 @@ export const JarMiniFarmCollapsible: FC<{
                       recipient: minichef.address,
                       approvalAmountRequired: farmBalance,
                       transferCallback: async () => {
-                        return minichef.deposit(
-                          poolIndex,
-                          farmBalance,
-                          address,
-                        );
+                        return minichef.deposit(poolIndex, farmBalance, address);
                       },
                     });
                   }
@@ -1120,16 +992,12 @@ export const JarMiniFarmCollapsible: FC<{
           {Boolean(stakedNum) && (
             <Grid
               xs={24}
-              md={
-                (!depositedNum || isEntryBatch || isExitBatch) && stakedNum
-                  ? 24
-                  : 12
-              }
+              md={(!depositedNum || isEntryBatch || isExitBatch) && stakedNum ? 24 : 12}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName} (
-                  {stakedUnderlyingStr} {depositTokenName}){" "}
+                  {t("balances.staked")}: {stakedStr} {farmDepositTokenName} ({stakedUnderlyingStr}{" "}
+                  {depositTokenName}){" "}
                 </div>
                 <Link
                   color
@@ -1210,11 +1078,7 @@ export const JarMiniFarmCollapsible: FC<{
         {Boolean(stakedNum || isExitBatch) && (
           <>
             <Grid xs={24} md={24}>
-              <Button
-                disabled={exitButton || isExitBatch}
-                onClick={exit}
-                style={{ width: "100%" }}
-              >
+              <Button disabled={exitButton || isExitBatch} onClick={exit} style={{ width: "100%" }}>
                 {exitButton || t("farms.harvestAndExit")}
               </Button>
             </Grid>
@@ -1261,9 +1125,7 @@ export const getRatioStringAndPendingString = (
         if (pendingHarvest) {
           const userShareHarvestUsd = userShare * pendingHarvest * 0.8;
           userSharePendingStr =
-            t("farms.pending") +
-            ": $" +
-            toLocaleNdigits(userShareHarvestUsd, 2);
+            t("farms.pending") + ": $" + toLocaleNdigits(userShareHarvestUsd, 2);
         }
       }
     }
