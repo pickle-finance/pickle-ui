@@ -27,9 +27,10 @@ const OffchainVoteButton: FC<{
 export type voteFunction = (
   provider: Web3Provider | undefined,
   account: string | null | undefined,
+  selectedChainStrats: string[],
   selectedChain: string[],
-  selectedJars: string[],
   selectedJarStrats: string[],
+  selectedJars: string[],
 ) => void;
 
 export default OffchainVoteButton;
