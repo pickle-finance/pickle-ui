@@ -171,9 +171,7 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "massUpdatePools",
-    "inputs": [
-      { "type": "uint256[]", "name": "pids", "internalType": "uint256[]" }
-    ]
+    "inputs": [{ "type": "uint256[]", "name": "pids", "internalType": "uint256[]" }]
   },
   {
     "type": "function",
@@ -205,9 +203,7 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "uint256", "name": "pending", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "pending", "internalType": "uint256" }],
     "name": "pendingToken",
     "inputs": [
       { "type": "uint256", "name": "_pid", "internalType": "uint256" },
@@ -261,9 +257,7 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "uint256", "name": "pools", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "pools", "internalType": "uint256" }],
     "name": "poolLength",
     "inputs": []
   },

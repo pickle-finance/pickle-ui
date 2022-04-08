@@ -22,9 +22,7 @@ function useFarms() {
       const ifarmInfo = createIFarmInfo(pickleCore);
       if (!ifarmInfo[chain][farm.lpToken.toLowerCase()]) return null;
 
-      const { tokenName, poolName } = ifarmInfo[chain][
-        farm.lpToken.toLowerCase()
-      ];
+      const { tokenName, poolName } = ifarmInfo[chain][farm.lpToken.toLowerCase()];
       return {
         ...farm,
         tokenName,

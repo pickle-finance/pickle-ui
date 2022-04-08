@@ -21,9 +21,7 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "addKeeper",
-    "inputs": [
-      { "type": "address", "name": "_keeper", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_keeper", "internalType": "address" }]
   },
   {
     "type": "function",
@@ -86,9 +84,7 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "deleverageUntil",
-    "inputs": [
-      { "type": "uint256", "name": "_supplyAmount", "internalType": "uint256" }
-    ]
+    "inputs": [{ "type": "uint256", "name": "_supplyAmount", "internalType": "uint256" }]
   },
   {
     "type": "function",
@@ -100,9 +96,7 @@
   {
     "type": "function",
     "stateMutability": "payable",
-    "outputs": [
-      { "type": "bytes", "name": "response", "internalType": "bytes" }
-    ],
+    "outputs": [{ "type": "bytes", "name": "response", "internalType": "bytes" }],
     "name": "execute",
     "inputs": [
       { "type": "address", "name": "_target", "internalType": "address" },
@@ -149,9 +143,7 @@
     "stateMutability": "view",
     "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
     "name": "getLeveragedSupplyTarget",
-    "inputs": [
-      { "type": "uint256", "name": "supplyBalance", "internalType": "uint256" }
-    ]
+    "inputs": [{ "type": "uint256", "name": "supplyBalance", "internalType": "uint256" }]
   },
   {
     "type": "function",
@@ -263,9 +255,7 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "leverageUntil",
-    "inputs": [
-      { "type": "uint256", "name": "_supplyAmount", "internalType": "uint256" }
-    ]
+    "inputs": [{ "type": "uint256", "name": "_supplyAmount", "internalType": "uint256" }]
   },
   {
     "type": "function",
@@ -300,9 +290,7 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "removeKeeper",
-    "inputs": [
-      { "type": "address", "name": "_keeper", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_keeper", "internalType": "address" }]
   },
   {
     "type": "function",
@@ -335,27 +323,21 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "setController",
-    "inputs": [
-      { "type": "address", "name": "_controller", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_controller", "internalType": "address" }]
   },
   {
     "type": "function",
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "setGovernance",
-    "inputs": [
-      { "type": "address", "name": "_governance", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_governance", "internalType": "address" }]
   },
   {
     "type": "function",
     "stateMutability": "nonpayable",
     "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
     "name": "setMarketColFactor",
-    "inputs": [
-      { "type": "uint256", "name": "_daiColFactor", "internalType": "uint256" }
-    ]
+    "inputs": [{ "type": "uint256", "name": "_daiColFactor", "internalType": "uint256" }]
   },
   {
     "type": "function",
@@ -388,18 +370,14 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "setStrategist",
-    "inputs": [
-      { "type": "address", "name": "_strategist", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_strategist", "internalType": "address" }]
   },
   {
     "type": "function",
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "setTimelock",
-    "inputs": [
-      { "type": "address", "name": "_timelock", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_timelock", "internalType": "address" }]
   },
   {
     "type": "function",
@@ -501,40 +479,28 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "withdraw",
-    "inputs": [
-      { "type": "uint256", "name": "_amount", "internalType": "uint256" }
-    ]
+    "inputs": [{ "type": "uint256", "name": "_amount", "internalType": "uint256" }]
   },
   {
     "type": "function",
     "stateMutability": "nonpayable",
-    "outputs": [
-      { "type": "uint256", "name": "balance", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "balance", "internalType": "uint256" }],
     "name": "withdraw",
-    "inputs": [
-      { "type": "address", "name": "_asset", "internalType": "contract IERC20" }
-    ]
+    "inputs": [{ "type": "address", "name": "_asset", "internalType": "contract IERC20" }]
   },
   {
     "type": "function",
     "stateMutability": "nonpayable",
-    "outputs": [
-      { "type": "uint256", "name": "balance", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "balance", "internalType": "uint256" }],
     "name": "withdrawAll",
     "inputs": []
   },
   {
     "type": "function",
     "stateMutability": "nonpayable",
-    "outputs": [
-      { "type": "uint256", "name": "balance", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "balance", "internalType": "uint256" }],
     "name": "withdrawForSwap",
-    "inputs": [
-      { "type": "uint256", "name": "_amount", "internalType": "uint256" }
-    ]
+    "inputs": [{ "type": "uint256", "name": "_amount", "internalType": "uint256" }]
   },
   {
     "type": "function",

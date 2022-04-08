@@ -41,10 +41,7 @@ const App: FC<AppProps> = (props) => {
       <Head>
         <title>{t("meta.titleFull")}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"
-        ></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1CT5KTZCB"></script>
 
         <meta property="og:title" content={t("meta.titleFull")} />
         <meta property="og:description" content={t("meta.description")} />

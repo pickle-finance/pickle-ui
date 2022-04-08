@@ -30,10 +30,7 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.theme.pick")}>
-      <RadioGroup
-        value={theme.type}
-        onChange={(value) => dispatch(setThemeType(value))}
-      >
+      <RadioGroup value={theme.type} onChange={(value) => dispatch(setThemeType(value))}>
         <div className="grid grid-cols-3 gap-2">
           {options.map((opt) => {
             const Icon = opt.icon;
@@ -52,10 +49,7 @@ const ThemeModal: FC<Props> = ({ isOpen, closeModal }) => {
                 }
               >
                 {({ checked }) => (
-                  <RadioGroup.Label
-                    as="div"
-                    className="flex flex-col items-center"
-                  >
+                  <RadioGroup.Label as="div" className="flex flex-col items-center">
                     <Icon
                       className={classNames(
                         checked ? "fill-primary-light" : "fill-current",

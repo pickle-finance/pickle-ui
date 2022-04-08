@@ -12,9 +12,7 @@ const Home: FC = () => {
   return (
     <Page>
       <Page.Content>
-        <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-          {t("meta.title")}
-        </h1>
+        <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>{t("meta.title")}</h1>
         <Grid.Container gap={2}>
           <Grid xs={24} sm={24} md={16}>
             <Balances />

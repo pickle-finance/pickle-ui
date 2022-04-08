@@ -28,12 +28,7 @@ interface Props {
 }
 
 export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
-  const {
-    totalSupply: dillSupply,
-    lockEndDate,
-    lockedAmount,
-    balance: dillBalance,
-  } = dillStats;
+  const { totalSupply: dillSupply, lockEndDate, lockedAmount, balance: dillBalance } = dillStats;
   const { t } = useTranslation("common");
 
   const unlockTime = new Date();
@@ -43,13 +38,9 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
 
   const isFetchingData = pickleBalance === null || !dillBalance;
 
-  const lockedAmountValue = Number(
-    formatEther(lockedAmount?.toString() || "0"),
-  );
+  const lockedAmountValue = Number(formatEther(lockedAmount?.toString() || "0"));
   const dillBalanceValue = Number(formatEther(dillBalance?.toString() || "0"));
-  const ratio = dillSupply
-    ? dillBalanceValue / parseFloat(formatEther(dillSupply))
-    : 0;
+  const ratio = dillSupply ? dillBalanceValue / parseFloat(formatEther(dillSupply)) : 0;
 
   return (
     <Card>
@@ -78,9 +69,7 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
               percentage: formatPercent(ratio, 1, 5),
             })}
           >
-            <span>
-              {isFetchingData ? "--" : formatNumber(dillBalanceValue)}
-            </span>
+            <span>{isFetchingData ? "--" : formatNumber(dillBalanceValue)}</span>
             &nbsp;DILL
             <img src="./question.svg" style={{ marginLeft: 8, width: 15 }} />
           </Tooltip>

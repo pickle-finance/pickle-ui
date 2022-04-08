@@ -14,11 +14,7 @@ export const usePicklePerBlock = (): { picklePerBlock: number | null } => {
     if (masterchef?.address != NULL_ADDRESS && blockNum) {
       const picklePerBlock = BigNumber.from(1);
 
-      setPicklePerBlock(
-        parseFloat(
-          ethers.utils.formatEther(picklePerBlock || BigNumber.from(0)),
-        ),
-      );
+      setPicklePerBlock(parseFloat(ethers.utils.formatEther(picklePerBlock || BigNumber.from(0))));
     }
   };
 

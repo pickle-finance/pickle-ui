@@ -15,15 +15,9 @@ const Frax: FC = () => {
     <>
       <Page>
         <Page.Content>
-          <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-            {t("frax.frax")}
-          </h1>
+          <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>{t("frax.frax")}</h1>
           <p>{t("frax.description")}</p>
-          {chainName !== ChainNetwork.Ethereum ? (
-            t("frax.connectionPrompt")
-          ) : (
-            <FraxFeature />
-          )}
+          {chainName !== ChainNetwork.Ethereum ? t("frax.connectionPrompt") : <FraxFeature />}
         </Page.Content>
         <Footer />
       </Page>

@@ -34,8 +34,7 @@ const NavItem = styled.a<NavItemProps>`
   position: relative;
   padding: 0 8px;
 
-  text-shadow: ${(props) =>
-    props.active ? "var(--link-hover-glow)" : "unset"};
+  text-shadow: ${(props) => (props.active ? "var(--link-hover-glow)" : "unset")};
 
   @media screen and (max-width: 600px) {
     padding: 0;
@@ -67,19 +66,13 @@ export const InfoBar: FC = () => {
       <MaxWidthWrapper>
         <Content>
           <Link href="/info" passHref>
-            <NavItem active={router.pathname.endsWith("/info")}>
-              {t("nav.info")}
-            </NavItem>
+            <NavItem active={router.pathname.endsWith("/info")}>{t("nav.info")}</NavItem>
           </Link>
           <Link href="/info/earn" passHref>
-            <NavItem active={router.pathname.startsWith("/info/earn")}>
-              {t("nav.profit")}
-            </NavItem>
+            <NavItem active={router.pathname.startsWith("/info/earn")}>{t("nav.profit")}</NavItem>
           </Link>
           <Link href="/info/jars" passHref>
-            <NavItem active={router.pathname.startsWith("/info/jars")}>
-              {t("nav.jars")}
-            </NavItem>
+            <NavItem active={router.pathname.startsWith("/info/jars")}>{t("nav.jars")}</NavItem>
           </Link>
         </Content>
       </MaxWidthWrapper>

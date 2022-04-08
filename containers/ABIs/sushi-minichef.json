@@ -2,9 +2,7 @@
   {
     "type": "constructor",
     "stateMutability": "nonpayable",
-    "inputs": [
-      { "type": "address", "name": "_sushi", "internalType": "contract IERC20" }
-    ]
+    "inputs": [{ "type": "address", "name": "_sushi", "internalType": "contract IERC20" }]
   },
   {
     "type": "event",
@@ -252,9 +250,7 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "address", "name": "", "internalType": "contract IERC20" }
-    ],
+    "outputs": [{ "type": "address", "name": "", "internalType": "contract IERC20" }],
     "name": "SUSHI",
     "inputs": []
   },
@@ -331,9 +327,7 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "address", "name": "", "internalType": "contract IERC20" }
-    ],
+    "outputs": [{ "type": "address", "name": "", "internalType": "contract IERC20" }],
     "name": "lpToken",
     "inputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }]
   },
@@ -342,9 +336,7 @@
     "stateMutability": "nonpayable",
     "outputs": [],
     "name": "massUpdatePools",
-    "inputs": [
-      { "type": "uint256[]", "name": "pids", "internalType": "uint256[]" }
-    ]
+    "inputs": [{ "type": "uint256[]", "name": "pids", "internalType": "uint256[]" }]
   },
   {
     "type": "function",
@@ -383,9 +375,7 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "uint256", "name": "pending", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "pending", "internalType": "uint256" }],
     "name": "pendingSushi",
     "inputs": [
       { "type": "uint256", "name": "_pid", "internalType": "uint256" },
@@ -426,18 +416,14 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "uint256", "name": "pools", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "pools", "internalType": "uint256" }],
     "name": "poolLength",
     "inputs": []
   },
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "address", "name": "", "internalType": "contract IRewarder" }
-    ],
+    "outputs": [{ "type": "address", "name": "", "internalType": "contract IRewarder" }],
     "name": "rewarder",
     "inputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }]
   },

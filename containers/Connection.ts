@@ -4,16 +4,9 @@ import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { useWeb3React } from "@web3-react/core";
-import {
-  Provider as MulticallProvider,
-  setMulticallAddress,
-} from "ethers-multicall";
+import { Provider as MulticallProvider, setMulticallAddress } from "ethers-multicall";
 import { useRouter } from "next/router";
-import {
-  ChainNetwork,
-  Chains,
-  RawChain,
-} from "picklefinance-core/lib/chain/Chains";
+import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
 import { PickleCore } from "./Jars/usePickleCore";
 
 type Network = ethers.providers.Network;
@@ -55,13 +48,10 @@ function useConnection() {
   const router = useRouter();
   const { pickleCore } = PickleCore.useContainer();
 
-  // Turn off ethersjs warnings 
+  // Turn off ethersjs warnings
   ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR);
 
-  const [
-    multicallProvider,
-    setMulticallProvider,
-  ] = useState<MulticallProvider | null>(null);
+  const [multicallProvider, setMulticallProvider] = useState<MulticallProvider | null>(null);
 
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
@@ -76,9 +66,7 @@ function useConnection() {
     } else {
       method = "wallet_addEthereumChain";
       method = "wallet_addEthereumChain";
-      const param = chainToChainParams(
-        pickleCore.chains.find((x) => x.chainId === chainId),
-      );
+      const param = chainToChainParams(pickleCore.chains.find((x) => x.chainId === chainId));
       if (param === undefined || param === null) return false;
       params = [param];
     }
@@ -118,17 +106,13 @@ function useConnection() {
       });
 
       const _multicallProvider = new MulticallProvider(library);
-      _multicallProvider
-        .init()
-        .then(() => setMulticallProvider(_multicallProvider));
+      _multicallProvider.init().then(() => setMulticallProvider(_multicallProvider));
 
       const { ethereum } = window as any;
       ethereum?.on("chainChanged", () => router.reload());
 
       const observable = new Observable<number>((subscriber) => {
-        library.on("block", (blockNumber: number) =>
-          subscriber.next(blockNumber),
-        );
+        library.on("block", (blockNumber: number) => subscriber.next(blockNumber));
       });
 
       // debounce to prevent subscribers making unnecessary calls
@@ -143,10 +127,8 @@ function useConnection() {
     }
   }, [library, pickleCore]);
 
-  const chainName =   
-    pickleCore?.chains.find((x) => x.chainId === chainId)
-      ?.network || null
-  
+  const chainName = pickleCore?.chains.find((x) => x.chainId === chainId)?.network || null;
+
   return {
     multicallProvider,
     provider: library,

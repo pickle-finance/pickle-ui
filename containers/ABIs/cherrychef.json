@@ -141,9 +141,7 @@
   {
     "inputs": [],
     "name": "cherry",
-    "outputs": [
-      { "internalType": "contract CherryToken", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract CherryToken", "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -237,9 +235,7 @@
   {
     "inputs": [],
     "name": "syrup",
-    "outputs": [
-      { "internalType": "contract SyrupBar", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract SyrupBar", "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"

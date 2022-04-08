@@ -1,11 +1,7 @@
 import { FC } from "react";
 import Image from "next/image";
 import { Popover } from "@headlessui/react";
-import {
-  ChevronDownIcon,
-  CheckCircleIcon,
-  CubeIcon,
-} from "@heroicons/react/solid";
+import { ChevronDownIcon, CheckCircleIcon, CubeIcon } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
 import { useWeb3React } from "@web3-react/core";
 
@@ -40,9 +36,7 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = ({ networks }) => {
             priority
           />
         </div>
-        <span className="text-foreground-alt-200 text-sm font-bold">
-          {activeChain.visibleName}
-        </span>
+        <span className="text-foreground-alt-200 text-sm font-bold">{activeChain.visibleName}</span>
       </div>
     );
 

@@ -191,9 +191,7 @@
   {
     "inputs": [],
     "name": "jf",
-    "outputs": [
-      { "internalType": "contract JFToken", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract JFToken", "name": "", "type": "address" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"

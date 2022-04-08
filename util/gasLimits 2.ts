@@ -29,10 +29,7 @@ const tokenGasLimits: TokenGasLimits = {
   },
 };
 
-export const gasLimit = (
-  tokenAddress: string,
-  interaction: Interaction,
-): Overrides => {
+export const gasLimit = (tokenAddress: string, interaction: Interaction): Overrides => {
   const gasLimit = tokenGasLimits[tokenAddress][interaction];
 
   return gasLimit ? { gasLimit } : {};

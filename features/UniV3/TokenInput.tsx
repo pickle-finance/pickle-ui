@@ -34,13 +34,11 @@ export const TokenInput: FC<{
   const [userApproved, setUserApproved] = useState(false);
 
   // In the future, make this an array to check for the native gas token on diff chains
-  const isEth =
-    token?.address.toLowerCase() ===
-    "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270";
+  const isEth = token?.address.toLowerCase() === "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270";
   const ethSelected = isEth && inputToken === ethOptions[0];
   const { t } = useTranslation("common");
   const balanceUsed = ethSelected ? ethBalance : token?.walletBalance;
-  
+
   useEffect(() => {
     const setBalance = async () => setEthBalance(await signer.getBalance());
     setBalance();
@@ -78,14 +76,8 @@ export const TokenInput: FC<{
               }}
             >
               {ethOptions.map((token) => (
-                <Select.Option
-                  style={{ fontSize: "1rem" }}
-                  value={token}
-                  key={token}
-                >
-                  <div style={{ display: `flex`, alignItems: `center` }}>
-                    {token}
-                  </div>
+                <Select.Option style={{ fontSize: "1rem" }} value={token} key={token}>
+                  <div style={{ display: `flex`, alignItems: `center` }}>{token}</div>
                 </Select.Option>
               ))}
             </Select>
@@ -103,11 +95,7 @@ export const TokenInput: FC<{
                 depositTokenAddr={token.address}
                 jarAddr={jarAddr}
                 signer={signer}
-                approved={
-                  (isEth && inputToken === ethOptions[0]) ||
-                  token.approved ||
-                  userApproved
-                }
+                approved={(isEth && inputToken === ethOptions[0]) || token.approved || userApproved}
                 setUserApproved={setUserApproved}
               />
             }

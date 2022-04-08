@@ -22,10 +22,7 @@ const UnlockDate: FC = () => {
       >
         <Button onClick={() => setIsOpen(true)}>+</Button>
       </DillCard>
-      <IncreaseLockDateModal
-        isOpen={isOpen}
-        closeModal={() => setIsOpen(false)}
-      />
+      <IncreaseLockDateModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />
     </>
   );
 };

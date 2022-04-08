@@ -10,7 +10,7 @@ export interface JarDetails {
   apy: number;
 }
 
-// STATS 
+// STATS
 // common
 export interface TvlData {
   value: number;
@@ -135,7 +135,7 @@ export interface RecentHarvest {
   gasTokenPrice: number;
   gasUsed: string;
   jarKey: string;
-  timestamp: number
+  timestamp: number;
   transfers: Transfer[];
   txid: string;
 }

@@ -41,18 +41,10 @@ export function useDill(): UseDillOutput {
   const [totalPickleValue, setTotalPickleValue] = useState<number | null>(null);
   const [nextDistribution, setNextDistribution] = useState<Date | null>(null);
   const [lastDistribution, setLastDistribution] = useState<number | null>(null);
-  const [lastDistributionValue, setLastDistributionValue] = useState<
-    number | null
-  >(null);
+  const [lastDistributionValue, setLastDistributionValue] = useState<number | null>(null);
 
   useEffect(() => {
-    if (
-      dill &&
-      feeDistributor &&
-      address &&
-      prices &&
-      chainName === ChainNetwork.Ethereum
-    ) {
+    if (dill && feeDistributor && address && prices && chainName === ChainNetwork.Ethereum) {
       const f = async () => {
         const dillContract = dill.attach(DILL);
         const feeDistributorContract = feeDistributor.attach(FEE_DISTRIBUTOR);
@@ -82,17 +74,13 @@ export function useDill(): UseDillOutput {
           },
         );
 
-        const totalLockedValue =
-          prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
+        const totalLockedValue = prices.pickle * parseFloat(ethers.utils.formatEther(totalSupply));
 
-        const totalPickleValue =
-          prices.pickle * parseFloat(ethers.utils.formatEther(totalLocked));
+        const totalPickleValue = prices.pickle * parseFloat(ethers.utils.formatEther(totalLocked));
 
         const nextDistribution = new Date(timeCursor.toNumber() * 1000);
 
-        const lastDistributionPickles = parseFloat(
-          ethers.utils.formatEther(lastDistribution),
-        );
+        const lastDistributionPickles = parseFloat(ethers.utils.formatEther(lastDistribution));
 
         const lastDistributionValue = prices.pickle * lastDistributionPickles;
 

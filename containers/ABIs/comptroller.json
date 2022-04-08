@@ -44,9 +44,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "holder", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "holder", "type": "address" }],
     "name": "claimComp",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -107,20 +105,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address[]", "name": "cTokens", "type": "address[]" }
-    ],
+    "inputs": [{ "internalType": "address[]", "name": "cTokens", "type": "address[]" }],
     "name": "enterMarkets",
-    "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-    ],
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "cToken", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "cToken", "type": "address" }],
     "name": "exitMarket",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
@@ -192,9 +184,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "cTokenAddress", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "cTokenAddress", "type": "address" }],
     "name": "markets",
     "outputs": [
       { "internalType": "bool", "name": "", "type": "bool" },

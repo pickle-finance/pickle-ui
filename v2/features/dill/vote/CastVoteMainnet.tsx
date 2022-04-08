@@ -17,7 +17,9 @@ const castVoteMainnet = (
 
   selectedJars.forEach((jar) => {
     const jarFromPfcore: JarDefinition | undefined = core
-      ? core.assets.jars.find((j) => j && j.details && j.details.apiKey ? j.details.apiKey === jar : false)
+      ? core.assets.jars.find((j) =>
+          j && j.details && j.details.apiKey ? j.details.apiKey === jar : false,
+        )
       : undefined;
     const jarContract = jarFromPfcore ? jarFromPfcore?.contract : "";
     if (jarContract === "") toast.error(`Unable to locate address of ${jar}.`, toastSettings);

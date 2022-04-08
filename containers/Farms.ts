@@ -5,9 +5,7 @@ import { useWithReward } from "./Farms/useWithReward";
 import { ChainNetwork, Chains, PickleModelJson } from "picklefinance-core";
 import { PickleCore } from "./Jars/usePickleCore";
 
-export const createIFarmInfo = (
-  pfcore: PickleModelJson.PickleModelJson | null,
-): any => {
+export const createIFarmInfo = (pfcore: PickleModelJson.PickleModelJson | null): any => {
   if (!pfcore) {
     return {};
   }
@@ -17,10 +15,7 @@ export const createIFarmInfo = (
     ret[chain.network] = {};
   });
   for (let i = 0; i < pfcore.assets.jars.length; i++) {
-    if (
-      pfcore.assets.jars[i].id !== undefined &&
-      pfcore.assets.jars[i].contract !== undefined
-    ) {
+    if (pfcore.assets.jars[i].id !== undefined && pfcore.assets.jars[i].contract !== undefined) {
       const tName = pfcore.assets.jars[i].farm
         ? pfcore.assets.jars[i].farm!.farmDepositTokenName
         : pfcore.assets.jars[i].depositToken.name;
@@ -28,17 +23,11 @@ export const createIFarmInfo = (
         tokenName: tName,
         poolName: pfcore.assets.jars[i].depositToken.name,
       };
-      ret[pfcore.assets.jars[i].chain][
-        pfcore.assets.jars[i].depositToken.addr.toLowerCase()
-      ] = r;
-      ret[pfcore.assets.jars[i].chain][
-        pfcore.assets.jars[i].contract.toLowerCase()
-      ] = r;
+      ret[pfcore.assets.jars[i].chain][pfcore.assets.jars[i].depositToken.addr.toLowerCase()] = r;
+      ret[pfcore.assets.jars[i].chain][pfcore.assets.jars[i].contract.toLowerCase()] = r;
     }
   }
-  ret[ChainNetwork.Ethereum][
-    "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819".toLowerCase()
-  ] = {
+  ret[ChainNetwork.Ethereum]["0xdc98556Ce24f007A5eF6dC1CE96322d65832A819".toLowerCase()] = {
     tokenName: "UNI PICKLE/ETH",
     poolName: "Pickle Power",
   };

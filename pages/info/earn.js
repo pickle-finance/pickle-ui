@@ -1,8 +1,4 @@
-import {
-  makeStyles,
-  createMuiTheme,
-  ThemeProvider,
-} from "@material-ui/core/styles";
+import { makeStyles, createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Card from "@material-ui/core/Card";
@@ -12,18 +8,8 @@ import CardContent from "@material-ui/core/CardContent";
 import { Page, Input } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import {
-  getUserEarnings,
-  getCoinData,
-  formatUsd,
-  getFarmData,
-} from "../../util/api";
-import {
-  cardColor,
-  pickleGreen,
-  materialBlack,
-  pickleWhite,
-} from "../../util/constants";
+import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../util/api";
+import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../util/constants";
 import InfoCardContent from "../../components/InfoCardContent";
 import EarnRow from "../../components/EarnRow";
 import ThemedTable from "../../components/ThemedTable";
@@ -129,9 +115,7 @@ export default function Earn() {
       }
       const pickle = responseData[1].market_data.current_price.usd;
       const farms = responseData[2];
-      const heldPositions = accountInfo.jarEarnings.filter(
-        (jar) => jar.balance > 0,
-      );
+      const heldPositions = accountInfo.jarEarnings.filter((jar) => jar.balance > 0);
       let balance = 0;
       let earn = 0;
       if (heldPositions.length > 0) {
@@ -253,11 +237,7 @@ export default function Earn() {
                   <Grid item xs={12} md={4}>
                     <InfoCardContent
                       title={t("info.earnings")}
-                      value={
-                        accountData
-                          ? formatUsd(accountData.earnings)
-                          : accountData
-                      }
+                      value={accountData ? formatUsd(accountData.earnings) : accountData}
                       subtext={t("info.lifetimeValue")}
                       icon={"/assets/coin.png"}
                     />
@@ -284,11 +264,7 @@ export default function Earn() {
               <Grid item xs={12} md={6} className={classes.gridItem}>
                 <h1>{t("info.earnings")}</h1>
                 <ThemedTable
-                  headers={[
-                    t("info.asset"),
-                    t("info.earnedTokens"),
-                    t("info.value"),
-                  ]}
+                  headers={[t("info.asset"), t("info.earnedTokens"), t("info.value")]}
                   rows={earnRows}
                 />
               </Grid>

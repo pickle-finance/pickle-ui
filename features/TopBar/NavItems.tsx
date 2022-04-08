@@ -23,8 +23,7 @@ export const NavItem = styled.a<NavItemProps>`
   position: relative;
   padding: 0 8px;
 
-  text-shadow: ${(props) =>
-    props.active ? "var(--link-hover-glow)" : "unset"};
+  text-shadow: ${(props) => (props.active ? "var(--link-hover-glow)" : "unset")};
 
   @media screen and (max-width: 600px) {
     padding: 0;
@@ -66,16 +65,12 @@ const infoItems = (router: NextRouter) => {
     <div style={{ padding: "0 10px" }}>
       <p>
         <Link href="/info/earn" passHref>
-          <NavItem active={router.pathname.startsWith("/info/earn")}>
-            {t("nav.profit")}
-          </NavItem>
+          <NavItem active={router.pathname.startsWith("/info/earn")}>{t("nav.profit")}</NavItem>
         </Link>
       </p>
       <p>
         <Link href="/info/jars" passHref>
-          <NavItem active={router.pathname.startsWith("/info/jars")}>
-            {t("nav.jars")}
-          </NavItem>
+          <NavItem active={router.pathname.startsWith("/info/jars")}>{t("nav.jars")}</NavItem>
         </Link>
       </p>
     </div>
@@ -90,29 +85,17 @@ export const NavItems: FC = () => {
     <>
       <NavItemsContainer>
         <Link href="/farms" passHref>
-          <NavItem active={router.pathname.endsWith("farms")}>
-            {t("nav.jarsAndFarms")}
-          </NavItem>
+          <NavItem active={router.pathname.endsWith("farms")}>{t("nav.jarsAndFarms")}</NavItem>
         </Link>
         <Link href="/dill" passHref>
-          <NavItem active={router.pathname.startsWith("/dill")}>
-            {t("nav.dill")}
-          </NavItem>
+          <NavItem active={router.pathname.startsWith("/dill")}>{t("nav.dill")}</NavItem>
         </Link>
         <Link href="/frax" passHref>
-          <NavItem active={router.pathname.startsWith("/frax")}>
-            {t("nav.frax")}
-          </NavItem>
+          <NavItem active={router.pathname.startsWith("/frax")}>{t("nav.frax")}</NavItem>
         </Link>
-        <Popover
-          content={infoItems(router)}
-          trigger="hover"
-          style={{ display: "flex" }}
-        >
+        <Popover content={infoItems(router)} trigger="hover" style={{ display: "flex" }}>
           <Link href="/info" passHref>
-            <NavItem active={router.pathname.startsWith("/info")}>
-              {t("nav.info")}
-            </NavItem>
+            <NavItem active={router.pathname.startsWith("/info")}>{t("nav.info")}</NavItem>
           </Link>
         </Popover>
         <Link href="https://feedback.pickle.finance/" passHref>

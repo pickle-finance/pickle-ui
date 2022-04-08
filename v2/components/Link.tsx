@@ -11,15 +11,7 @@ interface Props extends HTMLAttributes<HTMLElement> {
   primary?: boolean;
 }
 
-const AppLink: FC<Props> = ({
-  active,
-  children,
-  className,
-  external,
-  href,
-  primary,
-  onClick,
-}) => {
+const AppLink: FC<Props> = ({ active, children, className, external, href, primary, onClick }) => {
   return (
     <Link href={href}>
       <a

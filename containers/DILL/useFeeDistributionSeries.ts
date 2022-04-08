@@ -26,38 +26,25 @@ export type FeeDistributionDataPoint = {
 export function useFeeDistributionSeries() {
   const { multicallProvider } = Connection.useContainer();
   const { feeDistributor } = Contracts.useContainer();
-  const [feeDistributionSeries, setFeeDistributionSeries] = useState<
-    FeeDistributionDataPoint[]
-  >([]);
+  const [feeDistributionSeries, setFeeDistributionSeries] = useState<FeeDistributionDataPoint[]>(
+    [],
+  );
   const { prices } = Prices.useContainer();
   const { weeklyDistribution: weeklyDistributionUsd } = Dill.useContainer();
 
   const fetchFeeDistributionSeries = async () => {
-    if (
-      multicallProvider &&
-      feeDistributor &&
-      prices &&
-      weeklyDistributionUsd
-    ) {
+    if (multicallProvider && feeDistributor && prices && weeklyDistributionUsd) {
       const contract = new MulticallContract(feeDistributor.address, [
         ...feeDistributor.interface.fragments,
       ]);
 
       // Ignore initial negligible distributions that distort
       // PICKLE/DILL ratio range.
-      const startTime = ethers.BigNumber.from(
-        firstMeaningfulDistributionTimestamp,
-      );
-      const [endTime] = await multicallProvider.all<BigNumber[]>([
-        contract.time_cursor(),
-      ]);
+      const startTime = ethers.BigNumber.from(firstMeaningfulDistributionTimestamp);
+      const [endTime] = await multicallProvider.all<BigNumber[]>([contract.time_cursor()]);
 
       let payoutTimes: BigNumber[] = [];
-      for (
-        let time = startTime;
-        time.lt(endTime);
-        time = time.add(ethers.BigNumber.from(week))
-      ) {
+      for (let time = startTime; time.lt(endTime); time = time.add(ethers.BigNumber.from(week))) {
         payoutTimes.push(time);
       }
 
@@ -89,13 +76,9 @@ export function useFeeDistributionSeries() {
           const historicalEntry = picklePriceSeries.find((value) =>
             dayjs(value[0]).isSameOrAfter(distributionTime, "day"),
           );
-          const picklePriceUsd = historicalEntry
-            ? historicalEntry[1]
-            : prices.pickle;
+          const picklePriceUsd = historicalEntry ? historicalEntry[1] : prices.pickle;
 
-          const totalDillAmount = parseInt(
-            ethers.utils.formatEther(dillAmounts[index]),
-          );
+          const totalDillAmount = parseInt(ethers.utils.formatEther(dillAmounts[index]));
           const pickleDillRatio = weeklyPickleAmount / totalDillAmount;
 
           totalPickleAmount += weeklyPickleAmount;
@@ -120,12 +103,7 @@ export function useFeeDistributionSeries() {
 
   useEffect(() => {
     fetchFeeDistributionSeries();
-  }, [
-    multicallProvider,
-    feeDistributor?.address,
-    prices?.pickle,
-    weeklyDistributionUsd,
-  ]);
+  }, [multicallProvider, feeDistributor?.address, prices?.pickle, weeklyDistributionUsd]);
 
   return {
     feeDistributionSeries,

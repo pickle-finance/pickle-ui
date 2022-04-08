@@ -15,10 +15,7 @@ import { useMC2 } from "../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import {
-  AssetProjectedApr,
-  PickleAsset,
-} from "picklefinance-core/lib/model/PickleModelJson";
+import { AssetProjectedApr, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 
 const PICKLE_PID = 3;
 
@@ -47,15 +44,7 @@ const formatString = (num: number) =>
   });
 
 export const MC2Farm: FC = () => {
-  const {
-    slpStaked,
-    slpBalance,
-    userValue,
-    apy,
-    pendingPickle,
-    pendingSushi,
-    tvl,
-  } = useMC2();
+  const { slpStaked, slpBalance, userValue, apy, pendingPickle, pendingSushi, tvl } = useMC2();
   const { pickleCore } = PickleCore.useContainer();
 
   const balNum = parseFloat(formatEther(slpBalance));
@@ -96,9 +85,7 @@ export const MC2Farm: FC = () => {
 
   let APYs = [];
   let totalAPY = 0;
-  const pickleEthSlp:
-    | PickleAsset
-    | undefined = pickleCore?.assets.external.find(
+  const pickleEthSlp: PickleAsset | undefined = pickleCore?.assets.external.find(
     (x) => x.depositToken.addr.toLowerCase() === PICKLE_ETH_SLP.toLowerCase(),
   );
   if (
@@ -122,37 +109,13 @@ export const MC2Farm: FC = () => {
 
   useEffect(() => {
     if (masterchefV2) {
-      const stakeStatus = getTransferStatus(
-        PICKLE_ETH_SLP,
-        masterchefV2.address,
-      );
-      const unstakeStatus = getTransferStatus(
-        masterchefV2.address,
-        PICKLE_ETH_SLP,
-      );
-      const harvestStatus = getTransferStatus(
-        masterchefV2.address,
-        PICKLE_PID.toString(),
-      );
+      const stakeStatus = getTransferStatus(PICKLE_ETH_SLP, masterchefV2.address);
+      const unstakeStatus = getTransferStatus(masterchefV2.address, PICKLE_ETH_SLP);
+      const harvestStatus = getTransferStatus(masterchefV2.address, PICKLE_PID.toString());
 
-      setButtonStatus(
-        stakeStatus,
-        t("farms.staking"),
-        t("farms.stake"),
-        setStakeButton,
-      );
-      setButtonStatus(
-        unstakeStatus,
-        t("farms.unstaking"),
-        t("farms.unstake"),
-        setUnstakeButton,
-      );
-      setButtonStatus(
-        harvestStatus,
-        t("farms.harvesting"),
-        t("farms.harvest"),
-        setHarvestButton,
-      );
+      setButtonStatus(stakeStatus, t("farms.staking"), t("farms.stake"), setStakeButton);
+      setButtonStatus(unstakeStatus, t("farms.unstaking"), t("farms.unstake"), setUnstakeButton);
+      setButtonStatus(harvestStatus, t("farms.harvesting"), t("farms.harvest"), setHarvestButton);
     }
   }, [erc20TransferStatuses]);
 
@@ -164,12 +127,7 @@ export const MC2Farm: FC = () => {
         <Grid.Container gap={1}>
           <CenteredGrid xs={24} sm={12} md={6} lg={6}>
             <TokenIcon
-              src={
-                <LpIcon
-                  swapIconSrc={"/sushiswap.png"}
-                  tokenIconSrc={"/pickle.png"}
-                />
-              }
+              src={<LpIcon swapIconSrc={"/sushiswap.png"} tokenIconSrc={"/pickle.png"} />}
             />
             <div style={{ width: "100%" }}>
               <div style={{ fontSize: `1rem` }}>{t("farms.mc2")}</div>
@@ -203,9 +161,7 @@ export const MC2Farm: FC = () => {
           </CenteredGrid>
           <CenteredGrid xs={24} sm={12} md={4} lg={4}>
             <Tooltip text={typeof apy === "undefined" ? "--" : tooltipText}>
-              <div>
-                {typeof apy === "undefined" ? "--%" : totalAPY.toFixed(2) + "%"}
-              </div>
+              <div>{typeof apy === "undefined" ? "--%" : totalAPY.toFixed(2) + "%"}</div>
               <br />
               <Label>{t("balances.totalApy")}</Label>
             </Tooltip>
@@ -256,11 +212,7 @@ export const MC2Farm: FC = () => {
                   transferCallback: async () => {
                     return masterchefV2
                       .connect(signer)
-                      .deposit(
-                        PICKLE_PID,
-                        ethers.utils.parseEther(stakeAmount),
-                        address,
-                      );
+                      .deposit(PICKLE_PID, ethers.utils.parseEther(stakeAmount), address);
                   },
                 });
               }
@@ -331,9 +283,7 @@ export const MC2Farm: FC = () => {
                   recipient: masterchefV2.address,
                   approval: false,
                   transferCallback: async () => {
-                    return masterchefV2
-                      .connect(signer)
-                      .harvest(PICKLE_PID, address);
+                    return masterchefV2.connect(signer).harvest(PICKLE_PID, address);
                   },
                 });
               }

@@ -24,12 +24,8 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
   const { farms } = MiniFarms.useContainer();
   const { status: transferStatus } = ERC20Transfer.useContainer();
 
-  const [farmData, setFarmData] = useState<Array<UserFarmDataMatic> | null>(
-    null,
-  );
-  const [farmDataMatic, setFarmDataMatic] = useState<Array<
-    UserFarmDataMatic
-  > | null>(null);
+  const [farmData, setFarmData] = useState<Array<UserFarmDataMatic> | null>(null);
+  const [farmDataMatic, setFarmDataMatic] = useState<Array<UserFarmDataMatic> | null>(null);
 
   const updateMaticFarmData = async () => {
     if (pickleRewarder && farmData && address) {
@@ -66,14 +62,7 @@ const useUserMiniFarms = (): { farmData: UserFarmDataMatic[] | null } => {
   };
 
   useEffect(() => {
-    updateFarmData(
-      farms,
-      erc20,
-      minichef,
-      address,
-      multicallProvider,
-      setFarmData,
-    );
+    updateFarmData(farms, erc20, minichef, address, multicallProvider, setFarmData);
   }, [farms, blockNum, transferStatus]);
 
   useEffect(() => {

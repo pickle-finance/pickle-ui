@@ -14,11 +14,7 @@ export const Withdraw: FC<{
 }> = () => {
   const { blockNum, address, signer } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
-  const {
-    status: transferStatus,
-    transfer,
-    getTransferStatus,
-  } = ERC20Transfer.useContainer();
+  const { status: transferStatus, transfer, getTransferStatus } = ERC20Transfer.useContainer();
   const { t } = useTranslation("common");
   const { setButtonStatus } = useButtonStatus();
 

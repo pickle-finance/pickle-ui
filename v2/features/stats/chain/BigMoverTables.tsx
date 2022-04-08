@@ -2,12 +2,11 @@ import { FC } from "react";
 import { formatPercentage } from "v2/utils";
 import BigMoverTableHead from "./BigMoverTableHead";
 
-
-export const GainsTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
+export const GainsTable: FC<{ data: tokenPriceChange[] }> = ({ data }) => (
   <table className="w-1/2 inline-table">
-    <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.gain"/>
+    <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.gain" />
     <tbody className="border border-foreground-alt-400 text-center">
-      {data.slice(0,5).map(data => (
+      {data.slice(0, 5).map((data) => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
           <td>{formatPercentage(data.tokenPriceChange, 3)}</td>
@@ -15,13 +14,13 @@ export const GainsTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
       ))}
     </tbody>
   </table>
-)
+);
 
-export const LossesTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
+export const LossesTable: FC<{ data: tokenPriceChange[] }> = ({ data }) => (
   <table className="w-1/2 inline-table">
-    <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.loss"/>
+    <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.loss" />
     <tbody className="border border-foreground-alt-400 text-center">
-      {data.slice(-5).map(data => (
+      {data.slice(-5).map((data) => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
           <td>{formatPercentage(data.tokenPriceChange, 3)}</td>
@@ -29,8 +28,7 @@ export const LossesTable: FC <{data: tokenPriceChange[]}> = ({data}) => (
       ))}
     </tbody>
   </table>
-)
-
+);
 
 interface tokenPriceChange {
   apiKey: string;

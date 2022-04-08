@@ -85,16 +85,12 @@
       { "internalType": "bytes", "name": "_data", "type": "bytes" }
     ],
     "name": "execute",
-    "outputs": [
-      { "internalType": "bytes", "name": "response", "type": "bytes" }
-    ],
+    "outputs": [{ "internalType": "bytes", "name": "response", "type": "bytes" }],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }],
     "name": "freeWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -171,36 +167,28 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_burnFee", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_burnFee", "type": "uint256" }],
     "name": "setBurnFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_controller", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_controller", "type": "address" }],
     "name": "setController",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_governance", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_governance", "type": "address" }],
     "name": "setGovernance",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_keepUNI", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_keepUNI", "type": "uint256" }],
     "name": "setKeepUNI",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -220,27 +208,21 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_strategist", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_strategist", "type": "address" }],
     "name": "setStrategist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "_timelock", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_timelock", "type": "address" }],
     "name": "setTimelock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_withdrawalFee", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_withdrawalFee", "type": "uint256" }],
     "name": "setWithdrawalFee",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -289,31 +271,23 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "contract IERC20", "name": "_asset", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "contract IERC20", "name": "_asset", "type": "address" }],
     "name": "withdraw",
-    "outputs": [
-      { "internalType": "uint256", "name": "balance", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "balance", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "withdrawAll",
-    "outputs": [
-      { "internalType": "uint256", "name": "balance", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "balance", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },

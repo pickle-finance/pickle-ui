@@ -319,12 +319,8 @@ function useSushiPairs() {
     const { a, b } = PAIR_INFO[pairAddress];
 
     // get num of tokens
-    const numAInPair = parseFloat(
-      ethers.utils.formatUnits(numAInPairBN, a.decimals),
-    );
-    const numBInPair = parseFloat(
-      ethers.utils.formatUnits(numBInPairBN, b.decimals),
-    );
+    const numAInPair = parseFloat(ethers.utils.formatUnits(numAInPairBN, a.decimals));
+    const numBInPair = parseFloat(ethers.utils.formatUnits(numBInPairBN, b.decimals));
 
     // get prices
     const priceA = prices[a.priceId];

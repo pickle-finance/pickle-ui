@@ -1,12 +1,5 @@
 import { FC, useState } from "react";
-import {
-  Card,
-  Select,
-  Spacer,
-  Input,
-  Button,
-  Link as DisplayLink,
-} from "@geist-ui/react";
+import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist-ui/react";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useZapIn } from "./useZapper";
@@ -16,12 +9,7 @@ import { Connection } from "containers/Connection";
 import { Trans, useTranslation } from "next-i18next";
 import { Link } from "components/Link";
 
-import {
-  DEFAULT_SLIPPAGE,
-  YVECRVETH_JAR,
-  CRV_ADDRESS,
-  ETH_ADDRESS,
-} from "./constants";
+import { DEFAULT_SLIPPAGE, YVECRVETH_JAR, CRV_ADDRESS, ETH_ADDRESS } from "./constants";
 import { ChainNetwork } from "picklefinance-core";
 
 const formatValue = (numStr: string) =>
@@ -119,14 +107,8 @@ export const DepositZap: FC = () => {
         onChange={(e) => setInput(e.toString())}
       >
         {inputTokens.map((token) => (
-          <Select.Option
-            style={{ fontSize: "1rem" }}
-            value={token.symbol}
-            key={token.symbol}
-          >
-            <div style={{ display: `flex`, alignItems: `center` }}>
-              {token.label}
-            </div>
+          <Select.Option style={{ fontSize: "1rem" }} value={token.symbol} key={token.symbol}>
+            <div style={{ display: `flex`, alignItems: `center` }}>{token.label}</div>
           </Select.Option>
         ))}
       </Select>
@@ -139,8 +121,7 @@ export const DepositZap: FC = () => {
         }}
       >
         <div>
-          {t("balances.balance")}:{" "}
-          {balanceStr !== null ? formatValue(balanceStr) : 0}
+          {t("balances.balance")}: {balanceStr !== null ? formatValue(balanceStr) : 0}
         </div>
         <DisplayLink color href="#" onClick={setToMax}>
           {t("balances.max")}
@@ -155,11 +136,7 @@ export const DepositZap: FC = () => {
         size="large"
       />
       <Spacer />
-      <Button
-        style={{ width: "100%" }}
-        onClick={handleDeposit}
-        disabled={disableZap()}
-      >
+      <Button style={{ width: "100%" }} onClick={handleDeposit} disabled={disableZap()}>
         {txState || !isEth ? t("zap.notAvailable") : t("zap.zap")}
       </Button>
     </Card>

@@ -24,6 +24,6 @@ const ChainHead: FC = () => {
       </tr>
     </thead>
   );
-}
+};
 
 export default ChainHead;

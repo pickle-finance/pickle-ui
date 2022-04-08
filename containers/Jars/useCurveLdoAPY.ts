@@ -40,10 +40,7 @@ export const useCurveLdoAPY = (
 
   const getLdoAPY = async () => {
     if (stakingRewards && pool && multicallProvider && prices?.ldo) {
-      const mcPool = new MulticallContract(
-        pool.address,
-        pool.interface.fragments,
-      );
+      const mcPool = new MulticallContract(pool.address, pool.interface.fragments);
 
       const mcStakingRewards = new MulticallContract(
         stakingRewards.address,
@@ -66,8 +63,7 @@ export const useCurveLdoAPY = (
       const reward = rewardsRate * 365 * 3600 * 24;
 
       // https://github.com/curvefi/curve-dao/blob/2850af67abb42cbd50d940ae6280fc34659e8142/src/components/common/DailyAPYChart.vue
-      const ldoAPY =
-        (reward * prices.ldo) / (totalSupply * virtualPrice * prices.eth);
+      const ldoAPY = (reward * prices.ldo) / (totalSupply * virtualPrice * prices.eth);
       setLdoAPY(ldoAPY * 0.8);
     }
   };

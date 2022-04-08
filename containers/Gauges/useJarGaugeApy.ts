@@ -28,9 +28,7 @@ export const useJarGaugeApy = (inputGauges: Input): Output => {
     if (!inputGauges || !prices || !jars || !farmData || !chainName) {
       return;
     }
-    const jarGauges = inputGauges.filter(
-      (gauge) => jarFarmMap[gauge.token],
-    );
+    const jarGauges = inputGauges.filter((gauge) => jarFarmMap[gauge.token]);
 
     const res = jarGauges.map((gauge, idx) => {
       const { jarName } = jarFarmMap[gauge.token];

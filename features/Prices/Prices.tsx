@@ -76,11 +76,7 @@ export const Prices: FC = () => {
   return (
     <Card style={{ height: "169px" }}>
       <Card.Content>
-        <TradeButton
-          href={swapLink()}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <TradeButton href={swapLink()} target="_blank" rel="noopener noreferrer">
           Buy $Pickle
         </TradeButton>
         <DataPoint>
@@ -88,18 +84,14 @@ export const Prices: FC = () => {
             <CoinIcon src="/pickle.png" />
             PICKLE:
           </Label>
-          <Monospace>
-            {prices?.pickle ? formatDollars(prices.pickle) : "--"}
-          </Monospace>
+          <Monospace>{prices?.pickle ? formatDollars(prices.pickle) : "--"}</Monospace>
         </DataPoint>
         <DataPoint>
           <Label>
             <CoinIcon src="/ethereum.png" />
             ETH:
           </Label>
-          <Monospace>
-            {prices?.eth ? formatDollars(prices.eth) : "--"}
-          </Monospace>
+          <Monospace>{prices?.eth ? formatDollars(prices.eth) : "--"}</Monospace>
         </DataPoint>
       </Card.Content>
     </Card>

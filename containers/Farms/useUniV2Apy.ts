@@ -35,17 +35,9 @@ export const useUniV2Apy = (inputFarms: Input): Output => {
   const { getPairDataPrefill } = UniV2Pairs.useContainer();
 
   const calculateApy = async () => {
-    if (
-      inputFarms &&
-      prices &&
-      masterchef &&
-      getPairDataPrefill &&
-      multicallProvider
-    ) {
+    if (inputFarms && prices && masterchef && getPairDataPrefill && multicallProvider) {
       // filter for only uniswap v2 farms
-      const uniV2Farms = inputFarms?.filter(
-        (farm) => uniV2PairMap[farm.lpToken],
-      );
+      const uniV2Farms = inputFarms?.filter((farm) => uniV2PairMap[farm.lpToken]);
 
       // Batch-call
       const prefilledDatas = uniV2Farms

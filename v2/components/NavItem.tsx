@@ -10,14 +10,7 @@ interface Props extends HTMLAttributes<HTMLElement> {
   external?: boolean;
 }
 
-const NavItem: FC<Props> = ({
-  href,
-  children,
-  className,
-  Icon,
-  external,
-  onClick,
-}) => {
+const NavItem: FC<Props> = ({ href, children, className, Icon, external, onClick }) => {
   const router = useRouter();
   const isCurrent = external ? false : router.pathname.endsWith(href);
 
@@ -33,9 +26,7 @@ const NavItem: FC<Props> = ({
         {Icon && (
           <Icon
             className={classNames(
-              isCurrent
-                ? "text-primary-light"
-                : "text-foreground group-hover:text-primary-light",
+              isCurrent ? "text-primary-light" : "text-foreground group-hover:text-primary-light",
               "mr-2 flex-shrink-0 h-5 w-5 transition duration-300 ease-in-out",
             )}
             aria-hidden="true"

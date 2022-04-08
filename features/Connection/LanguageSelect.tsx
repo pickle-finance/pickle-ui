@@ -35,7 +35,7 @@ const languages = [
   {
     name: "Nederlands",
     locale: "nl",
-  }
+  },
 ];
 
 const activeLanguage = (locale: string | undefined): string => {
@@ -61,8 +61,7 @@ const activeLanguage = (locale: string | undefined): string => {
 const LanguageSelect: FC<Props> = ({ type }) => {
   const router = useRouter();
 
-  const handleLanguageSwitch = (locale: string) =>
-    router.push("", "", { locale });
+  const handleLanguageSwitch = (locale: string) => router.push("", "", { locale });
 
   const borderRadius = type === "grouped" ? "5px 0 0 5px" : "5px";
 

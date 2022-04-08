@@ -78,9 +78,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
     "name": "emergencyERC20Retrieve",
     "outputs": [],
     "stateMutability": "nonpayable",

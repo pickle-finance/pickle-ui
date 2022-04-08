@@ -30,9 +30,7 @@ const encodeParams = (params) =>
     .join("&");
 
 const getZapperApi = (endpoint, params) =>
-  `${ZAPPER_API}${endpoint}?api_key=${ZAPPER_APIKEY}${
-    params ? `&${encodeParams(params)}` : ""
-  }`;
+  `${ZAPPER_API}${endpoint}?api_key=${ZAPPER_APIKEY}${params ? `&${encodeParams(params)}` : ""}`;
 
 const fetchRes = async (url: string) => await fetch(url).then((x) => x.json());
 
@@ -60,11 +58,7 @@ export const useZapIn = ({
         .toString();
 
       if (!isSellTokenEth) {
-        const TOKEN = new ethers.Contract(
-          sellTokenAddress,
-          erc20.abi,
-          provider,
-        );
+        const TOKEN = new ethers.Contract(sellTokenAddress, erc20.abi, provider);
         decimals = await TOKEN.decimals();
         const approvalState = await fetchRes(
           getZapperApi("/zap-in/pickle/approval-state", {
@@ -84,9 +78,7 @@ export const useZapIn = ({
           await approveTx.wait();
         }
       }
-      const sellAmount = rawAmount
-        ? parseUnits(rawAmount, decimals || 18).toString()
-        : "0";
+      const sellAmount = rawAmount ? parseUnits(rawAmount, decimals || 18).toString() : "0";
       const { from, to, data, value } = await fetchRes(
         getZapperApi("/zap-in/pickle/transaction", {
           slippagePercentage,
@@ -114,9 +106,7 @@ export const useZapIn = ({
 };
 
 export const getStats = async (jarNames: string[]) => {
-  const jars = await fetchRes(
-    `${ZAPPER_API}/vault-stats/pickle?api_key=${ZAPPER_APIKEY}`,
-  );
+  const jars = await fetchRes(`${ZAPPER_API}/vault-stats/pickle?api_key=${ZAPPER_APIKEY}`);
   const statsRes = jars.filter((jar) => jarNames.includes(jar.value));
   return statsRes;
 };

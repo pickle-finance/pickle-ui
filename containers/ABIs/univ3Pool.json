@@ -441,9 +441,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint160", "name": "sqrtPriceX96", "type": "uint160" }
-    ],
+    "inputs": [{ "internalType": "uint160", "name": "sqrtPriceX96", "type": "uint160" }],
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -496,9 +494,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint32[]", "name": "secondsAgos", "type": "uint32[]" }
-    ],
+    "inputs": [{ "internalType": "uint32[]", "name": "secondsAgos", "type": "uint32[]" }],
     "name": "observe",
     "outputs": [
       {

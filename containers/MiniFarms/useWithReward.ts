@@ -70,9 +70,7 @@ export const useWithReward = (rawFarms: Input): Output => {
           pickleRewarder.interface.fragments,
         );
         rewarderPoolInfo = await multicallProvider.all<PoolInfo[]>(
-          rawFarms.map((farm) =>
-            pickleRewarderMulticallContract.poolInfo(farm.poolIndex),
-          ),
+          rawFarms.map((farm) => pickleRewarderMulticallContract.poolInfo(farm.poolIndex)),
         );
 
         totalRewarderAP = rewarderPoolInfo.reduce((acc: number, curr: any) => {
@@ -88,8 +86,7 @@ export const useWithReward = (rawFarms: Input): Output => {
 
         if (hasRewarder) {
           const maticFraction =
-            rewarderPoolInfo[farm.poolIndex].allocPoint.toNumber() /
-            totalRewarderAP;
+            rewarderPoolInfo[farm.poolIndex].allocPoint.toNumber() / totalRewarderAP;
           maticRewardedPerSecond = maticFraction * maticPerSecond;
           maticValuePerSecond =
             maticRewardedPerSecond *

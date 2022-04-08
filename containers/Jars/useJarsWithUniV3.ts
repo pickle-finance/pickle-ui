@@ -31,20 +31,24 @@ export interface JarV3 extends JarWithTVL {
   proportion: BigNumber | null;
 }
 
-export const getComponentTokenAddresses = (pickleCore: PickleModelJson.PickleModelJson | null | undefined, definition: PickleAsset): string[] | undefined => {
-  if( pickleCore === undefined || pickleCore === null )
-    return [];
+export const getComponentTokenAddresses = (
+  pickleCore: PickleModelJson.PickleModelJson | null | undefined,
+  definition: PickleAsset,
+): string[] | undefined => {
+  if (pickleCore === undefined || pickleCore === null) return [];
   const components = definition.depositToken.components || [];
   const addresses: string[] = [];
-  for( let i = 0; i < components.length; i++ ) {
-    const found: IExternalToken | undefined = pickleCore.tokens.find((x) => x.chain === definition.chain && x.id === components[i]);
-    if( !found ) {
+  for (let i = 0; i < components.length; i++) {
+    const found: IExternalToken | undefined = pickleCore.tokens.find(
+      (x) => x.chain === definition.chain && x.id === components[i],
+    );
+    if (!found) {
       return undefined;
     }
     addresses.push(found.contractAddr);
   }
   return addresses;
-}
+};
 
 export const useJarsWithUniV3 = (
   jars: Array<JarWithTVL> | null,
@@ -65,7 +69,7 @@ export const useJarsWithUniV3 = (
           token0: null,
           token1: null,
           proportion: null,
-        }
+        };
         const found: JarDefinition | undefined = pickleCore.assets.jars.find(
           (x) => x.details?.apiKey === jar.apiKey,
         );
@@ -81,7 +85,7 @@ export const useJarsWithUniV3 = (
 
         const jarV3 = JarV3Factory.connect(jar.contract.address, signer);
         const componentAddressArray = getComponentTokenAddresses(pickleCore, found);
-        if( componentAddressArray === undefined || componentAddressArray.length !== 2 )
+        if (componentAddressArray === undefined || componentAddressArray.length !== 2)
           return returnError;
 
         const token0 = componentAddressArray[0];
@@ -90,10 +94,7 @@ export const useJarsWithUniV3 = (
         const Token0 = erc20.attach(token0).connect(signer);
         const Token1 = erc20.attach(token1).connect(signer);
 
-        const jarV3Contract = JarV3Factory.connect(
-          jar.contract.address,
-          signer,
-        );
+        const jarV3Contract = JarV3Factory.connect(jar.contract.address, signer);
 
         const [
           bal0,

@@ -30,14 +30,7 @@ export const FraxFeature: FC = () => {
   } = ERC20Transfer.useContainer();
   const { setButtonStatus } = useButtonStatus();
 
-  const {
-    fxsBalance,
-    fxsApr,
-    userLockedFxs,
-    userPendingFxs,
-    pickleLockedFxs,
-    tvl,
-  } = useFrax();
+  const { fxsBalance, fxsApr, userLockedFxs, userPendingFxs, pickleLockedFxs, tvl } = useFrax();
 
   const [depositAmount, setDepositAmount] = useState("");
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
@@ -50,25 +43,12 @@ export const FraxFeature: FC = () => {
   });
 
   useEffect(() => {
-    const dStatus = getTransferStatus(
-      FraxAddresses.FXS,
-      FraxAddresses.veFXSVault,
-    );
+    const dStatus = getTransferStatus(FraxAddresses.FXS, FraxAddresses.veFXSVault);
     const claimStatus = getTransferStatus(FraxAddresses.veFXSVault, "claim");
 
-    setButtonStatus(
-      dStatus,
-      t("farms.depositing"),
-      t("farms.deposit"),
-      setDepositButton,
-    );
+    setButtonStatus(dStatus, t("farms.depositing"), t("farms.deposit"), setDepositButton);
 
-    setButtonStatus(
-      claimStatus,
-      t("dill.claiming"),
-      t("dill.claim"),
-      setClaimButton,
-    );
+    setButtonStatus(claimStatus, t("dill.claiming"), t("dill.claim"), setClaimButton);
   }, [erc20TransferStatuses, fxsBalance]);
 
   return (
@@ -109,11 +89,9 @@ export const FraxFeature: FC = () => {
                     token: FraxAddresses.FXS,
                     recipient: FraxAddresses.veFXSVault,
                     transferCallback: async () => {
-                      return vefxsVault
-                        .connect(signer)
-                        .deposit(parseEther(depositAmount), {
-                          gasLimit: 1200000,
-                        });
+                      return vefxsVault.connect(signer).deposit(parseEther(depositAmount), {
+                        gasLimit: 1200000,
+                      });
                     },
                   });
                 }
@@ -134,24 +112,21 @@ export const FraxFeature: FC = () => {
             <Button
               disabled={claimButton.disabled || !userPendingFxs}
               onClick={() => {
-                  if (signer && vefxsVault) {
-                    transfer({
-                      token: FraxAddresses.FXS,
-                      recipient: FraxAddresses.veFXSVault,
-                      transferCallback: async () => {
-                        return vefxsVault
-                          .connect(signer)
-                          .claim({
-                            gasLimit: 650000,
-                          });
-                      },
-                    });
-                  }
+                if (signer && vefxsVault) {
+                  transfer({
+                    token: FraxAddresses.FXS,
+                    recipient: FraxAddresses.veFXSVault,
+                    transferCallback: async () => {
+                      return vefxsVault.connect(signer).claim({
+                        gasLimit: 650000,
+                      });
+                    },
+                  });
+                }
               }}
               style={{ width: "100%" }}
             >
-              {claimButton.text}{" "}
-              {Boolean(userPendingFxs) && `${formatNumber(userPendingFxs)} FXS`}
+              {claimButton.text} {Boolean(userPendingFxs) && `${formatNumber(userPendingFxs)} FXS`}
             </Button>
             <Spacer y={1} />
           </Grid>

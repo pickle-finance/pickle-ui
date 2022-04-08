@@ -10,8 +10,10 @@ import { PriceIds, Prices } from "../Prices";
 import erc20 from "@studydefi/money-legos/erc20";
 import BLensABI from "../ABIs/blens.json";
 
-const DISTRUBTOR_ABI = ["function getYieldForDuration() view returns(uint256)",
-                        "function earned(address) view returns(uint256)"];
+const DISTRUBTOR_ABI = [
+  "function getYieldForDuration() view returns(uint256)",
+  "function earned(address) view returns(uint256)",
+];
 const VEFXS_ABI = ["function totalSupply() view returns(uint256)"];
 
 export const useFrax = () => {
@@ -20,9 +22,7 @@ export const useFrax = () => {
   const { status: transferStatus } = ERC20Transfer.useContainer();
   const { tokenBalances, getBalance } = Balances.useContainer();
   const { prices } = Prices.useContainer();
-  const [fxsBalance, setFxsBalance] = useState<ethers.BigNumber>(
-    ethers.BigNumber.from(0),
-  );
+  const [fxsBalance, setFxsBalance] = useState<ethers.BigNumber>(ethers.BigNumber.from(0));
   const [fxsApr, setFxsApr] = useState<number>(0);
   const [userLockedFxs, setUserLockedFxs] = useState<number>(0);
   const [userPendingFxs, setUserPendingFxs] = useState<number>(0);
@@ -31,11 +31,7 @@ export const useFrax = () => {
 
   const updateData = async () => {
     if (vefxsVault && prices && address) {
-      const feeDistributor = new Contract(
-        FraxAddresses.FXSDistribution,
-        DISTRUBTOR_ABI,
-        provider,
-      );
+      const feeDistributor = new Contract(FraxAddresses.FXSDistribution, DISTRUBTOR_ABI, provider);
       const veFxs = new Contract(FraxAddresses.veFXS, VEFXS_ABI, provider);
 
       const [
@@ -46,7 +42,7 @@ export const useFrax = () => {
         userLockedFxs,
         pickleLockedFxs,
         index,
-        supplyIndex
+        supplyIndex,
       ] = (
         await Promise.all([
           feeDistributor.getYieldForDuration(),
@@ -56,16 +52,17 @@ export const useFrax = () => {
           vefxsVault.balanceOf(address),
           vefxsVault.totalSupply(),
           vefxsVault.index(),
-          vefxsVault.supplyIndex(address)
+          vefxsVault.supplyIndex(address),
         ])
       ).map((x) => +formatEther(x));
 
       // 1 FXS = 4 veFXS when locked for 4 years
-      const fxsApr = (weeklyFxs * prices.fxs * 52) / (veFxsTotalSupply);
+      const fxsApr = (weeklyFxs * prices.fxs * 52) / veFxsTotalSupply;
 
-      const fxsPending = userPendingFxs + (feeDistributorEarnedFxs *
-        userLockedFxs / pickleLockedFxs)  +
-        ((index - supplyIndex) * userLockedFxs);
+      const fxsPending =
+        userPendingFxs +
+        (feeDistributorEarnedFxs * userLockedFxs) / pickleLockedFxs +
+        (index - supplyIndex) * userLockedFxs;
 
       setFxsBalance(getBalance(FraxAddresses.FXS) || BigNumber.from(0));
       setFxsApr(fxsApr);

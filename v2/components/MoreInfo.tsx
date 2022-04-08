@@ -24,10 +24,7 @@ const TooltipContent: FC<Props> = ({ primaryText, secondaryText }) => (
  * The callback function needs a name to satisfy react/display-name
  * linter rule.
  */
-const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(
-  props,
-  ref,
-) {
+const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(props, ref) {
   return (
     <span
       ref={ref}
@@ -40,11 +37,7 @@ const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(
 });
 
 const MoreInfo: FC<Props> = ({ primaryText = "", secondaryText = "" }) => (
-  <Tippy
-    content={
-      <TooltipContent primaryText={primaryText} secondaryText={secondaryText} />
-    }
-  >
+  <Tippy content={<TooltipContent primaryText={primaryText} secondaryText={secondaryText} />}>
     <TooltipTarget />
   </Tippy>
 );

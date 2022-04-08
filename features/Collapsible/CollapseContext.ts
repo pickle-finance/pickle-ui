@@ -10,9 +10,7 @@ const defaultContext = {
   values: [],
 };
 
-export const CollapseContext = React.createContext<CollapseConfig>(
-  defaultContext,
-);
+export const CollapseContext = React.createContext<CollapseConfig>(defaultContext);
 
 export const useCollapseContext = (): CollapseConfig =>
   React.useContext<CollapseConfig>(CollapseContext);

@@ -58,17 +58,11 @@ export const getPoolData = async (pool, token, provider) => {
   const tokenPrice = token0 === weth ? wethPrice * ratio : wethPrice / ratio;
 
   const wethContract = new ethers.Contract(weth, erc20.abi, provider);
-  const wethBalance = ethers.utils.formatUnits(
-    await wethContract.balanceOf(pool),
-    18,
-  );
+  const wethBalance = ethers.utils.formatUnits(await wethContract.balanceOf(pool), 18);
 
   const tokenContract = new ethers.Contract(token, erc20.abi, provider);
   const symbol = await tokenContract.symbol();
-  const tokenBalance = ethers.utils.formatUnits(
-    await tokenContract.balanceOf(pool),
-    18,
-  );
+  const tokenBalance = ethers.utils.formatUnits(await tokenContract.balanceOf(pool), 18);
 
   const tvl = tokenBalance * tokenPrice + wethPrice * wethBalance;
   return {
@@ -85,11 +79,7 @@ export const getPoolData = async (pool, token, provider) => {
 };
 
 export const getPosition = async (info, jarV3, provider) => {
-  const poolContract = new ethers.Contract(
-    info.incentiveKey[1],
-    v3PoolABI,
-    provider,
-  );
+  const poolContract = new ethers.Contract(info.incentiveKey[1], v3PoolABI, provider);
   const [data, totalLiquidity, jarLiquidity] = await Promise.all([
     poolContract.slot0(),
     poolContract.liquidity(),
@@ -98,14 +88,7 @@ export const getPosition = async (info, jarV3, provider) => {
 
   const tokenA = new Token(1, info.token0, 18);
   const tokenB = new Token(1, info.token1, 18);
-  const pool = new Pool(
-    tokenA,
-    tokenB,
-    info.fee,
-    data.sqrtPriceX96,
-    totalLiquidity,
-    data.tick,
-  );
+  const pool = new Pool(tokenA, tokenB, info.fee, data.sqrtPriceX96, totalLiquidity, data.tick);
   const position = new Position({
     pool,
     liquidity: jarLiquidity,
