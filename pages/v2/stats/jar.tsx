@@ -42,10 +42,12 @@ const Stats: PickleFinancePage = () => {
 
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
+  const router = useRouter();
+  const jar: string = typeof router.query.jar === "string" ? router.query.jar : "";
 
   return (
     <>
-      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats")}</h1>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.stats").concat(` - ${jar.toUpperCase()}`)}</h1>
       <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.stats.subtitle")}
       </h2>
