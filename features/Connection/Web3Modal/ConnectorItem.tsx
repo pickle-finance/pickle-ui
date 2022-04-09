@@ -1,6 +1,8 @@
 import styled, { css } from "styled-components";
 import Loader from "react-loader-spinner";
 import { FC, MouseEventHandler } from "react";
+import { Web3ReactHooks } from "@web3-react/core";
+import { Connector } from "@web3-react/types";
 
 interface ConnectorItemProps {
   icon: string;
@@ -8,6 +10,8 @@ interface ConnectorItemProps {
   onClick: MouseEventHandler<HTMLDivElement>;
   loading: boolean;
   disabled: boolean;
+  connector: Connector;
+  hooks: Web3ReactHooks;
 }
 
 interface ContainerProps {
@@ -49,7 +53,29 @@ const LoaderContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const ConnectorItem: FC<ConnectorItemProps> = ({ icon, title, onClick, loading, disabled }) => {
+
+
+const ConnectorItem: FC<ConnectorItemProps> = ({
+  icon,
+  title,
+  onClick,
+  loading,
+  disabled,
+  connector,
+  hooks,
+}) => {
+  const { useChainId, useAccounts, useError, useIsActivating, useIsActive, useProvider, useENSNames } = hooks
+  const chainId = useChainId()
+  const accounts = useAccounts()
+  const error = useError()
+  const isActivating = useIsActivating()
+
+  const isActive = useIsActive()
+
+  const provider = useProvider()
+  const ENSNames = useENSNames(provider)
+
+  
   return (
     <StyledContainer onClick={onClick} disabled={loading || disabled}>
       {loading && (

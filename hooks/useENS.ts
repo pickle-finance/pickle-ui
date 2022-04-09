@@ -8,7 +8,7 @@ const useENS = (address: string) => {
 
   useEffect(() => {
     const resolveENS = async () => {
-      if (ethers.utils.isAddress(address)) {
+      if (ethers.utils.isAddress(address) && provider) {
         let ensName = await provider.lookupAddress(address);
         if (ensName) setENSName(ensName);
       }
