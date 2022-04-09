@@ -4,9 +4,9 @@ import { ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
 import Button from "v2/components/Button";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
+import { jarDecimals } from "v2/utils/user";
 import { jarSupportsStaking } from "v2/store/core.helpers";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
@@ -22,8 +22,6 @@ interface Props {
 
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
-  const pfcore = useAppSelector(CoreSelectors.selectCore);
-  const userModel = useAppSelector(UserSelectors.selectData);
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
   const userTokenData = useAppSelector((state) =>
