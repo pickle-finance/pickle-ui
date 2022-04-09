@@ -22,6 +22,7 @@ import { useJarContract, useTransaction } from "../hooks";
 import { TransferEvent } from "containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
+import { eventsByName } from "../utils";
 
 interface Props {
   jar: JarWithData;
@@ -61,9 +62,9 @@ const DepositFlow: FC<Props> = ({ jar, balances }) => {
      * 1) Transfer of LP tokens from user's wallet to the jar
      * 2) Mint of pTokens sent to user's wallet
      */
-    const events = receipt.events?.filter(({ event }) => event === "Transfer") as TransferEvent[];
-    const depositTokenTransferEvent = events.find((event) => event.args.from === account)!;
-    const pTokenTransferEvent = events.find((event) => event.args.to === account)!;
+    const transferEvents = eventsByName<TransferEvent>(receipt, "Transfer");
+    const depositTokenTransferEvent = transferEvents.find((event) => event.args.from === account)!;
+    const pTokenTransferEvent = transferEvents.find((event) => event.args.to === account)!;
 
     const depositTokenBalance = depositTokenBalanceBN
       .sub(depositTokenTransferEvent.args.value)

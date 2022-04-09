@@ -21,9 +21,10 @@ import Failure from "../Failure";
 import { useFarmContract, useTransaction } from "../hooks";
 import { UserActions } from "v2/store/user";
 import { truncateToMaxDecimals } from "v2/utils";
-import { Gauge, StakedEvent } from "containers/Contracts/Gauge";
-import { DepositEvent, Minichef } from "containers/Contracts/Minichef";
+import { Gauge, RewardPaidEvent, WithdrawnEvent } from "containers/Contracts/Gauge";
+import { Minichef, HarvestEvent, WithdrawEvent } from "containers/Contracts/Minichef";
 import { AppDispatch } from "v2/store";
+import { eventsByName } from "../utils";
 
 interface Props {
   jar: JarWithData;
@@ -42,10 +43,16 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
 
   const decimals = jarDecimals(jar);
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
-  const pTokenBalance = parseFloat(ethers.utils.formatUnits(pTokenBalanceBN, decimals));
   const pStakedBalanceBN = BigNumber.from(balances?.pStakedBalance || "0");
+  const picklePendingBN = BigNumber.from(balances?.picklePending || "0");
   const pStakedBalance = parseFloat(ethers.utils.formatUnits(pStakedBalanceBN, decimals));
 
+  const isExiting = pStakedBalance.toString() === current.context.amount;
+
+  /**
+   * A user can either withdraw a partial amount or a full staked amount
+   * in which case we also harvest all rewards.
+   */
   const transactionFactory = () => {
     if (!FarmContract || !account) return;
 
@@ -53,13 +60,18 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
     const amount = ethers.utils.parseUnits(truncateToMaxDecimals(current.context.amount), decimals);
 
     if (chain === ChainNetwork.Ethereum) {
-      return () => (FarmContract as Gauge).deposit(amount);
+      if (isExiting) return () => (FarmContract as Gauge).exit();
+
+      return () => (FarmContract as Gauge).withdraw(amount);
     }
 
     const poolId = jar.farm?.details?.poolId;
     if (!poolId) return;
 
-    return () => (FarmContract as Minichef).deposit(poolId, amount, account);
+    if (isExiting)
+      return () => (FarmContract as Minichef).withdrawAndHarvest(poolId, amount, account);
+
+    return () => (FarmContract as Minichef).withdraw(poolId, amount, account);
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
@@ -67,22 +79,33 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
 
     const { chain } = jar;
     let amount: BigNumber;
+    let pickles: BigNumber = BigNumber.from(0);
 
     /**
      * This will generate different events on mainnet and on sidechains.
-     * On mainnet, read amount from the StakedEvent.
-     * On sidechains, read amount from the DepositEvent.
+     * Read amounts withdrawn and harvested.
      */
     if (chain === ChainNetwork.Ethereum) {
-      const events = receipt.events?.filter(({ event }) => event === "Staked") as StakedEvent[];
-      amount = events[0].args.amount;
+      const withdrawnEvents = eventsByName<WithdrawnEvent>(receipt, "Withdrawn");
+      amount = withdrawnEvents[0].args.amount;
+
+      if (isExiting) {
+        const rewardPaidEvents = eventsByName<RewardPaidEvent>(receipt, "RewardPaid");
+        pickles = rewardPaidEvents[0].args.reward;
+      }
     } else {
-      const events = receipt.events?.filter(({ event }) => event === "Deposit") as DepositEvent[];
-      amount = events[0].args.amount;
+      const withdrawEvents = eventsByName<WithdrawEvent>(receipt, "Withdraw");
+      amount = withdrawEvents[0].args.amount;
+
+      if (isExiting) {
+        const harvestEvents = eventsByName<HarvestEvent>(receipt, "Harvest");
+        pickles = harvestEvents[0].args.amount;
+      }
     }
 
-    const pAssetBalance = pTokenBalanceBN.sub(amount).toString();
-    const pStakedBalance = pStakedBalanceBN.add(amount).toString();
+    const pAssetBalance = pTokenBalanceBN.add(amount).toString();
+    const pStakedBalance = pStakedBalanceBN.sub(amount).toString();
+    const picklePending = picklePendingBN.sub(pickles).toString();
 
     dispatch(
       UserActions.setTokenData({
@@ -90,6 +113,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
         data: {
           pAssetBalance,
           pStakedBalance,
+          picklePending,
         },
       }),
     );
@@ -132,11 +156,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmation
             title={t("v2.farms.confirmUnstake")}
-            cta={
-              pStakedBalance.toString() === current.context.amount
-                ? t("v2.actions.harvestAndExit")
-                : t("v2.actions.unstake")
-            }
+            cta={isExiting ? t("v2.actions.harvestAndExit") : t("v2.actions.unstake")}
             tokenName={jar.farm?.farmDepositTokenName}
             amount={current.context.amount}
             error={error}

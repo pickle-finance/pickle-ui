@@ -16,6 +16,7 @@ import { useTokenContract, useTransaction } from "../hooks";
 import { AppDispatch, useAppSelector } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { ApprovalEvent } from "containers/Contracts/Erc20";
+import { eventsByName } from "../utils";
 
 type ApprovalType = "jar" | "farm";
 
@@ -70,10 +71,8 @@ const ApprovalFlow: FC<Props> = ({ jar, visible, type }) => {
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
-    const approvalEvent = receipt.events?.find(
-      ({ event }) => event === "Approval",
-    ) as ApprovalEvent;
-    const approvedAmount = approvalEvent.args[2];
+    const approvalEvents = eventsByName<ApprovalEvent>(receipt, "Approval");
+    const approvedAmount = approvalEvents[0].args[2];
 
     dispatch(
       UserActions.setTokenData({

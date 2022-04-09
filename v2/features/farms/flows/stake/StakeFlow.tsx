@@ -24,6 +24,7 @@ import { truncateToMaxDecimals } from "v2/utils";
 import { Gauge, StakedEvent } from "containers/Contracts/Gauge";
 import { DepositEvent, Minichef } from "containers/Contracts/Minichef";
 import { AppDispatch } from "v2/store";
+import { eventsByName } from "../utils";
 
 interface Props {
   jar: JarWithData;
@@ -73,10 +74,10 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
      * On sidechains, read amount from the DepositEvent.
      */
     if (chain === ChainNetwork.Ethereum) {
-      const events = receipt.events?.filter(({ event }) => event === "Staked") as StakedEvent[];
+      const events = eventsByName<StakedEvent>(receipt, "Staked");
       amount = events[0].args.amount;
     } else {
-      const events = receipt.events?.filter(({ event }) => event === "Deposit") as DepositEvent[];
+      const events = eventsByName<DepositEvent>(receipt, "Deposit");
       amount = events[0].args.amount;
     }
 
