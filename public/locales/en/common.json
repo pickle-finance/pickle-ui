@@ -321,8 +321,10 @@
       "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
+      "harvestAndExit": "Harvest and exit",
       "retry": "Retry",
       "stake": "Stake",
+      "unstake": "Unstake",
       "withdraw": "Withdraw"
     },
     "balances": {
@@ -412,6 +414,7 @@
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
       "confirmDeposit": "Please confirm your deposit amount",
       "confirmStake": "Please confirm the amount to be staked",
+      "confirmUnstake": "Please confirm the amount to be unstaked",
       "confirmWithdrawal": "Please confirm your withdrawal amount",
       "deposited": "Deposited",
       "depositedToken": "{{ token }} deposited",
@@ -461,6 +464,7 @@
       "tokens": "{{ amount }} Tokens",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
       "transactionFailed": "Transaction failed",
+      "unstakeToken": "Unstake {{ token }}",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates"
