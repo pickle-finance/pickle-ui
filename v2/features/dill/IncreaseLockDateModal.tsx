@@ -17,13 +17,12 @@ import { ArrowRightIcon } from "@heroicons/react/outline";
 import { stateMachine, Actions, States } from "../farms/flows/stateMachineUserInput";
 import Spinner from "v2/components/Spinner";
 import { useDillContract } from "./flows/hooks";
-import { DILL_ADDR } from "./GetDillModal";
 import { sleep } from "v2/utils/waiting";
 import { useAppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
 import Link from "v2/components/Link";
 import Ping from "../connection/Ping";
-import { shortenAddress } from "v2/utils";
+import { DILL_ADDRESS, shortenAddress } from "v2/utils";
 import { ChainNetwork, Chains } from "picklefinance-core";
 import { formatUnits } from "ethers/lib/utils";
 
@@ -52,7 +51,7 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
   }, [isOpen]);
 
   const { account } = useWeb3React<Web3Provider>();
-  const DillContract = useDillContract(DILL_ADDR);
+  const DillContract = useDillContract(DILL_ADDRESS);
 
   if (!DillContract || !account) return null;
 

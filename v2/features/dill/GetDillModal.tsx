@@ -1,23 +1,18 @@
 import { ChangeEvent, FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { IUserDillStats, UserPickles } from "picklefinance-core/lib/client/UserModel";
+import dayjs from "dayjs";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import LockTimeOptions from "./LockTimeOptions";
 import { ChainNetwork } from "picklefinance-core";
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { formatEther } from "ethers/lib/utils";
 import ApprovalFlow from "../farms/flows/approval/ApprovalFlow";
 import DillDepositFlow from "./flows/deposit/DillDepositFlow";
 import { estimateDillForDate, getDayOffset } from "./flows/utils";
 import LockTimeSlider from "./LockTimeSlider";
-import { ArrowRightIcon } from "@heroicons/react/outline";
-import dayjs from "dayjs";
-
-// TODO refactor into constants file
-export const PICKLE_ADDR = "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5";
-export const DILL_ADDR = "0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf";
-export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
+import { DILL_ADDRESS, PICKLE_ADDRESS } from "v2/utils";
 
 interface Props {
   isOpen: boolean;
@@ -124,12 +119,12 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
         )}
       </div>
       <ApprovalFlow
-        name={"PICKLE"}
-        depositTokenAddress={PICKLE_ADDR}
-        targetAddress={DILL_ADDR}
-        chain={ChainNetwork.Ethereum}
+        tokenAddress={PICKLE_ADDRESS}
+        tokenName={"PICKLE"}
+        spenderAddress={DILL_ADDRESS}
+        storeAttribute="dillApproval"
+        chainName={ChainNetwork.Ethereum}
         visible={!userHasDillAllowance}
-        entryTrigger={true}
       />
       <DillDepositFlow
         visible={userHasDillAllowance}
