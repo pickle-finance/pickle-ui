@@ -38,15 +38,16 @@ const LockTimeOptions: FC<Props> = ({ showValue = false, setLockTime, dill }) =>
       <div className="grid grid-cols-4 gap-2">
         {options.map((opt, index) => (
           <RadioGroup.Option
-            key={opt.value}
+            key={opt.weeks}
             value={index + 1}
             disabled={lockEnd?.isAfter(dayjs().add(opt.weeks, "week"))}
-            className={({ checked }) =>
+            className={({ checked, disabled }) =>
               classNames(
                 checked
                   ? "bg-background-lightest border-primary-light"
                   : "bg-background-light border-foreground-alt-500 hover:bg-background-lightest",
-                "font-title border rounded-xl cursor-pointer text-foreground py-4 px-6 flex items-center justify-center text-sm font-medium",
+                disabled ? "text-foreground-alt-400" : "text-foreground",
+                "font-title border rounded-xl cursor-pointer py-4 px-6 flex items-center justify-center text-sm font-medium",
               )
             }
           >
