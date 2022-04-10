@@ -6,8 +6,8 @@ import { formatEther } from "ethers/lib/utils";
 import Button from "v2/components/Button";
 import DillCard from "./DillCard";
 import { useDistributorContract } from "./flows/hooks";
-import { FEE_DISTRIBUTOR } from "./GetDillModal";
 import Spinner from "v2/components/Spinner";
+import { FEE_DISTRIBUTOR_ADDRESS } from "v2/utils";
 
 interface Props {
   dill: IUserDillStats;
@@ -18,7 +18,7 @@ const Harvest: FC<Props> = ({ dill }) => {
 
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [isSuccess, setSuccess] = useState<boolean>(false);
-  const DistributionContract = useDistributorContract(FEE_DISTRIBUTOR);
+  const DistributionContract = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS);
 
   if (!DistributionContract) return null;
 
@@ -28,10 +28,10 @@ const Harvest: FC<Props> = ({ dill }) => {
       const transaction = await DistributionContract["claim()"]();
       await transaction.wait();
       setIsWaiting(false);
-      setSuccess(true)
+      setSuccess(true);
     } catch (e) {
       setIsWaiting(false);
-      setSuccess(false)
+      setSuccess(false);
     }
   };
 

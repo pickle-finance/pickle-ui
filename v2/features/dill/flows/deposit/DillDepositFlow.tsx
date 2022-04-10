@@ -15,12 +15,11 @@ import { useAppDispatch } from "v2/store";
 import AwaitingReceipt from "../../../farms/flows/AwaitingReceipt";
 import Success from "../../../farms/flows/Success";
 import Failure from "../../../farms/flows/Failure";
-import { sleep } from "v2/utils";
+import { DILL_ADDRESS, sleep } from "v2/utils";
 import { UserActions } from "v2/store/user";
 import { ThemeActions } from "v2/store/theme";
 import { ChainNetwork } from "picklefinance-core";
 import { useDillContract } from "../hooks";
-import { DILL_ADDR } from "../../GetDillModal";
 import ErrorMessage from "../../../farms/flows/Error";
 import { getEpochSecondForDay } from "../utils";
 
@@ -52,7 +51,7 @@ const DepositFlow: FC<Props> = ({
   const chain = core?.chains.find((chain) => chain.network === ChainNetwork.Ethereum);
 
   const { account } = useWeb3React<Web3Provider>();
-  const DillContract = useDillContract(DILL_ADDR);
+  const DillContract = useDillContract(DILL_ADDRESS);
 
   if (!DillContract || !account) return null;
 

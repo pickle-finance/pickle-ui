@@ -51,7 +51,15 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
           <span className="font-title text-primary font-medium text-base leading-5">
             {jarTokens}
           </span>
-          <ApprovalFlow type="jar" jar={jar} visible={!userHasJarAllowance} />
+          <ApprovalFlow
+            apiKey={jar.details.apiKey}
+            tokenAddress={jar.depositToken.addr}
+            tokenName={jar.depositToken.name}
+            spenderAddress={jar.contract}
+            storeAttribute="jarAllowance"
+            chainName={jar.chain}
+            visible={!userHasJarAllowance}
+          />
           {userHasJarAllowance && (
             <div className="grid grid-cols-2 gap-3">
               <DepositFlow jar={jar} balances={userTokenData} />
@@ -69,7 +77,15 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
             <span className="font-title text-primary font-medium text-base leading-5">
               {farmTokens}
             </span>
-            <ApprovalFlow type="farm" jar={jar} visible={!userHasFarmAllowance} />
+            <ApprovalFlow
+              apiKey={jar.details.apiKey}
+              tokenAddress={jar.contract}
+              tokenName={jar.farm?.farmDepositTokenName}
+              spenderAddress={jar.farm?.farmAddress}
+              storeAttribute="farmAllowance"
+              chainName={jar.chain}
+              visible={!userHasFarmAllowance}
+            />
             {userHasFarmAllowance && (
               <div className="grid grid-cols-2 gap-3">
                 <StakeFlow jar={jar} balances={userTokenData} />

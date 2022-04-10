@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
-import { UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { IUserDillStats, UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
 import { baseTokenObject, normalizedData } from "./user.helpers";
@@ -73,6 +73,13 @@ const userSlice = createSlice({
 
       state.data.tokens = { ...state.data.tokens, [apiKey.toLowerCase()]: { ...token, ...data } };
     },
+    setDillData: (state, action: PayloadAction<Partial<IUserDillStats>>) => {
+      if (!state.data) return;
+
+      const dill = state.data.dill;
+
+      state.data.dill = { ...dill, ...action.payload };
+    },
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
     },
@@ -82,10 +89,11 @@ const userSlice = createSlice({
   },
 });
 
-const { refresh, setData, setIsFetching, setTokenData, setTokens } = userSlice.actions;
+const { refresh, setData, setIsFetching, setDillData, setTokenData, setTokens } = userSlice.actions;
 export const UserActions = {
   refresh,
   setData,
+  setDillData,
   setIsFetching,
   setTokens,
   setTokenData,
