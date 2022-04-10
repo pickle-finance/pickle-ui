@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { CashIcon, ClockIcon } from "@heroicons/react/solid";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useSelector } from "react-redux";
 import { PickleModelJson } from "picklefinance-core";
 import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
@@ -119,21 +119,10 @@ export const userVisibleStringForPickleAsset = (
 export const getRewardRowPropertiesForRewards = (
   core: PickleModelJson.PickleModelJson,
   userdata: UserData,
+  t: (key: string) => string,
 ): RewardRowProps[] => {
   const ret: RewardRowProps[] = [];
   const jarData = getUserAssetDataWithPricesForJars(core, userdata);
-  const jarHarvester = {
-    harvest: async (): Promise<boolean> => {
-      // TODO
-      return false;
-    },
-  };
-  const dillHarvester = {
-    harvest: async (): Promise<boolean> => {
-      // TODO
-      return false;
-    },
-  };
   for (let i = 0; i < jarData.length; i++) {
     const descriptor = userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
     const earnedPickles = parseFloat(jarData[i].earnedPickles.tokens);
@@ -142,18 +131,17 @@ export const getRewardRowPropertiesForRewards = (
         descriptor: descriptor,
         tokenString: "PICKLEs", // TODO i18n
         rewardCount: parseFloat(jarData[i].earnedPickles.tokens),
-        harvester: jarHarvester,
       });
     }
   }
   if (userdata.dill && userdata.dill.claimable) {
     const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
-    const dillRewardPickles = wei.div(1e10).div(1e8).toNumber();
+    const dillRewardPickles = parseFloat(ethers.utils.formatUnits(wei, 18));
+
     ret.push({
-      descriptor: "Dill Rewards", // TODO i18n
+      descriptor: t("v2.dill.dillRewards"),
       tokenString: "PICKLEs",
       rewardCount: dillRewardPickles,
-      harvester: dillHarvester,
     });
   }
   return ret;
@@ -169,7 +157,7 @@ const PerformanceCard: FC = () => {
   const unclaimedRewards = allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
   const pendingHarvest = allCore && userModel ? getPendingHarvestsUsd(allCore, userModel) : 0;
   const rewardRowProps: RewardRowProps[] =
-    allCore && userModel ? getRewardRowPropertiesForRewards(allCore, userModel) : [];
+    allCore && userModel ? getRewardRowPropertiesForRewards(allCore, userModel, t) : [];
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
@@ -219,7 +207,11 @@ const PerformanceCard: FC = () => {
         </div>
       </div>
       <div className="relative px-6 py-4 sm:px-8 sm:py-6">
-        <Button onClick={openModal} size="normal">
+        <Button
+          onClick={openModal}
+          size="normal"
+          state={rewardRowProps.length > 0 ? "enabled" : "disabled"}
+        >
           {t("v2.dashboard.harvestRewards")}
         </Button>
         <HarvestModal isOpen={isOpen} closeModal={closeModal} harvestables={rewardRowProps} />

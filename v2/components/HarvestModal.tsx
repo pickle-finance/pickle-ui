@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import Button from "./Button";
 import Modal from "./Modal";
+import { roundToSignificantDigits } from "v2/utils";
 
 interface Props {
   harvestables: RewardRowProps[];
@@ -15,9 +16,6 @@ export interface RewardRowProps {
   descriptor: string;
   rewardCount: number;
   tokenString: string;
-  harvester: {
-    harvest: () => Promise<boolean>;
-  };
 }
 interface RewardRowPropWrapper {
   details: RewardRowProps;
@@ -45,7 +43,7 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
             {details.descriptor}
           </p>
           <p className="text-primary font-bold text-lg align-bottom leading-6">
-            {details.rewardCount}
+            {roundToSignificantDigits(details.rewardCount, 5)}
             <span className="text-foreground text-xs ml-2">{details.tokenString}</span>
           </p>
         </div>
