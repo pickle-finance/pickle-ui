@@ -8,20 +8,20 @@ import { Web3Provider } from "@ethersproject/providers";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { CoreSelectors } from "v2/store/core";
 import { stateMachine, Actions, States } from "../../../farms/flows/stateMachineUserInput";
-import AwaitingConfirmation from "../../../farms/flows/deposit/AwaitingConfirmation";
-import { useAppDispatch } from "v2/store";
+import AwaitingConfirmation from "./AwaitingConfirmation";
+import { AppDispatch } from "v2/store";
 import AwaitingReceipt from "../../../farms/flows/AwaitingReceipt";
 import Success from "../../../farms/flows/Success";
 import Failure from "../../../farms/flows/Failure";
 import { DILL_ADDRESS, sleep } from "v2/utils";
 import { UserActions } from "v2/store/user";
-import { ThemeActions } from "v2/store/theme";
 import { ChainNetwork } from "picklefinance-core";
 import { useDillContract } from "../hooks";
 import ErrorMessage from "../../../farms/flows/Error";
 import { getEpochSecondForDay } from "../utils";
+import { useTransaction } from "v2/features/farms/flows/hooks";
 
 interface Props {
   visible: boolean;
@@ -42,67 +42,50 @@ const DepositFlow: FC<Props> = ({
 }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [error, setError] = useState<Error | undefined>();
-  const [isWaiting, setIsWaiting] = useState<boolean>(false);
-  const [progressStatus, setProgressStatus] = useState<string>(t("v2.farms.transactionPending"));
   const [current, send] = useMachine(stateMachine);
   const core = useSelector(CoreSelectors.selectCore);
-  const dispatch = useAppDispatch();
   const chain = core?.chains.find((chain) => chain.network === ChainNetwork.Ethereum);
 
   const { account } = useWeb3React<Web3Provider>();
   const DillContract = useDillContract(DILL_ADDRESS);
 
-  if (!DillContract || !account) return null;
+  const transactionFactory = () => {
+    if (!DillContract) return;
 
-  const sendTransaction = async () => {
-    setError(undefined);
-    setIsWaiting(true);
+    const amountBN = ethers.utils.parseEther(userInput);
 
-    try {
-      const amountBN = ethers.utils.parseEther(userInput);
-
-      const transaction = dillBalance
-        ? await DillContract.increase_amount(amountBN, {
+    return () =>
+      dillBalance
+        ? DillContract.increase_amount(amountBN, {
             gasLimit: 350000,
           })
-        : await DillContract.create_lock(amountBN, getEpochSecondForDay(lockTime), {
+        : DillContract.create_lock(amountBN, getEpochSecondForDay(lockTime), {
             gasLimit: 600000,
           });
-
-      send(Actions.TRANSACTION_SENT, { txHash: transaction.hash });
-
-      transaction
-        .wait()
-        .then(
-          async () => {
-            setProgressStatus(t("v2.farms.waitingForBlockConfirmation"));
-
-            while (true) {
-              const balance = await DillContract["balanceOf(address)"](account);
-
-              const success = balance.gt(ethers.utils.parseEther(dillBalance.toString()));
-
-              if (success) break;
-
-              await sleep(1000);
-            }
-
-            dispatch(UserActions.refresh());
-
-            send(Actions.SUCCESS);
-            dispatch(ThemeActions.setIsConfettiOn(true));
-          },
-          () => {
-            send(Actions.FAILURE);
-          },
-        )
-        .finally(() => setIsWaiting(false));
-    } catch (error) {
-      setError(error as Error);
-      setIsWaiting(false);
-    }
   };
+
+  const callback = async (_receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
+    if (!DillContract || !account) return;
+
+    while (true) {
+      const balance = await DillContract["balanceOf(address)"](account);
+
+      const success = balance.gt(ethers.utils.parseEther(dillBalance.toString()));
+
+      if (success) break;
+
+      await sleep(1000);
+    }
+
+    dispatch(UserActions.refresh());
+  };
+
+  const { sendTransaction, error, isWaiting } = useTransaction(
+    transactionFactory(),
+    callback,
+    send,
+    true,
+  );
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -114,8 +97,6 @@ const DepositFlow: FC<Props> = ({
   useEffect(() => {
     send(Actions.SUBMIT_FORM, { amount: userInput });
   }, []);
-
-  if (!visible) return null;
 
   return (
     <>
@@ -154,11 +135,7 @@ const DepositFlow: FC<Props> = ({
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (
-          <AwaitingReceipt
-            chainExplorer={chain?.explorer}
-            txHash={current.context.txHash}
-            progressStatus={progressStatus}
-          />
+          <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
         )}
         {current.matches(States.SUCCESS) && (
           <Success
@@ -171,7 +148,7 @@ const DepositFlow: FC<Props> = ({
           <Failure
             chainExplorer={chain?.explorer}
             txHash={current.context.txHash}
-            retry={() => send(Actions.RETRY)}
+            retry={() => send(Actions.RESET)}
           />
         )}
       </Modal>
