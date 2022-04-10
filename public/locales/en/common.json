@@ -338,6 +338,7 @@
     "connection": {
       "coinbase": "Coinbase",
       "connectWallet": "Connect wallet",
+      "disconnectedWallet": "Please connect your wallet to interact. Pickle supports the following networks: ",
       "errorTitle": "Uh oh, we're in a pickle here!",
       "metamask": "Metamask",
       "unauthorized": "Please <1>authorize</1> Pickle Finance to access your Ethereum account.",
@@ -367,6 +368,7 @@
       "depositPickle": "Deposit PICKLEs",
       "description": "DILL provides users with the power of governance and 45% share of Pickle revenues.",
       "dillAmount": "DILL amount",
+      "dillRewards": "DILL rewards",
       "earnedPickles": "Earned PICKLEs",
       "estimatedDill": "Estimated to receive",
       "getDill": "Get DILL",
