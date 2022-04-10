@@ -1,37 +1,38 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import { PencilIcon } from "@heroicons/react/outline";
+import dayjs from "dayjs";
 
 import Button from "v2/components/Button";
-import Error from "../Error";
+import Error from "v2/features/farms/flows/Error";
 import Spinner from "v2/components/Spinner";
-import { classNames } from "v2/utils";
+import { classNames, formatDollars } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 
 interface Props {
-  amount: string;
-  cta: string;
   error: Error | undefined;
-  equivalentValue?: string | undefined;
+  sendTransaction: () => void;
+  tokenName: string;
+  amount: string;
+  depositTokenPrice: number | undefined;
   isWaiting: boolean;
   previousStep: () => void;
-  sendTransaction: () => void;
-  title: string;
-  tokenName: string | undefined;
+  lockEnd?: Date | undefined;
 }
 
 const AwaitingConfirmation: FC<Props> = ({
-  amount,
-  cta,
-  equivalentValue,
   error,
+  sendTransaction,
+  tokenName,
+  amount,
+  depositTokenPrice,
   isWaiting,
   previousStep,
-  sendTransaction,
-  title,
-  tokenName,
+  lockEnd = null,
 }) => {
   const { t } = useTranslation("common");
+  const title = lockEnd ? t("v2.dill.confirmLock") : t("v2.farms.confirmDeposit");
+  const valueUSD = parseFloat(amount) * (depositTokenPrice || 0);
 
   return (
     <>
@@ -39,13 +40,21 @@ const AwaitingConfirmation: FC<Props> = ({
         <PencilIcon className="w-20 h-20 text-primary" />
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg mt-6 mb-4">{title}</h2>
-      <p className="text-foreground-alt-200 text-sm mb-8">
+      <p className="text-foreground-alt-200 text-sm mb-4">
         <span className="font-title text-primary text-base mr-2">{amount}</span>
         {tokenName}
-        {equivalentValue && <MoreInfo secondaryText={equivalentValue} />}
+        {valueUSD && <MoreInfo secondaryText={`~ ${formatDollars(valueUSD)}`} />}
       </p>
+      {lockEnd && (
+        <p className="text-foreground-alt-200 text-sm mb-4">
+          {t("v2.dill.lockingUntil")}{" "}
+          <span className="font-title text-primary text-base mr-2">
+            {dayjs(lockEnd).format("LL")}
+          </span>
+        </p>
+      )}
       <Error error={error} />
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center pt-4">
         <Button type="secondary" onClick={previousStep} className="mr-3">
           {t("v2.actions.back")}
         </Button>
@@ -59,7 +68,7 @@ const AwaitingConfirmation: FC<Props> = ({
               <Spinner />
             </div>
           )}
-          {cta}
+          {lockEnd ? t("v2.actions.lock") : t("v2.actions.deposit")}
         </Button>
       </div>
     </>

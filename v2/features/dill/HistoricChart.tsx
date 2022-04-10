@@ -14,7 +14,6 @@ import {
   YAxis,
 } from "recharts";
 import { useSelector } from "react-redux";
-import { DillWeek } from "picklefinance-core/lib/model/PickleModelJson";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { RadioGroup } from "@headlessui/react";
 
@@ -187,7 +186,6 @@ const DillToggle: FC<DillToggleProps> = ({ chartMode, setChartMode }) => {
     { value: t("v2.time.weekly"), key: "weekly" },
     { value: t("v2.time.monthly"), key: "monthly" },
   ];
-  const [option, setOption] = useState<any>(options[0]);
 
   return (
     <RadioGroup value={chartMode} onChange={setChartMode} className="pt-4">
@@ -307,7 +305,11 @@ const HistoricChart: FC = () => {
                 padding={{ top: 50 }}
                 tick={{ fill: "rgb(var(--color-foreground-alt-300))" }}
                 type="number"
-                domain={[-3000, 250000]}
+                /**
+                 * If the y-axis looks broken it's most likely due to one data point
+                 * being outside of this domain and it needs to be adjusted.
+                 */
+                domain={[-5000, 250000]}
                 tickCount={9}
               >
                 <Label

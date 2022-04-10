@@ -110,7 +110,7 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
           {dayjs.unix(parseFloat(dill?.lockEnd)).format("LL")}
         </span>
         <ArrowRightIcon className="mx-4 pt-1 w-6 h-6 text-foreground-alt-200" />
-        <span className={"text-primary font-bold whitespace-pre font-medium text-base"}>
+        <span className="text-primary font-bold whitespace-pre text-base">
           {dayjs(lockTime).format("LL")}
         </span>
       </div>
@@ -119,7 +119,7 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
           {parseFloat(formatUnits(dill.balance)).toFixed(3)} DILL
         </span>
         <ArrowRightIcon className="mx-4 pt-1 w-6 h-6 text-foreground-alt-200" />
-        <span className={"text-primary font-bold whitespace-pre font-medium text-base"}>
+        <span className="text-primary font-bold whitespace-pre text-base">
           ~
           {(
             estimateDillForDate(

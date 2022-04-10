@@ -55,12 +55,6 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
 
   const userHasDillAllowance = parseInt(dill?.dillApproval || "0") > 0;
 
-  const handleFormSubmit = () => {
-    if (error) return;
-
-    // nextStep(amount);
-  };
-
   return (
     <Modal
       isOpen={isOpen}
