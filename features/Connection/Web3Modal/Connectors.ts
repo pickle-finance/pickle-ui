@@ -8,8 +8,8 @@ import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/cor
 import { MetaMask } from '@web3-react/metamask'
 import type { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { hooks as metaMaskHooks, metaMask } from '../../../hooks/connectors/metaMask'
-import { hooks as walletConnectHooks, walletConnect } from '../../../hooks/connectors/walletConnect'
+import { hooks as metaMaskHooks, metaMask } from './MetaMaskConnectorItem'
+import { hooks as walletConnectHooks, walletConnect } from './WalletConnectConnectorItem'
 
 
 const POLLING_INTERVAL = 12000;

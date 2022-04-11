@@ -4,28 +4,15 @@ import { useWeb3React, Web3ReactHooks } from "@web3-react/core";
 // import { injected } from "./Connectors";
 import { Connector } from "@web3-react/types";
 
-export function useEagerConnect(connector:Connector, hooks:Web3ReactHooks|undefined) {
+export function useEagerConnect(connector:Connector) {
   const { isActive } = useWeb3React();
-  console.log("useEagerConnect")
-  if(!hooks){
-    console.log("[useEagerConnect] no hooks");
-    return
-  }
-  // const active = hooks.useIsActive();
   const [tried, setTried] = useState(false);
 
   useEffect(() => {
+    if (!tried){
     connector.connectEagerly&&connector.connectEagerly();
-    setTried(true);
-    // injected.isAuthorized().then((isAuthorized) => {
-    //   if (isAuthorized) {
-    //     activate(injected, undefined, true).catch(() => {
-    //     });
-    //   } else {
-    //     setTried(true);
-    //   }
-    // });
-  }, [/* activate */]); // intentionally only running on mount (make sure it's only mounted once :))
+    setTried(true);}
+  }, []); // intentionally only running on mount (make sure it's only mounted once :))
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
@@ -37,12 +24,13 @@ export function useEagerConnect(connector:Connector, hooks:Web3ReactHooks|undefi
   return tried;
 }
 
+// TODO what's the point of this?
 export function useInactiveListener(connector: Connector, hooks: Web3ReactHooks|undefined,suppress = false) {
   const { isActive, error } = useWeb3React();
-  if(!hooks){
-    console.log("[useInactiveListener] no hooks");
-    return
-  }
+  // if(!hooks){
+  //   console.log("[useInactiveListener] no hooks");
+  //   return
+  // }
   // const active = hooks.useIsActive();
   // const error = hooks.useError();
 

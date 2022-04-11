@@ -19,7 +19,9 @@ import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Cha
 import { chainToChainParams, Connection } from "containers/Connection";
 import { Connector } from "@web3-react/types";
 import { WalletConnect } from "@web3-react/walletconnect";
-import MetaMaskCard from "./MetaMaskConnectorItem";
+import MetaMaskItem from "./MetaMaskConnectorItem";
+import WalletConnectItem from "./WalletConnectConnectorItem";
+import CoinbaseWalletItem from "./CoinbaseWalletConnectorItem";
 
 interface Web3ModalProps {
   setVisible: Function;
@@ -68,14 +70,12 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   //   },
   // ];
 
-  const itemList = [
-    MetaMaskCard
-  ];
+  const itemList = [MetaMaskItem,WalletConnectItem,CoinbaseWalletItem];
 
   // const [activatingConnector, setActivatingConnector] = useState<Connector>();
   const [ethereum, setEthereum] = useState();
   const [isSupportedChain, setIsSupportedChain] = useState<boolean>(true);
-  const [desiredChainId, setDesiredChainId] = useState<number>(1);
+  const [desiredChainId, setDesiredChainId] = useState<number>(-1);
 
   // const {
   //   connector,
@@ -118,62 +118,51 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     conn: Connector,
     // hooks: Web3ReactHooks,
     error: ReturnType<Web3ReactHooks["useError"]>,
-    isActivating: ReturnType<Web3ReactHooks['useIsActivating']>,
-    isActive: ReturnType<Web3ReactHooks['useIsActive']>,
-    provider: ReturnType<Web3ReactHooks['useProvider']>,
-    chainId: ReturnType<Web3ReactHooks['useChainId']>,
+    isActivating: ReturnType<Web3ReactHooks["useIsActivating"]>,
+    isActive: ReturnType<Web3ReactHooks["useIsActive"]>,
   ) => {
-    
     console.log("inside onConnectClick");
     console.log(conn);
-    console.log(provider)
-    if (error) {
+    console.log(error);
+    console.log(isActive);
+
+    if (isActive) {
+      conn.deactivate();
+    } else if (desiredChainId !== -1 && !rawChainFor(desiredChainId)) {
+      setIsSupportedChain(false);
+    } else if (!isActivating || error) {
       conn instanceof WalletConnect /* || conn instanceof Network */
-        ? void conn.activate(desiredChainId === -1 ? undefined : desiredChainId)
-        : void conn.activate(
+        ? conn.activate(desiredChainId === -1 ? undefined : desiredChainId)
+        : conn.activate(
             desiredChainId === -1 ? undefined : chainToChainParams(rawChainFor(desiredChainId)),
           );
-    } else if (isActive) {
-      conn.deactivate();
-    } else {
-      isActivating
-        ? undefined
-        : () =>
-        conn instanceof WalletConnect /* || connector instanceof Network */
-              ? conn.activate(desiredChainId === -1 ? undefined : desiredChainId)
-              : conn.activate(
-                  desiredChainId === -1
-                    ? undefined
-                    : chainToChainParams(rawChainFor(desiredChainId)),
-                );
+      setVisible(false);
     }
-    console.log(isActivating)
-    setVisible(false);
+
+    // if (error) {
+    //   conn instanceof WalletConnect /* || conn instanceof Network */
+    //     ? void conn.activate(desiredChainId === -1 ? undefined : desiredChainId)
+    //     : void conn.activate(
+    //         desiredChainId === -1 ? undefined : chainToChainParams(rawChainFor(desiredChainId)),
+    //       );
+    // } else if (isActive) {
+    //   conn.deactivate();
+    // } else {
+    //   isActivating
+    //     ? undefined
+    //     : conn instanceof WalletConnect /* || connector instanceof Network */
+    //     ? conn.activate(desiredChainId === -1 ? undefined : desiredChainId)
+    //     : conn.activate(
+    //         desiredChainId === -1 ? undefined : chainToChainParams(rawChainFor(desiredChainId)),
+    //       );
+    // }
   };
-
-  const switchChain = useCallback(
-    async (desiredChainId: number) => {
-      setDesiredChainId(desiredChainId);
-      // if we're already connected to the desired chain, return
-      if (desiredChainId === chainId) return;
-      // if they want to connect to the default chain and we're already connected, return
-      if (desiredChainId === -1 && chainId !== undefined) return;
-
-      if (connector instanceof WalletConnect /* || connector instanceof Network */) {
-        await connector.activate(desiredChainId === -1 ? undefined : desiredChainId);
-      } else {
-        await connector.activate(
-          desiredChainId === -1 ? undefined : chainToChainParams(rawChainFor(desiredChainId)),
-        );
-      }
-    },
-    [connector, chainId],
-  );
 
   useEffect(() => {
     if (account) {
       setVisible(false);
       setIsSupportedChain(true);
+      console.log(account)
     }
   }, [account, setVisible]);
 
@@ -192,9 +181,13 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   useEffect(() => {
     const { ethereum } = window as any;
     setEthereum(ethereum);
+    // setDesiredChainId(ethereum.networkVersion);
+    setDesiredChainId(+ethereum.chainId);
+
+    console.log(+ethereum.chainId);
   }, []);
 
-  const triedEager = useEagerConnect(connector, hooks);
+  const triedEager = useEagerConnect(connector);
   useInactiveListener(connector, hooks, !triedEager /* || !!activatingConnector */);
 
   return (
@@ -209,7 +202,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
 
               return (
                 <Grid xs={12} key={index}>
-                  <ConnectorItem onClick={onConnectClick} ethereum={ethereum}/>
+                  <ConnectorItem onClick={onConnectClick} ethereum={ethereum} />
                 </Grid>
               );
             })}

@@ -1,16 +1,23 @@
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
+import { initializeConnector } from "@web3-react/core";
 import { useTranslation } from "next-i18next";
 import { FC, useEffect } from "react";
+import { URLS } from "../../../hooks/chains";
 import ConnectorItem from "./ConnectorItem";
-import { initializeConnector } from "@web3-react/core";
-import { MetaMask } from "@web3-react/metamask";
-
 
 interface ConnectorItemProps {
   onClick: Function;
   ethereum: any;
 }
 
-export const [metaMask, hooks] = initializeConnector<MetaMask>((actions) => new MetaMask(actions));
+export const [coinbaseWallet, hooks] = initializeConnector<CoinbaseWallet>(
+  (actions) =>
+    new CoinbaseWallet(actions, {
+      url: URLS[1][0],
+      appName: "web3-react",
+    //   appLogoUrl: "/pickle.png",
+    }),
+);
 
 const {
   useChainId,
@@ -22,11 +29,11 @@ const {
   useENSNames,
 } = hooks;
 
-const MetaMaskItem: FC<ConnectorItemProps> = ({ onClick, ethereum }) => {
+const CoinbaseWalletItem: FC<ConnectorItemProps> = ({ onClick, ethereum }) => {
   const { t } = useTranslation("common");
 
-  const icon = "metamask.svg";
-  const title = t("connection.metamask");
+  const icon = "coinbase.svg";
+  const title = t("connection.coinbase");
 
   const chainId = useChainId();
   const accounts = useAccounts();
@@ -40,27 +47,27 @@ const MetaMaskItem: FC<ConnectorItemProps> = ({ onClick, ethereum }) => {
 
   // attempt to connect eagerly on mount
   useEffect(() => {
-    void metaMask.connectEagerly();
+    void coinbaseWallet.connectEagerly();
   }, []);
 
   return (
     <ConnectorItem
       icon={icon}
-      disabled={title === t("connection.metamask") && !ethereum}
+      disabled={title === t("connection.coinbase") && !ethereum}
       title={title}
       loading={isActivating}
       onClick={
         () =>
           onClick(
-            metaMask,
+            coinbaseWallet,
             error,
             isActivating,
             isActive,
           ) /* (web3connector, hooks, hooks.useError(), hooks.useIsActivating(),hooks.useIsActive(),hooks.useProvider()) */
       }
-      connector={metaMask}
+      connector={coinbaseWallet}
       hooks={hooks}
     />
   );
 };
-export default MetaMaskItem;
+export default CoinbaseWalletItem;
