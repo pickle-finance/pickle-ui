@@ -53,7 +53,7 @@ export const TokenInput: FC<{
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
-          {t("balances.balance")}: {formatValue(toNum(balanceUsed))}{" "}
+          {t("balances.balance")}: {formatValue(toNum(balanceUsed, token?.decimals))}{" "}
           {isEth ? inputToken : token?.name}
         </div>
         <Link
