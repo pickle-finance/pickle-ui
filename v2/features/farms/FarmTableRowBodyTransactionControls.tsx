@@ -4,15 +4,17 @@ import { ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
 import Button from "v2/components/Button";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
+import { jarDecimals } from "v2/utils/user";
+import { jarSupportsStaking } from "v2/store/core.helpers";
+import LoadingIndicator from "v2/components/LoadingIndicator";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
-import LoadingIndicator from "v2/components/LoadingIndicator";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import StakeFlow from "./flows/stake/StakeFlow";
-import { jarSupportsStaking } from "v2/store/core.helpers";
+import UnstakeFlow from "./flows/unstake/UnstakeFlow";
+import { roundToSignificantDigits } from "v2/utils";
 
 interface Props {
   jar: JarWithData;
@@ -20,15 +22,11 @@ interface Props {
 
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
-  const pfcore = useAppSelector(CoreSelectors.selectCore);
-  const userModel = useAppSelector(UserSelectors.selectData);
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
   const userTokenData = useAppSelector((state) =>
     UserSelectors.selectTokenDataById(state, jar.details.apiKey),
   );
-  const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
-  const picklesPending = data.earnedPickles.tokensVisible;
 
   const decimals = jarDecimals(jar);
   const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
@@ -37,6 +35,9 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
   );
   const farmTokens = parseFloat(
     ethers.utils.formatUnits(userTokenData?.pStakedBalance || "0", decimals),
+  );
+  const picklePending = parseFloat(
+    ethers.utils.formatUnits(userTokenData?.picklePending || "0", 18),
   );
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
@@ -50,7 +51,15 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
           <span className="font-title text-primary font-medium text-base leading-5">
             {jarTokens}
           </span>
-          <ApprovalFlow type="jar" jar={jar} visible={!userHasJarAllowance} />
+          <ApprovalFlow
+            apiKey={jar.details.apiKey}
+            tokenAddress={jar.depositToken.addr}
+            tokenName={jar.depositToken.name}
+            spenderAddress={jar.contract}
+            storeAttribute="jarAllowance"
+            chainName={jar.chain}
+            visible={!userHasJarAllowance}
+          />
           {userHasJarAllowance && (
             <div className="grid grid-cols-2 gap-3">
               <DepositFlow jar={jar} balances={userTokenData} />
@@ -68,11 +77,19 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
             <span className="font-title text-primary font-medium text-base leading-5">
               {farmTokens}
             </span>
-            <ApprovalFlow type="farm" jar={jar} visible={!userHasFarmAllowance} />
+            <ApprovalFlow
+              apiKey={jar.details.apiKey}
+              tokenAddress={jar.contract}
+              tokenName={jar.farm?.farmDepositTokenName}
+              spenderAddress={jar.farm?.farmAddress}
+              storeAttribute="farmAllowance"
+              chainName={jar.chain}
+              visible={!userHasFarmAllowance}
+            />
             {userHasFarmAllowance && (
               <div className="grid grid-cols-2 gap-3">
                 <StakeFlow jar={jar} balances={userTokenData} />
-                <WithdrawFlow jar={jar} balances={userTokenData} />
+                <UnstakeFlow jar={jar} balances={userTokenData} />
               </div>
             )}
           </div>
@@ -91,7 +108,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
             </p>
             <div className="flex items-end justify-between">
               <span className="font-title text-primary font-medium text-base leading-5">
-                {picklesPending}
+                {roundToSignificantDigits(picklePending, 3)}
               </span>
               <Button type="primary" state="disabled">
                 {t("v2.farms.harvest")}

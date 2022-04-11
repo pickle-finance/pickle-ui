@@ -189,11 +189,6 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                   value={`$${userShareHarvestUsd.toFixed(4)}`}
                 />
                 <InfoRowContent
-                  label={t("v2.farms.compounding")}
-                  tooltipText={t("v2.farms.compoundingTooltip")}
-                  value={`TODO`}
-                />
-                <InfoRowContent
                   label={t("v2.farms.baseApr")}
                   tooltipText={t("v2.farms.baseAprTooltip")}
                   value={`${jar.aprStats?.apr.toFixed(3)}%`}

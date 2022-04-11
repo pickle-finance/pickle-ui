@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { ethers } from "ethers";
 
 import { UserSelectors } from "v2/store/user";
 import LoadingIndicator from "v2/components/LoadingIndicator";
@@ -18,16 +17,13 @@ const DillInfo: FC = () => {
       </div>
     );
 
-  const userBalance = ethers.utils.formatUnits(userData.dill.balance);
+  const { pickles, dill } = userData;
 
   return (
     <>
-      <DillAmount
-        pickleBalance={19} // TODO: fetch real value
-        dillBalance={parseFloat(userBalance)}
-      />
-      <UnlockDate />
-      <Harvest />
+      <DillAmount pickles={pickles} dill={dill} />
+      <UnlockDate dill={dill} />
+      <Harvest dill={dill} />
     </>
   );
 };
