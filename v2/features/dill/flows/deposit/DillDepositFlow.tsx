@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ChainNetwork, Chains } from "picklefinance-core";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -17,7 +18,6 @@ import Success from "../../../farms/flows/Success";
 import Failure from "../../../farms/flows/Failure";
 import { DILL_ADDRESS, sleep } from "v2/utils";
 import { UserActions } from "v2/store/user";
-import { ChainNetwork } from "picklefinance-core";
 import { useDillContract } from "../hooks";
 import ErrorMessage from "../../../farms/flows/Error";
 import { getEpochSecondForDay } from "../utils";
@@ -44,7 +44,7 @@ const DepositFlow: FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
   const core = useSelector(CoreSelectors.selectCore);
-  const chain = core?.chains.find((chain) => chain.network === ChainNetwork.Ethereum);
+  const chain = Chains.get(ChainNetwork.Ethereum);
 
   const { account } = useWeb3React<Web3Provider>();
   const DillContract = useDillContract(DILL_ADDRESS);

@@ -4,13 +4,13 @@ import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
-import { useSelector } from "react-redux";
+import { Chains } from "picklefinance-core";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
 import Form from "./Form";
 import { jarDecimals } from "v2/utils/user";
@@ -32,14 +32,12 @@ interface Props {
 const DepositFlow: FC<Props> = ({ jar, balances }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
 
+  const chain = Chains.get(jar.chain);
   const { contract } = jar;
   const JarContract = useJarContract(contract);
-
-  const chain = core?.chains.find((chain) => chain.network === jar.chain);
 
   const decimals = jarDecimals(jar);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
