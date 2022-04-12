@@ -451,6 +451,7 @@
       "getToken": "Get {{ token }}",
       "givePermission": "Give Pickle Finance permission to access your {{ token }}?",
       "harvest": "Harvest",
+      "harvesting": "Harvesting",
       "harvestRewards": "Harvest rewards",
       "invalidAmount": "Please enter a valid deposit amount",
       "jarAddress": "Jar Address",

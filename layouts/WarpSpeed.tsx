@@ -46,7 +46,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
             <TopNavbar PageTitle={PageTitle} />
             <ConnectionStatus />
             <Component {...pageProps} />
-            <div className="flex justify-between bg-background my-10">
+            <div className="flex justify-between bg-background mt-4 mb-8">
               <UserBalanceStatus showDetails />
               <BlockNumber />
             </div>

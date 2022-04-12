@@ -2,15 +2,15 @@ import { HTMLAttributes, FC, MouseEventHandler } from "react";
 
 import { classNames, noop } from "../utils";
 
-type Size = "small" | "normal" | "large";
-type Type = "primary" | "secondary";
-type State = "enabled" | "disabled";
+export type ButtonSize = "small" | "normal" | "large";
+export type ButtonType = "primary" | "secondary";
+type ButtonState = "enabled" | "disabled";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   onClick?: MouseEventHandler<HTMLAnchorElement>;
-  size?: Size;
-  type?: Type;
-  state?: State;
+  size?: ButtonSize;
+  type?: ButtonType;
+  state?: ButtonState;
 }
 
 const Button: FC<Props> = ({

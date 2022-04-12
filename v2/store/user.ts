@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
+import { BigNumber } from "ethers";
+import { ChainNetwork } from "picklefinance-core";
 import { IUserDillStats, UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
@@ -80,6 +82,21 @@ const userSlice = createSlice({
 
       state.data.dill = { ...dill, ...action.payload };
     },
+    addHarvestedPickles: (
+      state,
+      action: PayloadAction<{ chain: ChainNetwork; amount: string }>,
+    ) => {
+      if (!state.data) return;
+
+      const { chain, amount } = action.payload;
+      const harvestedAmountBN = BigNumber.from(amount);
+      const chainPicklesBN = BigNumber.from(state.data.pickles[chain]);
+
+      state.data.pickles = {
+        ...state.data.pickles,
+        [chain]: chainPicklesBN.add(harvestedAmountBN).toString(),
+      };
+    },
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
     },
@@ -89,8 +106,17 @@ const userSlice = createSlice({
   },
 });
 
-const { refresh, setData, setIsFetching, setDillData, setTokenData, setTokens } = userSlice.actions;
+const {
+  addHarvestedPickles,
+  refresh,
+  setData,
+  setIsFetching,
+  setDillData,
+  setTokenData,
+  setTokens,
+} = userSlice.actions;
 export const UserActions = {
+  addHarvestedPickles,
   refresh,
   setData,
   setDillData,

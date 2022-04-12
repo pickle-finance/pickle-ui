@@ -39,9 +39,11 @@ const LeftNavbar: FC = () => {
           <div className="flex flex-col overflow-y-auto">
             <NavItems />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col relative items-center">
             <PicklePriceIndicator />
-            <UserBalancesStatus />
+            <div className="flex justify-center absolute -bottom-4">
+              <UserBalancesStatus />
+            </div>
           </div>
         </div>
       </div>

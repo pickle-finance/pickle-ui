@@ -117,6 +117,8 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
         },
       }),
     );
+
+    dispatch(UserActions.addHarvestedPickles({ chain, amount: pickles.toString() }));
   };
 
   const { sendTransaction, error, setError, isWaiting } = useTransaction(

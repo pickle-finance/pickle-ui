@@ -43,7 +43,7 @@ const PaginationArrow: FC<PaginationArrowProps> = ({ currentPage, pageCount, onC
   );
 };
 
-const Paginate: FC = () => {
+const Pagination: FC = () => {
   const { t } = useTranslation("common");
   const dispatch = useAppDispatch();
   const { currentPage, itemsPerPage } = useSelector(ControlsSelectors.selectPaginateParams);
@@ -85,4 +85,4 @@ const Paginate: FC = () => {
   );
 };
 
-export default Paginate;
+export default Pagination;
