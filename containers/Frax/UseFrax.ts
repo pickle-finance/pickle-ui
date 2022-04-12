@@ -13,6 +13,7 @@ import BLensABI from "../ABIs/blens.json";
 const DISTRUBTOR_ABI = [
   "function getYieldForDuration() view returns(uint256)",
   "function earned(address) view returns(uint256)",
+  "function eligibleCurrentVeFXS(address) view returns(uint256)",
 ];
 const VEFXS_ABI = ["function totalSupply() view returns(uint256)"];
 
@@ -39,6 +40,7 @@ export const useFrax = () => {
         veFxsTotalSupply,
         userPendingFxs,
         feeDistributorEarnedFxs,
+        feeDistributorTotalFXS,
         userLockedFxs,
         pickleLockedFxs,
         index,
@@ -49,6 +51,7 @@ export const useFrax = () => {
           veFxs.totalSupply(),
           vefxsVault.claimable(address),
           feeDistributor.earned(FraxAddresses.locker),
+          feeDistributor.eligibleCurrentVeFXS(FraxAddresses.locker),
           vefxsVault.balanceOf(address),
           vefxsVault.totalSupply(),
           vefxsVault.index(),
@@ -57,7 +60,9 @@ export const useFrax = () => {
       ).map((x) => +formatEther(x));
 
       // 1 FXS = 4 veFXS when locked for 4 years
-      const fxsApr = (weeklyFxs * prices.fxs * 52) / veFxsTotalSupply;
+      const fxsPerVEFXS = weeklyFxs / veFxsTotalSupply * 52 * prices.fxs;
+      const earnedDollarsPerYear = feeDistributorTotalFXS * fxsPerVEFXS;
+      const fxsApr = earnedDollarsPerYear / (pickleLockedFxs * prices.fxs);
 
       const fxsPending =
         userPendingFxs +
