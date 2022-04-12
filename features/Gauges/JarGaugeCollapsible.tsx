@@ -247,6 +247,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xF3A43307DcAFa93275993862Aae628fCB50dC768": (
     <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/frax.webp"} />
   ),
+  "0x1054Ff2ffA34c055a13DCD9E0b4c0cA5b3aecEB9": (
+    <LpIcon swapIconSrc={"/convex.png"} tokenIconSrc={"/tokens/cadc.png"} />
+  ),
 };
 
 const DECIMALS_SCALE = (decimals: number) => ethers.utils.parseUnits("1", 18 - decimals);
