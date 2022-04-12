@@ -11,7 +11,8 @@ export const ChainTableRow: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
-}> = ({ network, core, offchainVoteData, wallet }) => {
+  setChange: (e: any) => void;
+}> = ({ network, core, offchainVoteData, wallet, setChange }) => {
   const chainData: RawChain = core
     ? core.chains.filter((x) => x.network === network)[0]
     : ({} as RawChain);
@@ -47,6 +48,7 @@ export const ChainTableRow: FC<{
           <ChainTableCellInput
             chain={network}
             val={getUserWeight(chainData.network, offchainVoteData, wallet)}
+            setChange={setChange}
           />
         </ChainTableCell>
       </tr>
@@ -66,7 +68,11 @@ const ChainTableCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }
   </td>
 );
 
-const ChainTableCellInput: FC<{ chain: string; val: string }> = ({ chain, val }) => (
+const ChainTableCellInput: FC<{ chain: string; val: string; setChange: (e: any) => void }> = ({
+  chain,
+  val,
+  setChange,
+}) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
@@ -74,6 +80,7 @@ const ChainTableCellInput: FC<{ chain: string; val: string }> = ({ chain, val })
       min="-100"
       max="100"
       defaultValue={val.slice(0, val.length - 1)}
+      onInput={(e) => setChange(e)}
       id={chain}
     />
     <span className="text-foreground-alt-200"> %</span>

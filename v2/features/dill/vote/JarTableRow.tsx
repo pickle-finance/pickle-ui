@@ -13,8 +13,9 @@ const JarTableRow: FC<{
   mainnet: boolean;
   offchainVoteData: iOffchainVoteData | undefined;
   wallet: string | undefined | null;
+  setChange: (e: any) => void;
   user?: UserData;
-}> = ({ jar, core, mainnet, offchainVoteData, wallet, user }) => {
+}> = ({ jar, core, mainnet, offchainVoteData, wallet, setChange, user }) => {
   const jarData: JarDefinition = core
     ? core.assets.jars.filter((x) => {
         if (x && x.details && x.details.apiKey) return x.details.apiKey === jar;
@@ -51,9 +52,17 @@ const JarTableRow: FC<{
         </JarTableCell>
         <JarTableCell className="rounded-r-xl">
           {mainnet ? (
-            <JarTableInput jar={jar} val={getMainnetUserWeight(jar, core, user)} />
+            <JarTableInput
+              jar={jar}
+              val={getMainnetUserWeight(jar, core, user)}
+              setChange={setChange}
+            />
           ) : (
-            <JarTableInput jar={jar} val={getOffchainUserWeight(jar, offchainVoteData, wallet)} />
+            <JarTableInput
+              jar={jar}
+              val={getOffchainUserWeight(jar, offchainVoteData, wallet)}
+              setChange={setChange}
+            />
           )}
         </JarTableCell>
       </tr>
@@ -77,7 +86,11 @@ const JarTableP: FC<{ text: string; className?: string }> = ({ text, className }
   <p className={classNames("font-title font-medium text-base leading-5", className)}>{text}</p>
 );
 
-const JarTableInput: FC<{ jar: string; val: string }> = ({ jar, val }) => (
+const JarTableInput: FC<{ jar: string; val: string; setChange: (e: any) => void }> = ({
+  jar,
+  val,
+  setChange,
+}) => (
   <>
     <input
       className="bg-background border border-foreground-alt-400 rounded p-2 text-center text-foreground-alt-200 focus:outline-none"
@@ -85,6 +98,7 @@ const JarTableInput: FC<{ jar: string; val: string }> = ({ jar, val }) => (
       min="-100"
       max="100"
       defaultValue={val.slice(0, val.length - 1)}
+      onInput={(e) => setChange(e)}
       id={jar}
     />
     <span className="text-foreground-alt-200"> %</span>

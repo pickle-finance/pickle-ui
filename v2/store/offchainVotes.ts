@@ -48,12 +48,12 @@ interface iDillWeight {
   hex: string;
 }
 
-interface iChainWeight {
+export interface iChainWeight {
   chain: string;
   weight: number;
 }
 
-interface iJarWeight {
+export interface iJarWeight {
   jarKey: string;
   weight: number;
 }
