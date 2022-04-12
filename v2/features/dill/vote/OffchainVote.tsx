@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useTranslation } from "next-i18next";
@@ -21,22 +21,43 @@ const OffchainVote: FC<{
   const { account, library } = useWeb3React<Web3Provider>();
   const { t } = useTranslation("common");
 
-  const [selectedChains, setSelectedChains] = useState<string[]>(
-    getUserChainsOrStrats(offchainVoteData, account).chainNames,
-  );
-  const [selectedChainStrats, setSelectecChainStrats] = useState<string[]>(
-    getUserChainsOrStrats(offchainVoteData, account).stratNames,
-  );
-  const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>(
-    getUserJarsOrStrats(offchainVoteData, account).jarNames,
-  );
-  const [selectedJarStrats, setSelectedJarStrats] = useState<string[]>(
-    getUserJarsOrStrats(offchainVoteData, account).stratNames,
-  );
+  const [selectedChains, setSelectedChains] = useState<string[]>([]);
+  const [selectedChainStrats, setSelectecChainStrats] = useState<string[]>([]);
+  const [selectedSidechainJars, setSelectedSidechainJars] = useState<string[]>([]);
+  const [selectedJarStrats, setSelectedJarStrats] = useState<string[]>([]);
+
+  const [change, setChange] = useState(null);
+  const [enabled, setEnabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    const userChains = getUserChainsOrStrats(offchainVoteData, account);
+    const userJars = getUserJarsOrStrats(offchainVoteData, account);
+
+    setSelectecChainStrats(userChains.stratNames);
+    setSelectedChains(userChains.chainNames);
+    setSelectedJarStrats(userJars.stratNames);
+    setSelectedSidechainJars(userJars.jarNames);
+  }, [offchainVoteData, account]);
+
+  useEffect(() => {
+    if (change) {
+      if (
+        sumVotes(selectedJarStrats, selectedSidechainJars) !== 100 ||
+        sumVotes(selectedChainStrats, selectedChains) !== 100
+      )
+        setEnabled(false);
+      else setEnabled(true);
+    }
+  }, [change]);
 
   return (
     <>
-      <h1 className="mb-5">{t("v2.dill.vote.subtitleOffchain")}</h1>
+      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2 mb-5 mt-10">
+        {t("v2.dill.vote.subtitleOffchain")}
+      </h1>
+      <p className="flex py-2 text-foreground-alt-200 justify-between mb-5">
+        <span className="font-medium text-base">{t("v2.dill.vote.descriptionOffchain")}</span>
+      </p>
       <div className="w-full inline-grid grid-cols-2 gap-4">
         <ChartContainer
           platformOrUser="platform"
@@ -64,6 +85,7 @@ const OffchainVote: FC<{
               selectedStrats={selectedChainStrats}
               offchainVoteData={offchainVoteData}
               wallet={account}
+              setChange={setChange}
             />
           )}
           {selectedChains.length > 0 && (
@@ -72,6 +94,7 @@ const OffchainVote: FC<{
               core={core}
               offchainVoteData={offchainVoteData}
               wallet={account}
+              setChange={setChange}
             />
           )}
         </div>
@@ -89,6 +112,7 @@ const OffchainVote: FC<{
               selectedStrats={selectedJarStrats}
               offchainVoteData={offchainVoteData}
               wallet={account}
+              setChange={setChange}
             />
           )}
           {selectedSidechainJars.length > 0 && (
@@ -98,11 +122,13 @@ const OffchainVote: FC<{
               mainnet={false}
               offchainVoteData={offchainVoteData}
               wallet={account}
+              setChange={setChange}
             />
           )}
         </div>
         <OffchainVoteButton
           vote={castVoteSideChain}
+          enabled={enabled}
           provider={library}
           account={account}
           selectedChainStrats={selectedChainStrats}
@@ -131,8 +157,9 @@ const getUserChainsOrStrats = (
   if (userVotes && userVotes.chainWeights)
     for (let i = 0; i < userVotes?.chainWeights?.length; i++) {
       let name = userVotes?.chainWeights[i].chain;
-      if (strategies.includes(name)) stratNames.push();
-      else chainNames.push(name);
+      if (strategies.includes(name)) {
+        stratNames.push(name);
+      } else chainNames.push(name);
     }
   return { stratNames, chainNames };
 };
@@ -158,6 +185,23 @@ const getUserJarsOrStrats = (
     }
   }
   return { stratNames, jarNames };
+};
+
+const sumVotes = (selected: string[], selected2?: string[]): number => {
+  let sum = 0;
+  selected.forEach((s) => {
+    const inputElement = document.getElementById(s) as HTMLInputElement;
+    if (+inputElement.value < 0) sum += +inputElement.value * -1;
+    else sum += +inputElement.value;
+  });
+  if (selected2) {
+    selected2.forEach((s) => {
+      const inputElement = document.getElementById(s) as HTMLInputElement;
+      if (+inputElement.value < 0) sum += +inputElement.value * -1;
+      else sum += +inputElement.value;
+    });
+  }
+  return sum;
 };
 
 export default OffchainVote;

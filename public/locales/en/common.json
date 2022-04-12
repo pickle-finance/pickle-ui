@@ -399,6 +399,8 @@
         },
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
+        "descriptionMainnet": "Voting for Mainnet jar reward weights occurs on-chain. Your DILL balance dictates how much power you have with regard to how the platform emissions are distributed. To vote, you must select at least one jar, then ensure the sum of your vote(s) equals 100%. If your vote is valid, you can cast your vote with the \"Cast Mainnet Vote\" button.",
+        "descriptionOffchain": "Voting for sidechain jar reward weights occurs offchain. Your DILL balance dictates how much power you have with regard to how the platform emissions are distributed. Your chain vote is for the distribution of emissions among the many chain supported by Pickle. Votes for specific jars or jar strategies will give those jars access to a portion of the emissions allocated to the chain in the former part of the vote. To vote, you must select at least one chain or chain strategy and one jar or jar strategy, then attribute a total of 100% of your vote in each of these categories. If your vote is valid, you can cast your vote with the \"Cast Offchain Vote\" button.",
         "newVote": "Your New Vote",
         "pickleApy": "Pickle APY",
         "rowAssetName": "Asset Name",
