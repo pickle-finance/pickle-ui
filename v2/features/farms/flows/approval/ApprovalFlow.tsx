@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { IUserDillStats, UserTokenData } from "picklefinance-core/lib/client/UserModel";
-import { ChainNetwork } from "picklefinance-core";
+import { ChainNetwork, Chains } from "picklefinance-core";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -13,11 +13,10 @@ import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
 import { useTokenContract, useTransaction } from "../hooks";
-import { AppDispatch, useAppSelector } from "v2/store";
+import { AppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { ApprovalEvent } from "containers/Contracts/Erc20";
 import { eventsByName } from "../utils";
-import { CoreSelectors } from "v2/store/core";
 
 interface Props {
   apiKey?: string;
@@ -42,9 +41,8 @@ const ApprovalFlow: FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
   const TokenContract = useTokenContract(tokenAddress);
-  const core = useAppSelector(CoreSelectors.selectCore);
 
-  const chain = core?.chains.find((chain) => chain.network === chainName);
+  const chain = Chains.get(chainName);
   const amount = ethers.constants.MaxUint256;
 
   const transactionFactory = () => {

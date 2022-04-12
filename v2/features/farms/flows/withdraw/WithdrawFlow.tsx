@@ -6,6 +6,7 @@ import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { Chains } from "picklefinance-core";
 
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
@@ -39,8 +40,7 @@ const WithdrawFlow: FC<Props> = ({ jar, balances }) => {
   const { contract } = jar;
   const JarContract = useJarContract(contract);
 
-  const chain = core?.chains.find((chain) => chain.network === jar.chain);
-
+  const chain = Chains.get(jar.chain);
   const decimals = jarDecimals(jar);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");

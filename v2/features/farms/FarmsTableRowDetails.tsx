@@ -2,18 +2,19 @@ import { FC, Fragment } from "react";
 import { Disclosure, Transition } from "@headlessui/react";
 import { NULL_ADDRESS } from "picklefinance-core/lib/model/PickleModel";
 import { Trans, useTranslation } from "next-i18next";
-import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import type { Web3Provider } from "@ethersproject/providers";
+import { Chains } from "picklefinance-core";
 
 import { roundToSignificantDigits, shortenAddress } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 import Button from "v2/components/Button";
 import Link from "v2/components/Link";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { JarWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
 import FarmDocs from "./FarmDocs";
 import { jarSupportsStaking } from "v2/store/core.helpers";
+
 interface Props {
   jar: JarWithData;
 }
@@ -47,8 +48,7 @@ const ComponentRow: FC<ComponentRowProps> = ({ property, value }) => (
 
 const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
-  const allCore = useSelector(CoreSelectors.selectCore);
-  const chain = allCore?.chains.find((x) => x.network === jar.chain);
+  const chain = Chains.get(jar.chain);
   const { library } = useWeb3React<Web3Provider>();
 
   const totalTokensInJarAndFarm =
