@@ -1,24 +1,27 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { useTranslation } from "next-i18next";
 import { PencilIcon } from "@heroicons/react/outline";
 
 import Button from "v2/components/Button";
-import Error from "../Error";
+import Error from "./Error";
 import Spinner from "v2/components/Spinner";
 import { classNames } from "v2/utils";
 
 interface Props {
   error: Error | undefined;
   sendTransaction: () => void;
-  tokenName: string | undefined;
+  title: string | ReactNode;
   isWaiting: boolean;
+  cta: string;
 }
 
-const AwaitingConfirmation: FC<Props> = ({ error, sendTransaction, tokenName, isWaiting }) => {
-  const { t } = useTranslation("common");
-
-  const title = t("v2.farms.givePermission", { token: tokenName });
-
+const AwaitingConfirmationNoUserInput: FC<Props> = ({
+  cta,
+  error,
+  sendTransaction,
+  title,
+  isWaiting,
+}) => {
   return (
     <>
       <div className="flex justify-center my-10">
@@ -36,10 +39,10 @@ const AwaitingConfirmation: FC<Props> = ({ error, sendTransaction, tokenName, is
             <Spinner />
           </div>
         )}
-        {t("v2.actions.approve")}
+        {cta}
       </Button>
     </>
   );
 };
 
-export default AwaitingConfirmation;
+export default AwaitingConfirmationNoUserInput;

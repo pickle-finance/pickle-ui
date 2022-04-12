@@ -1,5 +1,5 @@
-import { FC, Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
+import { VFC } from "react";
+import { Popover } from "@headlessui/react";
 import useSWR from "swr";
 import { useTranslation } from "next-i18next";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -8,7 +8,7 @@ import GasPumpIcon from "./icons/GasPump";
 import { fetcher, EthGasStationResponse } from "../utils";
 import SelectTransition from "./SelectTransition";
 
-const GasPriceIndicatorButtonLabel: FC<{
+const GasPriceIndicatorButtonLabel: VFC<{
   data: EthGasStationResponse | undefined;
 }> = ({ data }) => {
   if (!data)
@@ -25,7 +25,7 @@ const GasPriceIndicatorButtonLabel: FC<{
   return <span className="w-7">{data.average / 10}</span>;
 };
 
-const GasPriceIndicatorOptions: FC<{
+const GasPriceIndicatorOptions: VFC<{
   data: EthGasStationResponse | undefined;
 }> = ({ data }) => {
   const { t } = useTranslation("common");
@@ -64,7 +64,7 @@ const GasPriceIndicatorOptions: FC<{
   );
 };
 
-const GasPriceIndicator: FC = () => {
+const GasPriceIndicator: VFC = () => {
   const endpoint = "https://ethgasstation.info/api/ethgasAPI.json";
   const { data } = useSWR<EthGasStationResponse>(endpoint, fetcher);
 

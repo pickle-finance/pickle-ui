@@ -1,10 +1,13 @@
 import { FC } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
+import { BigNumber, ethers } from "ethers";
+import { ChainNetwork } from "picklefinance-core";
 
-import Button from "./Button";
 import Modal from "./Modal";
 import { roundToSignificantDigits } from "v2/utils";
+import HarvestFlow, { Rewarder } from "v2/features/farms/flows/harvest/HarvestFlow";
+import { Asset } from "v2/store/core.helpers";
 
 interface Props {
   harvestables: RewardRowProps[];
@@ -13,18 +16,19 @@ interface Props {
 }
 
 export interface RewardRowProps {
+  asset: Asset | undefined;
   descriptor: string;
-  rewardCount: number;
-  tokenString: string;
+  harvestableAmount: BigNumber;
+  rewarderType: Rewarder;
+  network: ChainNetwork;
 }
 interface RewardRowPropWrapper {
   details: RewardRowProps;
 }
 
 const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
-  const { t } = useTranslation("common");
+  const picklePendingAmount = parseFloat(ethers.utils.formatUnits(details.harvestableAmount, 18));
 
-  // TODO image needs to be configurable for what the reward is
   return (
     <div className="flex justify-between font-body">
       <div className="flex">
@@ -43,18 +47,20 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
             {details.descriptor}
           </p>
           <p className="text-primary font-bold text-lg align-bottom leading-6">
-            {roundToSignificantDigits(details.rewardCount, 5)}
-            <span className="text-foreground text-xs ml-2">{details.tokenString}</span>
+            {roundToSignificantDigits(picklePendingAmount, 5)}
+            <span className="text-foreground text-xs ml-2">PICKLE</span>
           </p>
         </div>
       </div>
       <div className="flex items-center">
-        <Button type="secondary" size="small">
-          {
-            // TODO use the harvester when clicked on.
-            t("v2.farms.harvest")
-          }
-        </Button>
+        <HarvestFlow
+          rewarderType={details.rewarderType}
+          asset={details.asset}
+          buttonSize="small"
+          buttonType="secondary"
+          harvestableAmount={details.harvestableAmount}
+          network={details.network}
+        />
       </div>
     </div>
   );
@@ -66,10 +72,9 @@ const HarvestModal: FC<Props> = ({ isOpen, closeModal, harvestables }) => {
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.farms.harvestRewards")}>
       <div className="grid gap-9">
-        {safeHarvestables.map((h) => {
-          const key = h.descriptor;
-          return <RewardRow key={key} details={h} />;
-        })}
+        {safeHarvestables.map((harvestable) => (
+          <RewardRow key={harvestable.descriptor} details={harvestable} />
+        ))}
       </div>
     </Modal>
   );

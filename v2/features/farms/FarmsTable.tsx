@@ -1,9 +1,11 @@
 import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
+
 import FarmsTableBody from "./FarmsTableBody";
 import FarmControls from "./FarmControls";
 import FarmsTableHeaderCellSortable from "./FarmsTableHeaderCellSortable";
 import { SortType } from "v2/store/controls";
+import Pagination from "./Pagination";
 
 interface Props {
   requiresUserModel?: boolean;
@@ -52,6 +54,11 @@ const FarmsTable: FC<Props> = ({ simple, title, requiresUserModel }) => {
                 <FarmsTableBody simple={simple} requiresUserModel={requiresUserModel} />
               </tbody>
             </table>
+            {!simple && (
+              <div className="flex justify-center mt-4">
+                <Pagination />
+              </div>
+            )}
           </div>
         </div>
       </div>

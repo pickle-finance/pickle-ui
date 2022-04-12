@@ -2,10 +2,9 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { CashIcon, ClockIcon } from "@heroicons/react/solid";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { useSelector } from "react-redux";
-import { PickleModelJson } from "picklefinance-core";
-import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "./Button";
@@ -14,6 +13,7 @@ import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
 import { formatUsd } from "util/api";
+import { findAsset, visibleStringForAsset } from "v2/store/core.helpers";
 
 export const getTotalBalances = (
   core: PickleModelJson.PickleModelJson,
@@ -99,23 +99,6 @@ export const getUserAssetDataWithPricesForJars = (
   return ret;
 };
 
-export const getAllPickleAssets = (core: PickleModelJson.PickleModelJson): PickleAsset[] => [
-  ...core.assets.jars,
-  ...core.assets.standaloneFarms,
-  ...core.assets.external,
-];
-
-export const userVisibleStringForPickleAsset = (
-  apiKey: string,
-  core: PickleModelJson.PickleModelJson,
-): string | undefined => {
-  const allAssets: PickleAsset[] = getAllPickleAssets(core);
-  const asset: PickleAsset | undefined = allAssets.find(
-    (x) => x.details?.apiKey === apiKey.toUpperCase(),
-  );
-  return asset ? asset.depositToken.name : undefined;
-};
-
 export const getRewardRowPropertiesForRewards = (
   core: PickleModelJson.PickleModelJson,
   userdata: UserData,
@@ -124,24 +107,31 @@ export const getRewardRowPropertiesForRewards = (
   const ret: RewardRowProps[] = [];
   const jarData = getUserAssetDataWithPricesForJars(core, userdata);
   for (let i = 0; i < jarData.length; i++) {
-    const descriptor = userVisibleStringForPickleAsset(jarData[i].assetId, core) || "unknown";
+    const { assetId } = jarData[i];
+    const descriptor = visibleStringForAsset(assetId, core) || "";
+    const asset = findAsset(assetId, core)!;
     const earnedPickles = parseFloat(jarData[i].earnedPickles.tokens);
+
     if (earnedPickles > 0) {
       ret.push({
-        descriptor: descriptor,
-        tokenString: "PICKLEs", // TODO i18n
-        rewardCount: parseFloat(jarData[i].earnedPickles.tokens),
+        asset,
+        descriptor,
+        harvestableAmount: jarData[i].earnedPickles.wei,
+        rewarderType: "farm",
+        network: asset.chain,
       });
     }
   }
+
   if (userdata.dill && userdata.dill.claimable) {
-    const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
-    const dillRewardPickles = parseFloat(ethers.utils.formatUnits(wei, 18));
+    const wei = BigNumber.from(userdata.dill.claimable);
 
     ret.push({
+      asset: undefined,
       descriptor: t("v2.dill.dillRewards"),
-      tokenString: "PICKLEs",
-      rewardCount: dillRewardPickles,
+      harvestableAmount: wei,
+      rewarderType: "dill",
+      network: ChainNetwork.Ethereum,
     });
   }
   return ret;
