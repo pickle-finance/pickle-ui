@@ -47,7 +47,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
             <ConnectionStatus />
             <Component {...pageProps} />
             <div className="flex justify-between bg-background my-10">
-              <UserBalanceStatus />
+              <UserBalanceStatus showDetails />
               <BlockNumber />
             </div>
           </div>

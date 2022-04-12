@@ -6,22 +6,26 @@ import { UserSelectors } from "v2/store/user";
 import TimeAgo from "v2/components/TimeAgo";
 import Ping from "./Ping";
 
-const UserBalancesStatus: FC = () => {
+interface Props {
+  showDetails?: boolean;
+}
+
+const UserBalancesStatus: FC<Props> = ({ showDetails }) => {
   const { t } = useTranslation("common");
   const updatedAt = useSelector(UserSelectors.selectUpdatedAt);
   const isFetching = useSelector(UserSelectors.selectIsFetching);
 
   if (isFetching)
     return (
-      <div className="flex items-center text-foreground-alt-300 text-sm">
-        <p>{t("v2.balances.fetching")}</p>
+      <div className="flex items-center text-foreground-alt-300 text-xs">
         <Ping />
+        <p>{t("v2.balances.fetching")}</p>
       </div>
     );
 
   return (
     <p className="text-foreground-alt-300 text-sm">
-      {updatedAt && (
+      {updatedAt && showDetails && (
         <Trans i18nKey="v2.balances.lastUpdated">
           Your balances updated <TimeAgo date={updatedAt} /> ago.
         </Trans>

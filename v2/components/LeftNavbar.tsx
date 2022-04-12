@@ -9,6 +9,7 @@ import NavItem from "./NavItem";
 import PicklePriceIndicator from "./PicklePriceIndicator";
 import { ThemeSelectors } from "v2/store/theme";
 import { matchingLogoSrc } from "v2/features/theme/themes";
+import UserBalancesStatus from "v2/features/connection/UserBalancesStatus";
 
 const LeftNavbar: FC = () => {
   const { t } = useTranslation("common");
@@ -38,20 +39,9 @@ const LeftNavbar: FC = () => {
           <div className="flex flex-col overflow-y-auto">
             <NavItems />
           </div>
-          <div className="flex flex-col overflow-y-auto">
+          <div className="flex flex-col">
             <PicklePriceIndicator />
-            <NavItem
-              href="https://etherscan.io/address/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
-              external
-            >
-              {t("v2.nav.tokenAddress")}
-            </NavItem>
-            <NavItem
-              href="https://etherscan.io/address/0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf"
-              external
-            >
-              {t("v2.nav.dillAddress")}
-            </NavItem>
+            <UserBalancesStatus />
           </div>
         </div>
       </div>

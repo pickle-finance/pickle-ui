@@ -489,7 +489,6 @@
       "close": "Close panel",
       "dashboard": "Dashboard",
       "dill": "DILL",
-      "dillAddress": "DILL address",
       "faq": "F.A.Q.",
       "feedback": "Feedback",
       "jarsAndFarms": "Jars & Farms",
@@ -497,8 +496,7 @@
       "next": "Next",
       "openMenu": "Open main menu",
       "previous": "Prev",
-      "stats": "Stats",
-      "tokenAddress": "Token address"
+      "stats": "Stats"
     },
     "stats": {
       "chain": {
