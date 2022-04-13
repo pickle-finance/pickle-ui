@@ -364,9 +364,11 @@ export const JarGaugeCollapsible: FC<{
         const v = uncompoundAPY(Object.values(x)[0]);
         return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
       }),
-      `${t(
-        "farms.compounding",
-      )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`,
+      isYearnJar
+        ? null
+        : `${t(
+            "farms.compounding",
+          )} <img src="/magicwand.svg" height="16" width="16"/>: ${difference.toFixed(2)}%`,
     ]
       .filter((x) => x)
       .join(` <br/> `);
