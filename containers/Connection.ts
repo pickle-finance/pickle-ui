@@ -3,15 +3,13 @@ import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { useWeb3React, Web3ReactHooks } from "@web3-react/core";
+import { useWeb3React, Web3ReactHooks,getPriorityConnector } from "@web3-react/core";
 import { Provider as MulticallProvider, setMulticallAddress } from "ethers-multicall";
 import { useRouter } from "next/router";
 import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
 import { PickleCore } from "./Jars/usePickleCore";
 import { AddEthereumChainParameter, Connector } from "@web3-react/types";
-import { hooks as metaMaskHooks } from "features/Connection/Web3Modal/MetaMaskConnectorItem";
-import { hooks as walletConnectHooks } from "features/Connection/Web3Modal/WalletConnectConnectorItem";
-import { hooks as coinbaseWalletHooks } from "features/Connection/Web3Modal/CoinbaseWalletConnectorItem";
+import { getHooks } from "features/Connection/Web3Modal/Connectors";
 import { MetaMask } from "@web3-react/metamask";
 import { WalletConnect } from "@web3-react/walletconnect";
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
@@ -51,14 +49,9 @@ export const chainToChainParams = (
   };
 };
 
-export function getHooks(connector: Connector): Web3ReactHooks | undefined {
-  if (connector instanceof MetaMask) return metaMaskHooks;
-  if (connector instanceof WalletConnect) return walletConnectHooks;
-  if (connector instanceof CoinbaseWallet) return coinbaseWalletHooks;
-}
 
 function useConnection() {
-  const { account, /* library, */ chainId, /* provider, */ connector,isActive } = useWeb3React();
+  const { account, /* library, */ chainId, /* provider, */ connector,isActive, ENSName } = useWeb3React();
   const router = useRouter();
   const { pickleCore } = PickleCore.useContainer();
 
@@ -92,6 +85,7 @@ function useConnection() {
       }
       return true;
     } catch (e) {
+      console.log("switchChainError")
       console.log(e);
     }
     return false;
@@ -118,26 +112,32 @@ function useConnection() {
   const tryHooks = getHooks(connector);
   const tryProvider = tryHooks?.useProvider();
 
-  useEffect(() => {
-    if (account && chainId && connector) {
-      const hooks = getHooks(connector);
-      const provider = tryProvider;
-      const signer = provider?.getSigner();
-      console.log(provider);
+  // useEffect(() => {
+  //   if (connector && tryHooks && tryProvider) {
+  //     const signer = tryProvider.getSigner();
 
-      setProvider(provider);
-      setSigner(signer);
-      setHooks(hooks);
-    }
-  }, [account, chainId, connector, isActive]);
+  //     setProvider(tryProvider);
+  //     setSigner(signer);
+  //     setHooks(hooks);
+  //   }
+  // }, [account, chainId, connector]);
 
   // create observable to stream new blocks
   useEffect(() => {
     console.log("Connection");
     console.log(provider);
     console.log(account);
-    if (provider) {
-      provider.getNetwork().then((network: any) => setNetwork(network));
+    console.log(ENSName)
+    console.log(signer)
+    if (connector && tryHooks && tryProvider) {
+      const signer = tryProvider.getSigner();
+
+      setProvider(tryProvider);
+      setSigner(signer);
+      setHooks(hooks);
+    }
+    if (tryProvider) {
+      tryProvider.getNetwork().then((network: any) => setNetwork(network));
       Chains.list().map((x) => {
         const raw: RawChain | undefined = rawChainFor(x);
         if (raw && raw.multicallAddress) {
@@ -145,14 +145,14 @@ function useConnection() {
         }
       });
 
-      const _multicallProvider = new MulticallProvider(provider);
+      const _multicallProvider = new MulticallProvider(tryProvider);
       _multicallProvider.init().then(() => setMulticallProvider(_multicallProvider));
 
       const { ethereum } = window as any;
       ethereum?.on("chainChanged", () => router.reload());
 
       const observable = new Observable<number>((subscriber) => {
-        provider.on("block", (blockNumber: number) => subscriber.next(blockNumber));
+        tryProvider.on("block", (blockNumber: number) => subscriber.next(blockNumber));
       });
 
       // debounce to prevent subscribers making unnecessary calls
@@ -165,7 +165,7 @@ function useConnection() {
       setMulticallProvider(null);
       setBlockNum(null);
     }
-  }, [provider, pickleCore]);
+  }, [provider, pickleCore,account, chainId, connector]);
 
   const chainName = pickleCore?.chains.find((x) => x.chainId === chainId)?.network || null;
 
@@ -175,7 +175,6 @@ function useConnection() {
     address: account,
     network,
     blockNum,
-    // signer: library?.getSigner(),  // TODO
     chainId,
     chainName,
     switchChain,

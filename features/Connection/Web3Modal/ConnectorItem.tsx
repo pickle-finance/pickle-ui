@@ -1,15 +1,14 @@
 import styled, { css } from "styled-components";
 import Loader from "react-loader-spinner";
-import { FC, MouseEventHandler } from "react";
+import { FC, MouseEventHandler, useEffect } from "react";
 import { Web3ReactHooks } from "@web3-react/core";
 import { Connector } from "@web3-react/types";
 
 interface ConnectorItemProps {
   icon: string;
   title: string;
-  onClick: MouseEventHandler<HTMLDivElement>;
-  loading: boolean;
-  disabled: boolean;
+  onClick: Function; //MouseEventHandler<HTMLDivElement>;
+  ethereum: any;
   connector: Connector;
   hooks: Web3ReactHooks;
 }
@@ -53,32 +52,30 @@ const LoaderContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-
-
 const ConnectorItem: FC<ConnectorItemProps> = ({
   icon,
   title,
   onClick,
-  loading,
-  disabled,
+  ethereum,
   connector,
   hooks,
 }) => {
-  const { useChainId, useAccounts, useError, useIsActivating, useIsActive, useProvider, useENSNames } = hooks
-  const chainId = useChainId()
-  const accounts = useAccounts()
-  const error = useError()
-  const isActivating = useIsActivating()
+  const { useError, useIsActivating, useIsActive } = hooks;
+  const error = useError();
+  const isActivating = useIsActivating();
+  const isActive = useIsActive();
 
-  const isActive = useIsActive()
+  // attempt to connect eagerly on mount
+  useEffect(() => {
+    if (connector.connectEagerly) void connector.connectEagerly();
+  }, []);
 
-  const provider = useProvider()
-  const ENSNames = useENSNames(provider)
-
-  
   return (
-    <StyledContainer onClick={onClick} disabled={loading || disabled}>
-      {loading && (
+    <StyledContainer
+      onClick={() => onClick(connector, error, isActivating, isActive)}
+      disabled={isActivating || !ethereum}
+    >
+      {isActivating && (
         <LoaderContainer>
           <Loader type="TailSpin" color="#aaa" height={50} width={50} />
         </LoaderContainer>

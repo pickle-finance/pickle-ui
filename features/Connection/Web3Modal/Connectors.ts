@@ -1,15 +1,13 @@
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { CloverConnector } from "@clover-network/clover-connector";
 import { Chains } from "picklefinance-core";
 
-import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
+import { initializeConnector, useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import type { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { hooks as metaMaskHooks, metaMask } from './MetaMaskConnectorItem'
-import { hooks as walletConnectHooks, walletConnect } from './WalletConnectConnectorItem'
+import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
+import ConnectorItem from "./ConnectorItem";
+import { useTranslation } from "next-i18next";
 
 
 const POLLING_INTERVAL = 12000;
@@ -46,8 +44,25 @@ RPC_URLS[1] = process.env.infura;
 // export const cloverconnect = new CloverConnector({
 //   supportedChainIds: [1],
 // });
-export {metaMask,walletConnect};
 
+export const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>((actions) => new MetaMask(actions));
+
+export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
+  (actions) =>
+    new WalletConnect(actions, {
+      rpc: RPC_URLS,
+    }),
+  Object.keys(RPC_URLS).map((chainId) => Number(chainId)),
+);
+
+export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
+  (actions) =>
+    new CoinbaseWallet(actions, {
+      url: RPC_URLS[1][0],
+      appName: "Pickle Finance",
+      appLogoUrl: "pickle.png",
+    }),
+);
 
 
 function getName(connector: Connector) {
@@ -58,17 +73,45 @@ function getName(connector: Connector) {
   return 'Unknown'
 }
 
-export function getHooks(connector: Connector): Web3ReactHooks|undefined {
-  if (connector instanceof MetaMask) return metaMaskHooks
-  if (connector instanceof WalletConnect) return walletConnectHooks
+export function getHooks(connector: Connector): Web3ReactHooks | undefined {
+  if (connector instanceof CoinbaseWallet) return coinbaseWalletHooks;
+  if (connector instanceof MetaMask) return metaMaskHooks;
+  if (connector instanceof WalletConnect) return walletConnectHooks;
 }
 
-export const connectors: [MetaMask | WalletConnect /* | CoinbaseWallet | Network */, Web3ReactHooks][] = [
+export const connectorsAndHooks: [Connector, Web3ReactHooks][] = [
   [metaMask, metaMaskHooks],
   [walletConnect, walletConnectHooks],
-  // [coinbaseWallet, coinbaseWalletHooks],
+  [coinbaseWallet, coinbaseWalletHooks],
   // [network, networkHooks],
 ]
+
+export const connectorItemList = [
+    {
+      icon: "metamask.svg",
+      title: "connection.metamask",   // translation string
+      connector: metaMask,
+      hooks: metaMaskHooks,
+    },
+    {
+      icon: "walletconnect.svg",
+      title: "connection.walletConnect",  // translation string
+      connector: walletConnect,
+      hooks: walletConnectHooks,
+    },
+    {
+      icon: "coinbase.svg",
+      title: "connection.coinbase",   // translation string
+      connector: coinbaseWallet,
+      hooks: coinbaseWalletHooks,
+    },
+    // {
+    //   icon: "clover.svg",
+    //   title: t("connection.clover"),
+    //   connector: metaMask,
+    //   hooks: metaMaskHooks,
+    // },
+  ];
 
 function Child() {
   const { connector } = useWeb3React()
