@@ -103,6 +103,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xFCfDFC98062d13a11cec48c44E4613eB26a34293": (
     <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/cow.png"} />
   ),
+  // APE/WETH 0.3%
+  "0xAc4b3DacB91461209Ae9d41EC517c2B9Cb1B7DAF": (
+    <LpIcon swapIconSrc={"/uniswap.png"} tokenIconSrc={"/tokens/apecoin.png"} />
+  ),
 };
 
 function sleep(ms: number) {
