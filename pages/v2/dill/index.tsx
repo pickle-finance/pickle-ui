@@ -17,7 +17,7 @@ const Dill: PickleFinancePage = () => {
     <div className="w-full xl:w-4/5 mb-5">
       {core ? (
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-10">
+          <div className="grid relative grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-10">
             <DillInfo />
           </div>
           <div className="mb-3">

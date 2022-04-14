@@ -60,6 +60,7 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
           buttonType="secondary"
           harvestableAmount={details.harvestableAmount}
           network={details.network}
+          showNetworkSwitch
         />
       </div>
     </div>
@@ -69,8 +70,12 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
 const HarvestModal: FC<Props> = ({ isOpen, closeModal, harvestables }) => {
   const { t } = useTranslation("common");
   const safeHarvestables = harvestables === undefined ? [] : harvestables;
+
+  // Close modal once user harvests their last reward.
+  if (safeHarvestables.length === 0) closeModal();
+
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title={t("v2.farms.harvestRewards")}>
+    <Modal size="wide" isOpen={isOpen} closeModal={closeModal} title={t("v2.farms.harvestRewards")}>
       <div className="grid gap-9">
         {safeHarvestables.map((harvestable) => (
           <RewardRow key={harvestable.descriptor} details={harvestable} />
