@@ -26,6 +26,8 @@ import MoreInfo from "v2/components/MoreInfo";
 import { FEE_DISTRIBUTOR_ADDRESS, formatDollars, roundToSignificantDigits } from "v2/utils";
 import { useDistributorContract } from "v2/features/dill/flows/hooks";
 import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
+import ConnectButton from "../../ConnectButton";
+import { useNeedsNetworkSwitch } from "v2/hooks";
 
 export type Rewarder = "farm" | "dill";
 
@@ -36,6 +38,7 @@ interface Props {
   harvestableAmount: BigNumber;
   network: ChainNetwork;
   rewarderType: Rewarder;
+  showNetworkSwitch?: boolean;
 }
 
 /**
@@ -49,6 +52,7 @@ const HarvestFlow: FC<Props> = ({
   harvestableAmount,
   network,
   rewarderType,
+  showNetworkSwitch,
 }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -56,11 +60,12 @@ const HarvestFlow: FC<Props> = ({
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
+  const { network: jarNetwork, needsNetworkSwitch } = useNeedsNetworkSwitch(network);
 
   const chain = core?.chains.find((chain) => chain.network === network);
+
   const FarmContract = useFarmContract(farmDetails(asset)?.farmAddress, chain);
   const DistributorContract = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS);
-
   const picklePendingAmount = parseFloat(ethers.utils.formatEther(harvestableAmount));
 
   const transactionFactory = () => {
@@ -101,13 +106,11 @@ const HarvestFlow: FC<Props> = ({
         pickles = harvestEvents[0].args.amount;
       }
 
-      const picklePending = harvestableAmount.sub(pickles).toString();
-
       dispatch(
         UserActions.setTokenData({
           apiKey: asset.details.apiKey,
           data: {
-            picklePending,
+            picklePending: "0",
           },
         }),
       );
@@ -116,7 +119,7 @@ const HarvestFlow: FC<Props> = ({
       const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
       pickles = claimedEvents[0].args.amount;
 
-      dispatch(UserActions.setDillData({ claimable: harvestableAmount.sub(pickles).toString() }));
+      dispatch(UserActions.setDillData({ claimable: "0" }));
     }
 
     dispatch(UserActions.addHarvestedPickles({ chain: network, amount: pickles.toString() }));
@@ -136,14 +139,18 @@ const HarvestFlow: FC<Props> = ({
 
   return (
     <>
-      <Button
-        type={buttonType}
-        size={buttonSize}
-        state={picklePendingAmount > 0 ? "enabled" : "disabled"}
-        onClick={openModal}
-      >
-        {t("v2.farms.harvest")}
-      </Button>
+      {needsNetworkSwitch && showNetworkSwitch ? (
+        <ConnectButton size={buttonSize} network={jarNetwork} />
+      ) : (
+        <Button
+          type={buttonType}
+          size={buttonSize}
+          state={picklePendingAmount > 0 ? "enabled" : "disabled"}
+          onClick={openModal}
+        >
+          {t("v2.farms.harvest")}
+        </Button>
+      )}
       <Modal isOpen={isModalOpen} closeModal={closeModal} title={t("v2.dashboard.harvestRewards")}>
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmationNoUserInput
