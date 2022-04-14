@@ -57,12 +57,15 @@
     "connectTo": "Connect to"
   },
   "frax": {
+    "aprBreakdown": "APR breakdown",
     "connectionPrompt": "Please switch to Ethereum network to use FRAX features.",
     "description": "Convert your FXS to pveFXS and earn FXS fee distribution rewards plus a share of boosted FXS rewards from our Uniswap v3 Jars",
     "frax": "Frax Brinery",
     "deposit": "This vault accepts FXS in exchange for a perpetual claim on Frax protocol fees. Your initially locked FXS cannot be redeemed, but a receipt token pveFXS is issued to represent your proportionate share of locked FXS",
     "apy": "FXS APR",
     "locked": "FXS locked with Pickle",
+    "fxsDistribution": "FXS distribution",
+    "flywheelProfits": "Flywheel profits",
     "tvl": "FXS value locked with Pickle",
     "info": "Info",
     "userLocked": "Your locked FXS",

@@ -5,7 +5,7 @@ import { Balances } from "./Balances";
 import { Connection } from "./Connection";
 import { useFetchJars } from "./Jars/useFetchJars";
 import { useJarWithAPY as useJarsWithAPYPFCore } from "./Jars/useJarsWithAPYPFCore";
-import { BPAddresses } from "./config";
+import { BPAddresses, FraxAddresses } from "./config";
 import { PICKLE_ETH_SLP } from "./Contracts";
 import { PickleCore } from "./Jars/usePickleCore";
 import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
@@ -45,7 +45,7 @@ function useJars() {
       const addedTokens = [...wants, ...pTokens, ...uniV3Underlying];
 
       if (chainName === ChainNetwork.Ethereum)
-        addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM);
+        addedTokens.push(PICKLE_ETH_SLP, BPAddresses.LUSD, BPAddresses.pBAMM, FraxAddresses.FXS);
       addTokens(addedTokens);
     }
   }, [jarsWithTVL]);

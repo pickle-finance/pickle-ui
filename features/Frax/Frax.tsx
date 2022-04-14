@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Link, Input, Grid, Spacer, Card } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Card, Tooltip } from "@geist-ui/react";
+import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { formatPercent } from "../../util/number";
@@ -30,7 +31,15 @@ export const FraxFeature: FC = () => {
   } = ERC20Transfer.useContainer();
   const { setButtonStatus } = useButtonStatus();
 
-  const { fxsBalance, fxsApr, userLockedFxs, userPendingFxs, pickleLockedFxs, tvl } = useFrax();
+  const {
+    fxsBalance,
+    fxsApr,
+    userLockedFxs,
+    userPendingFxs,
+    pickleLockedFxs,
+    tvl,
+    flywheelApr,
+  } = useFrax();
 
   const [depositAmount, setDepositAmount] = useState("");
   const [depositButton, setDepositButton] = useState<ButtonStatus>({
@@ -50,6 +59,10 @@ export const FraxFeature: FC = () => {
 
     setButtonStatus(claimStatus, t("dill.claiming"), t("dill.claim"), setClaimButton);
   }, [erc20TransferStatuses, fxsBalance]);
+
+  const tooltipText = ` ${t("frax.aprBreakdown")}<br/><br/>${t(
+    "frax.fxsDistribution",
+  )}: ${formatPercent(fxsApr)}<br/>${t("frax.flywheelProfits")}: ${formatPercent(flywheelApr)}<br/>ㅤ`;
 
   return (
     <>
@@ -90,7 +103,7 @@ export const FraxFeature: FC = () => {
                     recipient: FraxAddresses.veFXSVault,
                     transferCallback: async () => {
                       return vefxsVault.connect(signer).deposit(parseEther(depositAmount), {
-                        gasLimit: 1200000,
+                        gasLimit: 900000,
                       });
                     },
                   });
@@ -135,7 +148,13 @@ export const FraxFeature: FC = () => {
             <Card>
               <h2>{t("frax.info")}</h2>
               <div>
-                {t("frax.apy")}: {formatPercent(fxsApr)}
+                {t("frax.apy")}:{" "}
+                <Tooltip
+                  text={flywheelApr + fxsApr === 0 ? "--" : ReactHtmlParser(tooltipText)}
+                  style={{ marginTop: 5 }}
+                >
+                  <div style={{ display: "flex" }}>{formatPercent(flywheelApr + fxsApr)}</div>
+                </Tooltip>
               </div>
               &nbsp;
               <div>
