@@ -8,6 +8,7 @@ import { UserSelectors } from "v2/store/user";
 import { Sort } from "v2/store/controls";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import LoadingIndicator from "v2/components/LoadingIndicator";
+import { formatEther } from "ethers/lib/utils";
 
 const isPresent = (value: string): boolean => value !== "0";
 const hasBalances = (x: UserTokenData): boolean =>
@@ -25,6 +26,8 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescr
   const { t } = useTranslation("common");
   const core = useSelector(CoreSelectors.selectCore);
   const userModel = useSelector(UserSelectors.selectData);
+  const userDillRatio =
+    parseFloat(formatEther(userModel?.dill?.balance || "0")) / (core?.dill?.totalDill || 1);
   let jars = useSelector(CoreSelectors.makeJarsSelector({ filtered: !simple, paginated: !simple }));
 
   // TODO Should be all assets, not just jars
@@ -73,7 +76,12 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescr
   return (
     <>
       {jars.map((jar) => (
-        <FarmsTableRow key={jar.details.apiKey} jar={jar} simple={simple} />
+        <FarmsTableRow
+          key={jar.details.apiKey}
+          jar={jar}
+          simple={simple}
+          userDillRatio={userDillRatio}
+        />
       ))}
     </>
   );

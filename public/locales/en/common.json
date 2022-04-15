@@ -422,6 +422,7 @@
       "approveToken": "Approve {{ token }}",
       "apy": "APY",
       "apyBreakdown": "APY breakdown",
+      "apyUnavailable": "APY Range Unavailable",
       "asset": "Asset",
       "baseApr": "Base APR",
       "baseAprTooltip": "This is the base APR of the jar, without the effects of compounding",
@@ -485,7 +486,8 @@
       "unstakeToken": "Unstake {{ token }}",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
       "withdrawToken": "Withdraw {{ token }}",
-      "yieldRates": "Yield rates"
+      "yieldRates": "Yield rates",
+      "yourApy": "Your APY: {{ apy }}"
     },
     "gasPrices": {
       "fast": "Fast",

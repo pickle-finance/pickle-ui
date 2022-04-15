@@ -10,15 +10,21 @@ import { JarWithData } from "v2/store/core";
 interface Props {
   simple?: boolean;
   jar: JarWithData;
+  userDillRatio: number;
   hideDescription?: boolean;
 }
 
-const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription }) => {
+const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio }) => {
   if (simple)
     return (
       <>
         <tr className="group">
-          <FarmsTableRowHeader open={false} simple={simple} jar={jar} />
+          <FarmsTableRowHeader
+            open={false}
+            simple={simple}
+            jar={jar}
+            userDillRatio={userDillRatio}
+          />
         </tr>
         <FarmsTableSpacerRow />
       </>
@@ -34,7 +40,12 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription }) => {
               // No hover state when the row is expaned.
               className={classNames(!open && "group", !simple && "cursor-pointer")}
             >
-              <FarmsTableRowHeader open={open} simple={simple} jar={jar} />
+              <FarmsTableRowHeader
+                open={open}
+                simple={simple}
+                jar={jar}
+                userDillRatio={userDillRatio}
+              />
             </Disclosure.Button>
 
             <Transition
