@@ -5,8 +5,10 @@ import { useTranslation } from "next-i18next";
 import { DillDetails } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { CoreSelectors } from "v2/store/core";
-import { formatDollars, formatDate, formatNumber } from "v2/utils";
+import { formatDollars, formatDate, formatNumber, formatPercentage } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
+import { useProtocolIncome } from "./flows/hooks";
+import { PickleModelJson } from "picklefinance-core";
 
 interface Props {
   dill: DillDetails;
@@ -14,9 +16,18 @@ interface Props {
 
 const RevenueStats: FC<Props> = ({ dill }) => {
   const { t } = useTranslation("common");
+  const core = useSelector(CoreSelectors.selectCore);
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
+  const { weeklyDistribution } = useProtocolIncome(
+    core ? core : ({} as PickleModelJson.PickleModelJson),
+  );
   const { dillWeeks } = dill;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
+
+  const dillAPY =
+    weeklyDistribution && dill.totalDill
+      ? (weeklyDistribution / (dill.totalDill * picklePrice)) * 52
+      : 0;
 
   return (
     <>
@@ -61,8 +72,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         </div>
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
-            {/* TODO update this */}
-            101.78%
+            {formatPercentage(dillAPY)}
           </h2>
           <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.currentAPY")}
