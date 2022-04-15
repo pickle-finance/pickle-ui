@@ -26,8 +26,16 @@ interface RewardRowPropWrapper {
   details: RewardRowProps;
 }
 
+/**
+ * Any reward amount lower than this will show up as 0 when
+ * formatted so skip those rows altogether to avoid confusion.
+ */
+const threshold = BigNumber.from("1000000000000");
+
 const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
   const picklePendingAmount = parseFloat(ethers.utils.formatUnits(details.harvestableAmount, 18));
+
+  if (details.harvestableAmount.lt(threshold)) return null;
 
   return (
     <div className="flex justify-between font-body">

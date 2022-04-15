@@ -129,6 +129,7 @@ const HarvestFlow: FC<Props> = ({
     transactionFactory(),
     callback,
     send,
+    true,
   );
 
   const openModal = () => {
