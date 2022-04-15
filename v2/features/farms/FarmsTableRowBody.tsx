@@ -13,9 +13,10 @@ import ConnectButton from "./ConnectButton";
 
 interface Props {
   jar: JarWithData;
+  hideDescription?: boolean;
 }
 
-const FarmsTableRowBody: FC<Props> = ({ jar }) => {
+const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
   const { t } = useTranslation("common");
   const pfcore = useAppSelector(CoreSelectors.selectCore);
   const userModel = useAppSelector(UserSelectors.selectData);
@@ -64,7 +65,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar }) => {
           )}
         </div>
       </div>
-      <FarmsTableRowDetails jar={jar} />
+      <FarmsTableRowDetails jar={jar} hideDescription={hideDescription} />
     </td>
   );
 };

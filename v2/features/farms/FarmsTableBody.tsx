@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 
 import FarmsTableRow from "./FarmsTableRow";
-import { CoreSelectors } from "v2/store/core";
+import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { Sort } from "v2/store/controls";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
@@ -17,9 +17,11 @@ interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
   sort?: Sort;
+  asset?: JarWithData;
+  hideDescription?: boolean;
 }
 
-const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
+const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescription }) => {
   const { t } = useTranslation("common");
   const core = useSelector(CoreSelectors.selectCore);
   const userModel = useSelector(UserSelectors.selectData);
@@ -56,6 +58,16 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel }) => {
           {t("v2.farms.noResults")}
         </td>
       </tr>
+    );
+
+  if (asset)
+    return (
+      <FarmsTableRow
+        key={asset.details?.apiKey}
+        jar={asset}
+        simple={simple}
+        hideDescription={hideDescription}
+      />
     );
 
   return (

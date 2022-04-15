@@ -10,9 +10,10 @@ import { JarWithData } from "v2/store/core";
 interface Props {
   simple?: boolean;
   jar: JarWithData;
+  hideDescription?: boolean;
 }
 
-const FarmsTableRow: FC<Props> = ({ jar, simple }) => {
+const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription }) => {
   if (simple)
     return (
       <>
@@ -46,7 +47,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple }) => {
               leaveTo="opacity-0"
             >
               <Disclosure.Panel as="tr">
-                <FarmsTableRowBody jar={jar} />
+                <FarmsTableRowBody jar={jar} hideDescription={hideDescription} />
               </Disclosure.Panel>
             </Transition>
           </>
