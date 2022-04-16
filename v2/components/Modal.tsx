@@ -18,7 +18,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal"
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={closeModal}>
+      <Dialog as="div" className="fixed inset-0 z-220 overflow-y-auto" onClose={closeModal}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
@@ -31,7 +31,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal"
           >
             <Dialog.Overlay
               className={classNames(
-                "fixed inset-0 z-40 transition-all bg-background-light bg-opacity-50",
+                "fixed inset-0 z-210 transition-all bg-background-light bg-opacity-50",
                 // Impossible to render smoothly over a blurred background.
                 !isConfettiOn && "backdrop-filter backdrop-blur-sm",
               )}
@@ -53,7 +53,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal"
           >
             <div
               className={classNames(
-                "relative inline-block w-full align-middle bg-background-light rounded-2xl border border-foreground-alt-500 z-50 transition-all",
+                "relative inline-block w-full align-middle bg-background-light rounded-2xl border border-foreground-alt-500 z-220 transition-all",
                 size === "normal" && "max-w-md",
                 size === "wide" && "max-w-lg",
               )}
