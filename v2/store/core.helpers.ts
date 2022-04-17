@@ -29,9 +29,20 @@ const allAssets = (core: PickleModelJson): Asset[] => [
   ...core.assets.external,
 ];
 
+export const findJar = (
+  apiKey: string,
+  core: PickleModelJson | undefined,
+): JarDefinition | undefined => {
+  if (!core) return;
+
+  return core.assets.jars.find((jar) => jar.details?.apiKey.toUpperCase() === apiKey.toUpperCase());
+};
+
 export const findAsset = (apiKey: string, core: PickleModelJson): Asset | undefined => {
   const assets = allAssets(core);
-  const asset = assets.find((asset) => asset.details?.apiKey === apiKey.toUpperCase());
+  const asset = assets.find(
+    (asset) => asset.details?.apiKey.toUpperCase() === apiKey.toUpperCase(),
+  );
 
   return asset;
 };

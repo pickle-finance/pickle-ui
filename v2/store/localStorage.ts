@@ -1,4 +1,4 @@
-import { Reducer } from "@reduxjs/toolkit";
+import { AnyAction, Reducer } from "@reduxjs/toolkit";
 
 type StoreStateObject = {
   [key: string]: any;
@@ -6,11 +6,11 @@ type StoreStateObject = {
 
 const STORE_KEY = "pickle-finance-storage";
 
-export const persistSlice = (reducer: Reducer, name: string = "reducer"): any => (
-  state: any,
-  action: any,
-) => {
-  if (typeof window === "undefined") return reducer;
+export const persistSlice = <T>(reducer: Reducer<T>, name: string = "reducer"): Reducer<T> => (
+  state: T | undefined,
+  action: AnyAction,
+): T => {
+  if (typeof window === "undefined") return reducer as any;
 
   const storageItem = localStorage.getItem(STORE_KEY);
   let store: StoreStateObject = storageItem ? JSON.parse(storageItem) : {};
