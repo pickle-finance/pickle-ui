@@ -13,26 +13,27 @@ import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
 import { formatUsd } from "util/api";
-import { findAsset, visibleStringForAsset } from "v2/store/core.helpers";
+import { findAsset, findJar, visibleStringForAsset } from "v2/store/core.helpers";
 
 export const getTotalBalances = (
   core: PickleModelJson.PickleModelJson,
   userdata: UserData,
 ): string => {
-  let runningUsd = 0;
+  const balance = Object.entries(userdata.tokens).reduce((result, [key]) => {
+    const jar = findJar(key, core);
 
-  Object.entries(userdata.tokens).forEach(([key]) => {
-    const jar = core.assets.jars.find((x) => x.details?.apiKey === key.toUpperCase());
-    if (jar) {
-      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
-      if (data) {
-        runningUsd += data.depositTokensInJar.tokensUSD || 0;
-        runningUsd += data.depositTokensInFarm.tokensUSD || 0;
-      }
+    if (!jar) return result;
+
+    const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
+    if (data) {
+      result += data.depositTokensInJar.tokensUSD || 0;
+      result += data.depositTokensInFarm.tokensUSD || 0;
     }
-  });
 
-  return formatUsd(runningUsd);
+    return result;
+  }, 0);
+
+  return formatUsd(balance);
 };
 
 export const getPendingRewardsUsd = (
@@ -59,7 +60,7 @@ export const getPendingHarvestsUsd = (
   let runningUsd = 0;
 
   Object.entries(userdata.tokens).forEach(([key, tokenData]) => {
-    const jar = core.assets.jars.find((x) => x.details?.apiKey === key.toUpperCase());
+    const jar = findJar(key, core);
 
     if (!jar) return;
 
@@ -83,21 +84,18 @@ export const getPendingHarvestsUsd = (
 export const getUserAssetDataWithPricesForJars = (
   core: PickleModelJson.PickleModelJson,
   userdata: UserData,
-): UserAssetDataWithPrices[] => {
-  const ret: UserAssetDataWithPrices[] = [];
+): UserAssetDataWithPrices[] =>
+  Object.entries(userdata.tokens).reduce((result, [key]) => {
+    const jar = findJar(key, core);
 
-  Object.entries(userdata.tokens).forEach(([key]) => {
-    const jar = core.assets.jars.find((x) => x.details?.apiKey === key.toUpperCase());
-    if (jar) {
-      const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
-      if (data) {
-        ret.push(data);
-      }
-    }
-  });
+    if (!jar) return result;
 
-  return ret;
-};
+    const data: UserAssetDataWithPrices = getUserAssetDataWithPrices(jar, core, userdata);
+
+    if (data) result.push(data);
+
+    return result;
+  }, [] as UserAssetDataWithPrices[]);
 
 export const getRewardRowPropertiesForRewards = (
   core: PickleModelJson.PickleModelJson,
@@ -109,7 +107,10 @@ export const getRewardRowPropertiesForRewards = (
   for (let i = 0; i < jarData.length; i++) {
     const { assetId } = jarData[i];
     const descriptor = visibleStringForAsset(assetId, core) || "";
-    const asset = findAsset(assetId, core)!;
+    const asset = findAsset(assetId, core);
+
+    if (!asset) continue;
+
     const earnedPickles = parseFloat(jarData[i].earnedPickles.tokens);
 
     if (earnedPickles > 0) {

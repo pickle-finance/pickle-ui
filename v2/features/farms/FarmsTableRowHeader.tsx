@@ -66,6 +66,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
   const totalTokensInJarAndFarm =
     parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
   const depositTokenUSD = jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
+  const stakedTokensUSD = jar.depositTokensInFarm.tokensUSD;
   const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
   const picklesPending = jar.earnedPickles.tokensVisible;
   const depositTokenCountString = t("v2.farms.tokens", { amount: totalTokensInJarAndFarm });
@@ -85,7 +86,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open }) => {
       </RowCell>
       <RowCell>
         <div className="flex items-center">
-          <FarmsBadge active={depositTokenUSD > 0} />
+          <FarmsBadge active={stakedTokensUSD > 0} />
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5">
               {formatDollars(depositTokenUSD)}

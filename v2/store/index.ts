@@ -16,7 +16,7 @@ export const store = configureStore({
     core: coreReducer,
     docs: docsReducer,
     connection: connectionReducer,
-    user: persistSlice(userReducer, "user"),
+    user: persistSlice(userReducer, "user") as typeof userReducer,
     controls: controlsReducer,
     theme: themeReducer,
     offchainVotes: voteReducer,
