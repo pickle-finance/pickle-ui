@@ -78,7 +78,7 @@ const HarvestFlow: FC<Props> = ({
       if (network === ChainNetwork.Ethereum) return () => (FarmContract as Gauge).getReward();
 
       const poolId = farmDetails(asset)?.details?.poolId;
-      if (!poolId) return;
+      if (poolId === undefined) return;
 
       return () => (FarmContract as Minichef).harvest(poolId, account);
     }

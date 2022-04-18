@@ -57,7 +57,7 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
     }
 
     const poolId = jar.farm?.details?.poolId;
-    if (!poolId) return;
+    if (poolId === undefined) return;
 
     return () => (FarmContract as Minichef).deposit(poolId, amount, account);
   };

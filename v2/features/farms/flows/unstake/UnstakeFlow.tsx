@@ -66,7 +66,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
     }
 
     const poolId = jar.farm?.details?.poolId;
-    if (!poolId) return;
+    if (poolId === undefined) return;
 
     if (isExiting)
       return () => (FarmContract as Minichef).withdrawAndHarvest(poolId, amount, account);
