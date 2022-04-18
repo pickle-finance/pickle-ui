@@ -8,7 +8,7 @@ import { ChainNetwork, Chains } from "picklefinance-core";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { stateMachine, Actions, States } from "../stateMachineNoUserInput";
-import AwaitingConfirmation from "./AwaitingConfirmation";
+import AwaitingConfirmationNoUserInput from "../AwaitingConfirmationNoUserInput";
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
@@ -91,11 +91,12 @@ const ApprovalFlow: FC<Props> = ({
         title={t("v2.farms.approveToken", { token: tokenName })}
       >
         {current.matches(States.AWAITING_CONFIRMATION) && (
-          <AwaitingConfirmation
-            tokenName={tokenName}
+          <AwaitingConfirmationNoUserInput
+            title={t("v2.farms.givePermission", { token: tokenName })}
             error={error}
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}
+            cta={t("v2.actions.approve")}
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (

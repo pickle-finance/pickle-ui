@@ -4,6 +4,7 @@ import { toast, ToastOptions } from "react-toastify";
 import { PickleModelJson } from "picklefinance-core";
 import gaugeProxyAbi from "../../../../containers/ABIs/gauge-proxy.json";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { findJar } from "v2/store/core.helpers";
 
 const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 
@@ -16,11 +17,7 @@ const castVoteMainnet = (
   const newWeights: BigNumber[] = [];
 
   selectedJars.forEach((jar) => {
-    const jarFromPfcore: JarDefinition | undefined = core
-      ? core.assets.jars.find((j) =>
-          j && j.details && j.details.apiKey ? j.details.apiKey === jar : false,
-        )
-      : undefined;
+    const jarFromPfcore = findJar(jar, core);
     const jarContract = jarFromPfcore ? jarFromPfcore?.contract : "";
     if (jarContract === "") toast.error(`Unable to locate address of ${jar}.`, toastSettings);
     const inputElement = document.getElementById(jar) as HTMLInputElement;

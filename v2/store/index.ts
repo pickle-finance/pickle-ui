@@ -8,6 +8,7 @@ import userReducer from "./user";
 import controlsReducer from "./controls";
 import themeReducer from "./theme";
 import voteReducer from "./offchainVotes";
+import { persistSlice } from "./localStorage";
 import { listenerMiddleware } from "./listenerMiddleware";
 
 export const store = configureStore({
@@ -15,7 +16,7 @@ export const store = configureStore({
     core: coreReducer,
     docs: docsReducer,
     connection: connectionReducer,
-    user: userReducer,
+    user: persistSlice(userReducer, "user") as typeof userReducer,
     controls: controlsReducer,
     theme: themeReducer,
     offchainVotes: voteReducer,

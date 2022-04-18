@@ -1,6 +1,7 @@
 import { FC, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
+
 import { useAppSelector } from "v2/store";
 import { ThemeSelectors } from "v2/store/theme";
 import { classNames } from "v2/utils";
@@ -9,14 +10,15 @@ interface Props {
   isOpen: boolean;
   closeModal: () => void;
   title: string;
+  size?: "normal" | "wide";
 }
 
-const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
+const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal" }) => {
   const isConfettiOn = useAppSelector(ThemeSelectors.selectIsConfettiOn);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={closeModal}>
+      <Dialog as="div" className="fixed inset-0 z-220 overflow-y-auto" onClose={closeModal}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
@@ -29,7 +31,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
           >
             <Dialog.Overlay
               className={classNames(
-                "fixed inset-0 z-40 transition-all bg-background-light bg-opacity-50",
+                "fixed inset-0 z-210 transition-all bg-background-light bg-opacity-50",
                 // Impossible to render smoothly over a blurred background.
                 !isConfettiOn && "backdrop-filter backdrop-blur-sm",
               )}
@@ -49,7 +51,13 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-110"
           >
-            <div className="relative inline-block w-full max-w-md align-middle bg-background-light rounded-2xl border border-foreground-alt-500 z-50 transition-all">
+            <div
+              className={classNames(
+                "relative inline-block w-full align-middle bg-background-light rounded-2xl border border-foreground-alt-500 z-220 transition-all",
+                size === "normal" && "max-w-md",
+                size === "wide" && "max-w-lg",
+              )}
+            >
               <Dialog.Title
                 as="div"
                 className="flex justify-between items-center text-lg text-left font-title font-medium leading-6 text-foreground px-6 py-4 sm:px-8 sm:py-6 border-b border-foreground-alt-500"

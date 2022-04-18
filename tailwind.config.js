@@ -68,7 +68,14 @@ module.exports = {
         3: "3px",
       },
       zIndex: {
+        // Standard elements, hover states
         60: 60,
+        70: 70,
+        80: 80,
+        // Popovers, modals, overlays
+        200: 200,
+        210: 210,
+        220: 220,
       },
     },
   },

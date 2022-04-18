@@ -22,7 +22,7 @@ const SlideOverMenu: FC = () => {
         <Dialog
           as="div"
           static
-          className="fixed inset-0 overflow-hidden z-60"
+          className="fixed inset-0 overflow-hidden z-200"
           open={isOpen}
           onClose={() => setIsOpen(false)}
         >

@@ -30,7 +30,7 @@ const TokenIcon: FC<TokenIconProps> = ({ component, index, isLast }) => {
   return (
     <div
       className={classNames(
-        "w-10 h-10 rounded-full border-3 border-foreground-alt-400 z-10 hover:scale-125 duration-200 hover:z-50",
+        "w-10 h-10 rounded-full border-3 border-foreground-alt-400 hover:scale-125 duration-200 hover:z-80",
         /**
          * Allow me, dear reader, to ask you not to dismiss this code as something
          * written by a complete idiot, "clean it up", and ultimately break it.
@@ -38,10 +38,12 @@ const TokenIcon: FC<TokenIconProps> = ({ component, index, isLast }) => {
          * are used explicitly in the code, they will get purged. Hence, we can't build
          * these classes dynamically. We assume no more than 4 components per farm.
          */
-        index === 0 && "z-40",
-        index === 1 && "z-30",
-        index === 2 && "z-20",
-        index === 3 && "z-10",
+        index === 0 && "z-70",
+        index === 1 && "z-60",
+        index === 2 && "z-50",
+        index === 3 && "z-40",
+        index === 4 && "z-30",
+        index === 5 && "z-20",
         index > 0 && "-ml-4",
         isLast && "mr-3",
       )}
@@ -69,7 +71,7 @@ const ProtocolIcon: FC<ProtocolIconProps> = ({ protocol }) => {
 
   return (
     <div
-      className="absolute -top-3 -right-3 z-50 w-7 h-7 rounded-full border-3 border-foreground-alt-400 -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200"
+      className="absolute -top-3 -right-3 z-80 w-7 h-7 rounded-full border-3 border-foreground-alt-400 -ml-3 mr-3 opacity-0 scale-50 group-hover:scale-100 group-hover:opacity-100 duration-200"
       style={{
         background: isLoaded ? defaultBackgroundColor : brandColor(sanitizedProtocolName),
       }}

@@ -6,6 +6,7 @@ import TableSpacerRow from "./TableSpacerRow";
 import { iOffchainVoteData, UserVote } from "v2/store/offchainVotes";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { BigNumber } from "ethers";
+import { findJar } from "v2/store/core.helpers";
 
 const JarTableRow: FC<{
   jar: string;
@@ -168,7 +169,7 @@ const getMainnetUserWeight = (
   core: PickleModelJson.PickleModelJson,
   user: UserData | undefined,
 ) => {
-  const jarFromPfcore = core.assets.jars.find((j) => j.details?.apiKey === jarKey);
+  const jarFromPfcore = findJar(jarKey, core);
   const jarContract = jarFromPfcore?.contract || "";
   if (user) {
     let totalWeight = BigNumber.from("0");

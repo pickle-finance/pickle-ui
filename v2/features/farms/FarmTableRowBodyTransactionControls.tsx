@@ -1,9 +1,8 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
-import Button from "v2/components/Button";
 import { JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { jarDecimals } from "v2/utils/user";
@@ -15,6 +14,7 @@ import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
 import { roundToSignificantDigits } from "v2/utils";
+import HarvestFlow from "./flows/harvest/HarvestFlow";
 
 interface Props {
   jar: JarWithData;
@@ -110,9 +110,12 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
               <span className="font-title text-primary font-medium text-base leading-5">
                 {roundToSignificantDigits(picklePending, 3)}
               </span>
-              <Button type="primary" state="disabled">
-                {t("v2.farms.harvest")}
-              </Button>
+              <HarvestFlow
+                rewarderType="farm"
+                asset={jar}
+                harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
+                network={jar.chain}
+              />
             </div>
           </div>
           <div className="relative">
