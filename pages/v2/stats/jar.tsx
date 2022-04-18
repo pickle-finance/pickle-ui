@@ -9,27 +9,26 @@ import ChartContainer from "v2/features/stats/jar/ChartContainer";
 import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
-import { useAppSelector } from "v2/store";
-import { DocsSelectors } from "v2/store/docs";
 
 const Stats: PickleFinancePage = () => {
   const router = useRouter();
   const apiKey: string = typeof router.query.jar === "string" ? router.query.jar : "";
 
   const core = useSelector(CoreSelectors.selectCore);
-  const jarDocs = useAppSelector((state) => DocsSelectors.selectJarDocs(state, apiKey));
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
 
   let assets = useSelector(CoreSelectors.makeJarsSelector({ filtered: false, paginated: false }));
   const asset: JarWithData =
     assets.find((a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase()) ||
     ({} as JarWithData);
+
   useEffect(() => {
     const getData = async (): Promise<void> => {
       getJarData(apiKey).then((data) => setJarData(data));
     };
     getData();
   }, [apiKey]);
+
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">

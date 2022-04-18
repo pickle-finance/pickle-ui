@@ -69,7 +69,7 @@ const FarmsTable: FC<Props> = ({
                 />
               </tbody>
             </table>
-            {!simple && (
+            {!simple && !singleAsset && (
               <div className="flex justify-center mt-4">
                 <Pagination />
               </div>

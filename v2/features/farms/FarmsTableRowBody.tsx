@@ -47,7 +47,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
           <br />
           {analyticsUrl && (
             <Link href={analyticsUrl as string} className="font-bold" external primary>
-              {t("v2.farms.analytics")}
+              {t("v2.farms.statsAndDocs")}
             </Link>
           )}
         </div>

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { renderHtmlFromString } from "v2/utils";
 import { AssetDocumentationResult } from "picklefinance-core/lib/docModel/DocsInterfaces";
 import { useTranslation } from "next-i18next";
@@ -17,14 +17,22 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
               {t("v2.farms.docs.description")}
             </h2>
             <div className="text-sm text-foreground">{renderHtmlFromString(description)}</div>
-            {Object.keys(componentTokens).map((token) => (
-              <>
-                <h2 className="font-body font-bold text-foreground-alt-200 mb-1 mt-3">
-                  {token.toUpperCase()}
-                </h2>
-                <p className="text-sm text-foreground">{t(componentTokens[token])}</p>
-              </>
-            ))}
+            <h2 className="font-body font-bold text-foreground-alt-200 mt-3 mb-1">
+              {t("v2.farms.docs.relatedTokens")}
+            </h2>
+            {Object.keys(componentTokens).map((token) => {
+              console.log(componentTokens);
+              return (
+                <>
+                  <h2 className="font-body text-foreground-alt-200 mb-1 mt-3">
+                    {token.toUpperCase()}
+                  </h2>
+                  <p className="text-sm text-foreground text-justify indent-4">
+                    {<TokenText text={componentTokens[token].replace(":", "-")} />}
+                  </p>
+                </>
+              );
+            })}
           </div>
           <div>
             <div className="mb-2">
@@ -64,6 +72,31 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
       </div>
     </>
   );
+};
+
+const TokenText: FC<{ text: string }> = ({ text }) => {
+  let [isMore, setIsMore] = useState(false);
+  const { t } = useTranslation("common");
+
+  if (text.length > 400)
+    return (
+      <>
+        <span className="text-sm text-foreground text-justify indent-4">
+          {text.slice(0, 300).concat("... ")}
+        </span>
+        {isMore ? (
+          <span className="text-sm text-foreground text-justify whitespace-pre-wrap">
+            {text.slice(300)}
+          </span>
+        ) : null}
+        <div>
+          <a className="text-sm text-accent cursor-pointer" onClick={() => setIsMore(!isMore)}>
+            {isMore ? t("v2.stats.jar.showLess") : t("v2.stats.jar.showMore")}
+          </a>
+        </div>
+      </>
+    );
+  else return <p className="text-sm text-foreground text-justify indent-4">{text}</p>;
 };
 
 export default DocContainer;
