@@ -9,6 +9,7 @@ import ChartContainer from "v2/features/stats/jar/ChartContainer";
 import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
+import ErrorBoundary from "v2/components/ErrorBoundary";
 
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
@@ -40,11 +41,11 @@ const Stats: PickleFinancePage = () => {
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
         <Back router={router} chain={asset ? asset.chain : "eth"} text={t("v2.stats.jar.back")} />
-        <div className="mb-5">
-          {asset && asset.depositTokensInJar && (
+        {asset && (
+          <div className="mb-5">
             <FarmsTable asset={asset} singleAsset={true} hideDescription={true} />
-          )}
-        </div>
+          </div>
+        )}
         <ChartContainer jarData={jarData} />
         <br />
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
@@ -90,12 +91,14 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
 };
 
 const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router, chain, text }) => (
-  <span
-    className="text-accent cursor-pointer pb-5"
-    onClick={() => router.push(`/v2/stats/chain?chain=${chain}`)}
-  >
-    {text}
-  </span>
+  <div className="mb-5">
+    <span
+      className="text-accent cursor-pointer pb-5"
+      onClick={() => router.push(`/v2/stats/chain?chain=${chain}`)}
+    >
+      {text}
+    </span>
+  </div>
 );
 
 Stats.PageTitle = PageTitle;
