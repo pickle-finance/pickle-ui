@@ -11,16 +11,19 @@ import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 
 const Stats: PickleFinancePage = () => {
-  const router = useRouter();
-  const apiKey: string = typeof router.query.jar === "string" ? router.query.jar : "";
-
   const core = useSelector(CoreSelectors.selectCore);
+  let assets = useSelector(CoreSelectors.makeJarsSelector({ filtered: false, paginated: false }));
+  const router = useRouter();
+  const [apiKey, setApiKey] = useState("");
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
 
-  let assets = useSelector(CoreSelectors.makeJarsSelector({ filtered: false, paginated: false }));
   const asset: JarWithData =
     assets.find((a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase()) ||
     ({} as JarWithData);
+
+  useEffect(() => {
+    if (typeof router.query.jar === "string") setApiKey(router.query.jar);
+  }, [router]);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -33,7 +36,7 @@ const Stats: PickleFinancePage = () => {
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
         <div className="mb-5">
-          {asset !== undefined ? (
+          {asset && asset.depositTokensInJar ? (
             <FarmsTable asset={asset} singleAsset={true} hideDescription={true} />
           ) : null}
         </div>
@@ -55,7 +58,11 @@ const Stats: PickleFinancePage = () => {
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
-  const jar: string = typeof router.query.jar === "string" ? router.query.jar : "";
+  const [jar, setJar] = useState("");
+  useEffect(() => {
+    if (typeof router.query.jar === "string") setJar(router.query.jar);
+  }, [router]);
+  // const jar: string = typeof router.query.jar === "string" ? router.query.jar : "";
 
   return (
     <>
