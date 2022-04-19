@@ -18,7 +18,6 @@ const Stats: PickleFinancePage = () => {
   const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
-  const [chain, setChain] = useState("");
 
   const asset: JarWithData | undefined = assets.find(
     (a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase(),
@@ -27,10 +26,6 @@ const Stats: PickleFinancePage = () => {
   useEffect(() => {
     if (typeof router.query.jar === "string") setApiKey(router.query.jar);
   }, [router]);
-
-  useEffect(() => {
-    setChain(asset.chain);
-  }, [asset]);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
