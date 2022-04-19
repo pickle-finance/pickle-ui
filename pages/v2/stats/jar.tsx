@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import type { PickleFinancePage, JarChartData } from "v2/types";
@@ -13,9 +13,12 @@ import FarmsTable from "v2/features/farms/FarmsTable";
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
   let assets = useSelector(CoreSelectors.makeJarsSelector({ filtered: false, paginated: false }));
+
+  const { t } = useTranslation("common");
   const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
+  const [chain, setChain] = useState("");
 
   const asset: JarWithData =
     assets.find((a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase()) ||
@@ -24,6 +27,10 @@ const Stats: PickleFinancePage = () => {
   useEffect(() => {
     if (typeof router.query.jar === "string") setApiKey(router.query.jar);
   }, [router]);
+
+  useEffect(() => {
+    setChain(asset.chain);
+  }, [asset]);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -35,6 +42,7 @@ const Stats: PickleFinancePage = () => {
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
+        <Back router={router} chain={asset.chain} text={t("v2.stats.jar.back")} />
         <div className="mb-5">
           {asset && asset.depositTokensInJar ? (
             <FarmsTable asset={asset} singleAsset={true} hideDescription={true} />
@@ -62,7 +70,6 @@ const PageTitle: FC = () => {
   useEffect(() => {
     if (typeof router.query.jar === "string") setJar(router.query.jar);
   }, [router]);
-  // const jar: string = typeof router.query.jar === "string" ? router.query.jar : "";
 
   return (
     <>
@@ -84,6 +91,15 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
     .catch((e) => console.log(e));
   return data;
 };
+
+const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router, chain, text }) => (
+  <span
+    className="text-accent cursor-pointer pb-5"
+    onClick={() => router.push(`/v2/stats/chain?chain=${chain}`)}
+  >
+    {text}
+  </span>
+);
 
 Stats.PageTitle = PageTitle;
 

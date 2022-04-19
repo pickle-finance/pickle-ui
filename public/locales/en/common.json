@@ -514,6 +514,7 @@
           "apyRange": "APY Range"
         },
         "assetTableTitle": "Asset Stats",
+        "back": "⬅ Platform Stats",
         "bigMoversTableHeader": {
           "asset": "Asset",
           "gain": "Gain",
@@ -525,6 +526,7 @@
         "tvlYLabel": "TVL (USD)"
       },
       "jar": {
+        "back": "⬅ Chain Stats",
         "balanceYLabel": "Token Balance",
         "balanceTooltipUnits": "Tokens",
         "depositTokenPriceYLabel": "Deposit Token Price (USD)",
