@@ -15,9 +15,9 @@ const MainnetVoteButton: FC<{
   const enablement = enabled ? "enabled" : "disabled";
 
   return (
-    <div className="mt-5 pb-10">
+    <div className="grid grid-cols-1 place-items-end mt-5 pb-10">
       <Button
-        className="float-right rounded p-2 border border-foreground-alt-400 bg-background text-foreground-alt-200"
+        className="rounded p-2 border border-foreground-alt-400 bg-background text-foreground-alt-200"
         state={enablement}
         onClick={() => vote(provider, selectedJars, core)}
       >
