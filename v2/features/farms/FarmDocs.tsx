@@ -1,4 +1,4 @@
-import { FC, ReactElement } from "react";
+import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import { JarWithData } from "v2/store/core";
@@ -9,56 +9,28 @@ import { renderHtmlFromString } from "v2/utils";
 
 interface Props {
   jar: JarWithData;
+  hideDescription?: boolean;
 }
 
-const FarmDocs: FC<Props> = ({ jar }) => {
+const FarmDocs: FC<Props> = ({ jar, hideDescription }) => {
   const { t } = useTranslation("common");
   const jarDocs = useAppSelector((state) => DocsSelectors.selectJarDocs(state, jar.details.apiKey));
 
   if (!jarDocs) return <LoadingIndicator waitForDocs className="py-8" />;
 
-  const { description, obtain, social, risks } = jarDocs;
+  // const { description, obtain, social, risks } = jarDocs;
+  const { description } = jarDocs;
 
   return (
     <>
-      <div className="mb-2">
-        <h2 className="font-body font-bold text-foreground-alt-200 mb-1">
-          {t("v2.farms.docs.description")}
-        </h2>
-        <div className="text-sm text-foreground">{renderHtmlFromString(description)}</div>
-      </div>
-      <div className="mb-2">
-        <h2 className="font-body font-bold text-foreground-alt-200 mb-1">
-          {t("v2.farms.docs.obtain")}
-        </h2>
-        <ul className="text-sm text-foreground">
-          {obtain.map((item, index) => (
-            <li key={index}>{renderHtmlFromString(item)}</li>
-          ))}
-        </ul>
-      </div>
-      {social && (
+      {!hideDescription && (
         <div className="mb-2">
           <h2 className="font-body font-bold text-foreground-alt-200 mb-1">
-            {t("v2.farms.docs.social")}
+            {t("v2.farms.docs.description")}
           </h2>
-          <ul className="text-sm text-foreground">
-            {social.map((item, index) => (
-              <li key={index}>{renderHtmlFromString(item)}</li>
-            ))}
-          </ul>
+          <div className="text-sm text-foreground">{renderHtmlFromString(description)}</div>
         </div>
       )}
-      <div className="mb-2">
-        <h2 className="font-body font-bold text-foreground-alt-200 mb-1">
-          {t("v2.farms.docs.risks")}
-        </h2>
-        <ul className="text-sm text-foreground">
-          {risks.map((item, index) => (
-            <li key={index}>{renderHtmlFromString(item)}</li>
-          ))}
-        </ul>
-      </div>
     </>
   );
 };

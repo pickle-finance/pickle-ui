@@ -17,6 +17,7 @@ import { jarSupportsStaking } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
+  hideDescription?: boolean;
 }
 
 interface InfoProps {
@@ -46,7 +47,7 @@ const ComponentRow: FC<ComponentRowProps> = ({ property, value }) => (
   </p>
 );
 
-const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
+const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
   const { t } = useTranslation("common");
   const chain = Chains.get(jar.chain);
   const { library } = useWeb3React<Web3Provider>();
@@ -119,7 +120,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar }) => {
                   </Button>
                 </div>
                 <div className="pt-2 mb-4">
-                  <FarmDocs jar={jar} />
+                  <FarmDocs jar={jar} hideDescription={hideDescription} />
                 </div>
                 <div className="grid grid-cols-3 py-1">
                   <div>

@@ -418,7 +418,7 @@
       "weeklyPickleAmount": "Weekly PICKLEs distributed"
     },
     "farms": {
-      "analytics": "Analytics",
+      "statsAndDocs": "Stats & Docs",
       "approveToken": "Approve {{ token }}",
       "apy": "APY",
       "apyBreakdown": "APY breakdown",
@@ -439,6 +439,7 @@
       "docs": {
         "description": "Description",
         "obtain": "How to obtain",
+        "relatedTokens": "Related Tokens",
         "risks": "Risks",
         "social": "Social"
       },
@@ -528,6 +529,7 @@
         "balanceTooltipUnits": "Tokens",
         "depositTokenPriceYLabel": "Deposit Token Price (USD)",
         "depositTokenPriceTooltipUnits": "Tokens",
+        "documentation": "Documentation",
         "farmAllocShareYLabel": "Alloc. Share",
         "farmAllocShareTooltipUnits": "%",
         "farmPicklePerDayYLabel": "Pickles",
@@ -547,6 +549,8 @@
           "value": "Value"
         },
         "revsTableTitle": "Recent Harvests",
+        "showLess": "Show Less",
+        "showMore": "Show More",
         "tokenPriceVNumYLabelLeft": "No. of Tokens",
         "tokenPriceVNumYLabelRight": "Token Price (USD)",
         "valueYLabel": "USD Value",

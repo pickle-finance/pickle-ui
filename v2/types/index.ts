@@ -1,3 +1,4 @@
+import { AssetDocumentationResult } from "picklefinance-core/lib/docModel/DocsInterfaces";
 import { FC } from "react";
 
 export interface PickleFinancePage extends FC {
@@ -39,7 +40,7 @@ export interface PlatformChainCoreData {
 }
 
 export interface PlatformChainData {
-  [chain: string]: PlatformChainCoreData;
+  [ chain: string ]: PlatformChainCoreData;
 }
 
 export interface PlatformData {
@@ -78,7 +79,7 @@ export interface ChainData {
 }
 
 export interface ChainAssetData {
-  [assetName: string]: AssetChangeData;
+  [ assetName: string ]: AssetChangeData;
 }
 export interface AssetChangeData {
   now: AssetCoreData;
@@ -94,25 +95,17 @@ interface Component {
 export interface JarChartData {
   apiKey: string;
   assetData: JarAssetData;
-  documentation: AssetDocs;
+  documentation: AssetDocumentationResult;
   revenueExpenses: AssetRevs;
 }
 interface JarAssetData {
-  [key: string]: AssetCoreData[];
+  [ key: string ]: AssetCoreData[];
 }
 
 interface Component {
   count: number;
   id: string;
   price: number;
-}
-
-export interface AssetDocs {
-  apiKey: string;
-  description: string;
-  obtain: string[];
-  risks: string[];
-  social: string[];
 }
 
 export interface AssetRevs {
