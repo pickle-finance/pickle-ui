@@ -1,18 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import ConnectorItem from "./ConnectorItem";
 import { FC } from "react";
-import type { ethers, providers } from "ethers";
 import { Modal, Grid, Button } from "@geist-ui/react";
-import { useWeb3React, Web3ReactHooks } from "@web3-react/core";
+import { Web3ReactHooks } from "@web3-react/core";
 import { useTranslation } from "next-i18next";
+import { connectorItemPropsList, connectorsAndHooks } from "./Connectors";
 
-import {
-  connectorItemList,
-  /* injected, walletconnect, walletlink, cloverconnect */ connectorsAndHooks,
-  getHooks,
-} from "./Connectors";
-
-// import { useEagerConnect /* useInactiveListener */ } from "./useEagerConnect";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
 import { chainToChainParams, Connection } from "containers/Connection";
@@ -26,7 +19,7 @@ interface Web3ModalProps {
 const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   const { t } = useTranslation("common");
   const { pickleCore } = PickleCore.useContainer();
-  const { connector, hooks, address: account, chainId } = Connection.useContainer();
+  const { address } = Connection.useContainer();
 
   const rawChainFor = (network: ChainNetwork | number): RawChain | undefined => {
     return pickleCore === undefined || pickleCore === null
@@ -39,7 +32,6 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
     return chainToChainParams(rawChain);
   });
 
-  // const [activatingConnector, setActivatingConnector] = useState<Connector>();
   const [ethereum, setEthereum] = useState();
   const [isSupportedChain, setIsSupportedChain] = useState<boolean>(true);
   const [desiredChainId, setDesiredChainId] = useState<number>(-1);
@@ -66,18 +58,18 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
   };
 
   useEffect(() => {
-    if (account) {
+    if (address) {
       setVisible(false);
       setIsSupportedChain(true);
     }
-  }, [account, setVisible]);
+  }, [address, setVisible]);
 
   useEffect(() => {
     const { ethereum } = window as any;
     setEthereum(ethereum);
     setDesiredChainId(+ethereum.chainId);
-    
-    if (!triedEager && !account) {
+
+    if (!triedEager && !address) {
       connectorsAndHooks.forEach((c) => {
         c[0].connectEagerly && c[0].connectEagerly();
       });
@@ -91,7 +83,7 @@ const Web3Modal: FC<Web3ModalProps> = ({ setVisible, ...rest }) => {
       <Modal.Content>
         {isSupportedChain ? (
           <Grid.Container gap={2}>
-            {connectorItemList.map((c, index) => {
+            {connectorItemPropsList.map((c, index) => {
               return (
                 <Grid xs={12} key={index}>
                   <ConnectorItem

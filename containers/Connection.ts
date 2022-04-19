@@ -3,7 +3,7 @@ import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { useWeb3React, Web3ReactHooks,getPriorityConnector } from "@web3-react/core";
+import { useWeb3React, Web3ReactHooks, getPriorityConnector } from "@web3-react/core";
 import { Provider as MulticallProvider, setMulticallAddress } from "ethers-multicall";
 import { useRouter } from "next/router";
 import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
@@ -13,7 +13,6 @@ import { getHooks } from "features/Connection/Web3Modal/Connectors";
 import { MetaMask } from "@web3-react/metamask";
 import { WalletConnect } from "@web3-react/walletconnect";
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
-
 
 type Network = ethers.providers.Network;
 
@@ -49,9 +48,14 @@ export const chainToChainParams = (
   };
 };
 
-
 function useConnection() {
-  const { account, /* library, */ chainId, /* provider, */ connector,isActive, ENSName } = useWeb3React();
+  const {
+    account,
+    /* library, */ chainId,
+    /* provider, */ connector,
+    isActive,
+    ENSName,
+  } = useWeb3React();
   const router = useRouter();
   const { pickleCore } = PickleCore.useContainer();
 
@@ -85,7 +89,7 @@ function useConnection() {
       }
       return true;
     } catch (e) {
-      console.log("switchChainError")
+      console.log("switchChainError");
       console.log(e);
     }
     return false;
@@ -109,8 +113,10 @@ function useConnection() {
   });
   const supportedChains = supportedChainParams;
 
-  const tryHooks = getHooks(connector);
-  const tryProvider = tryHooks?.useProvider();
+  // get the currently connected connector hooks & provider
+  const currentHooks = getHooks(connector);
+  // hooks provider gives back a signer, the useWeb3React provider does not!
+  const currentProvider = currentHooks?.useProvider();
 
   // useEffect(() => {
   //   if (connector && tryHooks && tryProvider) {
@@ -124,20 +130,12 @@ function useConnection() {
 
   // create observable to stream new blocks
   useEffect(() => {
-    console.log("Connection");
-    console.log(provider);
-    console.log(account);
-    console.log(ENSName)
-    console.log(signer)
-    if (connector && tryHooks && tryProvider) {
-      const signer = tryProvider.getSigner();
+    // update provider, hooks and signer each time provider changes (upon chain, account or connector changes)
+    if (pickleCore && currentHooks && currentProvider && currentProvider !== provider) {
+      // set the network
+      currentProvider.getNetwork().then((network: any) => setNetwork(network));
 
-      setProvider(tryProvider);
-      setSigner(signer);
-      setHooks(hooks);
-    }
-    if (tryProvider) {
-      tryProvider.getNetwork().then((network: any) => setNetwork(network));
+      // set multicall address
       Chains.list().map((x) => {
         const raw: RawChain | undefined = rawChainFor(x);
         if (raw && raw.multicallAddress) {
@@ -145,14 +143,17 @@ function useConnection() {
         }
       });
 
-      const _multicallProvider = new MulticallProvider(tryProvider);
-      _multicallProvider.init().then(() => setMulticallProvider(_multicallProvider));
+      // set multicallProvider
+      const _multicallProvider = new MulticallProvider(currentProvider, chainId);
+      setMulticallProvider(_multicallProvider);
 
+      // reload the page on chain changes
       const { ethereum } = window as any;
       ethereum?.on("chainChanged", () => router.reload());
 
+      // create an observable to track the latest chain blocks
       const observable = new Observable<number>((subscriber) => {
-        tryProvider.on("block", (blockNumber: number) => subscriber.next(blockNumber));
+        currentProvider.on("block", (blockNumber: number) => subscriber.next(blockNumber));
       });
 
       // debounce to prevent subscribers making unnecessary calls
@@ -161,11 +162,12 @@ function useConnection() {
           setBlockNum(blockNumber);
         }
       });
-    } else {
-      setMulticallProvider(null);
-      setBlockNum(null);
+
+      setProvider(currentProvider);
+      setHooks(currentHooks);
+      setSigner(currentProvider.getSigner());
     }
-  }, [provider, pickleCore,account, chainId, connector]);
+  }, [pickleCore, connector, provider, chainId, account]);
 
   const chainName = pickleCore?.chains.find((x) => x.chainId === chainId)?.network || null;
 
