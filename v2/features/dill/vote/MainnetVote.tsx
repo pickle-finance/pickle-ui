@@ -39,7 +39,9 @@ const MainnetVote: FC<{ core: PickleModelJson.PickleModelJson; user: UserData | 
         {t("v2.dill.vote.subtitleMainnet")}
       </h1>
       <p className="flex py-2 text-foreground-alt-200 justify-between mb-5">
-        <span className="font-medium text-base">{t("v2.dill.vote.descriptionMainnet")}</span>
+        <span className="font-medium text-base indent-4">
+          {t("v2.dill.vote.descriptionMainnet")}
+        </span>
       </p>
       <div className="w-full inline-grid grid-cols-2 gap-4">
         <ChartContainer platformOrUser="platform" mainnet={true} core={core} />

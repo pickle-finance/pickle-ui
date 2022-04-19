@@ -56,7 +56,9 @@ const OffchainVote: FC<{
         {t("v2.dill.vote.subtitleOffchain")}
       </h1>
       <p className="flex py-2 text-foreground-alt-200 justify-between mb-5">
-        <span className="font-medium text-base">{t("v2.dill.vote.descriptionOffchain")}</span>
+        <span className="font-medium text-base indent-4">
+          {t("v2.dill.vote.descriptionOffchain")}
+        </span>
       </p>
       <div className="w-full inline-grid grid-cols-2 gap-4">
         <ChartContainer

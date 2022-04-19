@@ -9,9 +9,10 @@ const AssetTable: FC<{ assets: ChainAssetData }> = ({ assets }) => {
     <table className="w-full">
       <AssetTableHead />
       <tbody className="border border-foreground-alt-400">
-        {assetKeys.map((key) => (
-          <AssetRow key={key} assetKey={key} asset={assets[key]} />
-        ))}
+        {assetKeys.map((key) => {
+          if (key.slice(-3).toLowerCase() !== "old")
+            return <AssetRow key={key} assetKey={key} asset={assets[key]} />;
+        })}
       </tbody>
     </table>
   );
