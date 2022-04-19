@@ -10,8 +10,8 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
   return (
     <>
       <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
-        <h2 className="font-body font-bold text-xl mb-5">Documentation</h2>
-        <div className="grid grid-cols-2 gap-2">
+        <h2 className="font-body font-bold text-xl mb-5">{t("v2.stats.jar.documentation")}</h2>
+        <div className="grid grid-cols-2 gap-5">
           <div className="mb-2">
             <h2 className="font-body font-bold text-foreground-alt-200 mb-1">
               {t("v2.farms.docs.description")}

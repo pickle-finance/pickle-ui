@@ -529,6 +529,7 @@
         "balanceTooltipUnits": "Tokens",
         "depositTokenPriceYLabel": "Deposit Token Price (USD)",
         "depositTokenPriceTooltipUnits": "Tokens",
+        "documentation": "Documentation",
         "farmAllocShareYLabel": "Alloc. Share",
         "farmAllocShareTooltipUnits": "%",
         "farmPicklePerDayYLabel": "Pickles",
