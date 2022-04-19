@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ChainData } from "v2/types";
-import TvlChart from "./TvlChart";
-import RevsChart from "./RevsChart";
+import TvlChart from "../sharedCharts/TvlChart";
+import RevsChart from "../sharedCharts/RevsChart";
 import { useTranslation } from "next-i18next";
 
 const ChartContainer: FC<{ chart: string; dataSeries: ChainData }> = ({ chart, dataSeries }) => {

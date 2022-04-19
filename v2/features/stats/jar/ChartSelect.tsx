@@ -3,55 +3,6 @@ import Select from "react-select";
 
 const pickleWhite = "#ebebeb";
 
-const CHARTS = [
-  {
-    value: "value",
-    label: "TVL",
-  },
-  {
-    value: "balance",
-    label: "Balance",
-  },
-  {
-    value: "depositTokenPrice",
-    label: "Deposit Token Price",
-  },
-  {
-    value: "farmAllocShare",
-    label: "Farm Allocation Share",
-  },
-  {
-    value: "farmPicklePerDay",
-    label: "Farm Pickle Per Day",
-  },
-  {
-    value: "harvestable",
-    label: "Harvestable",
-  },
-  {
-    value: "ptokensInFarm",
-    label: "Percent of pTokens In Farm",
-  },
-  {
-    value: "ratio",
-    label: "Ratio",
-  },
-  {
-    value: "yield",
-    label: "APR and APY Yield",
-  },
-  {
-    value: "tokenPriceVNum",
-    label: "Token Price And Count",
-  },
-  {
-    value: "revs",
-    label: "Daily Revenue",
-  },
-];
-
-// daily revenue chart = bar chart of revenueExpenses.daily with 100 days of data and 15 and 30 day moving average
-
 const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
   return (
     <Select
@@ -101,5 +52,52 @@ const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
     />
   );
 };
+
+const CHARTS = [
+  {
+    value: "value",
+    label: "TVL",
+  },
+  {
+    value: "balance",
+    label: "Balance",
+  },
+  {
+    value: "depositTokenPrice",
+    label: "Deposit Token Price",
+  },
+  {
+    value: "farmAllocShare",
+    label: "Farm Allocation Share",
+  },
+  {
+    value: "farmPicklePerDay",
+    label: "Farm Pickle Per Day",
+  },
+  {
+    value: "harvestable",
+    label: "Harvestable",
+  },
+  {
+    value: "ptokensInFarm",
+    label: "Percent of pTokens In Farm",
+  },
+  {
+    value: "ratio",
+    label: "Ratio",
+  },
+  {
+    value: "yield",
+    label: "APR and APY Yield",
+  },
+  {
+    value: "tokenPriceVNum",
+    label: "Token Price And Count",
+  },
+  {
+    value: "revs",
+    label: "Daily Revenue",
+  },
+];
 
 export default ChartSelect;

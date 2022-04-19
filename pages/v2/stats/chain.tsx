@@ -10,12 +10,14 @@ import {
   getTokenPriceChangeBal,
   getTokenPriceChangePct,
 } from "v2/features/stats/chain/BigMoverUtils";
+import Link from "next/link";
 
 const Stats: PickleFinancePage = () => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const [tokenPctChangeData, setTokenPctChangeData] = useState<iTokenPriceChange[]>([]);
   const [tokenBalChangeData, setTokenBalChangeData] = useState<iTokenPriceChange[]>([]);
 
+  const { t } = useTranslation("common");
   const router: NextRouter = useRouter();
   const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
   useEffect(() => {
@@ -38,6 +40,7 @@ const Stats: PickleFinancePage = () => {
   return (
     <div className="block lg:flex mb-5 sm:mb-10">
       <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
+        <Back router={router} text={t("v2.stats.chain.back")} />
         {
           tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 ? (
             <span>
@@ -80,6 +83,14 @@ const getChainData = async (chain: string): Promise<ChainData> => {
     .then((response) => response.json())
     .catch((e) => console.log(e));
 };
+
+const Back: FC<{ router: NextRouter; text: string }> = ({ router, text }) => (
+  <div className="mb-5">
+    <span className="text-accent cursor-pointer" onClick={() => router.push("/v2/stats")}>
+      {text}
+    </span>
+  </div>
+);
 
 Stats.PageTitle = PageTitle;
 

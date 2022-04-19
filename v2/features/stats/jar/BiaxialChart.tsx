@@ -79,11 +79,18 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit })
         </YAxis>
         <Tooltip
           cursor={false}
-          contentStyle={{ backgroundColor: "black", color: "#26ff91" }}
+          contentStyle={{
+            backgroundColor: "rgb(var(--color-foreground-alt-500))",
+            borderColor: "rgb(var(--color-foreground-alt-500))",
+            borderRadius: 10,
+          }}
           labelFormatter={(label) =>
             new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
           }
-          formatter={(value: number) => formatBigNumber(value)}
+          formatter={(value: number, label: string) => [
+            formatBigNumber(value),
+            t("v2.stats.tooltips.".concat(label)),
+          ]}
         />
         <Line
           yAxisId="left"
@@ -99,7 +106,13 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit })
           stroke="rgb(var(--color-accent))"
           dot={false}
         />
-        <Legend wrapperStyle={{ paddingTop: 25 }} />
+        <Legend
+          formatter={(label: string) => (
+            <span className="text-foreground-alt-200">{t("v2.stats.tooltips.".concat(label))}</span>
+          )}
+          iconType="plainline"
+          wrapperStyle={{ paddingTop: 25 }}
+        />
       </LineChart>
     </ResponsiveContainer>
   );

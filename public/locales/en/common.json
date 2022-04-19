@@ -514,6 +514,7 @@
           "apyRange": "APY Range"
         },
         "assetTableTitle": "Asset Stats",
+        "back": "⬅ Platform Stats",
         "bigMoversTableHeader": {
           "asset": "Asset",
           "gain": "Gain",
@@ -525,10 +526,11 @@
         "tvlYLabel": "TVL (USD)"
       },
       "jar": {
+        "back": "⬅ Chain Stats",
         "balanceYLabel": "Token Balance",
         "balanceTooltipUnits": "Tokens",
         "depositTokenPriceYLabel": "Deposit Token Price (USD)",
-        "depositTokenPriceTooltipUnits": "Tokens",
+        "depositTokenPriceTooltipUnits": "USD",
         "documentation": "Documentation",
         "farmAllocShareYLabel": "Alloc. Share",
         "farmAllocShareTooltipUnits": "%",
@@ -568,7 +570,24 @@
         "revsChartTitle": "Daily Revenue",
         "tvlChartTitle": "Total Value Locked"
       },
-      "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol"
+      "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol",
+      "tooltips": {
+        "balance": "Token Balance",
+        "depositTokenPrice": "Deposit Token Price",
+        "farmAllocShare": "Emission Share",
+        "farmPicklePerDay": "Farm Pickles Per Day",
+        "harvestable": "Harvestable USD",
+        "jarApr": "Jar APR",
+        "ma": "Moving Average",
+        "maxApy": "Max. Farm APY",
+        "minApy": "Min. Farm APY",
+        "ptokensInFarm": "Percent of pTokens in Farm",
+        "ratio": "Ratio of pTokens to Deposit Tokens",
+        "revsUsd": "Revenue in USD",
+        "supply": "No. of Tokens",
+        "tokenPrice": "Token Price",
+        "value": "Total Value Locked"
+      }
     },
     "theme": {
       "dark": "Dark",
