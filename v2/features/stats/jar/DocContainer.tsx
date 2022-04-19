@@ -20,19 +20,16 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
             <h2 className="font-body font-bold text-foreground-alt-200 mt-3 mb-1">
               {t("v2.farms.docs.relatedTokens")}
             </h2>
-            {Object.keys(componentTokens).map((token) => {
-              console.log(componentTokens);
-              return (
-                <>
-                  <h2 className="font-body text-foreground-alt-200 mb-1 mt-3">
-                    {token.toUpperCase()}
-                  </h2>
-                  <p className="text-sm text-foreground text-justify indent-4">
-                    {<TokenText text={componentTokens[token].replace(":", "-")} />}
-                  </p>
-                </>
-              );
-            })}
+            {Object.keys(componentTokens).map((token) => (
+              <>
+                <h2 className="font-body text-foreground-alt-200 mb-1 mt-3">
+                  {token.toUpperCase()}
+                </h2>
+                <p className="text-sm text-foreground text-justify indent-4">
+                  {<TokenText text={componentTokens[token].replace(":", "-")} />}
+                </p>
+              </>
+            ))}
           </div>
           <div>
             <div className="mb-2">
