@@ -47,7 +47,7 @@ export const useZapIn = ({
   const zapIn = async () => {
     try {
       const gasPrices = await fetchRes(
-        getZapperApi("/gas-price", {
+        getZapperApi("/gas-prices", {
           sellTokenAddress,
           address,
         }),
