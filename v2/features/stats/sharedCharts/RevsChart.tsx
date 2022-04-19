@@ -53,19 +53,33 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
             style={{ textAnchor: "middle" }}
           />
         </YAxis>
+
         <Tooltip
           cursor={false}
-          contentStyle={{ backgroundColor: "black", color: "#26ff91" }}
+          contentStyle={{
+            backgroundColor: "rgb(var(--color-foreground-alt-500))",
+            borderColor: "rgb(var(--color-foreground-alt-500))",
+            borderRadius: 10,
+          }}
           labelFormatter={(label) =>
             new Date(label * 1000).toLocaleDateString() +
             " " +
             new Date(label * 1000).toLocaleTimeString()
           }
-          formatter={(value: number) => formatDollars(value)}
+          formatter={(value: number, label: string) => [
+            formatDollars(value),
+            t(`v2.stats.tooltips.${label}`),
+          ]}
         />
         <Bar dataKey="revsUsd" fill="rgb(var(--color-primary-light))" />
         <Line dataKey="ma" dot={false} stroke="rgb(var(--color-accent))" />
-        <Legend wrapperStyle={{ paddingTop: 25 }} />
+        <Legend
+          formatter={(label: string) => (
+            <span className="text-foreground-alt-200">{t(`v2.stats.tooltips.${label}`)}</span>
+          )}
+          iconType="wye"
+          wrapperStyle={{ paddingTop: 25 }}
+        />
       </ComposedChart>
     </ResponsiveContainer>
   );

@@ -64,15 +64,20 @@ const Chart: FC<{ chartKey: string; data: JarChartData; timeUnit: string }> = ({
         </YAxis>
         <Tooltip
           cursor={false}
-          contentStyle={{ backgroundColor: "black", color: "#26ff91" }}
+          contentStyle={{
+            backgroundColor: "rgb(var(--color-foreground-alt-500))",
+            borderColor: "rgb(var(--color-foreground-alt-500))",
+            borderRadius: 10,
+          }}
           labelFormatter={(label) =>
             new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
           }
-          formatter={(value: number) =>
+          formatter={(value: number, name: string) => [
             new Intl.NumberFormat("en", {}).format(value) +
-            " " +
-            t(`v2.stats.jar.${chartKey}TooltipUnits`)
-          }
+              " " +
+              t(`v2.stats.jar.${chartKey}TooltipUnits`),
+            t(`v2.stats.tooltips.${name}`),
+          ]}
         />
         <Line
           type="monotone"
@@ -87,7 +92,7 @@ const Chart: FC<{ chartKey: string; data: JarChartData; timeUnit: string }> = ({
 
 const pTokenPct = (data: AssetCoreData) => ({
   timestamp: data.timestamp,
-  ptokensInFarm: data.ptokensInFarm / data.supply,
+  ptokensInFarm: (data.ptokensInFarm / data.supply) * 100,
 });
 
 const getDataMax = (o: any[], key: string): number => {

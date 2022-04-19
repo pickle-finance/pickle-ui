@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import TvlChart from "./TvlChart";
-import RevsChart from "./RevsChart";
+import TvlChart from "../sharedCharts/TvlChart";
+import RevsChart from "../sharedCharts/RevsChart";
 import { PlatformData } from "v2/types";
 import { useTranslation } from "next-i18next";
 

@@ -59,14 +59,27 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit })
             style={{ textAnchor: "middle" }}
           />
         </YAxis>
-        <Legend wrapperStyle={{ paddingTop: 25 }} />
+        <Legend
+          formatter={(label: string) => (
+            <span className="text-foreground-alt-200">{t("v2.stats.tooltips.".concat(label))}</span>
+          )}
+          iconType="plainline"
+          wrapperStyle={{ paddingTop: 25 }}
+        />
         <Tooltip
           cursor={false}
-          contentStyle={{ backgroundColor: "black", color: "#26ff91" }}
+          contentStyle={{
+            backgroundColor: "rgb(var(--color-foreground-alt-500))",
+            borderColor: "rgb(var(--color-foreground-alt-500))",
+            borderRadius: 10,
+          }}
           labelFormatter={(label) =>
             new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
           }
-          formatter={(value: number) => value.toFixed(3) + "%"}
+          formatter={(value: number, name: string) => [
+            value.toFixed(3) + "%",
+            t(`v2.stats.tooltips.${name}`),
+          ]}
         />
         <Line
           type="monotone"

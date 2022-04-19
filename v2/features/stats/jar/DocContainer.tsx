@@ -25,9 +25,9 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
                 <h2 className="font-body text-foreground-alt-200 mb-1 mt-3">
                   {token.toUpperCase()}
                 </h2>
-                <p className="text-sm text-foreground text-justify indent-4">
+                <div className="text-sm text-foreground text-justify indent-4">
                   {<TokenText text={componentTokens[token].replace(":", "-")} />}
-                </p>
+                </div>
               </>
             ))}
           </div>
@@ -38,7 +38,7 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
               </h2>
               <ul className="text-sm text-foreground">
                 {obtain.map((item, index) => (
-                  <li key={index}>{renderHtmlFromString(item)}</li>
+                  <li key={index.toLocaleString()}>{renderHtmlFromString(item)}</li>
                 ))}
               </ul>
             </div>
@@ -79,7 +79,7 @@ const TokenText: FC<{ text: string }> = ({ text }) => {
     return (
       <>
         <span className="text-sm text-foreground text-justify indent-4">
-          {text.slice(0, 300).concat("... ")}
+          {text.slice(0, 300).concat(isMore ? "" : "... ")}
         </span>
         {isMore ? (
           <span className="text-sm text-foreground text-justify whitespace-pre-wrap">
