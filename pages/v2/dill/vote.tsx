@@ -27,19 +27,23 @@ const Vote: PickleFinancePage = () => {
   return (
     <>
       {core ? (
-        onMainnet ? (
-          <>
-            <MainnetVote core={core} user={user} />
-            <hr className="border-foreground-alt-500 mt-5 mb-5" />
-            <OffchainVote core={core} offchainVoteData={offchainVoteData} />
-          </>
+        user ? (
+          onMainnet ? (
+            <>
+              <MainnetVote core={core} user={user} />
+              <hr className="border-foreground-alt-500 mt-5 mb-5" />
+              <OffchainVote core={core} offchainVoteData={offchainVoteData} />
+            </>
+          ) : (
+            <>
+              <p>
+                TEMP - You must be on mainnet to Vote. ( add modal for this message with button to
+                switch to mainnet )
+              </p>
+            </>
+          )
         ) : (
-          <>
-            <p>
-              TEMP - You must be on mainnet to Vote. ( add modal for this message with button to
-              switch to mainnet )
-            </p>
-          </>
+          <LoadingIndicator waitForUserModel />
         )
       ) : (
         <LoadingIndicator waitForCore />
