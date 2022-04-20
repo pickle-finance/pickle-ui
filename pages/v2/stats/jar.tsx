@@ -10,7 +10,7 @@ import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import ErrorBoundary from "v2/components/ErrorBoundary";
-import { Button } from "@geist-ui/react";
+import Button from "v2/components/Button";
 
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
