@@ -508,6 +508,18 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xcc15d8f93be780ad78fd1a016fb0f15f2543b5dc": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/dai.png"} />
   ),
+  // HUMMUS USDC
+  "0x9e3f3be65fec3731197aff816489eb1eb6e6b830": (
+    <LpIcon swapIconSrc={"/protocols/hummus.png"} tokenIconSrc={"/usdc.png"} />
+  ),
+  // HUMMUS DAI
+  "0xd5a0760d55ad46b6a1c46d28725e4c117312a7ad": (
+    <LpIcon swapIconSrc={"/protocols/hummus.png"} tokenIconSrc={"/dai.png"} />
+  ),
+  // HUMMUS USDT
+  "0x9f51f0d7f500343e969d28010c7eb0db1bcaaef9": (
+    <LpIcon swapIconSrc={"/protocols/hummus.png"} tokenIconSrc={"/usdt.png"} />
+  ),
 
   // Moonbeam
 
