@@ -66,14 +66,12 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
       });
 
       send(Actions.TRANSACTION_SENT, { txHash: transaction.hash });
-      setProgressStatus(t("v2.farms.transactionPending"));
+      setProgressStatus(t("v2.farms.waitingToBeProcessed"));
 
       transaction
         .wait()
         .then(
           async () => {
-            setProgressStatus(t("v2.farms.waitingForBlockConfirmation"));
-
             while (true) {
               const newLock = await DillContract.locked__end(account);
               const success = newLock.gt(BigNumber.from(dill?.lockEnd || "0"));

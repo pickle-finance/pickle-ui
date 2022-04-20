@@ -27,11 +27,11 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
   const [error, setError] = useState<Error | undefined>();
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
 
-  const pickleBalanceNum = pickles[ChainNetwork.Ethereum]
-    ? parseFloat(formatEther(pickles[ChainNetwork.Ethereum]))
-    : 0;
+  const pickleBalanceStr = pickles[ChainNetwork.Ethereum]
+    ? formatEther(pickles[ChainNetwork.Ethereum])
+    : "0";
 
-  const [amount, setAmount] = useState<string>(pickleBalanceNum.toString());
+  const [amount, setAmount] = useState<string>(pickleBalanceStr);
   const [lockTime, setLockTime] = useState<Date>(getDayOffset(new Date(), 365 * 4 - 1));
 
   const validate = (value: string) => {
@@ -41,7 +41,7 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
     }
 
     const amount = parseFloat(value);
-    const isValid = amount > 0 && amount <= pickleBalanceNum;
+    const isValid = amount > 0 && amount <= parseFloat(pickleBalanceStr);
 
     isValid ? setError(undefined) : setError(invalidAmountError);
   };
@@ -67,7 +67,7 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.dill.pickleBalance")}: {pickleBalanceNum.toFixed(3)}
+            {t("v2.dill.pickleBalance")}: {parseFloat(pickleBalanceStr).toFixed(4)}
           </p>
         </div>
 
@@ -81,8 +81,8 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
           <Button
             size="small"
             onClick={() => {
-              setAmount(pickleBalanceNum.toString());
-              validate(pickleBalanceNum.toString());
+              setAmount(pickleBalanceStr);
+              validate(pickleBalanceStr);
             }}
           >
             {t("v2.balances.max")}

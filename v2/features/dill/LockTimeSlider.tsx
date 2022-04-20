@@ -15,11 +15,11 @@ interface Props {
 const LockTimeSlider: FC<Props> = ({ setLockTime, dill }) => {
   if (!dill?.lockEnd) return <></>;
 
-  const [weeks, setWeeks] = useState<number>(0);
   const currentLockEnd = parseFloat(dill?.lockEnd)
     ? dateFromEpoch(parseFloat(dill?.lockEnd))
     : new Date();
-  const max = getWeekDiff(currentLockEnd, getDayOffset(new Date(), 365 * 4));
+  const max = getWeekDiff(currentLockEnd, getDayOffset(new Date(), 365 * 4 - 7));
+  const [weeks, setWeeks] = useState<number>(max);
 
   const onSliderChange = (value: number | number[]) => {
     setWeeks(value as number);
