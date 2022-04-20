@@ -330,7 +330,10 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
   // SOLIDEX STABLE SPIRIT-RAINSPIRIT
   "0xca395560b6003d921d9408af011c6c61399f66ca": {
     "SEX-SOLID-sSPIRIT-RAINSPIRIT": (
-      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
+      <LpIcon
+        swapIconSrc={"/protocols/solidex.png"}
+        tokenIconSrc={"/tokens/spiritrainspirit.png"}
+      />
     ),
     "OXDSOLIDLYLP-SPIRIT-RAINSPIRIT": (
       <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
@@ -677,7 +680,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/usdcusdt.png"} />
   ),
   // NET BYTE/USDC
-<<<<<<< HEAD
   "0x3ab6be89ed5a0d4fdd412c246f5e6ddd250dd45c": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
   ),
@@ -688,14 +690,15 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   // NET METIS/RELAY
   "0xa58bd557bfbc12f8ceaccc6e1668f5fbfb2118bb": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/relay.png"} />
-=======
+  ),
+
+  // NET BYTE/USDC
   "0x3Ab6be89ED5A0d4FDD412c246F5e6DdD250Dd45c": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
   ),
   // NET BUSD/USDC
   "0x8014c801F6cF32445D503f7BaC30976B3161eE52": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
->>>>>>> 5e50a391 (adding oxd jars)
   ),
   // TETHYS TETHYS/METIS
   "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
@@ -1070,12 +1073,10 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xcb6eab779780c7fd6d014ab90d8b10e97a1227e2": (
     <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/oxd.png"} />
   ),
-<<<<<<< HEAD
   // STAR USDC
   "0x12edea9cd262006cc3c4e77c90d2cd2dd4b1eb97": (
     <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
-=======
   // StrategyOxdSolidlyVolatileDeiDeus
   "0xf42dbcf004a93ae6d5922282b304e2aefdd50058": (
     <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/deideus.png"} />
@@ -1084,7 +1085,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   // "0xD9A4108CBB40a12dE16dFFDc54aE5065878816d7": (
   //   <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/renbtc.png"} />
   // ),
->>>>>>> 81280500 (oxd UI fixes)
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
