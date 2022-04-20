@@ -10,6 +10,7 @@ import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import ErrorBoundary from "v2/components/ErrorBoundary";
+import { Button } from "@geist-ui/react";
 
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
@@ -19,6 +20,7 @@ const Stats: PickleFinancePage = () => {
   const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
+  const stringArray: string[] = [""];
 
   const asset: JarWithData | undefined = assets.find(
     (a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase(),
@@ -35,10 +37,9 @@ const Stats: PickleFinancePage = () => {
     getData();
   }, [apiKey]);
 
-  // if (!asset.depositTokensInJar) console.log(asset);
-
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
+<<<<<<< HEAD
       <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
         <Back router={router} chain={asset ? asset.chain : "eth"} text={t("v2.stats.jar.back")} />
         {asset && (
@@ -56,6 +57,34 @@ const Stats: PickleFinancePage = () => {
             pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
           />
         )}
+=======
+      <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
+        <ErrorBoundary>
+          <>
+            <Fail />
+            <Back
+              router={router}
+              chain={asset ? asset.chain : "eth"}
+              text={t("v2.stats.jar.back")}
+            />
+            {asset && (
+              <div className="mb-5">
+                <FarmsTable asset={asset} singleAsset={true} hideDescription={true} />
+              </div>
+            )}
+            <ChartContainer jarData={jarData} className="mb-5" />
+            {jarData && jarData.documentation && (
+              <DocContainer docs={jarData.documentation} className="mb-5" />
+            )}
+            {jarData && jarData.revenueExpenses && jarData.revenueExpenses.recentHarvests[0] && (
+              <RevTableContainer
+                revs={jarData.revenueExpenses}
+                pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
+              />
+            )}
+          </>
+        </ErrorBoundary>
+>>>>>>> d0f1240 (testing error boundaries)
       </div>
     </div>
   );
@@ -90,15 +119,27 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
   return data;
 };
 
-const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router, chain, text }) => (
-  <div className="mb-5">
-    <span
-      className="text-accent cursor-pointer pb-5"
-      onClick={() => router.push(`/v2/stats/chain?chain=${chain}`)}
-    >
-      {text}
-    </span>
-  </div>
+const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router, chain, text }) => {
+  return (
+    <div className="mb-5">
+      <span
+        className="text-accent cursor-pointer pb-5"
+        onClick={() => router.push(`/v2/stats/chain?chain=${chain}`)}
+      >
+        {text}
+      </span>
+    </div>
+  );
+};
+
+const Fail: FC = () => (
+  <Button
+    onClick={() => {
+      throw new Error("You have failed.");
+    }}
+  >
+    FAIL
+  </Button>
 );
 
 Stats.PageTitle = PageTitle;

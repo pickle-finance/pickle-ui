@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { PickleFinancePage, PlatformData } from "v2/types";
-import ChartContainer from "v2/features/stats/platform/ChartContainer";
+import ChartContainer from "v2/features/stats/sharedCharts/ChartContainer";
 import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 

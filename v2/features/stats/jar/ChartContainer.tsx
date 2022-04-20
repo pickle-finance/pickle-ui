@@ -6,8 +6,12 @@ import YieldChart from "./MultiLineChart";
 import RevsChart from "./RevsChart";
 import TimeUnitPanel from "./TimeUnitPanel";
 import { JarChartData } from "v2/types";
+import { classNames } from "v2/utils";
 
-const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
+const ChartContainer: FC<{ jarData: JarChartData; className: string }> = ({
+  jarData,
+  className,
+}) => {
   const [selectedChart, setSelectedChart] = useState("value");
   const chartChange = (e: HTMLSelectElement): void => setSelectedChart(e.value);
 
@@ -28,7 +32,12 @@ const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
   ];
 
   return (
-    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
+    <div
+      className={classNames(
+        "bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8",
+        className,
+      )}
+    >
       <h2 className="font-body font-bold text-xl">
         {jarData && jarData.apiKey && jarData.apiKey.toUpperCase()}
       </h2>

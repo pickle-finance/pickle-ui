@@ -3,15 +3,26 @@ import React, { FC } from "react";
 import { AssetRevs } from "v2/types";
 import { useTranslation } from "next-i18next";
 import RevTable from "./RevTable";
+import { classNames } from "v2/utils";
 
 const RevTableContainer: FC<{
   revs: AssetRevs;
   pfCore: PickleModelJson.PickleModelJson;
-}> = ({ revs, pfCore }) => {
+  className?: string;
+}> = ({ revs, pfCore, className }) => {
   const { t } = useTranslation("common");
   const chainExplorer: string = pfCore ? getChainExplorer(revs, pfCore) : "";
   return (
+<<<<<<< HEAD
     <div className="bg-background-light min-w-min rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
+=======
+    <div
+      className={classNames(
+        "bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8",
+        className,
+      )}
+    >
+>>>>>>> d0f1240 (testing error boundaries)
       <h2 className="font-body font-bold text-xl">{t("v2.stats.jar.revsTableTitle")}</h2>
       <br />
       <RevTable revs={revs} chainExplorer={chainExplorer} />

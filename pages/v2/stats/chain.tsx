@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { NextRouter, useRouter } from "next/router";
 import type { PickleFinancePage, ChainData } from "v2/types";
 
-import ChartContainer from "v2/features/stats/chain/ChartContainer";
+import ChartContainer from "v2/features/stats/sharedCharts/ChartContainer";
 import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
 import BigMoverTableContainer from "v2/features/stats/chain/BigMoverTableContainer";
 import {
