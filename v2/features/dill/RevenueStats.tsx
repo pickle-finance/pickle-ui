@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 import { DillDetails } from "picklefinance-core/lib/model/PickleModelJson";
+import { formatEther } from "ethers/lib/utils";
 
 import { CoreSelectors } from "v2/store/core";
 import { formatDollars, formatDate, formatNumber, formatPercentage } from "v2/utils";
@@ -22,7 +23,11 @@ const RevenueStats: FC<Props> = ({ dill }) => {
     core ? core : ({} as PickleModelJson.PickleModelJson),
   );
   const { dillWeeks } = dill;
+  if (!weeklyDistribution || !dillWeeks) return <></>;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
+
+  const ratio = dill.totalDill / dill.pickleLocked;
+  const averageLock = Math.round(ratio * 4 * 100) / 100;
 
   const dillAPY =
     weeklyDistribution && dill.totalDill
@@ -32,7 +37,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   return (
     <>
       <h1 className="font-body font-bold text-xl mb-4">{t("v2.dill.revenueShareStats")}</h1>
-      <div className="grid grid-cols-2 xl:grid-cols-4 bg-background-light rounded-xl border border-foreground-alt-500 shadow px-6 py-7">
+      <div className="grid grid-cols-2 xl:grid-cols-5 bg-background-light rounded-xl border border-foreground-alt-500 shadow px-6 py-7">
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}
@@ -101,12 +106,20 @@ const RevenueStats: FC<Props> = ({ dill }) => {
             {t("v2.dill.upcomingDistributionValue")}
           </p>
         </div>
-        <div>
+        <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDate(new Date(upcomingDistribution.distributionTime))}
           </h2>
           <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.upcomingDistributionDate")}
+          </p>
+        </div>
+        <div>
+          <h2 className="font-title font-medium text-foreground text-lg leading-5">
+            {t("v2.time.year_plural", { count: averageLock })}
+          </h2>
+          <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
+            {t("v2.dill.averageLock")}
           </p>
         </div>
       </div>

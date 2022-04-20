@@ -239,7 +239,8 @@ const HistoricChart: FC = () => {
   }, [core, chartMode]);
 
   const fetchFeeDistributionSeries = async (chartMode: ChartMode) => {
-    const dillStats = core?.dill?.dillWeeks!;
+    const dillStats = core?.dill?.dillWeeks;
+    if (!dillStats) return;
     const dillByWeek: WeeklyFeeDistributionDataPoint[] = dillStats.map((x) => {
       return {
         ...x,

@@ -365,6 +365,7 @@
     "dill": {
       "addPickle": "Add PICKLES",
       "addDill": "Add DILL",
+      "averageLock": "Average lock duration",
       "confirmLock": "Please confirm your lock amount & date",
       "createLock": "Create Lock",
       "currentAPY": "Current APY",
