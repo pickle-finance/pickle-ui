@@ -6,18 +6,24 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useCowSwap } from "./useCowSwap";
 import { getListOfTokens } from "./useTokenList";
-import { SwapSelector, SwapSelect } from "./SwapSelector";
-import { SwapInput } from "./SwapInput";
+import { SwapSelect } from "./SwapSelector";
 import { useInterval } from "./hooks";
 import isEmpty from "lodash/isEmpty";
 import { getAmountWRTDecimal, getAmountWRTUpperDenom } from "./utils";
 import { BigNumber } from "bignumber.js";
 import { FlipTokens } from "./FlipTokens";
 import { DELAY_FOR_BALANCES, DELAY_FOR_QOUTE, GPv2VaultRelayerAddress } from "./constants";
-import { OrderKind } from "@gnosis.pm/gp-v2-contracts";
+import { OrderKind } from "@cowprotocol/cow-sdk";
 import ApprovalFlow from "./flow/ApprovalFlow";
 import { Erc20__factory } from "containers/Contracts/factories/Erc20__factory";
-import { Link } from "@material-ui/core";
+import { CurrencyInput } from "./CurrencyInput";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 type LoadingErrorHandler<T> = {
   isLoading: boolean;
@@ -65,6 +71,10 @@ const SwapMainCard: FC = () => {
     error: "",
   });
 
+  const [swapError, setSwapError] = useState("");
+
+  const [openConfirmationalModel, setOpenConfirmationalModel] = useState(false);
+
   const { getQoute, sendSwap, error: cowSwap } = useCowSwap();
 
   const isEligibleQoute = !!token1?.value?.address && !!token2?.value?.address && !!amount1;
@@ -74,6 +84,28 @@ const SwapMainCard: FC = () => {
     handleQoute();
     handleTokenBalances();
   }, [token1, token2, amount1, account]);
+
+  const handleApprove = useCallback(async () => {
+    try {
+      if (!account || !chainId) throw new Error("MetaMask is not connected");
+      if (!GPv2VaultRelayerAddress[chainId])
+        throw new Error("Chain is not compatible with CowSwap");
+
+      const approvedAmount = await checkTokenApproval({
+        owner: account,
+        spender: GPv2VaultRelayerAddress[chainId].address,
+      });
+      setVisibleApproval(!!approvedAmount?.lt(qoute.data?.sellAmount));
+      setSwapError("");
+    } catch (err: any) {
+      setSwapError(err?.message);
+    }
+  }, [token1, account, chainId, qoute]);
+
+  useEffect(() => {
+    if (!openConfirmationalModel) return;
+    handleApprove();
+  }, [openConfirmationalModel]);
 
   const handleQoute = async () => {
     try {
@@ -146,46 +178,55 @@ const SwapMainCard: FC = () => {
   const flip = () => {
     if (!token1 || !token2) return;
     const token2Cpy = token2;
-    setKind((state) => (state === OrderKind.SELL ? OrderKind.BUY : OrderKind.SELL));
     setValue("token2", token1);
     setValue("token1", token2Cpy);
   };
 
-  const submit = async ({
+  const openConfirmational = ({
     token1,
     token2,
     amount1,
     amount2,
   }: {
     token1: SwapSelect | undefined;
-    amount1: string;
     token2: SwapSelect | undefined;
+    amount1: string;
     amount2: string;
+  }) => {
+    try {
+      if (isEmpty(token1) || isEmpty(token2) || !amount1 || !amount2)
+        throw new Error("Form is not filled");
+      setOpenConfirmationalModel(true);
+      setSwapError("");
+    } catch (err: any) {
+      setSwapError(err?.message);
+    }
+  };
+
+  const finalSubmit = async ({
+    token1,
+    token2,
+  }: {
+    token1: SwapSelect | undefined;
+    token2: SwapSelect | undefined;
   }) => {
     try {
       if (!account || !chainId) throw new Error("MetaMask is not connected");
       if (!token1 || !token2) throw new Error("Please fill the swap details");
       if (!GPv2VaultRelayerAddress[chainId])
         throw new Error("Chain Id is not supported for the swap");
-      const approvedAmount = await checkTokenApproval({
-        owner: account,
-        spender: GPv2VaultRelayerAddress[chainId].address,
-      });
+
       setSwapData((state) => ({
         ...state,
         isLoading: true,
         error: "",
       }));
-      const data = await handleQoute();
-      console.log(approvedAmount?.toString(), data?.sellAmount);
-      console.log(approvedAmount?.lt(data?.sellAmount));
-      setVisibleApproval(!!approvedAmount?.lt(data?.sellAmount));
       const swapId = await sendSwap({
-        buyAmount: data?.buyAmount,
-        buyToken: data?.buyToken,
-        feeAmount: data?.feeAmount,
-        sellAmount: data?.sellAmount,
-        sellToken: data?.sellToken,
+        buyAmount: qoute.data.buyAmount,
+        buyToken: token2.value.address,
+        feeAmount: qoute.data.feeAmount,
+        sellAmount: qoute.data.sellAmount,
+        sellToken: token1.value.address,
         kind,
       });
 
@@ -226,64 +267,87 @@ const SwapMainCard: FC = () => {
   }, [qoute, cowSwap, swapData]);
 
   return (
-    <div>
-      <div>{handlerErrorAndLoader()}</div>
-      <ApprovalFlow visible={visibleApproval} token={token1?.value?.address ?? ""} />
-      <form onSubmit={handleSubmit((form: SwapForm) => submit(form))}>
+    <Container>
+      {openConfirmationalModel ? (
         <div>
-          <SwapSelector
-            control={control}
-            list={LIST_WITH_CHAINID}
-            name={"token1"}
-            selected={token2}
-            key={"1"}
-          />
+          <button onClick={() => setOpenConfirmationalModel(false)}>Back</button>
+          <div>
+            From {token1?.value.symbol} {amount1}
+          </div>
+          <div>
+            To {token2?.value.symbol}{" "}
+            {getAmountWRTUpperDenom(amount2, token2?.value.decimals ?? 18)}
+          </div>
+          <div>
+            Fee: {getAmountWRTUpperDenom(qoute?.data?.feeAmount, token2?.value.decimals ?? 18)}
+          </div>
+          <div>
+            <button
+              onClick={() =>
+                finalSubmit({
+                  token1,
+                  token2,
+                })
+              }
+            >
+              Submit
+            </button>
+          </div>
         </div>
+      ) : (
         <div>
-          <SwapInput token={token1?.value} name="amount1" control={control} />
+          <div>{handlerErrorAndLoader()}</div>
+          <form onSubmit={handleSubmit((form: SwapForm) => openConfirmational(form))}>
+            <CurrencyInput
+              control={control}
+              inputName="amount1"
+              selectorName="token1"
+              list={LIST_WITH_CHAINID}
+              tokenA={token1}
+              tokenB={token2}
+              tokenBalance={token1Balance}
+              setValue={setValue}
+            />
+            <div className="text-center mb-4">
+              <FlipTokens onClick={flip} />
+            </div>
+            <CurrencyInput
+              control={control}
+              inputName="amount2"
+              selectorName="token2"
+              list={LIST_WITH_CHAINID}
+              tokenA={token2}
+              tokenB={token1}
+              tokenBalance={token2Balance}
+              setValue={setValue}
+            />
+            <div>
+              {isEligibleQoute &&
+                `1 ${token1.value.symbol} = ${costOfOneTokenWRTOtherToken()} ${
+                  token2.value.symbol
+                }`}
+            </div>
+            Fee:{" "}
+            {!isEmpty(qoute?.data) &&
+              getAmountWRTUpperDenom(qoute?.data?.feeAmount, token2?.value.decimals ?? 18)}
+            <div className="text-center">
+              {
+                <button
+                  disabled={!(!visibleApproval && !isEmpty(qoute.data) && !qoute.error)}
+                  type="submit"
+                >
+                  Submit
+                </button>
+              }
+              <ApprovalFlow
+                visible={openConfirmationalModel && visibleApproval}
+                token={token1?.value?.address ?? ""}
+              />
+            </div>
+          </form>
         </div>
-        <div>
-          <span>
-            {!!token1Balance && <Link onClick={() => setValue("amount1", token1Balance)}>Max</Link>}
-          </span>{" "}
-          <span>{!!token1Balance && `Balance: ${token1Balance}`}</span>
-        </div>
-        <FlipTokens onClick={flip} />
-        <div>
-          <SwapSelector
-            control={control}
-            list={LIST_WITH_CHAINID}
-            name={"token2"}
-            selected={token1}
-            key={"2"}
-          />
-        </div>
-        <div>
-          <SwapInput token={token2?.value} name="amount2" control={control} />
-        </div>
-        <div>
-          <span>
-            {!!token2Balance && <Link onClick={() => setValue("amount2", token2Balance)}>Max</Link>}
-          </span>{" "}
-          <span>{!!token2Balance && `Balance: ${token2Balance}`}</span>
-        </div>
-        <div>
-          {isEligibleQoute &&
-            `1 ${token1.value.symbol} = ${costOfOneTokenWRTOtherToken()} ${token2.value.symbol}`}
-        </div>
-        Fee:{" "}
-        {!isEmpty(qoute?.data) &&
-          getAmountWRTUpperDenom(
-            qoute?.data?.feeAmount,
-            (kind === OrderKind.SELL ? token2?.value.decimals : token1?.value.decimals) ?? 18,
-          )}
-        <div className="relative px-6 py-4 sm:px-8 sm:py-6">
-          <button disabled={qoute.isLoading || !!qoute.error} type="submit" className="p-4">
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
+      )}
+    </Container>
   );
 };
 

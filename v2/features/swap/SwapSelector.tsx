@@ -8,6 +8,12 @@ export interface SwapSelect {
   value: TokenInfo;
 }
 
+export interface SwapTokenMap {
+  [tokenName: string]: {
+    token: TokenInfo;
+  };
+}
+
 export const SwapSelector = ({
   selected,
   control,
@@ -16,18 +22,14 @@ export const SwapSelector = ({
 }: {
   selected: SwapSelect | undefined;
   control: Control<any, any>;
-  list: {
-    [tokenName: string]: {
-      token: TokenInfo;
-    };
-  };
+  list: SwapTokenMap;
   name: string;
 }) => {
   const options = useMemo(
     () =>
       Object.keys(list)
         .filter((item) => item !== selected?.label)
-        .map((item) => ({ label: item, value: list[item].token })),
+        .map((item) => ({ label: list[item].token.symbol, value: list[item].token })),
     [list, selected],
   );
   return (
@@ -37,15 +39,7 @@ export const SwapSelector = ({
       defaultValue={""}
       rules={{ required: true }}
       render={({ field }) => (
-        <Select
-          className="basic-single text-black"
-          classNamePrefix="select"
-
-          isSearchable
-          {...field}
-          name="color"
-          options={options}
-        />
+        <Select isSearchable {...field} name="tokens" options={options} />
       )}
     />
   );
