@@ -18,7 +18,7 @@ import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 import Confetti from "v2/components/Confetti";
 
-import 'react-toastify/dist/ReactToastify.css'
+import "react-toastify/dist/ReactToastify.css";
 
 // Custom polyfills
 import "core-js/proposals/string-match-all";
@@ -26,6 +26,7 @@ import "core-js/stable/array/find-index";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
+  clearScreen?: boolean;
 };
 
 type Props = AppProps & {
@@ -34,6 +35,7 @@ type Props = AppProps & {
 
 const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
   const PageTitle = Component.PageTitle ?? (() => <></>);
+  const clear = !!Component.clearScreen;
 
   return (
     <Provider store={store}>
@@ -44,7 +46,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
         <main className="sm:pl-64">
           <div className="px-4 py-2 sm:px-10 sm:py-10 text-foreground">
             <TopNavbar PageTitle={PageTitle} />
-            <ConnectionStatus />
+            {!clear && <ConnectionStatus />}
             <Component {...pageProps} />
             <div className="flex justify-between bg-background my-10">
               <UserBalanceStatus />
