@@ -158,6 +158,229 @@ export const JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON: {
       <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/deusftm.png"} />
     ),
   },
+  "0xbcab7d083cf6a01e0dda9ed7f8a02b47d125e682": {
+    "SEX-SOLID-sUSDC-MIM": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
+    ),
+    "OXDSOLIDLYLP-USDC-MIM": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
+    ),
+  },
+  "0xed7fd242ce91a541abcae52f3d617daca7fe6e34": {
+    "SEX-SOLID-vFTM-CRV": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
+    ),
+    "OXDSOLIDLYLP-CRV-WFTM": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE FSX-FRAX
+  "0x4bbd8467ccd49d5360648ce14830f43a7feb6e45": {
+    "SEX-SOLID-vFXS-FRAX": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
+    ),
+    "OXDSOLIDLYLP-FXS-FRAX": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE YFI-WOOFY
+  "0x4b3a172283ecb7d07ab881a9443d38cb1c98f4d0": {
+    "SEX-SOLID-vYFI-WOOFY": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
+    ),
+    "OXDSOLIDLYLP-YFI-WOOFY": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE USDC-SYN
+  "0xb1b3b96cf35435b2518093acd50e02fe03a0131f": {
+    "SEX-SOLID-vUSDC-SYN": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
+    ),
+    "OXDSOLIDLYLP-USDC-SYN": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-YFI
+  "0xea5f4ecf6900833f9b7038e5d8d67142abb09dcc": {
+    "SEX-SOLID-vFTM-YFI": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-YFI": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-MULTI
+  "0x94be7e51efe2a0c06c2281b6b385fcd12c84d6f9": {
+    "SEX-SOLID-vFTM-MULTI": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-MULTI": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
+    ),
+  },
+  // SOLIDEX STABLE SOLIDSEX-SOLID
+  "0x62e2819dd417f3b430b6fa5fd34a49a377a02ac8": {
+    "SEX-SOLID-sSOLID-SOLIDSEX": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
+    ),
+    "OXDSOLIDLYLP-SOLIDSEX-SOLID": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE LQDR-WFTM
+  "0x9861b8a9acc9b4f249981164bfe7f84202068bfe": {
+    "SEX-SOLID-vFTM-LQDR": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
+    ),
+    "OXDSOLIDLYLP-LQDR-WFTM": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE HND-WFTM
+  "0x6aae93f2915b899e87b49a9254434d36ac9570d8": {
+    "SEX-SOLID-vFTM-HND": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-HND": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE IB-WFTM
+  "0x304b61f3481c977ffbe630b55f2abeee74792664": {
+    "SEX-SOLID-vFTM-IB": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
+    ),
+    "OXDSOLIDLYLP-IB-WFTM": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-GEIST
+  "0xae885ef155f2835dce9c66b0a7a3a0c8c0622aa1": {
+    "SEX-SOLID-vFTM-GEIST": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-GEIST": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE BIFI-MAI
+  "0x8aeb0503e13f7bea02f80986a8fdb2acce5c6b6c": {
+    "SEX-SOLID-vBIFI-MAI": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/bifimai.png"} />
+    ),
+    "OXDSOLIDLYLP-BIFI-MAI": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/bifimai.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE CRV-G3CRV
+  "0x6ca598726d7c9ed382a101789c5f086f7165efa1": {
+    "SEX-SOLID-vCRV-G3CRV": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
+    ),
+    "OXDSOLIDLYLP-CRV-G3CRV": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-SOLIDSEX
+  "0xa66901d1965f5410deeb4d0bb43f7c1b628cb20b": {
+    "SEX-SOLID-vFTM-SOLIDSEX": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolidsex.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-SOLIDSEX": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmsolidsex.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-SYN
+  "0x8aa410d8b0cc3de48aac8eb5d928646a00e6ff04": {
+    "SEX-SOLID-vFTM-SYN": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-SYN": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE TAROT-XTAROT
+  "0x4fe782133af0f7604b9b89bf95893adde265fefd": {
+    "SEX-SOLID-vTAROT-XTAROT": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
+    ),
+    "OXDSOLIDLYLP-XTAROT-TAROT": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
+    ),
+  },
+  // SOLIDEX STABLE USDC-DEI
+  "0x5821573d8f04947952e76d94f3abc6d7b43bf8d0": {
+    "SEX-SOLID-sUSDC-DEI": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
+    ),
+    "OXDSOLIDLYLP-USDC-DEI": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/usdcdei.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-RDL
+  "0x5ef8f0bd4f071b0199603a28ec9343f3651999c0": {
+    "SEX-SOLID-vFTM-RDL": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-RDL": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
+    ),
+  },
+  // SOLIDEX STABLE SPIRIT-RAINSPIRIT
+  "0xca395560b6003d921d9408af011c6c61399f66ca": {
+    "SEX-SOLID-sSPIRIT-RAINSPIRIT": (
+      <LpIcon
+        swapIconSrc={"/protocols/solidex.png"}
+        tokenIconSrc={"/tokens/spiritrainspirit.png"}
+      />
+    ),
+    "OXDSOLIDLYLP-SPIRIT-RAINSPIRIT": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/spiritrainspirit.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-SOLID
+  "0xe4bc39fdd4618a76f6472079c329bdfa820afa75": {
+    "SEX-SOLID-vFTM-SOLID": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-SOLID": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
+    ),
+  },
+  // SOLIDEX STABLE SPIRIT-SINSPIRIT
+  "0x742c384d6edec91466042ba84e5e751c4eaff962": {
+    "SEX-SOLID-sSPIRIT-SINSPIRIT": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
+    ),
+    "OXDSOLIDLYLP-SPIRIT-SINSPIRIT": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-SCREAM
+  "0x86dd79265814756713e631dde7e162bdd538b7b1": {
+    "OXDSOLIDLYLP-WFTM-SCREAM": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE WFTM-TAROT
+  "0x783f1edbe336981dfcb74bd0b803655f55aadf48": {
+    "SEX-SOLID-vFTM-TAROT": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmtarot.png"} />
+    ),
+    "OXDSOLIDLYLP-WFTM-TAROT": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/wftmtarot.png"} />
+    ),
+  },
+  // SOLIDEX VOLATILE FTM-SEX
+  "0xfcec86af8774d69e2e4412b8de3f4abf1f671ecc": {
+    "SEX-SOLID-vFTM-SEX": (
+      <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
+    ),
+    "OXDSOLIDLYLP-SEX-WFTM": (
+      <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
+    ),
+  },
 };
 export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   [key: string]: string | ReactNode;
@@ -468,6 +691,15 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xa58bd557bfbc12f8ceaccc6e1668f5fbfb2118bb": (
     <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/relay.png"} />
   ),
+
+  // NET BYTE/USDC
+  "0x3Ab6be89ED5A0d4FDD412c246F5e6DdD250Dd45c": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
+  ),
+  // NET BUSD/USDC
+  "0x8014c801F6cF32445D503f7BaC30976B3161eE52": (
+    <LpIcon swapIconSrc={"/netswap.png"} tokenIconSrc={"/byteusdc.png"} />
+  ),
   // TETHYS TETHYS/METIS
   "0xc9b290ff37fa53272e9d71a0b13a444010af4497": (
     <LpIcon swapIconSrc={"/tethys.png"} tokenIconSrc={"/metis.png"} />
@@ -753,77 +985,17 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x8e38543d4c764dbd8f8b98c73407457a3d3b4999": (
     <LpIcon swapIconSrc={"/protocols/spiritswap.png"} tokenIconSrc={"/tokens/gscarabscarab.png"} />
   ),
-  // SOLIDEX VOLATILE FTM-SEX
-  "0xfcec86af8774d69e2e4412b8de3f4abf1f671ecc": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ftmsex.png"} />
-  ),
-  // SOLIDEX STABLE USDC-MIM
-  "0xbcab7d083cf6a01e0dda9ed7f8a02b47d125e682": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcmim.png"} />
-  ),
   // SOLIDEX VOLATILE WFTM-TOMB
   "0x60a861cd30778678e3d613db96139440bd333143": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmtomb.png"} />
-  ),
-  // SOLIDEX VOLATILE CRV-WFTM
-  "0xed7fd242ce91a541abcae52f3d617daca7fe6e34": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvwftm.png"} />
-  ),
-  // SOLIDEX VOLATILE FSX-FRAX
-  "0x4bbd8467ccd49d5360648ce14830f43a7feb6e45": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/fxsfrax.png"} />
   ),
   // SOLIDEX VOLATILE USDC-OXD
   "0xeafb5ae6eea34954ee5e5a27b068b8705ce926a6": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcoxd.png"} />
   ),
-  // SOLIDEX VOLATILE YFI-WOOFY
-  "0x4b3a172283ecb7d07ab881a9443d38cb1c98f4d0": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/yfiwoofy.png"} />
-  ),
-  // SOLIDEX VOLATILE USDC-SYN
-  "0xb1b3b96cf35435b2518093acd50e02fe03a0131f": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcsyn.png"} />
-  ),
-  // SOLIDEX VOLATILE WFTM-YFI
-  "0xea5f4ecf6900833f9b7038e5d8d67142abb09dcc": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmyfi.png"} />
-  ),
   // SOLIDEX VOLATILE OATH-WFTM
   "0x6b987e02ca5eae26d8b2bcac724d4e03b3b0c295": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/oathwftm.png"} />
-  ),
-  // SOLIDEX VOLATILE WFTM-MULTI
-  "0x94be7e51efe2a0c06c2281b6b385fcd12c84d6f9": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmmulti.png"} />
-  ),
-  // SOLIDEX STABLE SOLIDSEX-SOLID
-  "0x62e2819dd417f3b430b6fa5fd34a49a377a02ac8": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/solidsolidsex.png"} />
-  ),
-  // SOLIDEX VOLATILE LQDR-WFTM
-  "0x9861b8a9acc9b4f249981164bfe7f84202068bfe": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/lqdrwftm.png"} />
-  ),
-  // SOLIDEX VOLATILE HND-WFTM
-  "0x6aae93f2915b899e87b49a9254434d36ac9570d8": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/hndwftm.png"} />
-  ),
-  // SOLIDEX VOLATILE IB-WFTM
-  "0x304b61f3481c977ffbe630b55f2abeee74792664": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/ibwftm.png"} />
-  ),
-  // SOLIDEX VOLATILE WFTM-GEIST
-  "0xae885ef155f2835dce9c66b0a7a3a0c8c0622aa1": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmgeist.png"} />
-  ),
-  // SOLIDEX VOLATILE BIFI-MAI
-  "0x8aeb0503e13f7bea02f80986a8fdb2acce5c6b6c": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/bifimai.png"} />
-  ),
-  // SOLIDEX VOLATILE CRV-G3CRV
-  "0x6ca598726d7c9ed382a101789c5f086f7165efa1": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
   ),
   // SOLIDEX VOLATILE WFTM-BEFTM
   "0x387a11d161f6855bd3c801ba6c79fe9b824ce1f3": (
@@ -841,29 +1013,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xc0240ee4405f11efb87a00b432a8be7b7afc97cc": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdai.png"} />
   ),
-  // SOLIDEX VOLATILE WFTM-SYN
-  "0x8aa410d8b0cc3de48aac8eb5d928646a00e6ff04": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsyn.png"} />
-  ),
-  // SOLIDEX VOLATILE TAROT-XTAROT
-  "0x4fe782133af0f7604b9b89bf95893adde265fefd": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/tarotxtarot.png"} />
-  ),
-  // SOLIDEX STABLE USDC-DEI
-  "0x5821573d8f04947952e76d94f3abc6d7b43bf8d0": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/uscddei.png"} />
-  ),
-  // SOLIDEX VOLATILE WFTM-RDL
-  "0x5ef8f0bd4f071b0199603a28ec9343f3651999c0": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmrdl.png"} />
-  ),
   // SOLIDEX VOLATILE G3CRV-GEIST
   "0x6c90b69af6dbd929458497a8d1013aa255ac71f1": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/g3crvgeist.png"} />
-  ),
-  // SOLIDEX VOLATILE CRV-G3CRV
-  "0x817caff2dac62bdcce1ebe332ca128215dbd9e9a": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/crvg3crv.png"} />
   ),
   // SOLIDEX VOLATILE USDC-WFTM
   "0xbad7d3df8e1614d985c3d9ba9f6ecd32ae7dc20a": (
@@ -877,10 +1029,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0xd6be7592e5c424623c8c9557738970ae19ab5de2": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritlinspirit.png"} />
   ),
-  // SOLIDEX VOLATILE WFTM-SOLID
-  "0xe4bc39fdd4618a76f6472079c329bdfa820afa75": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmsolid.png"} />
-  ),
   // SOLIDEX STABLE SPIRIT-SINSPIRIT
   "0x742c384d6edec91466042ba84e5e751c4eaff962": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/spiritsinspirit.png"} />
@@ -893,22 +1041,50 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x4e9b80f91e954ae532ff765822fcb5a6bc36caa6": (
     <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/usdcdai.png"} />
   ),
-  // SOLIDEX VOLATILE WFTM-SCREAM
-  "0x86dd79265814756713e631dde7e162bdd538b7b1": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
-  ),
-  // SOLIDEX VOLATILE WFTM-TAROT
-  "0x783f1edbe336981dfcb74bd0b803655f55aadf48": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/wftmscream.png"} />
-  ),
   // SOLIDEX VOLATILE CRE8R-BOMB
   "0x6058345a4d8b89ddac7042be08091f91a404b80b": (
-    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/renbtc.png"} />
+    <LpIcon swapIconSrc={"/protocols/solidex.png"} tokenIconSrc={"/tokens/cre8rbomb.png"} />
+  ),
+  // StrategyOxdVolatileBeetsFbeetsLp
+  "0x5a3aa3284ee642152d4a2b55be1160051c5eb932": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/beetsfbeets.png"} />
+  ),
+  // StrategyOxdVolatileSolidOxsolidLp
+  "0xa3bf7336fdbce054c4b5bad4ff8d79539db2a2b3": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/solidoxsolid.png"} />
+  ),
+  // StrategyOxdVolatileDeiScreamLp
+  "0xd11e940c42e03d927cfd7426718bb4ca21d6015f": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/deiscream.png"} />
+  ),
+  // StrategyOxdVolatileOxdDeiLp
+  "0x4303edb91d23fc648bfeeb65349596bcf4df0742": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/deioxd.png"} />
+  ),
+  // StrategyOxdSolidexVolatileDeiDeusLp
+  "0x817caff2dac62bdcce1ebe332ca128215dbd9e9a": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/deideus.png"} />
+  ),
+  // StrategyOxdSolidlyVolatileSexG3crvLp
+  "0x966f6dfdfdc7fef3271287a88cb53c77d8901c19": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/sexg3crv.png"} />
+  ),
+  // StrategyOxdSolidlyVolatileWftmOxd2
+  "0xcb6eab779780c7fd6d014ab90d8b10e97a1227e2": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/oxd.png"} />
   ),
   // STAR USDC
   "0x12edea9cd262006cc3c4e77c90d2cd2dd4b1eb97": (
     <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdc.png"} />
   ),
+  // StrategyOxdSolidlyVolatileDeiDeus
+  "0xf42dbcf004a93ae6d5922282b304e2aefdd50058": (
+    <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/deideus.png"} />
+  ),
+  // // StrategyOxdSolidlyVolatileUsdcWeveLp
+  // "0xD9A4108CBB40a12dE16dFFDc54aE5065878816d7": (
+  //   <LpIcon swapIconSrc={"/protocols/oxd.png"} tokenIconSrc={"/tokens/renbtc.png"} />
+  // ),
 };
 
 const USDC_SCALE = ethers.utils.parseUnits("1", 12);
