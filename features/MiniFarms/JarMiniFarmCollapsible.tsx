@@ -321,6 +321,26 @@ export const FARM_LP_TO_ICON: {
   "0xf3EbeC4D691Bc5Ea7B0158228feCfC3de2aE3910": (
     <LpIcon swapIconSrc={"/wanna.png"} tokenIconSrc={"/wanna.png"} />
   ),
+  // TRI STNEAR-NEAR
+  "0xbD41Da79B1bA18195e184a6eA983CE87BE33D4Ad": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/stnear.png"} />
+  ),
+  // TRI STNEAR-XTRI
+  "0x86c125a1AfB4a656Ee1EadAB85BfB2bB26180360": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xtri.png"} />
+  ),
+  // TRI USDO-USDT
+  "0x663E01A89CF0C7F40E1FA892A157f870EDF55245": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/usdo.png"} />
+  ),
+  // TRI FLX-NEAR
+  "0x4062A67B641f96000334Af3012BEF2D8087534C4": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/flx.png"} />
+  ),
+  // TRI BSTN-NEAR
+  "0x031adC001358eE1416C6B4AD8B8bf98a1C72EdD0": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/bstn.png"} />
+  ),
 
   // Metis
 
