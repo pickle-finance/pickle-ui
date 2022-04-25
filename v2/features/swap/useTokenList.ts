@@ -13,11 +13,11 @@ export const getListOfTokens = () => {
   return DEFAULT_TOKEN_LIST.tokens.reduce<TokenAddressMap>((acc, prev) => {
     if (!acc[prev.chainId]) {
       acc[prev.chainId] = {
-        [prev.name]: { token: prev },
+        [prev.symbol]: { token: prev },
       };
     } else {
-      if (!acc[prev.chainId][prev.name]) {
-        acc[prev.chainId][prev.name] = { token: prev };
+      if (!acc[prev.chainId][prev.symbol]) {
+        acc[prev.chainId][prev.symbol] = { token: prev };
       }
     }
     return acc;
