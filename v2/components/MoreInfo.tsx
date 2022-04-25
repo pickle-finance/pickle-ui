@@ -1,19 +1,11 @@
-import { FC, forwardRef, ReactNode } from "react";
+import { FC, forwardRef } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 
-interface Props {
-  primaryText?: string | ReactNode;
-  secondaryText?: string | ReactNode;
-}
-
-const TooltipContent: FC<Props> = ({ primaryText, secondaryText }) => (
+const TooltipContent: FC = ({ children }) => (
   <div className="rounded-lg shadow-lg border border-foreground-alt-500 overflow-hidden">
     <div className="bg-background-light px-3 py-2">
-      <div className="text-primary-light text-base font-normal">
-        {primaryText && <span className="mr-2">{primaryText}</span>}
-        <span className="text-foreground-alt-200 text-sm">{secondaryText}</span>
-      </div>
+      <div className="text-primary-light text-base font-normal">{children}</div>
     </div>
   </div>
 );
@@ -36,8 +28,8 @@ const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(props, 
   );
 });
 
-const MoreInfo: FC<Props> = ({ primaryText = "", secondaryText = "" }) => (
-  <Tippy content={<TooltipContent primaryText={primaryText} secondaryText={secondaryText} />}>
+const MoreInfo: FC = ({ children }) => (
+  <Tippy content={<TooltipContent>{children}</TooltipContent>}>
     <TooltipTarget />
   </Tippy>
 );

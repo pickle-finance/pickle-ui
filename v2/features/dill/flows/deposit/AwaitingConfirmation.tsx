@@ -43,7 +43,13 @@ const AwaitingConfirmation: FC<Props> = ({
       <p className="text-foreground-alt-200 text-sm mb-4">
         <span className="font-title text-primary text-base mr-2">{amount}</span>
         {tokenName}
-        {valueUSD && <MoreInfo secondaryText={`~ ${formatDollars(valueUSD)}`} />}
+        {valueUSD && (
+          <MoreInfo>
+            <span className="text-foreground-alt-200 text-sm">{`~ ${formatDollars(
+              valueUSD,
+            )}`}</span>
+          </MoreInfo>
+        )}
       </p>
       {lockEnd && (
         <p className="text-foreground-alt-200 text-sm mb-4">

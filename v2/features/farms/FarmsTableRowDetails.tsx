@@ -29,7 +29,12 @@ interface InfoProps {
 const InfoRowContent: FC<InfoProps> = ({ label, tooltipText, value }) => (
   <p className="flex py-2 text-foreground-alt-200 justify-between">
     <span className="font-body font-bold">
-      {label} {tooltipText && <MoreInfo secondaryText={tooltipText} />}
+      {label}
+      {tooltipText && (
+        <MoreInfo>
+          <span className="text-foreground-alt-200 text-sm">{tooltipText}</span>
+        </MoreInfo>
+      )}
     </span>
     <span className="font-medium text-primary text-base">{value}</span>
   </p>
@@ -113,7 +118,11 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                       </span>
                       pTokens
                     </Trans>
-                    <MoreInfo secondaryText={t("v2.farms.pToken")} />
+                    <MoreInfo>
+                      <span className="text-foreground-alt-200 text-sm">
+                        {t("v2.farms.pToken")}
+                      </span>
+                    </MoreInfo>
                   </span>
                   <Button onClick={() => metamaskAdd()} type="secondary">
                     {t("v2.farms.metamaskAdd")}

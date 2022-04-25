@@ -161,9 +161,11 @@ const HarvestFlow: FC<Props> = ({
                 <span className="text-primary ml-2">
                   {roundToSignificantDigits(picklePendingAmount, 3)} PICKLE
                 </span>
-                <MoreInfo
-                  secondaryText={`~ ${formatDollars(picklePendingAmount * picklePrice, 3)}`}
-                />
+                <MoreInfo>
+                  <span className="text-foreground-alt-200 text-sm">
+                    {formatDollars(picklePendingAmount * picklePrice, 3)}
+                  </span>
+                </MoreInfo>
               </p>
             }
             cta={t("v2.actions.harvest")}

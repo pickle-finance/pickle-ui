@@ -36,35 +36,33 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}
-            <MoreInfo
-              secondaryText={
-                <div className="flex items-center font-bold">
-                  <span className="text-foreground mr-1">{formatNumber(dill.pickleLocked)}</span>
-                  <div className="inline-block w-6 h-6">
-                    <Image
-                      src="/pickle-icon.svg"
-                      width={24}
-                      height={24}
-                      layout="intrinsic"
-                      alt="PICKLE"
-                      title="PICKLE"
-                    />
-                  </div>
-                  <span className="mr-2 text-foreground-alt-200">=</span>
-                  <span className="text-foreground mr-1">{formatNumber(dill.totalDill)}</span>
-                  <div className="inline-block w-6 h-6">
-                    <Image
-                      src="/dill-icon.png"
-                      width={24}
-                      height={24}
-                      layout="intrinsic"
-                      alt="DILL"
-                      title="DILL"
-                    />
-                  </div>
+            <MoreInfo>
+              <div className="flex items-center font-bold text-sm">
+                <span className="text-foreground mr-1">{formatNumber(dill.pickleLocked)}</span>
+                <div className="inline-block w-6 h-6">
+                  <Image
+                    src="/pickle-icon.svg"
+                    width={24}
+                    height={24}
+                    layout="intrinsic"
+                    alt="PICKLE"
+                    title="PICKLE"
+                  />
                 </div>
-              }
-            />
+                <span className="mr-2 text-foreground-alt-200">=</span>
+                <span className="text-foreground mr-1">{formatNumber(dill.totalDill)}</span>
+                <div className="inline-block w-6 h-6">
+                  <Image
+                    src="/dill-icon.png"
+                    width={24}
+                    height={24}
+                    layout="intrinsic"
+                    alt="DILL"
+                    title="DILL"
+                  />
+                </div>
+              </div>
+            </MoreInfo>
           </h2>
           <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.totalValueLocked")}
@@ -81,25 +79,23 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         <div>
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(upcomingDistribution.weeklyPickleAmount * picklePrice)}
-            <MoreInfo
-              secondaryText={
-                <div className="flex items-center font-bold">
-                  <span className="text-foreground mr-1">
-                    {formatNumber(upcomingDistribution.weeklyPickleAmount)}
-                  </span>
-                  <div className="inline-block w-6 h-6">
-                    <Image
-                      src="/pickle-icon.svg"
-                      width={24}
-                      height={24}
-                      layout="intrinsic"
-                      alt="PICKLE"
-                      title="PICKLE"
-                    />
-                  </div>
+            <MoreInfo>
+              <div className="flex items-center font-bold text-sm">
+                <span className="text-foreground mr-1">
+                  {formatNumber(upcomingDistribution.weeklyPickleAmount)}
+                </span>
+                <div className="inline-block w-6 h-6">
+                  <Image
+                    src="/pickle-icon.svg"
+                    width={24}
+                    height={24}
+                    layout="intrinsic"
+                    alt="PICKLE"
+                    title="PICKLE"
+                  />
                 </div>
-              }
-            />
+              </div>
+            </MoreInfo>
           </h2>
           <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {t("v2.dill.upcomingDistributionValue")}

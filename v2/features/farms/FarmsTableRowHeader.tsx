@@ -161,7 +161,11 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) =>
       </RowCell>
       <RowCell>
         <span className="font-title font-medium text-base leading-5">{aprRangeString}</span>{" "}
-        <MoreInfo secondaryText={ReactHtmlParser(apyRangeTooltipText)} />{" "}
+        <MoreInfo>
+          <span className="text-foreground-alt-200 text-sm">
+            {ReactHtmlParser(apyRangeTooltipText)}
+          </span>
+        </MoreInfo>
         {jar.chain === ChainNetwork.Ethereum && Boolean(userStakedNum) && (
           <p className="font-normal text-xs text-foreground-alt-200">{userApyString}</p>
         )}

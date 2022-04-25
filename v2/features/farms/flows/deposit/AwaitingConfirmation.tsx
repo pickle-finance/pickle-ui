@@ -42,7 +42,11 @@ const AwaitingConfirmation: FC<Props> = ({
       <p className="text-foreground-alt-200 text-sm mb-8">
         <span className="font-title text-primary text-base mr-2">{amount}</span>
         {tokenName}
-        {equivalentValue && <MoreInfo secondaryText={equivalentValue} />}
+        {equivalentValue && (
+          <MoreInfo>
+            <span className="text-foreground-alt-200 text-sm">{equivalentValue}</span>
+          </MoreInfo>
+        )}
       </p>
       <Error error={error} />
       <div className="flex justify-center items-center">
