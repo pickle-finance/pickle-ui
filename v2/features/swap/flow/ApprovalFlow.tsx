@@ -15,8 +15,13 @@ import { ApprovalEvent } from "containers/Contracts/Erc20";
 
 import { GPv2VaultRelayerAddress } from "../constants";
 import { useWeb3React } from "@web3-react/core";
+import { StyledButton } from "../style";
 
-const ApprovalFlow: FC<{ visible: boolean; token: string }> = ({ visible, token }) => {
+const ApprovalFlow: FC<{
+  visible: boolean;
+  token: string;
+  setVisibleApproval: (val: boolean) => void;
+}> = ({ visible, token, setVisibleApproval }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
@@ -40,6 +45,7 @@ const ApprovalFlow: FC<{ visible: boolean; token: string }> = ({ visible, token 
       ({ event }) => event === "Approval",
     ) as ApprovalEvent;
     const approvedAmount = approvalEvent.args[2];
+    setVisibleApproval(false);
     console.log({ approvedAmount });
   };
 
@@ -57,7 +63,11 @@ const ApprovalFlow: FC<{ visible: boolean; token: string }> = ({ visible, token 
 
   return (
     <>
-      {visible && <Button onClick={openModal}>{t("v2.actions.approve")}</Button>}
+      {visible && (
+        <StyledButton type="button" onClick={openModal}>
+          {t("v2.actions.approve")}
+        </StyledButton>
+      )}
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}
