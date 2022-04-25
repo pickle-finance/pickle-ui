@@ -8,3 +8,6 @@ export const getAmountWRTUpperDenom = (amount: string, decimals: number) =>
     .div(new BigNumber(10).exponentiatedBy(decimals))
     .decimalPlaces(6)
     .toString();
+export const calculateBasisPoint = (val: number): BigNumber => {
+  return new BigNumber(val).div(10000);
+};

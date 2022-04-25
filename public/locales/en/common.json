@@ -474,7 +474,8 @@
       "openMenu": "Open main menu",
       "previous": "Prev",
       "stats": "Stats",
-      "tokenAddress": "Token address"
+      "tokenAddress": "Token address",
+      "swap": "Swap"
     },
     "stats": {
       "chain": {

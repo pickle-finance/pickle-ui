@@ -153,3 +153,7 @@ body.classic {
     background-color: var(--accent-color);
   }
 }
+
+.swap-select-item__indicator-separator  {
+  display: none !important;
+}
