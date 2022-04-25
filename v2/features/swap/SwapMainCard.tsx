@@ -9,7 +9,7 @@ import { getListOfTokens } from "./useTokenList";
 import { SwapSelect } from "./SwapSelector";
 import { useInterval } from "./hooks";
 import isEmpty from "lodash/isEmpty";
-import { getAmountWRTDecimal, getAmountWRTUpperDenom } from "./utils";
+import { calculateBasisPoint, getAmountWRTDecimal, getAmountWRTUpperDenom } from "./utils";
 import { BigNumber } from "bignumber.js";
 import { FlipTokens } from "./FlipTokens";
 import { DELAY_FOR_BALANCES, DELAY_FOR_QOUTE, GPv2VaultRelayerAddress } from "./constants";
@@ -17,13 +17,9 @@ import { OrderKind } from "@cowprotocol/cow-sdk";
 import ApprovalFlow from "./flow/ApprovalFlow";
 import { Erc20__factory } from "containers/Contracts/factories/Erc20__factory";
 import { CurrencyInput } from "./CurrencyInput";
-import styled from "styled-components";
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import { SwapInfo } from "./SwapInfo";
+import { Container, StyledButton, SwapContainer } from "./style";
+import { ConfirmationSwap } from "./ConfirmationSwap";
 
 type LoadingErrorHandler<T> = {
   isLoading: boolean;
@@ -65,6 +61,7 @@ const SwapMainCard: FC = () => {
     data: {},
     error: "",
   });
+  const [confirmationalSwap, setConfirmationalSwap] = useState<any>();
   const [swapData, setSwapData] = useState<LoadingErrorHandler<any>>({
     isLoading: false,
     data: {},
@@ -75,15 +72,19 @@ const SwapMainCard: FC = () => {
 
   const [openConfirmationalModel, setOpenConfirmationalModel] = useState(false);
 
-  const { getQoute, sendSwap, error: cowSwap } = useCowSwap();
+  const { getQoute, sendSwap, error: cowSwapError } = useCowSwap();
 
-  const isEligibleQoute = !!token1?.value?.address && !!token2?.value?.address && !!amount1;
+  const [slippageTolerance, setSlippageTolerance] = useState(calculateBasisPoint(1000));
+
+  const isEligibleQoute =
+    !!token1?.value?.address && !!token2?.value?.address && (!!amount1 || !!amount2);
 
   useEffect(() => {
     if (!isEligibleQoute) return;
     handleQoute();
     handleTokenBalances();
-  }, [token1, token2, amount1, account]);
+    handleApprove();
+  }, [token1, token2, amount1, account, amount2]);
 
   const handleApprove = useCallback(async () => {
     try {
@@ -102,10 +103,20 @@ const SwapMainCard: FC = () => {
     }
   }, [token1, account, chainId, qoute]);
 
-  useEffect(() => {
-    if (!openConfirmationalModel) return;
-    handleApprove();
-  }, [openConfirmationalModel]);
+  const getFee = useCallback(
+    (qouteVal?: any): string => {
+      const qouteData = qouteVal ?? qoute.data;
+      let token = token2;
+      let rate = costOfOneTokenWRTOtherToken(false, qouteData);
+      if (kind === OrderKind.BUY) {
+        token = token1;
+        rate = costOfOneTokenWRTOtherToken(true, qouteData);
+      }
+      const res = new BigNumber(rate).times(qouteData?.feeAmount).toString();
+      return getAmountWRTUpperDenom(res, token?.value.decimals ?? 18);
+    },
+    [token1, token2, qoute],
+  );
 
   const handleQoute = async () => {
     try {
@@ -114,10 +125,16 @@ const SwapMainCard: FC = () => {
         isLoading: true,
         error: "",
       }));
+      let amount;
+      if (OrderKind.SELL == kind) {
+        amount = getAmountWRTDecimal(amount1, token1?.value.decimals ?? 18);
+      } else {
+        amount = getAmountWRTDecimal(amount2, token2?.value.decimals ?? 18);
+      }
       const qoute = await getQoute({
         sellToken: token1?.value?.address ?? "",
         buyToken: token2?.value?.address ?? "",
-        amount: getAmountWRTDecimal(amount1, token1?.value.decimals ?? 18),
+        amount,
         kind,
       });
       setQoute((state) => ({
@@ -126,7 +143,22 @@ const SwapMainCard: FC = () => {
         data: qoute,
         error: "",
       }));
-      setValue("amount2", getAmountWRTUpperDenom(qoute.buyAmount, token2?.value?.decimals ?? 18));
+      const updatedVal = new BigNumber(getFee(qoute));
+      if (kind === OrderKind.SELL) {
+        setValue(
+          "amount2",
+          updatedVal
+            .plus(getAmountWRTUpperDenom(qoute.buyAmount, token2?.value?.decimals ?? 18))
+            .toString(),
+        );
+      } else {
+        setValue(
+          "amount1",
+          updatedVal
+            .plus(getAmountWRTUpperDenom(qoute.sellAmount, token1?.value?.decimals ?? 18))
+            .toString(),
+        );
+      }
       return qoute;
     } catch (err: any) {
       setQoute((state) => ({
@@ -152,20 +184,10 @@ const SwapMainCard: FC = () => {
   const handleTokenBalances = useCallback(async () => {
     if (!account) return;
     if (!!token1Contract) {
-      setToken1Balance(
-        getAmountWRTUpperDenom(
-          (await token1Contract.balanceOf(account)).toString(),
-          token1?.value.decimals ?? 18,
-        ),
-      );
+      setToken1Balance((await token1Contract.balanceOf(account)).toString());
     }
     if (!!token2Contract) {
-      setToken2Balance(
-        getAmountWRTUpperDenom(
-          (await token2Contract.balanceOf(account)).toString(),
-          token2?.value.decimals ?? 18,
-        ),
-      );
+      setToken2Balance((await token2Contract.balanceOf(account)).toString());
     }
   }, [token1, token2, token1Contract, token2Contract]);
 
@@ -196,8 +218,11 @@ const SwapMainCard: FC = () => {
     try {
       if (isEmpty(token1) || isEmpty(token2) || !amount1 || !amount2)
         throw new Error("Form is not filled");
-      setOpenConfirmationalModel(true);
       setSwapError("");
+      if (new BigNumber(token1Balance).lt(qoute.data.sellAmount))
+        throw new Error("Sell Token does not have enough balance");
+      setConfirmationalSwap({ ...qoute.data, amount1, amount2 });
+      setOpenConfirmationalModel(true);
     } catch (err: any) {
       setSwapError(err?.message);
     }
@@ -215,17 +240,31 @@ const SwapMainCard: FC = () => {
       if (!token1 || !token2) throw new Error("Please fill the swap details");
       if (!GPv2VaultRelayerAddress[chainId])
         throw new Error("Chain Id is not supported for the swap");
-
       setSwapData((state) => ({
         ...state,
         isLoading: true,
         error: "",
       }));
+      let adjustedSlippageBuyAmount = confirmationalSwap?.buyAmount;
+      let adjustedSlippageSellAmount = confirmationalSwap?.sellAmount;
+      if (!adjustedSlippageBuyAmount || !adjustedSlippageSellAmount)
+        throw new Error("Buy/Sell amount is zero");
+
+      if (OrderKind.SELL === confirmationalSwap.kind) {
+        adjustedSlippageBuyAmount = new BigNumber(slippageTolerance.plus(1))
+          .times(adjustedSlippageBuyAmount)
+          .toString();
+      } else {
+        adjustedSlippageSellAmount = new BigNumber(new BigNumber(1).minus(slippageTolerance))
+          .times(adjustedSlippageSellAmount)
+          .toString();
+      }
+
       const swapId = await sendSwap({
-        buyAmount: qoute.data.buyAmount,
+        buyAmount: adjustedSlippageBuyAmount,
         buyToken: token2.value.address,
-        feeAmount: qoute.data.feeAmount,
-        sellAmount: qoute.data.sellAmount,
+        feeAmount: confirmationalSwap?.feeAmount,
+        sellAmount: adjustedSlippageSellAmount,
         sellToken: token1.value.address,
         kind,
       });
@@ -247,14 +286,15 @@ const SwapMainCard: FC = () => {
   };
 
   const costOfOneTokenWRTOtherToken = useCallback(
-    (flip = false) => {
+    (flip = false, qouteVal?: any): string => {
+      let qouteData = qouteVal ?? qoute.data;
       const ratio = (q1: string, q2: string) =>
-        new BigNumber(q2).div(q1).decimalPlaces(6).toString();
-      if (isEmpty(qoute?.data)) return "0";
+        new BigNumber(q1).div(q2).decimalPlaces(6).toString();
+      if (isEmpty(qouteData)) return "0";
       if (flip) {
-        return ratio(qoute.data.buyAmount, qoute.data.sellAmount);
+        return ratio(qouteData.sellAmount, qouteData.buyAmount);
       }
-      return ratio(qoute.data.sellAmount, qoute.data.buyAmount);
+      return ratio(qouteData.buyAmount, qouteData.sellAmount);
     },
     [qoute],
   );
@@ -263,39 +303,26 @@ const SwapMainCard: FC = () => {
     if (qoute.isLoading || swapData.isLoading) return "Loading ...";
     if (!!qoute.error) return qoute.error;
     if (!!swapData.error) return swapData.error;
-    if (!!cowSwap) return cowSwap;
-  }, [qoute, cowSwap, swapData]);
+    if (!!cowSwapError) return cowSwapError;
+    if (!!swapError) return swapError;
+  }, [qoute, cowSwapError, swapData, swapError]);
 
   return (
     <Container>
       {openConfirmationalModel ? (
-        <div>
-          <button onClick={() => setOpenConfirmationalModel(false)}>Back</button>
-          <div>
-            From {token1?.value.symbol} {amount1}
-          </div>
-          <div>
-            To {token2?.value.symbol}{" "}
-            {getAmountWRTUpperDenom(amount2, token2?.value.decimals ?? 18)}
-          </div>
-          <div>
-            Fee: {getAmountWRTUpperDenom(qoute?.data?.feeAmount, token2?.value.decimals ?? 18)}
-          </div>
-          <div>
-            <button
-              onClick={() =>
-                finalSubmit({
-                  token1,
-                  token2,
-                })
-              }
-            >
-              Submit
-            </button>
-          </div>
-        </div>
+        <ConfirmationSwap
+          token1={token1}
+          token2={token2}
+          confirmationalSwap={confirmationalSwap}
+          setOpenConfirmationalModel={setOpenConfirmationalModel}
+          getFee={getFee}
+          kind={kind}
+          handleOnClick={finalSubmit}
+          costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
+          error={handlerErrorAndLoader}
+        />
       ) : (
-        <div>
+        <SwapContainer>
           <div>{handlerErrorAndLoader()}</div>
           <form onSubmit={handleSubmit((form: SwapForm) => openConfirmational(form))}>
             <CurrencyInput
@@ -307,6 +334,8 @@ const SwapMainCard: FC = () => {
               tokenB={token2}
               tokenBalance={token1Balance}
               setValue={setValue}
+              setKind={setKind}
+              kind={OrderKind.SELL}
             />
             <div className="text-center mb-4">
               <FlipTokens onClick={flip} />
@@ -320,32 +349,32 @@ const SwapMainCard: FC = () => {
               tokenB={token1}
               tokenBalance={token2Balance}
               setValue={setValue}
+              setKind={setKind}
+              kind={OrderKind.BUY}
             />
-            <div>
-              {isEligibleQoute &&
-                `1 ${token1.value.symbol} = ${costOfOneTokenWRTOtherToken()} ${
-                  token2.value.symbol
-                }`}
-            </div>
-            Fee:{" "}
-            {!isEmpty(qoute?.data) &&
-              getAmountWRTUpperDenom(qoute?.data?.feeAmount, token2?.value.decimals ?? 18)}
-            <div className="text-center">
-              {
-                <button
-                  disabled={!(!visibleApproval && !isEmpty(qoute.data) && !qoute.error)}
-                  type="submit"
-                >
-                  Submit
-                </button>
-              }
-              <ApprovalFlow
-                visible={openConfirmationalModel && visibleApproval}
-                token={token1?.value?.address ?? ""}
-              />
-            </div>
+            <SwapInfo
+              isEligibleQoute={isEligibleQoute}
+              qoute={qoute}
+              costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
+              token1={token1}
+              token2={token2}
+              getFee={getFee}
+              kind={kind}
+            />
+            <ApprovalFlow
+              visible={visibleApproval && !qoute.error}
+              token={token1?.value?.address ?? ""}
+              setVisibleApproval={setVisibleApproval}
+            />
+            {!(visibleApproval && !qoute.error) && <div className="py-6" />}
+            <StyledButton
+              disabled={isEmpty(qoute.data) || !!qoute.error || visibleApproval}
+              type="submit"
+            >
+              Submit
+            </StyledButton>
           </form>
-        </div>
+        </SwapContainer>
       )}
     </Container>
   );

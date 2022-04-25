@@ -5,15 +5,23 @@ import { useWeb3React } from "@web3-react/core";
 import React, { ChangeEvent, useCallback, useEffect, useState, KeyboardEvent } from "react";
 import { Control, Controller } from "react-hook-form";
 import { useTokenContract } from "../farms/flows/hooks";
+import { OrderKind } from "@cowprotocol/cow-sdk";
+import styled from "styled-components";
 const ETHEREUM_MAX_AMOUNT = /^\d*\.?\d*$/;
 export const SwapInput = ({
   control,
   name,
   token,
+  setKind,
+  kind,
+  disabled,
 }: {
   control: Control<any, any>;
   name: string;
   token: TokenInfo | undefined;
+  setKind: (kind: OrderKind) => void;
+  kind: OrderKind;
+  disabled?: boolean;
 }) => {
   const { account } = useWeb3React<Web3Provider>();
   const [balanceOf, setBalanceOf] = useState<string>("0");
@@ -32,9 +40,8 @@ export const SwapInput = ({
   const onChangeHandler = (onChange: (e: ChangeEvent<HTMLInputElement>) => void) => (
     e: ChangeEvent<HTMLInputElement>,
   ) => {
-    if (+e.target.value > -1 && +e.target.value <= +balanceOf) {
-      onChange(e);
-    }
+    setKind(kind);
+    onChange(e);
   };
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -48,17 +55,23 @@ export const SwapInput = ({
       name={name}
       control={control}
       defaultValue="0"
-      rules={
-        {
-          // required: true,
-        }
-      }
+      rules={{
+        required: true,
+      }}
       render={({ field }) => {
         const { onChange, ...rest } = field;
         return (
-          <Input
+          <input
             {...rest}
-            style={{ color: "white" }}
+            style={{
+              color: "white",
+              background: "transparent",
+              height: "60px",
+              width: "100%",
+              outline: "none",
+              fontSize: "18px",
+            }}
+            dir="rtl"
             inputMode="decimal"
             autoComplete="off"
             autoCorrect="off"
@@ -67,10 +80,10 @@ export const SwapInput = ({
             minLength={1}
             maxLength={79}
             spellCheck="false"
+            width="100%"
             onKeyPress={onKeyPressHandler}
             onChange={onChangeHandler(onChange)}
-            width="100%"
-            size="large"
+            disabled={disabled}
           />
         );
       }}
