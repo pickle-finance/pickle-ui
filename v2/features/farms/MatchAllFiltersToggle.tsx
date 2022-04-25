@@ -68,11 +68,13 @@ const MatchAllFiltersToggle: FC = () => {
         <span className="text-sm font-medium text-foreground-alt-200">
           {t("v2.farms.matchAllFilters")}
         </span>
-        <MoreInfo
-          secondaryText={
-            matchAllFilters ? t("v2.farms.matchingAllFilters") : t("v2.farms.notMatchingAllFilters")
-          }
-        />
+        <MoreInfo>
+          <span className="text-foreground-alt-200 text-sm">
+            {matchAllFilters
+              ? t("v2.farms.matchingAllFilters")
+              : t("v2.farms.notMatchingAllFilters")}
+          </span>
+        </MoreInfo>
       </Switch.Label>
     </Switch.Group>
   );
