@@ -108,7 +108,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
             leaveTo="opacity-0"
           >
             <Disclosure.Panel as="div" className="grid grid-cols-4 py-4 gap-2">
-              <div className="pr-4 col-span-2 border-r border-foreground-alt-500">
+              <div className="pr-4 col-span-3 border-r border-foreground-alt-500">
                 <div className="flex justify-between">
                   <span className="font-title text-foreground-alt-200 inline-flex items-center font-medium text-base leading-5">
                     <Trans i18nKey="v2.farms.tokensDeposited">
@@ -203,35 +203,15 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                   tooltipText={t("v2.farms.baseAprTooltip")}
                   value={`${jar.aprStats?.apr.toFixed(3)}%`}
                 />
-              </div>
-              <div className="px-4">
-                <InfoRowContent label={t("v2.farms.apyBreakdown")} tooltipText={null} value="" />
-                {jar.aprStats?.components.map((component, idx) => (
-                  <div key={component.name}>
-                    <ComponentRow
-                      property={component.name.toUpperCase()}
-                      value={`${component.apr}%`}
-                    />
-                    {idx === jar.aprStats?.components?.length! - 1 &&
-                      jar.aprStats?.apy != jar.aprStats?.apr && (
-                        <ComponentRow
-                          property={t("v2.farms.compounding")}
-                          value={`${(jar.aprStats?.apy! - jar.aprStats?.apr!).toFixed(3)}%`}
-                        />
-                      )}
-                  </div>
-                ))}
-                <div className="mt-3">
-                  <InfoRowContent label={t("v2.farms.yieldRates")} tooltipText={null} value="" />
-                  <ComponentRow
-                    property={t("v2.time.weekly")}
-                    value={`${((jar.aprStats?.apr || 0) / 52).toFixed(2)}%`}
-                  />
-                  <ComponentRow
-                    property={t("v2.time.monthly")}
-                    value={`${((jar.aprStats?.apr || 0) / 12).toFixed(2)}%`}
-                  />
-                </div>
+                <InfoRowContent label={t("v2.farms.yieldRates")} tooltipText={null} value="" />
+                <ComponentRow
+                  property={t("v2.time.weekly")}
+                  value={`${((jar.aprStats?.apr || 0) / 52).toFixed(2)}%`}
+                />
+                <ComponentRow
+                  property={t("v2.time.monthly")}
+                  value={`${((jar.aprStats?.apr || 0) / 12).toFixed(2)}%`}
+                />
               </div>
             </Disclosure.Panel>
           </Transition>
