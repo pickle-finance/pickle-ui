@@ -1,8 +1,9 @@
-import { OrderKind, CowSdk } from "@cowprotocol/cow-sdk";
+import { OrderKind, CowSdk, OrderMetaData } from "@cowprotocol/cow-sdk";
 
 import { useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { DELAY_FOR_QOUTE } from "./constants";
+import { convertMintoMicroSec } from "./utils";
 
 interface OrderParam {
   sellToken: string;
@@ -12,7 +13,10 @@ interface OrderParam {
   kind: OrderKind;
 }
 
-type QuoteParam = Pick<OrderParam, "sellToken" | "buyToken" | "kind"> & { amount: string };
+type QuoteParam = Pick<OrderParam, "sellToken" | "buyToken" | "kind"> & {
+  amount: string;
+  deadLine: number;
+};
 
 export const useCowSwap = () => {
   const [cowSwapSDK, setCowSwapSDK] = useState<CowSdk<number>>();
@@ -28,14 +32,14 @@ export const useCowSwap = () => {
     }
   }, [chainId]);
 
-  const getQoute = async ({ sellToken, buyToken, amount, kind }: QuoteParam) => {
+  const getQoute = async ({ sellToken, buyToken, amount, kind, deadLine }: QuoteParam) => {
     const quoteResponse = await cowSwapSDK?.cowApi.getQuote({
       kind, // Sell order (could also be BUY)
       sellToken,
       buyToken,
       amount,
       userAddress: account,
-      validTo: ~~(Date.now() / 1000) + DELAY_FOR_QOUTE,
+      validTo: ~~(Date.now() / 1000) + convertMintoMicroSec(deadLine),
     });
     return quoteResponse.quote;
   };
@@ -47,9 +51,11 @@ export const useCowSwap = () => {
     sellToken,
     kind,
     feeAmount,
+    validTo,
   }: OrderParam & {
     feeAmount: string;
-  }) => {
+    validTo: number;
+  }): Promise<string | undefined> => {
     if (!account) throw new Error("MetaMask is not connected");
     const order = {
       sellToken,
@@ -59,7 +65,7 @@ export const useCowSwap = () => {
       kind,
       receiver: account,
       partiallyFillable: false, // Allow partial executions of an order (true would be for a "Fill or Kill" order, which is not yet supported but will be added soon)
-      validTo: ~~(Date.now() / 1000) + DELAY_FOR_QOUTE,
+      validTo,
       feeAmount,
     };
     const signedOrder = await cowSwapSDK?.signOrder(order);
@@ -68,15 +74,17 @@ export const useCowSwap = () => {
       order: { ...order, ...signedOrder },
       owner: account,
     });
-
-    // We can inspect the Order details in the CoW Protocol Explorer
-    console.log(`https://explorer.cow.fi/rinkeby/orders/${orderId}`);
     return orderId;
+  };
+
+  const getOrder = async (orderId: string) => {
+    return cowSwapSDK?.cowApi.getOrder(orderId);
   };
 
   return {
     getQoute,
     sendSwap,
     error,
+    getOrder,
   };
 };
