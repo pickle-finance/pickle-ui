@@ -8,6 +8,9 @@ export const getAmountWRTUpperDenom = (amount: string, decimals: number) =>
     .div(new BigNumber(10).exponentiatedBy(decimals))
     .decimalPlaces(6)
     .toString();
-export const calculateBasisPoint = (val: number): BigNumber => {
-  return new BigNumber(val).div(10000);
+export const convertMintoMicroSec = (val: number) => {
+  return val * 60 * 1000; 
+}
+export const calculatePercentage = (val: number): number => {
+  return val / 100;
 };
