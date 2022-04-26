@@ -15,7 +15,7 @@ import { ApprovalEvent } from "containers/Contracts/Erc20";
 
 import { GPv2VaultRelayerAddress } from "../constants";
 import { useWeb3React } from "@web3-react/core";
-import { StyledButton } from "../style";
+import { SwapButtons } from "../SwapButtons";
 
 const ApprovalFlow: FC<{
   visible: boolean;
@@ -46,7 +46,6 @@ const ApprovalFlow: FC<{
     ) as ApprovalEvent;
     const approvedAmount = approvalEvent.args[2];
     setVisibleApproval(false);
-    console.log({ approvedAmount });
   };
 
   const { sendTransaction, error, isWaiting } = useTransaction(
@@ -64,9 +63,9 @@ const ApprovalFlow: FC<{
   return (
     <>
       {visible && (
-        <StyledButton type="button" onClick={openModal}>
+        <SwapButtons type="button" onClick={openModal}>
           {t("v2.actions.approve")}
-        </StyledButton>
+        </SwapButtons>
       )}
       <Modal
         isOpen={isModalOpen}

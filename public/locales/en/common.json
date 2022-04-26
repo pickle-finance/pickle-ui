@@ -456,6 +456,18 @@
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates"
     },
+    "swap": {
+      "waitingToBeProcessed": "Waiting for your transaction to be processed",
+      "success": "Success!",
+      "swapFailed": "Order failed",
+      "pleaseTryAgain": "{{ message }}, Please try again!",
+      "orderSent": "Your request is being process",
+      "settingTitle": "Transaction Settings",
+      "slippageAuto": "Auto",
+      "settingsSlippageFields": "Slippage Tolerance",
+      "settingsDeadline": "Deadline",
+      "settingsTab": "Settings"
+    },
     "gasPrices": {
       "fast": "Fast",
       "slow": "Slow",
