@@ -6,7 +6,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState, KeyboardEvent } f
 import { Control, Controller } from "react-hook-form";
 import { useTokenContract } from "../farms/flows/hooks";
 import { OrderKind } from "@cowprotocol/cow-sdk";
-import styled from "styled-components";
+
 const ETHEREUM_MAX_AMOUNT = /^\d*\.?\d*$/;
 export const SwapInput = ({
   control,
@@ -62,15 +62,9 @@ export const SwapInput = ({
         const { onChange, ...rest } = field;
         return (
           <input
+            className="text-white	bg-transparent w-full	outline-none text-lg"
+            style={{ height: "60px" }}
             {...rest}
-            style={{
-              color: "white",
-              background: "transparent",
-              height: "60px",
-              width: "100%",
-              outline: "none",
-              fontSize: "18px",
-            }}
             dir="rtl"
             inputMode="decimal"
             autoComplete="off"

@@ -21,12 +21,3 @@ export const StyledButton = styled.button`
   position: relative;
   transition: box-shadow 0.1s ease-in-out 0s, transform 0.1s ease-in-out 0s;
 `;
-
-export const SwapContainer = styled.div`
-  border: 1px solid;
-  padding: 50px;
-  height: 600px;
-  width: 500px;
-  border-radius: 56px;
-  background: rgb(22, 56, 97);
-`;
