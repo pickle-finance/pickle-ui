@@ -9,19 +9,28 @@ import { getListOfTokens } from "./useTokenList";
 import { SwapSelect } from "./SwapSelector";
 import { useInterval } from "./hooks";
 import isEmpty from "lodash/isEmpty";
-import { calculateBasisPoint, getAmountWRTDecimal, getAmountWRTUpperDenom } from "./utils";
+import { getAmountWRTDecimal, getAmountWRTUpperDenom } from "./utils";
 import { BigNumber } from "bignumber.js";
 import { FlipTokens } from "./FlipTokens";
-import { DELAY_FOR_BALANCES, DELAY_FOR_QOUTE, GPv2VaultRelayerAddress } from "./constants";
+import {
+  DEFAULT_DEADLINE_IN_MIN,
+  DEFAULT_SLIPPAGE_TOLERANCE,
+  DELAY_FOR_BALANCES,
+  DELAY_FOR_QOUTE,
+  GPv2VaultRelayerAddress,
+} from "./constants";
 import { OrderKind } from "@cowprotocol/cow-sdk";
 import ApprovalFlow from "./flow/ApprovalFlow";
 import { Erc20__factory } from "containers/Contracts/factories/Erc20__factory";
 import { CurrencyInput } from "./CurrencyInput";
 import { SwapInfo } from "./SwapInfo";
-import { Container, StyledButton, SwapContainer } from "./style";
+import { Container } from "./style";
 import { ConfirmationSwap } from "./ConfirmationSwap";
+import { SettingsTab } from "./SettingsTab";
+import { ErrorMessage } from "./ErrorMessage";
+import { SwapButtons } from "./SwapButtons";
 
-type LoadingErrorHandler<T> = {
+export type LoadingErrorHandler<T> = {
   isLoading: boolean;
   data: T;
   error: string;
@@ -44,7 +53,6 @@ const SwapMainCard: FC = () => {
     control,
     watch,
     handleSubmit,
-    formState: { isDirty, isValid },
     setValue,
   } = useForm<SwapForm>({
     defaultValues: {
@@ -62,19 +70,16 @@ const SwapMainCard: FC = () => {
     error: "",
   });
   const [confirmationalSwap, setConfirmationalSwap] = useState<any>();
-  const [swapData, setSwapData] = useState<LoadingErrorHandler<any>>({
-    isLoading: false,
-    data: {},
-    error: "",
-  });
 
   const [swapError, setSwapError] = useState("");
 
   const [openConfirmationalModel, setOpenConfirmationalModel] = useState(false);
 
-  const { getQoute, sendSwap, error: cowSwapError } = useCowSwap();
+  const { getQoute, error: cowSwapError } = useCowSwap();
 
-  const [slippageTolerance, setSlippageTolerance] = useState(calculateBasisPoint(1000));
+  const [slippageTolerance, setSlippageTolerance] = useState(DEFAULT_SLIPPAGE_TOLERANCE);
+
+  const [deadLine, setDeadLine] = useState(DEFAULT_DEADLINE_IN_MIN);
 
   const isEligibleQoute =
     !!token1?.value?.address && !!token2?.value?.address && (!!amount1 || !!amount2);
@@ -136,6 +141,7 @@ const SwapMainCard: FC = () => {
         buyToken: token2?.value?.address ?? "",
         amount,
         kind,
+        deadLine,
       });
       setQoute((state) => ({
         ...state,
@@ -228,63 +234,6 @@ const SwapMainCard: FC = () => {
     }
   };
 
-  const finalSubmit = async ({
-    token1,
-    token2,
-  }: {
-    token1: SwapSelect | undefined;
-    token2: SwapSelect | undefined;
-  }) => {
-    try {
-      if (!account || !chainId) throw new Error("MetaMask is not connected");
-      if (!token1 || !token2) throw new Error("Please fill the swap details");
-      if (!GPv2VaultRelayerAddress[chainId])
-        throw new Error("Chain Id is not supported for the swap");
-      setSwapData((state) => ({
-        ...state,
-        isLoading: true,
-        error: "",
-      }));
-      let adjustedSlippageBuyAmount = confirmationalSwap?.buyAmount;
-      let adjustedSlippageSellAmount = confirmationalSwap?.sellAmount;
-      if (!adjustedSlippageBuyAmount || !adjustedSlippageSellAmount)
-        throw new Error("Buy/Sell amount is zero");
-
-      if (OrderKind.SELL === confirmationalSwap.kind) {
-        adjustedSlippageBuyAmount = new BigNumber(slippageTolerance.plus(1))
-          .times(adjustedSlippageBuyAmount)
-          .toString();
-      } else {
-        adjustedSlippageSellAmount = new BigNumber(new BigNumber(1).minus(slippageTolerance))
-          .times(adjustedSlippageSellAmount)
-          .toString();
-      }
-
-      const swapId = await sendSwap({
-        buyAmount: adjustedSlippageBuyAmount,
-        buyToken: token2.value.address,
-        feeAmount: confirmationalSwap?.feeAmount,
-        sellAmount: adjustedSlippageSellAmount,
-        sellToken: token1.value.address,
-        kind,
-      });
-
-      setSwapData((state) => ({
-        ...state,
-        isLoading: false,
-        data: swapId,
-        error: "",
-      }));
-    } catch (err: any) {
-      setSwapData((state) => ({
-        ...state,
-        isLoading: false,
-        data: {},
-        error: err?.message ?? "Error Occurred in Swap",
-      }));
-    }
-  };
-
   const costOfOneTokenWRTOtherToken = useCallback(
     (flip = false, qouteVal?: any): string => {
       let qouteData = qouteVal ?? qoute.data;
@@ -300,12 +249,12 @@ const SwapMainCard: FC = () => {
   );
 
   const handlerErrorAndLoader = useCallback(() => {
-    if (qoute.isLoading || swapData.isLoading) return "Loading ...";
     if (!!qoute.error) return qoute.error;
-    if (!!swapData.error) return swapData.error;
     if (!!cowSwapError) return cowSwapError;
     if (!!swapError) return swapError;
-  }, [qoute, cowSwapError, swapData, swapError]);
+  }, [qoute, cowSwapError, swapError]);
+
+  const errorMessage = handlerErrorAndLoader();
 
   return (
     <Container>
@@ -317,13 +266,17 @@ const SwapMainCard: FC = () => {
           setOpenConfirmationalModel={setOpenConfirmationalModel}
           getFee={getFee}
           kind={kind}
-          handleOnClick={finalSubmit}
           costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
-          error={handlerErrorAndLoader}
+          slippageTolerance={slippageTolerance}
         />
       ) : (
-        <SwapContainer>
-          <div>{handlerErrorAndLoader()}</div>
+        <div className="h-4/5	w-3/5 p-4 border-solid border-2 rounded-2xl bg-green-600">
+          <SettingsTab
+            deadline={deadLine}
+            setDeadline={setDeadLine}
+            setSlippageTolerance={setSlippageTolerance}
+            slippageTolerance={slippageTolerance}
+          />
           <form onSubmit={handleSubmit((form: SwapForm) => openConfirmational(form))}>
             <CurrencyInput
               control={control}
@@ -361,20 +314,24 @@ const SwapMainCard: FC = () => {
               getFee={getFee}
               kind={kind}
             />
-            <ApprovalFlow
-              visible={visibleApproval && !qoute.error}
-              token={token1?.value?.address ?? ""}
-              setVisibleApproval={setVisibleApproval}
-            />
-            {!(visibleApproval && !qoute.error) && <div className="py-6" />}
-            <StyledButton
-              disabled={isEmpty(qoute.data) || !!qoute.error || visibleApproval}
-              type="submit"
-            >
-              Submit
-            </StyledButton>
+            <ErrorMessage error={errorMessage ?? ""} />
+            <div className={!errorMessage ? "py-3" : ""}>
+              <div className={!visibleApproval ? "pb-3" : "mb-2"}>
+                <ApprovalFlow
+                  visible={visibleApproval && !qoute.error}
+                  token={token1?.value?.address ?? ""}
+                  setVisibleApproval={setVisibleApproval}
+                />
+              </div>
+              <SwapButtons
+                disabled={isEmpty(qoute.data) || !!qoute.error || visibleApproval}
+                type="submit"
+              >
+                Submit
+              </SwapButtons>
+            </div>
           </form>
-        </SwapContainer>
+        </div>
       )}
     </Container>
   );
