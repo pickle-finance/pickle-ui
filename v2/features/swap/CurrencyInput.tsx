@@ -38,16 +38,7 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          border: "1px solid",
-          padding: "20px 10px 0 10px",
-          height: "100px",
-          borderRadius: "10px",
-          backgroundColor: "rgb(15, 38, 6",
-        }}
-      >
+      <div className="flex border-solid border-2 pt-5 px-4 bg-[#0f2606] rounded-2xl h-[6rem]">
         <SwapSelector control={control} list={list} name={selectorName} selected={tokenB} />
         <SwapInput
           token={tokenA?.value}
@@ -60,7 +51,9 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
       {kind === OrderKind.SELL && (
         <div>
           <span>
-            {!!tokenBalance && <Link onClick={() => setValue(inputName, memoTokenBalance)}>Max:</Link>}
+            {!!tokenBalance && (
+              <Link onClick={() => setValue(inputName, memoTokenBalance)}>Max:</Link>
+            )}
           </span>{" "}
           <span>{!!tokenBalance && memoTokenBalance}</span>
         </div>
