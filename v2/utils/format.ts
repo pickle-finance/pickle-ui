@@ -38,6 +38,14 @@ export const formatPercentage = (value: number, precision = 0): string =>
     maximumFractionDigits: precision,
   });
 
+export const formatAPY = (apy: number): string => {
+  if (apy === Number.POSITIVE_INFINITY) return "∞%";
+
+  const decimalPlaces = Math.log(apy) / Math.log(10) > 4 ? 0 : 2;
+
+  return apy.toFixed(decimalPlaces) + "%";
+};
+
 export const shortenAddress = (address: string): string =>
   address ? `${address.substring(0, 5)}…${address.substring(address.length - 4)}` : "";
 

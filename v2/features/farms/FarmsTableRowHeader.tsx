@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
-import ReactHtmlParser from "react-html-parser";
 
 import { classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
@@ -11,8 +10,7 @@ import { useSelector } from "react-redux";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import FarmComponentsIcons from "./FarmComponentsIcons";
 import { Network } from "../connection/networks";
-import { ChainNetwork } from "picklefinance-core";
-import MoreInfo from "v2/components/MoreInfo";
+import FarmAPY from "./FarmAPY";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -65,12 +63,6 @@ const formatImagePath = (chain: string, networks: Network[] | undefined): string
   }
 };
 
-const formatAPY = (apy: number) => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
-  const decimalPlaces = Math.log(apy) / Math.log(10) > 4 ? 0 : 2;
-  return apy.toFixed(decimalPlaces) + "%";
-};
-
 const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) => {
   const { t } = useTranslation("common");
   const networks = useSelector(CoreSelectors.selectNetworks);
@@ -82,59 +74,6 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) =>
   const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
   const picklesPending = jar.earnedPickles.tokensVisible;
   const depositTokenCountString = t("v2.farms.tokens", { amount: totalTokensInJarAndFarm });
-
-  let aprRangeString, pickleAprMin, pickleAprMax, pickleApr;
-  // Case #1: only jar, no farm
-  if (!jar.farm?.details?.farmApyComponents) {
-    aprRangeString = (jar.aprStats?.apy || 0).toFixed(3) + "%";
-  } else {
-    // Case #2: mainnet - show APR range for min/max DILL
-    if (jar.farm.details.farmApyComponents[0]?.maxApr && jar.chain === ChainNetwork.Ethereum) {
-      pickleAprMin = jar.farm.details.farmApyComponents[0].apr || 0;
-      pickleAprMax = jar.farm.details.farmApyComponents[0].maxApr || 0;
-      const aprMin = (jar.aprStats?.apy || 0) + pickleAprMin;
-      const aprMax = (jar.aprStats?.apy || 0) + pickleAprMax;
-      aprRangeString = `${aprMin.toFixed(2)}% ~ ${aprMax.toFixed(2)}%`;
-    } else {
-      // Case #3: sidechain with pickle farm
-      pickleApr = jar.farm.details.farmApyComponents[0]?.apr;
-      aprRangeString = `${((jar.aprStats?.apy || 0) + (pickleApr || 0)).toFixed(2)}%`;
-    }
-  }
-
-  const userStakedNum =
-    parseFloat(jar.depositTokensInFarm?.tokens || "0") +
-    parseFloat(jar.depositTokensInJar?.tokens || "0");
-  const userDerivedBalance = userStakedNum * 0.4;
-  const userAdjustedBalance = (jar.farm?.details?.tokenBalance || 0) * userDillRatio * 0.6;
-  const userAdjustedPickleApy =
-    ((jar.farm?.details?.farmApyComponents?.[0]?.maxApr || 0) *
-      Math.min(userStakedNum, userDerivedBalance + userAdjustedBalance)) /
-    (userStakedNum || 1);
-
-  const userApy = userAdjustedPickleApy + (jar.aprStats?.apy || 0);
-  const userApyString = t("v2.farms.yourApy", { apy: formatAPY(userApy || 0) });
-
-  const { aprStats } = jar;
-  const difference = (aprStats?.apy || 0) - (aprStats?.apr || 0);
-  let apyRangeTooltipText = `${t("v2.farms.apyUnavailable")}`;
-  if (aprStats?.components?.length) {
-    apyRangeTooltipText = [
-      `${t("farms.baseAPRs")}:`,
-      Boolean(pickleApr) && `pickle: ${formatAPY(pickleApr || 0)}`,
-      Boolean(pickleAprMin && pickleAprMax) &&
-        `pickle: ${formatAPY(pickleAprMin || 0)} ~ ${formatAPY(pickleAprMax || 0)}`,
-
-      ...aprStats.components.map((x) => {
-        const k = x.name;
-        const v = x.apr;
-        return isNaN(v) || v > 1e6 ? null : `${k}: ${v.toFixed(2)}%`;
-      }),
-      `${t("farms.compounding")}: ${difference.toFixed(2)}%`,
-    ]
-      .filter((x) => x)
-      .join(` <br/> `);
-  }
 
   return (
     <>
@@ -160,15 +99,7 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) =>
         </div>
       </RowCell>
       <RowCell>
-        <span className="font-title font-medium text-base leading-5">{aprRangeString}</span>{" "}
-        <MoreInfo>
-          <span className="text-foreground-alt-200 text-sm">
-            {ReactHtmlParser(apyRangeTooltipText)}
-          </span>
-        </MoreInfo>
-        {jar.chain === ChainNetwork.Ethereum && Boolean(userStakedNum) && (
-          <p className="font-normal text-xs text-foreground-alt-200">{userApyString}</p>
-        )}
+        <FarmAPY jar={jar} userDillRatio={userDillRatio} />
       </RowCell>
       <RowCell className={classNames(simple && "rounded-r-xl")}>
         <p className="font-title font-medium text-base leading-5">
