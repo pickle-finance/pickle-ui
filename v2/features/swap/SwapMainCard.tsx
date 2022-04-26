@@ -49,12 +49,7 @@ const SwapMainCard: FC = () => {
   const [visibleApproval, setVisibleApproval] = useState(false);
   const [token1Balance, setToken1Balance] = useState<string>("");
   const [token2Balance, setToken2Balance] = useState<string>("");
-  const {
-    control,
-    watch,
-    handleSubmit,
-    setValue,
-  } = useForm<SwapForm>({
+  const { control, watch, handleSubmit, setValue } = useForm<SwapForm>({
     defaultValues: {
       amount1: "",
       amount2: "",
@@ -96,7 +91,6 @@ const SwapMainCard: FC = () => {
       if (!account || !chainId) throw new Error("MetaMask is not connected");
       if (!GPv2VaultRelayerAddress[chainId])
         throw new Error("Chain is not compatible with CowSwap");
-
       const approvedAmount = await checkTokenApproval({
         owner: account,
         spender: GPv2VaultRelayerAddress[chainId].address,
@@ -111,14 +105,13 @@ const SwapMainCard: FC = () => {
   const getFee = useCallback(
     (qouteVal?: any): string => {
       const qouteData = qouteVal ?? qoute.data;
-      let token = token2;
-      let rate = costOfOneTokenWRTOtherToken(false, qouteData);
       if (kind === OrderKind.BUY) {
-        token = token1;
-        rate = costOfOneTokenWRTOtherToken(true, qouteData);
+        return getAmountWRTUpperDenom(qouteData?.feeAmount, token1?.value.decimals ?? 18);
       }
-      const res = new BigNumber(rate).times(qouteData?.feeAmount).toString();
-      return getAmountWRTUpperDenom(res, token?.value.decimals ?? 18);
+      const res = new BigNumber(costOfOneTokenWRTOtherToken(false, qouteData))
+        .times(qouteData?.feeAmount)
+        .toString();
+      return getAmountWRTUpperDenom(res, token2?.value.decimals ?? 18);
     },
     [token1, token2, qoute],
   );
@@ -158,6 +151,7 @@ const SwapMainCard: FC = () => {
             .toString(),
         );
       } else {
+        console.log(updatedVal.toString(), qoute);
         setValue(
           "amount1",
           updatedVal
