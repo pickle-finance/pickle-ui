@@ -1,21 +1,26 @@
 import { OrderKind } from "@cowprotocol/cow-sdk";
 import React, { FC } from "react";
 import { ReadCurrencyInput } from "./ReadCurrencyInput";
-import { SwapContainer } from "./style";
 import { SwapInfo } from "./SwapInfo";
 import { SwapSelect } from "./SwapSelector";
-import { StyledButton } from "./style";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { GPv2VaultRelayerAddress } from "./constants";
+import BigNumber from "bignumber.js";
+import { useCowSwap } from "./useCowSwap";
+import ConfirmationFlow from "./flow/ConfirmationFlow";
+import { calculatePercentage } from "./utils";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface ConfirmationSwapProps {
   token1: SwapSelect | undefined;
   token2: SwapSelect | undefined;
   setOpenConfirmationalModel: (val: boolean) => void;
-  getFee: () => string;
+  getFee: (data: any) => string;
   kind: OrderKind;
   confirmationalSwap: any;
-  handleOnClick: ({ token1, token2 }: { token1: SwapSelect; token2: SwapSelect }) => void;
   costOfOneTokenWRTOtherToken: (val?: boolean) => string;
-  error: () => string;
+  slippageTolerance: number;
 }
 
 export const ConfirmationSwap: FC<ConfirmationSwapProps> = ({
@@ -25,15 +30,57 @@ export const ConfirmationSwap: FC<ConfirmationSwapProps> = ({
   getFee,
   kind,
   confirmationalSwap,
-  handleOnClick,
   costOfOneTokenWRTOtherToken,
-  error,
+  slippageTolerance,
 }) => {
+  const { chainId, account } = useWeb3React<Web3Provider>();
+
+  const { sendSwap, error, getOrder } = useCowSwap();
   if (!token1 || !token2) return <div />;
+
+  const finalSubmit = async (): Promise<string | undefined> => {
+    if (!account || !chainId) throw new Error("MetaMask is not connected");
+    if (!token1 || !token2) throw new Error("Please fill the swap details");
+    if (!GPv2VaultRelayerAddress[chainId])
+      throw new Error("Chain Id is not supported for the swap");
+    // TODO: need to look into it
+    // if (confirmationalSwap?.validTo > ~~(Date.now() / 1000)) {
+    //   throw new Error("Order is expired");
+    // }
+    let adjustedSlippageBuyAmount = confirmationalSwap?.buyAmount;
+    let adjustedSlippageSellAmount = confirmationalSwap?.sellAmount;
+    if (!adjustedSlippageBuyAmount || !adjustedSlippageSellAmount)
+      throw new Error("Buy/Sell amount is zero");
+    const percentageSlippage = calculatePercentage(slippageTolerance);
+    if (OrderKind.SELL === confirmationalSwap.kind) {
+      adjustedSlippageBuyAmount = new BigNumber(1 - percentageSlippage)
+        .times(adjustedSlippageBuyAmount)
+        .integerValue(BigNumber.ROUND_DOWN)
+        .toString();
+    } else {
+      adjustedSlippageSellAmount = new BigNumber(1 + percentageSlippage)
+        .times(adjustedSlippageSellAmount)
+        .integerValue(BigNumber.ROUND_DOWN)
+        .toString();
+    }
+    return sendSwap({
+      buyAmount: adjustedSlippageBuyAmount,
+      buyToken: token2.value.address,
+      feeAmount: confirmationalSwap?.feeAmount,
+      sellAmount: adjustedSlippageSellAmount,
+      sellToken: token1.value.address,
+      kind,
+      validTo: confirmationalSwap?.validTo ?? ~~(Date.now() / 1000),
+    });
+  };
+  const pendingTrx = async (orderId: string) => {
+    const data = await getOrder(orderId);
+    return data?.status;
+  };
+
   return (
-    <SwapContainer>
+    <div className="h-4/5	w-3/5 p-4 border-solid border-2 rounded-2xl bg-green-600">
       <button onClick={() => setOpenConfirmationalModel(false)}>Back</button>
-      <div>{error()}</div>
       <div className="my-4">
         <ReadCurrencyInput tokenA={token1} amount={confirmationalSwap.amount1} />
         <div className="py-4" />
@@ -45,23 +92,11 @@ export const ConfirmationSwap: FC<ConfirmationSwapProps> = ({
         qoute={{ data: confirmationalSwap }}
         token1={token1}
         token2={token2}
-        getFee={getFee}
+        getFee={() => getFee(confirmationalSwap)}
         kind={kind}
       />
-
-      <StyledButton
-        className="mt-6"
-        disabled={!!error}
-        onClick={() =>
-          handleOnClick({
-            token1,
-            token2,
-          })
-        }
-        type="button"
-      >
-        Accept
-      </StyledButton>
-    </SwapContainer>
+      <ErrorMessage error={error} />
+      <ConfirmationFlow mainFunc={finalSubmit} pendingFunc={pendingTrx} />
+    </div>
   );
 };
