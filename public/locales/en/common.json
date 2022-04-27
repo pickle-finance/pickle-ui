@@ -397,8 +397,8 @@
         "castMainnetVote": "Cast Mainnet Vote",
         "castOffchainVote": "Cast Offchain Vote",
         "charts": {
-          "platformTitle": "Platform Vote Weights",
-          "userTitle": "Your Vote Weights"
+          "chainWeight": "Chain Reward Weights",
+          "jarWeight": "Jar Reward Weights"
         },
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",

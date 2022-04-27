@@ -5,7 +5,6 @@ import { PickleModelJson } from "picklefinance-core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 import { FC, useEffect, useState } from "react";
 import castVoteMainnet from "./CastVoteMainnet";
-import ChartContainer from "./ChartContainer";
 import JarSelect from "./JarSelect";
 import JarTable from "./JarTable";
 import MainnetVoteButton from "./VoteButtonMainnet";
@@ -43,10 +42,6 @@ const MainnetVote: FC<{ core: PickleModelJson.PickleModelJson; user: UserData | 
           {t("v2.dill.vote.descriptionMainnet")}
         </span>
       </p>
-      <div className="w-full inline-grid grid-cols-2 gap-4">
-        <ChartContainer platformOrUser="platform" mainnet={true} core={core} />
-        <ChartContainer platformOrUser="user" mainnet={true} core={core} user={user} />
-      </div>
       <JarSelect
         core={core}
         mainnet={true}

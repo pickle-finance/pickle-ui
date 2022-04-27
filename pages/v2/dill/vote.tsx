@@ -11,6 +11,7 @@ import { UserSelectors } from "v2/store/user";
 import PickleToastContainer from "v2/components/PickleToastContainer";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 
+import VoteWeightCharts from "v2/features/dill/vote/Charts";
 import MainnetVote from "v2/features/dill/vote/MainnetVote";
 import OffchainVote from "v2/features/dill/vote/OffchainVote";
 
@@ -30,6 +31,7 @@ const Vote: PickleFinancePage = () => {
         user ? (
           onMainnet ? (
             <>
+              <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
               <MainnetVote core={core} user={user} />
               <hr className="border-foreground-alt-500 mt-5 mb-5" />
               <OffchainVote core={core} offchainVoteData={offchainVoteData} />

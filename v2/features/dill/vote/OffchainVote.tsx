@@ -7,7 +7,6 @@ import { PickleModelJson } from "picklefinance-core";
 
 import ChainSelect from "./ChainSelect";
 import ChainTable from "./ChainTable";
-import ChartContainer from "./ChartContainer";
 import JarSelect from "./JarSelect";
 import JarTable from "./JarTable";
 import StratTable from "./StratTable";
@@ -60,19 +59,6 @@ const OffchainVote: FC<{
           {t("v2.dill.vote.descriptionOffchain")}
         </span>
       </p>
-      <div className="w-full inline-grid grid-cols-2 gap-4">
-        <ChartContainer
-          platformOrUser="platform"
-          mainnet={false}
-          offchainVoteData={offchainVoteData}
-        />
-        <ChartContainer
-          platformOrUser="user"
-          mainnet={false}
-          offchainVoteData={offchainVoteData}
-          wallet={account}
-        />
-      </div>
       <ChainSelect
         core={core}
         selectedChains={selectedChains}
