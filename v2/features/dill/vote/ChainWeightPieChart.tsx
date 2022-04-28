@@ -32,7 +32,6 @@ const Chart: FC<{
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colorPicker(data, entry, index)} />
           ))}
-          {/* <LabelList dataKey="weight" position="inside" formatter={formatPercentage} /> */}
           <LabelList dataKey="chain" position="outside" offset={20} formatter={chainStratFormat} />
         </Pie>
         <Tooltip
@@ -45,15 +44,7 @@ const Chart: FC<{
 };
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}: iLabel) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: iLabel) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);

@@ -1,7 +1,8 @@
+import { useTranslation } from "next-i18next";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC, useEffect, useState } from "react";
-import Select, { StylesConfig } from "react-select";
+import Select, { StylesConfig, components } from "react-select";
 
 const ChainSelect: FC<{
   core: PickleModelJson.PickleModelJson;
@@ -9,6 +10,7 @@ const ChainSelect: FC<{
   setSelectedChain: SetChainFunction;
 }> = ({ core, selectedChain, setSelectedChain }) => {
   const [selectData, setSelectData] = useState<SelectData[]>([]);
+  const { t } = useTranslation("common");
 
   const chainChange = (chain: SelectData): void => {
     console.log(chain);
@@ -26,6 +28,9 @@ const ChainSelect: FC<{
 
     setInterval(getData, 180000); // Updates every 3 minutes seconds
   }, [core]);
+
+  const VALUE_PREFIX = t("v2.dill.vote.chainSelectPrefix") + ": ";
+
   return (
     <Select
       className="mt-5 mb-5"
@@ -36,6 +41,13 @@ const ChainSelect: FC<{
       isSearchable={true}
       onChange={(s) => chainChange(s as SelectData)}
       options={selectData}
+      components={{
+        SingleValue: ({ children, ...props }) => {
+          return (
+            <components.SingleValue {...props}>{VALUE_PREFIX + children}</components.SingleValue>
+          );
+        },
+      }}
     />
   );
 };
