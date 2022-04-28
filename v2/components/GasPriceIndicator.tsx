@@ -5,11 +5,11 @@ import { useTranslation } from "next-i18next";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import GasPumpIcon from "./icons/GasPump";
-import { fetcher, EthGasStationResponse } from "../utils";
+import { fetcher, formatNumber, GasPriceResponse } from "../utils";
 import SelectTransition from "./SelectTransition";
 
 const GasPriceIndicatorButtonLabel: VFC<{
-  data: EthGasStationResponse | undefined;
+  data: GasPriceResponse | undefined;
 }> = ({ data }) => {
   if (!data)
     return (
@@ -22,11 +22,11 @@ const GasPriceIndicatorButtonLabel: VFC<{
       />
     );
 
-  return <span className="w-7">{data.average / 10}</span>;
+  return <span className="w-7">{formatNumber(data.data.fast / 1e9)}</span>;
 };
 
 const GasPriceIndicatorOptions: VFC<{
-  data: EthGasStationResponse | undefined;
+  data: GasPriceResponse | undefined;
 }> = ({ data }) => {
   const { t } = useTranslation("common");
 
@@ -35,15 +35,15 @@ const GasPriceIndicatorOptions: VFC<{
   const prices = [
     {
       name: t("v2.gasPrices.slow"),
-      value: data.safeLow / 10,
+      value: formatNumber(data.data.standard / 1e9),
     },
     {
       name: t("v2.gasPrices.standard"),
-      value: data.fast / 10,
+      value: formatNumber(data.data.fast / 1e9),
     },
     {
       name: t("v2.gasPrices.fast"),
-      value: data.fastest / 10,
+      value: formatNumber(data.data.rapid / 1e9),
     },
   ];
 
@@ -65,8 +65,8 @@ const GasPriceIndicatorOptions: VFC<{
 };
 
 const GasPriceIndicator: VFC = () => {
-  const endpoint = "https://ethgasstation.info/api/ethgasAPI.json";
-  const { data } = useSWR<EthGasStationResponse>(endpoint, fetcher);
+  const endpoint = "https://www.etherchain.org/api/gasnow";
+  const { data } = useSWR<GasPriceResponse>(endpoint, fetcher, { refreshInterval: 5000 });
 
   return (
     <Popover className="relative mr-3">
