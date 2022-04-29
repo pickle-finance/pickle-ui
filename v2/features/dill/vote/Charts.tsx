@@ -1,5 +1,5 @@
 import { PickleModelJson } from "picklefinance-core";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { iOffchainVoteData } from "v2/store/offchainVotes";
 import ChartContainer from "./ChartContainer";
 

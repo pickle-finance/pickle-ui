@@ -68,7 +68,6 @@ const getSidechainPlatformWeights = (
   offchainVoteData: iOffchainVoteData | undefined,
 ): PieChartData[] => {
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
-  console.log(platformWeights);
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
     chartData.push({

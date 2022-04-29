@@ -399,7 +399,12 @@
         "chainSelectPrefix": "Chain",
         "charts": {
           "chainWeight": "Chain Reward Weights",
-          "jarWeight": "Jar Reward Weights"
+          "jarWeight": "Jar Reward Weights",
+          "tooltips": {
+            "asset": "Asset",
+            "chainWeight": "Chain Weight",
+            "platformWeight": "Platform Weight"
+          }
         },
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",

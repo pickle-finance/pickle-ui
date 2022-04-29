@@ -29,11 +29,11 @@ const ChainSelect: FC<{
     setInterval(getData, 180000); // Updates every 3 minutes seconds
   }, [core]);
 
-  const VALUE_PREFIX = t("v2.dill.vote.chainSelectPrefix") + ": ";
+  // const VALUE_PREFIX = t("v2.dill.vote.chainSelectPrefix") + ": ";
 
   return (
     <Select
-      className="mt-5 mb-5"
+      className="mt-5 w-1/3"
       placeholder="Select Chain"
       defaultValue={selectedChain}
       closeMenuOnSelect={true}
@@ -41,13 +41,6 @@ const ChainSelect: FC<{
       isSearchable={true}
       onChange={(s) => chainChange(s as SelectData)}
       options={selectData}
-      components={{
-        SingleValue: ({ children, ...props }) => {
-          return (
-            <components.SingleValue {...props}>{VALUE_PREFIX + children}</components.SingleValue>
-          );
-        },
-      }}
     />
   );
 };

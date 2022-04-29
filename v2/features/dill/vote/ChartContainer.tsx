@@ -22,23 +22,30 @@ const ChartContainer: FC<{
   const [showJarTable, setShowJarTable] = useState(false);
 
   return (
-    <div className={`w-full rounded-xl border border-foreground-alt-500 p-4 sm:p-8 mb-10`}>
+    <div
+      className={`w-full grid grid-rows-7 rounded-xl border border-foreground-alt-500 p-4 sm:p-8 mb-10`}
+    >
       {isChainWeight ? (
-        <>
-          <h2 className={`font-body font-bold text-xl`}>{t(`v2.dill.vote.charts.chainWeight`)}</h2>
+        <div className="row-span-1">
+          <h2 className="font-body font-bold text-xl">{t(`v2.dill.vote.charts.chainWeight`)}</h2>
           <TableSwitch showTable={showChainTable} setShowTable={setShowChainTable} />
-        </>
+        </div>
       ) : (
-        <>
-          <h2 className={`font-body font-bold text-xl`}>{t(`v2.dill.vote.charts.jarWeight`)}</h2>
+        <div className="row-span-1">
+          <h2 className="font-body font-bold text-xl">{t(`v2.dill.vote.charts.jarWeight`)}</h2>
           <TableSwitch showTable={showJarTable} setShowTable={setShowJarTable} />
-        </>
+        </div>
       )}
-
-      {!isChainWeight && core && (
-        <ChainSelectSmall core={core} selectedChain={chartChain} setSelectedChain={setChartChain} />
-      )}
-      <aside className="h-[450px] w-full px-3 py-10">
+      <div className="row-start-2">
+        {!isChainWeight && core && (
+          <ChainSelectSmall
+            core={core}
+            selectedChain={chartChain}
+            setSelectedChain={setChartChain}
+          />
+        )}
+      </div>
+      <aside className="h-[450px] w-full row-start-7 px-3 py-10">
         {isChainWeight ? (
           <>
             {!showChainTable ? (
