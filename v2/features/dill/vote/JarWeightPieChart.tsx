@@ -1,31 +1,22 @@
 import React, { FC } from "react";
 import { PickleModelJson } from "picklefinance-core";
-import { UserData } from "picklefinance-core/lib/client/UserModel";
-import { JarDefinition, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
-import { iOffchainVoteData, JarVote, UserVote } from "v2/store/offchainVotes";
+import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import { iOffchainVoteData, JarVote } from "v2/store/offchainVotes";
 
 import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList, Cell } from "recharts";
 import { formatPercentage } from "v2/utils";
-import { BigNumber } from "ethers";
+import { round } from "lodash";
+import CustomTooltip from "./PieChartTooltip";
 
 const Chart: FC<{
-  platformOrUser: "platform" | "user";
-  mainnet: boolean;
-  user?: UserData | undefined;
+  chain: string;
   core?: PickleModelJson.PickleModelJson;
-  wallet?: string | undefined | null;
   offchainVoteData?: iOffchainVoteData | undefined;
-}> = ({ platformOrUser, mainnet, user, core, wallet, offchainVoteData }) => {
-  const data: PieChartData[] =
-    platformOrUser === "platform"
-      ? mainnet
-        ? getMainnetPlatformWeights(core)
-        : getSidechainPlatformWeights(offchainVoteData)
-      : platformOrUser === "user"
-      ? mainnet
-        ? getMainnetUserWeights(user, core)
-        : getSidechainUserWeights(offchainVoteData, wallet)
-      : [];
+}> = ({ chain, core, offchainVoteData }) => {
+  const isMainnet = chain === "eth";
+  const data: JarChartData[] = isMainnet
+    ? getMainnetPlatformWeights(core, offchainVoteData)
+    : getSidechainPlatformWeights(offchainVoteData, chain);
   if (data.length < 1)
     return (
       <div className="h-full">
@@ -41,6 +32,8 @@ const Chart: FC<{
           nameKey="jar"
           cx="50%"
           cy="50%"
+          label={renderCustomizedLabel}
+          labelLine={{ stroke: "rgb(var(--color-foreground-alt-100))" }}
           outerRadius={140}
           strokeWidth={data.length >= 1 ? 1 : 10}
           stroke={"rgb(var(--color-foreground-alt-100))"}
@@ -48,15 +41,26 @@ const Chart: FC<{
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colorPicker(data, entry, index)} />
           ))}
-          <LabelList dataKey="weight" position="inside" formatter={formatPercentage} />
           <LabelList dataKey="jar" position="outside" offset={20} formatter={jarStratFormat} />
         </Pie>
         <Tooltip
-          labelFormatter={(label: any) => jarStratFormat(label.jar)}
-          formatter={(value: number) => formatPercentage(value)}
+          content={({ active, payload }) => <CustomTooltip active={active} payload={payload} />}
         />
       </PieChart>
     </ResponsiveContainer>
+  );
+};
+
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: iLabel) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central">
+      {formatPercentage(percent)}
+    </text>
   );
 };
 
@@ -66,96 +70,66 @@ const stringForAsset = (asset: PickleAsset): string => {
 
 const getMainnetPlatformWeights = (
   core: PickleModelJson.PickleModelJson | undefined,
-): PieChartData[] => {
+  offchainVoteData: iOffchainVoteData | undefined,
+): JarChartData[] => {
   const mainnetJars: PickleModelJson.JarDefinition[] = core
     ? core.assets.jars.filter((j) => j.chain === "eth")
     : [];
+  const ethNetwork = offchainVoteData?.chains.filter((c) => c.chain === "eth")[0];
+  const ethChainWeight = ethNetwork?.rawChainWeight;
   let chartData = [];
   for (let i = 0; i < mainnetJars.length; i++) {
     if (mainnetJars[i].farm?.details?.allocShare !== undefined) {
+      const jar = stringForAsset(mainnetJars[i]);
+      const chainWeight = mainnetJars[i].farm?.details?.allocShare
+        ? mainnetJars[i].farm?.details?.allocShare || 0
+        : 0;
+      const platformWeight = ethChainWeight ? chainWeight * ethChainWeight : 0;
       chartData.push({
-        jar: stringForAsset(mainnetJars[i]),
-        weight: mainnetJars[i].farm?.details?.allocShare || 0,
+        jar: jar,
+        weight: chainWeight,
+        platformWeight: platformWeight,
       });
     }
   }
-  const other = chartData.filter((v) => v.weight < 0.05);
+  const other = chartData.filter((v) => v.weight < 0.03);
   const sumOther = other.reduce((x, y) => x + y.weight, 0);
   chartData = sortByWeight(chartData)
-    .filter((v) => v.weight > 0.05)
-    .slice(-15);
+    .filter((v) => v.weight >= 0.03)
+    .slice(-10);
   chartData.push({ jar: "Other", weight: sumOther });
   return chartData;
 };
 
 const getSidechainPlatformWeights = (
   offchainVoteData: iOffchainVoteData | undefined,
-): PieChartData[] => {
+  chain: string,
+): JarChartData[] => {
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
+  // console.log(platformWeights);
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
-    let jarVotes: JarVote[] = platformWeights[c].jarVotes;
-    for (let j = 0; j < jarVotes.length; j++) {
-      chartData.push({
-        jar: jarVotes[j].key,
-        weight: jarVotes[j].jarVoteAsEmissionShare,
-      });
+    if (platformWeights[c].chain === chain) {
+      let jarVotes: JarVote[] = platformWeights[c].jarVotes;
+      for (let j = 0; j < jarVotes.length; j++) {
+        chartData.push({
+          jar: jarVotes[j].key,
+          weight: jarVotes[j].jarVoteAsChainEmissionShare || 0,
+          platformWeight: jarVotes[j].jarVoteAsEmissionShare || 0,
+        });
+      }
     }
   }
-  const other = chartData.filter((v) => v.weight < 0.05);
+  const other = chartData.filter((v) => round(v.weight, 2) <= 0.03);
   const sumOther = other.reduce((x, y) => x + y.weight, 0);
   chartData = sortByWeight(chartData)
-    .filter((v) => v.weight > 0.05)
+    .filter((v) => round(v.weight, 2) > 0.03)
     .slice(-15);
   chartData.push({ jar: "Other", weight: sumOther });
   return chartData;
 };
 
-const getMainnetUserWeights = (
-  user: UserData | undefined,
-  core: PickleModelJson.PickleModelJson | undefined,
-): PieChartData[] => {
-  let chartData = [];
-  if (user && core) {
-    let totalWeight = BigNumber.from("0");
-    for (let i = 0; i < user.votes.length; i++)
-      totalWeight = totalWeight.add(BigNumber.from(user.votes[i].weight));
-
-    for (let i = 0; i < user.votes.length; i++) {
-      let jar: JarDefinition | undefined = core.assets.jars.find(
-        (j) => j.contract.toLowerCase() === user.votes[i].farmDepositToken.toLowerCase(),
-      );
-      let jarWeight =
-        BigNumber.from(user.votes[i].weight).mul(10000).div(totalWeight).toNumber() / 10000;
-      if (jar)
-        chartData.push({
-          jar: stringForAsset(jar),
-          weight: jarWeight,
-        });
-    }
-  }
-  return chartData;
-};
-
-const getSidechainUserWeights = (
-  offchainVoteData: iOffchainVoteData | undefined,
-  wallet: string | undefined | null,
-): PieChartData[] => {
-  let userVote: UserVote = {} as UserVote;
-  const allVotes = offchainVoteData ? offchainVoteData.votes : [];
-  if (offchainVoteData && wallet) {
-    for (let i = 0; i < allVotes.length; i++) {
-      if (allVotes[i].wallet.toLowerCase() === wallet.toLowerCase()) userVote = allVotes[i];
-    }
-  }
-  const chartData: PieChartData[] | undefined = userVote?.jarWeights?.map((v) => ({
-    jar: v.jarKey,
-    weight: (v.weight > 0 ? v.weight : v.weight * -1) * 0.01,
-  }));
-  return chartData ? chartData : [];
-};
-
-const colorPicker = (d: PieChartData[], e: PieChartData, n: number) => {
+const colorPicker = (d: JarChartData[], e: JarChartData, n: number) => {
   const evenColors = ["rgb(var(--color-primary-light))", "rgb(var(--color-primary))"];
   const oddColors = [
     "rgb(var(--color-primary-light))",
@@ -167,12 +141,22 @@ const colorPicker = (d: PieChartData[], e: PieChartData, n: number) => {
   return oddColors[n % 3];
 };
 
-const sortByWeight = (data: PieChartData[]) =>
+const sortByWeight = (data: JarChartData[]) =>
   data ? data.sort((a, b) => (a.weight > b.weight ? 1 : -1)) : [];
 
-interface PieChartData {
+interface JarChartData {
   jar: string;
   weight: number;
+  platformWeight?: number;
+}
+
+interface iLabel {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
 }
 
 const jarStratFormat = (i: string) => {
