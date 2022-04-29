@@ -79,7 +79,7 @@ export const ConfirmationSwap: FC<ConfirmationSwapProps> = ({
   };
 
   return (
-    <div className="h-4/5	w-3/5 p-4 border-solid border-2 rounded-2xl bg-green-600">
+    <div>
       <button onClick={() => setOpenConfirmationalModel(false)}>Back</button>
       <div className="my-4">
         <ReadCurrencyInput tokenA={token1} amount={confirmationalSwap.amount1} />

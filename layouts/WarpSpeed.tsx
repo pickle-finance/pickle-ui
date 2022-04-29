@@ -48,9 +48,11 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
             <TopNavbar PageTitle={PageTitle} />
             {!clear && <ConnectionStatus />}
             <Component {...pageProps} />
-            <div className="flex justify-between bg-background my-10">
-              <UserBalanceStatus />
-              <BlockNumber />
+            <div className={clear ? "fixed bottom-0 w-10/12" : ""}>
+              <div className="flex justify-between bg-background my-10">
+                <UserBalanceStatus />
+                <BlockNumber />
+              </div>
             </div>
           </div>
         </main>

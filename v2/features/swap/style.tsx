@@ -1,11 +1,4 @@
 import styled from "styled-components";
-
-export const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const StyledButton = styled.button`
   background: rgb(214, 123, 90);
   font-weight: 800;

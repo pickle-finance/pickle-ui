@@ -466,7 +466,8 @@
       "slippageAuto": "Auto",
       "settingsSlippageFields": "Slippage Tolerance",
       "settingsDeadline": "Deadline",
-      "settingsTab": "Settings"
+      "settingsTab": "Settings",
+      "swapSubmitButton": "Submit"
     },
     "gasPrices": {
       "fast": "Fast",

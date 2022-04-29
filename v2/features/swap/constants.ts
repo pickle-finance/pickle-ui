@@ -18,7 +18,7 @@ export const GPv2VaultRelayerAddress: {
   },
 };
 
-export const DELAY_FOR_QOUTE = 120;
+export const DELAY_FOR_QOUTE = 10;
 export const DELAY_FOR_BALANCES = 30;
 const baseUrl = "https://explorer.cow.fi";
 export const COW_SWAP_EXPLORER = {

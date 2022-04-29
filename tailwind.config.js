@@ -61,7 +61,7 @@ module.exports = {
           DEFAULT: withOpacityValue("--color-primary"),
           light: withOpacityValue("--color-primary-light"),
           dark: withOpacityValue("--color-primary-dark"),
-        },
+        }
       },
       scale: {
         "-1": "-1",
