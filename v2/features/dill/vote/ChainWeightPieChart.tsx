@@ -2,11 +2,15 @@ import React, { FC } from "react";
 import { iOffchainVoteData } from "v2/store/offchainVotes";
 import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList, Cell } from "recharts";
 import { formatPercentage } from "v2/utils";
+import CustomTooltip from "./PieChartTooltip";
+import { PickleModelJson } from "picklefinance-core";
+import { RawChain } from "picklefinance-core/lib/chain/Chains";
 
 const Chart: FC<{
   offchainVoteData?: iOffchainVoteData | undefined;
-}> = ({ offchainVoteData }) => {
-  const data: PieChartData[] = getSidechainPlatformWeights(offchainVoteData);
+  core: PickleModelJson.PickleModelJson | undefined;
+}> = ({ offchainVoteData, core }) => {
+  const data: PieChartData[] = getSidechainPlatformWeights(offchainVoteData, core);
 
   if (data.length < 1)
     return (
@@ -32,11 +36,15 @@ const Chart: FC<{
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colorPicker(data, entry, index)} />
           ))}
-          <LabelList dataKey="chain" position="outside" offset={20} formatter={chainStratFormat} />
+          <LabelList
+            dataKey="chain"
+            position="outside"
+            offset={20}
+            formatter={(label: string) => chainStratFormat(label, core)}
+          />
         </Pie>
         <Tooltip
-          labelFormatter={(label: any) => chainStratFormat(label.chain)}
-          formatter={(value: number) => formatPercentage(value)}
+          content={({ active, payload }) => <CustomTooltip active={active} payload={payload} />}
         />
       </PieChart>
     </ResponsiveContainer>
@@ -66,13 +74,22 @@ interface iLabel {
 
 const getSidechainPlatformWeights = (
   offchainVoteData: iOffchainVoteData | undefined,
+  core: PickleModelJson.PickleModelJson | undefined,
 ): PieChartData[] => {
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
+    let chain: string = platformWeights[c].chain;
+    let thisChain: RawChain | undefined = core
+      ? core.chains.find((c) => c.network === chain)
+      : undefined;
+    let chainVisible: string = thisChain ? thisChain.networkVisible : chain;
+    let weight: number = platformWeights[c].adjustedChainWeight;
+
     chartData.push({
-      chain: platformWeights[c].chain,
-      weight: platformWeights[c].adjustedChainWeight,
+      chain: chain,
+      chainVisible: chainVisible,
+      weight: weight,
     });
   }
   const other = chartData.filter((v) => v.weight < 0.05);
@@ -80,7 +97,7 @@ const getSidechainPlatformWeights = (
   chartData = sortByWeight(chartData)
     .filter((v) => v.weight > 0.05)
     .slice(-15);
-  chartData.push({ chain: "Other", weight: sumOther });
+  chartData.push({ chain: "Other", chainVisible: "Other", weight: sumOther });
   return chartData;
 };
 
@@ -101,12 +118,15 @@ const sortByWeight = (data: PieChartData[]) =>
 
 interface PieChartData {
   chain?: string;
+  chainVisible?: string;
   jar?: string;
   weight: number;
 }
 
-const chainStratFormat = (label: string) => {
-  return label.toLocaleUpperCase();
+const chainStratFormat = (label: string, core: PickleModelJson.PickleModelJson | undefined) => {
+  const thisChain = core ? core.chains.find((c) => c.network === label) : undefined;
+  const displayName = thisChain ? thisChain.networkVisible : label;
+  return displayName;
 };
 
 export default Chart;

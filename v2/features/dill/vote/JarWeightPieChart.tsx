@@ -6,7 +6,7 @@ import { iOffchainVoteData, JarVote } from "v2/store/offchainVotes";
 import { PieChart, Pie, ResponsiveContainer, Tooltip, LabelList, Cell } from "recharts";
 import { formatPercentage } from "v2/utils";
 import { round } from "lodash";
-import { useTranslation } from "next-i18next";
+import CustomTooltip from "./PieChartTooltip";
 
 const Chart: FC<{
   chain: string;
@@ -51,49 +51,6 @@ const Chart: FC<{
   );
 };
 
-const CustomTooltip: FC<{ active: any; payload: any }> = ({ active, payload }) => {
-  const { t } = useTranslation("common");
-
-  if (active && payload && payload.length) {
-    const label = payload[0].payload.jar;
-    const weight = payload[0].value;
-    const platformWeight = payload[0].payload.platformWeight;
-
-    return (
-      <div className="bg-background-light p-5 rounded border border-foreground-alt-300">
-        <table>
-          {label && <TooltipRow label={t("v2.dill.vote.charts.tooltips.asset")} value={label} />}
-          {weight && (
-            <TooltipRow
-              label={t("v2.dill.vote.charts.tooltips.chainWeight")}
-              value={formatPercentage(weight, 3)}
-            />
-          )}
-          {platformWeight && (
-            <TooltipRow
-              label={t("v2.dill.vote.charts.tooltips.platformWeight")}
-              value={formatPercentage(platformWeight, 5)}
-            />
-          )}
-        </table>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-const TooltipRow: FC<{ label: string; value: string }> = ({ label, value }) => (
-  <tr className="grid grid-cols-2 gap-5">
-    <td>
-      <p className="text-foreground-alt-200 col-span-1">{label}</p>
-    </td>
-    <td>
-      <p className="text-foreground-alt-200 col-span-2">{value}</p>
-    </td>
-  </tr>
-);
-
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: iLabel) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
@@ -106,14 +63,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     </text>
   );
 };
-interface iLabel {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-}
 
 const stringForAsset = (asset: PickleAsset): string => {
   return asset.details?.apiKey ? asset.details.apiKey + " (" + asset.id + ")" : asset.id;
@@ -199,6 +148,15 @@ interface JarChartData {
   jar: string;
   weight: number;
   platformWeight?: number;
+}
+
+interface iLabel {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
 }
 
 const jarStratFormat = (i: string) => {

@@ -49,9 +49,9 @@ const ChartContainer: FC<{
         {isChainWeight ? (
           <>
             {!showChainTable ? (
-              <ChainWeightChart offchainVoteData={offchainVoteData} />
+              <ChainWeightChart offchainVoteData={offchainVoteData} core={core} />
             ) : (
-              <ChainWeightTable offchainVoteData={offchainVoteData} />
+              <ChainWeightTable offchainVoteData={offchainVoteData} core={core} />
             )}
           </>
         ) : (

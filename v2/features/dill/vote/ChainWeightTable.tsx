@@ -1,11 +1,13 @@
 import { useTranslation } from "next-i18next";
+import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
 import { iOffchainVoteData } from "v2/store/offchainVotes";
 import { classNames, formatPercentage } from "v2/utils";
 
-const ChainWeightTable: FC<{ offchainVoteData: iOffchainVoteData | undefined }> = ({
-  offchainVoteData,
-}) => {
+const ChainWeightTable: FC<{
+  offchainVoteData: iOffchainVoteData | undefined;
+  core: PickleModelJson.PickleModelJson | undefined;
+}> = ({ offchainVoteData, core }) => {
   const tableData = getPlatformChainWeights(offchainVoteData);
   return (
     <div className="flex flex-col mt-20 mb-10 max-h-full">
@@ -21,6 +23,7 @@ const ChainWeightTable: FC<{ offchainVoteData: iOffchainVoteData | undefined }> 
                     chain={chain}
                     weight={weight}
                     tableData={tableData}
+                    core={core}
                   />
                 ))}
               </>
@@ -62,7 +65,8 @@ export const ChainWeightTableRow: FC<{
   chain: string;
   weight: number;
   tableData: iChainWeights[];
-}> = ({ chain, weight, tableData }) => {
+  core: PickleModelJson.PickleModelJson | undefined;
+}> = ({ chain, weight, tableData, core }) => {
   let classNameL = "";
   let classNameR = "";
   if (chain.toLowerCase() === tableData[0].chain.toLowerCase()) {
@@ -78,7 +82,7 @@ export const ChainWeightTableRow: FC<{
     <>
       <tr className="group">
         <ChainTableCell className={classNameL}>
-          <ChainTableP text={chain} className="text-left" />
+          <ChainTableP text={formatChainName(chain, core)} className="text-left" />
         </ChainTableCell>
 
         <ChainTableCell className={classNameR}>
@@ -118,6 +122,12 @@ const getPlatformChainWeights = (offchainVoteData: iOffchainVoteData | undefined
   chartData = sortByWeight(chartData);
 
   return chartData;
+};
+
+const formatChainName = (chain: string, core: PickleModelJson.PickleModelJson | undefined) => {
+  const thisChain = core ? core.chains.find((c) => c.network === chain) : undefined;
+  const displayName = thisChain ? thisChain.networkVisible : chain;
+  return displayName;
 };
 
 const sortByWeight = (data: any[]) =>

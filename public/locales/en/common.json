@@ -402,6 +402,7 @@
           "jarWeight": "Jar Reward Weights",
           "tooltips": {
             "asset": "Asset",
+            "chain": "Chain",
             "chainWeight": "Chain Weight",
             "platformWeight": "Platform Weight"
           }
