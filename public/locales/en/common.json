@@ -424,7 +424,8 @@
         "yourVote": "Your Current Vote"
       },
       "weeklyDillAmount": "Weekly DILL 🔒",
-      "weeklyPickleAmount": "Weekly PICKLEs distributed"
+      "weeklyPickleAmount": "Weekly PICKLEs distributed",
+      "yourShare": "{{ percentage }} of total DILL"
     },
     "farms": {
       "allApproved": "All approved!",

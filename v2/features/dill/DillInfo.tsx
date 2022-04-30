@@ -25,7 +25,7 @@ const DillInfo: FC = () => {
 
   return (
     <>
-      <DillAmount pickles={pickles} dill={dill} />
+      <DillAmount pickles={pickles} userDill={dill} />
       <UnlockDate dill={dill} />
       <Harvest dill={dill} />
       {needsNetworkSwitch && (
