@@ -7,17 +7,15 @@ import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
-import { useAppDispatch } from "v2/store";
+import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
-import Form from "./Form";
-import AwaitingConfirmation from "./AwaitingConfirmationUniV3";
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
-import { useJarContract, useTransactionUniV3, useUniV3JarContract } from "../hooks";
+import { useTransaction, useUniV3JarContract } from "../hooks";
 import { TransferEvent } from "containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
@@ -35,7 +33,6 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
-  const dispatch = useAppDispatch();
 
   const { contract } = jar;
   const JarContract = useUniV3JarContract(contract);
@@ -86,7 +83,7 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
     return () => JarContract[funcSig](amount0, amount1);
   };
 
-  const callback = (receipt: ethers.ContractReceipt) => {
+  const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     if (!account) return;
 
     /**
@@ -133,7 +130,7 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
     );
   };
 
-  const { sendTransaction, error, setError, isWaiting } = useTransactionUniV3(
+  const { sendTransaction, error, setError, isWaiting } = useTransaction(
     transactionFactory(),
     callback,
     send,
