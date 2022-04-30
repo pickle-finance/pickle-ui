@@ -55,3 +55,11 @@ export const visibleStringForAsset = (
 
   return asset?.depositToken.name;
 };
+
+export const tokenDecimals = (apiKey: string | undefined, core: PickleModelJson): number => {
+  if (!core || !apiKey) return 18;
+
+  const token = core.tokens.find((token) => token.id.toUpperCase() === apiKey.toUpperCase());
+
+  return token ? token.decimals : 18;
+};

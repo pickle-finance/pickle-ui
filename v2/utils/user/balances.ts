@@ -6,7 +6,8 @@ import {
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
-import { bigNumberToTokenNumber } from "../format";
+import { bigNumberToTokenNumber, formatNumber } from "../format";
+import { tokenDecimals } from "v2/store/core.helpers";
 
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -50,7 +51,7 @@ const createUserAssetDataComponent = (
   return {
     wei: depositTokenWei,
     tokens: bigNumberToTokenNumber(depositTokenWei, decimals, decimals).toString(),
-    tokensVisible: bigNumberToTokenNumber(depositTokenWei, decimals, 3).toString(),
+    tokensVisible: formatNumber(bigNumberToTokenNumber(depositTokenWei, decimals, 3), 3),
     tokensUSD: bigNumberToTokenNumber(weiMulPrice, decimals, 3),
   };
 };
@@ -99,14 +100,14 @@ export const getUserAssetDataWithPrices = (
 
     const token0Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token0Balance?.toString() || "0"),
-      decimals,
+      tokenDecimals(token0, core),
       core.prices[token0 || 0],
       1.0,
     );
 
     const token1Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token1Balance?.toString() || "0"),
-      decimals,
+      tokenDecimals(token1, core),
       core.prices[token1 || 0],
       1.0,
     );

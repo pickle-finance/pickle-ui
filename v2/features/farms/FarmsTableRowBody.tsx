@@ -25,7 +25,7 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
   const { network, needsNetworkSwitch } = useNeedsNetworkSwitch(jar.chain);
 
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
-  const tokensInWallet = data.depositTokensInWallet.tokens;
+  const tokensInWallet = data.depositTokensInWallet.tokensVisible;
   const depositTokenCountString = t("v2.farms.tokens", { amount: tokensInWallet });
 
   const analyticsUrl: string | undefined = jar.details?.apiKey
@@ -35,8 +35,8 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
   const isUniV3 = jar.protocol === AssetProtocol.UNISWAP_V3;
   const token0Name = jar.depositToken.components?.[0];
   const token1Name = jar.depositToken.components?.[1];
-  const userBalanceToken0 = data.walletComponentTokens[token0Name || ""]?.tokens;
-  const userBalanceToken1 = data.walletComponentTokens[token1Name || ""]?.tokens;
+  const userBalanceToken0 = data.walletComponentTokens[token0Name || ""]?.tokensVisible;
+  const userBalanceToken1 = data.walletComponentTokens[token1Name || ""]?.tokensVisible;
 
   return (
     <td

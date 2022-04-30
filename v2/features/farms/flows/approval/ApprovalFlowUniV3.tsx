@@ -6,14 +6,10 @@ import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { CoreSelectors, JarWithData } from "v2/store/core";
-import { stateMachine, Actions, States } from "../stateMachineNoUserInput";
-import AwaitingConfirmation from "./AwaitingConfirmation";
-import AwaitingReceipt from "../AwaitingReceipt";
-import Success from "../Success";
-import Failure from "../Failure";
+import { JarWithData } from "v2/store/core";
+import { stateMachine, Actions } from "../stateMachineNoUserInput";
 import { useTokenContract, useTransaction } from "../hooks";
-import { useAppDispatch, useAppSelector } from "v2/store";
+import { useAppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { ApprovalEvent, Erc20 } from "containers/Contracts/Erc20";
 import UniV3AwaitingConfirmation from "./AwaitingConfirmationUniV3";

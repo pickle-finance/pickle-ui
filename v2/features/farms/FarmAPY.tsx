@@ -72,7 +72,7 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
           {aprStats?.components.length &&
             aprStats.components.map(({ name, apr }) => {
               return isNaN(apr) || apr > 1e6 ? null : (
-                <div className="flex justify-between items-end">
+                <div key={name} className="flex justify-between items-end">
                   <div className="font-bold mr-2">{name.toUpperCase()}:</div>
                   <div className="text-foreground">{apr.toFixed(2)}%</div>
                 </div>
