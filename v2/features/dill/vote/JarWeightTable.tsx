@@ -84,7 +84,7 @@ export const JarWeightTableRow: FC<{
         </JarTableCell>
 
         <JarTableCell className={classNameR}>
-          <JarTableP text={formatPercentage(weight, 3)} />
+          <JarTableP text={formatPercentage(weight * 100, 3)} />
         </JarTableCell>
       </tr>
     </>

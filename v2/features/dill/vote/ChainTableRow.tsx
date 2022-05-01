@@ -114,7 +114,7 @@ const getPlatformWeight = (
   const thisChainVote: ChainVote | undefined = offchainVoteData?.chains.find(
     (c) => c.chain === currentChain,
   );
-  return thisChainVote ? formatPercentage(thisChainVote?.adjustedChainWeight) : "-";
+  return thisChainVote ? formatPercentage(thisChainVote?.adjustedChainWeight * 100) : "-";
 };
 
 const getUserWeight = (

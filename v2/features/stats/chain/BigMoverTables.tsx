@@ -23,7 +23,7 @@ export const LossesTable: FC<{ data: tokenPriceChange[] }> = ({ data }) => (
       {data.slice(-5).map((data) => (
         <tr key={"apiKey"}>
           <td>{data.apiKey}</td>
-          <td>{formatPercentage(data.tokenPriceChange, 3)}</td>
+          <td>{formatPercentage(data.tokenPriceChange * 100, 3)}</td>
         </tr>
       ))}
     </tbody>

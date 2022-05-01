@@ -86,7 +86,7 @@ export const ChainWeightTableRow: FC<{
         </ChainTableCell>
 
         <ChainTableCell className={classNameR}>
-          <ChainTableP text={formatPercentage(weight, 3)} />
+          <ChainTableP text={formatPercentage(weight * 100, 3)} />
         </ChainTableCell>
       </tr>
     </>

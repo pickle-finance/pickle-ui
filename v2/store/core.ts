@@ -255,7 +255,7 @@ const selectMaxApy = (state: RootState) => {
       return {
         name: jar.depositToken.name,
         chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
-        apy: (apy + farmApr) / 100,
+        apy: apy + farmApr,
       };
     });
 

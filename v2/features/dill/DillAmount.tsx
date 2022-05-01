@@ -34,7 +34,7 @@ const DillAmount: FC<Props> = ({ userDill, pickles }) => {
               <MoreInfo>
                 <span className="text-foreground font-bold text-sm">
                   {t("v2.dill.yourShare", {
-                    percentage: formatPercentage(dillBalance / totalDill, 6),
+                    percentage: formatPercentage((dillBalance / totalDill) * 100, 6),
                   })}
                 </span>
               </MoreInfo>
