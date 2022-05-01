@@ -40,7 +40,7 @@ const createUserAssetDataComponent = (
   price: number,
   ratio: number,
 ): UserAssetDataWithPricesComponent => {
-  const log = Math.log(price) / Math.log(10);
+  const log = price ? Math.log(price) / Math.log(10) : 0;
   const precisionAdjust = log > 4 ? 0 : 5 - Math.floor(log);
   const precisionAsNumber = Math.pow(10, precisionAdjust);
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
