@@ -32,19 +32,22 @@ export const formatDollars = (value: number, precision = 0): string => {
   return formatter.format(value);
 };
 
-export const formatPercentage = (value: number, precision = 0): string =>
-  value.toLocaleString("en-US", {
+export const formatPercentage = (value: number, precision?: number): string => {
+  if (value === Number.POSITIVE_INFINITY) return "∞%";
+  if (value === 0) precision = 0;
+  if (precision === undefined) {
+    if (value > 10) {
+      precision = 0;
+    } else {
+      precision = 2;
+    }
+  }
+
+  return (value / 100).toLocaleString("en-US", {
     style: "percent",
     minimumFractionDigits: precision,
     maximumFractionDigits: precision,
   });
-
-export const formatAPY = (apy: number): string => {
-  if (apy === Number.POSITIVE_INFINITY) return "∞%";
-
-  const decimalPlaces = Math.log(apy) / Math.log(10) > 4 ? 0 : 2;
-
-  return apy.toFixed(decimalPlaces) + "%";
 };
 
 export const shortenAddress = (address: string): string =>

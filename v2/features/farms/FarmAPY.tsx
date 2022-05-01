@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import { JarWithData } from "v2/store/core";
 import { ChainNetwork } from "picklefinance-core";
 import MoreInfo from "v2/components/MoreInfo";
-import { formatAPY } from "v2/utils";
+import { formatPercentage } from "v2/utils";
 
 interface Props {
   jar: JarWithData;
@@ -17,7 +17,7 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
 
   // Case #1: only jar, no farm
   if (!jar.farm?.details?.farmApyComponents) {
-    aprRangeString = (jar.aprStats?.apy || 0).toFixed(3) + "%";
+    aprRangeString = formatPercentage(jar.aprStats?.apy || 0);
   } else {
     // Case #2: mainnet - show APR range for min/max DILL
     if (jar.farm.details.farmApyComponents[0]?.maxApr && jar.chain === ChainNetwork.Ethereum) {
@@ -25,11 +25,11 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
       pickleAprMax = jar.farm.details.farmApyComponents[0].maxApr || 0;
       const aprMin = (jar.aprStats?.apy || 0) + pickleAprMin;
       const aprMax = (jar.aprStats?.apy || 0) + pickleAprMax;
-      aprRangeString = `${aprMin.toFixed(2)}% ~ ${aprMax.toFixed(2)}%`;
+      aprRangeString = `${formatPercentage(aprMin)} ~ ${formatPercentage(aprMax)}`;
     } else {
       // Case #3: sidechain with pickle farm
       pickleApr = jar.farm.details.farmApyComponents[0]?.apr;
-      aprRangeString = `${((jar.aprStats?.apy || 0) + (pickleApr || 0)).toFixed(2)}%`;
+      aprRangeString = formatPercentage((jar.aprStats?.apy || 0) + (pickleApr || 0));
     }
   }
 
@@ -44,7 +44,7 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
     (userStakedNum || 1);
 
   const userApy = userAdjustedPickleApy + (jar.aprStats?.apy || 0);
-  const userApyString = t("v2.farms.yourApy", { apy: formatAPY(userApy || 0) });
+  const userApyString = t("v2.farms.yourApy", { apy: formatPercentage(userApy || 0) });
 
   const { aprStats } = jar;
   const difference = (aprStats?.apy || 0) - (aprStats?.apr || 0);
@@ -58,15 +58,15 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
           {pickleApr && (
             <div className="flex justify-between items-end">
               <div className="font-bold mr-2">PICKLE:</div>
-              <div className="text-foreground">{`${formatAPY(pickleApr || 0)}`}</div>
+              <div className="text-foreground">{formatPercentage(pickleApr || 0)}</div>
             </div>
           )}
           {pickleAprMin && pickleAprMax && (
             <div className="flex justify-between items-end">
               <div className="font-bold mr-2">PICKLE:</div>
-              <div className="text-foreground">{`${formatAPY(pickleAprMin || 0)} ~ ${formatAPY(
-                pickleAprMax || 0,
-              )}`}</div>
+              <div className="text-foreground">{`${formatPercentage(
+                pickleAprMin || 0,
+              )} ~ ${formatPercentage(pickleAprMax || 0)}`}</div>
             </div>
           )}
           {aprStats?.components.length &&
@@ -74,13 +74,13 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
               return isNaN(apr) || apr > 1e6 ? null : (
                 <div key={name} className="flex justify-between items-end">
                   <div className="font-bold mr-2">{name.toUpperCase()}:</div>
-                  <div className="text-foreground">{apr.toFixed(2)}%</div>
+                  <div className="text-foreground">{formatPercentage(apr)}</div>
                 </div>
               );
             })}
           <div className="flex justify-between items-end">
             <span className="font-bold mr-2">{t("v2.farms.compounding")} ✨:</span>
-            <span className="text-foreground">{difference.toFixed(2)}%</span>
+            <span className="text-foreground">{formatPercentage(difference)}</span>
           </div>
         </div>
       </MoreInfo>

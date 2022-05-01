@@ -141,7 +141,7 @@ const getOffchainPlatformWeight = (
     (j) => j.key.toLowerCase() === jarKey.toLowerCase(),
   );
   const thisJarVote = thisJar ? thisJar.jarVoteAsEmissionShare : 0;
-  return formatPercentage(thisJarVote);
+  return formatPercentage(thisJarVote * 100);
 };
 
 const getOffchainUserWeight = (
@@ -160,7 +160,7 @@ const getOffchainUserWeight = (
 
 const getMainnetPlatformWeight = (jarData: JarDefinition | undefined) => {
   return jarData?.farm?.details?.allocShare
-    ? formatPercentage(jarData.farm.details.allocShare)
+    ? formatPercentage(jarData.farm.details.allocShare * 100)
     : "0%";
 };
 
@@ -178,7 +178,7 @@ const getMainnetUserWeight = (
       const userVote = user.votes.find((v) => v.farmDepositToken === jarContract);
       const jarWeight = userVote ? BigNumber.from(userVote.weight) : 0;
       const weightPct = jarWeight ? jarWeight.mul(10000).div(totalWeight).toNumber() / 10000 : 0;
-      const weightPctFormatted = weightPct !== 0 ? formatPercentage(weightPct) : "0%";
+      const weightPctFormatted = weightPct !== 0 ? formatPercentage(weightPct * 100) : "0%";
       return weightPctFormatted;
     }
   }

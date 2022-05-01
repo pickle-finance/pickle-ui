@@ -28,7 +28,7 @@ const AmountSteps: VFC<Props> = ({ setTransactionAmount }) => {
               )}
             >
               <span className="text-xs text-foreground-alt-200 font-semibold tracking-wide uppercase">
-                {formatPercentage(step.value)}
+                {formatPercentage(step.value * 100, 0)}
               </span>
             </a>
           </li>

@@ -87,8 +87,8 @@ export const getUserAssetDataWithPrices = (
 
   let token0,
     token1,
-    token0Balance,
-    token1Balance,
+    token0Balance: string,
+    token1Balance: string,
     walletComponentTokens: { [key: string]: UserAssetDataWithPricesComponent } = {};
 
   if (jar.protocol === AssetProtocol.UNISWAP_V3) {

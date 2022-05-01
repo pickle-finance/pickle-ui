@@ -59,7 +59,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central">
-      {formatPercentage(percent)}
+      {formatPercentage(percent * 100)}
     </text>
   );
 };

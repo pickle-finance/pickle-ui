@@ -22,13 +22,13 @@ const CustomTooltip: FC<{ active: any; payload: any }> = ({ active, payload }) =
           {weight && (
             <TooltipRow
               label={t("v2.dill.vote.charts.tooltips.chainWeight")}
-              value={formatPercentage(weight, 3)}
+              value={formatPercentage(weight * 100, 3)}
             />
           )}
           {platformWeight && (
             <TooltipRow
               label={t("v2.dill.vote.charts.tooltips.platformWeight")}
-              value={formatPercentage(platformWeight, 5)}
+              value={formatPercentage(platformWeight * 100, 5)}
             />
           )}
         </table>

@@ -31,7 +31,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
 
   const dillAPY =
     weeklyDistribution && dill.totalDill
-      ? (weeklyDistribution / (dill.totalDill * picklePrice)) * 52
+      ? (weeklyDistribution / (dill.totalDill * picklePrice)) * 52 * 100
       : 0;
 
   return (
