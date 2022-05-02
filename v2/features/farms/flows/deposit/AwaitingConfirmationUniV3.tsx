@@ -55,7 +55,11 @@ const AwaitingConfirmationUniV3: FC<Props> = ({
             {parseFloat(amount1).toFixed(4)}
           </span>
           {token1Name?.toUpperCase()}
-          {equivalentValue && <MoreInfo secondaryText={equivalentValue} />}
+          {equivalentValue && (
+            <MoreInfo>
+              <span className="text-foreground-alt-200 text-sm">{equivalentValue}</span>
+            </MoreInfo>
+          )}
         </span>
       </div>
       <Error error={error} />

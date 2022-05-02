@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import {
+  AssetEnablement,
   ExternalAssetDefinition,
   JarDefinition,
   NestedFarm,
@@ -23,7 +24,7 @@ export const jarSupportsStaking = (jar: JarWithData): boolean => {
   return farm.farmAddress !== ethers.constants.AddressZero;
 };
 
-const allAssets = (core: PickleModelJson): Asset[] => [
+export const allAssets = (core: PickleModelJson): Asset[] => [
   ...core.assets.jars,
   ...core.assets.standaloneFarms,
   ...core.assets.external,
@@ -63,3 +64,7 @@ export const tokenDecimals = (apiKey: string | undefined, core: PickleModelJson)
 
   return token ? token.decimals : 18;
 };
+
+export const enabledPredicate = (asset: Asset) =>
+  asset.enablement === AssetEnablement.ENABLED ||
+  asset.enablement === AssetEnablement.WITHDRAW_ONLY;
