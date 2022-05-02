@@ -4,10 +4,8 @@ import { maxBy, orderBy } from "lodash";
 import {
   AssetEnablement,
   AssetProtocol,
-  ExternalAssetDefinition,
   JarDefinition,
   PickleModelJson,
-  StandaloneFarmDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { RootState } from ".";
@@ -17,6 +15,7 @@ import { brandColor } from "v2/features/farms/colors";
 import { UserSelectors } from "./user";
 import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
 import { getUniV3Tokens } from "v2/utils/univ3";
+import { allAssets, enabledPredicate } from "./core.helpers";
 
 const apiHost = process.env.apiHost;
 
@@ -24,8 +23,6 @@ export const fetchCore = createAsyncThunk<PickleModelJson>("core/fetch", async (
   const response = await fetch(`${apiHost}/protocol/pfcore`);
   return await response.json();
 });
-
-type Asset = JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition;
 
 export interface UniV3Token {
   address: string;
@@ -85,7 +82,7 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
   let protocols: string[] = [];
   let tokens: string[] = [];
 
-  const processJar = (jar: Asset): void => {
+  allAssets(data).forEach((jar) => {
     if (jar.enablement !== AssetEnablement.ENABLED) return;
 
     protocols.push(jar.protocol);
@@ -95,10 +92,7 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
     if (!components) return;
 
     tokens.push(...components);
-  };
-
-  const entities = ["jars", "external", "standaloneFarms"] as const;
-  entities.forEach((entity) => data.assets[entity].forEach(processJar));
+  });
 
   const networkFilters = data.chains.map(({ network, networkVisible }) => ({
     type: FilterType.Network,
@@ -137,12 +131,25 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
  * Selectors
  */
 const selectCore = (state: RootState) => state.core.data;
+
+/**
+ * TODO: Refactor codebase to work with all enabled assets, i.e. use
+ * selectEnabledAssets so we can remove selectEnabledJars. This breaks a lot
+ * of types at the moment so using all assets only where possible for now.
+ */
+const selectEnabledAssets = (state: RootState) => {
+  const { data } = state.core;
+
+  if (data === undefined) return [];
+
+  return allAssets(data).filter(enabledPredicate);
+};
 const selectEnabledJars = (state: RootState) => {
   const { data } = state.core;
 
   if (data === undefined) return [];
 
-  return data.assets.jars.filter((jar) => jar.enablement === AssetEnablement.ENABLED);
+  return data.assets.jars.filter(enabledPredicate);
 };
 
 const selectFilteredAssets = createSelector(
@@ -240,12 +247,12 @@ const selectMaxApy = (state: RootState) => {
 
   if (data === undefined) return undefined;
 
-  const { jars } = data.assets;
-  const entries = jars
-    .filter((jar) => jar.enablement === AssetEnablement.ENABLED)
-    .map((jar) => {
-      let farmApr = 0;
-      const apy = jar.aprStats?.apy || 0;
+  const jars = selectEnabledAssets(state);
+  const entries = jars.map((jar) => {
+    let farmApr = 0;
+    const apy = jar.aprStats?.apy || 0;
+
+    if ("farm" in jar) {
       const farmApyComponents = jar.farm?.details?.farmApyComponents;
 
       if (farmApyComponents?.length) {
@@ -257,7 +264,8 @@ const selectMaxApy = (state: RootState) => {
         chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
         apy: apy + farmApr,
       };
-    });
+    }
+  });
 
   return maxBy(entries, "apy")!;
 };
