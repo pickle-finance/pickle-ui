@@ -1,30 +1,26 @@
 import { useEffect, VFC } from "react";
-import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { UserModel, IUserModelCallback } from "picklefinance-core/lib/client/UserModel";
 import { useIntervalWhen } from "rooks";
 import { ChainNetwork } from "picklefinance-core";
 import { Signer } from "ethers";
-import { useRouter } from "next/router";
 
 import { CoreSelectors } from "v2/store/core";
-import { useAppDispatch } from "v2/store";
+import { useAppDispatch, useAppSelector } from "v2/store";
 import { UserActions, UserSelectors } from "v2/store/user";
+import { useAccount } from "v2/hooks";
 
 const refreshInterval = 3 * 60 * 1000;
 
 const UserModelProvider: VFC = () => {
   const dispatch = useAppDispatch();
-  const core = useSelector(CoreSelectors.selectCore);
-  const coreTimestamp = useSelector(CoreSelectors.selectTimestamp);
-  const { account, chainId, library } = useWeb3React<Web3Provider>();
-  const nonce = useSelector(UserSelectors.selectNonce);
-  const updatedAt = useSelector(UserSelectors.selectUpdatedAt);
-
-  // This helps us debug issues by passing in user address to the URL.
-  const router = useRouter();
-  const impersonatedUserAddress = router.query.debug as string;
+  const core = useAppSelector(CoreSelectors.selectCore);
+  const coreTimestamp = useAppSelector(CoreSelectors.selectTimestamp);
+  const { chainId, library } = useWeb3React<Web3Provider>();
+  const account = useAccount();
+  const nonce = useAppSelector(UserSelectors.selectNonce);
+  const updatedAt = useAppSelector((state) => UserSelectors.selectUpdatedAt(state, account));
 
   interface Options {
     type: "full" | "minimal";
@@ -35,13 +31,25 @@ const UserModelProvider: VFC = () => {
 
     const callback: IUserModelCallback = {
       async modelUpdated(data) {
-        dispatch(UserActions.setData({ data, type: "incremental" }));
+        dispatch(
+          UserActions.setData({
+            account,
+            data,
+            type: "incremental",
+          }),
+        );
       },
       async modelFinished(data) {
         if (type === "full") {
-          dispatch(UserActions.setData({ data, type: "final" }));
+          dispatch(
+            UserActions.setData({
+              account,
+              data,
+              type: "final",
+            }),
+          );
         } else if (type === "minimal") {
-          dispatch(UserActions.setTokens(data));
+          dispatch(UserActions.setTokens({ account, data }));
         }
         dispatch(UserActions.setIsFetching(false));
       },
@@ -55,7 +63,7 @@ const UserModelProvider: VFC = () => {
       const map: Map<ChainNetwork, Signer> = new Map();
       map.set(chainName as ChainNetwork, library.getSigner());
 
-      const user = new UserModel(core, impersonatedUserAddress || account, map, callback);
+      const user = new UserModel(core, account, map, callback);
 
       dispatch(UserActions.setIsFetching(true));
 

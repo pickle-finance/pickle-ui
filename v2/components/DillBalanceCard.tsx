@@ -1,13 +1,16 @@
 import { FC } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { useSelector } from "react-redux";
-import { UserSelectors } from "v2/store/user";
 import { BigNumber } from "@ethersproject/bignumber";
+
+import { UserSelectors } from "v2/store/user";
+import { useAppSelector } from "v2/store";
+import { useAccount } from "v2/hooks";
 
 const DillBalanceCard: FC = () => {
   const { t } = useTranslation("common");
-  const userModel = useSelector(UserSelectors.selectData);
+  const account = useAccount();
+  const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
   let val = "0.00";
   // TODO this specific logic of dividing by 1e18 but then getting 3 decimals seems common.
   // Might want to extract to a utility

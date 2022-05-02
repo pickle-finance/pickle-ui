@@ -1,13 +1,17 @@
 import { FC } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { useSelector } from "react-redux";
-import { UserSelectors } from "v2/store/user";
 import { BigNumber } from "@ethersproject/bignumber";
+
+import { UserSelectors } from "v2/store/user";
+import { useAppSelector } from "v2/store";
+import { useAccount } from "v2/hooks";
 
 const PickleBalanceCard: FC = () => {
   const { t } = useTranslation("common");
-  const userModel = useSelector(UserSelectors.selectData);
+  const account = useAccount();
+  const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
+
   let pickles = 0;
   let chains = 0;
   if (userModel) {

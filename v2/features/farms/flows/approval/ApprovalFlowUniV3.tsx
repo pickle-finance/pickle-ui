@@ -3,6 +3,8 @@ import { useTranslation } from "next-i18next";
 import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import type { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -55,8 +57,9 @@ interface Props {
 
 const ApprovalFlowUniV3: FC<Props> = ({ jar, visible, type, balances }) => {
   const { t } = useTranslation("common");
+  const { account } = useWeb3React<Web3Provider>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [current, send] = useMachine(stateMachine);
+  const [, send] = useMachine(stateMachine);
   const dispatch = useAppDispatch();
   const approvalConfig = approvalData(jar, type);
 
@@ -77,6 +80,8 @@ const ApprovalFlowUniV3: FC<Props> = ({ jar, visible, type, balances }) => {
   };
 
   const callback = (receipt: ethers.ContractReceipt) => {
+    if (!account) return;
+
     const approvalEvent = receipt.events?.find(
       ({ event }) => event === "Approval",
     ) as ApprovalEvent;
@@ -91,6 +96,7 @@ const ApprovalFlowUniV3: FC<Props> = ({ jar, visible, type, balances }) => {
     if (tokenKey != undefined)
       dispatch(
         UserActions.setTokenData({
+          account,
           apiKey: jar.details.apiKey,
           data: {
             componentTokenBalances: {

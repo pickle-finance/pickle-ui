@@ -193,6 +193,7 @@ const selectFilteredAssets = createSelector(
 interface MakeJarsSelectorOpts {
   filtered?: boolean;
   paginated?: boolean;
+  account?: string | null | undefined;
 }
 
 const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
@@ -203,7 +204,7 @@ const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
     selectCore,
     ControlsSelectors.selectPaginateParams,
     ControlsSelectors.selectSort,
-    UserSelectors.selectData,
+    (state: RootState) => UserSelectors.selectData(state, options.account),
     (jars, allCore, pagination, sort, userModel) => {
       // Sort first, and then compute pagination
       let jarsWithData: JarWithData[] = jars.map((jar) => {

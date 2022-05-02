@@ -4,6 +4,8 @@ import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { IUserDillStats, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import { ChainNetwork, Chains } from "picklefinance-core";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -41,6 +43,7 @@ const ApprovalFlow: FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
   const TokenContract = useTokenContract(tokenAddress);
+  const { account } = useWeb3React<Web3Provider>();
 
   const chain = Chains.get(chainName);
   const amount = ethers.constants.MaxUint256;
@@ -52,18 +55,23 @@ const ApprovalFlow: FC<Props> = ({
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
+    if (!account) return;
+
     const approvalEvents = eventsByName<ApprovalEvent>(receipt, "Approval");
     const approvedAmount = approvalEvents[0].args[2];
 
     // No apiKey implicitly means DILL approval.
     if (!apiKey) {
-      dispatch(UserActions.setDillData({ [storeAttribute]: approvedAmount.toString() }));
+      dispatch(
+        UserActions.setDillData({ account, data: { [storeAttribute]: approvedAmount.toString() } }),
+      );
 
       return;
     }
 
     dispatch(
       UserActions.setTokenData({
+        account,
         apiKey: apiKey,
         data: { [storeAttribute]: approvedAmount.toString() },
       }),

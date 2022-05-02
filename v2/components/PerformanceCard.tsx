@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { CashIcon, ClockIcon } from "@heroicons/react/solid";
 import { BigNumber } from "ethers";
-import { useSelector } from "react-redux";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
@@ -14,6 +13,8 @@ import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
 import { formatUsd } from "util/api";
 import { findAsset, findJar, visibleStringForAsset } from "v2/store/core.helpers";
+import { useAppSelector } from "v2/store";
+import { useAccount } from "v2/hooks";
 
 export const getTotalBalances = (
   core: PickleModelJson.PickleModelJson,
@@ -140,10 +141,11 @@ export const getRewardRowPropertiesForRewards = (
 
 const PerformanceCard: FC = () => {
   const { t } = useTranslation("common");
+  const account = useAccount();
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const userModel = useSelector(UserSelectors.selectData);
+  const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
 
-  const allCore = useSelector(CoreSelectors.selectCore);
+  const allCore = useAppSelector(CoreSelectors.selectCore);
   const userTotalBalance = allCore && userModel ? getTotalBalances(allCore, userModel) : 0;
   const unclaimedRewards = allCore && userModel ? getPendingRewardsUsd(allCore, userModel) : 0;
   const pendingHarvest = allCore && userModel ? getPendingHarvestsUsd(allCore, userModel) : 0;
