@@ -247,7 +247,10 @@ const selectMaxApy = (state: RootState) => {
 
   if (data === undefined) return undefined;
 
-  const jars = selectEnabledAssets(state);
+  // Only jars users can currently invest in (not withdraw-only)
+  const jars = selectEnabledAssets(state).filter(
+    (asset) => asset.enablement === AssetEnablement.ENABLED,
+  );
   const entries = jars.map((jar) => {
     let farmApr = 0;
     const apy = jar.aprStats?.apy || 0;
