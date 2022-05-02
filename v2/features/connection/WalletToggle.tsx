@@ -12,6 +12,7 @@ import { shortenAddress } from "v2/utils";
 import { useAppDispatch } from "v2/store";
 import { setIsManuallyDeactivated } from "v2/store/connection";
 import { useENS } from "./hooks";
+import { useAccount } from "v2/hooks";
 
 const WalletToggleOptions: FC = () => {
   const { deactivate } = useWeb3React<Web3Provider>();
@@ -51,7 +52,8 @@ const WalletToggleOptions: FC = () => {
 };
 
 const WalletToggle: FC = () => {
-  const { account, library, chainId } = useWeb3React<Web3Provider>();
+  const { library, chainId } = useWeb3React<Web3Provider>();
+  const account = useAccount();
   const ens = useENS(account, library, chainId);
 
   if (!account) return <ConnectWalletButton />;

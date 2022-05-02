@@ -108,6 +108,7 @@ const HarvestFlow: FC<Props> = ({
 
       dispatch(
         UserActions.setTokenData({
+          account,
           apiKey: asset.details.apiKey,
           data: {
             picklePending: "0",
@@ -119,10 +120,12 @@ const HarvestFlow: FC<Props> = ({
       const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
       pickles = claimedEvents[0].args.amount;
 
-      dispatch(UserActions.setDillData({ claimable: "0" }));
+      dispatch(UserActions.setDillData({ account, data: { claimable: "0" } }));
     }
 
-    dispatch(UserActions.addHarvestedPickles({ chain: network, amount: pickles.toString() }));
+    dispatch(
+      UserActions.addHarvestedPickles({ account, chain: network, amount: pickles.toString() }),
+    );
   };
 
   const { sendTransaction, error, isWaiting } = useTransaction(

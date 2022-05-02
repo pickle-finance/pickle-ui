@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import type { PickleFinancePage } from "v2/types";
 import { useTranslation } from "next-i18next";
-import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -14,13 +13,18 @@ import LoadingIndicator from "v2/components/LoadingIndicator";
 import VoteWeightCharts from "v2/features/dill/vote/Charts";
 import MainnetVote from "v2/features/dill/vote/MainnetVote";
 import OffchainVote from "v2/features/dill/vote/OffchainVote";
+import { useAppSelector } from "v2/store";
+import { useAccount } from "v2/hooks";
 
 const Vote: PickleFinancePage = () => {
-  const core = useSelector(CoreSelectors.selectCore);
-  const user = useSelector(UserSelectors.selectData);
-  const offchainVoteData: iOffchainVoteData | undefined = useSelector(VoteSelectors.selectVoteData);
-
   const { library } = useWeb3React<Web3Provider>();
+  const account = useAccount();
+  const core = useAppSelector(CoreSelectors.selectCore);
+  const user = useAppSelector((state) => UserSelectors.selectData(state, account));
+  const offchainVoteData: iOffchainVoteData | undefined = useAppSelector(
+    VoteSelectors.selectVoteData,
+  );
+
   const [onMainnet, setOnMainnet] = useState(false);
 
   library?.getNetwork().then((n) => (n.chainId === 1 ? setOnMainnet(true) : setOnMainnet(false)));

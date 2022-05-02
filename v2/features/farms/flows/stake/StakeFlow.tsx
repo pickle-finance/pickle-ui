@@ -86,6 +86,7 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
 
     dispatch(
       UserActions.setTokenData({
+        account,
         apiKey: jar.details.apiKey,
         data: {
           pAssetBalance,

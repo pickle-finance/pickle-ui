@@ -94,6 +94,7 @@ const WithdrawFlow: FC<Props> = ({ jar, balances, isUniV3 = false }) => {
         .toString();
       dispatch(
         UserActions.setTokenData({
+          account,
           apiKey: jar.details.apiKey,
           data: {
             componentTokenBalances: {
@@ -119,6 +120,7 @@ const WithdrawFlow: FC<Props> = ({ jar, balances, isUniV3 = false }) => {
 
       dispatch(
         UserActions.setTokenData({
+          account,
           apiKey: jar.details.apiKey,
           data: {
             depositTokenBalance,

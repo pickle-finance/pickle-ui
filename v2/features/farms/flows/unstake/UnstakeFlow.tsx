@@ -109,6 +109,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
 
     dispatch(
       UserActions.setTokenData({
+        account,
         apiKey: jar.details.apiKey,
         data: {
           pAssetBalance,
@@ -118,7 +119,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
       }),
     );
 
-    dispatch(UserActions.addHarvestedPickles({ chain, amount: pickles.toString() }));
+    dispatch(UserActions.addHarvestedPickles({ account, chain, amount: pickles.toString() }));
   };
 
   const { sendTransaction, error, setError, isWaiting } = useTransaction(

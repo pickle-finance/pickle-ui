@@ -20,7 +20,7 @@ const Confetti: VFC = () => {
       numberOfPieces={500}
       gravity={0.15}
       onConfettiComplete={() => dispatch(ThemeActions.setIsConfettiOn(false))}
-      style={{ zIndex: 100 }}
+      style={{ zIndex: 300 }}
     />
   );
 };

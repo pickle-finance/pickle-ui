@@ -7,19 +7,23 @@ import { IUserDillStats, UserData, UserTokenData } from "picklefinance-core/lib/
 import { RootState } from ".";
 import { baseTokenObject, normalizedData } from "./user.helpers";
 
-interface UserState {
-  data: UserData | undefined;
-  isFetching: boolean;
+interface AccountData {
+  data: UserData;
   updatedAt: number | undefined;
+}
+
+interface UserState {
+  accounts: {
+    [address: string]: AccountData | undefined;
+  };
   nonce: number;
+  isFetching: boolean;
 }
 
 const initialState: UserState = {
-  data: undefined,
-  isFetching: true,
-  updatedAt: undefined,
-  // Incrementing this lets us refresh user data.
+  accounts: {},
   nonce: 0,
+  isFetching: true,
 };
 
 type UpdateType = "incremental" | "final";
@@ -28,29 +32,36 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setData: (state, action: PayloadAction<{ data: UserData; type: UpdateType }>) => {
+    setData: (
+      state,
+      action: PayloadAction<{ account: string; data: UserData; type: UpdateType }>,
+    ) => {
+      const { account, data, type } = action.payload;
+      const accountData = state.accounts[account] || ({} as AccountData);
       /**
        * Update state incrementally on initial page load. Only
        * update with the final user model on consequent runs to
        * avoid UI from going from populated to empty and back.
        */
-      if (action.payload.type === "incremental") {
-        if (state.updatedAt) return;
+      if (type === "incremental") {
+        if (accountData.updatedAt) return;
 
-        state.data = normalizedData(action.payload.data);
-      } else if (action.payload.type === "final") {
+        accountData.data = normalizedData(data);
+      } else if (type === "final") {
         /**
          * If the user model was updated in the last 30 seconds, it's because of partial
          * token refreshes due to user activity (by itself, it will update every N minutes).
          * This is to avoid a race condition where we update current state with stale
          * on-chain data from a full background refresh (a long-running process).
          */
-        if (dayjs(state.updatedAt).isBefore(dayjs().subtract(30, "seconds"))) {
-          state.data = normalizedData(action.payload.data);
+        if (dayjs(accountData.updatedAt).isBefore(dayjs().subtract(30, "seconds"))) {
+          accountData.data = normalizedData(data);
         }
 
-        state.updatedAt = +new Date();
+        accountData.updatedAt = +new Date();
       }
+
+      state.accounts[account] = accountData;
     },
     /**
      * This action allows us to merge in partial user token data. A good example of this
@@ -58,44 +69,68 @@ const userSlice = createSlice({
      * protects us against losing state that doesn't exist on the current chain, e.g.
      * PICKLE balances.
      */
-    setTokens: (state, action: PayloadAction<UserData>) => {
-      if (!state.data) return;
+    setTokens: (state, action: PayloadAction<{ account: string; data: UserData }>) => {
+      const { account, data } = action.payload;
+      const accountData = state.accounts[account];
 
-      state.data.tokens = { ...state.data.tokens, ...action.payload.tokens };
-      state.updatedAt = +new Date();
+      if (!accountData) return;
+
+      accountData.data.tokens = { ...accountData.data.tokens, ...data.tokens };
+      accountData.updatedAt = +new Date();
+
+      state.accounts[account] = accountData;
     },
     setTokenData: (
       state,
-      action: PayloadAction<{ apiKey: string; data: Partial<UserTokenData> }>,
+      action: PayloadAction<{ account: string; apiKey: string; data: Partial<UserTokenData> }>,
     ) => {
-      if (!state.data) return;
+      const { account, apiKey, data } = action.payload;
+      const accountData = state.accounts[account];
 
-      const { apiKey, data } = action.payload;
-      const token = state.data.tokens[apiKey.toLowerCase()] || baseTokenObject;
+      if (!accountData) return;
 
-      state.data.tokens = { ...state.data.tokens, [apiKey.toLowerCase()]: { ...token, ...data } };
+      const token = accountData.data.tokens[apiKey.toLowerCase()] || baseTokenObject;
+
+      accountData.data.tokens = {
+        ...accountData.data.tokens,
+        [apiKey.toLowerCase()]: { ...token, ...data },
+      };
+
+      state.accounts[account] = accountData;
     },
-    setDillData: (state, action: PayloadAction<Partial<IUserDillStats>>) => {
-      if (!state.data) return;
+    setDillData: (
+      state,
+      action: PayloadAction<{ account: string; data: Partial<IUserDillStats> }>,
+    ) => {
+      const { account, data } = action.payload;
+      const accountData = state.accounts[account];
 
-      const dill = state.data.dill;
+      if (!accountData) return;
 
-      state.data.dill = { ...dill, ...action.payload };
+      const { dill } = accountData.data;
+
+      accountData.data.dill = { ...dill, ...data };
+
+      state.accounts[account] = accountData;
     },
     addHarvestedPickles: (
       state,
-      action: PayloadAction<{ chain: ChainNetwork; amount: string }>,
+      action: PayloadAction<{ account: string; chain: ChainNetwork; amount: string }>,
     ) => {
-      if (!state.data) return;
+      const { account, chain, amount } = action.payload;
+      const accountData = state.accounts[account];
 
-      const { chain, amount } = action.payload;
+      if (!accountData) return;
+
       const harvestedAmountBN = BigNumber.from(amount);
-      const chainPicklesBN = BigNumber.from(state.data.pickles[chain]);
+      const chainPicklesBN = BigNumber.from(accountData.data.pickles[chain]);
 
-      state.data.pickles = {
-        ...state.data.pickles,
+      accountData.data.pickles = {
+        ...accountData.data.pickles,
         [chain]: chainPicklesBN.add(harvestedAmountBN).toString(),
       };
+
+      state.accounts[account] = accountData;
     },
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
@@ -128,12 +163,27 @@ export const UserActions = {
 /**
  * Selectors
  */
-const selectData = (state: RootState) => state.user.data;
+const selectData = (state: RootState, account: string | null | undefined) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.data;
+};
 const selectIsFetching = (state: RootState) => state.user.isFetching;
 const selectNonce = (state: RootState) => state.user.nonce;
-const selectTokenDataById = (state: RootState, apiKey: string) =>
-  state.user.data?.tokens[apiKey.toLowerCase()];
-const selectUpdatedAt = (state: RootState) => state.user.updatedAt;
+const selectTokenDataById = (
+  state: RootState,
+  apiKey: string,
+  account: string | null | undefined,
+) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.data?.tokens[apiKey.toLowerCase()];
+};
+const selectUpdatedAt = (state: RootState, account: string | null | undefined) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.updatedAt;
+};
 
 export const UserSelectors = {
   selectData,

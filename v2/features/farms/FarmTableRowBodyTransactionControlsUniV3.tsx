@@ -13,6 +13,7 @@ import LoadingIndicator from "v2/components/LoadingIndicator";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import ApprovalFlowUniV3 from "./flows/approval/ApprovalFlowUniV3";
 import DepositFlowUniV3 from "./flows/deposit/DepositFlowUniV3";
+import { useAccount } from "v2/hooks";
 
 interface Props {
   jar: JarWithData;
@@ -20,12 +21,13 @@ interface Props {
 
 const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
+  const account = useAccount();
   const pfcore = useAppSelector(CoreSelectors.selectCore);
-  const userModel = useAppSelector(UserSelectors.selectData);
+  const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
   const userTokenData = useAppSelector((state) =>
-    UserSelectors.selectTokenDataById(state, jar.details.apiKey),
+    UserSelectors.selectTokenDataById(state, jar.details.apiKey, account),
   );
 
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);

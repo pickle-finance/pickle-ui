@@ -4,7 +4,7 @@ type StoreStateObject = {
   [key: string]: any;
 };
 
-const STORE_KEY = "pickle-finance-storage";
+const STORE_KEY = "pickle-v2";
 
 export const persistSlice = <T>(reducer: Reducer<T>, name: string = "reducer"): Reducer<T> => (
   state: T | undefined,

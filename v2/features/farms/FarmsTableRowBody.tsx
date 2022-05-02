@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
+import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
@@ -9,8 +10,7 @@ import { getUserAssetDataWithPrices } from "v2/utils/user";
 import FarmsTableRowDetails from "./FarmsTableRowDetails";
 import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionControls";
 import ConnectButton from "./ConnectButton";
-import { useNeedsNetworkSwitch } from "v2/hooks";
-import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import { useAccount, useNeedsNetworkSwitch } from "v2/hooks";
 import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
 
 interface Props {
@@ -20,8 +20,9 @@ interface Props {
 
 const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
   const { t } = useTranslation("common");
+  const account = useAccount();
   const pfcore = useAppSelector(CoreSelectors.selectCore);
-  const userModel = useAppSelector(UserSelectors.selectData);
+  const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
   const { network, needsNetworkSwitch } = useNeedsNetworkSwitch(jar.chain);
 
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);

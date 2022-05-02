@@ -81,6 +81,8 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
         await library.provider.request({
           method: "wallet_watchAsset",
           params: {
+            // @ts-ignore
+            // https://github.com/ethers-io/ethers.js/issues/2576
             type: "ERC20",
             options: {
               address: tokenAddress,
