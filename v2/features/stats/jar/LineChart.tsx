@@ -29,65 +29,67 @@ const Chart: FC<{ chartKey: string; data: JarChartData; timeUnit: string }> = ({
   const dataMax = getDataMax(chartData, chartKey);
   const dataMin = getDataMin(chartData, chartKey);
 
-  return (
-    <ResponsiveContainer>
-      <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
-        <XAxis
-          dataKey="timestamp"
-          tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
-          height={75}
-          angle={300}
-          tickMargin={35}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
-        />
-        <YAxis
-          tickFormatter={(value) =>
-            new Intl.NumberFormat("en", {
-              notation: "compact",
-              compactDisplay: "short",
-            }).format(value)
-          }
-          domain={[dataMin - dataMin * 0.05, dataMax]}
-          width={100}
-          padding={{ top: 50 }}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
-          tickCount={9}
-        >
-          <Label
-            value={t(`v2.stats.jar.${chartKey}YLabel`) as string}
-            position="insideLeft"
-            angle={-90}
-            fill="rgb(var(--color-foreground-alt-100))"
-            style={{ textAnchor: "middle" }}
+  if (chartData.length > 0)
+    return (
+      <ResponsiveContainer>
+        <LineChart data={chartData}>
+          <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
+          <XAxis
+            dataKey="timestamp"
+            tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
+            height={75}
+            angle={300}
+            tickMargin={35}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
           />
-        </YAxis>
-        <Tooltip
-          cursor={false}
-          contentStyle={{
-            backgroundColor: "rgb(var(--color-foreground-alt-500))",
-            borderColor: "rgb(var(--color-foreground-alt-500))",
-            borderRadius: 10,
-          }}
-          labelFormatter={(label) =>
-            new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
-          }
-          formatter={(value: number, name: string) => [
-            new Intl.NumberFormat("en", {}).format(value) +
-              " " +
-              t(`v2.stats.jar.${chartKey}TooltipUnits`),
-            t(`v2.stats.tooltips.${name}`),
-          ]}
-        />
-        <Line
-          type="monotone"
-          dataKey={chartKey}
-          stroke="rgb(var(--color-accent-light))"
-          dot={false}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+          <YAxis
+            tickFormatter={(value) =>
+              new Intl.NumberFormat("en", {
+                notation: "compact",
+                compactDisplay: "short",
+              }).format(value)
+            }
+            domain={[dataMin - dataMin * 0.05, dataMax]}
+            width={100}
+            padding={{ top: 50 }}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
+            tickCount={9}
+          >
+            <Label
+              value={t(`v2.stats.jar.${chartKey}YLabel`) as string}
+              position="insideLeft"
+              angle={-90}
+              fill="rgb(var(--color-foreground-alt-100))"
+              style={{ textAnchor: "middle" }}
+            />
+          </YAxis>
+          <Tooltip
+            cursor={false}
+            contentStyle={{
+              backgroundColor: "rgb(var(--color-foreground-alt-500))",
+              borderColor: "rgb(var(--color-foreground-alt-500))",
+              borderRadius: 10,
+            }}
+            labelFormatter={(label) =>
+              new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
+            }
+            formatter={(value: number, name: string) => [
+              new Intl.NumberFormat("en", {}).format(value) +
+                " " +
+                t(`v2.stats.jar.${chartKey}TooltipUnits`),
+              t(`v2.stats.tooltips.${name}`),
+            ]}
+          />
+          <Line
+            type="monotone"
+            dataKey={chartKey}
+            stroke="rgb(var(--color-accent-light))"
+            dot={false}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  return <></>;
 };
 
 const pTokenPct = (data: AssetCoreData) => ({

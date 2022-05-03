@@ -22,100 +22,104 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit })
     supply: x.supply,
     tokenPrice: x.depositTokenPrice,
   }));
-  return (
-    <ResponsiveContainer className="w-full">
-      <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
-        <XAxis
-          dataKey="timestamp"
-          tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
-          height={75}
-          angle={300}
-          tickMargin={35}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
-        />
-        <YAxis
-          yAxisId="left"
-          tickFormatter={(value) => {
-            return new Intl.NumberFormat("en", {
-              notation: "compact",
-              compactDisplay: "short",
-            }).format(value);
-          }}
-          width={100}
-          padding={{ top: 50 }}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
-          tickCount={9}
-        >
-          <Label
-            value={t(`v2.stats.jar.tokenPriceVNumYLabelLeft`) as string}
-            position="insideLeft"
-            angle={-90}
-            fill="rgb(var(--color-foreground-alt-100))"
-            style={{ textAnchor: "middle" }}
+  if (chartData.length > 0)
+    return (
+      <ResponsiveContainer className="w-full">
+        <LineChart data={chartData}>
+          <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
+          <XAxis
+            dataKey="timestamp"
+            tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
+            height={75}
+            angle={300}
+            tickMargin={35}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
           />
-        </YAxis>
-        <YAxis
-          yAxisId="right"
-          orientation="right"
-          tickFormatter={(value) => {
-            return new Intl.NumberFormat("en", {
-              notation: "compact",
-              compactDisplay: "short",
-            }).format(value);
-          }}
-          width={100}
-          padding={{ top: 50 }}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: 20 }}
-          tickCount={9}
-        >
-          <Label
-            value={t(`v2.stats.jar.tokenPriceVNumYLabelRight`) as string}
-            position="insideRight"
-            angle={-90}
-            fill="rgb(var(--color-foreground-alt-100))"
-            style={{ textAnchor: "middle" }}
+          <YAxis
+            yAxisId="left"
+            tickFormatter={(value) => {
+              return new Intl.NumberFormat("en", {
+                notation: "compact",
+                compactDisplay: "short",
+              }).format(value);
+            }}
+            width={100}
+            padding={{ top: 50 }}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
+            tickCount={9}
+          >
+            <Label
+              value={t(`v2.stats.jar.tokenPriceVNumYLabelLeft`) as string}
+              position="insideLeft"
+              angle={-90}
+              fill="rgb(var(--color-foreground-alt-100))"
+              style={{ textAnchor: "middle" }}
+            />
+          </YAxis>
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tickFormatter={(value) => {
+              return new Intl.NumberFormat("en", {
+                notation: "compact",
+                compactDisplay: "short",
+              }).format(value);
+            }}
+            width={100}
+            padding={{ top: 50 }}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: 20 }}
+            tickCount={9}
+          >
+            <Label
+              value={t(`v2.stats.jar.tokenPriceVNumYLabelRight`) as string}
+              position="insideRight"
+              angle={-90}
+              fill="rgb(var(--color-foreground-alt-100))"
+              style={{ textAnchor: "middle" }}
+            />
+          </YAxis>
+          <Tooltip
+            cursor={false}
+            contentStyle={{
+              backgroundColor: "rgb(var(--color-foreground-alt-500))",
+              borderColor: "rgb(var(--color-foreground-alt-500))",
+              borderRadius: 10,
+            }}
+            labelFormatter={(label) =>
+              new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
+            }
+            formatter={(value: number, label: string) => [
+              formatBigNumber(value),
+              t("v2.stats.tooltips.".concat(label)),
+            ]}
           />
-        </YAxis>
-        <Tooltip
-          cursor={false}
-          contentStyle={{
-            backgroundColor: "rgb(var(--color-foreground-alt-500))",
-            borderColor: "rgb(var(--color-foreground-alt-500))",
-            borderRadius: 10,
-          }}
-          labelFormatter={(label) =>
-            new Date(label).toLocaleDateString() + " " + new Date(label).toLocaleTimeString()
-          }
-          formatter={(value: number, label: string) => [
-            formatBigNumber(value),
-            t("v2.stats.tooltips.".concat(label)),
-          ]}
-        />
-        <Line
-          yAxisId="left"
-          type="monotone"
-          dataKey={"supply"}
-          stroke="rgb(var(--color-accent-light))"
-          dot={false}
-        />
-        <Line
-          yAxisId="right"
-          type="monotone"
-          dataKey={"tokenPrice"}
-          stroke="rgb(var(--color-accent))"
-          dot={false}
-        />
-        <Legend
-          formatter={(label: string) => (
-            <span className="text-foreground-alt-200">{t("v2.stats.tooltips.".concat(label))}</span>
-          )}
-          iconType="plainline"
-          wrapperStyle={{ paddingTop: 25 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dataKey={"supply"}
+            stroke="rgb(var(--color-accent-light))"
+            dot={false}
+          />
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey={"tokenPrice"}
+            stroke="rgb(var(--color-accent))"
+            dot={false}
+          />
+          <Legend
+            formatter={(label: string) => (
+              <span className="text-foreground-alt-200">
+                {t("v2.stats.tooltips.".concat(label))}
+              </span>
+            )}
+            iconType="plainline"
+            wrapperStyle={{ paddingTop: 25 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  return <></>;
 };
 
 const formatDates = (jarData: JarChartData, timeUnit: string) => {

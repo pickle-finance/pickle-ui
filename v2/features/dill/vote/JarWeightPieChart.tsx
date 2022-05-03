@@ -53,13 +53,13 @@ const Chart: FC<{
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: iLabel) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central">
-      {formatPercentage(percent * 100)}
+      {formatPercentage(percent * 100, 1)}
     </text>
   );
 };
@@ -80,7 +80,7 @@ const getMainnetPlatformWeights = (
   let chartData = [];
   for (let i = 0; i < mainnetJars.length; i++) {
     if (mainnetJars[i].farm?.details?.allocShare !== undefined) {
-      const jar = stringForAsset(mainnetJars[i]);
+      const jar = mainnetJars[i].details.apiKey; //stringForAsset(mainnetJars[i]);
       const chainWeight = mainnetJars[i].farm?.details?.allocShare
         ? mainnetJars[i].farm?.details?.allocShare || 0
         : 0;

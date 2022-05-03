@@ -11,7 +11,7 @@ const BigMoverTableContainer: FC<{ type: string; tableData: iTokenPriceChange[] 
 
   return (
     <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 mb-5 sm:p-8">
-      <h2 className="font-body font-bold text-xl">{t("v2.stats.chain.assetTableTitle")}</h2>
+      <h2 className="font-body font-bold text-xl">{t(`v2.stats.chain.${type}GainsLosses`)}</h2>
       <br />
       {type === "pct" && (
         <span>

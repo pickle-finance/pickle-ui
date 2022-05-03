@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import { PickleFinancePage, PlatformData } from "v2/types";
 import ChartContainer from "v2/features/stats/platform/ChartContainer";
 import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
+import LoadingIndicator from "v2/components/LoadingIndicator";
 
 const Stats: PickleFinancePage = () => {
   const [dataSeries, setDataSeries] = useState<PlatformData>({} as PlatformData);
@@ -16,10 +17,16 @@ const Stats: PickleFinancePage = () => {
 
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
-      <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
-        <ChartContainer chart="tvl" dataSeries={dataSeries} />
-        <ChartContainer chart="revs" dataSeries={dataSeries} />
-        <ChainTableContainer chains={dataSeries.chains} />
+      <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
+        {dataSeries.tvl?.length > 0 && dataSeries.revenues.length > 0 ? (
+          <>
+            <ChartContainer chart="tvl" dataSeries={dataSeries} />
+            <ChartContainer chart="revs" dataSeries={dataSeries} />
+            <ChainTableContainer chains={dataSeries.chains} />
+          </>
+        ) : (
+          <LoadingIndicator />
+        )}
       </div>
     </div>
   );
