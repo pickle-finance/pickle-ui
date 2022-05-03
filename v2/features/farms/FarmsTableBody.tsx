@@ -21,9 +21,16 @@ interface Props {
   sort?: Sort;
   asset?: JarWithData;
   hideDescription?: boolean;
+  isBrinery?: boolean;
 }
 
-const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescription }) => {
+const FarmsTableBody: FC<Props> = ({
+  simple,
+  requiresUserModel,
+  asset,
+  hideDescription,
+  isBrinery,
+}) => {
   const { t } = useTranslation("common");
   const account = useAccount();
   const core = useAppSelector(CoreSelectors.selectCore);
@@ -33,6 +40,8 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescr
   let jars = useAppSelector(
     CoreSelectors.makeJarsSelector({ account, filtered: !simple, paginated: !simple }),
   );
+
+  const brineries = useAppSelector(CoreSelectors.makeBrinerySelector({ account }));
 
   // TODO Should be all assets, not just jars
   if (requiresUserModel && userModel) {
@@ -67,6 +76,20 @@ const FarmsTableBody: FC<Props> = ({ simple, requiresUserModel, asset, hideDescr
       </tr>
     );
 
+  if (isBrinery)
+    return (
+      <>
+        {brineries.map((brinery) => (
+          <FarmsTableRow
+            key={brinery.details.apiKey}
+            jar={brinery}
+            simple={simple}
+            userDillRatio={userDillRatio}
+            isBrinery={isBrinery}
+          />
+        ))}
+      </>
+    );
   if (asset)
     return (
       <FarmsTableRow

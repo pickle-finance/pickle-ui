@@ -1,16 +1,16 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { BrineryDefinition, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
 
 import { classNames, formatDollars } from "v2/utils";
-import FarmsBadge from "./FarmsBadge";
+import FarmsBadge from "../farms/FarmsBadge";
 import { useSelector } from "react-redux";
-import { CoreSelectors, JarWithData } from "v2/store/core";
-import FarmComponentsIcons from "./FarmComponentsIcons";
+import { BrineryWithData, CoreSelectors, JarWithData } from "v2/store/core";
+import FarmComponentsIcons from "../farms/FarmComponentsIcons";
 import { Network } from "../connection/networks";
-import FarmAPY from "./FarmAPY";
+import FarmAPY from "../farms/FarmAPY";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -23,25 +23,25 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   </td>
 );
 
-const chainProtocol = (jar: JarDefinition, networks: Network[] | undefined): JSX.Element => {
+const chainProtocol = (brinery: BrineryDefinition, networks: Network[] | undefined): JSX.Element => {
   return (
     <div>
       <p className="font-title font-medium text-base leading-5 group-hover:text-primary-light transition duration-300 ease-in-out">
-        {jar.depositToken.name}
+        {brinery.depositToken.name}
       </p>
       <div className="flex mt-1">
         <div className="w-4 h-4 mr-1">
           <Image
-            src={formatImagePath(jar.chain, networks)}
+            src={formatImagePath(brinery.chain, networks)}
             className="rounded-full"
             width={20}
             height={20}
             layout="responsive"
-            alt={jar.chain}
-            title={jar.chain}
+            alt={brinery.chain}
+            title={brinery.chain}
           />
         </div>
-        <p className="italic font-normal text-xs text-foreground-alt-200">{jar.protocol}</p>
+        <p className="italic font-normal text-xs text-foreground-alt-200">{brinery.protocol}</p>
       </div>
     </div>
   );
@@ -50,7 +50,7 @@ const chainProtocol = (jar: JarDefinition, networks: Network[] | undefined): JSX
 interface Props {
   simple?: boolean;
   open: boolean;
-  jar: JarWithData;
+  brinery: BrineryWithData;
   userDillRatio: number;
 }
 
@@ -63,33 +63,30 @@ const formatImagePath = (chain: string, networks: Network[] | undefined): string
   }
 };
 
-const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) => {
+const BrineryTableRowHeader: FC<Props> = ({ brinery, simple, open, userDillRatio }) => {
   const { t } = useTranslation("common");
   const networks = useSelector(CoreSelectors.selectNetworks);
 
-  const totalTokensInJarAndFarm =
-    parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
-  const depositTokenUSD = jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
-  const stakedTokensUSD = jar.depositTokensInFarm.tokensUSD;
-  const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
-  const picklesPending = jar.earnedPickles.tokensVisible;
-  const depositTokenCountString = t("v2.farms.tokens", { amount: totalTokensInJarAndFarm });
+  const depositTokenUSD = brinery.brineryBalance.tokensUSD
+  const rewardsPendingAsDollars = brinery.earnedRewards.tokensUSD;
+  const earnedRewards = brinery.earnedRewards.tokensVisible;
+  const depositTokenCountString = t("v2.farms.tokens", { amount: brinery.brineryBalance.tokens });
 
   return (
     <>
       <RowCell className={classNames(!open && "rounded-bl-xl", "rounded-tl-xl flex items-center")}>
-        <FarmComponentsIcons jar={jar} />
-        {chainProtocol(jar, networks)}
+        <FarmComponentsIcons jar={brinery} />
+        {chainProtocol(brinery, networks)}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">
-          {formatDollars(pendingPicklesAsDollars)}
+          {formatDollars(rewardsPendingAsDollars)}
         </p>
-        <p className="font-normal text-xs text-foreground-alt-200">{picklesPending} PICKLEs</p>
+        <p className="font-normal text-xs text-foreground-alt-200">{`${earnedRewards} ${brinery.depositToken.name}`}</p>
       </RowCell>
       <RowCell>
         <div className="flex items-center">
-          <FarmsBadge active={stakedTokensUSD > 0} />
+          <FarmsBadge active={depositTokenUSD > 0} />
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5">
               {formatDollars(depositTokenUSD)}
@@ -99,11 +96,11 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) =>
         </div>
       </RowCell>
       <RowCell>
-        <FarmAPY jarOrBrinery={jar} userDillRatio={userDillRatio} />
+        <FarmAPY jarOrBrinery={brinery} userDillRatio={userDillRatio} />
       </RowCell>
       <RowCell className={classNames(simple && "rounded-r-xl")}>
         <p className="font-title font-medium text-base leading-5">
-          {formatDollars(jar.details.harvestStats?.balanceUSD || 0)}
+          {formatDollars(brinery.details.harvestStats?.balanceUSD || 0)}
         </p>
       </RowCell>
       {!simple && (
@@ -123,4 +120,4 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, open, userDillRatio }) =>
   );
 };
 
-export default FarmsTableRowHeader;
+export default BrineryTableRowHeader;

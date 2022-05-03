@@ -510,6 +510,7 @@
       "standard": "Standard"
     },
     "nav": {
+      "brinery": "Brinery",
       "close": "Close panel",
       "dashboard": "Dashboard",
       "dill": "DILL",
@@ -635,6 +636,9 @@
     "wallet": {
       "exit": "Exit",
       "switch": "Switch wallet"
+    },
+    "brineries":{
+      "test": "test"
     }
   }
 }

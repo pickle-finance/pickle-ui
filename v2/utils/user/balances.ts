@@ -1,6 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import {
   AssetProtocol,
+  BrineryDefinition,
   JarDefinition,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
@@ -25,6 +26,13 @@ export interface UserAssetDataWithPrices {
   walletComponentTokens: {
     [key: string]: UserAssetDataWithPricesComponent;
   };
+}
+
+export interface UserBrineryDataWithPrices {
+  assetId: string;
+  depositTokensInWallet: UserAssetDataWithPricesComponent;
+  brineryBalance: UserAssetDataWithPricesComponent;
+  earnedRewards: UserAssetDataWithPricesComponent;
 }
 
 const userAssetDataZeroComponent = (): UserAssetDataWithPricesComponent => ({
@@ -63,6 +71,13 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => ({
   depositTokensInFarm: userAssetDataZeroComponent(),
   earnedPickles: userAssetDataZeroComponent(),
   walletComponentTokens: {},
+});
+
+const userBrineryDataZeroEverything = (): UserBrineryDataWithPrices => ({
+  assetId: "",
+  depositTokensInWallet: userAssetDataZeroComponent(),
+  brineryBalance: userAssetDataZeroComponent(),
+  earnedRewards: userAssetDataZeroComponent(),
 });
 
 export const jarDecimals = (jar: JarDefinition): number =>
@@ -153,5 +168,51 @@ export const getUserAssetDataWithPrices = (
     depositTokensInJar: jarComponent,
     depositTokensInFarm: farmComponent,
     walletComponentTokens,
+  };
+};
+
+export const getUserBrineryDataWithPrices = (
+  brinery: BrineryDefinition,
+  core: PickleModelJson | undefined,
+  userModel: UserData | undefined,
+): UserBrineryDataWithPrices => {
+  if (core === undefined || userModel === undefined) {
+    return userBrineryDataZeroEverything();
+  }
+
+  const userBrineryDetails = userModel.brineries.find(
+    (x) => x.assetKey === brinery.details.apiKey.toUpperCase(),
+  );
+
+  const depositToken = core.tokens.find(
+    (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
+  );
+
+  const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.depositTokenBalance || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  const brineryBalance: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.balance || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  const earnedRewards: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.claimable || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  return {
+    assetId: brinery.details.apiKey,
+    depositTokensInWallet: wallet,
+    brineryBalance,
+    earnedRewards
   };
 };

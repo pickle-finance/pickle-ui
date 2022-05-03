@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { BrineryDefinition, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { classNames } from "v2/utils";
 import { brandColor, defaultBackgroundColor } from "./colors";
 
@@ -16,7 +16,7 @@ interface ProtocolIconProps {
 }
 
 interface Props {
-  jar: JarDefinition;
+  jar: JarDefinition | BrineryDefinition;
 }
 
 /**
