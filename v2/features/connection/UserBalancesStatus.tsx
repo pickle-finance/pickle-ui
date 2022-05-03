@@ -1,12 +1,11 @@
 import { FC } from "react";
 import { useTranslation, Trans } from "next-i18next";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 
 import { UserSelectors } from "v2/store/user";
 import TimeAgo from "v2/components/TimeAgo";
 import Ping from "./Ping";
 import { useAppSelector } from "v2/store";
+import { useAccount } from "v2/hooks";
 
 interface Props {
   showDetails?: boolean;
@@ -14,7 +13,7 @@ interface Props {
 
 const UserBalancesStatus: FC<Props> = ({ showDetails }) => {
   const { t } = useTranslation("common");
-  const { account } = useWeb3React<Web3Provider>();
+  const account = useAccount();
   const updatedAt = useAppSelector((state) => UserSelectors.selectUpdatedAt(state, account));
   const isFetching = useAppSelector(UserSelectors.selectIsFetching);
 
