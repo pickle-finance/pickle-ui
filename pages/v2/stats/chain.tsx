@@ -10,9 +10,13 @@ import {
   getTokenPriceChangeBal,
   getTokenPriceChangePct,
 } from "v2/features/stats/chain/BigMoverUtils";
-import Link from "next/link";
+import LoadingIndicator from "v2/components/LoadingIndicator";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
 
 const Stats: PickleFinancePage = () => {
+  const core = useSelector(CoreSelectors.selectCore);
+
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const [tokenPctChangeData, setTokenPctChangeData] = useState<iTokenPriceChange[]>([]);
   const [tokenBalChangeData, setTokenBalChangeData] = useState<iTokenPriceChange[]>([]);
@@ -26,34 +30,40 @@ const Stats: PickleFinancePage = () => {
         getChainData(chain).then((data) => {
           setChainData(data);
         });
-        const tokenPriceChangePct = getTokenPriceChangePct(chainData);
-        setTokenPctChangeData(tokenPriceChangePct);
-        const tokenPriceChangeBal = getTokenPriceChangeBal(chainData);
-        setTokenBalChangeData(tokenPriceChangeBal);
       }
     };
     getData();
   }, [chain]);
+
+  useEffect(() => {
+    const tokenPriceChangePct = getTokenPriceChangePct(chainData);
+    setTokenPctChangeData(tokenPriceChangePct);
+    const tokenPriceChangeBal = getTokenPriceChangeBal(chainData);
+    setTokenBalChangeData(tokenPriceChangeBal);
+  }, [chainData]);
+
   tokenPctChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
   tokenBalChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
 
   return (
     <div className="block lg:flex mb-5 sm:mb-10">
-      <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
+      <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
         <Back router={router} text={t("v2.stats.chain.back")} />
-        {
-          tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 ? (
-            <span>
-              <BigMoverTableContainer type="pct" tableData={tokenPctChangeData} />
-              <BigMoverTableContainer type="bal" tableData={tokenBalChangeData} />
-            </span>
-          ) : (
-            <></>
-          ) //add loading component here?
-        }
-        <ChartContainer chart="tvl" dataSeries={chainData} />
-        <ChartContainer chart="revs" dataSeries={chainData} />
-        <AssetTableContainer assets={chainData?.assets} />
+        {tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 && (
+          <span>
+            <BigMoverTableContainer type="pct" tableData={tokenPctChangeData} />
+            <BigMoverTableContainer type="bal" tableData={tokenBalChangeData} />
+          </span>
+        )}
+        {chainData.assets && core ? (
+          <>
+            <ChartContainer chart="tvl" dataSeries={chainData} />
+            <ChartContainer chart="revs" dataSeries={chainData} />
+            <AssetTableContainer assets={chainData?.assets} core={core} />
+          </>
+        ) : (
+          <LoadingIndicator />
+        )}
       </div>
     </div>
   );
