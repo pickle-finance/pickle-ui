@@ -7,7 +7,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useAppSelector } from "v2/store";
 import { JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
-import { classNames } from "v2/utils";
 import { jarDecimals } from "v2/utils/user";
 import { jarSupportsStaking } from "v2/store/core.helpers";
 import LoadingIndicator from "v2/components/LoadingIndicator";
@@ -16,7 +15,7 @@ import DepositFlow from "./flows/deposit/DepositFlow";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
-import { roundToSignificantDigits } from "v2/utils";
+import { classNames, roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
 
 interface Props {
@@ -47,36 +46,39 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
 
   return (
     <div className="flex space-x-3">
-      <div
-        className={classNames(
-          jarSupportsStaking(jar) ? "grow" : "w-1/2",
-          "border self-start border-foreground-alt-500 rounded-xl p-4",
-        )}
-      >
-        <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-          {t("v2.farms.depositedToken", { token: jar.depositToken.name })}
-        </p>
-        <div className="flex items-end justify-between">
-          <span className="font-title text-primary font-medium text-base leading-5">
-            {jarTokens}
-          </span>
-          <ApprovalFlow
-            apiKey={jar.details.apiKey}
-            tokenAddress={jar.depositToken.addr}
-            tokenName={jar.depositToken.name}
-            spenderAddress={jar.contract}
-            storeAttribute="jarAllowance"
-            chainName={jar.chain}
-            visible={!userHasJarAllowance}
-          />
-          {userHasJarAllowance && (
-            <div className="grid grid-cols-2 gap-3">
-              <DepositFlow jar={jar} balances={userTokenData} />
-              <WithdrawFlow jar={jar} balances={userTokenData} />
-            </div>
+      <div className={classNames(jarSupportsStaking(jar) ? "grow self-start" : "w-1/2")}>
+        <div className="border border-foreground-alt-500 rounded-xl p-4">
+          <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
+            {t("v2.farms.depositedToken", { token: jar.depositToken.name })}
+          </p>
+          <div className="flex items-end justify-between">
+            <span className="font-title text-primary font-medium text-base leading-5">
+              {jarTokens}
+            </span>
+            <ApprovalFlow
+              apiKey={jar.details.apiKey}
+              tokenAddress={jar.depositToken.addr}
+              tokenName={jar.depositToken.name}
+              spenderAddress={jar.contract}
+              storeAttribute="jarAllowance"
+              chainName={jar.chain}
+              visible={!userHasJarAllowance}
+            />
+            {userHasJarAllowance && (
+              <div className="grid grid-cols-2 gap-3">
+                <DepositFlow jar={jar} balances={userTokenData} />
+                <WithdrawFlow jar={jar} balances={userTokenData} />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="relative">
+          {!jarSupportsStaking(jar) && isUserModelLoading && (
+            <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-1" />
           )}
         </div>
       </div>
+      {/* Stake and Harvest functions hidden if no staking available */}
       {jarSupportsStaking(jar) && (
         <>
           <div className="grow self-start">
@@ -104,11 +106,6 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="relative">
-              {!jarSupportsStaking(jar) && isUserModelLoading && (
-                <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-1" />
-              )}
             </div>
           </div>
           <div className="grow self-start">

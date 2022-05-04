@@ -80,7 +80,7 @@ const UserModelProvider: VFC = () => {
 
   useEffect(() => {
     refreshUserModel({ type: "full" });
-  }, [coreTimestamp, account]);
+  }, [coreTimestamp, account, library]);
 
   useEffect(() => {
     refreshUserModel({ type: "minimal" });

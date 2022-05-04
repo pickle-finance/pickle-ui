@@ -38,7 +38,7 @@ const Stats: PickleFinancePage = () => {
 
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
-      <div className="w-full mb-4 lg:w-1/2 lg:mr-8 lg:mb-0 xl:w-4/5">
+      <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
         <Back router={router} chain={asset ? asset.chain : "eth"} text={t("v2.stats.jar.back")} />
         <div className="mb-5">
           {asset && asset.depositTokensInJar && (

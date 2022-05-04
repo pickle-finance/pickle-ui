@@ -23,6 +23,7 @@ import { TransferEvent } from "containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 import { eventsByName } from "../utils";
+import { isAcceptingDeposits } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
@@ -108,7 +109,7 @@ const DepositFlow: FC<Props> = ({ jar, balances }) => {
     <>
       <Button
         type="primary"
-        state={depositTokenBalance > 0 ? "enabled" : "disabled"}
+        state={isAcceptingDeposits(jar) && depositTokenBalance > 0 ? "enabled" : "disabled"}
         onClick={openModal}
         className="w-11"
       >

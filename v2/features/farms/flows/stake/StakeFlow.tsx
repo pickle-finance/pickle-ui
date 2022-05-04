@@ -25,6 +25,7 @@ import { Gauge, StakedEvent } from "containers/Contracts/Gauge";
 import { DepositEvent, Minichef } from "containers/Contracts/Minichef";
 import { AppDispatch } from "v2/store";
 import { eventsByName } from "../utils";
+import { isAcceptingDeposits } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
@@ -113,7 +114,7 @@ const StakeFlow: FC<Props> = ({ jar, balances }) => {
     <>
       <Button
         type="primary"
-        state={pTokenBalance > 0 ? "enabled" : "disabled"}
+        state={isAcceptingDeposits(jar) && pTokenBalance > 0 ? "enabled" : "disabled"}
         onClick={openModal}
         className="w-11"
       >

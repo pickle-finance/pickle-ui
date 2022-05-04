@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import { AssetEnablement, AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import { InformationCircleIcon } from "@heroicons/react/solid";
 
 import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
@@ -12,6 +13,7 @@ import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionC
 import ConnectButton from "./ConnectButton";
 import { useAccount, useNeedsNetworkSwitch } from "v2/hooks";
 import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
+import BrineryTableRowBodyTransactionControls from "../brinery/BrineryTableRowBodyTransactionControls";
 
 interface Props {
   jarOrBrinery: JarWithData | BrineryWithData;
@@ -41,11 +43,26 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
       ?.tokensVisible;
   }
 
+  const renderTransactionControls = () => {
+    if (isUniV3)
+      return <FarmsTableRowBodyV3TransactionControls jar={jarOrBrinery as JarWithData} />;
+    console.log(isBrinery);
+    if (isBrinery)
+      return <BrineryTableRowBodyTransactionControls brinery={jarOrBrinery as BrineryWithData} />;
+    return <FarmsTableRowBodyTransactionControls jar={jarOrBrinery as JarWithData} />;
+  };
+
   return (
     <td
       colSpan={6}
       className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
+      {jarOrBrinery.enablement === AssetEnablement.WITHDRAW_ONLY && (
+        <div className="flex justify-center text-foreground-alt-200 text-sm mt-1 mb-6">
+          <InformationCircleIcon className="w-5 h-5 text-accent mr-2" />
+          {t("v2.farms.withdrawOnly")}
+        </div>
+      )}
       <div className="flex">
         <div className="pt-4 pb-6 flex-shrink-0 mr-6">
           {(isUniV3 && (
@@ -74,11 +91,8 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
           )}
         </div>
         <div className="relative w-full mb-2">
-          {isUniV3 ? (
-            <FarmsTableRowBodyV3TransactionControls jar={jarOrBrinery as JarWithData} />
-          ) : (
-            <FarmsTableRowBodyTransactionControls jar={jarOrBrinery as JarWithData} />
-          )}
+          {renderTransactionControls()}
+
           {needsNetworkSwitch && (
             <div className="absolute inset-0 flex grow justify-center items-center border border-foreground-alt-500 rounded-xl bg-background-light bg-opacity-90 backdrop-filter backdrop-blur-sm">
               <ConnectButton network={network} />

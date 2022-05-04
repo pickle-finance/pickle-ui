@@ -179,6 +179,15 @@ const selectTokenDataById = (
 
   return state.user.accounts[account]?.data?.tokens[apiKey.toLowerCase()];
 };
+const selectBrineryDataById = (
+  state: RootState,
+  apiKey: string,
+  account: string | null | undefined,
+) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.data?.brineries.find((x) => x.assetKey === apiKey);
+};
 const selectUpdatedAt = (state: RootState, account: string | null | undefined) => {
   if (!account) return;
 
@@ -191,6 +200,7 @@ export const UserSelectors = {
   selectNonce,
   selectTokenDataById,
   selectUpdatedAt,
+  selectBrineryDataById,
 };
 
 export default userSlice.reducer;

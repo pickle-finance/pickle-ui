@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   ComposedChart,
   Line,
@@ -17,72 +17,89 @@ import { useTranslation } from "next-i18next";
 
 const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
   const { t } = useTranslation("common");
-  const sortedData: RevenueData[] = sortByDate(data);
-  const chartData = computeMovingAverage(sortedData, 10);
-  const dataMax = getDataMax(chartData);
+  const [chartData, setChartData] = useState<RevenueData[]>([]);
+  const [dataMax, setDataMax] = useState<number>(0);
 
-  return (
-    <ResponsiveContainer className="w-full">
-      <ComposedChart data={chartData}>
-        <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
-        <XAxis
-          dataKey="timestamp"
-          tickFormatter={(timestamp) => new Date(timestamp * 1000).toLocaleDateString()}
-          height={75}
-          angle={300}
-          tickMargin={35}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
-        />
-        <YAxis
-          tickFormatter={(value) =>
-            new Intl.NumberFormat("en", { notation: "compact", compactDisplay: "short" }).format(
-              value,
-            )
-          }
-          domain={[0, dataMax]}
-          width={100}
-          padding={{ top: 50 }}
-          tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
-          tickCount={9}
-        >
-          <Label
-            value={t("v2.dill.usdValue") as string}
-            position="insideLeft"
-            angle={-90}
-            fill="rgb(var(--color-foreground-alt-100))"
-            style={{ textAnchor: "middle" }}
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const sortedData: RevenueData[] = sortByDate(data);
+      setChartData(computeMovingAverage(sortedData, 10));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (chartData.length > 0) setDataMax(getDataMax(chartData));
+  }, [chartData]);
+
+  if (chartData.length > 0)
+    return (
+      <ResponsiveContainer className="w-full">
+        <ComposedChart data={chartData}>
+          <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
+          <XAxis
+            dataKey="timestamp"
+            tickFormatter={(timestamp) => new Date(timestamp * 1000).toLocaleDateString()}
+            height={75}
+            angle={300}
+            tickMargin={35}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
           />
-        </YAxis>
+          <YAxis
+            tickFormatter={(value) =>
+              new Intl.NumberFormat("en", { notation: "compact", compactDisplay: "short" }).format(
+                value,
+              )
+            }
+            domain={dataMax ? [0, dataMax] : undefined}
+            width={100}
+            padding={{ top: 50 }}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
+            tickCount={9}
+          >
+            <Label
+              value={t("v2.dill.usdValue") as string}
+              position="insideLeft"
+              angle={-90}
+              fill="rgb(var(--color-foreground-alt-100))"
+              style={{ textAnchor: "middle" }}
+            />
+          </YAxis>
 
-        <Tooltip
-          cursor={false}
-          contentStyle={{
-            backgroundColor: "rgb(var(--color-foreground-alt-500))",
-            borderColor: "rgb(var(--color-foreground-alt-500))",
-            borderRadius: 10,
-          }}
-          labelFormatter={(label) =>
-            new Date(label * 1000).toLocaleDateString() +
-            " " +
-            new Date(label * 1000).toLocaleTimeString()
-          }
-          formatter={(value: number, label: string) => [
-            formatDollars(value),
-            t(`v2.stats.tooltips.${label}`),
-          ]}
-        />
-        <Bar dataKey="revsUsd" fill="rgb(var(--color-primary-light))" />
-        <Line dataKey="ma" dot={false} stroke="rgb(var(--color-accent))" />
-        <Legend
-          formatter={(label: string) => (
-            <span className="text-foreground-alt-200">{t(`v2.stats.tooltips.${label}`)}</span>
-          )}
-          iconType="wye"
-          wrapperStyle={{ paddingTop: 25 }}
-        />
-      </ComposedChart>
-    </ResponsiveContainer>
-  );
+          <Tooltip
+            cursor={false}
+            contentStyle={{
+              backgroundColor: "rgb(var(--color-foreground-alt-500))",
+              borderColor: "rgb(var(--color-foreground-alt-500))",
+              borderRadius: 10,
+            }}
+            labelFormatter={(label) =>
+              new Date(label * 1000).toLocaleDateString() +
+              " " +
+              new Date(label * 1000).toLocaleTimeString()
+            }
+            formatter={(value: number, label: string) => [
+              formatDollars(value),
+              t(`v2.stats.tooltips.${label}`),
+            ]}
+          />
+          <Bar dataKey="revsUsd" isAnimationActive={false} fill="rgb(var(--color-primary-light))" />
+          <Line
+            dataKey="ma"
+            dot={false}
+            isAnimationActive={false}
+            stroke="rgb(var(--color-accent))"
+          />
+          <Legend
+            formatter={(label: string) => (
+              <span className="text-foreground-alt-200">{t(`v2.stats.tooltips.${label}`)}</span>
+            )}
+            iconType="wye"
+            wrapperStyle={{ paddingTop: 25 }}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
+    );
+  return <></>;
 };
 
 const computeMovingAverage = (sortedData: RevenueData[], period: number): RevenueData[] => {
