@@ -1,8 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 
 import { useAppSelector } from "v2/store";
 import { JarWithData } from "v2/store/core";
@@ -17,6 +15,7 @@ import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
 import { roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
+import { useAccount } from "v2/hooks";
 
 interface Props {
   jar: JarWithData;
@@ -24,7 +23,7 @@ interface Props {
 
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ jar }) => {
   const { t } = useTranslation("common");
-  const { account } = useWeb3React<Web3Provider>();
+  const account = useAccount();
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
   const userTokenData = useAppSelector((state) =>

@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import { AssetEnablement, AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+import { InformationCircleIcon } from "@heroicons/react/solid";
 
 import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
@@ -44,6 +45,12 @@ const FarmsTableRowBody: FC<Props> = ({ jar, hideDescription }) => {
       colSpan={6}
       className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
+      {jar.enablement === AssetEnablement.WITHDRAW_ONLY && (
+        <div className="flex justify-center text-foreground-alt-200 text-sm mt-1 mb-6">
+          <InformationCircleIcon className="w-5 h-5 text-accent mr-2" />
+          {t("v2.farms.withdrawOnly")}
+        </div>
+      )}
       <div className="flex">
         <div className="pt-4 pb-6 flex-shrink-0 mr-6">
           {(isUniV3 && (

@@ -500,6 +500,7 @@
       "transactionFailed": "Transaction failed",
       "unstakeToken": "Unstake {{ token }}",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
+      "withdrawOnly": "This jar is in withdraw-only mode.",
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates",
       "yourApy": "Your APY: {{ apy }}"
