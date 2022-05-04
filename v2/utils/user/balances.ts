@@ -46,8 +46,8 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
-
+  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber.toString());
+  
   return {
     wei: depositTokenWei,
     tokens: bigNumberToTokenNumber(depositTokenWei, decimals, decimals).toString(),
