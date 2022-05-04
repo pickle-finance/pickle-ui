@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useTranslation } from "next-i18next";
 
 import NavItems from "./NavItems";
-import NavItem from "./NavItem";
 import PicklePriceIndicator from "./PicklePriceIndicator";
 import { ThemeSelectors } from "v2/store/theme";
 import { matchingLogoSrc } from "v2/features/theme/themes";

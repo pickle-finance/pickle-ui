@@ -21,6 +21,7 @@ import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 import AwaitingConfirmationUniV3 from "./AwaitingConfirmationUniV3";
 import FormUniV3 from "./FormUniV3";
+import { isAcceptingDeposits } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
@@ -157,7 +158,8 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
     return `~ ${formatDollars(valueUSD)}`;
   };
 
-  const enabled = depositToken0Balance > 0 || depositToken1Balance > 0;
+  const enabled =
+    isAcceptingDeposits(jar) && (depositToken0Balance > 0 || depositToken1Balance > 0);
 
   return (
     <>
