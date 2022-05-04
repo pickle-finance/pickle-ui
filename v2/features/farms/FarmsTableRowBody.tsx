@@ -46,9 +46,10 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
   const renderTransactionControls = () => {
     if (isUniV3)
       return <FarmsTableRowBodyV3TransactionControls jar={jarOrBrinery as JarWithData} />;
-    console.log(isBrinery);
     if (isBrinery)
       return <BrineryTableRowBodyTransactionControls brinery={jarOrBrinery as BrineryWithData} />;
+
+    // Default is farms control
     return <FarmsTableRowBodyTransactionControls jar={jarOrBrinery as JarWithData} />;
   };
 

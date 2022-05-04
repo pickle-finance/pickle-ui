@@ -2,7 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 import { ChainNetwork } from "picklefinance-core";
-import { IUserDillStats, UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import {
+  IUserBrineryStats,
+  IUserDillStats,
+  UserData,
+  UserTokenData,
+} from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
 import { baseTokenObject, normalizedData } from "./user.helpers";
@@ -113,6 +118,24 @@ const userSlice = createSlice({
 
       state.accounts[account] = accountData;
     },
+
+    setBrineryData: (
+      state,
+      action: PayloadAction<{ account: string; apiKey: string; data: Partial<UserTokenData> }>,
+    ) => {
+      const { account, apiKey, data } = action.payload;
+      const accountData = state.accounts[account];
+
+      if (!accountData) return;
+
+      const brineryIndex = accountData.data.brineries.findIndex((x) => x.assetKey === apiKey);
+
+      accountData.data.brineries[brineryIndex] = {
+        ...accountData.data.brineries[brineryIndex],
+        ...data,
+      };
+    },
+
     addHarvestedPickles: (
       state,
       action: PayloadAction<{ account: string; chain: ChainNetwork; amount: string }>,
@@ -149,6 +172,7 @@ const {
   setDillData,
   setTokenData,
   setTokens,
+  setBrineryData,
 } = userSlice.actions;
 export const UserActions = {
   addHarvestedPickles,
@@ -158,6 +182,7 @@ export const UserActions = {
   setIsFetching,
   setTokens,
   setTokenData,
+  setBrineryData,
 };
 
 /**

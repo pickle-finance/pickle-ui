@@ -24,8 +24,6 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
 
-  const userData = useAppSelector((state) => UserSelectors.selectData(state, account));
-
   const userBrinery = useAppSelector((state) =>
     UserSelectors.selectBrineryDataById(state, brinery.details.apiKey, account),
   );
@@ -51,9 +49,10 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
               tokenAddress={brinery.depositToken.addr}
               tokenName={brinery.depositToken.name}
               spenderAddress={brinery.contract}
-              storeAttribute="jarAllowance"
+              storeAttribute="allowance"
               chainName={brinery.chain}
               visible={!userHasBrineryAllowance}
+              type="brinery"
             />
             {userHasBrineryAllowance && (
               <div className="grid grid-cols-2 gap-3">
