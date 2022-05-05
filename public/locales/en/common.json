@@ -540,7 +540,9 @@
         },
         "revsChartTitle": "Daily Revenue",
         "revenueYLabel": "Revenue (USD)",
+        "tokenPctTable": "One Day Deposit Token Value Change (%)",
         "tvlChartTitle": "Total Value Locked",
+        "tvlTable": "One Day TVL Change ($)",
         "tvlYLabel": "TVL (USD)"
       },
       "jar": {

@@ -8,7 +8,7 @@ const RevRow: FC<{ recentHarvest: RecentHarvest; chainExplorer: string }> = ({
   chainExplorer,
 }) => (
   <tr className="border border-foreground-alt-400 pt-2 pb-2">
-    <td className="text-center pt-2 pb-2">
+    <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pb-2">
       {recentHarvest.timestamp &&
         formatDate(
           // this condition was added in POC because of sec vs millisec inconsistancy
@@ -20,10 +20,10 @@ const RevRow: FC<{ recentHarvest: RecentHarvest; chainExplorer: string }> = ({
           ),
         )}
     </td>
-    <td className="text-center pt-2 pb-2">
+    <td className="text-left p-2">
       {recentHarvest.transfers && formatTxLink(chainExplorer, recentHarvest.txid)}
     </td>
-    <td className="text-center pt-2 pb-2">
+    <td className="text-left p-2">
       {recentHarvest.transfers &&
         formatDollars(sumHarvestTransfers(recentHarvest.transfers, recentHarvest.fee))}
     </td>
