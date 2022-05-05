@@ -25,7 +25,7 @@ const AssetRow: FC<{
       : "0%";
   return (
     <tr className="border border-foreground-alt-400 pt-2 pb-2">
-      <td className="text-left pt-2 pb-2 pl-20">{formatAssetLink(assetKey.toLowerCase())}</td>
+      <td className="text-left pt-2 pb-2 pl-10">{formatAssetLink(assetKey.toLowerCase())}</td>
       <td className="text-left pt-2 pb-2 pl-10">
         {asset && asset.now ? formatDollars(asset.now.value) : "-"}
       </td>

@@ -4,11 +4,11 @@ import BigMoverTableHead from "./BigMoverTableHead";
 import { iBigMoverTableData } from "./BigMoverUtils";
 
 export const TokenGainsTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) => (
-  <table className="w-full inline-table">
+  <table className="w-full table-auto inline-table">
     <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.gain" />
     <tbody className="border border-foreground-alt-400">
       {data.slice(0, 5).map((data) => (
-        <tr className="pb-2" key={"apiKey"}>
+        <tr key={"apiKey"}>
           <td className="text-left pl-20 pt-2">{data.apiKey}</td>
           <td className="text-left pl-20 pt-2">
             {data.tokenPriceChange !== undefined
@@ -22,7 +22,7 @@ export const TokenGainsTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) =>
 );
 
 export const TokenLossesTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) => (
-  <table className="w-full inline-table">
+  <table className="w-full table-auto inline-table">
     <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.loss" />
     <tbody className="border border-foreground-alt-400 text-left">
       {data
