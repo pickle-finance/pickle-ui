@@ -7,8 +7,9 @@ import ChartContainer from "v2/features/stats/chain/ChartContainer";
 import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
 import BigMoverTableContainer from "v2/features/stats/chain/BigMoverTableContainer";
 import {
-  getTokenPriceChangeBal,
   getTokenPriceChangePct,
+  getTVLChange,
+  iBigMoverTableData,
 } from "v2/features/stats/chain/BigMoverUtils";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import { useSelector } from "react-redux";
@@ -18,19 +19,18 @@ const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
 
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
-  const [tokenPctChangeData, setTokenPctChangeData] = useState<iTokenPriceChange[]>([]);
-  const [tokenBalChangeData, setTokenBalChangeData] = useState<iTokenPriceChange[]>([]);
+  const [tokenPctChangeData, setTokenPctChangeData] = useState<iBigMoverTableData[]>([]);
+  const [tvlChange, setTvlChange] = useState<iBigMoverTableData[]>([]);
 
   const { t } = useTranslation("common");
   const router: NextRouter = useRouter();
   const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      if (chain) {
+      if (chain)
         getChainData(chain).then((data) => {
           setChainData(data);
         });
-      }
     };
     getData();
   }, [chain]);
@@ -38,22 +38,22 @@ const Stats: PickleFinancePage = () => {
   useEffect(() => {
     const tokenPriceChangePct = getTokenPriceChangePct(chainData);
     setTokenPctChangeData(tokenPriceChangePct);
-    const tokenPriceChangeBal = getTokenPriceChangeBal(chainData);
-    setTokenBalChangeData(tokenPriceChangeBal);
+    const tvlChange = getTVLChange(chainData);
+    setTvlChange(tvlChange);
   }, [chainData]);
 
   tokenPctChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
-  tokenBalChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
+  tvlChange.sort((a, b) => (a.tvlChange > b.tvlChange ? -1 : 1));
 
   return (
     <div className="block lg:flex mb-5 sm:mb-10">
-      <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
+      <div className="w-full min-w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
         <Back router={router} text={t("v2.stats.chain.back")} />
-        {tokenBalChangeData.length > 0 && tokenPctChangeData.length > 0 && (
-          <span>
-            <BigMoverTableContainer type="pct" tableData={tokenPctChangeData} />
-            <BigMoverTableContainer type="bal" tableData={tokenBalChangeData} />
-          </span>
+        {tvlChange.length > 0 && tokenPctChangeData.length > 0 && (
+          <>
+            <BigMoverTableContainer type="tvl" tableData={tvlChange} />
+            <BigMoverTableContainer type="tokenPct" tableData={tokenPctChangeData} />
+          </>
         )}
         {chainData.assets && core ? (
           <>
@@ -103,11 +103,6 @@ const Back: FC<{ router: NextRouter; text: string }> = ({ router, text }) => (
 );
 
 Stats.PageTitle = PageTitle;
-
-export interface iTokenPriceChange {
-  apiKey: string;
-  tokenPriceChange: number;
-}
 
 export { getStaticProps } from "../../../util/locales";
 
