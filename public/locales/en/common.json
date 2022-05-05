@@ -408,6 +408,7 @@
             "platformWeight": "Platform Weight"
           }
         },
+        "connectToMainnet": "You must be on the Ethereum network to cast an emisison vote.",
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
         "descriptionMainnet": "Voting for Mainnet jar reward weights occurs on-chain. Your DILL balance dictates how much power you have with regard to how the platform emissions are distributed. To vote, you must select at least one jar, then ensure the sum of your vote(s) equals 100%. If your vote is valid, you can cast your vote with the \"Cast Mainnet Vote\" button.",

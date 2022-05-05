@@ -24,8 +24,8 @@ const AssetRow: FC<{
       ? `${asset.now.jarApr}%`
       : "0%";
   return (
-    <tr className="border border-foreground-alt-400 pt-2 pb-2">
-      <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pb-2">
+    <tr className="border border-foreground-alt-400">
+      <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 py-2 pr-2">
         {formatAssetLink(assetKey.toLowerCase())}
       </td>
       <td className="text-left p-2">{asset && asset.now ? formatDollars(asset.now.value) : "-"}</td>
