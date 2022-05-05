@@ -70,6 +70,7 @@ const Stats: PickleFinancePage = () => {
 };
 
 const PageTitle: FC = () => {
+  const core = useSelector(CoreSelectors.selectCore);
   const { t } = useTranslation("common");
   const router: NextRouter = useRouter();
   const chain: string = typeof router.query.chain === "string" ? router.query.chain : "";
@@ -77,7 +78,9 @@ const PageTitle: FC = () => {
   return (
     <>
       <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
-        {t("v2.nav.stats").concat(chain ? ` - ${chain.toUpperCase()}` : "")}
+        {t("v2.nav.stats").concat(
+          chain ? ` - ${core?.chains.find((c) => chain === c.network)?.networkVisible}` : "",
+        )}
       </h1>
       <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.stats.subtitle")}

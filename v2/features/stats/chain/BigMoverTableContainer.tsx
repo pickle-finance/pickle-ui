@@ -20,13 +20,13 @@ const BigMoverTableContainer: FC<{
     >
       <h2 className="font-body font-bold text-xl mb-4">{t(`v2.stats.chain.${type}Table`)}</h2>
       {type === "tvl" && (
-        <div className="grid grid-cols-2 grid-flow-row-dense gap-4">
+        <div className="xl:columns-2 l:columns-2 md:columns-1 sm:columns-1 gap-4">
           <TvlGainsTable data={tableData} />
           <TvlLossesTable data={tableData} />
         </div>
       )}
       {type === "tokenPct" && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="xl:columns-2 l:columns-2 md:columns-1 sm:columns-1 gap-4">
           <TokenGainsTable data={tableData} />
           <TokenLossesTable data={tableData} />
         </div>

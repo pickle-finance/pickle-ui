@@ -6,16 +6,16 @@ const AssetTableHead: FC = () => {
   return (
     <thead className="rounded-t-md">
       <tr className="w-full border border-foreground-alt-400 bg-foreground-alt-400">
-        <th scope="col" className="w-1/4 text-left pl-10 pt-2 pb-2">
+        <th scope="col" className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pb-2">
           {t("v2.stats.chain.assetTableHeaders.asset")}
         </th>
-        <th scope="col" className="w-1/4 text-left pl-10 pt-2 pb-2">
+        <th scope="col" className="text-left p-2">
           {t("v2.stats.chain.assetTableHeaders.tvl")}
         </th>
-        <th scope="col" className="w-1/4 text-left pl-10 pt-2 pb-2">
+        <th scope="col" className="text-left p-2">
           {t("v2.stats.chain.assetTableHeaders.tvlChange")}
         </th>
-        <th scope="col" className="w-1/4 text-left pl-10 pt-2 pb-2">
+        <th scope="col" className="text-left p-2">
           {t("v2.stats.chain.assetTableHeaders.apyRange")}
         </th>
       </tr>
