@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, ReactElement } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 
@@ -11,9 +11,10 @@ interface Props {
   closeModal: () => void;
   title: string;
   size?: "normal" | "wide" | "xl";
+  footer?: ReactElement;
 }
 
-const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal" }) => {
+const Modal: FC<Props> = ({ isOpen, closeModal, title, children, footer, size = "normal" }) => {
   const isConfettiOn = useAppSelector(ThemeSelectors.selectIsConfettiOn);
 
   return (
@@ -72,6 +73,11 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal"
                 </button>
               </Dialog.Title>
               <div className="px-6 py-4 sm:px-8 sm:py-6">{children}</div>
+              {footer && (
+                <div className="text-foreground px-6 py-2 sm:px-8 sm:py-3 border-t border-foreground-alt-500">
+                  {footer}
+                </div>
+              )}
             </div>
           </Transition.Child>
         </div>
