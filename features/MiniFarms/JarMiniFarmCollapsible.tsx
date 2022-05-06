@@ -357,18 +357,6 @@ export const FARM_LP_TO_ICON: {
   "0x0EA5D709851ae7A6856677b880b8c56e87e7877B": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/solace.png"} />
   ),
-  // // TRI XNL-AURORA
-  // "0xb419ff9221039Bdca7bb92A131DD9CF7DEb9b8e5": (
-  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
-  // ),
-  // // TRI GBA-NEAR
-  // "0x7B273238C6DD0453C160f305df35c350a123E505": (
-  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/gba.png"} />
-  // ),
-  // // TRI XNL-NEAR
-  // "0xFBc4C42159A5575a772BebA7E3BF91DB508E127a": (
-  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/xnl.png"} />
-  // ),
   // TRI BBT-NEAR
   "0xA3342A7CB3fc1Fb8de3Fb7ef5d4A30e0e56C36CD": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/bbt.png"} />
@@ -377,37 +365,13 @@ export const FARM_LP_TO_ICON: {
   "0x7977844f44BFb9d33302FC4A99bB0247BA13478c": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/shitzu.png"} />
   ),
-  // PAD MODA-PAD
-  // "0xC8F45738e2900fCaB9B72EA624F48aE2c222e248": (
-  //   <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/moda.png"} />
-  // ),
-  // // PAD DAI-PAD
-  // "0xaf3f197Ce82bf524dAb0e9563089d443cB950048": (
-  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/nearpad.png"} />
-  // ),
-  // // PAD AURORA-PAD
-  // "0xFE28a27a95e51BB2604aBD65375411A059371616": (
-  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/aurora.png"} />
-  // ),
-  // // PAD ETH-PAD
-  // "0x24886811d2d5E362FF69109aed0A6EE3EeEeC00B": (
-  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/nearpad.png"} />
-  // ),
-  // // PAD FRAX-NEAR
-  // "0xac187A18f9DaB50506fc8111aa7E86F5F55DefE9": (
-  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/frax.png"} />
-  // ),
-  // // PAD PAD-TRI
-  // "0x50F63D48a52397C1a469Ccd057905CC8d2609B85": (
-  //   <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/tri.png"} />
-  // ),
   // ROSE 3POOL
   "0x0FeEc68AFB4716Af45349bcFdc317E872BD50335": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
   ),
   // ROSE USTPOOL
   "0xe7a47b1Be32161736FE083E8425b7Be97099B2Ed": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/ust.png"} />
   ),
   // ROSE FRAXPOOL
   "0xF25466cadAD7ACd09249A8e4baDF62C43c6e0375": (
@@ -415,11 +379,11 @@ export const FARM_LP_TO_ICON: {
   ),
   // ROSE ROSE-FRAX
   "0x566112Ba8Bf50218Ac5D485DcbE0eBF240707D11": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/rose.png"} />
   ),
   // ROSE ROSE-PAD
   "0x3F00480fB625Be95abf6c462C84Be1916baF6446": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose.png"} />
+    <LpIcon swapIconSrc={"/nearpad.png"} tokenIconSrc={"/tokens/rose.png"} />
   ),
   // WANNA WANNAX-STNEAR
   "0x527F243112Cc6DE5A9879c93c2091C23E9a3afa5": (
@@ -427,7 +391,7 @@ export const FARM_LP_TO_ICON: {
   ),
   // ROSE MAIPOOL
   "0x4850d60B10520081653F012E000049Bc82dE365F": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/mai.png"} />
   ),
   // ROSE RUSDPOOL
   "0x5ae33A37398Fe95131c2150D3D4A5D539C791d50": (
@@ -435,12 +399,17 @@ export const FARM_LP_TO_ICON: {
   ),
   // ROSE BUSDPOOL
   "0x149228d9d745e5aBdeb0640aE4dB51BdEC7de1AA": (
-    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/rose3pool.png"} />
+    <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/busd.png"} />
   ),
   // TRI AURORA-NEAR
   "0x708C457199A699Ce7219d778353F9e82f5C49DC3": (
     <LpIcon swapIconSrc={"/rose.png"} tokenIconSrc={"/tokens/aurora.png"} />
   ),
+  // TRI AURORA-NEAR
+  "0x46d42C3DcCC38B92f40b021008AcDc76ab463B12": (
+    <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/ply.png"} />
+  ),
+  
 
   // Metis
 
