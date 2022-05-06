@@ -121,7 +121,7 @@ const userSlice = createSlice({
 
     setBrineryData: (
       state,
-      action: PayloadAction<{ account: string; apiKey: string; data: Partial<UserTokenData> }>,
+      action: PayloadAction<{ account: string; apiKey: string; data: Partial<IUserBrineryStats> }>,
     ) => {
       const { account, apiKey, data } = action.payload;
       const accountData = state.accounts[account];

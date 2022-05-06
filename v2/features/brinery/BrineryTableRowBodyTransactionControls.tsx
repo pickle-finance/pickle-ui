@@ -55,9 +55,8 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
               type="brinery"
             />
             {userHasBrineryAllowance && (
-              <div className="grid grid-cols-2 gap-3">
-                <DepositFlow jar={brinery} balances={userBrinery} />
-                <WithdrawFlow jar={brinery} balances={userBrinery} />
+              <div>
+                <DepositFlow jar={brinery} balances={userBrinery} type="brinery" buttonSize="normal"/>
               </div>
             )}
           </div>

@@ -9,6 +9,7 @@ import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber, formatNumber } from "../format";
 import { tokenDecimals } from "v2/store/core.helpers";
+import { parseEther } from "ethers/lib/utils";
 
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -54,8 +55,10 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber.toString());
-  
+  const weiMulPrice = depositTokenWei
+    .mul(tokenPriceWithPrecision)
+    .div(precisionAsNumber.toString());
+
   return {
     wei: depositTokenWei,
     tokens: bigNumberToTokenNumber(depositTokenWei, decimals, decimals).toString(),
@@ -179,10 +182,10 @@ export const getUserBrineryDataWithPrices = (
   if (core === undefined || userModel === undefined) {
     return userBrineryDataZeroEverything();
   }
-
+  
   const userBrineryDetails = userModel.brineries.find(
     (x) => x.assetKey === brinery.details.apiKey.toUpperCase(),
-  );
+    );
 
   const depositToken = core.tokens.find(
     (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
@@ -213,6 +216,6 @@ export const getUserBrineryDataWithPrices = (
     assetId: brinery.details.apiKey,
     depositTokensInWallet: wallet,
     brineryBalance,
-    earnedRewards
+    earnedRewards,
   };
 };
