@@ -10,7 +10,7 @@ interface Props {
   isOpen: boolean;
   closeModal: () => void;
   title: string;
-  size?: "normal" | "wide";
+  size?: "normal" | "wide" | "xl";
 }
 
 const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal" }) => {
@@ -56,6 +56,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children, size = "normal"
                 "relative inline-block w-full align-middle bg-background-light rounded-2xl border border-foreground-alt-500 z-220 transition-all",
                 size === "normal" && "max-w-md",
                 size === "wide" && "max-w-lg",
+                size === "xl" && "max-w-3xl",
               )}
             >
               <Dialog.Title

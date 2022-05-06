@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { startAppListening } from "./listenerMiddleware";
 
 import { RootState } from ".";
-import { applyTheme } from "v2/features/theme/themes";
+import { applyTheme, currentTheme } from "v2/features/theme/themes";
 
 export enum ThemeType {
   Light = "light",
@@ -57,6 +57,7 @@ export const ThemeActions = {
  * Selectors
  */
 const selectTheme = (state: RootState) => state.theme;
+const selectThemeTone = (state: RootState) => currentTheme(state.theme).tone;
 const selectIsConfettiOn = (state: RootState) => state.theme.isConfettiOn;
 
 /**
@@ -75,6 +76,7 @@ startAppListening({
 export const ThemeSelectors = {
   selectIsConfettiOn,
   selectTheme,
+  selectThemeTone,
 };
 
 export default themeSlice.reducer;
