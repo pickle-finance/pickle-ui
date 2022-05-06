@@ -638,8 +638,8 @@
       "exit": "Exit",
       "switch": "Switch wallet"
     },
-    "brineries":{
-      "test": "test"
+    "brinery":{
+      "subtitle": "Pickle accepts governance token deposits in exchange for perpetual fee claims. Receipt pTokens are issued to represent your proportionate share of locked tokens"
     }
   }
 }

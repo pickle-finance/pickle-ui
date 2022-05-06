@@ -10,7 +10,7 @@ import { IUserBrineryStats, UserTokenData } from "picklefinance-core/lib/client/
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { JarWithData } from "v2/store/core";
+import { BrineryWithData, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
 import Form from "./Form";
 import { jarDecimals } from "v2/utils/user";
@@ -29,22 +29,22 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 type DepositType = "jar" | "brinery";
 
 interface Props {
-  jar: JarWithData;
+  jarOrBrinery: JarWithData | BrineryWithData;
   balances: UserTokenData | IUserBrineryStats | undefined;
   type: DepositType;
 }
 
-const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
+const DepositFlow: FC<Props> = ({ jarOrBrinery, balances, type }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
 
-  const chain = Chains.get(jar.chain);
-  const { contract } = jar;
+  const chain = Chains.get(jarOrBrinery.chain);
+  const { contract } = jarOrBrinery;
   const JarContract = useJarContract(contract);
 
-  const decimals = jarDecimals(jar);
+  const decimals = jarDecimals(jarOrBrinery as JarWithData);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
   const depositTokenBalance = parseFloat(ethers.utils.formatUnits(depositTokenBalanceBN, decimals));
 
@@ -81,7 +81,7 @@ const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
       dispatch(
         UserActions.setBrineryData({
           account,
-          apiKey: jar.details.apiKey,
+          apiKey: jarOrBrinery.details.apiKey,
           data: {
             depositTokenBalance,
             balance: newBrineryBalance,
@@ -94,7 +94,7 @@ const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
       dispatch(
         UserActions.setTokenData({
           account,
-          apiKey: jar.details.apiKey,
+          apiKey: jarOrBrinery.details.apiKey,
           data: {
             depositTokenBalance,
             pAssetBalance,
@@ -118,7 +118,7 @@ const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
   const closeModal = () => setIsModalOpen(false);
 
   const equivalentValue = () => {
-    const depositTokenPrice = jar.depositToken.price;
+    const depositTokenPrice = jarOrBrinery.depositToken.price;
 
     if (!depositTokenPrice) return;
 
@@ -131,7 +131,9 @@ const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
     <>
       <Button
         type="primary"
-        state={isAcceptingDeposits(jar) && depositTokenBalance > 0 ? "enabled" : "disabled"}
+        state={
+          isAcceptingDeposits(jarOrBrinery) && depositTokenBalance > 0 ? "enabled" : "disabled"
+        }
         onClick={openModal}
       >
         {type === "brinery" ? t("v2.actions.deposit") : "+"}
@@ -139,7 +141,7 @@ const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        title={t("v2.farms.depositToken", { token: jar.depositToken.name })}
+        title={t("v2.farms.depositToken", { token: jarOrBrinery.depositToken.name })}
       >
         {current.matches(States.FORM) && (
           <Form
@@ -151,7 +153,7 @@ const DepositFlow: FC<Props> = ({ jar, balances, type }) => {
           <AwaitingConfirmation
             title={t("v2.farms.confirmDeposit")}
             cta={t("v2.actions.deposit")}
-            tokenName={jar.depositToken.name}
+            tokenName={jarOrBrinery.depositToken.name}
             amount={current.context.amount}
             equivalentValue={equivalentValue()}
             error={error}

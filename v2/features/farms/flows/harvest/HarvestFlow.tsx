@@ -14,7 +14,7 @@ import AwaitingConfirmationNoUserInput from "../AwaitingConfirmationNoUserInput"
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
-import { useFarmContract, useTransaction } from "../hooks";
+import { useFarmContract, useTransaction, usePveContract } from "../hooks";
 import { AppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { eventsByName } from "../utils";
@@ -28,8 +28,10 @@ import { useDistributorContract } from "v2/features/dill/flows/hooks";
 import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
+import { IUserBrineryStats } from "picklefinance-core/lib/client/UserModel";
+import { BrineryDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
-export type Rewarder = "farm" | "dill";
+export type Rewarder = "farm" | "dill" | "brinery";
 
 interface Props {
   asset?: Asset | undefined;
@@ -39,6 +41,7 @@ interface Props {
   network: ChainNetwork;
   rewarderType: Rewarder;
   showNetworkSwitch?: boolean;
+  balances?: IUserBrineryStats | undefined;
 }
 
 /**
@@ -53,11 +56,11 @@ const HarvestFlow: FC<Props> = ({
   network,
   rewarderType,
   showNetworkSwitch,
+  balances,
 }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
-  const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
   const { network: jarNetwork, needsNetworkSwitch } = useNeedsNetworkSwitch(network);
@@ -66,7 +69,15 @@ const HarvestFlow: FC<Props> = ({
 
   const FarmContract = useFarmContract(farmDetails(asset)?.farmAddress, chain);
   const DistributorContract = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS);
-  const picklePendingAmount = parseFloat(ethers.utils.formatEther(harvestableAmount));
+  const PveContract = usePveContract(asset?.contract || ethers.constants.AddressZero);
+  const pendingRewardAmount = parseFloat(ethers.utils.formatEther(harvestableAmount));
+
+  const rewardPrice =
+    rewarderType === "brinery"
+      ? core?.prices[(asset as BrineryDefinition)?.details.rewardToken] || 0
+      : useSelector(CoreSelectors.selectPicklePrice);
+
+  const rewardName = rewarderType === "brinery" ? asset?.depositToken.name : "PICKLE";
 
   const transactionFactory = () => {
     if (!account) return;
@@ -81,6 +92,9 @@ const HarvestFlow: FC<Props> = ({
       if (poolId === undefined) return;
 
       return () => (FarmContract as Minichef).harvest(poolId, account);
+    } else if (rewarderType === "brinery") {
+      if (!PveContract) return;
+      return () => PveContract["claim()"]();
     }
 
     // Dill rewards
@@ -115,6 +129,27 @@ const HarvestFlow: FC<Props> = ({
           },
         }),
       );
+    } else if (rewarderType === "brinery") {
+      if (!asset || !balances) return;
+      const transferEvents = eventsByName<any>(receipt, "Transfer");
+      const claimTransferEvent = transferEvents.find((event) => event.args.to === account)!;
+
+      // This is applicable only for veFXS
+      // requires change where depositToken != rewardToken
+      const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
+      const rewardClaimed = claimTransferEvent.args.amount || BigNumber.from("0");
+      const newDepositBalance = depositTokenBalanceBN.add(rewardClaimed).toString();
+
+      dispatch(
+        UserActions.setBrineryData({
+          account,
+          apiKey: asset.details.apiKey,
+          data: {
+            depositTokenBalance: newDepositBalance,
+          },
+        }),
+      );
+      return;
     } else {
       // Dill rewards
       const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
@@ -149,7 +184,7 @@ const HarvestFlow: FC<Props> = ({
         <Button
           type={buttonType}
           size={buttonSize}
-          state={picklePendingAmount > 0 ? "enabled" : "disabled"}
+          state={pendingRewardAmount > 0 ? "enabled" : "disabled"}
           onClick={openModal}
         >
           {t("v2.farms.harvest")}
@@ -162,11 +197,11 @@ const HarvestFlow: FC<Props> = ({
               <p>
                 {t("v2.farms.harvesting")}
                 <span className="text-primary ml-2">
-                  {roundToSignificantDigits(picklePendingAmount, 3)} PICKLE
+                  {roundToSignificantDigits(pendingRewardAmount, 3)} {rewardName}
                 </span>
                 <MoreInfo>
                   <span className="text-foreground-alt-200 text-sm">
-                    {formatDollars(picklePendingAmount * picklePrice, 3)}
+                    {formatDollars(pendingRewardAmount * rewardPrice, 3)}
                   </span>
                 </MoreInfo>
               </p>

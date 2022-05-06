@@ -31,7 +31,7 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
   const userHasBrineryAllowance = parseInt(userBrinery?.allowance || "0") > 0;
   const brineryBalance = brinery.brineryBalance.tokens;
 
-  const earnedRewards = brinery.earnedRewards.tokensVisible;
+  const earnedRewards = brinery.earnedRewards.tokens;
 
   return (
     <div className="flex space-x-3">
@@ -56,7 +56,7 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
             />
             {userHasBrineryAllowance && (
               <div>
-                <DepositFlow jar={brinery} balances={userBrinery} type="brinery" buttonSize="normal"/>
+                <DepositFlow jarOrBrinery={brinery} balances={userBrinery} type="brinery" />
               </div>
             )}
           </div>
@@ -65,17 +65,18 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
       <div className="grow self-start">
         <div className="border border-foreground-alt-500 rounded-xl p-4">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-            {t("v2.farms.earnedToken", { token: "PICKLEs" })}
+            {t("v2.farms.earnedToken", { token: brinery.depositToken.name })}
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-primary font-medium text-base leading-5">
               {roundToSignificantDigits(parseFloat(earnedRewards), 3)}
             </span>
             <HarvestFlow
-              rewarderType="farm"
+              rewarderType="brinery"
               asset={brinery}
-              harvestableAmount={BigNumber.from(parseFloat(earnedRewards) || 0)}
+              harvestableAmount={brinery.earnedRewards.wei}
               network={brinery.chain}
+              balances={userBrinery}
             />
           </div>
         </div>

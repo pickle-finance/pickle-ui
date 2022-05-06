@@ -103,19 +103,6 @@ const BrineryTableRowHeader: FC<Props> = ({ brinery, simple, open, userDillRatio
           {formatDollars(brinery.details.harvestStats?.balanceUSD || 0)}
         </p>
       </RowCell>
-      {!simple && (
-        <RowCell className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}>
-          <div className="flex justify-end pr-3">
-            <ChevronDownIcon
-              className={classNames(
-                open && "rotate-180",
-                "text-foreground ml-2 h-5 w-5 transition duration-300 ease-in-out",
-              )}
-              aria-hidden="true"
-            />
-          </div>
-        </RowCell>
-      )}
     </>
   );
 };

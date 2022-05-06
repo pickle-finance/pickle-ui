@@ -69,11 +69,6 @@ const BrineryTable: FC<Props> = ({
                 />
               </tbody>
             </table>
-            {!simple && !singleAsset && (
-              <div className="flex justify-center mt-4">
-                <Pagination />
-              </div>
-            )}
           </div>
         </div>
       </div>
