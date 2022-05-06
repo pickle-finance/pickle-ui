@@ -10,6 +10,7 @@ import { fetcher, PicklePriceResponse } from "../utils";
 import Modal from "./Modal";
 import { useAppSelector } from "v2/store";
 import { ThemeSelectors } from "v2/store/theme";
+import Link from "./Link";
 
 interface AdvancedChartProps {
   widgetProps?: AdvancedChartWidgetProps;
@@ -73,6 +74,28 @@ const PicklePriceIndicator: FC = () => {
         isOpen={isOpen}
         closeModal={() => setIsOpen(false)}
         title={t("v2.dashboard.pickleToken")}
+        footer={
+          <>
+            <Link
+              href="https://etherscan.io/address/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5"
+              external
+            >
+              {t("v2.dashboard.contract")}
+            </Link>
+            <span className="text-foreground-alt-300 mx-2">&#x2022;</span>
+            <Link href="https://www.coingecko.com/en/coins/pickle-finance" external>
+              CoinGecko
+            </Link>
+            <span className="text-foreground-alt-300 mx-2">&#x2022;</span>
+            <Link href="https://coinmarketcap.com/currencies/pickle-finance" external>
+              CoinMarketCap
+            </Link>
+            <span className="text-foreground-alt-300 mx-2">&#x2022;</span>
+            <Link href="https://www.tradingview.com/chart/?symbol=OKEX%3APICKLEUSDT" external>
+              TradingView
+            </Link>
+          </>
+        }
       >
         <TradeViewChart
           widgetProps={{
