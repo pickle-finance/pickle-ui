@@ -14,6 +14,7 @@ import ConnectButton from "./ConnectButton";
 import { useAccount, useNeedsNetworkSwitch } from "v2/hooks";
 import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
 import BrineryTableRowBodyTransactionControls from "../brinery/BrineryTableRowBodyTransactionControls";
+import BrineryTableRowDetails from "../brinery/BrineryTableRowDetails";
 
 interface Props {
   jarOrBrinery: JarWithData | BrineryWithData;
@@ -43,12 +44,24 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
       ?.tokensVisible;
   }
 
+  const renderAssetDetails = () => {
+    if (isBrinery)
+      return (
+        <BrineryTableRowDetails
+          brinery={jarOrBrinery as BrineryWithData}
+          hideDescription={hideDescription}
+        />
+      );
+    return (
+      <FarmsTableRowDetails jar={jarOrBrinery as JarWithData} hideDescription={hideDescription} />
+    );
+  };
+
   const renderTransactionControls = () => {
     if (isUniV3)
       return <FarmsTableRowBodyV3TransactionControls jar={jarOrBrinery as JarWithData} />;
     if (isBrinery)
       return <BrineryTableRowBodyTransactionControls brinery={jarOrBrinery as BrineryWithData} />;
-
     // Default is farms control
     return <FarmsTableRowBodyTransactionControls jar={jarOrBrinery as JarWithData} />;
   };
@@ -101,7 +114,7 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
           )}
         </div>
       </div>
-      {/* <FarmsTableRowDetails jar={jar} hideDescription={hideDescription} /> */}
+      {renderAssetDetails()}
     </td>
   );
 };

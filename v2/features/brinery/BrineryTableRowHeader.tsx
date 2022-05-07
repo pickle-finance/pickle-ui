@@ -98,7 +98,7 @@ const BrineryTableRowHeader: FC<Props> = ({ brinery, simple, open, userDillRatio
       <RowCell>
         <FarmAPY jarOrBrinery={brinery} userDillRatio={userDillRatio} />
       </RowCell>
-      <RowCell className={classNames(simple && "rounded-r-xl")}>
+      <RowCell className={classNames("rounded-tr-xl")}>
         <p className="font-title font-medium text-base leading-5">
           {formatDollars(brinery.details.harvestStats?.balanceUSD || 0)}
         </p>
