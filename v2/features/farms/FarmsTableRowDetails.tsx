@@ -14,6 +14,7 @@ import { JarWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
 import FarmDocs from "./FarmDocs";
 import { jarSupportsStaking } from "v2/store/core.helpers";
+import { metamaskAdd } from "./flows/utils";
 
 interface Props {
   jar: JarWithData;
@@ -69,33 +70,6 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
     (jar.details.harvestStats?.harvestableUSD || 0) *
     (1 - (chain?.defaultPerformanceFee || 0.2));
 
-  const metamaskAdd = async () => {
-    const tokenAddress = jar.contract;
-    const tokenSymbol = `p${jar.depositToken.name.replace(/[\s\/-]/g, "").substring(0, 10)}`;
-    const tokenDecimals = 18;
-    const tokenImage = new URL("/tokens/pickle.png", document.baseURI).href;
-
-    if (library?.provider.request !== undefined) {
-      try {
-        // Returns a boolean. Like any RPC method, an error may be thrown.
-        await library.provider.request({
-          method: "wallet_watchAsset",
-          params: {
-            // @ts-ignore
-            // https://github.com/ethers-io/ethers.js/issues/2576
-            type: "ERC20",
-            options: {
-              address: tokenAddress,
-              symbol: tokenSymbol,
-              decimals: tokenDecimals,
-              image: tokenImage,
-            },
-          },
-        });
-      } catch (error) {}
-    }
-  };
-
   return (
     <Disclosure as={Fragment}>
       {({ open }) => (
@@ -126,7 +100,7 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                       </span>
                     </MoreInfo>
                   </span>
-                  <Button onClick={() => metamaskAdd()} type="secondary">
+                  <Button onClick={() => metamaskAdd(jar, library)} type="secondary">
                     {t("v2.farms.metamaskAdd")}
                   </Button>
                 </div>

@@ -13,6 +13,7 @@ import Link from "v2/components/Link";
 import { BrineryWithData } from "v2/store/core";
 import DetailsToggle from "../farms/DetailsToggle";
 import FarmDocs from "../farms/FarmDocs";
+import { metamaskAdd } from "../farms/flows/utils";
 
 interface Props {
   brinery: BrineryWithData;
@@ -58,33 +59,6 @@ const BrineryTableRowDetails: FC<Props> = ({ brinery, hideDescription }) => {
 
   const totalTokensInBrinery = parseFloat(brinery.brineryBalance.tokens);
 
-  const metamaskAdd = async () => {
-    const tokenAddress = brinery.contract;
-    const tokenSymbol = `p${brinery.depositToken.name.replace(/[\s\/-]/g, "").substring(0, 10)}`;
-    const tokenDecimals = 18;
-    const tokenImage = new URL("/tokens/pickle.png", document.baseURI).href;
-
-    if (library?.provider.request !== undefined) {
-      try {
-        // Returns a boolean. Like any RPC method, an error may be thrown.
-        await library.provider.request({
-          method: "wallet_watchAsset",
-          params: {
-            // @ts-ignore
-            // https://github.com/ethers-io/ethers.js/issues/2576
-            type: "ERC20",
-            options: {
-              address: tokenAddress,
-              symbol: tokenSymbol,
-              decimals: tokenDecimals,
-              image: tokenImage,
-            },
-          },
-        });
-      } catch (error) {}
-    }
-  };
-
   return (
     <Disclosure as={Fragment}>
       {({ open }) => (
@@ -115,7 +89,7 @@ const BrineryTableRowDetails: FC<Props> = ({ brinery, hideDescription }) => {
                       </span>
                     </MoreInfo>
                   </span>
-                  <Button onClick={() => metamaskAdd()} type="secondary">
+                  <Button onClick={() => metamaskAdd(brinery, library)} type="secondary">
                     {t("v2.farms.metamaskAdd")}
                   </Button>
                 </div>
