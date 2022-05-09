@@ -42,19 +42,22 @@ const FarmsTable: FC<Props> = ({
                   />
 
                   <FarmsTableHeaderCellSortable
-                    sortType={SortType.Earned}
+                    sortType={singleAsset ? SortType.None : SortType.Earned}
                     label={t("v2.farms.earned")}
                   />
 
                   <FarmsTableHeaderCellSortable
-                    sortType={SortType.Deposited}
+                    sortType={singleAsset ? SortType.None : SortType.Deposited}
                     label={t("v2.farms.deposited")}
                   />
 
-                  <FarmsTableHeaderCellSortable sortType={SortType.Apy} label={t("v2.farms.apy")} />
+                  <FarmsTableHeaderCellSortable
+                    sortType={singleAsset ? SortType.None : SortType.Apy}
+                    label={t("v2.farms.apy")}
+                  />
 
                   <FarmsTableHeaderCellSortable
-                    sortType={SortType.Liquidity}
+                    sortType={singleAsset ? SortType.None : SortType.Liquidity}
                     label={t("v2.farms.liquidity")}
                   />
                   {/* Chevron down/up column */}
