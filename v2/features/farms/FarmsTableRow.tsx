@@ -7,17 +7,17 @@ import FarmsTableRowHeader from "./FarmsTableRowHeader";
 import BrineryTableRowHeader from "../brinery/BrineryTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
 import { BrineryWithData, JarWithData } from "v2/store/core";
+import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
   simple?: boolean;
   jar: JarWithData | BrineryWithData;
   userDillRatio: number;
   hideDescription?: boolean;
-  isBrinery?: boolean;
 }
 
-const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio, isBrinery }) => {
-  if (isBrinery)
+const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio }) => {
+  if (isBrinery(jar))
     return (
       <>
         <tr>

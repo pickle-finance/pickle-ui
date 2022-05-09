@@ -5,6 +5,7 @@ import { BrineryWithData, JarWithData } from "v2/store/core";
 import { ChainNetwork } from "picklefinance-core";
 import MoreInfo from "v2/components/MoreInfo";
 import { formatPercentage } from "v2/utils";
+import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
   jarOrBrinery: JarWithData | BrineryWithData;
@@ -15,13 +16,11 @@ const FarmAPY: FC<Props> = ({ jarOrBrinery, userDillRatio }) => {
   const { t } = useTranslation("common");
   let aprRangeString, pickleAprMin, pickleAprMax, pickleApr, userStakedNum, userApyString;
 
-  const isBrinery = !(jarOrBrinery as JarWithData).farm;
-
   // Discriminating the jarOrBrinery union type
   const jar = jarOrBrinery as JarWithData;
 
   // Case #1: only jar or brinery, no farm
-  if (isBrinery || !jar.farm?.details?.farmApyComponents) {
+  if (isBrinery(jarOrBrinery) || !jar.farm?.details?.farmApyComponents) {
     aprRangeString = formatPercentage(jar.aprStats?.apy || 0);
   } else {
     // Case #2: mainnet - show APR range for min/max DILL

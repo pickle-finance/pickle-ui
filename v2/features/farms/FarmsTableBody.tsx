@@ -85,7 +85,6 @@ const FarmsTableBody: FC<Props> = ({
             jar={brinery}
             simple={simple}
             userDillRatio={userDillRatio}
-            isBrinery={isBrinery}
           />
         ))}
       </>

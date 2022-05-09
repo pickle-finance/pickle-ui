@@ -15,6 +15,7 @@ import { useAccount, useNeedsNetworkSwitch } from "v2/hooks";
 import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
 import BrineryTableRowBodyTransactionControls from "../brinery/BrineryTableRowBodyTransactionControls";
 import BrineryTableRowDetails from "../brinery/BrineryTableRowDetails";
+import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
   jarOrBrinery: JarWithData | BrineryWithData;
@@ -32,7 +33,6 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
     ? "/v2/stats/jar?jar=" + jarOrBrinery.details.apiKey
     : undefined;
 
-  const isBrinery = !(jarOrBrinery as JarWithData).farm;
   const isUniV3 = jarOrBrinery.protocol === AssetProtocol.UNISWAP_V3;
   let token0Name, token1Name, userBalanceToken0, userBalanceToken1;
   if (isUniV3) {
@@ -45,7 +45,7 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
   }
 
   const renderAssetDetails = () => {
-    if (isBrinery)
+    if (isBrinery(jarOrBrinery))
       return (
         <BrineryTableRowDetails
           brinery={jarOrBrinery as BrineryWithData}
@@ -60,7 +60,7 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
   const renderTransactionControls = () => {
     if (isUniV3)
       return <FarmsTableRowBodyV3TransactionControls jar={jarOrBrinery as JarWithData} />;
-    if (isBrinery)
+    if (isBrinery(jarOrBrinery))
       return <BrineryTableRowBodyTransactionControls brinery={jarOrBrinery as BrineryWithData} />;
     // Default is farms control
     return <FarmsTableRowBodyTransactionControls jar={jarOrBrinery as JarWithData} />;
