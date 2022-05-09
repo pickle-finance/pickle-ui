@@ -12,11 +12,12 @@ import { isBrinery } from "v2/store/core.helpers";
 interface Props {
   simple?: boolean;
   jar: JarWithData | BrineryWithData;
+  dashboard?: boolean;
   userDillRatio: number;
   hideDescription?: boolean;
 }
 
-const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio }) => {
+const FarmsTableRow: FC<Props> = ({ jar, simple, dashboard, hideDescription, userDillRatio }) => {
   if (isBrinery(jar))
     return (
       <>
@@ -28,10 +29,12 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
             userDillRatio={userDillRatio}
           />
         </tr>
-        <FarmsTableRowBody jarOrBrinery={jar as BrineryWithData} hideDescription={hideDescription} />
+        <FarmsTableRowBody
+          jarOrBrinery={jar as BrineryWithData}
+          hideDescription={hideDescription}
+        />
       </>
     );
-
   if (simple)
     return (
       <>
@@ -40,6 +43,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
             open={false}
             simple={simple}
             jar={jar as JarWithData}
+            dashboard={dashboard}
             userDillRatio={userDillRatio}
           />
         </tr>
@@ -75,7 +79,10 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
               leaveTo="opacity-0"
             >
               <Disclosure.Panel as="tr">
-                <FarmsTableRowBody jarOrBrinery={jar as JarWithData} hideDescription={hideDescription} />
+                <FarmsTableRowBody
+                  jarOrBrinery={jar as JarWithData}
+                  hideDescription={hideDescription}
+                />
               </Disclosure.Panel>
             </Transition>
           </>

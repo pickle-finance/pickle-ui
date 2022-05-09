@@ -18,8 +18,9 @@ const hasBalances = (x: UserTokenData): boolean =>
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
+  dashboard?: boolean;
   sort?: Sort;
-  asset?: JarWithData;
+  singleAsset?: JarWithData;
   hideDescription?: boolean;
   isBrinery?: boolean;
 }
@@ -27,9 +28,10 @@ interface Props {
 const FarmsTableBody: FC<Props> = ({
   simple,
   requiresUserModel,
-  asset,
   hideDescription,
   isBrinery,
+  dashboard,
+  singleAsset,
 }) => {
   const { t } = useTranslation("common");
   const account = useAccount();
@@ -89,11 +91,11 @@ const FarmsTableBody: FC<Props> = ({
         ))}
       </>
     );
-  if (asset)
+  if (singleAsset)
     return (
       <FarmsTableRow
-        key={asset.details?.apiKey}
-        jar={asset}
+        key={singleAsset.details?.apiKey}
+        jar={singleAsset}
         simple={simple}
         hideDescription={hideDescription}
         userDillRatio={userDillRatio}
@@ -107,6 +109,7 @@ const FarmsTableBody: FC<Props> = ({
           key={jar.details.apiKey}
           jar={jar}
           simple={simple}
+          dashboard={dashboard}
           userDillRatio={userDillRatio}
         />
       ))}
