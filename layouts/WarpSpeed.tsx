@@ -23,6 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 // Custom polyfills
 import "core-js/proposals/string-match-all";
 import "core-js/stable/array/find-index";
+import ErrorBoundary from "v2/components/ErrorBoundary";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -41,17 +42,19 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
         <Confetti />
         <NavbarMobile />
         <LeftNavbar />
-        <main className="sm:pl-64">
-          <div className="px-4 py-2 sm:px-10 sm:py-10 text-foreground">
-            <TopNavbar PageTitle={PageTitle} />
-            <ConnectionStatus />
-            <Component {...pageProps} />
-            <div className="flex justify-between bg-background mt-4 mb-8">
-              <UserBalanceStatus showDetails />
-              <BlockNumber />
+        <ErrorBoundary>
+          <main className="sm:pl-64">
+            <div className="px-4 py-2 sm:px-10 sm:py-10 text-foreground">
+              <TopNavbar PageTitle={PageTitle} />
+              <ConnectionStatus />
+              <Component {...pageProps} />
+              <div className="flex justify-between bg-background mt-4 mb-8">
+                <UserBalanceStatus showDetails />
+                <BlockNumber />
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </ErrorBoundary>
         <CoreProvider />
         <DocsProvider />
         <OffchainVotesProvider />
