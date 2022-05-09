@@ -6,10 +6,17 @@ import { classNames } from "v2/utils";
 
 interface Props {
   open: boolean;
+  isBrinery?: boolean;
 }
 
-const DetailsToggle: FC<Props> = ({ open }) => {
+const DetailsToggle: FC<Props> = ({ open, isBrinery }) => {
   const { t } = useTranslation("common");
+
+  const renderText = () => {
+    if (open) return t("v2.actions.close");
+    if (isBrinery) return t("v2.brinery.seeBrineryDetails");
+    return t("v2.farms.seeFarmDetails");
+  };
 
   return (
     <div className="flex group pt-2 justify-center text-foreground-alt-200 hover:text-foreground-alt-300 cursor-pointer transition duration-300 ease-in-out">
@@ -21,7 +28,7 @@ const DetailsToggle: FC<Props> = ({ open }) => {
           )}
           aria-hidden="true"
         />
-        <span>{open ? t("v2.actions.close") : t("v2.farms.seeFarmDetails")}</span>
+        <span>{renderText()}</span>
       </div>
     </div>
   );

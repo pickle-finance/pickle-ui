@@ -4,17 +4,34 @@ import { Disclosure, Transition } from "@headlessui/react";
 import { classNames } from "v2/utils";
 import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
+import BrineryTableRowHeader from "../brinery/BrineryTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
-import { JarWithData } from "v2/store/core";
+import { BrineryWithData, JarWithData } from "v2/store/core";
+import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
   simple?: boolean;
-  jar: JarWithData;
+  jar: JarWithData | BrineryWithData;
   userDillRatio: number;
   hideDescription?: boolean;
 }
 
 const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio }) => {
+  if (isBrinery(jar))
+    return (
+      <>
+        <tr>
+          <BrineryTableRowHeader
+            open={true}
+            simple={simple}
+            brinery={jar as BrineryWithData}
+            userDillRatio={userDillRatio}
+          />
+        </tr>
+        <FarmsTableRowBody jarOrBrinery={jar as BrineryWithData} hideDescription={hideDescription} />
+      </>
+    );
+
   if (simple)
     return (
       <>
@@ -22,7 +39,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
           <FarmsTableRowHeader
             open={false}
             simple={simple}
-            jar={jar}
+            jar={jar as JarWithData}
             userDillRatio={userDillRatio}
           />
         </tr>
@@ -43,7 +60,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
               <FarmsTableRowHeader
                 open={open}
                 simple={simple}
-                jar={jar}
+                jar={jar as JarWithData}
                 userDillRatio={userDillRatio}
               />
             </Disclosure.Button>
@@ -58,7 +75,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
               leaveTo="opacity-0"
             >
               <Disclosure.Panel as="tr">
-                <FarmsTableRowBody jar={jar} hideDescription={hideDescription} />
+                <FarmsTableRowBody jarOrBrinery={jar as JarWithData} hideDescription={hideDescription} />
               </Disclosure.Panel>
             </Transition>
           </>

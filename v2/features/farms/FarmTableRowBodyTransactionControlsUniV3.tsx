@@ -85,10 +85,11 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             storeAttribute="farmAllowance"
             chainName={jar.chain}
             visible={!userHasFarmAllowance}
+            type="farm"
           />
           {userHasFarmAllowance && (
             <div className="grid grid-cols-2 gap-3">
-              <DepositFlow jar={jar} balances={userTokenData} />
+              <DepositFlow jarOrBrinery={jar} balances={userTokenData} type="jar"/>
               <WithdrawFlow jar={jar} balances={userTokenData} />
             </div>
           )}

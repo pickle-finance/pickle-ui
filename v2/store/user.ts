@@ -2,7 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 import { ChainNetwork } from "picklefinance-core";
-import { IUserDillStats, UserData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import {
+  UserBrineries,
+  IUserDillStats,
+  UserData,
+  UserTokenData,
+  UserBrineryData,
+} from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
 import { baseTokenObject, normalizedData } from "./user.helpers";
@@ -113,6 +119,24 @@ const userSlice = createSlice({
 
       state.accounts[account] = accountData;
     },
+
+    setBrineryData: (
+      state,
+      action: PayloadAction<{ account: string; apiKey: string; data: Partial<UserBrineryData> }>,
+    ) => {
+      const { account, apiKey, data } = action.payload;
+      const accountData = state.accounts[account];
+
+      if (!accountData) return;
+
+      accountData.data.brineries[apiKey.toLowerCase()] = {
+        ...accountData.data.brineries[apiKey.toLowerCase()],
+        ...data,
+      };
+
+      state.accounts[account] = accountData;
+    },
+
     addHarvestedPickles: (
       state,
       action: PayloadAction<{ account: string; chain: ChainNetwork; amount: string }>,
@@ -149,6 +173,7 @@ const {
   setDillData,
   setTokenData,
   setTokens,
+  setBrineryData,
 } = userSlice.actions;
 export const UserActions = {
   addHarvestedPickles,
@@ -158,6 +183,7 @@ export const UserActions = {
   setIsFetching,
   setTokens,
   setTokenData,
+  setBrineryData,
 };
 
 /**
@@ -179,6 +205,15 @@ const selectTokenDataById = (
 
   return state.user.accounts[account]?.data?.tokens[apiKey.toLowerCase()];
 };
+const selectBrineryDataById = (
+  state: RootState,
+  apiKey: string,
+  account: string | null | undefined,
+) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.data?.brineries[apiKey.toLowerCase()];
+};
 const selectUpdatedAt = (state: RootState, account: string | null | undefined) => {
   if (!account) return;
 
@@ -191,6 +226,7 @@ export const UserSelectors = {
   selectNonce,
   selectTokenDataById,
   selectUpdatedAt,
+  selectBrineryDataById,
 };
 
 export default userSlice.reducer;

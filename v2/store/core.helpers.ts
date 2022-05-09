@@ -8,7 +8,7 @@ import {
   StandaloneFarmDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
-import { JarWithData } from "./core";
+import { BrineryWithData, JarWithData } from "./core";
 
 export type Asset = JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition;
 
@@ -38,6 +38,9 @@ export const findJar = (
 
   return core.assets.jars.find((jar) => jar.details?.apiKey.toUpperCase() === apiKey.toUpperCase());
 };
+
+export const isBrinery = (asset: Asset | undefined): asset is BrineryWithData =>
+  asset?.type === "brinery";
 
 export const findAsset = (apiKey: string, core: PickleModelJson): Asset | undefined => {
   const assets = allAssets(core);

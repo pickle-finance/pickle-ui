@@ -1,22 +1,26 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
-import { JarWithData } from "v2/store/core";
+import { BrineryWithData, JarWithData } from "v2/store/core";
 import { ChainNetwork } from "picklefinance-core";
 import MoreInfo from "v2/components/MoreInfo";
 import { formatPercentage } from "v2/utils";
+import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
-  jar: JarWithData;
+  jarOrBrinery: JarWithData | BrineryWithData;
   userDillRatio: number;
 }
 
-const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
+const FarmAPY: FC<Props> = ({ jarOrBrinery, userDillRatio }) => {
   const { t } = useTranslation("common");
-  let aprRangeString, pickleAprMin, pickleAprMax, pickleApr;
+  let aprRangeString, pickleAprMin, pickleAprMax, pickleApr, userStakedNum, userApyString;
 
-  // Case #1: only jar, no farm
-  if (!jar.farm?.details?.farmApyComponents) {
+  // Discriminating the jarOrBrinery union type
+  const jar = jarOrBrinery as JarWithData;
+
+  // Case #1: only jar or brinery, no farm
+  if (isBrinery(jarOrBrinery) || !jar.farm?.details?.farmApyComponents) {
     aprRangeString = formatPercentage(jar.aprStats?.apy || 0);
   } else {
     // Case #2: mainnet - show APR range for min/max DILL
@@ -26,25 +30,25 @@ const FarmAPY: FC<Props> = ({ jar, userDillRatio }) => {
       const aprMin = (jar.aprStats?.apy || 0) + pickleAprMin;
       const aprMax = (jar.aprStats?.apy || 0) + pickleAprMax;
       aprRangeString = `${formatPercentage(aprMin)} ~ ${formatPercentage(aprMax)}`;
+
+      userStakedNum =
+        parseFloat(jar.depositTokensInFarm?.tokens || "0") +
+        parseFloat(jar.depositTokensInJar?.tokens || "0");
+      const userDerivedBalance = userStakedNum * 0.4;
+      const userAdjustedBalance = (jar.farm?.details?.tokenBalance || 0) * userDillRatio * 0.6;
+      const userAdjustedPickleApy =
+        ((jar.farm?.details?.farmApyComponents?.[0]?.maxApr || 0) *
+          Math.min(userStakedNum, userDerivedBalance + userAdjustedBalance)) /
+        (userStakedNum || 1);
+
+      const userApy = userAdjustedPickleApy + (jar.aprStats?.apy || 0);
+      userApyString = t("v2.farms.yourApy", { apy: formatPercentage(userApy || 0) });
     } else {
       // Case #3: sidechain with pickle farm
       pickleApr = jar.farm.details.farmApyComponents[0]?.apr;
       aprRangeString = formatPercentage((jar.aprStats?.apy || 0) + (pickleApr || 0));
     }
   }
-
-  const userStakedNum =
-    parseFloat(jar.depositTokensInFarm?.tokens || "0") +
-    parseFloat(jar.depositTokensInJar?.tokens || "0");
-  const userDerivedBalance = userStakedNum * 0.4;
-  const userAdjustedBalance = (jar.farm?.details?.tokenBalance || 0) * userDillRatio * 0.6;
-  const userAdjustedPickleApy =
-    ((jar.farm?.details?.farmApyComponents?.[0]?.maxApr || 0) *
-      Math.min(userStakedNum, userDerivedBalance + userAdjustedBalance)) /
-    (userStakedNum || 1);
-
-  const userApy = userAdjustedPickleApy + (jar.aprStats?.apy || 0);
-  const userApyString = t("v2.farms.yourApy", { apy: formatPercentage(userApy || 0) });
 
   const { aprStats } = jar;
   const difference = (aprStats?.apy || 0) - (aprStats?.apr || 0);

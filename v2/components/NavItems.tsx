@@ -6,6 +6,7 @@ import {
   SpeakerphoneIcon,
   TemplateIcon,
   UserGroupIcon,
+  HeartIcon
 } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
 
@@ -26,6 +27,7 @@ const NavItems: FC<Props> = ({ onClick }) => {
       icon: LightningBoltIcon,
     },
     { name: t("v2.nav.dill"), href: "/v2/dill", icon: UserGroupIcon },
+    { name: t("v2.nav.brinery"), href: "/v2/brinery", icon: HeartIcon },
     { name: t("v2.nav.stats"), href: "/v2/stats", icon: ChartBarIcon },
     { name: t("v2.nav.faq"), href: "#", icon: QuestionMarkCircleIcon },
     { name: t("v2.nav.feedback"), href: "#", icon: SpeakerphoneIcon },

@@ -1,6 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import {
   AssetProtocol,
+  BrineryDefinition,
   JarDefinition,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
@@ -8,6 +9,7 @@ import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber, formatNumber } from "../format";
 import { tokenDecimals } from "v2/store/core.helpers";
+import { parseEther } from "ethers/lib/utils";
 
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -25,6 +27,13 @@ export interface UserAssetDataWithPrices {
   walletComponentTokens: {
     [key: string]: UserAssetDataWithPricesComponent;
   };
+}
+
+export interface UserBrineryDataWithPrices {
+  assetId: string;
+  depositTokensInWallet: UserAssetDataWithPricesComponent;
+  brineryBalance: UserAssetDataWithPricesComponent;
+  earnedRewards: UserAssetDataWithPricesComponent;
 }
 
 const userAssetDataZeroComponent = (): UserAssetDataWithPricesComponent => ({
@@ -46,8 +55,10 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber.toString());
-  
+  const weiMulPrice = depositTokenWei
+    .mul(tokenPriceWithPrecision)
+    .div(precisionAsNumber.toString());
+
   return {
     wei: depositTokenWei,
     tokens: bigNumberToTokenNumber(depositTokenWei, decimals, decimals).toString(),
@@ -63,6 +74,13 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => ({
   depositTokensInFarm: userAssetDataZeroComponent(),
   earnedPickles: userAssetDataZeroComponent(),
   walletComponentTokens: {},
+});
+
+const userBrineryDataZeroEverything = (): UserBrineryDataWithPrices => ({
+  assetId: "",
+  depositTokensInWallet: userAssetDataZeroComponent(),
+  brineryBalance: userAssetDataZeroComponent(),
+  earnedRewards: userAssetDataZeroComponent(),
 });
 
 export const jarDecimals = (jar: JarDefinition): number =>
@@ -153,5 +171,49 @@ export const getUserAssetDataWithPrices = (
     depositTokensInJar: jarComponent,
     depositTokensInFarm: farmComponent,
     walletComponentTokens,
+  };
+};
+
+export const getUserBrineryDataWithPrices = (
+  brinery: BrineryDefinition,
+  core: PickleModelJson | undefined,
+  userModel: UserData | undefined,
+): UserBrineryDataWithPrices => {
+  if (core === undefined || userModel === undefined) {
+    return userBrineryDataZeroEverything();
+  }
+
+  const userBrineryDetails = userModel.brineries[brinery.details.apiKey.toLowerCase()];
+
+  const depositToken = core.tokens.find(
+    (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
+  );
+
+  const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.depositTokenBalance || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  const brineryBalance: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.balance || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  const earnedRewards: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.claimable || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  return {
+    assetId: brinery.details.apiKey,
+    depositTokensInWallet: wallet,
+    brineryBalance,
+    earnedRewards,
   };
 };

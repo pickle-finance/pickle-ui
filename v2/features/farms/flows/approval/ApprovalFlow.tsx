@@ -2,7 +2,11 @@ import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
-import { IUserDillStats, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import {
+  UserBrineryData,
+  IUserDillStats,
+  UserTokenData,
+} from "picklefinance-core/lib/client/UserModel";
 import { ChainNetwork, Chains } from "picklefinance-core";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -20,14 +24,17 @@ import { UserActions } from "v2/store/user";
 import { ApprovalEvent } from "containers/Contracts/Erc20";
 import { eventsByName } from "../utils";
 
+type ApprovalType = "jar" | "farm" | "dill" | "brinery";
+
 interface Props {
   apiKey?: string;
   tokenAddress: string;
   tokenName: string | undefined;
   spenderAddress: string | undefined;
-  storeAttribute: keyof UserTokenData | keyof IUserDillStats;
+  storeAttribute: keyof UserTokenData | keyof IUserDillStats | keyof UserBrineryData;
   chainName: ChainNetwork;
   visible: boolean;
+  type: ApprovalType;
 }
 
 const ApprovalFlow: FC<Props> = ({
@@ -38,6 +45,7 @@ const ApprovalFlow: FC<Props> = ({
   storeAttribute,
   chainName,
   visible,
+  type,
 }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -61,11 +69,21 @@ const ApprovalFlow: FC<Props> = ({
     const approvedAmount = approvalEvents[0].args[2];
 
     // No apiKey implicitly means DILL approval.
-    if (!apiKey) {
+    if (!apiKey || type === "dill") {
       dispatch(
         UserActions.setDillData({ account, data: { [storeAttribute]: approvedAmount.toString() } }),
       );
+      return;
+    }
 
+    if (type === "brinery") {
+      dispatch(
+        UserActions.setBrineryData({
+          account,
+          apiKey: apiKey,
+          data: { [storeAttribute]: approvedAmount.toString() },
+        }),
+      );
       return;
     }
 
