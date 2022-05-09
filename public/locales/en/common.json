@@ -430,6 +430,7 @@
       "weeklyPickleAmount": "Weekly PICKLEs distributed",
       "yourShare": "{{ percentage }} of total DILL"
     },
+    "error": "An unexpected error has occured. Try refreshing the page. If the error persists contact the pickle team on Discord. Simply click the link to the Pickle server below and head to the support channel.",
     "farms": {
       "allApproved": "All approved!",
       "approvalBalanceError": "Please get your hands on some deposit tokens first!",
