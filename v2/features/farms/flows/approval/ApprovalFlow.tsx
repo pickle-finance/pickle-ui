@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import {
-  IUserBrineryStats,
+  UserBrineryData,
   IUserDillStats,
   UserTokenData,
 } from "picklefinance-core/lib/client/UserModel";
@@ -31,7 +31,7 @@ interface Props {
   tokenAddress: string;
   tokenName: string | undefined;
   spenderAddress: string | undefined;
-  storeAttribute: keyof UserTokenData | keyof IUserDillStats | keyof IUserBrineryStats;
+  storeAttribute: keyof UserTokenData | keyof IUserDillStats | keyof UserBrineryData;
   chainName: ChainNetwork;
   visible: boolean;
   type: ApprovalType;

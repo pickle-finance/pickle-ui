@@ -3,10 +3,11 @@ import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 import { ChainNetwork } from "picklefinance-core";
 import {
-  IUserBrineryStats,
+  UserBrineries,
   IUserDillStats,
   UserData,
   UserTokenData,
+  UserBrineryData,
 } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
@@ -121,7 +122,7 @@ const userSlice = createSlice({
 
     setBrineryData: (
       state,
-      action: PayloadAction<{ account: string; apiKey: string; data: Partial<IUserBrineryStats> }>,
+      action: PayloadAction<{ account: string; apiKey: string; data: Partial<UserBrineryData> }>,
     ) => {
       const { account, apiKey, data } = action.payload;
       const accountData = state.accounts[account];

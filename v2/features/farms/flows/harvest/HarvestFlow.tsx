@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ChainNetwork } from "picklefinance-core";
+import { UserBrineryData } from "picklefinance-core/lib/client/UserModel";
+import { BrineryDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 import Button, { ButtonSize, ButtonType } from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -28,8 +30,6 @@ import { useDistributorContract } from "v2/features/dill/flows/hooks";
 import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
-import { IUserBrineryStats } from "picklefinance-core/lib/client/UserModel";
-import { BrineryDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 export type Rewarder = "farm" | "dill" | "brinery";
 
@@ -41,7 +41,7 @@ interface Props {
   network: ChainNetwork;
   rewarderType: Rewarder;
   showNetworkSwitch?: boolean;
-  balances?: IUserBrineryStats | undefined;
+  balances?: UserBrineryData | undefined;
 }
 
 /**

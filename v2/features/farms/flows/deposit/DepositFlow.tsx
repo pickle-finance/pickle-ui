@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { Chains } from "picklefinance-core";
-import { IUserBrineryStats, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { UserBrineryData, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
@@ -30,7 +30,7 @@ type DepositType = "jar" | "brinery";
 
 interface Props {
   jarOrBrinery: JarWithData | BrineryWithData;
-  balances: UserTokenData | IUserBrineryStats | undefined;
+  balances: UserTokenData | UserBrineryData | undefined;
   type: DepositType;
 }
 
@@ -73,7 +73,7 @@ const DepositFlow: FC<Props> = ({ jarOrBrinery, balances, type }) => {
       .toString();
 
     if (type === "brinery") {
-      const brineryBalance = (balances as IUserBrineryStats)?.balance || "0";
+      const brineryBalance = (balances as UserBrineryData)?.balance || "0";
       const newBrineryBalance = BigNumber.from(brineryBalance)
         .add(pTokenTransferEvent.args.value)
         .toString();
