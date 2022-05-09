@@ -42,7 +42,7 @@ const Stats: PickleFinancePage = () => {
         <Back router={router} chain={asset ? asset.chain : "eth"} text={t("v2.stats.jar.back")} />
         <div className="mb-5">
           {asset && asset.depositTokensInJar && (
-            <FarmsTable asset={asset} singleAsset={true} hideDescription={true} />
+            <FarmsTable singleAsset={asset} hideDescription={true} />
           )}
         </div>
         <ChartContainer jarData={jarData} />

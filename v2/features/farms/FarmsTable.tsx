@@ -11,17 +11,17 @@ import Pagination from "./Pagination";
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
+  dashboard?: boolean;
   title?: string;
-  asset?: JarWithData;
-  singleAsset?: boolean;
+  singleAsset?: JarWithData;
   hideDescription?: boolean;
 }
 
 const FarmsTable: FC<Props> = ({
   simple,
+  dashboard,
   title,
   requiresUserModel,
-  asset,
   singleAsset,
   hideDescription,
 }) => {
@@ -66,8 +66,9 @@ const FarmsTable: FC<Props> = ({
               <tbody className="text-foreground">
                 <FarmsTableBody
                   simple={simple}
+                  dashboard={dashboard}
                   requiresUserModel={requiresUserModel}
-                  asset={asset}
+                  singleAsset={singleAsset}
                   hideDescription={hideDescription}
                 />
               </tbody>
