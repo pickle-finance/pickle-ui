@@ -1,7 +1,4 @@
-import { FC, HTMLAttributes } from "react";
-import Image from "next/image";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-import { BrineryDefinition, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import { classNames, formatDollars } from "v2/utils";
@@ -9,9 +6,7 @@ import FarmsBadge from "../farms/FarmsBadge";
 import { useSelector } from "react-redux";
 import { BrineryWithData, CoreSelectors, JarWithData } from "v2/store/core";
 import FarmComponentsIcons from "../farms/FarmComponentsIcons";
-import { Network } from "../connection/networks";
 import FarmAPY from "../farms/FarmAPY";
-import { formatImagePath } from "../farms/flows/utils";
 import RowCell from "v2/components/RowCell";
 import ChainProtocol from "v2/components/ChainProtocol";
 

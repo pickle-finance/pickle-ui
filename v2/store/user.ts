@@ -128,12 +128,12 @@ const userSlice = createSlice({
 
       if (!accountData) return;
 
-      const brineryIndex = accountData.data.brineries.findIndex((x) => x.assetKey === apiKey);
-
-      accountData.data.brineries[brineryIndex] = {
-        ...accountData.data.brineries[brineryIndex],
+      accountData.data.brineries[apiKey.toLowerCase()] = {
+        ...accountData.data.brineries[apiKey.toLowerCase()],
         ...data,
       };
+
+      state.accounts[account] = accountData;
     },
 
     addHarvestedPickles: (
@@ -211,7 +211,7 @@ const selectBrineryDataById = (
 ) => {
   if (!account) return;
 
-  return state.user.accounts[account]?.data?.brineries.find((x) => x.assetKey === apiKey);
+  return state.user.accounts[account]?.data?.brineries[apiKey.toLowerCase()];
 };
 const selectUpdatedAt = (state: RootState, account: string | null | undefined) => {
   if (!account) return;
