@@ -108,7 +108,7 @@ export const rareThemes: CurrentTheme[] = Object.keys(themes)
     label: name,
   }));
 
-const currentTheme = (options: ThemeState): Theme => {
+export const currentTheme = (options: ThemeState): Theme => {
   const { type, current } = options;
 
   switch (type) {

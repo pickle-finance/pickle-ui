@@ -12,17 +12,19 @@ const AssetTable: FC<{ assets: ChainAssetData; core: PickleModelJson.PickleModel
   let assetKeys: string[] = assets ? Object.keys(assets) : [];
   const activeJarKeys = assetKeys.filter((key) => {
     let thisJar = core.assets.jars.find((j) => j.details?.apiKey === key);
-    if (thisJar?.enablement !== AssetEnablement.PERMANENTLY_DISABLED) return key;
-    else console.log(key);
+    if (
+      thisJar?.enablement !== AssetEnablement.PERMANENTLY_DISABLED &&
+      key.slice(-3).toLowerCase() !== "old"
+    )
+      return key;
   });
 
   return (
-    <table className="w-full">
+    <table className="min-w-full table-auto">
       <AssetTableHead />
       <tbody className="border border-foreground-alt-400">
         {activeJarKeys.map((key) => {
-          if (key.slice(-3).toLowerCase() !== "old")
-            return <AssetRow key={key} assetKey={key} asset={assets[key]} />;
+          return <AssetRow key={key} assetKey={key} asset={assets[key]} />;
         })}
       </tbody>
     </table>
