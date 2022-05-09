@@ -48,8 +48,8 @@ const ErrorMessage: FC<{ className?: string }> = ({ className }) => {
           <p className="break-normal text-accent">{t("v2.error")}</p>
         </div>
         <div className="text-center">
-          <Link className="mt-10" href="https://discord.gg/XpJZ8vwS" external>
-            <p className="on-hover:text-primary-light">https://discord.gg/XpJZ8vwS</p>
+          <Link className="mt-10" href="https://discord.gg/pickle-finance" external>
+            <p className="on-hover:text-primary-light">discord.gg/pickle-finance</p>
           </Link>
         </div>
       </div>
