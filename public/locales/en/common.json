@@ -526,7 +526,8 @@
       "next": "Next",
       "openMenu": "Open main menu",
       "previous": "Prev",
-      "stats": "Stats"
+      "stats": "Stats",
+      "vote": "Vote"
     },
     "stats": {
       "chain": {

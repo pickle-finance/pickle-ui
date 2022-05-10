@@ -10,9 +10,9 @@ import { UserSelectors } from "v2/store/user";
 import PickleToastContainer from "v2/components/PickleToastContainer";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 
-import VoteWeightCharts from "v2/features/dill/vote/Charts";
-import MainnetVote from "v2/features/dill/vote/MainnetVote";
-import OffchainVote from "v2/features/dill/vote/OffchainVote";
+import VoteWeightCharts from "v2/features/vote/Charts";
+import MainnetVote from "v2/features/vote/MainnetVote";
+import OffchainVote from "v2/features/vote/OffchainVote";
 import { useAppSelector } from "v2/store";
 import { useAccount } from "v2/hooks";
 import ConnectButton from "v2/features/farms/ConnectButton";
@@ -84,6 +84,6 @@ const SwitchToMainnet: FC<{ t: TFunction }> = ({ t }) => (
 
 Vote.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../../util/locales";
+export { getStaticProps } from "../../util/locales";
 
 export default Vote;
