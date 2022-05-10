@@ -3,19 +3,18 @@ import { useTranslation } from "next-i18next";
 import { AssetEnablement, AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 import { InformationCircleIcon } from "@heroicons/react/solid";
 
-import { useAppSelector } from "v2/store";
 import Link from "v2/components/Link";
-import { BrineryWithData, CoreSelectors, JarWithData } from "v2/store/core";
-import { UserSelectors } from "v2/store/user";
-import { getUserAssetDataWithPrices } from "v2/utils/user";
+
+import { BrineryWithData, JarWithData } from "v2/store/core";
 import FarmsTableRowDetails from "./FarmsTableRowDetails";
 import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionControls";
 import ConnectButton from "./ConnectButton";
-import { useAccount, useNeedsNetworkSwitch } from "v2/hooks";
+import { useNeedsNetworkSwitch } from "v2/hooks";
 import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
 import BrineryTableRowBodyTransactionControls from "../brinery/BrineryTableRowBodyTransactionControls";
 import BrineryTableRowDetails from "../brinery/BrineryTableRowDetails";
 import { isBrinery } from "v2/store/core.helpers";
+import NextLink from "next/link";
 
 interface Props {
   jarOrBrinery: JarWithData | BrineryWithData;
@@ -99,7 +98,7 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
           </Link>
           <br />
           {analyticsUrl && (
-            <Link href={analyticsUrl as string} className="font-bold" external primary>
+            <Link href={analyticsUrl as string} className="font-bold" primary>
               {t("v2.farms.statsAndDocs")}
             </Link>
           )}
