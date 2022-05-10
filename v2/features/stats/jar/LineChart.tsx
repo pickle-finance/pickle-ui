@@ -26,6 +26,8 @@ const Chart: FC<{ chartKey: string; data: JarChartData; timeUnit: string }> = ({
   if (chartKey === "ptokensInFarm") {
     chartData = chartData.map(pTokenPct);
   }
+  if (chartKey === "value") chartData = chartData.filter((a) => a.value !== 0);
+
   const dataMax = getDataMax(chartData, chartKey);
   const dataMin = getDataMin(chartData, chartKey);
 
