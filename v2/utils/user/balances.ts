@@ -76,8 +76,8 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => ({
   walletComponentTokens: {},
 });
 
-const userBrineryDataZeroEverything = (): UserBrineryDataWithPrices => ({
-  assetId: "",
+const userBrineryDataZeroEverything = (assetId: string): UserBrineryDataWithPrices => ({
+  assetId: assetId,
   depositTokensInWallet: userAssetDataZeroComponent(),
   brineryBalance: userAssetDataZeroComponent(),
   earnedRewards: userAssetDataZeroComponent(),
@@ -179,14 +179,11 @@ export const getUserBrineryDataWithPrices = (
   core: PickleModelJson | undefined,
   userModel: UserData | undefined,
 ): UserBrineryDataWithPrices => {
-  if (core === undefined || userModel === undefined) {
-    return userBrineryDataZeroEverything();
-  }
   const brineryKey = brinery && brinery.details && brinery.details.apiKey ? brinery.details.apiKey.toLowerCase() : undefined;
-  if( userModel.brineries === undefined || brineryKey === undefined ) {
-    return userBrineryDataZeroEverything();
+  if (core === undefined || userModel === undefined || userModel.brineries === undefined || brineryKey === undefined) {
+    return userBrineryDataZeroEverything(brineryKey || "");
   }
-  
+
   const userBrineryDetails = userModel.brineries[brineryKey];
   const depositToken = core.tokens.find(
     (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
