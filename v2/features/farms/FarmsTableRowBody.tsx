@@ -98,11 +98,6 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
           </Link>
           <br />
           {analyticsUrl && (
-            // <NextLink href={analyticsUrl as string}>
-            //   <a className="text-accent group inline-flex items-center text-sm rounded-lg hover:text-primary-light transition duration-300 ease-in-out">
-            //     {t("v2.farms.statsAndDocs")}
-            //   </a>
-            // </NextLink>
             <Link href={analyticsUrl as string} className="font-bold" primary>
               {t("v2.farms.statsAndDocs")}
             </Link>
