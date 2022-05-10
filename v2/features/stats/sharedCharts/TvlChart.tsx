@@ -15,7 +15,9 @@ import { TvlData } from "v2/types";
 
 const Chart: FC<{ data: TvlData[] | undefined }> = ({ data }) => {
   const { t } = useTranslation("common");
-  const chartData = data ? data.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)) : undefined;
+  const chartData = data
+    ? data.filter(filterZero).sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+    : undefined;
   const dataMax: number | undefined = chartData ? getDataMax(chartData) : undefined;
 
   if (chartData && dataMax)
@@ -74,6 +76,10 @@ const Chart: FC<{ data: TvlData[] | undefined }> = ({ data }) => {
       </ResponsiveContainer>
     );
   return <></>;
+};
+
+const filterZero = (data: TvlData): TvlData | void => {
+  if (data.value !== 0) return data;
 };
 
 const getDataMax = (o: any[]): number => {
