@@ -6,8 +6,8 @@ import dayjs from "dayjs";
 import IncreaseLockDateModal from "v2/features/dill/IncreaseLockDateModal";
 import Button from "v2/components/Button";
 import DillCard from "./DillCard";
-let duration = require('dayjs/plugin/duration')
-dayjs.extend(duration)
+let duration = require("dayjs/plugin/duration");
+dayjs.extend(duration);
 
 interface Props {
   dill: IUserDillStats;
@@ -18,8 +18,8 @@ const UnlockDate: FC<Props> = ({ dill }) => {
   const lockEnd = parseFloat(dill?.lockEnd) ? dayjs.unix(parseFloat(dill?.lockEnd)) : undefined;
   const date1 = dayjs(Date.now());
   const date2 = dayjs(lockEnd);
-  
-  const du = dayjs.duration(date2.diff(date1))
+
+  const du = dayjs.duration(date2.diff(date1));
   const years = du.$d.years;
   const months = du.$d.months;
   const days = du.$d.days;
@@ -56,8 +56,10 @@ const UnlockDate: FC<Props> = ({ dill }) => {
           </Button>
         </div>
         <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-        {/* {`${dayjs(lockEnd).diff(Date.now(),'days')} days`} */}
-          {`${years} years, ${months} months, ${days} days`}
+          {years ? `${years} years` : months || days ? " , " : ""}
+          {months ? `${months} months` : days ? " , " : ""}
+          {days ? `${days}` : ""}
+          {years || months || days ? "" : "No Time Lock found"}
         </h1>
       </aside>
       {Boolean(parseFloat(dill?.pickleLocked)) && (

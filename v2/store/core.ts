@@ -286,6 +286,11 @@ const selectPicklePrice = (state: RootState): number => {
 
   return prices ? prices["pickle"] : 0;
 };
+const selectETHPrice = (state: RootState): number => {
+  const prices = selectPrices(state);
+
+  return prices ? prices["weth"] : 0;
+};
 const selectPrices = (state: RootState) => state.core.data?.prices;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
@@ -300,6 +305,7 @@ export const CoreSelectors = {
   selectNetworks,
   selectPicklePrice,
   selectTimestamp,
+  selectETHPrice,
 };
 
 export default coreSlice.reducer;

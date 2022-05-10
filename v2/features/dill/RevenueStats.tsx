@@ -83,14 +83,14 @@ const RevenueStats: FC<Props> = ({ dill }) => {
               <p className="font-bold text-primary">{`${t("Rewards")}`}</p>
               {
                 <div className="flex justify-between items-end">
-                  <div className="font-bold text-foreground mr-2">ETH:</div>
-                  <div className="text-foreground">{formatPercentage(ethRewards)}</div>
+                  <div className="font-bold text-foreground text-xs mr-2">ETH:</div>
+                  <div className="text-foreground text-xs">{formatPercentage(ethRewards)}</div>
                 </div>
               }
               {
                 <div className="flex justify-between items-end">
-                  <div className="font-bold text-foreground mr-2">PICKLE:</div>
-                  <div className="text-foreground">{formatPercentage(pickleRewards)}</div>
+                  <div className="font-bold text-foreground text-xs mr-2">PICKLE:</div>
+                  <div className="text-foreground text-xs">{formatPercentage(pickleRewards)}</div>
                 </div>
               }
             </MoreInfo>
