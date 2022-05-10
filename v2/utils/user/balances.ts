@@ -184,8 +184,7 @@ export const getUserBrineryDataWithPrices = (
     return userBrineryDataZeroEverything(brineryKey || "");
   }
 
-  const userBrineryDetails = userModel.brineries[ brinery.details.apiKey.toLowerCase() ];
-
+  const userBrineryDetails = userModel.brineries[brineryKey];
   const depositToken = core.tokens.find(
     (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
   );
