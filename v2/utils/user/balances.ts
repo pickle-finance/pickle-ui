@@ -182,9 +182,12 @@ export const getUserBrineryDataWithPrices = (
   if (core === undefined || userModel === undefined) {
     return userBrineryDataZeroEverything();
   }
-
-  const userBrineryDetails = userModel.brineries[brinery.details.apiKey.toLowerCase()];
-
+  const brineryKey = brinery && brinery.details && brinery.details.apiKey ? brinery.details.apiKey.toLowerCase() : undefined;
+  if( userModel.brineries === undefined || brineryKey === undefined ) {
+    return userBrineryDataZeroEverything();
+  }
+  
+  const userBrineryDetails = userModel.brineries[brineryKey];
   const depositToken = core.tokens.find(
     (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
   );
