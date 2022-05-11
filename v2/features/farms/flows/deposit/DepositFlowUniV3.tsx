@@ -70,13 +70,13 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
     if (!JarContract) return;
 
     const amount0 = ethers.utils.parseUnits(
-      truncateToMaxDecimals(current.context.amount),
+      truncateToMaxDecimals(current.context.amount || "0"),
       token0Decimals,
     );
 
     const amount1 = ethers.utils.parseUnits(
       truncateToMaxDecimals(current.context.amount1 || "0"),
-      token0Decimals,
+      token1Decimals,
     );
 
     // Non-Frax UniV3 jars have an extra bool argument for zapping
