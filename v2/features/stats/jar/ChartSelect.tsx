@@ -71,10 +71,6 @@ const CHARTS = [
     label: "Farm Allocation Share",
   },
   {
-    value: "farmPicklePerDay",
-    label: "Farm Pickle Per Day",
-  },
-  {
     value: "harvestable",
     label: "Harvestable",
   },

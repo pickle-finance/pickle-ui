@@ -25,7 +25,7 @@ export interface UserAssetDataWithPrices {
   depositTokensInFarm: UserAssetDataWithPricesComponent;
   earnedPickles: UserAssetDataWithPricesComponent;
   walletComponentTokens: {
-    [key: string]: UserAssetDataWithPricesComponent;
+    [ key: string ]: UserAssetDataWithPricesComponent;
   };
 }
 
@@ -76,8 +76,8 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => ({
   walletComponentTokens: {},
 });
 
-const userBrineryDataZeroEverything = (): UserBrineryDataWithPrices => ({
-  assetId: "",
+const userBrineryDataZeroEverything = (assetId: string): UserBrineryDataWithPrices => ({
+  assetId: assetId,
   depositTokensInWallet: userAssetDataZeroComponent(),
   brineryBalance: userAssetDataZeroComponent(),
   earnedRewards: userAssetDataZeroComponent(),
@@ -87,8 +87,8 @@ export const jarDecimals = (jar: JarDefinition): number =>
   jar.details.decimals
     ? jar.details.decimals
     : jar.depositToken.decimals
-    ? jar.depositToken.decimals
-    : 18;
+      ? jar.depositToken.decimals
+      : 18;
 
 export const getUserAssetDataWithPrices = (
   jar: JarDefinition,
@@ -98,7 +98,7 @@ export const getUserAssetDataWithPrices = (
   if (core === undefined || userModel === undefined) {
     return userAssetDataZeroEverything();
   }
-  const userTokenDetails = userModel.tokens[jar.details.apiKey.toLowerCase()];
+  const userTokenDetails = userModel.tokens[ jar.details.apiKey.toLowerCase() ];
   if (userTokenDetails === undefined) return userAssetDataZeroEverything();
 
   const decimals = jarDecimals(jar);
@@ -107,32 +107,32 @@ export const getUserAssetDataWithPrices = (
     token1,
     token0Balance: string,
     token1Balance: string,
-    walletComponentTokens: { [key: string]: UserAssetDataWithPricesComponent } = {};
+    walletComponentTokens: { [ key: string ]: UserAssetDataWithPricesComponent } = {};
 
   if (jar.protocol === AssetProtocol.UNISWAP_V3) {
-    token0 = jar.depositToken.components?.[0];
-    token1 = jar.depositToken.components?.[1];
+    token0 = jar.depositToken.components?.[ 0 ];
+    token1 = jar.depositToken.components?.[ 1 ];
 
-    token0Balance = userTokenDetails.componentTokenBalances[token0 || ""].balance;
-    token1Balance = userTokenDetails.componentTokenBalances[token1 || ""].balance;
+    token0Balance = userTokenDetails.componentTokenBalances[ token0 || "" ].balance;
+    token1Balance = userTokenDetails.componentTokenBalances[ token1 || "" ].balance;
 
     const token0Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token0Balance?.toString() || "0"),
       tokenDecimals(token0, core),
-      core.prices[token0 || 0],
+      core.prices[ token0 || 0 ],
       1.0,
     );
 
     const token1Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token1Balance?.toString() || "0"),
       tokenDecimals(token1, core),
-      core.prices[token1 || 0],
+      core.prices[ token1 || 0 ],
       1.0,
     );
 
     if (token0 && token1) {
-      walletComponentTokens[token0] = token0Wallet;
-      walletComponentTokens[token1] = token1Wallet;
+      walletComponentTokens[ token0 ] = token0Wallet;
+      walletComponentTokens[ token1 ] = token1Wallet;
     }
   }
 
@@ -179,12 +179,12 @@ export const getUserBrineryDataWithPrices = (
   core: PickleModelJson | undefined,
   userModel: UserData | undefined,
 ): UserBrineryDataWithPrices => {
-  if (core === undefined || userModel === undefined) {
-    return userBrineryDataZeroEverything();
+  const brineryKey = brinery && brinery.details && brinery.details.apiKey ? brinery.details.apiKey.toLowerCase() : undefined;
+  if (core === undefined || userModel === undefined || userModel.brineries === undefined || brineryKey === undefined) {
+    return userBrineryDataZeroEverything(brineryKey || "");
   }
 
-  const userBrineryDetails = userModel.brineries[brinery.details.apiKey.toLowerCase()];
-
+  const userBrineryDetails = userModel.brineries[brineryKey];
   const depositToken = core.tokens.find(
     (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
   );
