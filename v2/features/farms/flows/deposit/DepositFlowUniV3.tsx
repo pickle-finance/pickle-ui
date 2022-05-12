@@ -182,6 +182,8 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
           <FormUniV3
             balance0={depositToken0Balance}
             balance1={depositToken1Balance}
+            token0Decimals={token0Decimals}
+            token1Decimals={token1Decimals}
             jar={jar}
             nextStep={(amount: string, amount1: string) =>
               send(Actions.SUBMIT_FORM, { amount, amount1 })
