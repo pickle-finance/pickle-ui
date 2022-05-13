@@ -6,6 +6,7 @@ import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { ChainNetwork } from "picklefinance-core";
 
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
@@ -33,6 +34,7 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
+  const [shouldZap, setShouldZap] = useState(false);
   const { account } = useWeb3React<Web3Provider>();
 
   const { contract } = jar;
@@ -64,7 +66,8 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
 
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
 
-  const isFrax = token0Name === "frax" || token1Name === "frax";
+  const canZap =
+    token0Name !== "frax" && token1Name !== "frax" && jar.chain === ChainNetwork.Ethereum;
 
   const transactionFactory = () => {
     if (!JarContract) return;
@@ -80,8 +83,9 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
     );
 
     // Non-Frax UniV3 jars have an extra bool argument for zapping
-    const funcSig = `deposit(uint256,uint256${!isFrax ? ",bool" : ""})`;
-    return () => JarContract[funcSig](amount0, amount1);
+    const funcSig = `deposit(uint256,uint256${canZap ? ",bool" : ""})`;
+    const args = [amount0, amount1, ...[canZap ? shouldZap : []]];
+    return () => JarContract[funcSig](...args);
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
@@ -185,6 +189,9 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
             token0Decimals={token0Decimals}
             token1Decimals={token1Decimals}
             jar={jar}
+            canZap={canZap}
+            shouldZap={shouldZap}
+            setShouldZap={setShouldZap}
             nextStep={(amount: string, amount1: string) =>
               send(Actions.SUBMIT_FORM, { amount, amount1 })
             }
