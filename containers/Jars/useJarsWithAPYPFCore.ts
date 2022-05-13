@@ -53,6 +53,12 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
           lp: lp,
         };
       }
+      return {
+        APYs: [],
+        apr: 0,
+        totalAPY: 0,
+        lp: 0
+      }
     }
 
     return [];
