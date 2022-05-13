@@ -16,7 +16,9 @@ import { AssetCoreData, JarChartData } from "v2/types";
 const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit }) => {
   const { t } = useTranslation("common");
 
-  const assetData: AssetCoreData[] = formatDates(data, timeUnit);
+  const assetData: AssetCoreData[] = formatDates(data, timeUnit).filter(
+    (a) => a.supply !== 0 && a.depositTokenPrice !== 0,
+  );
   const chartData = assetData.map((x) => ({
     timestamp: x.timestamp,
     supply: x.supply,
