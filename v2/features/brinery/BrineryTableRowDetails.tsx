@@ -94,7 +94,7 @@ const BrineryTableRowDetails: FC<Props> = ({ brinery, hideDescription }) => {
                   </Button>
                 </div>
                 <div className="pt-2 mb-4">
-                  <FarmDocs jarOrBrinery={brinery} hideDescription={hideDescription} />
+                  <FarmDocs asset={brinery} hideDescription={hideDescription} />
                 </div>
                 <div className="grid grid-cols-3 py-1">
                   <div>

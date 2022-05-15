@@ -2,13 +2,13 @@ import { getAddress } from "ethers/lib/utils";
 import { ChainNetwork, Chains } from "picklefinance-core";
 import { NULL_ADDRESS } from "picklefinance-core/lib/model/PickleModel";
 import {
-  JarDefinition,
   AssetProtocol,
   PickleAsset,
   IExternalToken,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { UniV3Token } from "v2/store/core";
+import { Asset } from "v2/store/core.helpers";
 
 export const getComponentTokenAddresses = (
   pickleCore: PickleModelJson,
@@ -29,7 +29,7 @@ export const getComponentTokenAddresses = (
 };
 
 export const getUniV3Tokens = (
-  jar: JarDefinition,
+  jar: Asset,
   pickleCore: PickleModelJson | undefined,
 ): Array<UniV3Token | undefined> => {
   if (

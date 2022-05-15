@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import FarmsTableRow from "./FarmsTableRow";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { AssetWithData, CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { Sort } from "v2/store/controls";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
@@ -20,7 +20,7 @@ interface Props {
   simple?: boolean;
   dashboard?: boolean;
   sort?: Sort;
-  singleAsset?: JarWithData;
+  singleAsset?: AssetWithData;
   hideDescription?: boolean;
   isBrinery?: boolean;
 }
@@ -39,8 +39,8 @@ const FarmsTableBody: FC<Props> = ({
   const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
   const userDillRatio =
     parseFloat(formatEther(userModel?.dill?.balance || "0")) / (core?.dill?.totalDill || 1);
-  let jars = useAppSelector(
-    CoreSelectors.makeJarsSelector({ account, filtered: !simple, paginated: !simple }),
+  let assets = useAppSelector(
+    CoreSelectors.makeAssetsSelector({ account, filtered: !simple, paginated: !simple }),
   );
 
   const brineries = useAppSelector(CoreSelectors.makeBrinerySelector({ account }));
@@ -51,7 +51,7 @@ const FarmsTableBody: FC<Props> = ({
       .filter(([_, data]) => hasBalances(data!))
       .map(([apiKey]) => apiKey.toUpperCase());
 
-    jars = jars.filter((jar) => apiKeys.includes(jar.details.apiKey.toUpperCase()));
+    assets = assets.filter((asset) => apiKeys.includes(asset.details.apiKey.toUpperCase()));
   }
 
   const isLoading = !core || (requiresUserModel && !userModel);
@@ -66,7 +66,7 @@ const FarmsTableBody: FC<Props> = ({
     );
   }
 
-  if (jars.length === 0)
+  if (assets.length === 0)
     return (
       <tr>
         <td
@@ -84,7 +84,7 @@ const FarmsTableBody: FC<Props> = ({
         {brineries.map((brinery) => (
           <FarmsTableRow
             key={brinery.details.apiKey}
-            jar={brinery}
+            asset={brinery}
             simple={simple}
             userDillRatio={userDillRatio}
           />
@@ -95,7 +95,7 @@ const FarmsTableBody: FC<Props> = ({
     return (
       <FarmsTableRow
         key={singleAsset.details?.apiKey}
-        jar={singleAsset}
+        asset={singleAsset}
         simple={simple}
         hideDescription={hideDescription}
         userDillRatio={userDillRatio}
@@ -104,10 +104,10 @@ const FarmsTableBody: FC<Props> = ({
 
   return (
     <>
-      {jars.map((jar) => (
+      {assets.map((asset) => (
         <FarmsTableRow
-          key={jar.details.apiKey}
-          jar={jar}
+          key={asset.details.apiKey}
+          asset={asset}
           simple={simple}
           dashboard={dashboard}
           userDillRatio={userDillRatio}

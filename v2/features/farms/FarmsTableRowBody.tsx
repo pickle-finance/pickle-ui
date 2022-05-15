@@ -4,8 +4,7 @@ import { AssetEnablement, AssetProtocol } from "picklefinance-core/lib/model/Pic
 import { InformationCircleIcon } from "@heroicons/react/solid";
 
 import Link from "v2/components/Link";
-
-import { BrineryWithData, JarWithData } from "v2/store/core";
+import { AssetWithData, BrineryWithData } from "v2/store/core";
 import FarmsTableRowDetails from "./FarmsTableRowDetails";
 import FarmsTableRowBodyTransactionControls from "./FarmTableRowBodyTransactionControls";
 import ConnectButton from "./ConnectButton";
@@ -13,56 +12,44 @@ import { useNeedsNetworkSwitch } from "v2/hooks";
 import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactionControlsUniV3";
 import BrineryTableRowBodyTransactionControls from "../brinery/BrineryTableRowBodyTransactionControls";
 import BrineryTableRowDetails from "../brinery/BrineryTableRowDetails";
-import { isBrinery } from "v2/store/core.helpers";
-import NextLink from "next/link";
+import { isBrinery, isJar } from "v2/store/core.helpers";
 
 interface Props {
-  jarOrBrinery: JarWithData | BrineryWithData;
+  asset: AssetWithData | BrineryWithData;
   hideDescription?: boolean;
 }
 
-const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
+const FarmsTableRowBody: FC<Props> = ({ asset, hideDescription }) => {
   const { t } = useTranslation("common");
-  const { network, needsNetworkSwitch } = useNeedsNetworkSwitch(jarOrBrinery.chain);
+  const { network, needsNetworkSwitch } = useNeedsNetworkSwitch(asset.chain);
 
-  const tokensInWallet = jarOrBrinery.depositTokensInWallet.tokensVisible;
+  const tokensInWallet = asset.depositTokensInWallet.tokensVisible;
   const depositTokenCountString = t("v2.farms.tokens", { amount: tokensInWallet });
 
-  const analyticsUrl: string | undefined = jarOrBrinery.details?.apiKey
-    ? "/v2/stats/jar?jar=" + jarOrBrinery.details.apiKey
+  const analyticsUrl: string | undefined = asset.details?.apiKey
+    ? "/v2/stats/jar?jar=" + asset.details.apiKey
     : undefined;
 
-  const isUniV3 = jarOrBrinery.protocol === AssetProtocol.UNISWAP_V3;
+  const isUniV3 = asset.protocol === AssetProtocol.UNISWAP_V3;
   let token0Name, token1Name, userBalanceToken0, userBalanceToken1;
-  if (isUniV3) {
-    token0Name = jarOrBrinery.depositToken.components?.[0];
-    token1Name = jarOrBrinery.depositToken.components?.[1];
-    userBalanceToken0 = (jarOrBrinery as JarWithData).walletComponentTokens[token0Name || ""]
-      ?.tokensVisible;
-    userBalanceToken1 = (jarOrBrinery as JarWithData).walletComponentTokens[token1Name || ""]
-      ?.tokensVisible;
+  if (isUniV3 && isJar(asset)) {
+    token0Name = asset.depositToken.components?.[0];
+    token1Name = asset.depositToken.components?.[1];
+    userBalanceToken0 = asset.walletComponentTokens[token0Name || ""]?.tokensVisible;
+    userBalanceToken1 = asset.walletComponentTokens[token1Name || ""]?.tokensVisible;
   }
 
   const renderAssetDetails = () => {
-    if (isBrinery(jarOrBrinery))
-      return (
-        <BrineryTableRowDetails
-          brinery={jarOrBrinery as BrineryWithData}
-          hideDescription={hideDescription}
-        />
-      );
-    return (
-      <FarmsTableRowDetails jar={jarOrBrinery as JarWithData} hideDescription={hideDescription} />
-    );
+    if (isBrinery(asset))
+      return <BrineryTableRowDetails brinery={asset} hideDescription={hideDescription} />;
+    return <FarmsTableRowDetails asset={asset} hideDescription={hideDescription} />;
   };
 
   const renderTransactionControls = () => {
-    if (isUniV3)
-      return <FarmsTableRowBodyV3TransactionControls jar={jarOrBrinery as JarWithData} />;
-    if (isBrinery(jarOrBrinery))
-      return <BrineryTableRowBodyTransactionControls brinery={jarOrBrinery as BrineryWithData} />;
+    if (isUniV3 && isJar(asset)) return <FarmsTableRowBodyV3TransactionControls jar={asset} />;
+    if (isBrinery(asset)) return <BrineryTableRowBodyTransactionControls brinery={asset} />;
     // Default is farms control
-    return <FarmsTableRowBodyTransactionControls jar={jarOrBrinery as JarWithData} />;
+    return <FarmsTableRowBodyTransactionControls asset={asset} />;
   };
 
   return (
@@ -70,7 +57,7 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
       colSpan={6}
       className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
-      {jarOrBrinery.enablement === AssetEnablement.WITHDRAW_ONLY && (
+      {asset.enablement === AssetEnablement.WITHDRAW_ONLY && (
         <div className="flex justify-center text-foreground-alt-200 text-sm mt-1 mb-6">
           <InformationCircleIcon className="w-5 h-5 text-accent mr-2" />
           {t("v2.farms.withdrawOnly")}
@@ -93,8 +80,8 @@ const FarmsTableRowBody: FC<Props> = ({ jarOrBrinery, hideDescription }) => {
           <p className="font-normal text-xs text-foreground-alt-200 mb-6">
             {t("v2.balances.balance")}
           </p>
-          <Link href={jarOrBrinery.depositToken.link} className="font-bold" external primary>
-            {t("v2.farms.getToken", { token: jarOrBrinery.depositToken.name })}
+          <Link href={asset.depositToken.link} className="font-bold" external primary>
+            {t("v2.farms.getToken", { token: asset.depositToken.name })}
           </Link>
           <br />
           {analyticsUrl && (

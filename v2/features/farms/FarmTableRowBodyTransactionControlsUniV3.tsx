@@ -3,12 +3,10 @@ import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
-import Button from "v2/components/Button";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
-import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import ApprovalFlowUniV3 from "./flows/approval/ApprovalFlowUniV3";
@@ -69,7 +67,7 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
           {userHasJarAllowance && (
             <div className="grid grid-cols-2 gap-3">
               <DepositFlowUniV3 jar={jar} balances={userTokenData} />
-              <WithdrawFlow jar={jar} balances={userTokenData} isUniV3={true} />
+              <WithdrawFlow asset={jar} balances={userTokenData} isUniV3={true} />
             </div>
           )}
         </div>
@@ -94,8 +92,8 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
           />
           {userHasFarmAllowance && (
             <div className="grid grid-cols-2 gap-3">
-              <StakeFlow jar={jar} balances={userTokenData} />
-              <UnstakeFlow jar={jar} balances={userTokenData} />
+              <StakeFlow asset={jar} balances={userTokenData} />
+              <UnstakeFlow asset={jar} balances={userTokenData} />
             </div>
           )}
         </div>
@@ -106,16 +104,16 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             {t("v2.farms.earnedToken", { token: "PICKLEs" })}
           </p>
           <div className="flex items-end justify-between">
-                <span className="font-title text-primary font-medium text-base leading-5">
-                  {roundToSignificantDigits(picklePending, 3)}
-                </span>
-                <HarvestFlow
-                  rewarderType="farm"
-                  asset={jar}
-                  harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
-                  network={jar.chain}
-                />
-              </div>
+            <span className="font-title text-primary font-medium text-base leading-5">
+              {roundToSignificantDigits(picklePending, 3)}
+            </span>
+            <HarvestFlow
+              rewarderType="farm"
+              asset={jar}
+              harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
+              network={jar.chain}
+            />
+          </div>
         </div>
         <div className="relative">
           {isUserModelLoading && (

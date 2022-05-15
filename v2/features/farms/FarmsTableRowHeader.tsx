@@ -1,18 +1,16 @@
 import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { TFunction, useTranslation } from "next-i18next";
 
 import { classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { AssetWithData, CoreSelectors } from "v2/store/core";
 import FarmComponentsIcons from "./FarmComponentsIcons";
 import { Network } from "../connection/networks";
 import Link from "v2/components/Link";
 import FarmAPY from "./FarmAPY";
-import ChainProtocol from "v2/components/ChainProtocol";
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
   <td
@@ -26,17 +24,19 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
 );
 
 const chainProtocol = (
-  jar: JarDefinition,
+  asset: AssetWithData,
   networks: Network[] | undefined,
   dashboard: boolean | undefined,
   t: TFunction,
 ): JSX.Element => {
-  const analyticsUrl = jar.details?.apiKey ? "/v2/stats/jar?jar=" + jar.details.apiKey : undefined;
+  const analyticsUrl = asset.details?.apiKey
+    ? "/v2/stats/jar?jar=" + asset.details.apiKey
+    : undefined;
 
   return (
     <div>
       <p className="font-title font-medium text-base leading-5 group-hover:text-primary-light transition duration-300 ease-in-out">
-        {jar.depositToken.name}
+        {asset.depositToken.name}
       </p>
       {dashboard && analyticsUrl && (
         <Link
@@ -51,16 +51,16 @@ const chainProtocol = (
       <div className="flex mt-1">
         <div className="w-4 h-4 mr-1">
           <Image
-            src={formatImagePath(jar.chain, networks)}
+            src={formatImagePath(asset.chain, networks)}
             className="rounded-full"
             width={20}
             height={20}
             layout="responsive"
-            alt={jar.chain}
-            title={jar.chain}
+            alt={asset.chain}
+            title={asset.chain}
           />
         </div>
-        <p className="italic font-normal text-xs text-foreground-alt-200">{jar.protocol}</p>
+        <p className="italic font-normal text-xs text-foreground-alt-200">{asset.protocol}</p>
       </div>
     </div>
   );
@@ -70,7 +70,7 @@ interface Props {
   simple?: boolean;
   dashboard?: boolean;
   open: boolean;
-  jar: JarWithData;
+  asset: AssetWithData;
   userDillRatio: number;
 }
 
@@ -83,23 +83,23 @@ const formatImagePath = (chain: string, networks: Network[] | undefined): string
   }
 };
 
-const FarmsTableRowHeader: FC<Props> = ({ jar, simple, dashboard, open, userDillRatio }) => {
+const FarmsTableRowHeader: FC<Props> = ({ asset, simple, dashboard, open, userDillRatio }) => {
   const { t } = useTranslation("common");
   const networks = useSelector(CoreSelectors.selectNetworks);
 
   const totalTokensInJarAndFarm =
-    parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
-  const depositTokenUSD = jar.depositTokensInJar.tokensUSD + jar.depositTokensInFarm.tokensUSD;
-  const stakedTokensUSD = jar.depositTokensInFarm.tokensUSD;
-  const pendingPicklesAsDollars = jar.earnedPickles.tokensUSD;
-  const picklesPending = jar.earnedPickles.tokensVisible;
+    parseFloat(asset.depositTokensInJar.tokens) + parseFloat(asset.depositTokensInFarm.tokens);
+  const depositTokenUSD = asset.depositTokensInJar.tokensUSD + asset.depositTokensInFarm.tokensUSD;
+  const stakedTokensUSD = asset.depositTokensInFarm.tokensUSD;
+  const pendingPicklesAsDollars = asset.earnedPickles.tokensUSD;
+  const picklesPending = asset.earnedPickles.tokensVisible;
   const depositTokenCountString = t("v2.farms.tokens", { amount: totalTokensInJarAndFarm });
 
   return (
     <>
       <RowCell className={classNames(!open && "rounded-bl-xl", "rounded-tl-xl flex items-center")}>
-        <FarmComponentsIcons jar={jar} />
-        {chainProtocol(jar, networks, dashboard, t)}
+        <FarmComponentsIcons asset={asset} />
+        {chainProtocol(asset, networks, dashboard, t)}
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5">
@@ -119,11 +119,11 @@ const FarmsTableRowHeader: FC<Props> = ({ jar, simple, dashboard, open, userDill
         </div>
       </RowCell>
       <RowCell>
-        <FarmAPY jarOrBrinery={jar} userDillRatio={userDillRatio} />
+        <FarmAPY asset={asset} userDillRatio={userDillRatio} />
       </RowCell>
       <RowCell className={classNames(simple && "rounded-r-xl")}>
         <p className="font-title font-medium text-base leading-5">
-          {formatDollars(jar.details.harvestStats?.balanceUSD || 0)}
+          {formatDollars(asset.details.harvestStats?.balanceUSD || 0)}
         </p>
       </RowCell>
       {!simple && (
