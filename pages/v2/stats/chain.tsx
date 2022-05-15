@@ -42,8 +42,8 @@ const Stats: PickleFinancePage = () => {
     setTvlChange(tvlChange);
   }, [chainData]);
 
-  tokenPctChangeData.sort((a, b) => (a.tokenPriceChange > b.tokenPriceChange ? -1 : 1));
-  tvlChange.sort((a, b) => (a.tvlChange > b.tvlChange ? -1 : 1));
+  tokenPctChangeData.sort((a, b) => (a.tokenPriceChange || 0) - (b.tokenPriceChange || 0));
+  tvlChange.sort((a, b) => (a.tvlChange || 0) - (b.tvlChange || 0));
 
   return (
     <div className="block lg:flex mb-5 sm:mb-10">

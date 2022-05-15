@@ -1,9 +1,10 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 
-import { BrineryDefinition, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { BrineryDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { classNames } from "v2/utils";
 import { brandColor, defaultBackgroundColor } from "./colors";
+import { AssetWithData } from "v2/store/core";
 
 interface TokenIconProps {
   component: string;
@@ -16,7 +17,7 @@ interface ProtocolIconProps {
 }
 
 interface Props {
-  jar: JarDefinition | BrineryDefinition;
+  asset: AssetWithData | BrineryDefinition;
 }
 
 /**
@@ -90,8 +91,8 @@ const ProtocolIcon: FC<ProtocolIconProps> = ({ protocol }) => {
   );
 };
 
-const TokenIcons: FC<Props> = ({ jar }) => {
-  const { components } = jar.depositToken;
+const TokenIcons: FC<Props> = ({ asset }) => {
+  const { components } = asset.depositToken;
 
   if (!components) return null;
 
@@ -109,12 +110,12 @@ const TokenIcons: FC<Props> = ({ jar }) => {
   );
 };
 
-const FarmComponentsIcons: FC<Props> = ({ jar }) => {
-  const { protocol } = jar;
+const FarmComponentsIcons: FC<Props> = ({ asset }) => {
+  const { protocol } = asset;
 
   return (
     <div className="flex relative mr-2">
-      <TokenIcons jar={jar} />
+      <TokenIcons asset={asset} />
       <ProtocolIcon protocol={protocol} />
     </div>
   );

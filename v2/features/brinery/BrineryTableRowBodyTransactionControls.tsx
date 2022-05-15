@@ -54,7 +54,7 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
             />
             {userHasBrineryAllowance && (
               <div>
-                <DepositFlow jarOrBrinery={brinery} balances={userBrinery} type="brinery" />
+                <DepositFlow asset={brinery} balances={userBrinery} type="brinery" />
               </div>
             )}
           </div>

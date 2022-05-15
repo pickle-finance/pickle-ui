@@ -10,7 +10,7 @@ import { ChainNetwork } from "picklefinance-core";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { AssetWithData, CoreSelectors } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
 import Form from "../deposit/Form";
 import { jarDecimals } from "v2/utils/user";
@@ -25,23 +25,26 @@ import { Gauge, RewardPaidEvent, WithdrawnEvent } from "containers/Contracts/Gau
 import { Minichef, HarvestEvent, WithdrawEvent } from "containers/Contracts/Minichef";
 import { AppDispatch } from "v2/store";
 import { eventsByName } from "../utils";
+import { jarSupportsStaking } from "v2/store/core.helpers";
 
 interface Props {
-  jar: JarWithData;
+  asset: AssetWithData;
   balances: UserTokenData | undefined;
 }
 
-const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
+const UnstakeFlow: FC<Props> = ({ asset, balances }) => {
+  if (!jarSupportsStaking(asset)) return null;
+
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
 
-  const chain = core?.chains.find((chain) => chain.network === jar.chain);
-  const FarmContract = useFarmContract(jar.farm?.farmAddress, chain);
+  const chain = core?.chains.find((chain) => chain.network === asset.chain);
+  const FarmContract = useFarmContract(asset.farm?.farmAddress, chain);
 
-  const decimals = jarDecimals(jar);
+  const decimals = jarDecimals(asset);
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
   const pStakedBalanceBN = BigNumber.from(balances?.pStakedBalance || "0");
   const picklePendingBN = BigNumber.from(balances?.picklePending || "0");
@@ -56,7 +59,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
   const transactionFactory = () => {
     if (!FarmContract || !account) return;
 
-    const { chain } = jar;
+    const { chain } = asset;
     const amount = ethers.utils.parseUnits(truncateToMaxDecimals(current.context.amount), decimals);
 
     if (chain === ChainNetwork.Ethereum) {
@@ -65,7 +68,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
       return () => (FarmContract as Gauge).withdraw(amount);
     }
 
-    const poolId = jar.farm?.details?.poolId;
+    const poolId = asset.farm?.details?.poolId;
     if (poolId === undefined) return;
 
     if (isExiting)
@@ -77,7 +80,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     if (!account) return;
 
-    const { chain } = jar;
+    const { chain } = asset;
     let amount: BigNumber;
     let pickles: BigNumber = BigNumber.from(0);
 
@@ -110,7 +113,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
     dispatch(
       UserActions.setTokenData({
         account,
-        apiKey: jar.details.apiKey,
+        apiKey: asset.details.apiKey,
         data: {
           pAssetBalance,
           pStakedBalance,
@@ -148,7 +151,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}
-        title={t("v2.farms.unstakeToken", { token: jar.farm?.farmDepositTokenName })}
+        title={t("v2.farms.unstakeToken", { token: asset.farm?.farmDepositTokenName })}
       >
         {current.matches(States.FORM) && (
           <Form
@@ -160,7 +163,7 @@ const UnstakeFlow: FC<Props> = ({ jar, balances }) => {
           <AwaitingConfirmation
             title={t("v2.farms.confirmUnstake")}
             cta={isExiting ? t("v2.actions.harvestAndExit") : t("v2.actions.unstake")}
-            tokenName={jar.farm?.farmDepositTokenName}
+            tokenName={asset.farm?.farmDepositTokenName}
             amount={current.context.amount}
             error={error}
             sendTransaction={sendTransaction}

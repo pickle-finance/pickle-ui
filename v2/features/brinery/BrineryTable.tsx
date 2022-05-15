@@ -2,29 +2,20 @@ import { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import FarmsTableBody from "../farms/FarmsTableBody";
-import FarmControls from "../farms/FarmControls";
 import FarmsTableHeaderCellSortable from "../farms/FarmsTableHeaderCellSortable";
 import { SortType } from "v2/store/controls";
-import { JarWithData } from "v2/store/core";
-import Pagination from "../farms/Pagination";
+import { AssetWithData } from "v2/store/core";
 
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
   title?: string;
-  asset?: JarWithData;
+  asset?: AssetWithData;
   singleAsset?: boolean;
   hideDescription?: boolean;
 }
 
-const BrineryTable: FC<Props> = ({
-  simple,
-  title,
-  requiresUserModel,
-  asset,
-  singleAsset,
-  hideDescription,
-}) => {
+const BrineryTable: FC<Props> = ({ simple, title, requiresUserModel, asset, hideDescription }) => {
   const { t } = useTranslation("common");
   return (
     <>
@@ -63,7 +54,7 @@ const BrineryTable: FC<Props> = ({
                 <FarmsTableBody
                   simple={simple}
                   requiresUserModel={requiresUserModel}
-                  asset={asset}
+                  singleAsset={asset}
                   hideDescription={hideDescription}
                   isBrinery={true}
                 />
