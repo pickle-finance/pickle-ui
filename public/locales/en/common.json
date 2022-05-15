@@ -529,6 +529,9 @@
       "stats": "Stats",
       "vote": "Vote"
     },
+    "prompts": {
+      "pleaseConfirm": "Please confirm the transaction"
+    },
     "stats": {
       "chain": {
         "assetTableHeaders": {

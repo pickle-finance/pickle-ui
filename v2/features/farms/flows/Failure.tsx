@@ -19,8 +19,12 @@ const Failure: FC<Props> = ({ retry, txHash, chainExplorer }) => {
 
   return (
     <>
-      <div className="flex justify-center my-2 text-4xl">😭</div>
-      <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>
+      <div className="flex justify-center mt-2">
+        <div className="w-1/2 min-h-[200px]">
+          <img src="/animations/failure.gif" alt={title} title={title} />
+        </div>
+      </div>
+      <h2 className="text-foreground-alt-100 font-title text-lg mb-6">{title}</h2>
       <div className="flex items-center justify-center space-x-3 mb-6">
         <Link href={txUrl} external primary className="grow-0">
           {shortenAddress(txHash || "")}
