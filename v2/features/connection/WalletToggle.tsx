@@ -59,7 +59,7 @@ const WalletToggle: FC = () => {
   if (!account) return <ConnectWalletButton />;
 
   return (
-    <Popover className="relative">
+    <Popover className="relative shrink-0">
       {() => (
         <>
           <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-foreground font-bold hover:bg-background-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
