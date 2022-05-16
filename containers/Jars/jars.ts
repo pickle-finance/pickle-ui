@@ -67,6 +67,7 @@ export const shouldJarBeInUi = (
 export const isJarActive = (jarApiKey: string, pfcore: PickleModelJson.PickleModelJson | null) => {
   return (
     checkJarEnablement(AssetEnablement.ENABLED, jarApiKey, pfcore) ||
+    jarApiKey == "UNIV2-FRAX-TEMPLE" ||
     checkJarEnablement(AssetEnablement.WITHDRAW_ONLY, jarApiKey, pfcore)
   );
 };
