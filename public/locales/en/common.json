@@ -478,6 +478,7 @@
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
       "loadingDocs": "Loading docs ...",
+      "loadingInvestments": "Loading investment details ...",
       "loadingUserModel": "Loading your balances ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
