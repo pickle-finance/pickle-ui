@@ -1,14 +1,24 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Switch } from "@headlessui/react";
+import { useWeb3React } from "@web3-react/core";
+import type { Web3Provider } from "@ethersproject/providers";
+import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 
 import Button from "v2/components/Button";
 import ErrorMessage from "../Error";
-import AmountSteps from "v2/components/AmountSteps";
-import { JarWithData } from "v2/store/core";
+import { CoreSelectors, JarWithData } from "v2/store/core";
 import { classNames, truncateToMaxDecimals } from "v2/utils";
-import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import TokenOptions from "./TokenOptions";
+import { useAppSelector } from "v2/store";
+
+type TokenType = "native" | "wrapped";
+
+export interface TokenSelect {
+  label: string;
+  value: TokenType;
+}
 
 interface Props {
   jar: JarWithData;
@@ -34,8 +44,20 @@ const FormUniV3: FC<Props> = ({
   nextStep,
 }) => {
   const { t } = useTranslation("common");
+  const core = useAppSelector(CoreSelectors.selectCore);
+
   const [amount0, setAmount0] = useState<string>(balance0.toString());
   const [amount1, setAmount1] = useState<string>(balance1.toString());
+  const [nativeBalance, setNativeBalance] = useState<string>("0");
+
+  const { library } = useWeb3React<Web3Provider>();
+
+  const jarChain = core?.chains.find((chain) => chain.network === jar.chain);
+
+  const [selectedToken, setSelectedToken] = useState<TokenSelect>({
+    label: jarChain?.gasTokenSymbol.toUpperCase() || "",
+    value: "native",
+  });
 
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
   const [error, setError] = useState<Error | undefined>();
@@ -59,7 +81,10 @@ const FormUniV3: FC<Props> = ({
       const { value } = (event as ChangeEvent<HTMLInputElement>).target;
       inputAmount0 = value;
     } else {
-      inputAmount0 = balance0.toString();
+      inputAmount0 =
+        jar.token0?.isNative && selectedToken.value === "native"
+          ? nativeBalance
+          : balance0.toString();
     }
 
     setAmount0(inputAmount0);
@@ -76,7 +101,10 @@ const FormUniV3: FC<Props> = ({
       const { value } = (event as ChangeEvent<HTMLInputElement>).target;
       inputAmount1 = value;
     } else {
-      inputAmount1 = balance1.toString();
+      inputAmount1 =
+        jar.token1?.isNative && selectedToken.value === "native"
+          ? nativeBalance
+          : balance1.toString();
     }
     setAmount1(inputAmount1);
     if (!shouldZap && inputAmount1) {
@@ -92,6 +120,12 @@ const FormUniV3: FC<Props> = ({
     validate();
   }, [amount0, amount1]);
 
+  useEffect(() => {
+    const setBalance = async () =>
+      setNativeBalance(formatEther((await library?.getSigner()?.getBalance()) || "0"));
+    setBalance();
+  }, [library]);
+
   const handleFormSubmit = () => {
     if (error) return;
 
@@ -101,7 +135,11 @@ const FormUniV3: FC<Props> = ({
   return (
     <>
       <h2 className="text-foreground-alt-100 flex font-title text-lg mb-4 ml-4">
-        {jar.token0?.name.toUpperCase()}
+        <TokenOptions
+          selectedToken={selectedToken}
+          setSelectedToken={setSelectedToken}
+          token={jar.token0!}
+        />{" "}
       </h2>
       <div className="bg-background-lightest rounded-xl px-4 py-2 mb-6">
         <div className="flex justify-between mb-2">
@@ -109,7 +147,8 @@ const FormUniV3: FC<Props> = ({
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {balance0}
+            {t("v2.balances.balance")}:{" "}
+            {jar.token0?.isNative && selectedToken.value === "native" ? nativeBalance : balance0}
           </p>
         </div>
 
@@ -132,7 +171,11 @@ const FormUniV3: FC<Props> = ({
       </div>
 
       <h2 className="text-foreground-alt-100 flex font-title text-lg mt-6 mb-4 ml-4">
-        {jar.token1?.name.toUpperCase()}
+        <TokenOptions
+          selectedToken={selectedToken}
+          setSelectedToken={setSelectedToken}
+          token={jar.token1!}
+        />
       </h2>
       <div className="bg-background-lightest rounded-xl px-4 py-2 mb-6">
         <div className="flex justify-between mb-2">
@@ -140,7 +183,8 @@ const FormUniV3: FC<Props> = ({
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {balance1}
+            {t("v2.balances.balance")}:{" "}
+            {jar.token1?.isNative && selectedToken.value === "native" ? "ree" : balance1}
           </p>
         </div>
 
