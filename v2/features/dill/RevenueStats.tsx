@@ -3,13 +3,13 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 import { DillDetails } from "picklefinance-core/lib/model/PickleModelJson";
-import { formatEther } from "ethers/lib/utils";
 
 import { CoreSelectors } from "v2/store/core";
 import { formatDollars, formatDate, formatNumber, formatPercentage } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 import { useProtocolIncome } from "./flows/hooks";
 import { PickleModelJson } from "picklefinance-core";
+import { BigNumber } from "ethers";
 
 interface Props {
   dill: DillDetails;
@@ -22,7 +22,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const { weeklyDistribution, weeklyProfit, picklePerBlock, blockPerWeek } = useProtocolIncome(
     core ? core : ({} as PickleModelJson.PickleModelJson),
   );
-
+  
   const { dillWeeks } = dill;
   if (!weeklyDistribution || !dillWeeks) return <></>;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
@@ -30,11 +30,14 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const ratio = dill.totalDill / dill.pickleLocked;
   const averageLock = Math.round(ratio * 4 * 100) / 100;
 
-  /*WIP: FETCH totalSupply AND CHANGE BELOW */
-  const totalSupply = 1.9598883123310572e24;
-  const pickleRewards =
-    (picklePerBlock * blockPerWeek * 52 * dill.totalDill) / (totalSupply * picklePrice);
-  const ethRewards = (weeklyProfit / dill.totalDill) * picklePrice;
+  const totalSupply = BigNumber.from(dill.totalPickle);
+
+  const adjusted_emissions =( picklePerBlock / 10 ** 18) * 3 * ( 1 - ( (dill.totalDill) / totalSupply ));
+  const dill_emissions = adjusted_emissions * (dill.totalDill / totalSupply);
+  const pickleRewards = (dill_emissions * (blockPerWeek) * 52 / (dill.totalDill / 10 ** 18)) * 100;
+
+  const ethRewards = (weeklyProfit / (dill.totalDill * picklePrice)) * 52 * 100;
+
   const dillAPY = ethRewards + pickleRewards;
 
   return (

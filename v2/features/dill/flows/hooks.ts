@@ -7,8 +7,8 @@ import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 // TODO: use pf-core files when they're included in the distribution
 import { Dill__factory as DillFactory } from "containers/Contracts/factories/Dill__factory";
 import { Dill } from "containers/Contracts/Dill";
-import { FeeDistributor__factory as FeeDistributorFactory } from "containers/Contracts/factories/FeeDistributor__factory";
-import { FeeDistributor } from "containers/Contracts/FeeDistributor";
+import { FeeDistributorV2__factory as FeeDistributorFactory } from "containers/Contracts/factories/FeeDistributorV2__factory";
+import { FeeDistributorV2 } from "containers/Contracts/FeeDistributorV2";
 import { PickleModelJson } from "picklefinance-core";
 
 export const useDillContract = (address: string) => {
@@ -26,7 +26,7 @@ export const useDillContract = (address: string) => {
 export const useDistributorContract = (address: string) => {
   const { library } = useWeb3React<Web3Provider>();
 
-  const DistributorContract = useMemo<FeeDistributor | undefined>(() => {
+  const DistributorContract = useMemo<FeeDistributorV2 | undefined>(() => {
     if (!library) return;
 
     return FeeDistributorFactory.connect(address, library.getSigner());
@@ -73,7 +73,6 @@ export function useProtocolIncome(pickleCore: PickleModelJson.PickleModelJson) {
       const weeklyDistribution = profit * 0.45;
       const platform = pickleCore.platform;
       const picklePerBlock = Number(platform.picklePerBlock);
-      console.log("chainId",chainId)
       const calculatedBlockPerWeek = await blocksPerMinute[chainId] * 7 * 24 * 60;
 
       

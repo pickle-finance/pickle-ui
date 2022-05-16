@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+ import React, { FC } from "react";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { IUserDillStats } from "picklefinance-core/lib/client/UserModel";
@@ -16,61 +16,23 @@ interface Props {
 }
 
 const Harvest: FC<Props> = ({ dill }) => {
-  // WIP: fetch claimableEth, totalETHRewards and totalPickleRewards and remove hardcoded values
-  const totalETHRewards = "816747.635322385";
-  const totalPickleRewards = "816747.635322385";
+  const totalETHRewards = Number(dill.totalClaimableToken);
+  const totalPickleRewards = Number(dill.totalClaimableETH);
   const { t } = useTranslation("common");
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   return (
     <>
-      {/* <DillCard
-        // title={t("v2.dill.earnedRewards")}
-        title={t("Earned Rewards")}
-        data={parseFloat(formatEther(dill.claimable)).toFixed(3)}
-      >
-        <HarvestFlow
-          rewarderType="dill"
-          harvestableAmount={BigNumber.from(dill.claimable)}
-          network={ChainNetwork.Ethereum}
-        />
-      </DillCard> */}
       <aside className="border border-foreground-alt-500 grow font-title rounded-lg tracking-normal p-4">
         <h1 className="font-medium text-foreground-alt-200 text-base leading-5">
           {t("Earned Rewards")}
           <MoreInfo>
-            <p className="font-bold text-primary">{`${t("Total Rewards")}`}</p>
             {
-              <>
                 <div className="flex justify-between items-end">
-                  <div className="font-bold text-foreground text-xs mr-2">ETH:</div>
-                  <div className="font-bold text-foreground text-xs">
-                    {parseFloat(totalETHRewards).toFixed(4)}
-                  </div>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-foreground text-xs mr-2">{""}</div>
                   <div className="text-foreground text-xs">
-                    {formatDollars(parseFloat(totalETHRewards) * ethPrice)}
+                    {t("if you haven't claimed for a long time, multiple claim transactions may be required to fully claim the amount.")}
                   </div>
                 </div>
-              </>
-            }
-            {
-              <>
-                <div className="flex justify-between items-end">
-                  <div className="font-bold text-foreground text-xs mr-2">PICKLE:</div>
-                  <div className="font-bold text-foreground text-xs">
-                    {parseFloat(totalPickleRewards).toFixed(4)}
-                  </div>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-foreground text-xs mr-2">{""}</div>
-                  <div className="text-foreground text-xs">
-                    {formatDollars(parseFloat(totalPickleRewards) * picklePrice)}
-                  </div>
-                </div>
-              </>
             }
           </MoreInfo>
         </h1>
@@ -78,18 +40,16 @@ const Harvest: FC<Props> = ({ dill }) => {
           <div>
             <br></br>
             <p className="text-primary whitespace-pre font-medium text-base">
-              {/*WIP: change to claimableEth */}
-              {`${parseFloat(formatEther(dill.claimable))} ETH`}
+              {`${parseFloat(formatEther(totalETHRewards))} ETH`}
             </p>
             <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-              {/*WIP: change to claimableEth*/}
-              {`(${formatDollars(parseFloat(formatEther(dill.claimable)) * ethPrice)})`}
+              {`(${formatDollars(parseFloat(formatEther(totalETHRewards)) * ethPrice)})`}
             </h1>
             <p className="text-primary whitespace-pre font-medium text-base">
-              {`${parseFloat(formatEther(dill.claimable))} PICKLE`}
+              {`${parseFloat(formatEther(totalPickleRewards))} PICKLE`}
             </p>
             <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-              {`(${formatDollars(parseFloat(formatEther(dill.claimable)) * picklePrice)})`}
+              {`(${formatDollars(parseFloat(formatEther(totalPickleRewards)) * picklePrice)})`}
             </h1>
             <br></br>
           </div>
