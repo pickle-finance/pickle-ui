@@ -42,6 +42,9 @@ const FarmsTableBody: FC<Props> = ({
   let assets = useAppSelector(
     CoreSelectors.makeAssetsSelector({ account, filtered: !simple, paginated: !simple }),
   );
+  const userModelUpdatedAt = useAppSelector((state) =>
+    UserSelectors.selectUpdatedAt(state, account),
+  );
 
   const brineries = useAppSelector(CoreSelectors.makeBrinerySelector({ account }));
 
@@ -73,7 +76,7 @@ const FarmsTableBody: FC<Props> = ({
           colSpan={6}
           className="bg-background-light text-foreground-alt-200 text-center p-8 rounded-xl"
         >
-          {t("v2.farms.noResults")}
+          {userModelUpdatedAt ? t("v2.farms.noResults") : t("v2.farms.loadingInvestments")}
         </td>
       </tr>
     );
