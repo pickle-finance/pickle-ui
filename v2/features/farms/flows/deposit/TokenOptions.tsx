@@ -12,9 +12,8 @@ const TokenOptions: FC<{
 }> = ({ token, selectedToken, setSelectedToken }) => {
   const [selectOptions, setSelectOptions] = useState<SelectOptions[]>([]);
 
-  const tokenChange = (chain: TokenSelect): void => {
-    console.log(chain);
-    setSelectedToken(chain);
+  const tokenChange = (token: TokenSelect): void => {
+    setSelectedToken(token);
   };
 
   useEffect(() => {
