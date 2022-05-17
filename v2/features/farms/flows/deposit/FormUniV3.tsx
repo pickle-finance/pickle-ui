@@ -4,7 +4,6 @@ import { Switch } from "@headlessui/react";
 import { useWeb3React } from "@web3-react/core";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
-import { BigNumber } from "ethers";
 
 import Button from "v2/components/Button";
 import ErrorMessage from "../Error";
@@ -29,7 +28,7 @@ interface Props {
   canZap: boolean;
   shouldZap: boolean;
   setShouldZap: (e: any) => void;
-  nextStep: (amount: string, amount1: string) => void;
+  nextStep: (amount: string, amount1: string, useNative: boolean) => void;
 }
 
 const FormUniV3: FC<Props> = ({
@@ -46,8 +45,8 @@ const FormUniV3: FC<Props> = ({
   const { t } = useTranslation("common");
   const core = useAppSelector(CoreSelectors.selectCore);
 
-  const [amount0, setAmount0] = useState<string>(balance0.toString());
-  const [amount1, setAmount1] = useState<string>(balance1.toString());
+  const [amount0, setAmount0] = useState<string>("0");
+  const [amount1, setAmount1] = useState<string>("0");
   const [nativeBalance, setNativeBalance] = useState<string>("0");
 
   const { library } = useWeb3React<Web3Provider>();
@@ -59,19 +58,26 @@ const FormUniV3: FC<Props> = ({
     value: "native",
   });
 
+  const usedBalance0 =
+    jar.token0?.isNative && selectedToken.value === "native" ? parseFloat(nativeBalance) : balance0;
+
+  const usedBalance1 =
+    jar.token1?.isNative && selectedToken.value === "native" ? parseFloat(nativeBalance) : balance1;
+
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
   const [error, setError] = useState<Error | undefined>();
 
   const validate = () => {
     const amount0Num = parseFloat(amount0);
     const amount1Num = parseFloat(amount1);
+
     if (!amount0 || !amount1) {
       setError(invalidAmountError);
       return;
     }
 
     const isValid =
-      (amount0Num > 0 || amount1Num) && amount0Num <= balance0 && amount1Num <= balance1;
+      (amount0Num || amount1Num) && amount0Num <= usedBalance0 && amount1Num <= usedBalance1;
     isValid ? setError(undefined) : setError(invalidAmountError);
   };
 
@@ -101,10 +107,7 @@ const FormUniV3: FC<Props> = ({
       const { value } = (event as ChangeEvent<HTMLInputElement>).target;
       inputAmount1 = value;
     } else {
-      inputAmount1 =
-        jar.token1?.isNative && selectedToken.value === "native"
-          ? nativeBalance
-          : balance1.toString();
+      inputAmount1 = usedBalance1.toString();
     }
     setAmount1(inputAmount1);
     if (!shouldZap && inputAmount1) {
@@ -129,7 +132,7 @@ const FormUniV3: FC<Props> = ({
   const handleFormSubmit = () => {
     if (error) return;
 
-    nextStep(amount0, amount1);
+    nextStep(amount0, amount1, selectedToken.value === "native");
   };
 
   return (
@@ -147,8 +150,7 @@ const FormUniV3: FC<Props> = ({
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}:{" "}
-            {jar.token0?.isNative && selectedToken.value === "native" ? nativeBalance : balance0}
+            {t("v2.balances.balance")}: {usedBalance0}
           </p>
         </div>
 
@@ -183,8 +185,7 @@ const FormUniV3: FC<Props> = ({
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}:{" "}
-            {jar.token1?.isNative && selectedToken.value === "native" ? "ree" : balance1}
+            {t("v2.balances.balance")}: {usedBalance1}
           </p>
         </div>
 

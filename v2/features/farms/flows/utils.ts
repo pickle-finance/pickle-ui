@@ -3,6 +3,12 @@ import { ethers, Event } from "ethers";
 import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 import { Network } from "v2/features/connection/networks";
 
+export const getNativeName = (token: string): string => {
+  const startsWithW = token.charAt(0).toLowerCase() === "w";
+  const nativeName = startsWithW ? token.substring(1).toUpperCase() : token.toUpperCase();
+  return nativeName;
+};
+
 export const eventsByName = <T extends Event>(receipt: ethers.ContractReceipt, name: string): T[] =>
   receipt.events?.filter(({ event }) => event === name) as T[];
 

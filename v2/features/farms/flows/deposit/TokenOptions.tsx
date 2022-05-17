@@ -2,6 +2,7 @@ import { useTranslation } from "next-i18next";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 import { UniV3Token } from "v2/store/core";
+import { getNativeName } from "../utils";
 import { TokenSelect } from "./FormUniV3";
 
 const TokenOptions: FC<{
@@ -17,10 +18,7 @@ const TokenOptions: FC<{
   };
 
   useEffect(() => {
-    const startsWithW = token.name.charAt(0).toLowerCase() === "w";
-    const nativeName = startsWithW
-      ? token.name.substring(1).toUpperCase()
-      : token.name.toUpperCase();
+    const nativeName = getNativeName(token.name);
     const wrappedName = "W" + nativeName;
     const options: Array<TokenSelect> = [
       {
@@ -34,8 +32,6 @@ const TokenOptions: FC<{
     ];
     setSelectOptions(options);
   }, []);
-
-  // const VALUE_PREFIX = t("v2.dill.vote.chainSelectPrefix") + ": ";
 
   if (!token.isNative) return <>{token.name.toUpperCase()}</>;
   return (

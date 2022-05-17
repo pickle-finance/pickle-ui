@@ -3,7 +3,8 @@ import { createMachine, assign } from "xstate";
 interface DepositContext {
   txHash: string | undefined;
   amount: string;
-  amount1: string | undefined;
+  amount1?: string;
+  useNative?: boolean;
 }
 
 export enum States {
@@ -28,7 +29,8 @@ export const stateMachine = createMachine<DepositContext>({
   context: {
     txHash: undefined,
     amount: "0",
-    amount1: undefined,
+    amount1: "0",
+    useNative: true,
   },
   states: {
     [States.FORM]: {
@@ -38,6 +40,7 @@ export const stateMachine = createMachine<DepositContext>({
       entry: assign({
         amount: (_context, event) => event.amount,
         amount1: (_context, event) => event.amount1 || undefined,
+        useNative: (_context, event) => event.useNative || false,
       }),
       on: {
         [Actions.TRANSACTION_SENT]: { target: States.AWAITING_RECEIPT },
