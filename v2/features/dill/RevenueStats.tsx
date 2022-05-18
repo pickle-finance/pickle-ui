@@ -9,7 +9,7 @@ import { formatDollars, formatDate, formatNumber, formatPercentage } from "v2/ut
 import MoreInfo from "v2/components/MoreInfo";
 import { useProtocolIncome } from "./flows/hooks";
 import { PickleModelJson } from "picklefinance-core";
-import { BigNumber } from "ethers";
+
 
 interface Props {
   dill: DillDetails;
@@ -19,18 +19,18 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const { t } = useTranslation("common");
   const core = useSelector(CoreSelectors.selectCore);
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
-  const { weeklyDistribution, weeklyProfit, picklePerBlock, blockPerWeek } = useProtocolIncome(
+  const { weeklyProfit, picklePerBlock, blockPerWeek } = useProtocolIncome(
     core ? core : ({} as PickleModelJson.PickleModelJson),
   );
   
   const { dillWeeks } = dill;
-  if (!weeklyDistribution || !dillWeeks) return <></>;
+  const totalSupply = dill.totalPickle;
+  if (!weeklyProfit || !dillWeeks || !totalSupply || !picklePerBlock || !blockPerWeek) return <></>;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
 
   const ratio = dill.totalDill / dill.pickleLocked;
   const averageLock = Math.round(ratio * 4 * 100) / 100;
 
-  const totalSupply = dill.totalPickle;
   const adjusted_emissions =( picklePerBlock / 10 ** 18) * ( 1 - ( (dill.totalDill) / totalSupply ));
   const dill_emissions = adjusted_emissions * (dill.totalDill / totalSupply);
   const pickleRewards = (dill_emissions * (blockPerWeek) * 52 / (dill.totalDill)) * 100;

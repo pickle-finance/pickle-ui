@@ -54,7 +54,7 @@ export function useProtocolIncome(pickleCore: PickleModelJson.PickleModelJson) {
   };
   const { chainId } = useWeb3React<Web3Provider>();
   const getWeeklyIncome = async () => {
-    if (pickleCore) {
+    if (pickleCore && chainId) {
       const jars = pickleCore.assets.jars;
       const profit = jars.reduce((acc, currJar: JarDefinition) => {
         const jarTVL = currJar.details?.harvestStats?.balanceUSD || 0;
