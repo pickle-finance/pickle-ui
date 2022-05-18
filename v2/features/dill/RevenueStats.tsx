@@ -30,11 +30,10 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const ratio = dill.totalDill / dill.pickleLocked;
   const averageLock = Math.round(ratio * 4 * 100) / 100;
 
-  const totalSupply = BigNumber.from(dill.totalPickle);
-
-  const adjusted_emissions =( picklePerBlock / 10 ** 18) * 3 * ( 1 - ( (dill.totalDill) / totalSupply ));
+  const totalSupply = dill.totalPickle;
+  const adjusted_emissions =( picklePerBlock / 10 ** 18) * ( 1 - ( (dill.totalDill) / totalSupply ));
   const dill_emissions = adjusted_emissions * (dill.totalDill / totalSupply);
-  const pickleRewards = (dill_emissions * (blockPerWeek) * 52 / (dill.totalDill / 10 ** 18)) * 100;
+  const pickleRewards = (dill_emissions * (blockPerWeek) * 52 / (dill.totalDill)) * 100;
 
   const ethRewards = (weeklyProfit / (dill.totalDill * picklePrice)) * 52 * 100;
 
