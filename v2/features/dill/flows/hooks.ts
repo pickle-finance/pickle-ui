@@ -38,23 +38,9 @@ export const useDistributorContract = (address: string) => {
 export function useProtocolIncome(pickleCore: PickleModelJson.PickleModelJson) {
   const [weeklyProfit, setWeeklyProfit] = useState<number | null>(null);
   const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(null);
-  const [picklePerBlock, setPicklePerBlock] = useState<number | null>(null);
-  const [blockPerWeek, setBlockPerWeek] = useState<number | null>(null);
 
-  const blocksPerMinute: Record<number, number> = {
-    1: 4.6, // eth
-    137: 30, // poly
-    42161: 20, // arb
-    66: 20, // oec
-    1666600000: 30, // harmony
-    1285: 4.3, // moonriver
-    25: 5.7, // cronos
-    1313161554: 1, // aurora
-    1088: 17, // aurora
-  };
-  const { chainId } = useWeb3React<Web3Provider>();
   const getWeeklyIncome = async () => {
-    if (pickleCore && chainId) {
+    if (pickleCore) {
       const jars = pickleCore.assets.jars;
       const profit = jars.reduce((acc, currJar: JarDefinition) => {
         const jarTVL = currJar.details?.harvestStats?.balanceUSD || 0;
@@ -71,13 +57,7 @@ export function useProtocolIncome(pickleCore: PickleModelJson.PickleModelJson) {
       }, 0);
 
       const weeklyDistribution = profit * 0.45;
-      const platform = pickleCore.platform;
-      const picklePerBlock = Number(platform.picklePerBlock);
-      const calculatedBlockPerWeek = await blocksPerMinute[chainId] * 7 * 24 * 60;
 
-      
-      setBlockPerWeek(calculatedBlockPerWeek);
-      setPicklePerBlock(picklePerBlock);
       setWeeklyProfit(profit);
       setWeeklyDistribution(weeklyDistribution);
     }
@@ -90,7 +70,5 @@ export function useProtocolIncome(pickleCore: PickleModelJson.PickleModelJson) {
   return {
     weeklyProfit,
     weeklyDistribution,
-    picklePerBlock,
-    blockPerWeek,
   };
 }

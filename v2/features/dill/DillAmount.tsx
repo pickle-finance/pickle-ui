@@ -49,18 +49,19 @@ const DillAmount: FC<Props> = ({ userDill, pickles }) => {
                 {dillBalance.toFixed(4)}
               </p>
               <br></br>
-              {/* WIP : check fetched locked pickle for user and $ calc below*/}
               <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-                {pickleLocked.toFixed(4)}{" "}
-                {t("PICKLE")}{" ("}
-                {formatDollars(pickleLocked * picklePrice)}{") "}
-                {t("locked")}
+                {pickleLocked.toFixed(4)} {t("v2.dill.pickle")}
+                {" ("}
+                {formatDollars(pickleLocked * picklePrice)}
+                {") "}
+                {t("v2.dill.locked")}
               </h1>
               <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-                {pickleBalance.toFixed(4)}{" "}
-                {t("PICKLE")}{" ("}
-                {formatDollars(pickleBalance * picklePrice)}{") "}
-                {t("in wallet")}
+                {pickleBalance.toFixed(4)} {t("v2.dill.pickle")}
+                {" ("}
+                {formatDollars(pickleBalance * picklePrice)}
+                {") "}
+                {t("v2.dill.inWallet")}
               </h1>
             </div>
             <Button type="primary" onClick={() => setIsOpen(true)}>

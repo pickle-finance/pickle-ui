@@ -8,8 +8,7 @@ import { CoreSelectors } from "v2/store/core";
 import { formatDollars, formatDate, formatNumber, formatPercentage } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 import { useProtocolIncome } from "./flows/hooks";
-import { PickleModelJson } from "picklefinance-core";
-
+import { ChainNetwork, Chains, PickleModelJson } from "picklefinance-core";
 
 interface Props {
   dill: DillDetails;
@@ -18,24 +17,23 @@ interface Props {
 const RevenueStats: FC<Props> = ({ dill }) => {
   const { t } = useTranslation("common");
   const core = useSelector(CoreSelectors.selectCore);
+  const picklePerBlock = Number(core?.platform.picklePerBlock);
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
-  const { weeklyProfit, picklePerBlock, blockPerWeek } = useProtocolIncome(
-    core ? core : ({} as PickleModelJson.PickleModelJson),
-  );
-  
-  const { dillWeeks } = dill;
-  const totalSupply = dill.totalPickle;
-  if (!weeklyProfit || !dillWeeks || !totalSupply || !picklePerBlock || !blockPerWeek) return <></>;
+  const blockPerWeek = (1 / Chains.get(ChainNetwork.Ethereum).secondsPerBlock) * 60 * 7 * 24 * 60;
+  const { weeklyProfit } = useProtocolIncome(core ? core : ({} as PickleModelJson.PickleModelJson));
+  const { dillWeeks, totalPickle, pickleLocked, totalDill } = dill;
+
+  if (!weeklyProfit || !dillWeeks || !totalPickle || !picklePerBlock || !blockPerWeek) return <></>;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
 
-  const ratio = dill.totalDill / dill.pickleLocked;
+  const ratio = totalDill / pickleLocked;
   const averageLock = Math.round(ratio * 4 * 100) / 100;
 
-  const adjusted_emissions =( picklePerBlock / 10 ** 18) * ( 1 - ( (dill.totalDill) / totalSupply ));
-  const dill_emissions = adjusted_emissions * (dill.totalDill / totalSupply);
-  const pickleRewards = (dill_emissions * (blockPerWeek) * 52 / (dill.totalDill)) * 100;
+  const adjustedEmissions = (picklePerBlock / 10 ** 18) * (1 - totalDill / totalPickle);
+  const dillEmissions = adjustedEmissions * (totalDill / totalPickle);
+  const pickleRewards = ((dillEmissions * blockPerWeek * 52) / dill.totalDill) * 100;
 
-  const ethRewards = (weeklyProfit / (dill.totalDill * picklePrice)) * 52 * 100;
+  const ethRewards = (weeklyProfit / (totalDill * picklePrice)) * 52 * 100;
 
   const dillAPY = ethRewards + pickleRewards;
 
@@ -82,19 +80,15 @@ const RevenueStats: FC<Props> = ({ dill }) => {
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatPercentage(dillAPY)}
             <MoreInfo>
-              <p className="font-bold text-primary">{`${t("Rewards")}`}</p>
-              {
-                <div className="flex justify-between items-end">
-                  <div className="font-bold text-foreground text-xs mr-2">ETH:</div>
-                  <div className="text-foreground text-xs">{formatPercentage(ethRewards)}</div>
-                </div>
-              }
-              {
-                <div className="flex justify-between items-end">
-                  <div className="font-bold text-foreground text-xs mr-2">PICKLE:</div>
-                  <div className="text-foreground text-xs">{formatPercentage(pickleRewards)}</div>
-                </div>
-              }
+              <p className="font-bold text-primary">{`${t("v2.dill.rewards")}`}</p>
+              <div className="flex justify-between items-end">
+                <div className="font-bold text-foreground text-xs mr-2">ETH:</div>
+                <div className="text-foreground text-xs">{formatPercentage(ethRewards)}</div>
+              </div>
+              <div className="flex justify-between items-end">
+                <div className="font-bold text-foreground text-xs mr-2">PICKLE:</div>
+                <div className="text-foreground text-xs">{formatPercentage(pickleRewards)}</div>
+              </div>
             </MoreInfo>
           </h2>
           <p className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
