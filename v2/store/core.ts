@@ -311,7 +311,9 @@ const selectMaxApy = (state: RootState) => {
     }
   });
 
-  return maxBy(entries, "apy")!;
+  // Filtering out jars with ridiculous APY
+  const filteredEntries = entries.filter((entry) => entry?.apy && entry.apy < 10000);
+  return maxBy(filteredEntries, "apy")!;
 };
 
 const selectNetworks = (state: RootState) => {
