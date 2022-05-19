@@ -302,13 +302,14 @@ const selectMaxApy = (state: RootState) => {
       if (farmApyComponents?.length) {
         farmApr = farmApyComponents[0].apr;
       }
-
-      return {
-        name: jar.depositToken.name,
-        chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
-        apy: apy + farmApr,
-      };
     }
+    return {
+      name: jar.depositToken.name,
+      chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
+      apy: apy + farmApr,
+      tokens: jar.depositToken.components,
+      protocol: jar.protocol,
+    };
   });
 
   // Filtering out jars with ridiculous APY
