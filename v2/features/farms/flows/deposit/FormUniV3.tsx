@@ -49,7 +49,7 @@ const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
   useEffect(() => {
     validate();
   }, [amount0, amount1]);
-  
+
   const handleFormSubmit = () => {
     if (error) return;
 

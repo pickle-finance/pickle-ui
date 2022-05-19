@@ -44,7 +44,6 @@ const WithdrawFlow: FC<Props> = ({ asset, balances, isUniV3 = false }) => {
   const decimals = jarDecimals(asset);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
-  const pTokenBalance = parseFloat(ethers.utils.formatUnits(pTokenBalanceBN, decimals));
 
   const transactionFactory = () => {
     if (!JarContract) return;
@@ -159,7 +158,7 @@ const WithdrawFlow: FC<Props> = ({ asset, balances, isUniV3 = false }) => {
     <>
       <Button
         type="secondary"
-        state={pTokenBalance > 0 ? "enabled" : "disabled"}
+        state={pTokenBalanceBN.gt(0) ? "enabled" : "disabled"}
         onClick={openModal}
         className="w-11"
       >
@@ -174,7 +173,8 @@ const WithdrawFlow: FC<Props> = ({ asset, balances, isUniV3 = false }) => {
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={pTokenBalance}
+            balance={balances?.pAssetBalance || "0"}
+            decimals={decimals}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
           />
         )}
