@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from ".";
+import { isFilterEnabled } from "./controls.helpers";
 
 export enum FilterType {
   Token = "token",
@@ -69,13 +70,33 @@ const controlsSlice = createSlice({
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
+    toggleFilter: (state, action: PayloadAction<Filter>) => {
+      const filter = action.payload;
+      const isEnabled = isFilterEnabled(state.filters, filter);
+
+      if (isEnabled) {
+        // Remove from existing filters if previously selected.
+        state.filters = state.filters.filter(
+          (item) => item.type !== filter.type || item.value !== filter.value,
+        );
+      } else {
+        // Push chain to filters if doesn't exist
+        state.filters = [...state.filters, filter];
+      }
+    },
   },
 });
 
 /**
  * Actions
  */
-export const { setFilters, setMatchAllFilters, setSort, setCurrentPage } = controlsSlice.actions;
+export const {
+  setFilters,
+  setMatchAllFilters,
+  setSort,
+  setCurrentPage,
+  toggleFilter,
+} = controlsSlice.actions;
 
 /**
  * Selectors
