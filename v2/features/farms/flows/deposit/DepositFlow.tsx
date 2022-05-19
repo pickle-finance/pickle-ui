@@ -45,7 +45,6 @@ const DepositFlow: FC<Props> = ({ asset, balances, type }) => {
 
   const decimals = jarDecimals(asset);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
-  const depositTokenBalance = parseFloat(ethers.utils.formatUnits(depositTokenBalanceBN, decimals));
 
   const transactionFactory = () => {
     if (!JarContract) return;
@@ -130,7 +129,7 @@ const DepositFlow: FC<Props> = ({ asset, balances, type }) => {
     <>
       <Button
         type="primary"
-        state={isAcceptingDeposits(asset) && depositTokenBalance > 0 ? "enabled" : "disabled"}
+        state={isAcceptingDeposits(asset) && depositTokenBalanceBN.gt(0) ? "enabled" : "disabled"}
         onClick={openModal}
       >
         {type === "brinery" ? t("v2.actions.deposit") : "+"}
@@ -142,7 +141,8 @@ const DepositFlow: FC<Props> = ({ asset, balances, type }) => {
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={depositTokenBalance}
+            balance={balances?.depositTokenBalance || "0"}
+            decimals={decimals}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
           />
         )}

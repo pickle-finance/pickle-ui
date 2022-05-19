@@ -46,7 +46,6 @@ const StakeFlow: FC<Props> = ({ asset, balances }) => {
 
   const decimals = jarDecimals(asset);
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
-  const pTokenBalance = parseFloat(ethers.utils.formatUnits(pTokenBalanceBN, decimals));
   const pStakedBalanceBN = BigNumber.from(balances?.pStakedBalance || "0");
 
   const transactionFactory = () => {
@@ -116,7 +115,7 @@ const StakeFlow: FC<Props> = ({ asset, balances }) => {
     <>
       <Button
         type="primary"
-        state={isAcceptingDeposits(asset) && pTokenBalance > 0 ? "enabled" : "disabled"}
+        state={isAcceptingDeposits(asset) && pTokenBalanceBN.gt(0) ? "enabled" : "disabled"}
         onClick={openModal}
         className="w-11"
       >
@@ -129,7 +128,8 @@ const StakeFlow: FC<Props> = ({ asset, balances }) => {
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={pTokenBalance}
+            balance={balances?.pAssetBalance || "0"}
+            decimals={decimals}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
           />
         )}

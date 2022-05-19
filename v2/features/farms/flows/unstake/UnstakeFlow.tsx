@@ -48,9 +48,8 @@ const UnstakeFlow: FC<Props> = ({ asset, balances }) => {
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
   const pStakedBalanceBN = BigNumber.from(balances?.pStakedBalance || "0");
   const picklePendingBN = BigNumber.from(balances?.picklePending || "0");
-  const pStakedBalance = parseFloat(ethers.utils.formatUnits(pStakedBalanceBN, decimals));
 
-  const isExiting = pStakedBalance.toString() === current.context.amount;
+  const isExiting = ethers.utils.formatUnits(pStakedBalanceBN, decimals) === current.context.amount;
 
   /**
    * A user can either withdraw a partial amount or a full staked amount
@@ -142,7 +141,7 @@ const UnstakeFlow: FC<Props> = ({ asset, balances }) => {
     <>
       <Button
         type="secondary"
-        state={pStakedBalance > 0 ? "enabled" : "disabled"}
+        state={pStakedBalanceBN.gt(0) ? "enabled" : "disabled"}
         onClick={openModal}
         className="w-11"
       >
@@ -155,7 +154,8 @@ const UnstakeFlow: FC<Props> = ({ asset, balances }) => {
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={pStakedBalance}
+            balance={balances?.pStakedBalance || "0"}
+            decimals={decimals}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
           />
         )}
