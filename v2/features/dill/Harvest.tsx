@@ -25,7 +25,7 @@ const Harvest: FC<Props> = ({ dill }) => {
   return (
     <aside className="border border-foreground-alt-500 grow font-title rounded-lg tracking-normal p-4">
       <h1 className="font-medium text-foreground-alt-200 text-base leading-5">
-        {t("Earned Rewards")}
+        {t("v2.dill.earnedRewards")}
         <MoreInfo>
           {
             <div className="flex justify-between items-end">

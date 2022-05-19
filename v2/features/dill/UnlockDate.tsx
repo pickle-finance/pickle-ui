@@ -45,11 +45,19 @@ const UnlockDate: FC<Props> = ({ dill }) => {
           </Button>
         </div>
         <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-          {years ? `${years} ${t("v2.dill.years")}` : ""}
+          {years
+            ? years == 1
+              ? t("v2.time.year")
+              : t("v2.time.year_plural", { count: years })
+            : ""}
           {months || days ? ", " : ""}
-          {months ? `${months} ${t("v2.dill.months")}` : ""}
+          {months
+            ? months == 1
+              ? t("v2.time.month")
+              : t("v2.time.month_plural", { count: months })
+            : ""}
           {days ? ", " : ""}
-          {days ? `${days} ${t("v2.dill.days")}` : ""}
+          {days ? (days == 1 ? t("v2.time.day") : t("v2.time.day_plural", { count: days })) : ""}
           {years || months || days ? "" : t("v2.dill.noTimeLockFound")}
         </h1>
       </aside>
