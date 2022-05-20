@@ -16,12 +16,15 @@ interface Props {
 
 const Harvest: FC<Props> = ({ dill }) => {
   const totalETHRewards = Number(dill.claimableETHV2);
-  const totalPickleRewards = Number(dill.claimableV2);
+  const pickleRewardsV2 = Number(dill.claimableV2);
   const claimable = Number(dill.claimable);
 
   const { t } = useTranslation("common");
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
+  const totalEthRewards = parseFloat(formatEther(totalETHRewards));
+  const totalPickleRewards = parseFloat(formatEther(pickleRewardsV2 + claimable));
+
   return (
     <aside className="border border-foreground-alt-500 grow font-title rounded-lg tracking-normal p-4">
       <h1 className="font-medium text-foreground-alt-200 text-base leading-5">
@@ -38,17 +41,17 @@ const Harvest: FC<Props> = ({ dill }) => {
         <div>
           <br></br>
           <p className="text-primary whitespace-pre font-medium text-base">
-            {`${parseFloat(formatEther(totalETHRewards))} ETH`}
+            {`${totalEthRewards.toFixed(4)} ETH`}
           </p>
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-            {`(${formatDollars(parseFloat(formatEther(totalETHRewards)) * ethPrice)})`}
+            {`(${formatDollars(totalEthRewards * ethPrice)})`}
           </h1>
           <p className="text-primary whitespace-pre font-medium text-base">
-            {`${parseFloat(formatEther(totalPickleRewards + claimable))} PICKLE`}
+            {`${totalPickleRewards.toFixed(4)} PICKLE`}
           </p>
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {`(${formatDollars(
-              parseFloat(formatEther(totalPickleRewards + claimable)) * picklePrice,
+              totalPickleRewards * picklePrice,
             )})`}
           </h1>
           <br></br>
