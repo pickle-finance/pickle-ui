@@ -23,8 +23,13 @@ import { Asset, farmDetails } from "v2/store/core.helpers";
 import { Gauge, RewardPaidEvent } from "containers/Contracts/Gauge";
 import { HarvestEvent, Minichef } from "containers/Contracts/Minichef";
 import MoreInfo from "v2/components/MoreInfo";
-import { FEE_DISTRIBUTOR_ADDRESS, formatDollars, roundToSignificantDigits } from "v2/utils";
-import { useDistributorContract } from "v2/features/dill/flows/hooks";
+import {
+  FEE_DISTRIBUTOR_ADDRESS,
+  FEE_DISTRIBUTOR_ADDRESS_V1,
+  formatDollars,
+  roundToSignificantDigits,
+} from "v2/utils";
+import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks"; //changed
 import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
@@ -35,7 +40,9 @@ interface Props {
   asset?: Asset | undefined;
   buttonSize?: ButtonSize;
   buttonType?: ButtonType;
-  harvestableAmount: BigNumber;
+  claimableV1: number; //changed
+  totalClaimableV2: number; //changed
+  totalClaimableETHV2: number; //changed
   network: ChainNetwork;
   rewarderType: Rewarder;
   showNetworkSwitch?: boolean;
@@ -49,7 +56,9 @@ const HarvestFlow: FC<Props> = ({
   asset,
   buttonSize,
   buttonType,
-  harvestableAmount,
+  claimableV1, //changed
+  totalClaimableV2, //changed
+  totalClaimableETHV2, //changed
   network,
   rewarderType,
   showNetworkSwitch,
@@ -65,8 +74,12 @@ const HarvestFlow: FC<Props> = ({
   const chain = core?.chains.find((chain) => chain.network === network);
 
   const FarmContract = useFarmContract(farmDetails(asset)?.farmAddress, chain);
-  const DistributorContract = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS);
+  const DistributorContractV1 = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS_V1); //changed
+  const DistributorContractV2 = useDistributorV2Contract(FEE_DISTRIBUTOR_ADDRESS); //changed
+  const harvestableAmount = claimableV1 + totalClaimableV2 + totalClaimableETHV2; //changed
   const picklePendingAmount = parseFloat(ethers.utils.formatEther(harvestableAmount));
+  // WIP get claimable from v1 using static call
+  // const claimableV1 = 1;
 
   const transactionFactory = () => {
     if (!account) return;
@@ -83,17 +96,23 @@ const HarvestFlow: FC<Props> = ({
       return () => (FarmContract as Minichef).harvest(poolId, account);
     }
 
-    // Dill rewards
-    if (!DistributorContract) return;
+    // Dill rewards//changed
+    if (!DistributorContractV2 || !DistributorContractV1) return;
 
-    return () => DistributorContract["claim()"]();
+    // Claim rewards from V1 Distributor Contract//changed
+    if (claimableV1) return () => DistributorContractV1["claim()"]();
+    //changed
+    if (claimableV1 == 0 && (totalClaimableV2 > 0 || totalClaimableETHV2 > 0))
+      return () => DistributorContractV2["claim()"]();
+    //changed
+    return;
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     if (!account) return;
 
     let pickles: BigNumber = BigNumber.from(0);
-
+    let ETH: BigNumber = BigNumber.from(0);
     // Farm rewards
     if (rewarderType === "farm") {
       if (!asset) return;
@@ -117,10 +136,32 @@ const HarvestFlow: FC<Props> = ({
       );
     } else {
       // Dill rewards
-      const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
-      pickles = claimedEvents[0].args.amount;
-
-      dispatch(UserActions.setDillData({ account, data: { claimable: "0" } }));
+      if (claimableV1 > 0) {
+        const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
+        pickles = claimedEvents[0].args.amount;
+        //changed
+        dispatch(
+          UserActions.setDillData({
+            account,
+            data: { claimable: (claimableV1 - Number(pickles)).toString() },
+          }),
+        );
+      }
+      if (claimableV1 == 0 && (totalClaimableETHV2 > 0 || totalClaimableV2 > 0)) {
+        const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
+        pickles = claimedEvents[0].args.amount;
+        ETH = claimedEvents[0].args.amount_eth;
+        //changed
+        dispatch(
+          UserActions.setDillData({
+            account,
+            data: {
+              claimable: (claimableV1 - Number(pickles)).toString(),
+              totalClaimableTokenV2: (totalClaimableETHV2 - Number(ETH)).toString(),
+            },
+          }),
+        );
+      }
     }
 
     dispatch(
