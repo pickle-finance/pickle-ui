@@ -29,7 +29,7 @@ import {
   formatDollars,
   roundToSignificantDigits,
 } from "v2/utils";
-import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks"; //changed
+import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks"; 
 import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
@@ -40,9 +40,9 @@ interface Props {
   asset?: Asset | undefined;
   buttonSize?: ButtonSize;
   buttonType?: ButtonType;
-  claimableV1: number; //changed
-  totalClaimableV2: number; //changed
-  totalClaimableETHV2: number; //changed
+  claimableV1: number; 
+  claimableV2: number; 
+  claimableETHV2: number; 
   network: ChainNetwork;
   rewarderType: Rewarder;
   showNetworkSwitch?: boolean;
@@ -56,9 +56,9 @@ const HarvestFlow: FC<Props> = ({
   asset,
   buttonSize,
   buttonType,
-  claimableV1, //changed
-  totalClaimableV2, //changed
-  totalClaimableETHV2, //changed
+  claimableV1, 
+  claimableV2, 
+  claimableETHV2, 
   network,
   rewarderType,
   showNetworkSwitch,
@@ -67,6 +67,7 @@ const HarvestFlow: FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
+  const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
   const { network: jarNetwork, needsNetworkSwitch } = useNeedsNetworkSwitch(network);
@@ -74,12 +75,10 @@ const HarvestFlow: FC<Props> = ({
   const chain = core?.chains.find((chain) => chain.network === network);
 
   const FarmContract = useFarmContract(farmDetails(asset)?.farmAddress, chain);
-  const DistributorContractV1 = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS_V1); //changed
-  const DistributorContractV2 = useDistributorV2Contract(FEE_DISTRIBUTOR_ADDRESS); //changed
-  const harvestableAmount = claimableV1 + totalClaimableV2 + totalClaimableETHV2; //changed
+  const DistributorContractV1 = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS_V1); 
+  const DistributorContractV2 = useDistributorV2Contract(FEE_DISTRIBUTOR_ADDRESS); 
+  const harvestableAmount = claimableV1 + claimableV2 + claimableETHV2; 
   const picklePendingAmount = parseFloat(ethers.utils.formatEther(harvestableAmount));
-  // WIP get claimable from v1 using static call
-  // const claimableV1 = 1;
 
   const transactionFactory = () => {
     if (!account) return;
@@ -96,15 +95,15 @@ const HarvestFlow: FC<Props> = ({
       return () => (FarmContract as Minichef).harvest(poolId, account);
     }
 
-    // Dill rewards//changed
+    // Dill rewards
     if (!DistributorContractV2 || !DistributorContractV1) return;
 
-    // Claim rewards from V1 Distributor Contract//changed
-    if (claimableV1) return () => DistributorContractV1["claim()"]();
-    //changed
-    if (claimableV1 == 0 && (totalClaimableV2 > 0 || totalClaimableETHV2 > 0))
+    // Claim rewards from V1 Distributor Contract
+    if (claimableV1 > 0) return () => DistributorContractV1["claim()"]();
+    // Claim rewards from V2 Distributor Contract
+    if (claimableV1 == 0 && (claimableV2 > 0 || claimableETHV2 > 0))
       return () => DistributorContractV2["claim()"]();
-    //changed
+
     return;
   };
 
@@ -139,7 +138,6 @@ const HarvestFlow: FC<Props> = ({
       if (claimableV1 > 0) {
         const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
         pickles = claimedEvents[0].args.amount;
-        //changed
         dispatch(
           UserActions.setDillData({
             account,
@@ -147,17 +145,16 @@ const HarvestFlow: FC<Props> = ({
           }),
         );
       }
-      if (claimableV1 == 0 && (totalClaimableETHV2 > 0 || totalClaimableV2 > 0)) {
+      if (claimableV1 == 0 && (claimableETHV2 > 0 || claimableV2 > 0)) {
         const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
         pickles = claimedEvents[0].args.amount;
         ETH = claimedEvents[0].args.amount_eth;
-        //changed
         dispatch(
           UserActions.setDillData({
             account,
             data: {
-              claimable: (claimableV1 - Number(pickles)).toString(),
-              totalClaimableTokenV2: (totalClaimableETHV2 - Number(ETH)).toString(),
+              claimable: (BigNumber.from(claimableV1).sub(pickles)).toString(),
+              totalClaimableETHV2: (BigNumber.from(claimableETHV2).sub(ETH)).toString(),
             },
           }),
         );
@@ -190,7 +187,7 @@ const HarvestFlow: FC<Props> = ({
         <Button
           type={buttonType}
           size={buttonSize}
-          state={picklePendingAmount > 0 ? "enabled" : "disabled"}
+          state={picklePendingAmount > 0 ? "enabled" : "disabled"} 
           onClick={openModal}
         >
           {t("v2.farms.harvest")}
@@ -203,11 +200,23 @@ const HarvestFlow: FC<Props> = ({
               <p>
                 {t("v2.farms.harvesting")}
                 <span className="text-primary ml-2">
-                  {roundToSignificantDigits(picklePendingAmount, 3)} PICKLE
+                  {claimableV1 > 0
+                    ? `${roundToSignificantDigits(claimableV1, 3)} PICKLE`
+                    : claimableV1 == 0 && (claimableETHV2 > 0 || claimableV2 > 0)
+                    ? `${roundToSignificantDigits(
+                        claimableV1,
+                        3,
+                      )} PICKLE and ${roundToSignificantDigits(claimableETHV2, 3)} ETH`
+                    : "0 PICKLE"}
                 </span>
                 <MoreInfo>
                   <span className="text-foreground-alt-200 text-sm">
-                    {formatDollars(picklePendingAmount * picklePrice, 3)}
+                    {claimableV1 > 0
+                      ? formatDollars(claimableV1 * picklePrice, 3)
+                      : formatDollars(
+                          (claimableV1 + claimableV2) * picklePrice + claimableETHV2 * ethPrice,
+                          3,
+                        )}
                   </span>
                 </MoreInfo>
               </p>

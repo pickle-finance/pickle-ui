@@ -15,11 +15,14 @@ interface Props {
 }
 
 const Harvest: FC<Props> = ({ dill }) => {
+  if (!dill.claimableETHV2 ) return <></>;
+  console.log(dill)
   const totalETHRewards = Number(dill.claimableETHV2);
   const pickleRewardsV2 = Number(dill.claimableV2);
   const claimable = Number(dill.claimable);
-  console.log("dill",dill);
+
   const { t } = useTranslation("common");
+
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   const totalEthRewards = parseFloat(formatEther(totalETHRewards));
@@ -57,8 +60,8 @@ const Harvest: FC<Props> = ({ dill }) => {
         <HarvestFlow
           rewarderType="dill"
           claimableV1={claimable}
-          totalClaimableV2={pickleRewardsV2}
-          totalClaimableETHV2={totalEthRewards}
+          claimableV2={pickleRewardsV2} 
+          claimableETHV2={totalEthRewards}
           network={ChainNetwork.Ethereum}
         />
       </div>
