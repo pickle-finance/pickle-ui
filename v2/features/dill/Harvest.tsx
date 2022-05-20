@@ -18,7 +18,7 @@ const Harvest: FC<Props> = ({ dill }) => {
   const totalETHRewards = Number(dill.claimableETHV2);
   const pickleRewardsV2 = Number(dill.claimableV2);
   const claimable = Number(dill.claimable);
-
+  console.log("dill",dill);
   const { t } = useTranslation("common");
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
@@ -50,15 +50,15 @@ const Harvest: FC<Props> = ({ dill }) => {
             {`${totalPickleRewards.toFixed(4)} PICKLE`}
           </p>
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-            {`(${formatDollars(
-              totalPickleRewards * picklePrice,
-            )})`}
+            {`(${formatDollars(totalPickleRewards * picklePrice)})`}
           </h1>
           <br></br>
         </div>
         <HarvestFlow
           rewarderType="dill"
-          harvestableAmount={BigNumber.from(dill.claimable)}
+          claimableV1={claimable}
+          totalClaimableV2={pickleRewardsV2}
+          totalClaimableETHV2={totalEthRewards}
           network={ChainNetwork.Ethereum}
         />
       </div>

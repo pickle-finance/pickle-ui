@@ -7,8 +7,10 @@ import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 // TODO: use pf-core files when they're included in the distribution
 import { Dill__factory as DillFactory } from "containers/Contracts/factories/Dill__factory";
 import { Dill } from "containers/Contracts/Dill";
-import { FeeDistributorV2__factory as FeeDistributorFactory } from "containers/Contracts/factories/FeeDistributorV2__factory";
+import { FeeDistributorV2__factory as FeeDistributorFactoryV2 } from "containers/Contracts/factories/FeeDistributorV2__factory";
+import { FeeDistributor__factory as FeeDistributorFactory } from "containers/Contracts/factories/FeeDistributor__factory";
 import { FeeDistributorV2 } from "containers/Contracts/FeeDistributorV2";
+import { FeeDistributor } from "containers/Contracts/FeeDistributor";
 import { PickleModelJson } from "picklefinance-core";
 
 export const useDillContract = (address: string) => {
@@ -23,10 +25,22 @@ export const useDillContract = (address: string) => {
   return DillContract;
 };
 
-export const useDistributorContract = (address: string) => {
+export const useDistributorV2Contract = (address: string) => {
   const { library } = useWeb3React<Web3Provider>();
 
   const DistributorContract = useMemo<FeeDistributorV2 | undefined>(() => {
+    if (!library) return;
+
+    return FeeDistributorFactoryV2.connect(address, library.getSigner());
+  }, [library, address]);
+
+  return DistributorContract;
+};
+
+export const useDistributorContract = (address: string) => {
+  const { library } = useWeb3React<Web3Provider>();
+
+  const DistributorContract = useMemo<FeeDistributor | undefined>(() => {
     if (!library) return;
 
     return FeeDistributorFactory.connect(address, library.getSigner());

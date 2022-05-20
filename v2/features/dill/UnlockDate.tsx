@@ -49,14 +49,12 @@ const UnlockDate: FC<Props> = ({ dill }) => {
             ? years == 1
               ? t("v2.time.year")
               : t("v2.time.year_plural", { count: years })
-            : ""}
-          {months || days ? ", " : ""}
+            : ""}{" "}
           {months
             ? months == 1
               ? t("v2.time.month")
               : t("v2.time.month_plural", { count: months })
-            : ""}
-          {days ? ", " : ""}
+            : ""}{" "}
           {days ? (days == 1 ? t("v2.time.day") : t("v2.time.day_plural", { count: days })) : ""}
           {years || months || days ? "" : t("v2.dill.noTimeLockFound")}
         </h1>
