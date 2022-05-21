@@ -17,16 +17,18 @@ interface Props {
 const Harvest: FC<Props> = ({ dill }) => {
   if (!dill.claimableETHV2 ) return <></>;
   console.log(dill)
-  const totalETHRewards = Number(dill.claimableETHV2);
-  const pickleRewardsV2 = Number(dill.claimableV2);
-  const claimable = Number(dill.claimable);
+  const claimableETHRewards = BigNumber.from(dill.claimableETHV2);
+  const claimablePickleRewardsV2 = BigNumber.from(dill.claimableV2);
+  const pickleRewardsV1 = BigNumber.from(dill.claimable);
+  const totalETHRewards = BigNumber.from(dill.totalClaimableETHV2);
+  const totalPickleRewardsV2 = BigNumber.from(dill.totalClaimableTokenV2)
 
   const { t } = useTranslation("common");
 
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   const totalEthRewards = parseFloat(formatEther(totalETHRewards));
-  const totalPickleRewards = parseFloat(formatEther(pickleRewardsV2 + claimable));
+  const totalPickleRewards = parseFloat(formatEther(totalPickleRewardsV2.add(pickleRewardsV1)));
 
   return (
     <aside className="border border-foreground-alt-500 grow font-title rounded-lg tracking-normal p-4">
@@ -59,9 +61,9 @@ const Harvest: FC<Props> = ({ dill }) => {
         </div>
         <HarvestFlow
           rewarderType="dill"
-          claimableV1={claimable}
-          claimableV2={pickleRewardsV2} 
-          claimableETHV2={totalEthRewards}
+          claimableV1={pickleRewardsV1}
+          claimableV2={claimablePickleRewardsV2} 
+          claimableETHV2={claimableETHRewards}
           network={ChainNetwork.Ethereum}
         />
       </div>

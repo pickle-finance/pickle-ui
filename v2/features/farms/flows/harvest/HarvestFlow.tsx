@@ -29,7 +29,7 @@ import {
   formatDollars,
   roundToSignificantDigits,
 } from "v2/utils";
-import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks"; 
+import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks";
 import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
@@ -40,9 +40,10 @@ interface Props {
   asset?: Asset | undefined;
   buttonSize?: ButtonSize;
   buttonType?: ButtonType;
-  claimableV1: number; 
-  claimableV2: number; 
-  claimableETHV2: number; 
+  harvestableAmount?: BigNumber;
+  claimableV1?: BigNumber;
+  claimableV2?: BigNumber;
+  claimableETHV2?: BigNumber;
   network: ChainNetwork;
   rewarderType: Rewarder;
   showNetworkSwitch?: boolean;
@@ -56,9 +57,10 @@ const HarvestFlow: FC<Props> = ({
   asset,
   buttonSize,
   buttonType,
-  claimableV1, 
-  claimableV2, 
-  claimableETHV2, 
+  harvestableAmount,
+  claimableV1,
+  claimableV2,
+  claimableETHV2,
   network,
   rewarderType,
   showNetworkSwitch,
@@ -75,10 +77,15 @@ const HarvestFlow: FC<Props> = ({
   const chain = core?.chains.find((chain) => chain.network === network);
 
   const FarmContract = useFarmContract(farmDetails(asset)?.farmAddress, chain);
-  const DistributorContractV1 = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS_V1); 
-  const DistributorContractV2 = useDistributorV2Contract(FEE_DISTRIBUTOR_ADDRESS); 
-  const harvestableAmount = claimableV1 + claimableV2 + claimableETHV2; 
-  const picklePendingAmount = parseFloat(ethers.utils.formatEther(harvestableAmount));
+  const DistributorContractV1 = useDistributorContract(FEE_DISTRIBUTOR_ADDRESS_V1);
+  const DistributorContractV2 = useDistributorV2Contract(FEE_DISTRIBUTOR_ADDRESS);
+  const claimableV1Formatted = parseFloat(ethers.utils.formatEther(claimableV1 || 0));
+  const claimableV2Formatted = parseFloat(ethers.utils.formatEther(claimableV2 || 0));
+  const claimableETHV2Formatted = parseFloat(ethers.utils.formatEther(claimableETHV2 || 0));
+  const harvestableAmountFormatted = parseFloat(ethers.utils.formatEther(harvestableAmount || 0));
+  const picklePendingAmount = rewarderType === "farm" ? harvestableAmountFormatted :
+    claimableV1Formatted > 0 ? claimableV1Formatted : claimableV2Formatted;
+  const isEthClaimable = rewarderType === "dill" && claimableV1Formatted === 0 && claimableETHV2Formatted > 0
 
   const transactionFactory = () => {
     if (!account) return;
@@ -99,12 +106,9 @@ const HarvestFlow: FC<Props> = ({
     if (!DistributorContractV2 || !DistributorContractV1) return;
 
     // Claim rewards from V1 Distributor Contract
-    if (claimableV1 > 0) return () => DistributorContractV1["claim()"]();
+    if (claimableV1Formatted > 0) return () => DistributorContractV1["claim()"]();
     // Claim rewards from V2 Distributor Contract
-    if (claimableV1 == 0 && (claimableV2 > 0 || claimableETHV2 > 0))
-      return () => DistributorContractV2["claim()"]();
-
-    return;
+    if (claimableV2Formatted > 0 || claimableETHV2Formatted > 0) return () => DistributorContractV2["claim()"]();
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
@@ -133,32 +137,29 @@ const HarvestFlow: FC<Props> = ({
           },
         }),
       );
-    } else {
+    } else if (claimableV1Formatted > 0) {
       // Dill rewards
-      if (claimableV1 > 0) {
-        const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
-        pickles = claimedEvents[0].args.amount;
-        dispatch(
-          UserActions.setDillData({
-            account,
-            data: { claimable: (claimableV1 - Number(pickles)).toString() },
-          }),
-        );
-      }
-      if (claimableV1 == 0 && (claimableETHV2 > 0 || claimableV2 > 0)) {
-        const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
-        pickles = claimedEvents[0].args.amount;
-        ETH = claimedEvents[0].args.amount_eth;
-        dispatch(
-          UserActions.setDillData({
-            account,
-            data: {
-              claimable: (BigNumber.from(claimableV1).sub(pickles)).toString(),
-              totalClaimableETHV2: (BigNumber.from(claimableETHV2).sub(ETH)).toString(),
-            },
-          }),
-        );
-      }
+      const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
+      pickles = claimedEvents[0].args.amount;
+      dispatch(
+        UserActions.setDillData({
+          account,
+          data: { claimable: (BigNumber.from(claimableV1).sub(pickles)).toString() },
+        }),
+      );
+    } else if (claimableETHV2Formatted > 0 || claimableV2Formatted > 0) {
+      const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
+      pickles = claimedEvents[0].args.amount;
+      ETH = claimedEvents[0].args.amount_eth;
+      dispatch(
+        UserActions.setDillData({
+          account,
+          data: {
+            claimableV2: (BigNumber.from(claimableV2).sub(pickles)).toString(),
+            totalClaimableETHV2: (BigNumber.from(claimableETHV2).sub(ETH)).toString(),
+          },
+        }),
+      );
     }
 
     dispatch(
@@ -187,7 +188,7 @@ const HarvestFlow: FC<Props> = ({
         <Button
           type={buttonType}
           size={buttonSize}
-          state={picklePendingAmount > 0 ? "enabled" : "disabled"} 
+          state={picklePendingAmount + claimableETHV2Formatted > 0 ? "enabled" : "disabled"}
           onClick={openModal}
         >
           {t("v2.farms.harvest")}
@@ -200,29 +201,18 @@ const HarvestFlow: FC<Props> = ({
               <p>
                 {t("v2.farms.harvesting")}
                 <span className="text-primary ml-2">
-                  {claimableV1 > 0
-                    ? `${roundToSignificantDigits(claimableV1, 3)} PICKLE`
-                    : claimableV1 == 0 && (claimableETHV2 > 0 || claimableV2 > 0)
-                    ? `${roundToSignificantDigits(
-                        claimableV1,
-                        3,
-                      )} PICKLE and ${roundToSignificantDigits(claimableETHV2, 3)} ETH`
-                    : "0 PICKLE"}
+                  {`${roundToSignificantDigits(picklePendingAmount, 3)} PICKLE${isEthClaimable ? ` and ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH` : ""}`}
                 </span>
                 <MoreInfo>
                   <span className="text-foreground-alt-200 text-sm">
-                    {claimableV1 > 0
-                      ? formatDollars(claimableV1 * picklePrice, 3)
-                      : formatDollars(
-                          (claimableV1 + claimableV2) * picklePrice + claimableETHV2 * ethPrice,
-                          3,
-                        )}
+                    {formatDollars((picklePendingAmount * picklePrice) + (isEthClaimable ? (claimableETHV2Formatted * ethPrice) : 0), 3)}
                   </span>
                 </MoreInfo>
               </p>
             }
             cta={t("v2.actions.harvest")}
             error={error}
+            
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}
           />
