@@ -19,6 +19,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const core = useSelector(CoreSelectors.selectCore);
   const picklePerBlock = Number(core?.platform.picklePerBlock);
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
+  const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   const blockPerWeek = (1 / Chains.get(ChainNetwork.Ethereum).secondsPerBlock) * 60 * 7 * 24 * 60;
   const { weeklyProfit } = useProtocolIncome(core ? core : ({} as PickleModelJson.PickleModelJson));
   const { dillWeeks, totalPickle, pickleLocked, totalDill } = dill;
@@ -97,7 +98,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         </div>
         <div>
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
-            {formatDollars(upcomingDistribution.weeklyPickleAmount * picklePrice)}
+            {formatDollars((upcomingDistribution.weeklyPickleAmount * picklePrice) + (upcomingDistribution.weeklyEthAmount * ethPrice))}
             <MoreInfo>
               <div className="flex items-center font-bold text-sm">
                 <span className="text-foreground mr-1">
@@ -111,6 +112,21 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                     layout="intrinsic"
                     alt="PICKLE"
                     title="PICKLE"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center font-bold text-sm">
+                <span className="text-foreground mr-1">
+                  {formatNumber(upcomingDistribution.weeklyEthAmount)}
+                </span>
+                <div className="inline-block w-6 h-6">
+                  <Image
+                    src="/ethereum.png"
+                    width={24}
+                    height={24}
+                    layout="intrinsic"
+                    alt="ETH"
+                    title="ETH"
                   />
                 </div>
               </div>
