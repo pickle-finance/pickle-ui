@@ -98,7 +98,10 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         </div>
         <div>
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
-            {formatDollars((upcomingDistribution.weeklyPickleAmount * picklePrice) + (upcomingDistribution.weeklyEthAmount * ethPrice))}
+            {formatDollars(
+              upcomingDistribution.weeklyPickleAmount * picklePrice +
+                upcomingDistribution.weeklyEthAmount * ethPrice,
+            )}
             <MoreInfo>
               <div className="flex items-center font-bold text-sm">
                 <span className="text-foreground mr-1">

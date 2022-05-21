@@ -83,9 +83,14 @@ const HarvestFlow: FC<Props> = ({
   const claimableV2Formatted = parseFloat(ethers.utils.formatEther(claimableV2 || 0));
   const claimableETHV2Formatted = parseFloat(ethers.utils.formatEther(claimableETHV2 || 0));
   const harvestableAmountFormatted = parseFloat(ethers.utils.formatEther(harvestableAmount || 0));
-  const picklePendingAmount = rewarderType === "farm" ? harvestableAmountFormatted :
-    claimableV1Formatted > 0 ? claimableV1Formatted : claimableV2Formatted;
-  const isEthClaimable = rewarderType === "dill" && claimableV1Formatted === 0 && claimableETHV2Formatted > 0
+  const picklePendingAmount =
+    rewarderType === "farm"
+      ? harvestableAmountFormatted
+      : claimableV1Formatted > 0
+      ? claimableV1Formatted
+      : claimableV2Formatted;
+  const isEthClaimable =
+    rewarderType === "dill" && claimableV1Formatted === 0 && claimableETHV2Formatted > 0;
 
   const transactionFactory = () => {
     if (!account) return;
@@ -108,7 +113,8 @@ const HarvestFlow: FC<Props> = ({
     // Claim rewards from V1 Distributor Contract
     if (claimableV1Formatted > 0) return () => DistributorContractV1["claim()"]();
     // Claim rewards from V2 Distributor Contract
-    if (claimableV2Formatted > 0 || claimableETHV2Formatted > 0) return () => DistributorContractV2["claim()"]();
+    if (claimableV2Formatted > 0 || claimableETHV2Formatted > 0)
+      return () => DistributorContractV2["claim()"]();
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
@@ -144,7 +150,7 @@ const HarvestFlow: FC<Props> = ({
       dispatch(
         UserActions.setDillData({
           account,
-          data: { claimable: (BigNumber.from(claimableV1).sub(pickles)).toString() },
+          data: { claimable: BigNumber.from(claimableV1).sub(pickles).toString() },
         }),
       );
     } else if (claimableETHV2Formatted > 0 || claimableV2Formatted > 0) {
@@ -155,8 +161,8 @@ const HarvestFlow: FC<Props> = ({
         UserActions.setDillData({
           account,
           data: {
-            claimableV2: (BigNumber.from(claimableV2).sub(pickles)).toString(),
-            totalClaimableETHV2: (BigNumber.from(claimableETHV2).sub(ETH)).toString(),
+            claimableV2: BigNumber.from(claimableV2).sub(pickles).toString(),
+            totalClaimableETHV2: BigNumber.from(claimableETHV2).sub(ETH).toString(),
           },
         }),
       );
@@ -201,18 +207,25 @@ const HarvestFlow: FC<Props> = ({
               <p>
                 {t("v2.farms.harvesting")}
                 <span className="text-primary ml-2">
-                  {`${roundToSignificantDigits(picklePendingAmount, 3)} PICKLE${isEthClaimable ? ` and ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH` : ""}`}
+                  {`${roundToSignificantDigits(picklePendingAmount, 3)} PICKLE${
+                    isEthClaimable
+                      ? ` and ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH`
+                      : ""
+                  }`}
                 </span>
                 <MoreInfo>
                   <span className="text-foreground-alt-200 text-sm">
-                    {formatDollars((picklePendingAmount * picklePrice) + (isEthClaimable ? (claimableETHV2Formatted * ethPrice) : 0), 3)}
+                    {formatDollars(
+                      picklePendingAmount * picklePrice +
+                        (isEthClaimable ? claimableETHV2Formatted * ethPrice : 0),
+                      3,
+                    )}
                   </span>
                 </MoreInfo>
               </p>
             }
             cta={t("v2.actions.harvest")}
             error={error}
-            
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}
           />

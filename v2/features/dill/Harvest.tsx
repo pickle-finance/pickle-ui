@@ -15,13 +15,11 @@ interface Props {
 }
 
 const Harvest: FC<Props> = ({ dill }) => {
-  if (!dill.claimableETHV2 ) return <></>;
-  console.log(dill)
   const claimableETHRewards = BigNumber.from(dill.claimableETHV2);
   const claimablePickleRewardsV2 = BigNumber.from(dill.claimableV2);
   const pickleRewardsV1 = BigNumber.from(dill.claimable);
   const totalETHRewards = BigNumber.from(dill.totalClaimableETHV2);
-  const totalPickleRewardsV2 = BigNumber.from(dill.totalClaimableTokenV2)
+  const totalPickleRewardsV2 = BigNumber.from(dill.totalClaimableTokenV2);
 
   const { t } = useTranslation("common");
 
@@ -62,7 +60,7 @@ const Harvest: FC<Props> = ({ dill }) => {
         <HarvestFlow
           rewarderType="dill"
           claimableV1={pickleRewardsV1}
-          claimableV2={claimablePickleRewardsV2} 
+          claimableV2={claimablePickleRewardsV2}
           claimableETHV2={claimableETHRewards}
           network={ChainNetwork.Ethereum}
         />
