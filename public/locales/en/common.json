@@ -443,6 +443,7 @@
       "asset": "Asset",
       "baseApr": "Base APR",
       "baseAprTooltip": "This is the base APR of the jar, without the effects of compounding",
+      "bProtocolInfo": "This jar has no fees and kickback rate for LQTY is 100%",
       "chain": "Chain",
       "compounding": "Compounding",
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
