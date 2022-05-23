@@ -60,14 +60,7 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
   const token1Data = balances?.componentTokenBalances[token1Name];
 
   const depositToken0BalanceBN = BigNumber.from(token0Data?.balance || "0");
-  const depositToken0Balance = parseFloat(
-    ethers.utils.formatUnits(depositToken0BalanceBN, token0Decimals),
-  );
-
   const depositToken1BalanceBN = BigNumber.from(token1Data?.balance || "0");
-  const depositToken1Balance = parseFloat(
-    ethers.utils.formatUnits(depositToken1BalanceBN, token1Decimals),
-  );
 
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
 
@@ -191,7 +184,7 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
   };
 
   const enabled =
-    isAcceptingDeposits(jar) && (depositToken0Balance > 0 || depositToken1Balance > 0);
+    isAcceptingDeposits(jar) && (depositToken0BalanceBN.gt(0) || depositToken1BalanceBN.gt(0));
 
   return (
     <>
@@ -212,8 +205,8 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
       >
         {current.matches(States.FORM) && (
           <FormUniV3
-            balance0={depositToken0Balance}
-            balance1={depositToken1Balance}
+            balance0={token0Data?.balance || "0"}
+            balance1={token1Data?.balance || "0"}
             token0Decimals={token0Decimals}
             token1Decimals={token1Decimals}
             jar={jar}

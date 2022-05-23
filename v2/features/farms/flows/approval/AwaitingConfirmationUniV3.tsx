@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { PencilIcon } from "@heroicons/react/outline";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 import Button from "v2/components/Button";
@@ -31,7 +30,6 @@ const UniV3AwaitingConfirmation: FC<Props> = ({
   if (!balances)
     return (
       <>
-        {" "}
         <div className="font-title mb-2 text-lg text-foreground-alt-200">
           {t("v2.farms.approvalBalanceError")}
         </div>
@@ -46,8 +44,14 @@ const UniV3AwaitingConfirmation: FC<Props> = ({
   const userHasJarAllowance = jarAllowedToken0 && jarAllowedToken1;
   return (
     <>
-      <div className="flex justify-center my-10">
-        <PencilIcon className="w-20 h-20 text-primary" />
+      <div className="flex justify-center my-2">
+        <div className="w-1/2 min-h-[200px]">
+          <img
+            src="/animations/working.gif"
+            alt={t("v2.prompts.pleaseConfirm")}
+            title={t("v2.prompts.pleaseConfirm")}
+          />
+        </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>
       <Error error={error} />

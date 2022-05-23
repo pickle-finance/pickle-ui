@@ -20,7 +20,7 @@ const Chart: FC<{ data: JarChartData; timeUnit: string }> = ({ data, timeUnit })
   const sortedData: AssetCoreData[] = assetData
     ? assetData.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
     : [];
-  const chartData: ApyChartData[] = sortedData.map(aprAndApyData);
+  const chartData: ApyChartData[] = sortedData.map(aprAndApyData).filter((a) => a.jarApr !== 0);
   const dataMax = getDataMax(chartData);
   const dataMin = getDataMin(chartData);
 

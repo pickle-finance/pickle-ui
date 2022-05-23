@@ -10,14 +10,14 @@ import { roundToSignificantDigits, shortenAddress } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
 import Button from "v2/components/Button";
 import Link from "v2/components/Link";
-import { JarWithData } from "v2/store/core";
+import { AssetWithData } from "v2/store/core";
 import DetailsToggle from "./DetailsToggle";
 import FarmDocs from "./FarmDocs";
-import { jarSupportsStaking } from "v2/store/core.helpers";
+import { isJar, isStandaloneFarm, jarSupportsStaking } from "v2/store/core.helpers";
 import { metamaskAdd } from "./flows/utils";
 
 interface Props {
-  jar: JarWithData;
+  asset: AssetWithData;
   hideDescription?: boolean;
 }
 
@@ -53,21 +53,22 @@ const ComponentRow: FC<ComponentRowProps> = ({ property, value }) => (
   </p>
 );
 
-const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
+const FarmsTableRowDetails: FC<Props> = ({ asset, hideDescription }) => {
   const { t } = useTranslation("common");
-  const chain = Chains.get(jar.chain);
+  const chain = Chains.get(asset.chain);
   const { library } = useWeb3React<Web3Provider>();
 
   const totalTokensInJarAndFarm =
-    parseFloat(jar.depositTokensInJar.tokens) + parseFloat(jar.depositTokensInFarm.tokens);
+    parseFloat(asset.depositTokensInJar.tokens) + parseFloat(asset.depositTokensInFarm.tokens);
 
-  const userShare = jar.details.tokenBalance
-    ? totalTokensInJarAndFarm / jar.details.tokenBalance
-    : 0;
+  const userShare =
+    (isJar(asset) || isStandaloneFarm(asset)) && asset.details.tokenBalance
+      ? totalTokensInJarAndFarm / asset.details.tokenBalance
+      : 0;
 
   const userShareHarvestUsd =
     userShare *
-    (jar.details.harvestStats?.harvestableUSD || 0) *
+    (asset.details.harvestStats?.harvestableUSD || 0) *
     (1 - (chain?.defaultPerformanceFee || 0.2));
 
   return (
@@ -100,12 +101,12 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                       </span>
                     </MoreInfo>
                   </span>
-                  <Button onClick={() => metamaskAdd(jar, library)} type="secondary">
+                  <Button onClick={() => metamaskAdd(asset, library)} type="secondary">
                     {t("v2.farms.metamaskAdd")}
                   </Button>
                 </div>
                 <div className="pt-2 mb-4">
-                  <FarmDocs jarOrBrinery={jar} hideDescription={hideDescription} />
+                  <FarmDocs asset={asset} hideDescription={hideDescription} />
                 </div>
                 <div className="grid grid-cols-3 py-1">
                   <div>
@@ -115,14 +116,15 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                   </div>
                   <div>
                     <span className="ml-auto">
-                      <Link href={`${chain?.explorer}/address/${jar.contract}`} external primary>
-                        {shortenAddress(jar.contract)}
+                      <Link href={`${chain?.explorer}/address/${asset.contract}`} external primary>
+                        {shortenAddress(asset.contract)}
                       </Link>
                     </span>
                   </div>
                 </div>
-                {jar.details?.strategyAddr != NULL_ADDRESS &&
-                  jar.details?.strategyAddr !== undefined && (
+                {isJar(asset) &&
+                  asset.details?.strategyAddr != NULL_ADDRESS &&
+                  asset.details?.strategyAddr !== undefined && (
                     <div className="grid grid-cols-3 py-1">
                       <div>
                         <span className="font-body font-bold text-foreground-alt-200">
@@ -132,17 +134,17 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                       <div>
                         <span className="ml-auto">
                           <Link
-                            href={`${chain?.explorer}/address/${jar.details?.strategyAddr}`}
+                            href={`${chain?.explorer}/address/${asset.details?.strategyAddr}`}
                             external
                             primary
                           >
-                            {shortenAddress(jar.details?.strategyAddr!)}
+                            {shortenAddress(asset.details?.strategyAddr)}
                           </Link>
                         </span>
                       </div>
                     </div>
                   )}
-                {jarSupportsStaking(jar) && (
+                {jarSupportsStaking(asset) && (
                   <div className="grid grid-cols-3 py-1">
                     <div>
                       <span className="font-body font-bold text-foreground-alt-200">
@@ -152,11 +154,11 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                     <div>
                       <span className="ml-auto">
                         <Link
-                          href={`${chain?.explorer}/address/${jar.farm?.farmAddress}`}
+                          href={`${chain?.explorer}/address/${asset.farm?.farmAddress}`}
                           external
                           primary
                         >
-                          {shortenAddress(jar.farm?.farmAddress!)}
+                          {shortenAddress(asset.farm?.farmAddress!)}
                         </Link>
                       </span>
                     </div>
@@ -164,11 +166,13 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                 )}
               </div>
               <div className="px-4 border-r border-foreground-alt-500">
-                <InfoRowContent
-                  label={t("v2.farms.ratio")}
-                  tooltipText={t("v2.farms.ratioTooltip")}
-                  value={jar.details.ratio?.toFixed(4) || ""}
-                />
+                {isJar(asset) && (
+                  <InfoRowContent
+                    label={t("v2.farms.ratio")}
+                    tooltipText={t("v2.farms.ratioTooltip")}
+                    value={asset.details.ratio?.toFixed(4) || ""}
+                  />
+                )}
                 <InfoRowContent
                   label={t("v2.farms.pending")}
                   tooltipText={t("v2.farms.pendingTooltip")}
@@ -177,16 +181,16 @@ const FarmsTableRowDetails: FC<Props> = ({ jar, hideDescription }) => {
                 <InfoRowContent
                   label={t("v2.farms.baseApr")}
                   tooltipText={t("v2.farms.baseAprTooltip")}
-                  value={`${jar.aprStats?.apr.toFixed(3)}%`}
+                  value={`${asset.aprStats?.apr.toFixed(3)}%`}
                 />
                 <InfoRowContent label={t("v2.farms.yieldRates")} tooltipText={null} value="" />
                 <ComponentRow
                   property={t("v2.time.weekly")}
-                  value={`${((jar.aprStats?.apr || 0) / 52).toFixed(2)}%`}
+                  value={`${((asset.aprStats?.apr || 0) / 52).toFixed(2)}%`}
                 />
                 <ComponentRow
                   property={t("v2.time.monthly")}
-                  value={`${((jar.aprStats?.apr || 0) / 12).toFixed(2)}%`}
+                  value={`${((asset.aprStats?.apr || 0) / 12).toFixed(2)}%`}
                 />
               </div>
             </Disclosure.Panel>

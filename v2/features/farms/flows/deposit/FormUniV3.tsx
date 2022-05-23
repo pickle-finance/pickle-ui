@@ -8,7 +8,7 @@ import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/uti
 import Button from "v2/components/Button";
 import ErrorMessage from "../Error";
 import { CoreSelectors, JarWithData } from "v2/store/core";
-import { classNames, truncateToMaxDecimals } from "v2/utils";
+import { truncateToMaxDecimals } from "v2/utils";
 import TokenOptions from "./TokenOptions";
 import { useAppSelector } from "v2/store";
 import OnOffToggle from "v2/components/OnOffToggle";
@@ -22,8 +22,8 @@ export interface TokenSelect {
 
 interface Props {
   jar: JarWithData;
-  balance0: number;
-  balance1: number;
+  balance0: string;
+  balance1: string;
   token0Decimals: number;
   token1Decimals: number;
   canZap: boolean;
@@ -60,38 +60,41 @@ const FormUniV3: FC<Props> = ({
   });
 
   const usedBalance0 =
-    jar.token0?.isNative && selectedToken.value === "native" ? parseFloat(nativeBalance) : balance0;
+    jar.token0?.isNative && selectedToken.value === "native" ? nativeBalance : balance0;
 
   const usedBalance1 =
-    jar.token1?.isNative && selectedToken.value === "native" ? parseFloat(nativeBalance) : balance1;
+    jar.token1?.isNative && selectedToken.value === "native" ? nativeBalance : balance1;
+
+  const displayBalance0Str = formatUnits(usedBalance0, token0Decimals);
+
+  const displayBalance1Str = formatUnits(usedBalance1, token1Decimals);
 
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
   const [error, setError] = useState<Error | undefined>();
 
   const validate = () => {
-    const amount0Num = parseFloat(amount0);
-    const amount1Num = parseFloat(amount1);
+    const amount0BN = parseUnits(amount0 || "0", token0Decimals);
+    const amount1BN = parseUnits(amount1 || "0", token1Decimals);
 
-    if (!amount0 || !amount1) {
+    if (amount0BN.eq(0) && amount1BN.eq(0)) {
       setError(invalidAmountError);
       return;
     }
 
-    const isValid =
-      (amount0Num || amount1Num) && amount0Num <= usedBalance0 && amount1Num <= usedBalance1;
+    const isValid = amount0BN.lte(usedBalance0) && amount1BN.lte(usedBalance1);
     isValid ? setError(undefined) : setError(invalidAmountError);
   };
 
   let inputAmount0, inputAmount1;
-  const handleChange0 = (event: ChangeEvent<HTMLInputElement> | number) => {
+  const handleChange0 = (event: ChangeEvent<HTMLInputElement> | string) => {
+    // Use user input
     if ((event as ChangeEvent<HTMLInputElement>).target) {
       const { value } = (event as ChangeEvent<HTMLInputElement>).target;
       inputAmount0 = value;
-    } else {
-      inputAmount0 =
-        jar.token0?.isNative && selectedToken.value === "native"
-          ? nativeBalance
-          : balance0.toString();
+    }
+    // Use max balance
+    else {
+      inputAmount0 = displayBalance0Str;
     }
 
     setAmount0(inputAmount0);
@@ -103,12 +106,12 @@ const FormUniV3: FC<Props> = ({
     }
   };
 
-  const handleChange1 = (event: ChangeEvent<HTMLInputElement> | number) => {
+  const handleChange1 = (event: ChangeEvent<HTMLInputElement> | string) => {
     if ((event as ChangeEvent<HTMLInputElement>).target) {
       const { value } = (event as ChangeEvent<HTMLInputElement>).target;
       inputAmount1 = value;
     } else {
-      inputAmount1 = usedBalance1.toString();
+      inputAmount1 = displayBalance1Str;
     }
     setAmount1(inputAmount1);
     if (!shouldZap && inputAmount1) {
@@ -126,7 +129,7 @@ const FormUniV3: FC<Props> = ({
 
   useEffect(() => {
     const setBalance = async () =>
-      setNativeBalance(formatEther((await library?.getSigner()?.getBalance()) || "0"));
+      setNativeBalance((await library?.getSigner()?.getBalance())?.toString() || "0");
     setBalance();
   }, [library]);
 
@@ -151,7 +154,7 @@ const FormUniV3: FC<Props> = ({
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {usedBalance0}
+            {t("v2.balances.balance")}: {displayBalance0Str}
           </p>
         </div>
 
@@ -165,7 +168,7 @@ const FormUniV3: FC<Props> = ({
           <Button
             size="small"
             onClick={() => {
-              handleChange0(balance1);
+              handleChange0(balance0);
             }}
           >
             {t("v2.balances.max")}
@@ -186,7 +189,7 @@ const FormUniV3: FC<Props> = ({
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {usedBalance1}
+            {t("v2.balances.balance")}: {displayBalance1Str}
           </p>
         </div>
 

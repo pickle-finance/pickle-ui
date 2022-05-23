@@ -210,19 +210,17 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     else {
       switch (isEthToken) {
         case ethToken.token0:
-          return jarContract
-            .connect(signer)
-            .deposit("0", convertDecimals(deposit1Amount, token1?.decimals), {
-              value: parseEther(deposit0Amount),
-              gasLimit: 850000,
-            });
+          return payableDeposit(
+            0,
+            convertDecimals(deposit1Amount, token1?.decimals ?? 18),
+            parseEther(deposit0Amount),
+          );
         case ethToken.token1:
-          return jarContract
-            .connect(signer)
-            .deposit(convertDecimals(deposit0Amount, token0?.decimals), "0", {
-              value: parseEther(deposit1Amount),
-              gasLimit: 850000,
-            });
+          return payableDeposit(
+            convertDecimals(deposit0Amount, token0?.decimals ?? 18),
+            0,
+            parseEther(deposit1Amount),
+          );
         case ethToken.none:
         default:
           return defaultDeposit();
@@ -230,15 +228,26 @@ export const UniV3JarMiniFarmCollapsible: FC<{
     }
   };
 
-  const defaultDeposit = () =>
-    jarContract
+  const payableDeposit = (
+    token0Amount: BigNumber | 0,
+    token1Amount: BigNumber | 0,
+    ethAmount: BigNumber,
+  ) => {
+    return jarContract.connect(signer)["deposit(uint256,uint256)"](token0Amount, token1Amount, {
+      value: ethAmount,
+      gasLimit: 850000,
+    });
+  };
+
+  const defaultDeposit = () => {
+    return jarContract
       .connect(signer)
-      .deposit(
-        convertDecimals(deposit0Amount, token0?.decimals),
-        convertDecimals(deposit1Amount, token1?.decimals),
+      ["deposit(uint256,uint256)"](
+        convertDecimals(deposit0Amount, token0?.decimals ?? 18),
+        convertDecimals(deposit1Amount, token1?.decimals ?? 18),
         { gasLimit: 850000 },
       );
-
+  };
   const depositAndStake = async () => {
     if (minichef && address) {
       try {

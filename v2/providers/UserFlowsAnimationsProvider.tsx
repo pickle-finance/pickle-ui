@@ -5,7 +5,12 @@ import { VFC, useEffect } from "react";
  * for animated GIFs in Next.js. Instead, we preload them
  * so they can render almost instantly.
  */
-const images = ["/animations/waiting.gif"];
+const images = [
+  "/animations/working.gif",
+  "/animations/waiting.gif",
+  "/animations/success.gif",
+  "/animations/failure.gif",
+];
 
 const preloadImage = (url: string) => {
   const img = new Image();

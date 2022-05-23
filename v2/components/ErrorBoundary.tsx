@@ -1,7 +1,8 @@
 import { useTranslation } from "next-i18next";
 import React, { Component, ErrorInfo, FC, ReactNode } from "react";
+
 import { classNames } from "v2/utils";
-import Link from "v2/components/Link";
+import Button from "./Button";
 
 interface Props {
   children: ReactNode;
@@ -36,21 +37,25 @@ class ErrorBoundary extends Component<Props, State> {
 
 const ErrorMessage: FC<{ className?: string }> = ({ className }) => {
   const { t } = useTranslation("common");
+
   return (
-    <div className="flex flex-col justify-center items-center py-96">
+    <div className="flex justify-center items-center py-8 lg:py-32">
       <div
         className={classNames(
-          "bg-background-light w-1/3 indent-4 rounded-xl border border-foreground-alt-500 shadow p-12",
+          "bg-background-light w-4/5 lg:w-1/2 max-w-xl rounded-xl border border-foreground-alt-500 shadow p-6 md:p-12",
           className,
         )}
       >
-        <div className="w-full text-justify">
-          <p className="break-normal text-accent">{t("v2.error")}</p>
+        <div className="flex justify-center mt-2">
+          <div className="w-3/5 lg:w-1/2 min-h-[200px]">
+            <img src="/animations/failure.gif" />
+          </div>
         </div>
-        <div className="text-center">
-          <Link className="mt-10" href="https://discord.gg/pickle-finance" external>
-            <p className="on-hover:text-primary-light">discord.gg/pickle-finance</p>
-          </Link>
+        <div className="w-full text-center mb-8">
+          <p className="break-normal text-foreground-alt-200">{t("v2.error")}</p>
+        </div>
+        <div className="flex justify-center">
+          <Button href="https://discord.gg/pickle-finance">Discord</Button>
         </div>
       </div>
     </div>

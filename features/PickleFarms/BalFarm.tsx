@@ -1,28 +1,29 @@
 import React, { useState, FC, useEffect } from "react";
 import { Grid, Card } from "@geist-ui/react";
-import { formatEther } from "@ethersproject/units";
 import { Trans, useTranslation } from "next-i18next";
-
 import { TradeButton } from "features/Prices/Prices";
 import { Connection } from "containers/Connection";
 import { Prices } from "containers/Prices";
 import { Contracts } from "containers/Contracts";
-
-const BALANCER_VAULT = "0xba12222222228d8ba445958a75a0704d566bf2c8";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 
 export const BalFarm: FC = () => {
   const { provider, blockNum } = Connection.useContainer();
   const { pickle } = Contracts.useContainer();
   const { prices } = Prices.useContainer();
+  const { pickleCore } = PickleCore.useContainer();
   const [apy, setApy] = useState("0");
   const { t } = useTranslation("common");
 
   const getBalancerStats = async () => {
-    if (provider && prices && pickle) {
-      const pickleLocked = await pickle.balanceOf(BALANCER_VAULT);
-      const valueLocked = (+formatEther(pickleLocked) * prices.pickle) / 0.8; // 80/20 pool
-      const balDistributed = 42995;
-      const apy = (balDistributed * prices.bal * 100) / valueLocked;
+    if (provider && prices && pickle && pickleCore) {
+      const pickleEthJar = pickleCore.assets.jars.find((x) => x.details?.apiKey === "BalPickleEth");
+      const jarApy = pickleEthJar?.aprStats?.apy;
+      const farmApy = pickleEthJar?.farm?.details?.farmApyComponents?.reduce(
+        (a, b) => a + b.apr,
+        0,
+      );
+      const apy = (jarApy ?? 0) + (farmApy ?? 0);
       setApy(apy.toFixed(2));
     }
   };

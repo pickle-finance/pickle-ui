@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { BigNumber, ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
@@ -10,8 +9,7 @@ import { UserSelectors } from "v2/store/user";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import ApprovalFlow from "../farms/flows/approval/ApprovalFlow";
 import DepositFlow from "../farms/flows/deposit/DepositFlow";
-import WithdrawFlow from "../farms/flows/withdraw/WithdrawFlow";
-import { classNames, roundToSignificantDigits } from "v2/utils";
+import { roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "../farms/flows/harvest/HarvestFlow";
 
 interface Props {
@@ -56,7 +54,7 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
             />
             {userHasBrineryAllowance && (
               <div>
-                <DepositFlow jarOrBrinery={brinery} balances={userBrinery} type="brinery" />
+                <DepositFlow asset={brinery} balances={userBrinery} type="brinery" />
               </div>
             )}
           </div>

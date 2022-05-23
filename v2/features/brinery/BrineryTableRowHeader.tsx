@@ -29,7 +29,7 @@ const BrineryTableRowHeader: FC<Props> = ({ brinery, simple, open, userDillRatio
   return (
     <>
       <RowCell className={classNames(!open && "rounded-bl-xl", "rounded-tl-xl flex items-center")}>
-        <FarmComponentsIcons jar={brinery} />
+        <FarmComponentsIcons asset={brinery} />
 
         <ChainProtocol asset={brinery} networks={networks} />
       </RowCell>
@@ -51,7 +51,7 @@ const BrineryTableRowHeader: FC<Props> = ({ brinery, simple, open, userDillRatio
         </div>
       </RowCell>
       <RowCell>
-        <FarmAPY jarOrBrinery={brinery} userDillRatio={userDillRatio} />
+        <FarmAPY asset={brinery} userDillRatio={userDillRatio} />
       </RowCell>
       <RowCell className={classNames("rounded-tr-xl")}>
         <p className="font-title font-medium text-base leading-5">
