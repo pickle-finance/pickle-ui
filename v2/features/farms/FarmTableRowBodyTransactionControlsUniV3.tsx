@@ -1,19 +1,21 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
-import Button from "v2/components/Button";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
-import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import ApprovalFlowUniV3 from "./flows/approval/ApprovalFlowUniV3";
 import DepositFlowUniV3 from "./flows/deposit/DepositFlowUniV3";
 import { useAccount } from "v2/hooks";
+import StakeFlow from "./flows/stake/StakeFlow";
+import UnstakeFlow from "./flows/unstake/UnstakeFlow";
+import { roundToSignificantDigits } from "v2/utils";
+import HarvestFlow from "./flows/harvest/HarvestFlow";
 
 interface Props {
   jar: JarWithData;
@@ -32,8 +34,9 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
 
   const data = getUserAssetDataWithPrices(jar, pfcore, userModel);
   const farmTokens = data.depositTokensInFarm.tokens;
-  const picklesPending = data.earnedPickles.tokensVisible;
-
+  const picklePending = parseFloat(
+    ethers.utils.formatUnits(userTokenData?.picklePending || "0", 18),
+  );
   const decimals = jarDecimals(jar);
   const jarAllowanceToken0 = userTokenData?.componentTokenBalances[jar.token0?.name!].allowance;
   const jarAllowanceToken1 = userTokenData?.componentTokenBalances[jar.token1?.name!].allowance;
@@ -64,7 +67,7 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
           {userHasJarAllowance && (
             <div className="grid grid-cols-2 gap-3">
               <DepositFlowUniV3 jar={jar} balances={userTokenData} />
-              <WithdrawFlow jar={jar} balances={userTokenData} isUniV3={true} />
+              <WithdrawFlow asset={jar} balances={userTokenData} isUniV3={true} />
             </div>
           )}
         </div>
@@ -85,11 +88,12 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             storeAttribute="farmAllowance"
             chainName={jar.chain}
             visible={!userHasFarmAllowance}
+            type="farm"
           />
           {userHasFarmAllowance && (
             <div className="grid grid-cols-2 gap-3">
-              <DepositFlow jar={jar} balances={userTokenData} />
-              <WithdrawFlow jar={jar} balances={userTokenData} />
+              <StakeFlow asset={jar} balances={userTokenData} />
+              <UnstakeFlow asset={jar} balances={userTokenData} />
             </div>
           )}
         </div>
@@ -101,11 +105,14 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-primary font-medium text-base leading-5">
-              {picklesPending}
+              {roundToSignificantDigits(picklePending, 3)}
             </span>
-            <Button type="primary" state="disabled">
-              {t("v2.farms.harvest")}
-            </Button>
+            <HarvestFlow
+              rewarderType="farm"
+              asset={jar}
+              harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
+              network={jar.chain}
+            />
           </div>
         </div>
         <div className="relative">

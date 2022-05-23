@@ -8,7 +8,13 @@ import {
   StandaloneFarmDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
-import { JarWithData } from "./core";
+import {
+  AssetWithData,
+  BrineryWithData,
+  ExternalAssetWithData,
+  JarWithData,
+  StandaloneFarmWithData,
+} from "./core";
 
 export type Asset = JarDefinition | StandaloneFarmDefinition | ExternalAssetDefinition;
 
@@ -16,12 +22,23 @@ export const farmDetails = (asset: Asset | undefined): NestedFarm | undefined =>
   if (asset && "farm" in asset) return asset.farm;
 };
 
-export const jarSupportsStaking = (jar: JarWithData): boolean => {
-  const { farm } = jar;
+export const isJar = (asset: Asset | undefined): asset is JarWithData => asset?.type === "jar";
+export const isStandaloneFarm = (asset: Asset | undefined): asset is StandaloneFarmWithData =>
+  asset?.type === "standalone_farm";
+export const isExternalAsset = (asset: Asset | undefined): asset is ExternalAssetWithData =>
+  asset?.type === "external";
+export const isBrinery = (asset: Asset | undefined): asset is BrineryWithData =>
+  asset?.type === "brinery";
 
-  if (!farm) return false;
+export const jarSupportsStaking = (
+  asset: AssetWithData | undefined,
+): asset is JarWithData | ExternalAssetWithData => {
+  if (asset == undefined) return false;
+  if ("farm" in asset) {
+    return asset.farm !== undefined && asset.farm.farmAddress !== ethers.constants.AddressZero;
+  }
 
-  return farm.farmAddress !== ethers.constants.AddressZero;
+  return false;
 };
 
 export const allAssets = (core: PickleModelJson): Asset[] => [
@@ -68,3 +85,6 @@ export const tokenDecimals = (apiKey: string | undefined, core: PickleModelJson)
 export const enabledPredicate = (asset: Asset) =>
   asset.enablement === AssetEnablement.ENABLED ||
   asset.enablement === AssetEnablement.WITHDRAW_ONLY;
+
+export const isAcceptingDeposits = (asset: Asset) =>
+  asset.enablement !== AssetEnablement.WITHDRAW_ONLY;

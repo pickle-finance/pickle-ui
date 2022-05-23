@@ -349,6 +349,7 @@
       "walletConnect": "Wallet Connect"
     },
     "dashboard": {
+      "contract": "Contract",
       "dillAmount": "DILL amount",
       "earnUpTo": "Earn up to <1>{{ percent }}</1><2/>APY",
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
@@ -358,6 +359,7 @@
       "picklesInWalletZeroOrOne": "PICKLEs in wallet",
       "picklesInWallet": "PICKLEs on {{ chains }} chains",
       "pickleSubtitle": "Pickle auto-compounds your rewards to boost your yield",
+      "pickleToken": "PICKLE token",
       "pendingHarvests": "Pending harvests",
       "pickleTitle": "Pickle Finance",
       "unclaimedRewards": "Unclaimed rewards"
@@ -417,6 +419,7 @@
             "platformWeight": "Platform Weight"
           }
         },
+        "connectToMainnet": "You must be on the Ethereum network to cast an emisison vote.",
         "currentWeight": "Platform Weight",
         "description": "Select which farms to allocate PICKLE rewards to using your DILL balance",
         "descriptionMainnet": "Voting for Mainnet jar reward weights occurs on-chain. Your DILL balance dictates how much power you have with regard to how the platform emissions are distributed. To vote, you must select at least one jar, then ensure the sum of your vote(s) equals 100%. If your vote is valid, you can cast your vote with the \"Cast Mainnet Vote\" button.",
@@ -436,6 +439,7 @@
       "weeklyPickleAmount": "Weekly PICKLEs distributed",
       "yourShare": "{{ percentage }} of total DILL"
     },
+    "error": "An unexpected error has occured. Try refreshing the page. If the error persists let us know in the #support channel on Discord.",
     "farms": {
       "allApproved": "All approved!",
       "approvalBalanceError": "Please get your hands on some deposit tokens first!",
@@ -483,6 +487,7 @@
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
       "loadingDocs": "Loading docs ...",
+      "loadingInvestments": "Loading investment details ...",
       "loadingUserModel": "Loading your balances ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
@@ -509,6 +514,7 @@
       "transactionFailed": "Transaction failed",
       "unstakeToken": "Unstake {{ token }}",
       "waitingToBeProcessed": "Waiting for your transaction to be processed",
+      "withdrawOnly": "This jar is in withdraw-only mode.",
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates",
       "yourApy": "Your APY: {{ apy }}"
@@ -519,6 +525,7 @@
       "standard": "Standard"
     },
     "nav": {
+      "brinery": "Brinery",
       "close": "Close panel",
       "dashboard": "Dashboard",
       "dill": "DILL",
@@ -529,7 +536,11 @@
       "next": "Next",
       "openMenu": "Open main menu",
       "previous": "Prev",
-      "stats": "Stats"
+      "stats": "Stats",
+      "vote": "Vote"
+    },
+    "prompts": {
+      "pleaseConfirm": "Please confirm the transaction"
     },
     "stats": {
       "chain": {
@@ -548,7 +559,9 @@
         },
         "revsChartTitle": "Daily Revenue",
         "revenueYLabel": "Revenue (USD)",
+        "tokenPctTable": "One Day Deposit Token Value Change (%)",
         "tvlChartTitle": "Total Value Locked",
+        "tvlTable": "One Day TVL Change ($)",
         "tvlYLabel": "TVL (USD)"
       },
       "jar": {
@@ -644,6 +657,13 @@
     "wallet": {
       "exit": "Exit",
       "switch": "Switch wallet"
+    },
+    "brinery": {
+      "subtitle": "Pickle accepts governance token deposits in exchange for perpetual fee claims. Receipt pTokens are issued to represent your proportionate share of locked tokens",
+      "brineryAddress": "Brinery Address",
+      "lockerAddress": "Locker Address",
+      "seeBrineryDetails": "See brinery details",
+      "strategyAddress": "Strategy Address"
     }
   }
 }

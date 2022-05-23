@@ -20,7 +20,7 @@ const AppLink: FC<Props> = ({ active, children, className, external, href, prima
         className={classNames(
           active && "bg-background-light text-primary-light",
           primary ? "text-accent" : "text-foreground",
-          "group inline-flex grow items-center text-sm rounded-lg hover:text-primary-light transition duration-300 ease-in-out",
+          "group inline-flex items-center text-sm rounded-lg hover:text-primary-light transition duration-300 ease-in-out",
           className,
         )}
         {...(external && { target: "_blank", rel: "noopener" })}

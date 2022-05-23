@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ChainNetwork } from "picklefinance-core";
+import { UserBrineryData } from "picklefinance-core/lib/client/UserModel";
+import { BrineryDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 import Button, { ButtonSize, ButtonType } from "v2/components/Button";
 import Modal from "v2/components/Modal";
@@ -14,7 +16,7 @@ import AwaitingConfirmationNoUserInput from "../AwaitingConfirmationNoUserInput"
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
-import { useFarmContract, useTransaction } from "../hooks";
+import { useFarmContract, useTransaction, usePveContract } from "../hooks";
 import { AppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
 import { eventsByName } from "../utils";
@@ -34,7 +36,7 @@ import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
 
-export type Rewarder = "farm" | "dill";
+export type Rewarder = "farm" | "dill" | "brinery";
 
 interface Props {
   asset?: Asset | undefined;
@@ -47,6 +49,7 @@ interface Props {
   network: ChainNetwork;
   rewarderType: Rewarder;
   showNetworkSwitch?: boolean;
+  balances?: UserBrineryData | undefined;
 }
 
 /**
@@ -64,6 +67,7 @@ const HarvestFlow: FC<Props> = ({
   network,
   rewarderType,
   showNetworkSwitch,
+  balances,
 }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -83,14 +87,25 @@ const HarvestFlow: FC<Props> = ({
   const claimableV2Formatted = parseFloat(ethers.utils.formatEther(claimableV2 || 0));
   const claimableETHV2Formatted = parseFloat(ethers.utils.formatEther(claimableETHV2 || 0));
   const harvestableAmountFormatted = parseFloat(ethers.utils.formatEther(harvestableAmount || 0));
-  const picklePendingAmount =
-    rewarderType === "farm"
+
+  const pendingRewardAmount =
+    rewarderType === "farm" || rewarderType === "brinery"
       ? harvestableAmountFormatted
       : claimableV1Formatted > 0
-      ? claimableV1Formatted
-      : claimableV2Formatted;
+        ? claimableV1Formatted
+        : claimableV2Formatted;
+
   const isEthClaimable =
     rewarderType === "dill" && claimableV1Formatted === 0 && claimableETHV2Formatted > 0;
+
+  const PveContract = usePveContract(asset?.contract || ethers.constants.AddressZero);
+
+  const rewardPrice =
+    rewarderType === "brinery"
+      ? core?.prices[(asset as BrineryDefinition)?.details.rewardToken] || 0
+      : picklePrice;
+
+  const rewardName = rewarderType === "brinery" ? asset?.depositToken.name : "PICKLE";
 
   const transactionFactory = () => {
     if (!account) return;
@@ -105,6 +120,9 @@ const HarvestFlow: FC<Props> = ({
       if (poolId === undefined) return;
 
       return () => (FarmContract as Minichef).harvest(poolId, account);
+    } else if (rewarderType === "brinery") {
+      if (!PveContract) return;
+      return () => PveContract["claim()"]();
     }
 
     // Dill rewards
@@ -143,6 +161,28 @@ const HarvestFlow: FC<Props> = ({
           },
         }),
       );
+    } else if (rewarderType === "brinery") {
+      // Brinery rewards 
+      if (!asset || !balances) return;
+      const transferEvents = eventsByName<any>(receipt, "Transfer");
+      const claimTransferEvent = transferEvents.find((event) => event.args.to === account)!;
+
+      // This is applicable only for veFXS
+      // requires change where depositToken != rewardToken
+      const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
+      const rewardClaimed = claimTransferEvent.args.amount || BigNumber.from("0");
+      const newDepositBalance = depositTokenBalanceBN.add(rewardClaimed).toString();
+
+      dispatch(
+        UserActions.setBrineryData({
+          account,
+          apiKey: asset.details.apiKey,
+          data: {
+            depositTokenBalance: newDepositBalance,
+          },
+        }),
+      );
+      return;
     } else if (claimableV1Formatted > 0) {
       // Dill rewards
       const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
@@ -194,7 +234,7 @@ const HarvestFlow: FC<Props> = ({
         <Button
           type={buttonType}
           size={buttonSize}
-          state={picklePendingAmount + claimableETHV2Formatted > 0 ? "enabled" : "disabled"}
+          state={pendingRewardAmount + claimableETHV2Formatted > 0 ? "enabled" : "disabled"}
           onClick={openModal}
         >
           {t("v2.farms.harvest")}
@@ -207,17 +247,18 @@ const HarvestFlow: FC<Props> = ({
               <p>
                 {t("v2.farms.harvesting")}
                 <span className="text-primary ml-2">
-                  {`${roundToSignificantDigits(picklePendingAmount, 3)} PICKLE${
-                    isEthClaimable
+                  {
+                    `${roundToSignificantDigits(pendingRewardAmount, 3)} ${rewardName}${isEthClaimable
                       ? ` and ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH`
                       : ""
-                  }`}
-                </span>
+                    }`
+                  }
+                </span >
                 <MoreInfo>
                   <span className="text-foreground-alt-200 text-sm">
                     {formatDollars(
-                      picklePendingAmount * picklePrice +
-                        (isEthClaimable ? claimableETHV2Formatted * ethPrice : 0),
+                      pendingRewardAmount * rewardPrice +
+                      (isEthClaimable ? claimableETHV2Formatted * ethPrice : 0),
                       3,
                     )}
                   </span>
@@ -230,24 +271,30 @@ const HarvestFlow: FC<Props> = ({
             isWaiting={isWaiting}
           />
         )}
-        {current.matches(States.AWAITING_RECEIPT) && (
-          <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
-        )}
-        {current.matches(States.SUCCESS) && (
-          <Success
-            chainExplorer={chain?.explorer}
-            txHash={current.context.txHash}
-            closeModal={closeModal}
-          />
-        )}
-        {current.matches(States.FAILURE) && (
-          <Failure
-            chainExplorer={chain?.explorer}
-            txHash={current.context.txHash}
-            retry={() => send(Actions.RESET)}
-          />
-        )}
-      </Modal>
+        {
+          current.matches(States.AWAITING_RECEIPT) && (
+            <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
+          )
+        }
+        {
+          current.matches(States.SUCCESS) && (
+            <Success
+              chainExplorer={chain?.explorer}
+              txHash={current.context.txHash}
+              closeModal={closeModal}
+            />
+          )
+        }
+        {
+          current.matches(States.FAILURE) && (
+            <Failure
+              chainExplorer={chain?.explorer}
+              txHash={current.context.txHash}
+              retry={() => send(Actions.RESET)}
+            />
+          )
+        }
+      </Modal >
     </>
   );
 };

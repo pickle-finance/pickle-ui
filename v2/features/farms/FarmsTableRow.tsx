@@ -4,17 +4,34 @@ import { Disclosure, Transition } from "@headlessui/react";
 import { classNames } from "v2/utils";
 import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
+import BrineryTableRowHeader from "../brinery/BrineryTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
-import { JarWithData } from "v2/store/core";
+import { AssetWithData, BrineryWithData, JarWithData } from "v2/store/core";
+import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
   simple?: boolean;
-  jar: JarWithData;
+  asset: AssetWithData | BrineryWithData;
+  dashboard?: boolean;
   userDillRatio: number;
   hideDescription?: boolean;
 }
 
-const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio }) => {
+const FarmsTableRow: FC<Props> = ({ asset, simple, dashboard, hideDescription, userDillRatio }) => {
+  if (isBrinery(asset))
+    return (
+      <>
+        <tr>
+          <BrineryTableRowHeader
+            open={true}
+            simple={simple}
+            brinery={asset}
+            userDillRatio={userDillRatio}
+          />
+        </tr>
+        <FarmsTableRowBody asset={asset} hideDescription={hideDescription} />
+      </>
+    );
   if (simple)
     return (
       <>
@@ -22,7 +39,8 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
           <FarmsTableRowHeader
             open={false}
             simple={simple}
-            jar={jar}
+            asset={asset}
+            dashboard={dashboard}
             userDillRatio={userDillRatio}
           />
         </tr>
@@ -43,7 +61,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
               <FarmsTableRowHeader
                 open={open}
                 simple={simple}
-                jar={jar}
+                asset={asset}
                 userDillRatio={userDillRatio}
               />
             </Disclosure.Button>
@@ -58,7 +76,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, hideDescription, userDillRatio 
               leaveTo="opacity-0"
             >
               <Disclosure.Panel as="tr">
-                <FarmsTableRowBody jar={jar} hideDescription={hideDescription} />
+                <FarmsTableRowBody asset={asset} hideDescription={hideDescription} />
               </Disclosure.Panel>
             </Transition>
           </>

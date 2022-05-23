@@ -4,8 +4,11 @@ import { maxBy, orderBy } from "lodash";
 import {
   AssetEnablement,
   AssetProtocol,
+  BrineryDefinition,
+  ExternalAssetDefinition,
   JarDefinition,
   PickleModelJson,
+  StandaloneFarmDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { RootState } from ".";
@@ -13,7 +16,12 @@ import { Filter, FilterType, ControlsSelectors, SortType } from "./controls";
 import { getNetworks } from "v2/features/connection/networks";
 import { brandColor } from "v2/features/farms/colors";
 import { UserSelectors } from "./user";
-import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
+import {
+  getUserAssetDataWithPrices,
+  getUserBrineryDataWithPrices,
+  UserAssetDataWithPrices,
+  UserBrineryDataWithPrices,
+} from "v2/utils/user";
 import { getUniV3Tokens } from "v2/utils/univ3";
 import { allAssets, enabledPredicate } from "./core.helpers";
 
@@ -32,14 +40,23 @@ export interface UniV3Token {
   isNative: boolean;
 }
 
-export interface JarWithData extends JarDefinition, UserAssetDataWithPrices {
+interface SortTypes {
   [SortType.Earned]: number | undefined;
   [SortType.Deposited]: number | undefined;
   [SortType.Apy]: number | undefined;
   [SortType.Liquidity]: number | undefined;
+}
+
+interface ExtraAssetData extends UserAssetDataWithPrices, SortTypes {}
+export interface JarWithData extends JarDefinition, ExtraAssetData {
   token0: UniV3Token | undefined;
   token1: UniV3Token | undefined;
 }
+export interface StandaloneFarmWithData extends StandaloneFarmDefinition, ExtraAssetData {}
+export interface ExternalAssetWithData extends ExternalAssetDefinition, ExtraAssetData {}
+export type AssetWithData = JarWithData | StandaloneFarmWithData | ExternalAssetWithData;
+
+export interface BrineryWithData extends BrineryDefinition, UserBrineryDataWithPrices, SortTypes {}
 
 interface CoreState {
   data: PickleModelJson | undefined;
@@ -132,11 +149,6 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
  */
 const selectCore = (state: RootState) => state.core.data;
 
-/**
- * TODO: Refactor codebase to work with all enabled assets, i.e. use
- * selectEnabledAssets so we can remove selectEnabledJars. This breaks a lot
- * of types at the moment so using all assets only where possible for now.
- */
 const selectEnabledAssets = (state: RootState) => {
   const { data } = state.core;
 
@@ -144,16 +156,16 @@ const selectEnabledAssets = (state: RootState) => {
 
   return allAssets(data).filter(enabledPredicate);
 };
-const selectEnabledJars = (state: RootState) => {
+const selectEnabledBrineries = (state: RootState) => {
   const { data } = state.core;
 
   if (data === undefined) return [];
 
-  return data.assets.jars.filter(enabledPredicate);
+  return data.assets.brineries.filter(enabledPredicate);
 };
 
 const selectFilteredAssets = createSelector(
-  selectEnabledJars,
+  selectEnabledAssets,
   ControlsSelectors.selectFilters,
   ControlsSelectors.selectMatchAllFilters,
   (jars, filters, matchAllFilters) => {
@@ -196,28 +208,28 @@ interface MakeJarsSelectorOpts {
   account?: string | null | undefined;
 }
 
-const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
-  const selectJarsFunction = options.filtered ? selectFilteredAssets : selectEnabledJars;
+const makeAssetsSelector = (options: MakeJarsSelectorOpts = {}) => {
+  const selectAssetsFunction = options.filtered ? selectFilteredAssets : selectEnabledAssets;
 
   return createSelector(
-    selectJarsFunction,
+    selectAssetsFunction,
     selectCore,
     ControlsSelectors.selectPaginateParams,
     ControlsSelectors.selectSort,
     (state: RootState) => UserSelectors.selectData(state, options.account),
-    (jars, allCore, pagination, sort, userModel) => {
+    (assets, allCore, pagination, sort, userModel) => {
       // Sort first, and then compute pagination
-      let jarsWithData: JarWithData[] = jars.map((jar) => {
+      let assetsWithData: AssetWithData[] = assets.map((asset) => {
         let token0, token1;
-        if (jar.protocol === AssetProtocol.UNISWAP_V3)
-          [token0, token1] = getUniV3Tokens(jar, allCore);
-        const data = getUserAssetDataWithPrices(jar, allCore, userModel);
+        if (asset.protocol === AssetProtocol.UNISWAP_V3)
+          [token0, token1] = getUniV3Tokens(asset, allCore);
+        const data = getUserAssetDataWithPrices(asset, allCore, userModel);
         const deposited = data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
         const earned = data.earnedPickles.tokensUSD || 0;
-        const apy = jar.aprStats?.apy || 0;
-        const liquidity = jar.details.harvestStats?.balanceUSD || 0;
+        const apy = asset.aprStats?.apy || 0;
+        const liquidity = asset.details.harvestStats?.balanceUSD || 0;
         return {
-          ...jar,
+          ...asset,
           ...data,
           deposited,
           earned,
@@ -229,16 +241,44 @@ const makeJarsSelector = (options: MakeJarsSelectorOpts = {}) => {
       });
 
       if (sort && sort.type != SortType.None) {
-        jarsWithData = orderBy(jarsWithData, [sort.type], [sort.direction]);
+        assetsWithData = orderBy(assetsWithData, [sort.type], [sort.direction]);
       }
 
       if (options.paginated) {
         const { offset, itemsPerPage } = pagination;
         const endOffset = offset + itemsPerPage;
-        return jarsWithData.slice(offset, endOffset);
+
+        return assetsWithData.slice(offset, endOffset);
       }
 
-      return jarsWithData;
+      return assetsWithData;
+    },
+  );
+};
+
+const makeBrinerySelector = (options: MakeJarsSelectorOpts = {}) => {
+  return createSelector(
+    selectEnabledBrineries,
+    selectCore,
+    (state: RootState) => UserSelectors.selectData(state, options.account),
+    (brineries, allCore, userModel) => {
+      let brineriesWithData: BrineryWithData[] = brineries.map((brinery) => {
+        const data = getUserBrineryDataWithPrices(brinery, allCore, userModel);
+
+        const deposited = data.brineryBalance.tokensUSD;
+        const earned = 0;
+        const apy = brinery.aprStats?.apy || 0;
+        const liquidity = brinery.details.harvestStats?.balanceUSD || 0;
+        return {
+          ...brinery,
+          ...data,
+          deposited,
+          earned,
+          apy,
+          liquidity,
+        };
+      });
+      return brineriesWithData;
     },
   );
 };
@@ -295,9 +335,9 @@ const selectPrices = (state: RootState) => state.core.data?.prices;
 const selectTimestamp = (state: RootState) => state.core.data?.timestamp;
 
 export const CoreSelectors = {
-  makeJarsSelector,
+  makeAssetsSelector,
+  makeBrinerySelector,
   selectCore,
-  selectEnabledJars,
   selectFilteredAssets,
   selectFilters,
   selectLoadingState,

@@ -5,32 +5,45 @@ import Button from "v2/components/Button";
 import ErrorMessage from "../Error";
 import AmountSteps from "v2/components/AmountSteps";
 import { JarWithData } from "v2/store/core";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 interface Props {
-  balance0: number;
-  balance1: number;
+  balance0: string;
+  balance1: string;
+  token0Decimals: number;
+  token1Decimals: number;
   jar: JarWithData;
   nextStep: (amount: string, amount1: string) => void;
 }
 
-const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
+const FormUniV3: FC<Props> = ({
+  balance0,
+  balance1,
+  token0Decimals,
+  token1Decimals,
+  jar,
+  nextStep,
+}) => {
   const { t } = useTranslation("common");
-  const [amount0, setAmount0] = useState<string>(balance0.toString());
-  const [amount1, setAmount1] = useState<string>(balance1.toString());
+
+  const displayBalance0Str = formatUnits(balance0, token0Decimals);
+  const displayBalance1Str = formatUnits(balance1, token1Decimals);
+
+  const [amount0, setAmount0] = useState<string>(displayBalance0Str);
+  const [amount1, setAmount1] = useState<string>(displayBalance1Str);
 
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
   const [error, setError] = useState<Error | undefined>();
 
   const validate = () => {
-    const amount0Num = parseFloat(amount0);
-    const amount1Num = parseFloat(amount1);
-    if (!amount0 || !amount1) {
+    const amount0BN = parseUnits(amount0, token0Decimals);
+    const amount1BN = parseUnits(amount1, token1Decimals);
+    if (amount0BN.eq(0) && amount1BN.eq(0)) {
       setError(invalidAmountError);
       return;
     }
 
-    const isValid =
-      (amount0Num > 0 || amount1Num) && amount0Num <= balance0 && amount1Num <= balance1;
+    const isValid = amount0BN.lte(balance0) && amount1BN.lte(balance1);
     isValid ? setError(undefined) : setError(invalidAmountError);
   };
 
@@ -49,7 +62,7 @@ const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
   useEffect(() => {
     validate();
   }, [amount0, amount1]);
-  
+
   const handleFormSubmit = () => {
     if (error) return;
 
@@ -67,7 +80,7 @@ const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {balance0}
+            {t("v2.balances.balance")}: {displayBalance0Str}
           </p>
         </div>
 
@@ -81,7 +94,7 @@ const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
           <Button
             size="small"
             onClick={() => {
-              setAmount0(balance0.toString());
+              setAmount0(displayBalance0Str);
             }}
           >
             {t("v2.balances.max")}
@@ -98,7 +111,7 @@ const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {balance1}
+            {t("v2.balances.balance")}: {displayBalance1Str}
           </p>
         </div>
 
@@ -112,7 +125,7 @@ const FormUniV3: FC<Props> = ({ balance0, balance1, jar, nextStep }) => {
           <Button
             size="small"
             onClick={() => {
-              setAmount1(balance1.toString());
+              setAmount1(displayBalance1Str);
             }}
           >
             {t("v2.balances.max")}

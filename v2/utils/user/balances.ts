@@ -1,13 +1,13 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import {
   AssetProtocol,
-  JarDefinition,
+  BrineryDefinition,
   PickleModelJson,
 } from "picklefinance-core/lib/model/PickleModelJson";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber, formatNumber } from "../format";
-import { tokenDecimals } from "v2/store/core.helpers";
+import { Asset, isJar, tokenDecimals } from "v2/store/core.helpers";
 
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -25,6 +25,13 @@ export interface UserAssetDataWithPrices {
   walletComponentTokens: {
     [key: string]: UserAssetDataWithPricesComponent;
   };
+}
+
+export interface UserBrineryDataWithPrices {
+  assetId: string;
+  depositTokensInWallet: UserAssetDataWithPricesComponent;
+  brineryBalance: UserAssetDataWithPricesComponent;
+  earnedRewards: UserAssetDataWithPricesComponent;
 }
 
 const userAssetDataZeroComponent = (): UserAssetDataWithPricesComponent => ({
@@ -46,7 +53,9 @@ const createUserAssetDataComponent = (
   const tokenPriceWithPrecision = (price * precisionAsNumber).toFixed();
 
   const depositTokenWei = wei.mul((ratio * 1e4).toFixed()).div(1e4);
-  const weiMulPrice = depositTokenWei.mul(tokenPriceWithPrecision).div(precisionAsNumber);
+  const weiMulPrice = depositTokenWei
+    .mul(tokenPriceWithPrecision)
+    .div(precisionAsNumber.toString());
 
   return {
     wei: depositTokenWei,
@@ -65,25 +74,35 @@ const userAssetDataZeroEverything = (): UserAssetDataWithPrices => ({
   walletComponentTokens: {},
 });
 
-export const jarDecimals = (jar: JarDefinition): number =>
-  jar.details.decimals
-    ? jar.details.decimals
-    : jar.depositToken.decimals
-    ? jar.depositToken.decimals
+const userBrineryDataZeroEverything = (assetId: string): UserBrineryDataWithPrices => ({
+  assetId: assetId,
+  depositTokensInWallet: userAssetDataZeroComponent(),
+  brineryBalance: userAssetDataZeroComponent(),
+  earnedRewards: userAssetDataZeroComponent(),
+});
+
+export const jarDecimals = (asset: Asset): number => {
+  if (!isJar(asset)) return 18;
+
+  return asset.details.decimals
+    ? asset.details.decimals
+    : asset.depositToken.decimals
+    ? asset.depositToken.decimals
     : 18;
+};
 
 export const getUserAssetDataWithPrices = (
-  jar: JarDefinition,
+  asset: Asset,
   core: PickleModelJson | undefined,
   userModel: UserData | undefined,
 ): UserAssetDataWithPrices => {
   if (core === undefined || userModel === undefined) {
     return userAssetDataZeroEverything();
   }
-  const userTokenDetails = userModel.tokens[jar.details.apiKey.toLowerCase()];
+  const userTokenDetails = userModel.tokens[asset.details.apiKey.toLowerCase()];
   if (userTokenDetails === undefined) return userAssetDataZeroEverything();
 
-  const decimals = jarDecimals(jar);
+  const decimals = jarDecimals(asset);
 
   let token0,
     token1,
@@ -91,9 +110,9 @@ export const getUserAssetDataWithPrices = (
     token1Balance: string,
     walletComponentTokens: { [key: string]: UserAssetDataWithPricesComponent } = {};
 
-  if (jar.protocol === AssetProtocol.UNISWAP_V3) {
-    token0 = jar.depositToken.components?.[0];
-    token1 = jar.depositToken.components?.[1];
+  if (asset.protocol === AssetProtocol.UNISWAP_V3) {
+    token0 = asset.depositToken.components?.[0];
+    token1 = asset.depositToken.components?.[1];
 
     token0Balance = userTokenDetails.componentTokenBalances[token0 || ""].balance;
     token1Balance = userTokenDetails.componentTokenBalances[token1 || ""].balance;
@@ -121,22 +140,22 @@ export const getUserAssetDataWithPrices = (
   const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
     BigNumber.from(userTokenDetails.depositTokenBalance),
     decimals,
-    jar.depositToken.price || 0,
+    asset.depositToken.price || 0,
     1.0,
   );
 
   const jarComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
     BigNumber.from(userTokenDetails.pAssetBalance),
     decimals,
-    jar.depositToken.price || 0,
-    jar.details.ratio || 0,
+    asset.depositToken.price || 0,
+    isJar(asset) ? asset.details.ratio || 1 : 1,
   );
 
   const farmComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
     BigNumber.from(userTokenDetails.pStakedBalance),
     decimals,
-    jar.depositToken.price || 0,
-    jar.details.ratio || 0,
+    asset.depositToken.price || 0,
+    isJar(asset) ? asset.details.ratio || 1 : 1,
   );
 
   const pickleComponent: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
@@ -147,11 +166,63 @@ export const getUserAssetDataWithPrices = (
   );
 
   return {
-    assetId: jar.details.apiKey,
+    assetId: asset.details.apiKey,
     earnedPickles: pickleComponent,
     depositTokensInWallet: wallet,
     depositTokensInJar: jarComponent,
     depositTokensInFarm: farmComponent,
     walletComponentTokens,
+  };
+};
+
+export const getUserBrineryDataWithPrices = (
+  brinery: BrineryDefinition,
+  core: PickleModelJson | undefined,
+  userModel: UserData | undefined,
+): UserBrineryDataWithPrices => {
+  const brineryKey =
+    brinery && brinery.details && brinery.details.apiKey
+      ? brinery.details.apiKey.toLowerCase()
+      : undefined;
+  if (
+    core === undefined ||
+    userModel === undefined ||
+    userModel.brineries === undefined ||
+    brineryKey === undefined
+  ) {
+    return userBrineryDataZeroEverything(brineryKey || "");
+  }
+
+  const userBrineryDetails = userModel.brineries[brineryKey];
+  const depositToken = core.tokens.find(
+    (x) => x.contractAddr === brinery.depositToken.addr.toLowerCase(),
+  );
+
+  const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.depositTokenBalance || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  const brineryBalance: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.balance || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  const earnedRewards: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(userBrineryDetails?.claimable || "0"),
+    depositToken?.decimals || 18,
+    depositToken?.price || 0,
+    1.0,
+  );
+
+  return {
+    assetId: brinery.details.apiKey,
+    depositTokensInWallet: wallet,
+    brineryBalance,
+    earnedRewards,
   };
 };

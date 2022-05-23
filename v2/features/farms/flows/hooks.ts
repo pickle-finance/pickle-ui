@@ -16,6 +16,9 @@ import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__
 import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/JarV3__factory";
 import { Jar } from "containers/Contracts/Jar";
 import { JarV3 } from "containers/Contracts/JarV3";
+import { VefxsVault } from "containers/Contracts/VefxsVault";
+import { VefxsVault__factory as VefxsVaultFactory} from "containers/Contracts/factories/VefxsVault__factory";
+
 
 import { AppDispatch, useAppDispatch } from "v2/store";
 import { Actions } from "./stateMachineUserInput";
@@ -57,6 +60,18 @@ export const useFarmContract = (address: string | undefined, chain: RawChain | u
   }, [library, address, chain]);
 
   return FarmContract;
+};
+
+export const usePveContract = (address: string | undefined) => {
+  const { library } = useWeb3React<Web3Provider>();
+
+  const PveContract = useMemo<VefxsVault | undefined>(() => {
+    if (!library || !address) return;
+
+    return VefxsVaultFactory.connect(address, library.getSigner());
+  }, [library, address]);
+
+  return PveContract;
 };
 
 export const useUniV3JarContract = (address: string) => {

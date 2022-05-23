@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Provider } from "react-redux";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 
 import NavbarMobile from "v2/components/NavbarMobile";
 import LeftNavbar from "v2/components/LeftNavbar";
@@ -17,6 +18,7 @@ import OffchainVotesProvider from "v2/providers/OffchainVotesProvider";
 import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 import Confetti from "v2/components/Confetti";
+import ErrorBoundary from "v2/components/ErrorBoundary";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -34,6 +36,7 @@ type Props = AppProps & {
 
 const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
   const PageTitle = Component.PageTitle ?? (() => <></>);
+  const { asPath } = useRouter();
 
   return (
     <Provider store={store}>
@@ -45,7 +48,9 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
           <div className="px-4 py-2 sm:px-10 sm:py-10 text-foreground">
             <TopNavbar PageTitle={PageTitle} />
             <ConnectionStatus />
-            <Component {...pageProps} />
+            <ErrorBoundary key={asPath}>
+              <Component {...pageProps} />
+            </ErrorBoundary>
             <div className="flex justify-between bg-background mt-4 mb-8">
               <UserBalanceStatus showDetails />
               <BlockNumber />

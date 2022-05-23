@@ -27,12 +27,12 @@ const ChartContainer: FC<{
     >
       {isChainWeight ? (
         <div className="row-span-1">
-          <h2 className="font-body font-bold text-xl">{t(`v2.dill.vote.charts.chainWeight`)}</h2>
+          <h2 className="font-body font-bold text-xl">{t("v2.dill.vote.charts.chainWeight")}</h2>
           <TableSwitch showTable={showChainTable} setShowTable={setShowChainTable} />
         </div>
       ) : (
         <div className="row-span-1">
-          <h2 className="font-body font-bold text-xl">{t(`v2.dill.vote.charts.jarWeight`)}</h2>
+          <h2 className="font-body font-bold text-xl">{t("v2.dill.vote.charts.jarWeight")}</h2>
           <TableSwitch showTable={showJarTable} setShowTable={setShowJarTable} />
         </div>
       )}

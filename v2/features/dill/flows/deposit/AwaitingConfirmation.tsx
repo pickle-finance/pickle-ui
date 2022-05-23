@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { PencilIcon } from "@heroicons/react/outline";
 import dayjs from "dayjs";
 
 import Button from "v2/components/Button";
@@ -36,8 +35,14 @@ const AwaitingConfirmation: FC<Props> = ({
 
   return (
     <>
-      <div className="flex justify-center my-10">
-        <PencilIcon className="w-20 h-20 text-primary" />
+      <div className="flex justify-center my-2">
+        <div className="w-1/2 min-h-[200px]">
+          <img
+            src="/animations/working.gif"
+            alt={t("v2.prompts.pleaseConfirm")}
+            title={t("v2.prompts.pleaseConfirm")}
+          />
+        </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg mt-6 mb-4">{title}</h2>
       <p className="text-foreground-alt-200 text-sm mb-4">

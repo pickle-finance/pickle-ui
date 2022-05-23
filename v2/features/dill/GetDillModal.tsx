@@ -119,6 +119,7 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
         storeAttribute="dillApproval"
         chainName={ChainNetwork.Ethereum}
         visible={!userHasDillAllowance}
+        type="dill"
       />
       <DillDepositFlow
         visible={userHasDillAllowance}

@@ -29,7 +29,7 @@ const TooltipTarget = forwardRef<HTMLSpanElement>(function TooltipTarget(props, 
 });
 
 const MoreInfo: FC = ({ children }) => (
-  <Tippy content={<TooltipContent>{children}</TooltipContent>}>
+  <Tippy duration={0} content={<TooltipContent>{children}</TooltipContent>}>
     <TooltipTarget />
   </Tippy>
 );

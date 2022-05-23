@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { NextRouter, useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { CoreSelectors, JarWithData } from "v2/store/core";
+import { CoreSelectors } from "v2/store/core";
 import type { PickleFinancePage, JarChartData } from "v2/types";
 import { PickleModelJson } from "picklefinance-core";
 import ChartContainer from "v2/features/stats/jar/ChartContainer";
@@ -12,16 +12,14 @@ import FarmsTable from "v2/features/farms/FarmsTable";
 
 const Stats: PickleFinancePage = () => {
   const core = useSelector(CoreSelectors.selectCore);
-  let assets = useSelector(CoreSelectors.makeJarsSelector({ filtered: false, paginated: false }));
+  let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const { t } = useTranslation("common");
   const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
 
-  const asset: JarWithData | undefined = assets.find(
-    (a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase(),
-  );
+  const asset = assets.find((a) => a.details.apiKey.toLowerCase() === apiKey.toLowerCase());
 
   useEffect(() => {
     if (typeof router.query.jar === "string") setApiKey(router.query.jar);
@@ -34,15 +32,13 @@ const Stats: PickleFinancePage = () => {
     getData();
   }, [apiKey]);
 
-  // if (!asset.depositTokensInJar) console.log(asset);
-
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
         <Back router={router} chain={asset ? asset.chain : "eth"} text={t("v2.stats.jar.back")} />
         <div className="mb-5">
           {asset && asset.depositTokensInJar && (
-            <FarmsTable asset={asset} singleAsset={true} hideDescription={true} />
+            <FarmsTable singleAsset={asset} hideDescription={true} />
           )}
         </div>
         <ChartContainer jarData={jarData} />

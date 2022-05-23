@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { CashIcon, ClockIcon } from "@heroicons/react/solid";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { UserData } from "picklefinance-core/lib/client/UserModel";
 
@@ -46,9 +46,10 @@ export const getPendingRewardsUsd = (
   for (let i = 0; i < jarData.length; i++) {
     runningUsd += jarData[i].earnedPickles.tokensUSD;
   }
-  if (userdata.dill && userdata.dill.claimable) {
-    const wei: BigNumber = BigNumber.from(userdata.dill.claimable);
-    const dillRewardUsd = wei.div(1e10).div(1e8).toNumber() * core.prices.pickle;
+  if (userdata.dill.claimable) {
+    const wei = BigNumber.from(userdata.dill.claimable);
+    const dillRewardUsd = parseFloat(ethers.utils.formatEther(wei)) * core.prices.pickle;
+
     runningUsd += dillRewardUsd;
   }
   return formatUsd(runningUsd);

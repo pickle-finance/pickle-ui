@@ -111,7 +111,7 @@ export const useJarsWithUniV3 = (
           Token1.allowance(address, jar.contract.address),
           Token0.decimals(),
           Token1.decimals(),
-          jarV3.getProportion(),
+          jarV3.getProportion().catch(() => BigNumber.from(0)),
         ]);
 
         return {

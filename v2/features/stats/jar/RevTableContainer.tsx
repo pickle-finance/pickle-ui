@@ -11,7 +11,7 @@ const RevTableContainer: FC<{
   const { t } = useTranslation("common");
   const chainExplorer: string = pfCore ? getChainExplorer(revs, pfCore) : "";
   return (
-    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
+    <div className="bg-background-light min-w-min rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
       <h2 className="font-body font-bold text-xl">{t("v2.stats.jar.revsTableTitle")}</h2>
       <br />
       <RevTable revs={revs} chainExplorer={chainExplorer} />

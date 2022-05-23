@@ -5,23 +5,23 @@ import FarmsTableBody from "./FarmsTableBody";
 import FarmControls from "./FarmControls";
 import FarmsTableHeaderCellSortable from "./FarmsTableHeaderCellSortable";
 import { SortType } from "v2/store/controls";
-import { JarWithData } from "v2/store/core";
+import { AssetWithData } from "v2/store/core";
 import Pagination from "./Pagination";
 
 interface Props {
   requiresUserModel?: boolean;
   simple?: boolean;
+  dashboard?: boolean;
   title?: string;
-  asset?: JarWithData;
-  singleAsset?: boolean;
+  singleAsset?: AssetWithData;
   hideDescription?: boolean;
 }
 
 const FarmsTable: FC<Props> = ({
   simple,
+  dashboard,
   title,
   requiresUserModel,
-  asset,
   singleAsset,
   hideDescription,
 }) => {
@@ -42,19 +42,22 @@ const FarmsTable: FC<Props> = ({
                   />
 
                   <FarmsTableHeaderCellSortable
-                    sortType={SortType.Earned}
+                    sortType={singleAsset ? SortType.None : SortType.Earned}
                     label={t("v2.farms.earned")}
                   />
 
                   <FarmsTableHeaderCellSortable
-                    sortType={SortType.Deposited}
+                    sortType={singleAsset ? SortType.None : SortType.Deposited}
                     label={t("v2.farms.deposited")}
                   />
 
-                  <FarmsTableHeaderCellSortable sortType={SortType.Apy} label={t("v2.farms.apy")} />
+                  <FarmsTableHeaderCellSortable
+                    sortType={singleAsset ? SortType.None : SortType.Apy}
+                    label={t("v2.farms.apy")}
+                  />
 
                   <FarmsTableHeaderCellSortable
-                    sortType={SortType.Liquidity}
+                    sortType={singleAsset ? SortType.None : SortType.Liquidity}
                     label={t("v2.farms.liquidity")}
                   />
                   {/* Chevron down/up column */}
@@ -63,8 +66,9 @@ const FarmsTable: FC<Props> = ({
               <tbody className="text-foreground">
                 <FarmsTableBody
                   simple={simple}
+                  dashboard={dashboard}
                   requiresUserModel={requiresUserModel}
-                  asset={asset}
+                  singleAsset={singleAsset}
                   hideDescription={hideDescription}
                 />
               </tbody>

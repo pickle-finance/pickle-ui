@@ -16,11 +16,7 @@ const MainnetVoteButton: FC<{
 
   return (
     <div className="grid grid-cols-1 place-items-end mt-5 pb-10">
-      <Button
-        className="rounded p-2 border border-foreground-alt-400 bg-background text-foreground-alt-200"
-        state={enablement}
-        onClick={() => vote(provider, selectedJars, core)}
-      >
+      <Button state={enablement} size="small" onClick={() => vote(provider, selectedJars, core)}>
         {t("v2.dill.vote.castMainnetVote")}
       </Button>
     </div>
