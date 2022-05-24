@@ -1,13 +1,11 @@
 import React, { FC, useState } from "react";
 import { Trans, useTranslation } from "next-i18next";
 import { IUserDillStats } from "picklefinance-core/lib/client/UserModel";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import duration from "dayjs/plugin/duration";
+
 import IncreaseLockDateModal from "v2/features/dill/IncreaseLockDateModal";
 import Button from "v2/components/Button";
-dayjs.extend(duration);
-dayjs.extend(localizedFormat);
+import dayjs from "util/dayjs";
+
 interface Props {
   dill: IUserDillStats;
 }

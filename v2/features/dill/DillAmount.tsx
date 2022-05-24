@@ -32,7 +32,7 @@ const DillAmount: FC<Props> = ({ userDill, pickles }) => {
         <aside className="border border-foreground-alt-500 grow font-title rounded-lg tracking-normal p-4">
           <h1 className="font-medium text-foreground-alt-200 text-base leading-5">
             {t("v2.dill.dillAmount")}
-            {/* {dillBalance && (
+            {!!dillBalance && (
               <MoreInfo>
                 <span className="text-foreground font-bold text-sm">
                   {t("v2.dill.yourShare", {
@@ -40,7 +40,7 @@ const DillAmount: FC<Props> = ({ userDill, pickles }) => {
                   })}
                 </span>
               </MoreInfo>
-            )} */}
+            )}
           </h1>
           <div className="flex justify-between items-top">
             <div>

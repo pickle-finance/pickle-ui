@@ -249,7 +249,7 @@ const HarvestFlow: FC<Props> = ({
                 <span className="text-primary ml-2">
                   {
                     `${roundToSignificantDigits(pendingRewardAmount, 3)} ${rewardName}${isEthClaimable
-                      ? ` and ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH`
+                      ? ` ${t("v2.dill.and")} ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH`
                       : ""
                     }`
                   }

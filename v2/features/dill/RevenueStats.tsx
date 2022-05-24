@@ -124,7 +124,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                 </span>
                 <div className="inline-block w-6 h-6">
                   <Image
-                    src="/ethereum.png"
+                    src="/tokens/eth.png"
                     width={24}
                     height={24}
                     layout="intrinsic"
