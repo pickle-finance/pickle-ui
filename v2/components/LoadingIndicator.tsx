@@ -8,6 +8,7 @@ import { UserSelectors } from "v2/store/user";
 import Ping from "v2/features/connection/Ping";
 import { DocsSelectors } from "v2/store/docs";
 import { classNames } from "v2/utils";
+import { VoteSelectors } from "v2/store/offchainVotes";
 
 const LoadStatusIcon: FC<{ isLoading: boolean }> = ({ isLoading }) => {
   if (isLoading) return <Ping />;
@@ -19,13 +20,23 @@ interface Props extends HTMLAttributes<HTMLElement> {
   waitForCore?: boolean;
   waitForUserModel?: boolean;
   waitForDocs?: boolean;
+  waitForVoteData?: boolean;
+  customText?: string;
 }
 
-const LoadingIndicator: FC<Props> = ({ waitForCore, waitForDocs, waitForUserModel, className }) => {
+const LoadingIndicator: FC<Props> = ({
+  waitForCore,
+  waitForDocs,
+  waitForUserModel,
+  waitForVoteData,
+  customText,
+  className,
+}) => {
   const { t } = useTranslation("common");
   const coreLoadingState = useSelector(CoreSelectors.selectLoadingState);
   const isUserModelLoading = useSelector(UserSelectors.selectIsFetching);
   const docs = useSelector(DocsSelectors.selectDocs);
+  const voteData = useSelector(VoteSelectors.selectVoteData);
 
   const isCoreLoading = coreLoadingState !== "fulfilled";
 
@@ -39,19 +50,25 @@ const LoadingIndicator: FC<Props> = ({ waitForCore, waitForDocs, waitForUserMode
       {waitForCore && (
         <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={isCoreLoading} />
-          <span>{t("v2.farms.loadingCoreData")}</span>
+          <span>{customText ? customText : t("v2.farms.loadingCoreData")}</span>
         </div>
       )}
       {waitForUserModel && (
         <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={isUserModelLoading} />
-          <span>{t("v2.farms.loadingUserModel")}</span>
+          <span>{customText ? customText : t("v2.farms.loadingUserModel")}</span>
         </div>
       )}
       {waitForDocs && (
         <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
           <LoadStatusIcon isLoading={!docs} />
-          <span>{t("v2.farms.loadingDocs")}</span>
+          <span>{customText ? customText : t("v2.farms.loadingDocs")}</span>
+        </div>
+      )}
+      {waitForVoteData && (
+        <div className="flex items-center justify-center text-foreground-alt-300 text-sm mb-2">
+          <LoadStatusIcon isLoading={!voteData} />
+          <span>{customText ? customText : t("v2.farms.loadingVotes")}</span>
         </div>
       )}
     </div>

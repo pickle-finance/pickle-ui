@@ -13,7 +13,6 @@ const ChainSelect: FC<{
   const { t } = useTranslation("common");
 
   const chainChange = (chain: SelectData): void => {
-    console.log(chain);
     setSelectedChain(chain);
   };
 

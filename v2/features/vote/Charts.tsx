@@ -8,7 +8,7 @@ const VoteCharts: FC<{
   offchainVoteData: iOffchainVoteData | undefined;
 }> = ({ core, offchainVoteData }) => {
   return (
-    <div className="w-full inline-grid grid-cols-2 gap-4">
+    <div className="flex columns-2 gap-4">
       <ChartContainer core={core} offchainVoteData={offchainVoteData} isChainWeight={true} />
       <ChartContainer core={core} offchainVoteData={offchainVoteData} />
     </div>
