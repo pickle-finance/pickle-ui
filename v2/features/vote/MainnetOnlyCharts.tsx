@@ -12,7 +12,7 @@ const VoteCharts: FC<{
   return (
     <>
       <h2 className="font-body font-bold text-xl p-4">{t("v2.dill.vote.charts.jarWeight")}</h2>
-      <div className="flex columns-2 gap-4 border border-foreground-alt-500 rounded-xl">
+      <div className="flex columns-2 min-w-min gap-4 border border-foreground-alt-500 rounded-xl">
         <ChartContainer core={core} offchainVoteData={offchainVoteData} />
         <ChartContainer core={core} offchainVoteData={offchainVoteData} showTable />
       </div>
