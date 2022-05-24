@@ -480,6 +480,7 @@
       "loadingDocs": "Loading docs ...",
       "loadingInvestments": "Loading investment details ...",
       "loadingUserModel": "Loading your balances ...",
+      "loadingVotes": "Loading vote data ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
       "metamaskAdd": "Add to Metamask",

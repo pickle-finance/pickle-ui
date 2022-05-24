@@ -71,7 +71,7 @@ export const JarWeightTableRow: FC<{
   if (jar.toLowerCase() === tableData[0].jar.toLowerCase()) {
     classNameL = "rounded-tl-xl";
     classNameR = "rounded-tr-xl";
-  } else console.log(jar, tableData[0].jar);
+  }
   if (jar === tableData[tableData.length - 1].jar) {
     classNameL = "rounded-bl-xl";
     classNameR = "rounded-br-xl";
@@ -135,7 +135,6 @@ const getSidechainPlatformWeights = (
   chain: string,
 ): iJarWeights[] => {
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
-  console.log(platformWeights);
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
     if (platformWeights[c].chain === chain) {

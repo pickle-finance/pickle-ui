@@ -23,7 +23,7 @@ const ChartContainer: FC<{
 
   return (
     <div
-      className={`grid grid-rows-7 w-1/2 min-w-min rounded-xl border border-foreground-alt-500 p-4 sm:p-8 mb-10`}
+      className={`grid grid-rows-7 w-full min-w-min rounded-xl border border-foreground-alt-500 p-4 sm:p-8 mb-10`}
     >
       {isChainWeight ? (
         <div className="row-auto">

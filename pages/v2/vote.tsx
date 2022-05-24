@@ -27,29 +27,33 @@ const Vote: PickleFinancePage = () => {
   );
   const { t } = useTranslation("common");
 
-  const [onMainnet, setOnMainnet] = useState(false);
+  const [onMainnet, setOnMainnet] = useState(true);
 
   library?.getNetwork().then((n) => (n.chainId === 1 ? setOnMainnet(true) : setOnMainnet(false)));
 
   return (
     <>
-      {core ? (
-        user ? (
-          onMainnet ? (
-            <>
-              <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
-              <MainnetVote core={core} user={user} />
-              <hr className="border-foreground-alt-500 mt-5 mb-5" />
-              <OffchainVote core={core} offchainVoteData={offchainVoteData} />
-            </>
+      {onMainnet ? (
+        core ? (
+          user ? (
+            offchainVoteData ? (
+              <>
+                <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
+                <MainnetVote core={core} user={user} />
+                <hr className="border-foreground-alt-500 mt-5 mb-5" />
+                <OffchainVote core={core} offchainVoteData={offchainVoteData} />
+              </>
+            ) : (
+              <LoadingIndicator waitForVoteData />
+            )
           ) : (
-            <SwitchToMainnet t={t} />
+            <LoadingIndicator waitForUserModel customText="Loading Chart Data" />
           )
         ) : (
-          <LoadingIndicator waitForUserModel />
+          <LoadingIndicator waitForCore customText="Loading Chart Data" />
         )
       ) : (
-        <LoadingIndicator waitForCore />
+        <SwitchToMainnet t={t} />
       )}
       <PickleToastContainer />
     </>
