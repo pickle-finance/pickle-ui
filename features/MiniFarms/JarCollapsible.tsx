@@ -1088,63 +1088,67 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
 
   // Gnosis
   // StrategySushiLinkXdai
-  "0xB320609F2Bf3ca98754c14Db717307c6d6794d8b": (
+  "0xb320609f2bf3ca98754c14db717307c6d6794d8b": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/linkxdai.png"} />
   ),
+  // StrategySushiXdaiGno
+  "0x0f9d54d9ee044220a3925f9b97509811924fd269": (
+    <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/gnoxdai.png"} />
+  ),
   // StrategySushiSushiGno
-  "0xF38c5b39F29600765849cA38712F302b1522C9B8": (
+  "0xf38c5b39f29600765849ca38712f302b1522c9b8": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/sushigno.png"} />
   ),
   // StrategySushiUsdcXdai
-  "0xA227c72a4055A9DC949cAE24f54535fe890d3663": (
+  "0xa227c72a4055a9dc949cae24f54535fe890d3663": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/usdcxdai.png"} />
   ),
   // StrategySushiUsdcUsdt
-  "0x74c2EFA722010Ad7C142476F525A051084dA2C42": (
+  "0x74c2efa722010ad7c142476f525a051084da2c42": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/usdcusdt.png"} />
   ),
   // StrategySushiXdaiUsdt
-  "0x6685C047EAB042297e659bFAa7423E94b4A14b9E": (
+  "0x6685c047eab042297e659bfaa7423e94b4a14b9e": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/xdaiusdt.png"} />
   ),
   // StrategySushiWethGno
-  "0x15f9EEdeEBD121FBb238a8A0caE38f4b4A07A585": (
+  "0x15f9eedeebd121fbb238a8a0cae38f4b4a07a585": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/wethgno.png"} />
   ),
   // StrategySushiWethWbtc
-  "0xe21F631f47bFB2bC53ED134E83B8cff00e0EC054": (
+  "0xe21f631f47bfb2bc53ed134e83b8cff00e0ec054": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/wethwbtc.png"} />
   ),
   // StrategySushiWethXdai
-  "0x8C0C36c85192204c8d782F763fF5a30f5bA0192F": (
+  "0x8c0c36c85192204c8d782f763ff5a30f5ba0192f": (
     <LpIcon swapIconSrc={"/protocols/sushi.png"} tokenIconSrc={"/tokens/wethxdai.png"} />
   ),
   // StrategySwaprGnoXdai
-  "0xD7b118271B1B7d26C9e044Fc927CA31DccB22a5a": (
+  "0xd7b118271b1b7d26c9e044fc927ca31dccb22a5a": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/gnoxdai.png"} />
   ),
   // StrategySwaprWbtcWeth
-  "0xf6Be7AD58F4BAA454666b0027839a01BcD721Ac3": (
+  "0xf6be7ad58f4baa454666b0027839a01bcd721ac3": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/wethwbtc.png"} />
   ),
   // StrategySwaprCowWeth
-  "0x8028457E452D7221dB69B1e0563AA600A059fab1": (
+  "0x8028457e452d7221db69b1e0563aa600a059fab1": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/cowweth.png"} />
   ),
   // StrategySwaprGnoWeth
-  "0x5fCA4cBdC182e40aeFBCb91AFBDE7AD8d3Dc18a8": (
+  "0x5fca4cbdc182e40aefbcb91afbde7ad8d3dc18a8": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/wethgno.png"} />
   ),
   // StrategySwaprDxdGno
-  "0x558d777B24366f011E35A9f59114D1b45110d67B": (
+  "0x558d777b24366f011e35a9f59114d1b45110d67b": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/dxdgno.png"} />
   ),
   // StrategySwaprXdaiWeth
-  "0x1865d5445010E0baf8Be2eB410d3Eae4A68683c2": (
+  "0x1865d5445010e0baf8be2eb410d3eae4a68683c2": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/wethxdai.png"} />
   ),
   // StrategySwaprCowGno
-  "0xDBF14bce36F661B29F6c8318a1D8944650c73F38": (
+  "0xdbf14bce36f661b29f6c8318a1d8944650c73f38": (
     <LpIcon swapIconSrc={"/protocols/swapr.png"} tokenIconSrc={"/tokens/cowgno.png"} />
   ),
 };
