@@ -92,8 +92,8 @@ const HarvestFlow: FC<Props> = ({
     rewarderType === "farm" || rewarderType === "brinery"
       ? harvestableAmountFormatted
       : claimableV1Formatted > 0
-        ? claimableV1Formatted
-        : claimableV2Formatted;
+      ? claimableV1Formatted
+      : claimableV2Formatted;
 
   const isEthClaimable =
     rewarderType === "dill" && claimableV1Formatted === 0 && claimableETHV2Formatted > 0;
@@ -162,7 +162,7 @@ const HarvestFlow: FC<Props> = ({
         }),
       );
     } else if (rewarderType === "brinery") {
-      // Brinery rewards 
+      // Brinery rewards
       if (!asset || !balances) return;
       const transferEvents = eventsByName<any>(receipt, "Transfer");
       const claimTransferEvent = transferEvents.find((event) => event.args.to === account)!;
@@ -247,18 +247,20 @@ const HarvestFlow: FC<Props> = ({
               <p>
                 {t("v2.farms.harvesting")}
                 <span className="text-primary ml-2">
-                  {
-                    `${roundToSignificantDigits(pendingRewardAmount, 3)} ${rewardName}${isEthClaimable
-                      ? ` ${t("v2.dill.and")} ${roundToSignificantDigits(claimableETHV2Formatted, 3)} ETH`
+                  {`${roundToSignificantDigits(pendingRewardAmount, 3)} ${rewardName}${
+                    isEthClaimable
+                      ? ` ${t("v2.dill.and")} ${roundToSignificantDigits(
+                          claimableETHV2Formatted,
+                          3,
+                        )} ETH`
                       : ""
-                    }`
-                  }
-                </span >
+                  }`}
+                </span>
                 <MoreInfo>
                   <span className="text-foreground-alt-200 text-sm">
                     {formatDollars(
                       pendingRewardAmount * rewardPrice +
-                      (isEthClaimable ? claimableETHV2Formatted * ethPrice : 0),
+                        (isEthClaimable ? claimableETHV2Formatted * ethPrice : 0),
                       3,
                     )}
                   </span>
@@ -271,30 +273,24 @@ const HarvestFlow: FC<Props> = ({
             isWaiting={isWaiting}
           />
         )}
-        {
-          current.matches(States.AWAITING_RECEIPT) && (
-            <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
-          )
-        }
-        {
-          current.matches(States.SUCCESS) && (
-            <Success
-              chainExplorer={chain?.explorer}
-              txHash={current.context.txHash}
-              closeModal={closeModal}
-            />
-          )
-        }
-        {
-          current.matches(States.FAILURE) && (
-            <Failure
-              chainExplorer={chain?.explorer}
-              txHash={current.context.txHash}
-              retry={() => send(Actions.RESET)}
-            />
-          )
-        }
-      </Modal >
+        {current.matches(States.AWAITING_RECEIPT) && (
+          <AwaitingReceipt chainExplorer={chain?.explorer} txHash={current.context.txHash} />
+        )}
+        {current.matches(States.SUCCESS) && (
+          <Success
+            chainExplorer={chain?.explorer}
+            txHash={current.context.txHash}
+            closeModal={closeModal}
+          />
+        )}
+        {current.matches(States.FAILURE) && (
+          <Failure
+            chainExplorer={chain?.explorer}
+            txHash={current.context.txHash}
+            retry={() => send(Actions.RESET)}
+          />
+        )}
+      </Modal>
     </>
   );
 };
