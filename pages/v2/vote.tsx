@@ -10,9 +10,10 @@ import { UserSelectors } from "v2/store/user";
 import PickleToastContainer from "v2/components/PickleToastContainer";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 
-import VoteWeightCharts from "v2/features/vote/Charts";
+// import VoteWeightCharts from "v2/features/vote/Charts";
+import MainnetVoteWeightCharts from "v2/features/vote/MainnetOnlyCharts";
 import MainnetVote from "v2/features/vote/MainnetVote";
-import OffchainVote from "v2/features/vote/OffchainVote";
+// import OffchainVote from "v2/features/vote/OffchainVote";
 import { useAppSelector } from "v2/store";
 import { useAccount } from "v2/hooks";
 import ConnectButton from "v2/features/farms/ConnectButton";
@@ -38,10 +39,13 @@ const Vote: PickleFinancePage = () => {
           user ? (
             offchainVoteData ? (
               <>
-                <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
+                {/* <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} /> */}
+                <MainnetVoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
                 <MainnetVote core={core} user={user} />
                 <hr className="border-foreground-alt-500 mt-5 mb-5" />
-                <OffchainVote core={core} offchainVoteData={offchainVoteData} />
+                {/* Uncomment line when offchain voting is fully tested and ready for release
+                  <OffchainVote core={core} offchainVoteData={offchainVoteData} /> 
+                */}
               </>
             ) : (
               <LoadingIndicator waitForVoteData />
