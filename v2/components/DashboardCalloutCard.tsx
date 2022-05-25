@@ -8,7 +8,7 @@ import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 import { formatPercentage } from "../utils";
 import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
-import { FilterType, setFilters, setMatchAllFilters } from "v2/store/controls";
+import { setSort, SortType } from "v2/store/controls";
 import MoreInfo from "./MoreInfo";
 
 const DashboardCalloutCard: FC = () => {
@@ -33,18 +33,7 @@ const DashboardCalloutCard: FC = () => {
         onClick={() => {
           coreMaxApy?.tokens &&
             coreMaxApy.apy &&
-            dispatch(
-              setFilters(
-                options.filter((option) => {
-                  return (
-                    (option.type === FilterType.Network &&
-                      option.value === coreMaxApy?.chain.toLowerCase()) ||
-                    (option.type === FilterType.Token && coreMaxApy?.tokens?.includes(option.value))
-                  );
-                }),
-              ),
-            );
-          dispatch(setMatchAllFilters(true));
+            dispatch(setSort({ type: SortType.Apy, direction: "desc" }));
         }}
       >
         <div className="flex justify-between px-5 py-4 sm:px-8 sm:py-5">

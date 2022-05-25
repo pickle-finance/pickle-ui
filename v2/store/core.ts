@@ -221,12 +221,20 @@ const makeAssetsSelector = (options: MakeJarsSelectorOpts = {}) => {
       // Sort first, and then compute pagination
       let assetsWithData: AssetWithData[] = assets.map((asset) => {
         let token0, token1;
+        let farmApr = 0;
+        if ("farm" in asset) {
+          const farmApyComponents = asset.farm?.details?.farmApyComponents;
+
+          if (farmApyComponents?.length) {
+            farmApr = farmApyComponents[0].apr;
+          }
+        }
         if (asset.protocol === AssetProtocol.UNISWAP_V3)
           [token0, token1] = getUniV3Tokens(asset, allCore);
         const data = getUserAssetDataWithPrices(asset, allCore, userModel);
         const deposited = data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
         const earned = data.earnedPickles.tokensUSD || 0;
-        const apy = asset.aprStats?.apy || 0;
+        const apy = (asset.aprStats?.apy || 0) + farmApr;
         const liquidity = asset.details.harvestStats?.balanceUSD || 0;
         return {
           ...asset,
