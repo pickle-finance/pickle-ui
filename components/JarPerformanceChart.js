@@ -1,11 +1,11 @@
-import { materialBlack, pickleGreen, cardColor } from "../util/constants";
+import { materialBlack, pickleGreen, cardColor } from "../v1/util/constants";
 import React, { useState, useEffect, useRef } from "react";
 import { LineChart, Line, YAxis, XAxis, Legend } from "recharts";
 import { makeStyles } from "@material-ui/core/styles";
 import { getTickValues } from "recharts-scale";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Paper from "@material-ui/core/Paper";
-import dayjs from "util/dayjs";
+import dayjs from "v1/util/dayjs";
 import { useTranslation } from "next-i18next";
 
 const useStyles = makeStyles((theme) => ({

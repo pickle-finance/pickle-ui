@@ -4,7 +4,7 @@ import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { getFarmData } from "../../util/api";
+import { getFarmData } from "../../v1/util/api";
 import { useJarFarmMap } from "containers/Farms/farms";
 import { isPUsdcToken } from "../Jars/jars";
 import { Connection } from "containers/Connection";

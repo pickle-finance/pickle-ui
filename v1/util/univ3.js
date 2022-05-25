@@ -1,9 +1,9 @@
 import { ethers, Contract } from "ethers";
-import v3PoolABI from "../containers/ABIs/univ3Pool.json";
+import v3PoolABI from "../../containers/ABIs/univ3Pool.json";
 
 import univ3prices from "@thanpolas/univ3prices";
 import erc20 from "@studydefi/money-legos/erc20";
-import { JAR_DEPOSIT_TOKENS } from "../containers/Jars/jars";
+import { JAR_DEPOSIT_TOKENS } from "../../containers/Jars/jars";
 import { tokenInfo } from "features/Zap/useBalance";
 import { Token } from "@uniswap/sdk-core";
 import { Pool, Position } from "@uniswap/v3-sdk";

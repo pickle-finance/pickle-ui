@@ -13,7 +13,7 @@ import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { Dill } from "../../containers/Dill";
 import { TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
-import { pickleWhite } from "../../util/constants";
+import { pickleWhite } from "../../v1/util/constants";
 import { ERC20Transfer, Status as ERC20TransferStatus } from "../../containers/Erc20Transfer";
 import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";

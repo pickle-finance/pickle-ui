@@ -23,7 +23,7 @@ import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleModelJson, ChainNetwork } from "picklefinance-core";
 import { TokenDetails } from "containers/Jars/useJarsWithZap";
-import { neverExpireEpochTime } from "util/constants";
+import { neverExpireEpochTime } from "v1/util/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 
 interface DataProps {
@@ -409,7 +409,6 @@ export const FARM_LP_TO_ICON: {
   "0x46d42C3DcCC38B92f40b021008AcDc76ab463B12": (
     <LpIcon swapIconSrc={"/trisolaris.png"} tokenIconSrc={"/tokens/ply.png"} />
   ),
-  
 
   // Metis
 
@@ -560,22 +559,22 @@ export const JarMiniFarmCollapsible: FC<{
 
     const swapTx = inputToken.isWrapped
       ? await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactTokensForTokens(
-          depositAmt,
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        )
+          .connect(signer)
+          .populateTransaction.swapExactTokensForTokens(
+            depositAmt,
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          )
       : await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactETHForTokens(
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        );
+          .connect(signer)
+          .populateTransaction.swapExactETHForTokens(
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          );
 
     return transfer({
       token: inputToken.address,
@@ -1001,8 +1000,9 @@ export const JarMiniFarmCollapsible: FC<{
               <div>
                 {t("balances.balance")}: {depositedStr} (
                 <Tooltip
-                  text={`${deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
-                    } ${depositTokenName}`}
+                  text={`${
+                    deposited && ratio ? parseFloat(formatEther(deposited)) * ratio : 0
+                  } ${depositTokenName}`}
                 >
                   {depositedUnderlyingStr}
                 </Tooltip>{" "}

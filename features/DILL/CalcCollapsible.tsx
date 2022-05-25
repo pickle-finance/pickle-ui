@@ -7,7 +7,7 @@ import { Connection } from "../../containers/Connection";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { Dill, UseDillOutput } from "../../containers/Dill";
 import Collapse from "../Collapsible/Collapse";
-import { pickleWhite } from "../../util/constants";
+import { pickleWhite } from "../../v1/util/constants";
 import { isPUsdcToken } from "../../containers/Jars/jars";
 import { PickleCore } from "./../../containers/Jars/usePickleCore";
 import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";

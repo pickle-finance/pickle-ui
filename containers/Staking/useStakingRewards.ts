@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import dayjs from "util/dayjs";
+import dayjs from "v1/util/dayjs";
 
 import { StakingRewards } from "../Contracts/StakingRewards";
 

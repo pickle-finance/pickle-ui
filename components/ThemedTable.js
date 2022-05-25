@@ -8,7 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
-import { pickleGreen, materialBlack, cardColor } from "../util/constants";
+import { pickleGreen, materialBlack, cardColor } from "../v1/util/constants";
 
 const theme = createMuiTheme({
   tableCell: {

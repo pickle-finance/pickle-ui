@@ -8,7 +8,7 @@ import { Prices } from "../../containers/Prices";
 import { Connection } from "../../containers/Connection";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
-import { getProtocolData } from "util/api";
+import { getProtocolData } from "v1/util/api";
 import PickleIcon from "../../components/PickleIcon";
 
 const Container = styled(Grid.Container)`

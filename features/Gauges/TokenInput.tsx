@@ -4,7 +4,7 @@ import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
 import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
 import { toNum, formatValue } from "./UniV3JarGaugeCollapsible";
-import { weth } from "util/univ3";
+import { weth } from "v1/util/univ3";
 import { UniV3Token } from "containers/Jars/useJarsWithUniV3";
 import erc20 from "@studydefi/money-legos/erc20";
 import { Connection } from "containers/Connection";

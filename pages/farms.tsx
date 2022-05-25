@@ -6,7 +6,7 @@ import { Footer } from "../features/Footer/Footer";
 import { GaugeList } from "../features/Gauges/GaugeList";
 import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
 import { Connection } from "../containers/Connection";
-import { noFarms } from "util/constants";
+import { noFarms } from "v1/util/constants";
 import { ChainNetwork } from "picklefinance-core";
 
 const Gauges: FC = () => {
@@ -27,6 +27,6 @@ const Gauges: FC = () => {
   );
 };
 
-export { getStaticProps } from "../util/locales";
+export { getStaticProps } from "../v1/util/locales";
 
 export default Gauges;

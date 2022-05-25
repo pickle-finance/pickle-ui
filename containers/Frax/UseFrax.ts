@@ -9,7 +9,7 @@ import { Contracts } from "../Contracts";
 import { PriceIds, Prices } from "../Prices";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-import { jars } from "util/jars";
+import { jars } from "v1/util/jars";
 const DISTRUBTOR_ABI = [
   "function getYieldForDuration() view returns(uint256)",
   "function earned(address) view returns(uint256)",
@@ -108,6 +108,6 @@ export const useFrax = () => {
     userPendingFxs,
     pickleLockedFxs,
     tvl,
-    flywheelApr
+    flywheelApr,
   };
 };
