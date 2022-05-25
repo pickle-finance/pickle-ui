@@ -10,9 +10,10 @@ import { UserSelectors } from "v2/store/user";
 import PickleToastContainer from "v2/components/PickleToastContainer";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 
-import VoteWeightCharts from "v2/features/vote/Charts";
+// import VoteWeightCharts from "v2/features/vote/Charts";
+import MainnetVoteWeightCharts from "v2/features/vote/MainnetOnlyCharts";
 import MainnetVote from "v2/features/vote/MainnetVote";
-import OffchainVote from "v2/features/vote/OffchainVote";
+// import OffchainVote from "v2/features/vote/OffchainVote";
 import { useAppSelector } from "v2/store";
 import { useAccount } from "v2/hooks";
 import ConnectButton from "v2/features/farms/ConnectButton";
@@ -27,29 +28,36 @@ const Vote: PickleFinancePage = () => {
   );
   const { t } = useTranslation("common");
 
-  const [onMainnet, setOnMainnet] = useState(false);
+  const [onMainnet, setOnMainnet] = useState(true);
 
   library?.getNetwork().then((n) => (n.chainId === 1 ? setOnMainnet(true) : setOnMainnet(false)));
 
   return (
     <>
-      {core ? (
-        user ? (
-          onMainnet ? (
-            <>
-              <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
-              <MainnetVote core={core} user={user} />
-              <hr className="border-foreground-alt-500 mt-5 mb-5" />
-              <OffchainVote core={core} offchainVoteData={offchainVoteData} />
-            </>
+      {onMainnet ? (
+        core ? (
+          user ? (
+            offchainVoteData ? (
+              <>
+                {/* <VoteWeightCharts core={core} offchainVoteData={offchainVoteData} /> */}
+                <MainnetVoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
+                <MainnetVote core={core} user={user} />
+                <hr className="border-foreground-alt-500 mt-5 mb-5" />
+                {/* Uncomment line when offchain voting is fully tested and ready for release
+                  <OffchainVote core={core} offchainVoteData={offchainVoteData} /> 
+                */}
+              </>
+            ) : (
+              <LoadingIndicator waitForVoteData />
+            )
           ) : (
-            <SwitchToMainnet t={t} />
+            <LoadingIndicator waitForUserModel customText="Loading Chart Data" />
           )
         ) : (
-          <LoadingIndicator waitForUserModel />
+          <LoadingIndicator waitForCore customText="Loading Chart Data" />
         )
       ) : (
-        <LoadingIndicator waitForCore />
+        <SwitchToMainnet t={t} />
       )}
       <PickleToastContainer />
     </>

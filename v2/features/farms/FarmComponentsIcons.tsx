@@ -68,7 +68,7 @@ const TokenIcon: FC<TokenIconProps> = ({ component, index, isLast }) => {
 
 const ProtocolIcon: FC<ProtocolIconProps> = ({ protocol }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const sanitizedProtocolName = protocol.replace(/\s/g, "").toLowerCase();
+  const sanitizedProtocolName = protocol.replace(/\s|\./g, "").toLowerCase();
 
   return (
     <div

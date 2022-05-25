@@ -53,12 +53,16 @@ const FarmAPY: FC<Props> = ({ asset, userDillRatio }) => {
     }
   }
 
+  const apr = aprRangeString.substring(0, aprRangeString.indexOf("%")).replace(/,/g, "");
+  const highApr = parseFloat(apr) > 10000;
   const { aprStats } = asset;
   const difference = (aprStats?.apy || 0) - (aprStats?.apr || 0);
 
   return (
     <>
-      <span className="font-title font-medium text-base leading-5">{aprRangeString}</span>
+      <span className="font-title font-medium text-base leading-5">
+        {highApr ? ">10,000%" : aprRangeString}
+      </span>
       <MoreInfo>
         <div className="text-foreground-alt-200 text-sm">
           <p className="font-bold text-primary">{`${t("farms.baseAPRs")}`}</p>

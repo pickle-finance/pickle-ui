@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
-import { AssetEnablement, AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
-import { InformationCircleIcon } from "@heroicons/react/solid";
+import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 
 import Link from "v2/components/Link";
 import { AssetWithData, BrineryWithData } from "v2/store/core";
@@ -13,6 +12,7 @@ import FarmsTableRowBodyV3TransactionControls from "./FarmTableRowBodyTransactio
 import BrineryTableRowBodyTransactionControls from "../brinery/BrineryTableRowBodyTransactionControls";
 import BrineryTableRowDetails from "../brinery/BrineryTableRowDetails";
 import { isBrinery, isJar } from "v2/store/core.helpers";
+import FarmAdditionalInfo from "./FarmAdditionalInfo";
 
 interface Props {
   asset: AssetWithData | BrineryWithData;
@@ -57,12 +57,7 @@ const FarmsTableRowBody: FC<Props> = ({ asset, hideDescription }) => {
       colSpan={6}
       className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
     >
-      {asset.enablement === AssetEnablement.WITHDRAW_ONLY && (
-        <div className="flex justify-center text-foreground-alt-200 text-sm mt-1 mb-6">
-          <InformationCircleIcon className="w-5 h-5 text-accent mr-2" />
-          {t("v2.farms.withdrawOnly")}
-        </div>
-      )}
+      <FarmAdditionalInfo asset={asset} />
       <div className="flex">
         <div className="pt-4 pb-6 flex-shrink-0 mr-6">
           {(isUniV3 && (
