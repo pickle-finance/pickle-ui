@@ -11,7 +11,7 @@ import HarvestModal, { RewardRowProps } from "./HarvestModal";
 import { CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, UserAssetDataWithPrices } from "v2/utils/user";
-import { formatUsd } from "util/api";
+import { formatUsd } from "v1/util/api";
 import { findAsset, findJar, visibleStringForAsset } from "v2/store/core.helpers";
 import { useAppSelector } from "v2/store";
 import { useAccount } from "v2/hooks";

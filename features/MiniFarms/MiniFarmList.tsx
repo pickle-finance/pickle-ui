@@ -10,12 +10,12 @@ import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
 import { BalFarm } from "../PickleFarms/BalFarm";
 import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
-import { pickleWhite, someFarms } from "util/constants";
+import { pickleWhite, someFarms } from "v1/util/constants";
 import { FarmsIntro } from "components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { useJarFarmMap } from "containers/Farms/farms";
 import { isJarDisabled, isJarActive } from "containers/Jars/jars";
-import { noFarms } from "util/constants";
+import { noFarms } from "v1/util/constants";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import {
   AssetAprComponent,

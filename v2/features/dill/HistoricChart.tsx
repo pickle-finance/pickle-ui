@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { TFunction, useTranslation } from "next-i18next";
-import dayjs from "util/dayjs";
+import dayjs from "v1/util/dayjs";
 import {
   Bar,
   Cell,
@@ -18,7 +18,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { RadioGroup } from "@headlessui/react";
 
 import { CoreSelectors } from "v2/store/core";
-import { roundNumber } from "util/number";
+import { roundNumber } from "v1/util/number";
 import { classNames } from "v2/utils";
 
 interface Entry {

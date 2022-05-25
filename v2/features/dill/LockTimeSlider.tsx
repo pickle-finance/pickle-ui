@@ -4,7 +4,7 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
 import { getDayOffset, getWeekDiff } from "./flows/utils";
-import { dateFromEpoch } from "util/date";
+import { dateFromEpoch } from "v1/util/date";
 
 interface Props {
   setLockTime: (date: Date) => void;

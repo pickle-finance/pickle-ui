@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
-import dayjs from "util/dayjs";
+import dayjs from "v1/util/dayjs";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";

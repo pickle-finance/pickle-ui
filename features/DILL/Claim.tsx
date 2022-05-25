@@ -7,7 +7,7 @@ import { Contracts } from "../../containers/Contracts";
 import { Connection } from "../../containers/Connection";
 import { UseDillOutput } from "../../containers/Dill";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
-import { formatPercent } from "../../util/number";
+import { formatPercent } from "../../v1/util/number";
 import PickleIcon from "../../components/PickleIcon";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 

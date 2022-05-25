@@ -8,12 +8,12 @@ import CardContent from "@material-ui/core/CardContent";
 import { Page, Input } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../util/api";
-import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../util/constants";
+import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../v1/util/api";
+import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../v1/util/constants";
 import InfoCardContent from "../../components/InfoCardContent";
 import EarnRow from "../../components/EarnRow";
 import ThemedTable from "../../components/ThemedTable";
-import { jars } from "../../util/jars";
+import { jars } from "../../v1/util/jars";
 import { Connection } from "../../containers/Connection";
 import { InfoBar } from "../../features/InfoBar/InfoBar";
 import { Footer } from "../../features/Footer/Footer";
@@ -291,4 +291,4 @@ export default function Earn() {
   );
 }
 
-export { getStaticProps } from "../../util/locales";
+export { getStaticProps } from "../../v1/util/locales";

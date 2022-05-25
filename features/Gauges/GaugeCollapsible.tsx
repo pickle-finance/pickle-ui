@@ -10,7 +10,7 @@ import { Contracts } from "../../containers/Contracts";
 import { Jars } from "../../containers/Jars";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { getProtocolData } from "../../util/api";
+import { getProtocolData } from "../../v1/util/api";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";

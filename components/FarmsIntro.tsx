@@ -3,7 +3,7 @@ import { Trans, useTranslation } from "next-i18next";
 
 import { Connection } from "../containers/Connection";
 import { MiniIcon } from "../components/TokenIcon";
-import { noFarms, someFarms } from "util/constants";
+import { noFarms, someFarms } from "v1/util/constants";
 import { ChainNetwork } from "picklefinance-core";
 import { Spacer } from "@geist-ui/react";
 

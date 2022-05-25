@@ -16,12 +16,12 @@ import {
   getWeekDiff,
   getDayDiff,
   formatDate,
-} from "../../../util/date";
+} from "../../../v1/util/date";
 import {
   estimateDillForPeriod,
   roundDateByDillEpoch,
   roundDateByDillEpochSeconds,
-} from "../../../util/dill";
+} from "../../../v1/util/dill";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 
 const DAY = 86400;

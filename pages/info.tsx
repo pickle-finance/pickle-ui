@@ -18,9 +18,9 @@ import { useTranslation } from "next-i18next";
 
 import { InfoBar } from "../features/InfoBar/InfoBar";
 import { Footer } from "../features/Footer/Footer";
-import { cardColor, pickleGreen, materialBlack } from "../util/constants";
-import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "../util/api";
-import { powerPool, jars } from "../util/jars";
+import { cardColor, pickleGreen, materialBlack } from "../v1/util/constants";
+import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "../v1/util/api";
+import { powerPool, jars } from "../v1/util/jars";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -506,4 +506,4 @@ export default function Brining() {
   );
 }
 
-export { getStaticProps } from "../util/locales";
+export { getStaticProps } from "../v1/util/locales";

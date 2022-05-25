@@ -1,5 +1,5 @@
 import { FC, useState, ReactNode } from "react";
-import dayjs from "util/dayjs";
+import dayjs from "v1/util/dayjs";
 import { Card, Radio, Spacer, Text } from "@geist-ui/react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import {
@@ -16,8 +16,8 @@ import {
 } from "recharts";
 import { TFunction, useTranslation } from "next-i18next";
 
-import { accentColor, materialBlack } from "../../util/constants";
-import { roundNumber } from "../../util/number";
+import { accentColor, materialBlack } from "../../v1/util/constants";
+import { roundNumber } from "../../v1/util/number";
 import {
   useFeeDistributionSeries,
   FeeDistributionDataPoint,

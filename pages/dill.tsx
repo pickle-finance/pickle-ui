@@ -25,6 +25,6 @@ const Dill: FC = () => {
   );
 };
 
-export { getStaticProps } from "../util/locales";
+export { getStaticProps } from "../v1/util/locales";
 
 export default Dill;

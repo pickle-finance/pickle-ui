@@ -5,8 +5,8 @@ import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../containers/Dill";
-import { formatDate } from "../../util/date";
-import { formatPercent } from "../../util/number";
+import { formatDate } from "../../v1/util/date";
+import { formatPercent } from "../../v1/util/number";
 import PickleIcon from "../../components/PickleIcon";
 
 const DataPoint = styled.div`

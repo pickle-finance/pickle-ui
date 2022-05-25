@@ -96,6 +96,6 @@ const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router,
 
 Stats.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../../util/locales";
+export { getStaticProps } from "../../../v1/util/locales";
 
 export default Stats;

@@ -27,7 +27,7 @@ import { zapDefaultTokens } from "../Zap/tokens";
 import { tokenInfo, useBalance } from "../Zap/useBalance";
 import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
-import { uncompoundAPY } from "../../util/jars";
+import { uncompoundAPY } from "../../v1/util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
@@ -36,7 +36,7 @@ import {
   getRatioStringAndPendingString,
   RatioAndPendingStrings,
 } from "features/MiniFarms/JarMiniFarmCollapsible";
-import { gasLimit, JarInteraction } from "util/gasLimits";
+import { gasLimit, JarInteraction } from "v1/util/gasLimits";
 
 interface DataProps {
   isZero?: boolean;

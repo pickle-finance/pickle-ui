@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPickleCore } from "../../util/api";
+import { getPickleCore } from "../../v1/util/api";
 import { createContainer } from "unstated-next";
 import { Connection } from "../Connection";
 import { PickleModelJson } from "picklefinance-core";

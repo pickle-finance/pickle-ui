@@ -3,7 +3,7 @@ import { Button, Link, Input, Grid, Spacer, Card, Tooltip } from "@geist-ui/reac
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import { formatPercent } from "../../util/number";
+import { formatPercent } from "../../v1/util/number";
 import { ButtonStatus, useButtonStatus } from "hooks/useButtonStatus";
 import { Connection } from "containers/Connection";
 import { useFrax } from "containers/Frax/UseFrax";
@@ -62,7 +62,9 @@ export const FraxFeature: FC = () => {
 
   const tooltipText = ` ${t("frax.aprBreakdown")}<br/><br/>${t(
     "frax.fxsDistribution",
-  )}: ${formatPercent(fxsApr)}<br/>${t("frax.flywheelProfits")}: ${formatPercent(flywheelApr)}<br/>ㅤ`;
+  )}: ${formatPercent(fxsApr)}<br/>${t("frax.flywheelProfits")}: ${formatPercent(
+    flywheelApr,
+  )}<br/>ㅤ`;
 
   return (
     <>

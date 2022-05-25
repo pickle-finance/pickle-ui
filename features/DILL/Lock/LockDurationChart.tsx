@@ -6,7 +6,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { Trans, useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../../containers/Dill";
-import { accentColor } from "../../../util/constants";
+import { accentColor } from "../../../v1/util/constants";
 
 interface Props {
   dillStats: UseDillOutput;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Jar } from "./useFetchJars";
-import { ChainName } from "containers/config";
 import { PickleCore } from "./usePickleCore";
 import { Prices } from "../Prices";
 
@@ -24,7 +23,7 @@ type Output = {
   jarsWithAPY: Array<JarWithAPY> | null;
 };
 
-export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
+export const useJarWithAPY = (network: string | null, jars: Input): Output => {
   const { pickleCore } = PickleCore.useContainer();
   const { prices } = Prices.useContainer();
   const [jarsWithAPY, setJarsWithAPY] = useState<Array<JarWithAPY> | null>(null);
@@ -57,8 +56,8 @@ export const useJarWithAPY = (network: ChainName, jars: Input): Output => {
         APYs: [],
         apr: 0,
         totalAPY: 0,
-        lp: 0
-      }
+        lp: 0,
+      };
     }
 
     return [];

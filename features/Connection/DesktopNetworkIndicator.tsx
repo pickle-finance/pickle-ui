@@ -6,12 +6,9 @@ import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
-import { config } from "../../containers/config";
-import { MiniIcon } from "../../components/TokenIcon";
 import LanguageSelect from "./LanguageSelect";
 import useENS from "hooks/useENS";
 import { PickleCore } from "containers/Jars/usePickleCore";
-import { Chains } from "picklefinance-core";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;
