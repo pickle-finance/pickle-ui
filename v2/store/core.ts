@@ -221,12 +221,20 @@ const makeAssetsSelector = (options: MakeJarsSelectorOpts = {}) => {
       // Sort first, and then compute pagination
       let assetsWithData: AssetWithData[] = assets.map((asset) => {
         let token0, token1;
+        let farmApr = 0;
+        if ("farm" in asset) {
+          const farmApyComponents = asset.farm?.details?.farmApyComponents;
+
+          if (farmApyComponents?.length) {
+            farmApr = farmApyComponents[0].apr;
+          }
+        }
         if (asset.protocol === AssetProtocol.UNISWAP_V3)
           [token0, token1] = getUniV3Tokens(asset, allCore);
         const data = getUserAssetDataWithPrices(asset, allCore, userModel);
         const deposited = data.depositTokensInJar.tokensUSD + data.depositTokensInFarm.tokensUSD;
         const earned = data.earnedPickles.tokensUSD || 0;
-        const apy = asset.aprStats?.apy || 0;
+        const apy = (asset.aprStats?.apy || 0) + farmApr;
         const liquidity = asset.details.harvestStats?.balanceUSD || 0;
         return {
           ...asset,
@@ -302,16 +310,19 @@ const selectMaxApy = (state: RootState) => {
       if (farmApyComponents?.length) {
         farmApr = farmApyComponents[0].apr;
       }
-
-      return {
-        name: jar.depositToken.name,
-        chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
-        apy: apy + farmApr,
-      };
     }
+    return {
+      name: jar.depositToken.name,
+      chain: data.chains.find((chain) => chain.network === jar.chain)!.networkVisible,
+      apy: apy + farmApr,
+      tokens: jar.depositToken.components,
+      protocol: jar.protocol,
+    };
   });
 
-  return maxBy(entries, "apy")!;
+  // Filtering out jars with ridiculous APY
+  const filteredEntries = entries.filter((entry) => entry?.apy && entry.apy < 10000);
+  return maxBy(filteredEntries, "apy")!;
 };
 
 const selectNetworks = (state: RootState) => {

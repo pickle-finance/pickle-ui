@@ -2,6 +2,8 @@ import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { TFunction, useTranslation } from "next-i18next";
+import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import dayjs from "dayjs";
 
 import { classNames, formatDollars } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
@@ -66,6 +68,26 @@ const chainProtocol = (
   );
 };
 
+const tvlDisplay = (asset: PickleAsset, t: TFunction): JSX.Element => {
+  const balanceUSD = asset.details.harvestStats?.balanceUSD || 0;
+  const formattedBalance = formatDollars(balanceUSD);
+  const jarCreated = dayjs.unix(asset.startTimestamp || 0);
+  const oneMonthAgo = dayjs().subtract(1, "month");
+  const isNew = jarCreated.isAfter(oneMonthAgo);
+
+  const lowBalance = balanceUSD < 1000;
+  const highBalance = balanceUSD > 10000;
+
+  //1653026038
+  if (!isNew && lowBalance) {
+    return <>{`<$1k`}</>;
+  }
+  if (isNew && !highBalance) {
+    return <>{t("v2.farms.new")} ✨</>;
+  }
+  return <>{formattedBalance}</>;
+};
+
 interface Props {
   simple?: boolean;
   dashboard?: boolean;
@@ -122,9 +144,7 @@ const FarmsTableRowHeader: FC<Props> = ({ asset, simple, dashboard, open, userDi
         <FarmAPY asset={asset} userDillRatio={userDillRatio} />
       </RowCell>
       <RowCell className={classNames(simple && "rounded-r-xl")}>
-        <p className="font-title font-medium text-base leading-5">
-          {formatDollars(asset.details.harvestStats?.balanceUSD || 0)}
-        </p>
+        <p className="font-title font-medium text-base leading-5">{tvlDisplay(asset, t)}</p>
       </RowCell>
       {!simple && (
         <RowCell className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}>

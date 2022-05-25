@@ -494,6 +494,7 @@
       "matchingAllFilters": "Showing farms matching all filters",
       "metamaskAdd": "Add to Metamask",
       "network": "Network",
+      "new": "NEW",
       "noResults": "No results",
       "notMatchingAllFilters": "Showing farms matching at least one filter",
       "pagination": "Page {{ current }} of {{ total }}",
