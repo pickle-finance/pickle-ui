@@ -6,6 +6,8 @@ import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { useSelector } from "react-redux";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { ChainNetwork } from "picklefinance-core";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
@@ -22,6 +24,7 @@ import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 import AwaitingConfirmationUniV3 from "./AwaitingConfirmationUniV3";
 import FormUniV3 from "./FormUniV3";
 import { isAcceptingDeposits } from "v2/store/core.helpers";
+import { getNativeName } from "../utils";
 
 interface Props {
   jar: JarWithData;
@@ -33,6 +36,7 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const core = useSelector(CoreSelectors.selectCore);
   const [current, send] = useMachine(stateMachine);
+  const [shouldZap, setShouldZap] = useState(false);
   const { account } = useWeb3React<Web3Provider>();
 
   const { contract } = jar;
@@ -42,6 +46,9 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
 
   const token0Name = jar.token0!.name;
   const token1Name = jar.token1!.name;
+
+  const token0NativeName = getNativeName(token0Name);
+  const token1NativeName = getNativeName(token1Name);
 
   const token0Decimals =
     core?.tokens.find((x) => x.chain === jar.chain && x.id === token0Name)?.decimals || 18;
@@ -57,24 +64,41 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
 
   const pTokenBalanceBN = BigNumber.from(balances?.pAssetBalance || "0");
 
-  const isFrax = token0Name === "frax" || token1Name === "frax";
+  const canZap =
+    token0Name !== "frax" && token1Name !== "frax" && jar.chain === ChainNetwork.Ethereum;
 
   const transactionFactory = () => {
     if (!JarContract) return;
 
+    // Use native balance only if set & one of the tokens are native
+    const useNative = current.context.useNative && (jar.token0?.isNative || jar.token1?.isNative);
+
+    const nativeBalance = parseEther(
+      useNative ? (jar.token0?.isNative ? current.context.amount : current.context.amount1!) : "0",
+    );
+
+    // Zero out token in argument if native (expressed in "value")
     const amount0 = ethers.utils.parseUnits(
-      truncateToMaxDecimals(current.context.amount),
+      useNative && jar.token0?.isNative
+        ? "0"
+        : truncateToMaxDecimals(current.context.amount || "0"),
       token0Decimals,
     );
 
     const amount1 = ethers.utils.parseUnits(
-      truncateToMaxDecimals(current.context.amount1 || "0"),
-      token0Decimals,
+      useNative && jar.token1?.isNative
+        ? "0"
+        : truncateToMaxDecimals(current.context.amount1 || "0"),
+      token1Decimals,
     );
 
     // Non-Frax UniV3 jars have an extra bool argument for zapping
-    const funcSig = `deposit(uint256,uint256${!isFrax ? ",bool" : ""})`;
-    return () => JarContract[funcSig](amount0, amount1);
+    const funcSig = `deposit(uint256,uint256${canZap ? ",bool" : ""})`;
+
+    return () =>
+      JarContract[funcSig](amount0, amount1, ...(canZap ? [shouldZap] : []), {
+        value: nativeBalance,
+      });
   };
 
   const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
@@ -99,9 +123,17 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
 
     const pTokenTransferEvent = events.find((event) => event.args.to === account)!;
 
-    const newToken0Balance = depositToken0BalanceBN.sub(token0TransferEvent.args.value).toString();
+    // May not have transfer events if native token involved
+    const newToken0Balance = (!token0TransferEvent
+      ? depositToken0BalanceBN
+      : depositToken0BalanceBN.sub(token0TransferEvent.args.value)
+    ).toString();
 
-    const newToken1Balance = depositToken1BalanceBN.sub(token1TransferEvent.args.value).toString();
+    const newToken1Balance = (!token1TransferEvent
+      ? depositToken1BalanceBN
+      : depositToken1BalanceBN.sub(token1TransferEvent.args.value)
+    ).toString();
+
     const pAssetBalance = pTokenBalanceBN.add(pTokenTransferEvent.args.value).toString();
 
     dispatch(
@@ -178,8 +210,11 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
             token0Decimals={token0Decimals}
             token1Decimals={token1Decimals}
             jar={jar}
-            nextStep={(amount: string, amount1: string) =>
-              send(Actions.SUBMIT_FORM, { amount, amount1 })
+            canZap={canZap}
+            shouldZap={shouldZap}
+            setShouldZap={setShouldZap}
+            nextStep={(amount: string, amount1: string, useNative: boolean) =>
+              send(Actions.SUBMIT_FORM, { amount, amount1, useNative })
             }
           />
         )}
@@ -187,8 +222,12 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
           <AwaitingConfirmationUniV3
             title={t("v2.farms.confirmDeposit")}
             cta={t("v2.actions.deposit")}
-            token0Name={token0Name}
-            token1Name={token1Name}
+            token0Name={
+              current.context.useNative && jar.token0?.isNative ? token0NativeName : token0Name
+            }
+            token1Name={
+              current.context.useNative && jar.token1?.isNative ? token1NativeName : token1Name
+            }
             amount0={current.context.amount}
             amount1={current.context.amount1 || "0"}
             equivalentValue={equivalentValue()}
