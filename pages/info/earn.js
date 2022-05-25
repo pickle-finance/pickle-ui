@@ -15,8 +15,8 @@ import EarnRow from "../../components/EarnRow";
 import ThemedTable from "../../components/ThemedTable";
 import { jars } from "../../v1/util/jars";
 import { Connection } from "../../containers/Connection";
-import { InfoBar } from "../../features/InfoBar/InfoBar";
-import { Footer } from "../../features/Footer/Footer";
+import { InfoBar } from "../../v1/features/InfoBar/InfoBar";
+import { Footer } from "../../v1/features/Footer/Footer";
 
 const theme = createMuiTheme({
   palette: {

@@ -8,7 +8,7 @@ import { Connection } from "./Connection";
 import { updateFarmData } from "./UserFarms";
 import { UserFarmData } from "../containers/UserFarms";
 import { ERC20Transfer } from "./Erc20Transfer";
-import { NULL_ADDRESS } from "features/Zap/constants";
+import { NULL_ADDRESS } from "v1/features/Zap/constants";
 
 export interface UserFarmDataMatic extends UserFarmData {
   harvestableMatic: ethers.BigNumber;

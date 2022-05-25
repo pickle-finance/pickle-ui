@@ -7,7 +7,7 @@ import { MiniPickles } from "../Pickles";
 import { Contracts } from "../Contracts";
 import { Connection } from "../Connection";
 import { RawFarm } from "../Farms/useFetchFarms";
-import { NULL_ADDRESS } from "features/Zap/constants";
+import { NULL_ADDRESS } from "v1/features/Zap/constants";
 import { ChainNetwork } from "picklefinance-core";
 
 // this hook calculates and adds the following properties to the RawFarm objects

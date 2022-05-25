@@ -24,7 +24,7 @@ import { UserGauges } from "../containers/UserGauges";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
-import { TopBar } from "../features/TopBar/TopBar";
+import { TopBar } from "../v1/features/TopBar/TopBar";
 import { PickleCore } from "containers/Jars/usePickleCore";
 
 const getLibrary = (provider: any) => {

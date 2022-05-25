@@ -4,8 +4,8 @@ import { ArrowLeft } from "@geist-ui/react-icons";
 import { Trans, useTranslation } from "next-i18next";
 
 import Link from "next/link";
-import { Footer } from "../features/Footer/Footer";
-import { FarmList } from "../features/Farms/FarmList";
+import { Footer } from "../v1/features/Footer/Footer";
+import { FarmList } from "../v1/features/Farms/FarmList";
 
 const Farms: FC = () => {
   const { t } = useTranslation("common");

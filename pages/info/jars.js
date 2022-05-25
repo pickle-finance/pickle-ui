@@ -9,8 +9,8 @@ import { crvJars, sushiJars, uniJars, polyJars, arbJars } from "../../v1/util/ja
 import { getAllJarsChart, getProtocolData } from "../../v1/util/api";
 import { materialBlack } from "../../v1/util/constants";
 import JarValueChart from "../../components/JarValueChart";
-import { InfoBar } from "../../features/InfoBar/InfoBar";
-import { Footer } from "../../features/Footer/Footer";
+import { InfoBar } from "../../v1/features/InfoBar/InfoBar";
+import { Footer } from "../../v1/features/Footer/Footer";
 
 export const useStyles = makeStyles(() => ({
   title: {
