@@ -1,9 +1,12 @@
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { WalletLinkConnector } from "@web3-react/walletlink-connector";
-import { CloverConnector } from "@clover-network/clover-connector";
 import { Chains } from "picklefinance-core";
-const POLLING_INTERVAL = 12000;
+
+import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
+import { MetaMask } from '@web3-react/metamask'
+import type { Connector } from '@web3-react/types'
+import { WalletConnect } from '@web3-react/walletconnect'
+import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
+
+
 const RPC_URLS = Chains.list()
   .map((x) => {
     const id = Chains.get(x).id;
@@ -17,23 +20,63 @@ const RPC_URLS = Chains.list()
   });
 RPC_URLS[1] = process.env.infura;
 
-export const injected = new InjectedConnector({
-  supportedChainIds: Chains.list().map((x) => Chains.get(x).id),
-});
+export const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>((actions) => new MetaMask(actions));
 
-export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: RPC_URLS[1] /*, 137: RPC_URLS[137]*/ }, // web3-react walletconnect connector not compatible
-  bridge: "https://bridge.walletconnect.org",
-  qrcode: true,
-  pollingInterval: POLLING_INTERVAL,
-});
+export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
+  (actions) =>
+    new WalletConnect(actions, {
+      rpc: RPC_URLS,
+    }),
+  Object.keys(RPC_URLS).map((chainId) => Number(chainId)),
+);
 
-export const walletlink = new WalletLinkConnector({
-  url: RPC_URLS[1],
-  appName: "Pickle Finance",
-  appLogoUrl: "pickle.png",
-});
+export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
+  (actions) =>
+    new CoinbaseWallet(actions, {
+      url: RPC_URLS[1][0],
+      appName: "Pickle Finance",
+      appLogoUrl: "pickle.png",
+    }),
+);
 
-export const cloverconnect = new CloverConnector({
-  supportedChainIds: [1],
-});
+
+
+
+export function getHooks(connector: Connector): Web3ReactHooks | undefined {
+  if (connector instanceof CoinbaseWallet) return coinbaseWalletHooks;
+  if (connector instanceof MetaMask) return metaMaskHooks;
+  if (connector instanceof WalletConnect) return walletConnectHooks;
+}
+
+export const connectorsAndHooks: [Connector, Web3ReactHooks][] = [
+  [metaMask, metaMaskHooks],
+  [walletConnect, walletConnectHooks],
+  [coinbaseWallet, coinbaseWalletHooks],
+]
+
+export const connectorItemPropsList = [
+    {
+      icon: "metamask.svg",
+      title: "connection.metamask",   // translation string
+      connector: metaMask,
+      hooks: metaMaskHooks,
+    },
+    {
+      icon: "walletconnect.svg",
+      title: "connection.walletConnect",  // translation string
+      connector: walletConnect,
+      hooks: walletConnectHooks,
+    },
+    {
+      icon: "coinbase.svg",
+      title: "connection.coinbase",   // translation string
+      connector: coinbaseWallet,
+      hooks: coinbaseWalletHooks,
+    },
+    // {
+    //   icon: "clover.svg",
+    //   title: t("connection.clover"),
+    //   connector: metaMask,
+    //   hooks: metaMaskHooks,
+    // },
+  ];

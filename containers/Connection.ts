@@ -3,35 +3,40 @@ import { createContainer } from "unstated-next";
 import { ethers } from "ethers";
 import { Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React, Web3ReactHooks, getPriorityConnector } from "@web3-react/core";
 import { Provider as MulticallProvider, setMulticallAddress } from "ethers-multicall";
 import { useRouter } from "next/router";
 import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
 import { PickleCore } from "./Jars/usePickleCore";
+import { AddEthereumChainParameter, Connector } from "@web3-react/types";
+import { getHooks } from "features/Connection/Web3Modal/Connectors";
+import { MetaMask } from "@web3-react/metamask";
+import { WalletConnect } from "@web3-react/walletconnect";
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
 
 type Network = ethers.providers.Network;
 
 // See https://eips.ethereum.org/EIPS/eip-3085 and
 // https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
-interface AddEthereumChainParameter {
-  chainId: string;
-  blockExplorerUrls?: string[];
-  chainName?: string;
-  iconUrls?: string[];
-  nativeCurrency?: {
-    name: string;
-    symbol: string;
-    decimals: number;
-  };
-  rpcUrls?: string[];
-}
+// interface AddEthereumChainParameter {
+//   chainId: string;
+//   blockExplorerUrls?: string[];
+//   chainName?: string;
+//   iconUrls?: string[];
+//   nativeCurrency?: {
+//     name: string;
+//     symbol: string;
+//     decimals: number;
+//   };
+//   rpcUrls?: string[];
+// }
 
 export const chainToChainParams = (
   chain: RawChain | undefined,
 ): AddEthereumChainParameter | undefined => {
   if (!chain) return undefined;
   return {
-    chainId: "0x" + chain.chainId.toString(16),
+    chainId: chain.chainId,
     chainName: chain.networkVisible,
     nativeCurrency: {
       name: chain.gasTokenSymbol.toUpperCase(),
@@ -44,7 +49,13 @@ export const chainToChainParams = (
 };
 
 function useConnection() {
-  const { account, library, chainId } = useWeb3React();
+  const {
+    account,
+    /* library, */ chainId,
+    /* provider, */ connector,
+    isActive,
+    ENSName,
+  } = useWeb3React();
   const router = useRouter();
   const { pickleCore } = PickleCore.useContainer();
 
@@ -53,40 +64,48 @@ function useConnection() {
 
   const [multicallProvider, setMulticallProvider] = useState<MulticallProvider | null>(null);
 
+  const [hooks, setHooks] = useState<Web3ReactHooks>();
+  const [provider, setProvider] = useState<ReturnType<Web3ReactHooks["useProvider"]>>();
+  const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner>();
+
   const [network, setNetwork] = useState<Network | null>(null);
   const [blockNum, setBlockNum] = useState<number | null>(null);
 
-  const switchChain = async (chainId: number) => {
+  const switchChain = async (desiredChainId: number) => {
+    // if pfcore is not loaded yet, return
     if (!pickleCore) return false;
-    let method: string;
-    let params: any[];
-    if (chainId === 1) {
-      method = "wallet_switchEthereumChain";
-      params = [{ chainId: "0x1" }];
-    } else {
-      method = "wallet_addEthereumChain";
-      method = "wallet_addEthereumChain";
-      const param = chainToChainParams(pickleCore.chains.find((x) => x.chainId === chainId));
-      if (param === undefined || param === null) return false;
-      params = [param];
-    }
+    // if we're already connected to the desired chain, return
+    if (desiredChainId === chainId) return true;
+    // if they want to connect to the default chain and we're already connected, return
+    if (desiredChainId === -1 && chainId !== undefined) return true;
 
     try {
-      await library.provider.request({
-        method: method,
-        params: params,
-      });
+      if (connector instanceof WalletConnect /* || connector instanceof Network */) {
+        await connector.activate(desiredChainId === -1 ? undefined : desiredChainId);
+      } else {
+        await connector.activate(
+          desiredChainId === -1 ? undefined : chainToChainParams(rawChainFor(desiredChainId)),
+        );
+      }
       return true;
     } catch (e) {
-      return false;
+      console.log("switchChainError");
+      console.log(e);
     }
+    return false;
   };
 
-  const rawChainFor = (network: ChainNetwork): RawChain | undefined => {
+  // const rawChainFor = (network: ChainNetwork): RawChain | undefined => {
+  //   return pickleCore === undefined || pickleCore === null
+  //     ? undefined
+  //     : pickleCore.chains.find((z) => z.network === network);
+  // };
+  const rawChainFor = (network: ChainNetwork | number): RawChain | undefined => {
     return pickleCore === undefined || pickleCore === null
       ? undefined
-      : pickleCore.chains.find((z) => z.network === network);
+      : pickleCore.chains.find((z) => z.network === network || z.chainId === network);
   };
+
   const networks = Chains.list().filter((x) => rawChainFor(x) !== undefined);
   const supportedChainParams = networks.map((x) => {
     const rawChain = rawChainFor(x);
@@ -94,10 +113,29 @@ function useConnection() {
   });
   const supportedChains = supportedChainParams;
 
+  // get the currently connected connector hooks & provider
+  const currentHooks = getHooks(connector);
+  // hooks provider gives back a signer, the useWeb3React provider does not!
+  const currentProvider = currentHooks?.useProvider();
+
+  // useEffect(() => {
+  //   if (connector && tryHooks && tryProvider) {
+  //     const signer = tryProvider.getSigner();
+
+  //     setProvider(tryProvider);
+  //     setSigner(signer);
+  //     setHooks(hooks);
+  //   }
+  // }, [account, chainId, connector]);
+
   // create observable to stream new blocks
   useEffect(() => {
-    if (library) {
-      library.getNetwork().then((network: any) => setNetwork(network));
+    // update provider, hooks and signer each time provider changes (upon chain, account or connector changes)
+    if (pickleCore && currentHooks && currentProvider && currentProvider !== provider) {
+      // set the network
+      currentProvider.getNetwork().then((network: any) => setNetwork(network));
+
+      // set multicall address
       Chains.list().map((x) => {
         const raw: RawChain | undefined = rawChainFor(x);
         if (raw && raw.multicallAddress) {
@@ -105,14 +143,17 @@ function useConnection() {
         }
       });
 
-      const _multicallProvider = new MulticallProvider(library);
-      _multicallProvider.init().then(() => setMulticallProvider(_multicallProvider));
+      // set multicallProvider
+      const _multicallProvider = new MulticallProvider(currentProvider, chainId);
+      setMulticallProvider(_multicallProvider);
 
+      // reload the page on chain changes
       const { ethereum } = window as any;
       ethereum?.on("chainChanged", () => router.reload());
 
+      // create an observable to track the latest chain blocks
       const observable = new Observable<number>((subscriber) => {
-        library.on("block", (blockNumber: number) => subscriber.next(blockNumber));
+        currentProvider.on("block", (blockNumber: number) => subscriber.next(blockNumber));
       });
 
       // debounce to prevent subscribers making unnecessary calls
@@ -121,25 +162,28 @@ function useConnection() {
           setBlockNum(blockNumber);
         }
       });
-    } else {
-      setMulticallProvider(null);
-      setBlockNum(null);
+
+      setProvider(currentProvider);
+      setHooks(currentHooks);
+      setSigner(currentProvider.getSigner());
     }
-  }, [library, pickleCore]);
+  }, [pickleCore, connector, provider, chainId, account]);
 
   const chainName = pickleCore?.chains.find((x) => x.chainId === chainId)?.network || null;
 
   return {
     multicallProvider,
-    provider: library,
+    provider,
     address: account,
     network,
     blockNum,
-    signer: library?.getSigner(),
     chainId,
     chainName,
     switchChain,
     supportedChains,
+    connector,
+    hooks,
+    signer,
   };
 }
 

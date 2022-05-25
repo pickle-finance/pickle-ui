@@ -26,13 +26,14 @@ import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../containers/ComethPairs";
 import { TopBar } from "../features/TopBar/TopBar";
 import { PickleCore } from "containers/Jars/usePickleCore";
+import { connectorsAndHooks } from "features/Connection/Web3Modal/Connectors";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
 };
 
 const WithContainers: FC = ({ children }) => (
-  <Web3ReactProvider getLibrary={getLibrary}>
+  <Web3ReactProvider connectors={connectorsAndHooks}>
     <PickleCore.Provider>
       <Connection.Provider>
         <Contracts.Provider>

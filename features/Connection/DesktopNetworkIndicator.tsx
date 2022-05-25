@@ -125,7 +125,7 @@ export const DesktopNetworkIndicator: FC = () => {
   const { ensName } = useENS(address);
   const { pickleCore } = PickleCore.useContainer();
 
-  const shortAddress = `${address?.substr(0, 5)}…${address?.substr(-4)}`;
+  const shortAddress = `${address?.substring(0, 5)}…${address?.substring(38)}`;
 
   const handleSwitchChain = async (newChainId: number) => {
     if (chainId === newChainId) return;
