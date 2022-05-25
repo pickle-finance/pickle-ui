@@ -1,7 +1,7 @@
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import { DayPickerInputProps } from "react-day-picker/types/Props";
 import styled from "styled-components";
-import { colors } from "../styles/theme";
+import { colors } from "../v1/styles/theme";
 
 interface DayPickerInputWrapperProps extends Omit<DayPickerInputProps, "classNames"> {
   className?: string;

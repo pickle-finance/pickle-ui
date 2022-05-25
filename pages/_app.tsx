@@ -7,8 +7,8 @@ import { appWithTranslation, useTranslation } from "next-i18next";
  * Global CSS must be in _app.tsx.
  * https://nextjs.org/docs/messages/css-global
  */
-import "../styles/reset.css";
-import "../styles/global.scss";
+import "../v1/styles/reset.css";
+import "../v1/styles/global.scss";
 import "react-day-picker/lib/style.css";
 
 /**
