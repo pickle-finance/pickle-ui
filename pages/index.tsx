@@ -2,9 +2,9 @@ import { FC } from "react";
 import { Grid, Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Balances } from "../features/Balances/Balances";
-import { Footer } from "../features/Footer/Footer";
-import { DepositZap } from "../features/Zap/DepositZap";
+import { Balances } from "../v1/features/Balances/Balances";
+import { Footer } from "../v1/features/Footer/Footer";
+import { DepositZap } from "../v1/features/Zap/DepositZap";
 
 const Home: FC = () => {
   const { t } = useTranslation("common");

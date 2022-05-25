@@ -16,8 +16,8 @@ import Paper from "@material-ui/core/Paper";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { InfoBar } from "../features/InfoBar/InfoBar";
-import { Footer } from "../features/Footer/Footer";
+import { InfoBar } from "../v1/features/InfoBar/InfoBar";
+import { Footer } from "../v1/features/Footer/Footer";
 import { cardColor, pickleGreen, materialBlack } from "../v1/util/constants";
 import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "../v1/util/api";
 import { powerPool, jars } from "../v1/util/jars";

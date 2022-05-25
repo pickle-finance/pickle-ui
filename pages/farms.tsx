@@ -2,9 +2,9 @@ import { FC } from "react";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Footer } from "../features/Footer/Footer";
-import { GaugeList } from "../features/Gauges/GaugeList";
-import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
+import { Footer } from "../v1/features/Footer/Footer";
+import { GaugeList } from "../v1/features/Gauges/GaugeList";
+import { MiniFarmList } from "../v1/features/MiniFarms/MiniFarmList";
 import { Connection } from "../containers/Connection";
 import { noFarms } from "v1/util/constants";
 import { ChainNetwork } from "picklefinance-core";

@@ -2,8 +2,8 @@ import { FC } from "react";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Footer } from "../features/Footer/Footer";
-import { DillFeature } from "../features/DILL/DILL";
+import { Footer } from "../v1/features/Footer/Footer";
+import { DillFeature } from "../v1/features/DILL/DILL";
 import { Connection } from "../containers/Connection";
 import { ChainNetwork } from "picklefinance-core";
 

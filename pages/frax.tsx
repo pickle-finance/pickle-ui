@@ -2,9 +2,9 @@ import { FC } from "react";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Footer } from "../features/Footer/Footer";
+import { Footer } from "../v1/features/Footer/Footer";
 import { Connection } from "../containers/Connection";
-import { FraxFeature } from "features/Frax/Frax";
+import { FraxFeature } from "v1/features/Frax/Frax";
 import { ChainNetwork } from "picklefinance-core";
 
 const Frax: FC = () => {
