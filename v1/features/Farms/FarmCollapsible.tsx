@@ -13,7 +13,7 @@ import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { JarApy } from "../../../containers/Jars/useJarsWithAPYPFCore";
 import { useUniPairDayData } from "../../../containers/Jars/useUniPairDayData";
-import { LpIcon, TokenIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "./UseMigrate";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";

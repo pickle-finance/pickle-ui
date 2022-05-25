@@ -10,7 +10,7 @@ import { Contracts, PICKLE_ETH_SLP } from "../../../containers/Contracts";
 import { JarApy } from "../../../containers/Jars/useJarsWithAPYPFCore";
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { LpIcon, TokenIcon, MiniIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useMC2 } from "../../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";

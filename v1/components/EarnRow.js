@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Avatar from "@material-ui/core/Avatar";
-import { materialBlack } from "../v1/util/constants";
+import { materialBlack } from "../util/constants";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({

@@ -12,7 +12,7 @@ import { Contracts } from "../../../containers/Contracts";
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "containers/UserJars";
-import { LpIcon, TokenIcon, ZapperIcon, MiniIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon, ZapperIcon, MiniIcon } from "../../components/TokenIcon";
 import {
   isYveCrvEthJarToken,
   isMainnetMimEthJarDepositToken,

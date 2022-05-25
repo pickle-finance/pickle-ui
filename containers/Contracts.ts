@@ -41,8 +41,6 @@ import { YearnRegistry__factory as YearnRegistryFactory } from "./Contracts/fact
 import { StakingPools__factory as StakingPoolsFactory } from "./Contracts/factories/StakingPools__factory";
 import { StakingRewards } from "./Contracts/StakingRewards";
 import { StakingRewards__factory as StakingRewardsFactory } from "./Contracts/factories/StakingRewards__factory";
-import { CommunalFarm } from "./Contracts/CommunalFarm";
-import { CommunalFarm__factory as CommunalFarmFactory } from "./Contracts/factories/CommunalFarm__factory";
 import { Strategy } from "./Contracts/Strategy";
 import { Strategy__factory as StrategyFactory } from "./Contracts/factories/Strategy__factory";
 import { SushiChef } from "./Contracts/SushiChef";
@@ -243,7 +241,6 @@ function useContracts() {
   const [dill, setDill] = useState<Dill | null>(null);
   const [gaugeProxy, setGaugeProxy] = useState<GaugeProxy | null>(null);
   const [gauge, setGauge] = useState<Gauge | null>(null);
-  const [communalFarm, setCommunalFarm] = useState<CommunalFarm | null>(null);
   const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(null);
   const [feeDistributorV2, setFeeDistributorV2] = useState<FeeDistributorV2 | null>(null);
 
@@ -318,7 +315,6 @@ function useContracts() {
       setStakingRewards(
         StakingRewardsFactory.connect(ethers.constants.AddressZero, providerOrSigner),
       );
-      setCommunalFarm(CommunalFarmFactory.connect(COMMUNAL_FARM, providerOrSigner));
       setSorbettiereFarm(
         SorbettiereFactory.connect(
           addresses.sorbettiere || ethers.constants.AddressZero,
@@ -417,7 +413,6 @@ function useContracts() {
     renPool,
     threePool,
     steCRVPool,
-    communalFarm,
     stakingRewards,
     uniswapv2Pair,
     erc20,

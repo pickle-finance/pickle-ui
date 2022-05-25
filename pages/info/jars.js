@@ -8,7 +8,7 @@ import { useTranslation } from "next-i18next";
 import { crvJars, sushiJars, uniJars, polyJars, arbJars } from "../../v1/util/jars";
 import { getAllJarsChart, getProtocolData } from "../../v1/util/api";
 import { materialBlack } from "../../v1/util/constants";
-import JarValueChart from "../../components/JarValueChart";
+import JarValueChart from "../../v1/components/JarValueChart";
 import { InfoBar } from "../../v1/features/InfoBar/InfoBar";
 import { Footer } from "../../v1/features/Footer/Footer";
 

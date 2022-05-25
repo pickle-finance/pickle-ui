@@ -3,11 +3,11 @@ import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useZapIn } from "./useZapper";
-import { TokenIcon } from "../../../components/TokenIcon";
+import { TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "../Farms/UseMigrate";
 import { Connection } from "containers/Connection";
 import { Trans, useTranslation } from "next-i18next";
-import { Link } from "components/Link";
+import { Link } from "v1/components/Link";
 
 import { DEFAULT_SLIPPAGE, YVECRVETH_JAR, CRV_ADDRESS, ETH_ADDRESS } from "./constants";
 import { ChainNetwork } from "picklefinance-core";

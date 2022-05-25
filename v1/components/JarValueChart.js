@@ -9,7 +9,7 @@ import {
   pickleNeon,
   graphFill,
   pickleWhite,
-} from "../v1/util/constants";
+} from "../util/constants";
 import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { AreaChart, Area, YAxis, XAxis, Tooltip } from "recharts";
