@@ -20,7 +20,7 @@ const Chart: FC<{
   if (data.length < 1)
     return (
       <div className="h-full">
-        <p className="text-center">Vote Data Unavailable</p>
+        <p className="text-center">Chart Unavailable</p>
       </div>
     );
   return (
@@ -53,7 +53,7 @@ const Chart: FC<{
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: iLabel) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
