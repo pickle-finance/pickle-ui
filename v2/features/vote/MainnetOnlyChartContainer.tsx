@@ -11,7 +11,7 @@ const ChartContainer: FC<{
   showTable?: boolean;
 }> = ({ core, offchainVoteData, showTable }) => {
   return (
-    <div className="w-full h-[500px] px-4 py-10 mb-10">
+    <div className="w-full h-[500px]">
       {!showTable ? (
         <JarWeightChart chain={"eth"} core={core} offchainVoteData={offchainVoteData} />
       ) : (
