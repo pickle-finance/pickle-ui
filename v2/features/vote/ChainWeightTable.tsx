@@ -10,10 +10,10 @@ const ChainWeightTable: FC<{
 }> = ({ offchainVoteData, core }) => {
   const tableData = getPlatformChainWeights(offchainVoteData);
   return (
-    <div className="flex flex-col mt-20 mb-10 max-h-full">
+    <div className="flex flex-col h-full max-w-full">
       <div className="-my-2 overflow-x-auto">
         <div className="py-2 align-middle inline-block min-w-full">
-          <table className="min-w-full table-auto border-collapse">
+          <table className="w-full table-auto border-collapse">
             <ChainWeightTableHeader />
             <tbody>
               <>

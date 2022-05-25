@@ -49,7 +49,8 @@
       "metis": "Metis",
       "moonbeam": "Moonbeam",
       "optimism": "Optimism",
-      "fantom": "Fantom"
+      "fantom": "Fantom",
+      "gnosis": "Gnosis"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
@@ -480,6 +481,7 @@
       "loadingDocs": "Loading docs ...",
       "loadingInvestments": "Loading investment details ...",
       "loadingUserModel": "Loading your balances ...",
+      "loadingVotes": "Loading vote data ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
       "metamaskAdd": "Add to Metamask",
