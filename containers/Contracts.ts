@@ -19,6 +19,8 @@ import { Erc20 } from "./Contracts/Erc20";
 import { Erc20__factory as Erc20Factory } from "./Contracts/factories/Erc20__factory";
 import { FeeDistributor } from "./Contracts/FeeDistributor";
 import { FeeDistributor__factory as FeeDistributorFactory } from "./Contracts/factories/FeeDistributor__factory";
+import { FeeDistributorV2 } from "./Contracts/FeeDistributorV2";
+import { FeeDistributorV2__factory as FeeDistributorV2Factory } from "./Contracts/factories/FeeDistributorV2__factory";
 import { Gauge } from "./Contracts/Gauge";
 import { Gauge__factory as GaugeFactory } from "./Contracts/factories/Gauge__factory";
 import { GaugeController } from "./Contracts/GaugeController";
@@ -177,6 +179,8 @@ export const INSTABRINE = "0x8F9676bfa268E94A2480352cC5296A943D5A2809";
 export const SUSHI_CHEF = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd";
 export const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
 export const FEE_DISTRIBUTOR = "0x74C6CadE3eF61d64dcc9b97490d9FbB231e4BdCc";
+export const FEE_DISTRIBUTOR_V2 = "0x2c6C87E7E6195ab7A4f19d3CF31D867580Bb2a1b";
+
 export const YVECRV_ZAP = "0x1fd6ADbA9FEe5c18338F134E31b4a323aFa06AD4";
 export const YVBOOST_MIGRATOR = "0x61Dde5da89fB3a099035bd9b3f94d1105A22F3d9";
 
@@ -241,6 +245,7 @@ function useContracts() {
   const [gauge, setGauge] = useState<Gauge | null>(null);
   const [communalFarm, setCommunalFarm] = useState<CommunalFarm | null>(null);
   const [feeDistributor, setFeeDistributor] = useState<FeeDistributor | null>(null);
+  const [feeDistributorV2, setFeeDistributorV2] = useState<FeeDistributorV2 | null>(null);
 
   const [stakingRewards, setStakingRewards] = useState<StakingRewards | null>(null);
   const [sorbettiereFarm, setSorbettiereFarm] = useState<Sorbettiere | null>(null);
@@ -339,12 +344,14 @@ function useContracts() {
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, providerOrSigner));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, providerOrSigner));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, providerOrSigner));
+      setFeeDistributorV2(FeeDistributorV2Factory.connect(FEE_DISTRIBUTOR_V2, providerOrSigner));
       setInstabrine(InstabrineFactory.connect(INSTABRINE, signer));
       setSushiChef(SushiChefFactory.connect(SUSHI_CHEF, signer));
       setDill(DillFactory.connect(DILL, signer));
       setGaugeProxy(GaugeProxyFactory.connect(GAUGE_PROXY, signer));
       setGauge(GaugeFactory.connect(ethers.constants.AddressZero, signer));
       setFeeDistributor(FeeDistributorFactory.connect(FEE_DISTRIBUTOR, signer));
+      setFeeDistributorV2(FeeDistributorV2Factory.connect(FEE_DISTRIBUTOR_V2, signer));
       setyvBoostMigrator(YvboostMigratorFactory.connect(YVBOOST_MIGRATOR, signer));
       setStakingPools(StakingPoolsFactory.connect(ALCHEMIX_ALCX_ETH_STAKING_POOLS, signer));
       setYearnRegistry(YearnRegistryFactory.connect(YEARN_REGISTRY, signer));
@@ -426,6 +433,7 @@ function useContracts() {
     gaugeProxy,
     gauge,
     feeDistributor,
+    feeDistributorV2,
     yvBoostMigrator,
     stakingPools,
     yearnRegistry,
