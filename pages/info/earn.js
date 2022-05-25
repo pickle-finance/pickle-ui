@@ -14,7 +14,7 @@ import InfoCardContent from "../../v1/components/InfoCardContent";
 import EarnRow from "../../v1/components/EarnRow";
 import ThemedTable from "../../v1/components/ThemedTable";
 import { jars } from "../../v1/util/jars";
-import { Connection } from "../../containers/Connection";
+import { Connection } from "../../v1/containers/Connection";
 import { InfoBar } from "../../v1/features/InfoBar/InfoBar";
 import { Footer } from "../../v1/features/Footer/Footer";
 

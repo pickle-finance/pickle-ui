@@ -21,7 +21,7 @@ import { roundNumber } from "../../util/number";
 import {
   useFeeDistributionSeries,
   FeeDistributionDataPoint,
-} from "../../../containers/DILL/useFeeDistributionSeries";
+} from "../../containers/DILL/useFeeDistributionSeries";
 
 type ChartMode = "weekly" | "total";
 

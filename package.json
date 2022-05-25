@@ -17,7 +17,7 @@
     "postinstall": "yarn typechain && typesync",
     "lint": "next lint",
     "tsc": "tsc",
-    "typechain": "typechain --target=ethers-v5 --out-dir ./containers/Contracts ./containers/ABIs/**/*.json"
+    "typechain": "typechain --target=ethers-v5 --out-dir ./v1/containers/Contracts ./v1/containers/ABIs/**/*.json"
   },
   "dependencies": {
     "@clover-network/clover-connector": "^1.0.0",

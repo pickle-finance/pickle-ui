@@ -4,12 +4,12 @@ import { formatEther } from "ethers/lib/utils";
 import { Balances } from "../Balances";
 import { Connection } from "../Connection";
 import { ERC20Transfer } from "../Erc20Transfer";
-import { BPAddresses } from "containers/config";
+import { BPAddresses } from "v1/containers/config";
 import { Contracts } from "../Contracts";
 import { PriceIds, Prices } from "../Prices";
 import erc20 from "@studydefi/money-legos/erc20";
 import BLensABI from "../ABIs/blens.json";
-import { Jar__factory as JarFactory } from "../../containers/Contracts/factories/Jar__factory";
+import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory";
 
 export const usePBAMM = () => {
   const { signer, provider, address } = Connection.useContainer();

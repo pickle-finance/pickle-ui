@@ -3,10 +3,10 @@ import { Spacer, Grid, Card, Button } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { Contracts } from "../../../containers/Contracts";
-import { Connection } from "../../../containers/Connection";
-import { UseDillOutput } from "../../../containers/Dill";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { Contracts } from "../../containers/Contracts";
+import { Connection } from "../../containers/Connection";
+import { UseDillOutput } from "../../containers/Dill";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import { formatPercent } from "../../util/number";
 import PickleIcon from "../../components/PickleIcon";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";

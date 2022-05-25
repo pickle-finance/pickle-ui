@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import erc20 from "@studydefi/money-legos/erc20";
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { ETH_ADDRESS } from "./constants";
 
 const { parseUnits } = ethers.utils;

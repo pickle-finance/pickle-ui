@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Spacer, Table } from "@geist-ui/react";
-import { UserGaugeData } from "../../../containers/UserGauges";
+import { UserGaugeData } from "../../containers/UserGauges";
 import Collapse from "../Collapsible/Collapse";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import styled from "styled-components";

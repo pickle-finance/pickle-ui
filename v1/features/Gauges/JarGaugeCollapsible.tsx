@@ -6,22 +6,22 @@ import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { formatEther, formatUnits } from "ethers/lib/utils";
-import { Contracts } from "../../../containers/Contracts";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { Contracts } from "../../containers/Contracts";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { UserJarData } from "containers/UserJars";
+import { UserJarData } from "v1/containers/UserJars";
 import { LpIcon, TokenIcon, ZapperIcon, MiniIcon } from "../../components/TokenIcon";
 import {
   isYveCrvEthJarToken,
   isMainnetMimEthJarDepositToken,
   isJarWithdrawOnly,
   isLooksJar,
-} from "../../../containers/Jars/jars";
-import { useDill } from "../../../containers/Dill";
+} from "../../containers/Jars/jars";
+import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
-import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getFormatString } from "./GaugeInfo";
 import { zapDefaultTokens } from "../Zap/tokens";
 import { tokenInfo, useBalance } from "../Zap/useBalance";
@@ -30,7 +30,7 @@ import { useZapIn } from "../Zap/useZapper";
 import { uncompoundAPY } from "../../util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { PickleCore } from "../../../containers/Jars/usePickleCore";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import {
   getRatioStringAndPendingString,

@@ -4,8 +4,8 @@ import { Card, Grid, Tooltip } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
 import { useBalances } from "./useBalances";
-import { Prices } from "../../../containers/Prices";
-import { Connection } from "../../../containers/Connection";
+import { Prices } from "../../containers/Prices";
+import { Connection } from "../../containers/Connection";
 import { Prices as PriceComponent } from "../Prices/Prices";
 import { ethers } from "ethers";
 import { getProtocolData } from "v1/util/api";

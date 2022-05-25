@@ -2,10 +2,10 @@ import React, { useState, FC, useEffect } from "react";
 import { Grid, Card } from "@geist-ui/react";
 import { Trans, useTranslation } from "next-i18next";
 import { TradeButton } from "v1/features/Prices/Prices";
-import { Connection } from "containers/Connection";
-import { Prices } from "containers/Prices";
-import { Contracts } from "containers/Contracts";
-import { PickleCore } from "../../../containers/Jars/usePickleCore";
+import { Connection } from "v1/containers/Connection";
+import { Prices } from "v1/containers/Prices";
+import { Contracts } from "v1/containers/Contracts";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 
 export const BalFarm: FC = () => {
   const { provider, blockNum } = Connection.useContainer();

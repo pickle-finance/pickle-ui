@@ -2,7 +2,7 @@ import { Page } from "@geist-ui/react";
 import { FC } from "react";
 import styled from "styled-components";
 import { useTranslation } from "next-i18next";
-import { Connection } from "containers/Connection";
+import { Connection } from "v1/containers/Connection";
 import { ChainNetwork } from "picklefinance-core";
 
 const Container = styled(Page.Footer)`

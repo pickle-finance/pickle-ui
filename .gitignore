@@ -38,5 +38,5 @@ yarn-error.log*
 .vscode
 
 # Generated Typechain files
-containers/Contracts/*
+v1/containers/Contracts/*
 secrets.json

@@ -22,8 +22,8 @@ import { UserActions } from "v2/store/user";
 import { eventsByName } from "../utils";
 import { CoreSelectors } from "v2/store/core";
 import { Asset, farmDetails } from "v2/store/core.helpers";
-import { Gauge, RewardPaidEvent } from "containers/Contracts/Gauge";
-import { HarvestEvent, Minichef } from "containers/Contracts/Minichef";
+import { Gauge, RewardPaidEvent } from "v1/containers/Contracts/Gauge";
+import { HarvestEvent, Minichef } from "v1/containers/Contracts/Minichef";
 import MoreInfo from "v2/components/MoreInfo";
 import {
   FEE_DISTRIBUTOR_ADDRESS,
@@ -32,7 +32,7 @@ import {
   roundToSignificantDigits,
 } from "v2/utils";
 import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks";
-import { ClaimedEvent } from "containers/Contracts/FeeDistributor";
+import { ClaimedEvent } from "v1/containers/Contracts/FeeDistributor";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
 

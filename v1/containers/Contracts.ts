@@ -96,7 +96,7 @@ import { DodoPair } from "./Contracts/DodoPair";
 import { DodoPair__factory as DodoPairFactory } from "./Contracts/factories/DodoPair__factory";
 import { DodoRewards } from "./Contracts/DodoRewards";
 import { DodoRewards__factory as DodoRewardsFactory } from "./Contracts/factories/DodoRewards__factory";
-import { LooksStaking__factory as LooksStakingFactory } from "containers/Contracts/factories/LooksStaking__factory";
+import { LooksStaking__factory as LooksStakingFactory } from "v1/containers/Contracts/factories/LooksStaking__factory";
 import { LooksStaking } from "./Contracts/LooksStaking";
 import { PickleCore } from "./Jars/usePickleCore";
 import { ADDRESSES } from "picklefinance-core/lib/model/PickleModel";

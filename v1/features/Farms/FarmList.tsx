@@ -4,9 +4,9 @@ import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
 import { FarmCollapsible } from "./FarmCollapsible";
-import { UserFarms, UserFarmData } from "../../../containers/UserFarms";
-import { Connection } from "../../../containers/Connection";
-import { isYveCrvEthJarToken } from "../../../containers/Jars/jars";
+import { UserFarms, UserFarmData } from "../../containers/UserFarms";
+import { Connection } from "../../containers/Connection";
+import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
 import { ChainNetwork } from "picklefinance-core";
 
 const Container = styled.div`

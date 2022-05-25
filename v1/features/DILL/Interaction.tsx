@@ -3,7 +3,7 @@ import { Card, Grid } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
 import { CreateLock } from "./Lock/CreateLock";
-import { UseDillOutput } from "../../../containers/Dill";
+import { UseDillOutput } from "../../containers/Dill";
 import { IncreaseAmount } from "./Lock/IncreaseAmount";
 import { IncreaseTime } from "./Lock/IncreaseTime";
 import { LockDurationChart } from "./Lock/LockDurationChart";

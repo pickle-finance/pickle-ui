@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
-import { Contracts } from "../../../containers/Contracts";
-import { UserGauges } from "../../../containers/UserGauges";
-import { Dill } from "../../../containers/Dill";
+import { Contracts } from "../../containers/Contracts";
+import { UserGauges } from "../../containers/UserGauges";
+import { Dill } from "../../containers/Dill";
 import { ChainNetwork } from "picklefinance-core";
 
 export const usePendingPickles = (): { pendingPickles: number | null } => {

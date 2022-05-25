@@ -8,9 +8,9 @@ import { useTranslation } from "next-i18next";
 
 import { injected, walletconnect, walletlink, cloverconnect } from "./Connectors";
 import { useEagerConnect, useInactiveListener } from "./useEagerConnect";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { ChainNetwork, Chains, RawChain } from "picklefinance-core/lib/chain/Chains";
-import { chainToChainParams } from "containers/Connection";
+import { chainToChainParams } from "v1/containers/Connection";
 
 interface Web3ModalProps {
   setVisible: Function;

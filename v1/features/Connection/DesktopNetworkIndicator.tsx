@@ -4,11 +4,12 @@ import Davatar from "@davatar/react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useTranslation } from "next-i18next";
 
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
 import LanguageSelect from "./LanguageSelect";
 import useENS from "v1/hooks/useENS";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
+import { MiniIcon } from "v1/components/TokenIcon";
 
 const Container = styled.div`
   font-family: "Menlo", sans-serif;

@@ -3,11 +3,11 @@ import { Prices } from "../Prices";
 import { GaugeWithApy } from "./useUniV2Apy";
 import { GaugeWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
-import { PickleCore } from "containers/Jars/usePickleCore";
-import { getFarmData } from "../../v1/util/api";
-import { useJarFarmMap } from "containers/Farms/farms";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
+import { getFarmData } from "../../util/api";
+import { useJarFarmMap } from "v1/containers/Farms/farms";
 import { isPUsdcToken } from "../Jars/jars";
-import { Connection } from "containers/Connection";
+import { Connection } from "v1/containers/Connection";
 
 // what comes in and goes out of this function
 type Input = GaugeWithReward[] | null;

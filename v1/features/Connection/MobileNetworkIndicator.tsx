@@ -1,8 +1,8 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import Davatar from "@davatar/react";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 
 const Container = styled.div`
   display: none;

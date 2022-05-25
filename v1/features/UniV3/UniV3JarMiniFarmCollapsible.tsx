@@ -6,18 +6,18 @@ import React, { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 import ReactHtmlParser from "react-html-parser";
 
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
-import { Contracts } from "../../../containers/Contracts";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { Contracts } from "../../containers/Contracts";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { Balances } from "containers/Balances";
+import { Balances } from "v1/containers/Balances";
 import { TokenInput } from "./TokenInput";
-import { UserFarmDataMatic } from "containers/UserMiniFarms";
+import { UserFarmDataMatic } from "v1/containers/UserMiniFarms";
 import { JarApy } from "v1/features/MiniFarms/MiniFarmList";
-import { UserJarData } from "containers/UserJars";
+import { UserJarData } from "v1/containers/UserJars";
 import { getFormatString } from "v1/features/Gauges/GaugeInfo";
 
 interface DataProps {

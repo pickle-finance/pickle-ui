@@ -3,7 +3,7 @@ import { createContainer } from "unstated-next";
 
 import { Contracts, DILL, FEE_DISTRIBUTOR } from "./Contracts";
 import { Connection } from "./Connection";
-import { Prices } from "../containers/Prices";
+import { Prices } from "./Prices";
 import { useProtocolIncome } from "./DILL/useProtocolIncome";
 import { ethers } from "ethers";
 import { ChainNetwork } from "picklefinance-core";

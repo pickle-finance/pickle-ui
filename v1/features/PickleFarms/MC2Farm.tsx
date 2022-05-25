@@ -5,16 +5,16 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { Connection } from "../../../containers/Connection";
-import { Contracts, PICKLE_ETH_SLP } from "../../../containers/Contracts";
-import { JarApy } from "../../../containers/Jars/useJarsWithAPYPFCore";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { Connection } from "../../containers/Connection";
+import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { useMC2 } from "../../../containers/Gauges/useMC2";
+import { useMC2 } from "../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { AssetProjectedApr, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 
 const PICKLE_PID = 3;

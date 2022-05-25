@@ -4,10 +4,10 @@ import { formatEther } from "ethers/lib/utils";
 import { Balances } from "../Balances";
 import { Connection } from "../Connection";
 import { ERC20Transfer } from "../Erc20Transfer";
-import { FraxAddresses } from "containers/config";
+import { FraxAddresses } from "v1/containers/config";
 import { Contracts } from "../Contracts";
 import { PriceIds, Prices } from "../Prices";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { jars } from "v1/util/jars";
 const DISTRUBTOR_ABI = [

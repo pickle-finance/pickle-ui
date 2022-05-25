@@ -6,7 +6,7 @@ import { MiniFarms } from "./MiniFarms";
 import { Contracts } from "./Contracts";
 import { Connection } from "./Connection";
 import { updateFarmData } from "./UserFarms";
-import { UserFarmData } from "../containers/UserFarms";
+import { UserFarmData } from "./UserFarms";
 import { ERC20Transfer } from "./Erc20Transfer";
 import { NULL_ADDRESS } from "v1/features/Zap/constants";
 

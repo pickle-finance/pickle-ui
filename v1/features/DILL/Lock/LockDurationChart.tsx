@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Trans, useTranslation } from "next-i18next";
 
-import { UseDillOutput } from "../../../../containers/Dill";
+import { UseDillOutput } from "../../../containers/Dill";
 import { accentColor } from "../../../util/constants";
 
 interface Props {

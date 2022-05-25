@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Trans, useTranslation } from "next-i18next";
 
-import { Connection } from "../../containers/Connection";
+import { Connection } from "../containers/Connection";
 import { MiniIcon } from "./TokenIcon";
 import { noFarms, someFarms } from "v1/util/constants";
 import { ChainNetwork } from "picklefinance-core";

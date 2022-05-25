@@ -5,7 +5,7 @@ import { TokenSymbol, useBalance } from "./useBalance";
 import { useZapIn } from "./useZapper";
 import { TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "../Farms/UseMigrate";
-import { Connection } from "containers/Connection";
+import { Connection } from "v1/containers/Connection";
 import { Trans, useTranslation } from "next-i18next";
 import { Link } from "v1/components/Link";
 

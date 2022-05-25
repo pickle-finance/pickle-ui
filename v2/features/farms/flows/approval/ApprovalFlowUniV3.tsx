@@ -13,7 +13,7 @@ import { stateMachine, Actions } from "../stateMachineNoUserInput";
 import { useTokenContract, useTransaction } from "../hooks";
 import { useAppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
-import { ApprovalEvent, Erc20 } from "containers/Contracts/Erc20";
+import { ApprovalEvent, Erc20 } from "v1/containers/Contracts/Erc20";
 import UniV3AwaitingConfirmation from "./AwaitingConfirmationUniV3";
 
 type ApprovalType = "jar" | "farm";

@@ -4,11 +4,11 @@ import { parseEther, formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
 import { useBalances } from "../../Balances/useBalances";
-import { Contracts } from "../../../../containers/Contracts";
-import { Connection } from "../../../../containers/Connection";
+import { Contracts } from "../../../containers/Contracts";
+import { Connection } from "../../../containers/Connection";
 
-import { ERC20Transfer } from "../../../../containers/Erc20Transfer";
-import { UseDillOutput } from "../../../../containers/Dill";
+import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { UseDillOutput } from "../../../containers/Dill";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 const formatPickles = (num: number) =>

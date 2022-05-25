@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import { Footer } from "../v1/features/Footer/Footer";
 import { DillFeature } from "../v1/features/DILL/DILL";
-import { Connection } from "../containers/Connection";
+import { Connection } from "../v1/containers/Connection";
 import { ChainNetwork } from "picklefinance-core";
 
 const Dill: FC = () => {

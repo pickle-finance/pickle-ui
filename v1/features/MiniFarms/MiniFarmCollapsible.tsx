@@ -5,17 +5,17 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { useJarFarmMap } from "../../../containers/Farms/farms";
-import { UserFarmDataMatic } from "../../../containers/UserMiniFarms";
-import { Connection } from "../../../containers/Connection";
-import { Contracts } from "../../../containers/Contracts";
-import { Jars } from "../../../containers/Jars";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { useJarFarmMap } from "../../containers/Farms/farms";
+import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
+import { Connection } from "../../containers/Connection";
+import { Contracts } from "../../containers/Contracts";
+import { Jars } from "../../containers/Jars";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../../containers/Jars/useJarsWithAPYPFCore";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;

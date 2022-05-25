@@ -16,5 +16,6 @@
     "baseUrl": ".",
     "downlevelIteration": true
   },
-  "exclude": ["node_modules", "./containers/Contracts/**.ts"]
+  "exclude": ["node_modules", "v1/containers/Contracts/**.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

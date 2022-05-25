@@ -2,11 +2,11 @@ import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Contracts } from "../../../../containers/Contracts";
-import { Connection } from "../../../../containers/Connection";
+import { Contracts } from "../../../containers/Contracts";
+import { Connection } from "../../../containers/Connection";
 
-import { ERC20Transfer } from "../../../../containers/Erc20Transfer";
-import { UseDillOutput } from "../../../../containers/Dill";
+import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { UseDillOutput } from "../../../containers/Dill";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 export const Withdraw: FC<{

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
-import { Connection } from "../../../containers/Connection";
-import { Contracts } from "../../../containers/Contracts";
+import { Connection } from "../../containers/Connection";
+import { Contracts } from "../../containers/Contracts";
 import { usePendingPickles } from "./usePendingPickles";
-import { MiniPickles, Pickles } from "../../../containers/Pickles";
+import { MiniPickles, Pickles } from "../../containers/Pickles";
 
 interface IUseBalances {
   pickleBalance: number | null;

@@ -3,9 +3,9 @@ import { formatEther } from "ethers/lib/utils";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
-import { UserGaugeData, UserGauges } from "../../../containers/UserGauges";
+import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { BProtocol } from "./BProtocol";
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { VoteCollapsible } from "./VoteCollapsible";
 import { GaugeChartCollapsible } from "./GaugeChartCollapsible";
 import { MC2Farm } from "../PickleFarms/MC2Farm";
@@ -13,25 +13,25 @@ import { useJarData } from "./useJarData";
 import { GaugeCollapsible } from "./GaugeCollapsible";
 import { JarGaugeCollapsible } from "./JarGaugeCollapsible";
 import { backgroundColor, pickleGreen } from "../../util/constants";
-import { useJarFarmMap, PICKLE_ETH_FARM } from "../../../containers/Farms/farms";
+import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { uncompoundAPY } from "../../util/jars";
-import { PICKLE_ETH_GAUGE } from "../../../containers/Gauges/gauges";
-import { useUniPairDayData } from "../../../containers/Jars/useUniPairDayData";
-import { Jars } from "../../../containers/Jars";
-import { UserJarData } from "containers/UserJars";
+import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { Jars } from "../../containers/Jars";
+import { UserJarData } from "v1/containers/UserJars";
 import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
 import { FarmsIntro } from "v1/components/FarmsIntro";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import {
   AssetEnablement,
   AssetProtocol,
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
-import { isJarDisabled, isJarActive } from "containers/Jars/jars";
+import { isJarDisabled, isJarActive } from "v1/containers/Jars/jars";
 import { ChainNetwork } from "picklefinance-core";
 import { UniV3JarGaugeCollapsible } from "./UniV3JarGaugeCollapsible";
-import { JarWithAPY } from "containers/Jars/useJarsWithAPYPFCore";
+import { JarWithAPY } from "v1/containers/Jars/useJarsWithAPYPFCore";
 
 export interface UserGaugeDataWithAPY extends UserGaugeData {
   APYs: Array<JarApy>;

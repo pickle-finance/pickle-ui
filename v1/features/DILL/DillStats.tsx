@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
-import { UseDillOutput } from "../../../containers/Dill";
+import { UseDillOutput } from "../../containers/Dill";
 import { formatDate } from "../../util/date";
 import { formatPercent } from "../../util/number";
 import PickleIcon from "../../components/PickleIcon";

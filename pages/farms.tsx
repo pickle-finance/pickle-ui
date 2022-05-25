@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import { Footer } from "../v1/features/Footer/Footer";
 import { GaugeList } from "../v1/features/Gauges/GaugeList";
 import { MiniFarmList } from "../v1/features/MiniFarms/MiniFarmList";
-import { Connection } from "../containers/Connection";
+import { Connection } from "../v1/containers/Connection";
 import { noFarms } from "v1/util/constants";
 import { ChainNetwork } from "picklefinance-core";
 
