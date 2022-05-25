@@ -20,7 +20,7 @@ import Classic from "../layouts/Classic";
 import WarpSpeed from "../layouts/WarpSpeed";
 
 // i18n
-import useTranslationsHMR from "../hooks/useTranslationsHMR";
+import useTranslationsHMR from "../v1/hooks/useTranslationsHMR";
 import config from "../next-i18next.config";
 
 const Body: FC<AppProps> = (props) => {

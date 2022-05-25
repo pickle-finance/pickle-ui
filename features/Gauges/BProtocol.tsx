@@ -16,7 +16,7 @@ import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { useDuneData } from "../../containers/Jars/useDuneData";
 import { getFormatString } from "./GaugeInfo";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 const JarName = styled(Grid)({
   display: "flex",

@@ -4,7 +4,7 @@ import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { formatPercent } from "../../v1/util/number";
-import { ButtonStatus, useButtonStatus } from "hooks/useButtonStatus";
+import { ButtonStatus, useButtonStatus } from "v1/hooks/useButtonStatus";
 import { Connection } from "containers/Connection";
 import { useFrax } from "containers/Frax/UseFrax";
 import { ERC20Transfer } from "containers/Erc20Transfer";

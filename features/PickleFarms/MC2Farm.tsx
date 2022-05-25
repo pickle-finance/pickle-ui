@@ -13,7 +13,7 @@ import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useMC2 } from "../../containers/Gauges/useMC2";
 import { getFormatString } from "../Gauges/GaugeInfo";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { AssetProjectedApr, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 

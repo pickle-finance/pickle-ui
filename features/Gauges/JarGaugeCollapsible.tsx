@@ -29,7 +29,7 @@ import { DEFAULT_SLIPPAGE } from "../Zap/constants";
 import { useZapIn } from "../Zap/useZapper";
 import { uncompoundAPY } from "../../v1/util/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import {

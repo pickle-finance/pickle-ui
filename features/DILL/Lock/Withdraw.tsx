@@ -7,7 +7,7 @@ import { Connection } from "../../../containers/Connection";
 
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { UseDillOutput } from "../../../containers/Dill";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 export const Withdraw: FC<{
   dillStats: UseDillOutput;

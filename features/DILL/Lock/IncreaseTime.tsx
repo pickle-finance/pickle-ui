@@ -22,7 +22,7 @@ import {
   roundDateByDillEpoch,
   roundDateByDillEpochSeconds,
 } from "../../../v1/util/dill";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 const DAY = 86400;
 const WEEK = 7 * 86400;

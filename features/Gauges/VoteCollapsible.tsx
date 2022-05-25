@@ -19,7 +19,7 @@ import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { Jars } from "../../containers/Jars";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { useJarFarmMap } from "containers/Farms/farms";
 import { PickleCore } from "containers/Jars/usePickleCore";
 

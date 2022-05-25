@@ -20,7 +20,7 @@ import { getProtocolData } from "../../v1/util/api";
 import { getFormatString } from "./GaugeInfo";
 import { uncompoundAPY } from "../../v1/util/jars";
 import { UserGaugeDataWithAPY } from "./GaugeList";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { Balances } from "containers/Balances";
 import { TokenInput } from "./TokenInput";
 import { PickleCore } from "../../containers/Jars/usePickleCore";

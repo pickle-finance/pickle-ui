@@ -16,7 +16,7 @@ import { UserFarmDataMatic } from "../../containers/UserMiniFarms";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { JarApy } from "containers/Jars/useCurveCrvAPY";
 import { isJarWithdrawOnly, isQlpQiMaticOrUsdcToken, isQlpQiToken } from "containers/Jars/jars";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { PickleCore } from "../../containers/Jars/usePickleCore";
 import jarTimelockABI from "../../containers/ABIs/jar_timelock.json";
 import { BalancerJarTimer, BalancerJarTimerProps } from "./BalancerJarTimer";
