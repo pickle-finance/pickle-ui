@@ -20,7 +20,7 @@ import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
 import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
 
 interface DataProps {

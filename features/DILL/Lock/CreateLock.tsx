@@ -6,7 +6,7 @@ import { Trans, useTranslation } from "next-i18next";
 import { useBalances } from "../../Balances/useBalances";
 import { Contracts } from "../../../containers/Contracts";
 import { Connection } from "../../../containers/Connection";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { DayPicker } from "../../../components/DayPicker";

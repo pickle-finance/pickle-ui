@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";
 import { Modal, Select, Tooltip } from "@geist-ui/react";
 import LanguageSelect from "./LanguageSelect";
-import useENS from "hooks/useENS";
+import useENS from "v1/hooks/useENS";
 import { PickleCore } from "containers/Jars/usePickleCore";
 
 const Container = styled.div`

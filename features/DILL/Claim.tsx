@@ -9,7 +9,7 @@ import { UseDillOutput } from "../../containers/Dill";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import { formatPercent } from "../../v1/util/number";
 import PickleIcon from "../../components/PickleIcon";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 const formatNumber = (num: number, precision?: number) =>
   num &&

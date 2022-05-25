@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import { Status } from "../containers/Erc20Transfer";
+import { Status } from "../../containers/Erc20Transfer";
 
 export interface ButtonStatus {
   disabled: boolean;

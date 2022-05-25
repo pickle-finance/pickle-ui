@@ -12,7 +12,7 @@ import { Contracts } from "../../containers/Contracts";
 import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { Balances } from "containers/Balances";
 import { TokenInput } from "./TokenInput";
 import { UserFarmDataMatic } from "containers/UserMiniFarms";

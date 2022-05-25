@@ -15,7 +15,7 @@ import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
 import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "./UseMigrate";
-import { useButtonStatus, ButtonStatus } from "hooks/useButtonStatus";
+import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import { isYveCrvEthJarToken } from "containers/Jars/jars";
 
