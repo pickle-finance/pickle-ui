@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 import type { AppProps } from "next/app";
 import { GeistProvider } from "@geist-ui/react";
 
-import { geistTheme } from "../styles/geistTheme";
+import { geistTheme } from "../v1/styles/geistTheme";
 import { Balances } from "../containers/Balances";
 import { ERC20Transfer } from "../containers/Erc20Transfer";
 import { Connection } from "../containers/Connection";
