@@ -4,20 +4,20 @@ import { useState, FC, useEffect } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 
-import { useJarFarmMap, PICKLE_ETH_FARM } from "../../../containers/Farms/farms";
-import { UserFarmData } from "../../../containers/UserFarms";
-import { Connection } from "../../../containers/Connection";
-import { Contracts } from "../../../containers/Contracts";
-import { Jars } from "../../../containers/Jars";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { UserFarmData } from "../../containers/UserFarms";
+import { Connection } from "../../containers/Connection";
+import { Contracts } from "../../containers/Contracts";
+import { Jars } from "../../containers/Jars";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { JarApy } from "../../../containers/Jars/useJarsWithAPYPFCore";
-import { useUniPairDayData } from "../../../containers/Jars/useUniPairDayData";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { useMigrate } from "./UseMigrate";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { PickleCore } from "containers/Jars/usePickleCore";
-import { isYveCrvEthJarToken } from "containers/Jars/jars";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
+import { isYveCrvEthJarToken } from "v1/containers/Jars/jars";
 
 interface DataProps {
   isZero?: boolean;

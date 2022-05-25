@@ -9,7 +9,7 @@ import { useJarFarmMap } from "./farms";
 import { FarmWithApy } from "./useUniV2Apy";
 import { FarmWithReward } from "./useWithReward";
 import { Jars } from "../Jars";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { getAddress } from "@ethersproject/address";
 
 // what comes in and goes out of this function

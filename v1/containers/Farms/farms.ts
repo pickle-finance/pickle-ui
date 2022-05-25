@@ -1,7 +1,7 @@
 import { PickleModelJson } from "picklefinance-core";
 import { getAddress } from "@ethersproject/address";
-import { Connection } from "containers/Connection";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { Connection } from "v1/containers/Connection";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { useEffect, useState } from "react";
 
 export const PICKLE_ETH_FARM = "0xdc98556ce24f007a5ef6dc1ce96322d65832a819";

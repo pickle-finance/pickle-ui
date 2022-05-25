@@ -7,24 +7,24 @@ import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/re
 import ReactHtmlParser from "react-html-parser";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
-import { Contracts } from "../../../containers/Contracts";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { Contracts } from "../../containers/Contracts";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { useDill } from "../../../containers/Dill";
+import { useDill } from "../../containers/Dill";
 import { backgroundColor, pickleGreen } from "../../util/constants";
-import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { getProtocolData } from "../../util/api";
 import { getFormatString } from "./GaugeInfo";
 import { uncompoundAPY } from "../../util/jars";
 import { UserGaugeDataWithAPY } from "./GaugeList";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { Balances } from "containers/Balances";
+import { Balances } from "v1/containers/Balances";
 import { TokenInput } from "./TokenInput";
-import { PickleCore } from "../../../containers/Jars/usePickleCore";
-import { UserJarData } from "containers/UserJars";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
+import { UserJarData } from "v1/containers/UserJars";
 
 interface DataProps {
   isZero?: boolean;

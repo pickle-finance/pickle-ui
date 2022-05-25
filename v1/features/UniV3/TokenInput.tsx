@@ -4,9 +4,9 @@ import React, { useState, FC, useEffect } from "react";
 import { Trans, useTranslation } from "next-i18next";
 import { Link, Input, Grid, Spacer, Button, Select } from "@geist-ui/react";
 import { formatValue } from "./UniV3JarMiniFarmCollapsible";
-import { UniV3Token } from "containers/Jars/useJarsWithUniV3";
+import { UniV3Token } from "v1/containers/Jars/useJarsWithUniV3";
 import erc20 from "@studydefi/money-legos/erc20";
-import { Connection } from "containers/Connection";
+import { Connection } from "v1/containers/Connection";
 
 export const TokenInput: FC<{
   token: UniV3Token;

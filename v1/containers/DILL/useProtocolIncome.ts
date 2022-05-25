@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 
 type Jar = {

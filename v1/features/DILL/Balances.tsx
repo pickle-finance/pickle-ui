@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 
 import { useBalances } from "../Balances/useBalances";
 import { DillStats } from "./DillStats";
-import { UseDillOutput } from "../../../containers/Dill";
+import { UseDillOutput } from "../../containers/Dill";
 import PickleIcon from "../../components/PickleIcon";
 
 const DataPoint = styled.div`

@@ -5,16 +5,16 @@ import { useTranslation } from "next-i18next";
 
 import { useState, FC, useEffect, ReactNode } from "react";
 import Collapse from "../Collapsible/Collapse";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
-import { Connection } from "../../../containers/Connection";
-import { usePBAMM } from "../../../containers/Jars/usePBAMM";
-import { Contracts } from "../../../containers/Contracts";
-import { Prices } from "../../../containers/Prices";
-import { BPAddresses } from "containers/config";
-import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
+import { Connection } from "../../containers/Connection";
+import { usePBAMM } from "../../containers/Jars/usePBAMM";
+import { Contracts } from "../../containers/Contracts";
+import { Prices } from "../../containers/Prices";
+import { BPAddresses } from "v1/containers/config";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
-import { useDuneData } from "../../../containers/Jars/useDuneData";
+import { useDuneData } from "../../containers/Jars/useDuneData";
 import { getFormatString } from "./GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { signERC2612Permit } from "eth-permit";
-import { Connection } from "../../../containers/Connection";
-import { Contracts, PICKLE_ETH_SLP } from "../../../containers/Contracts";
-import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";
-import { Erc20 } from "../../../containers/Contracts/Erc20";
+import { Connection } from "../../containers/Connection";
+import { Contracts, PICKLE_ETH_SLP } from "../../containers/Contracts";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
+import { Erc20 } from "../../containers/Contracts/Erc20";
 import { getStats } from "../Zap/useZapper";
-import { Gauge } from "../../../containers/Contracts/Gauge";
-import { PICKLE_ETH_FARM } from "../../../containers/Farms/farms";
-import { addresses } from "../../../containers/SushiPairs";
-import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__factory";
-import { Erc20__factory as Erc20Factory } from "containers/Contracts/factories/Erc20__factory";
+import { Gauge } from "../../containers/Contracts/Gauge";
+import { PICKLE_ETH_FARM } from "../../containers/Farms/farms";
+import { addresses } from "../../containers/SushiPairs";
+import { Jar__factory as JarFactory } from "v1/containers/Contracts/factories/Jar__factory";
+import { Erc20__factory as Erc20Factory } from "v1/containers/Contracts/factories/Erc20__factory";
 
 export const FARM_LP_TO_GAUGE = {
   "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819": "0xfAA267C3Bb25a82CFDB604136a29895D30fd3fd8", // PICKLE/ETH

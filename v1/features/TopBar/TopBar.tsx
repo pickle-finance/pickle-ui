@@ -9,7 +9,7 @@ import { DesktopConnect } from "../Connection/DesktopConnect";
 import { DesktopNetworkIndicator } from "../Connection/DesktopNetworkIndicator";
 import { MobileConnect } from "../Connection/MobileConnect";
 import { MobileNetworkIndicator } from "../Connection/MobileNetworkIndicator";
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import LanguageSelect from "../Connection/LanguageSelect";
 
 const Container = styled.div`

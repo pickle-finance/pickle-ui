@@ -1,6 +1,6 @@
 import CoinGecko from "coingecko-api";
 
-import { getDayDiff } from "../../v1/util/date";
+import { getDayDiff } from "../../util/date";
 
 /**
  * [date, price]

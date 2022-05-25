@@ -5,11 +5,11 @@ import { useTranslation } from "next-i18next";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { formatPercent } from "../../util/number";
 import { ButtonStatus, useButtonStatus } from "v1/hooks/useButtonStatus";
-import { Connection } from "containers/Connection";
-import { useFrax } from "containers/Frax/UseFrax";
-import { ERC20Transfer } from "containers/Erc20Transfer";
-import { FraxAddresses } from "containers/config";
-import { Contracts } from "containers/Contracts";
+import { Connection } from "v1/containers/Connection";
+import { useFrax } from "v1/containers/Frax/UseFrax";
+import { ERC20Transfer } from "v1/containers/Erc20Transfer";
+import { FraxAddresses } from "v1/containers/config";
+import { Contracts } from "v1/containers/Contracts";
 import styled from "styled-components";
 
 const formatNumber = (num: number) => {

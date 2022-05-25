@@ -3,13 +3,13 @@ import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer, Select, Input } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Connection } from "../../../containers/Connection";
-import { UserGaugeData, UserGauges } from "../../../containers/UserGauges";
-import { Dill, UseDillOutput } from "../../../containers/Dill";
+import { Connection } from "../../containers/Connection";
+import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
+import { Dill, UseDillOutput } from "../../containers/Dill";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
-import { isPUsdcToken } from "../../../containers/Jars/jars";
-import { PickleCore } from "../../../containers/Jars/usePickleCore";
+import { isPUsdcToken } from "../../containers/Jars/jars";
+import { PickleCore } from "../../containers/Jars/usePickleCore";
 import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 import { ChainNetwork } from "picklefinance-core";
 

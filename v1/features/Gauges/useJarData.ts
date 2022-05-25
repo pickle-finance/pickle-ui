@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
-import { Jars } from "../../../containers/Jars";
-import { Balances } from "../../../containers/Balances";
-import { Connection } from "../../../containers/Connection";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
-import { useJarsWithUniV3 } from "containers/Jars/useJarsWithUniV3";
-import { useJarsWithZap } from "containers/Jars/useJarsWithZap";
+import { Jars } from "../../containers/Jars";
+import { Balances } from "../../containers/Balances";
+import { Connection } from "../../containers/Connection";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
+import { useJarsWithUniV3 } from "v1/containers/Jars/useJarsWithUniV3";
+import { useJarsWithZap } from "v1/containers/Jars/useJarsWithZap";
 
 export const useJarData = (): { jarData: UserJarData[] | null } => {
   const { blockNum, chainName } = Connection.useContainer();

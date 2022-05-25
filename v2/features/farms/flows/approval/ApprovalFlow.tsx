@@ -21,7 +21,7 @@ import Failure from "../Failure";
 import { useTokenContract, useTransaction } from "../hooks";
 import { AppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
-import { ApprovalEvent } from "containers/Contracts/Erc20";
+import { ApprovalEvent } from "v1/containers/Contracts/Erc20";
 import { eventsByName } from "../utils";
 
 type ApprovalType = "jar" | "farm" | "dill" | "brinery";

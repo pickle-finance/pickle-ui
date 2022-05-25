@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { Jar as JarContract } from "../Contracts/Jar";
 import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory";
-import { JarNative__factory as JarNativeFactory } from "containers/Contracts/factories/JarNative__factory";
+import { JarNative__factory as JarNativeFactory } from "v1/containers/Contracts/factories/JarNative__factory";
 import { Erc20 as Erc20Contract } from "../Contracts/Erc20";
 import { Erc20__factory as Erc20Factory } from "../Contracts/factories/Erc20__factory";
 
@@ -12,7 +12,7 @@ import { ChainNetwork } from "picklefinance-core";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { PickleCore } from "./usePickleCore";
 import { isCroToken, shouldJarBeInUi } from "./jars";
-import { JarNative as JarNativeContract } from "containers/Contracts/JarNative";
+import { JarNative as JarNativeContract } from "v1/containers/Contracts/JarNative";
 
 export type Jar = {
   depositToken: Erc20Contract;

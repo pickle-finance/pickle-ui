@@ -19,7 +19,7 @@ import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
 import { useJarContract, useTransaction } from "../hooks";
-import { TransferEvent } from "containers/Contracts/Jar";
+import { TransferEvent } from "v1/containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 import { eventsByName } from "../utils";

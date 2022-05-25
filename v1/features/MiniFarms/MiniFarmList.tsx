@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { UserMiniFarms } from "../../../containers/UserMiniFarms";
-import { Connection } from "../../../containers/Connection";
+import { UserMiniFarms } from "../../containers/UserMiniFarms";
+import { Connection } from "../../containers/Connection";
 import { useJarData } from "v1/features/Gauges/useJarData";
 import { JarMiniFarmCollapsible } from "./JarMiniFarmCollapsible";
 import { JarCollapsible } from "./JarCollapsible";
@@ -12,9 +12,9 @@ import { BalFarm } from "../PickleFarms/BalFarm";
 import { UniV3JarMiniFarmCollapsible } from "../UniV3/UniV3JarMiniFarmCollapsible";
 import { pickleWhite, someFarms } from "v1/util/constants";
 import { FarmsIntro } from "v1/components/FarmsIntro";
-import { PickleCore } from "containers/Jars/usePickleCore";
-import { useJarFarmMap } from "containers/Farms/farms";
-import { isJarDisabled, isJarActive } from "containers/Jars/jars";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
+import { useJarFarmMap } from "v1/containers/Farms/farms";
+import { isJarDisabled, isJarActive } from "v1/containers/Jars/jars";
 import { noFarms } from "v1/util/constants";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import {
@@ -22,7 +22,7 @@ import {
   AssetProtocol,
   JarDefinition,
 } from "picklefinance-core/lib/model/PickleModelJson";
-import { UserJarData } from "containers/UserJars";
+import { UserJarData } from "v1/containers/UserJars";
 import { formatEther } from "ethers/lib/utils";
 import { GreenSwitch } from "v1/features/Gauges/GaugeList";
 

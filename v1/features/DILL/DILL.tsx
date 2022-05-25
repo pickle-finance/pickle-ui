@@ -6,7 +6,7 @@ import { Interaction } from "./Interaction";
 import { Claim } from "./Claim";
 import { CalcCollapsible } from "./CalcCollapsible";
 import { FeeDistributionsChart } from "./FeeDistributionsChart";
-import { Dill } from "../../../containers/Dill";
+import { Dill } from "../../containers/Dill";
 
 export const DillFeature: FC = () => {
   const dillStats = Dill.useContainer();

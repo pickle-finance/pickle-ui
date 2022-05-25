@@ -4,25 +4,25 @@ import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
 
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
 import ReactHtmlParser from "react-html-parser";
-import { ERC20Transfer, Status as ERC20TransferStatus } from "../../../containers/Erc20Transfer";
+import { ERC20Transfer, Status as ERC20TransferStatus } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { UserJarData } from "../../../containers/UserJars";
+import { UserJarData } from "../../containers/UserJars";
 import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { uncompoundAPY } from "v1/util/jars";
 import { JarApy } from "./MiniFarmList";
 import { useTranslation } from "next-i18next";
-import { isCroToken, isUsdcToken } from "containers/Jars/jars";
-import { PickleCore } from "containers/Jars/usePickleCore";
-import { TokenDetails } from "containers/Jars/useJarsWithZap";
+import { isCroToken, isUsdcToken } from "v1/containers/Jars/jars";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
+import { TokenDetails } from "v1/containers/Jars/useJarsWithZap";
 import { formatUnits } from "@ethersproject/units";
 import { neverExpireEpochTime } from "v1/util/constants";
 import { getRatioStringAndPendingString, RatioAndPendingStrings } from "./JarMiniFarmCollapsible";
-import { Jar } from "containers/Contracts/Jar";
-import { JarNative } from "containers/Contracts/JarNative";
+import { Jar } from "v1/containers/Contracts/Jar";
+import { JarNative } from "v1/containers/Contracts/JarNative";
 
 interface DataProps {
   isZero?: boolean;

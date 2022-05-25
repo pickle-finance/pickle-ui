@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/JarV3__factory";
+import { JarV3__factory as JarV3Factory } from "v1/containers/Contracts/factories/JarV3__factory";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
 import { BigNumber, ethers } from "ethers";
 import { JarWithAPY as JarWithTVL } from "./useJarsWithAPYPFCore";
-import { Balances } from "containers/Balances";
-import { ERC20Transfer } from "containers/Erc20Transfer";
+import { Balances } from "v1/containers/Balances";
+import { ERC20Transfer } from "v1/containers/Erc20Transfer";
 import { PickleCore } from "./usePickleCore";
 import {
   JarDefinition,

@@ -1,4 +1,4 @@
-import { Connection } from "containers/Connection";
+import { Connection } from "v1/containers/Connection";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 

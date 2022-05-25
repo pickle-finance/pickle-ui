@@ -5,23 +5,23 @@ import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Trans, useTranslation } from "next-i18next";
 
-import { Connection } from "../../../containers/Connection";
-import { Contracts } from "../../../containers/Contracts";
-import { Jars } from "../../../containers/Jars";
-import { ERC20Transfer } from "../../../containers/Erc20Transfer";
+import { Connection } from "../../containers/Connection";
+import { Contracts } from "../../containers/Contracts";
+import { Jars } from "../../containers/Jars";
+import { ERC20Transfer } from "../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { getProtocolData } from "../../util/api";
 import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
-import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";
+import { Gauge__factory as GaugeFactory } from "../../containers/Contracts/factories/Gauge__factory";
 import { FARM_LP_TO_ICON } from "../Farms/FarmCollapsible";
-import { useDill } from "../../../containers/Dill";
+import { useDill } from "../../containers/Dill";
 import { useMigrate } from "../Farms/UseMigrate";
-import { isYveCrvEthJarToken } from "../../../containers/Jars/jars";
+import { isYveCrvEthJarToken } from "../../containers/Jars/jars";
 import { JarApy, UserGaugeDataWithAPY } from "./GaugeList";
-import { useJarFarmMap, PICKLE_ETH_FARM } from "../../../containers/Farms/farms";
+import { useJarFarmMap, PICKLE_ETH_FARM } from "../../containers/Farms/farms";
 import { PICKLE_POWER, getFormatString } from "./GaugeInfo";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 
 interface DataProps {
   isZero?: boolean;

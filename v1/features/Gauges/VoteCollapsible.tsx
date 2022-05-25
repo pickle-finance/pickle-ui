@@ -5,23 +5,23 @@ import { Button, Grid, Spacer } from "@geist-ui/react";
 import Select from "react-select";
 import { useTranslation } from "next-i18next";
 
-import { Connection } from "../../../containers/Connection";
+import { Connection } from "../../containers/Connection";
 import { PercentageInput } from "../../components/PercentageInput";
-import { UserGaugeData } from "../../../containers/UserGauges";
-import { Contracts } from "../../../containers/Contracts";
+import { UserGaugeData } from "../../containers/UserGauges";
+import { Contracts } from "../../containers/Contracts";
 import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
-import { Dill } from "../../../containers/Dill";
+import { Dill } from "../../containers/Dill";
 import { TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
-import { ERC20Transfer, Status as ERC20TransferStatus } from "../../../containers/Erc20Transfer";
-import { PICKLE_ETH_GAUGE } from "../../../containers/Gauges/gauges";
-import { useUniPairDayData } from "../../../containers/Jars/useUniPairDayData";
-import { JarApy } from "../../../containers/Jars/useJarsWithAPYPFCore";
-import { Jars } from "../../../containers/Jars";
+import { ERC20Transfer, Status as ERC20TransferStatus } from "../../containers/Erc20Transfer";
+import { PICKLE_ETH_GAUGE } from "../../containers/Gauges/gauges";
+import { useUniPairDayData } from "../../containers/Jars/useUniPairDayData";
+import { JarApy } from "../../containers/Jars/useJarsWithAPYPFCore";
+import { Jars } from "../../containers/Jars";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
-import { useJarFarmMap } from "containers/Farms/farms";
-import { PickleCore } from "containers/Jars/usePickleCore";
+import { useJarFarmMap } from "v1/containers/Farms/farms";
+import { PickleCore } from "v1/containers/Jars/usePickleCore";
 
 interface Weights {
   [key: string]: number;

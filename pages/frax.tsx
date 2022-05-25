@@ -3,7 +3,7 @@ import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
 import { Footer } from "../v1/features/Footer/Footer";
-import { Connection } from "../containers/Connection";
+import { Connection } from "../v1/containers/Connection";
 import { FraxFeature } from "v1/features/Frax/Frax";
 import { ChainNetwork } from "picklefinance-core";
 
