@@ -10,9 +10,9 @@ import { useTranslation } from "next-i18next";
 
 import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../v1/util/api";
 import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../v1/util/constants";
-import InfoCardContent from "../../components/InfoCardContent";
-import EarnRow from "../../components/EarnRow";
-import ThemedTable from "../../components/ThemedTable";
+import InfoCardContent from "../../v1/components/InfoCardContent";
+import EarnRow from "../../v1/components/EarnRow";
+import ThemedTable from "../../v1/components/ThemedTable";
 import { jars } from "../../v1/util/jars";
 import { Connection } from "../../containers/Connection";
 import { InfoBar } from "../../v1/features/InfoBar/InfoBar";

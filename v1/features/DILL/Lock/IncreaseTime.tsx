@@ -6,7 +6,7 @@ import { Contracts } from "../../../../containers/Contracts";
 import { Connection } from "../../../../containers/Connection";
 
 import { ERC20Transfer } from "../../../../containers/Erc20Transfer";
-import { DayPicker } from "../../../../components/DayPicker";
+import { DayPicker } from "../../../components/DayPicker";
 import { InputProps } from "@geist-ui/react/dist/input/input";
 import { UseDillOutput } from "../../../../containers/Dill";
 import {

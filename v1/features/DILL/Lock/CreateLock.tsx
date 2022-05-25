@@ -9,7 +9,7 @@ import { Connection } from "../../../../containers/Connection";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 
 import { ERC20Transfer } from "../../../../containers/Erc20Transfer";
-import { DayPicker } from "../../../../components/DayPicker";
+import { DayPicker } from "../../../components/DayPicker";
 import { InputProps } from "@geist-ui/react/dist/input/input";
 import { UseDillOutput } from "../../../../containers/Dill";
 import { getDayOffset, getEpochSecondForDay, getWeekDiff } from "../../../util/date";

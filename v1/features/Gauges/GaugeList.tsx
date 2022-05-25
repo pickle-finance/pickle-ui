@@ -21,7 +21,7 @@ import { Jars } from "../../../containers/Jars";
 import { UserJarData } from "containers/UserJars";
 import { BigNumber } from "ethers";
 import { useTranslation } from "next-i18next";
-import { FarmsIntro } from "components/FarmsIntro";
+import { FarmsIntro } from "v1/components/FarmsIntro";
 import { PickleCore } from "containers/Jars/usePickleCore";
 import {
   AssetEnablement,

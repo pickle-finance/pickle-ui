@@ -12,7 +12,7 @@ import { Contracts } from "../../../containers/Contracts";
 import { Prices } from "../../../containers/Prices";
 import { BPAddresses } from "containers/config";
 import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";
-import { LpIcon, TokenIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
 import { useDuneData } from "../../../containers/Jars/useDuneData";
 import { getFormatString } from "./GaugeInfo";

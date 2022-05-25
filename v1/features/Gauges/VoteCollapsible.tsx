@@ -6,12 +6,12 @@ import Select from "react-select";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../../containers/Connection";
-import { PercentageInput } from "../../../components/PercentageInput";
+import { PercentageInput } from "../../components/PercentageInput";
 import { UserGaugeData } from "../../../containers/UserGauges";
 import { Contracts } from "../../../containers/Contracts";
 import { FARM_LP_TO_ICON as GAUGE_LP_TO_ICON } from "../Farms/FarmCollapsible";
 import { Dill } from "../../../containers/Dill";
-import { TokenIcon } from "../../../components/TokenIcon";
+import { TokenIcon } from "../../components/TokenIcon";
 import Collapse from "../Collapsible/Collapse";
 import { pickleWhite } from "../../util/constants";
 import { ERC20Transfer, Status as ERC20TransferStatus } from "../../../containers/Erc20Transfer";

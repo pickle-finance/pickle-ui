@@ -10,7 +10,7 @@ import ReactHtmlParser from "react-html-parser";
 import { ERC20Transfer, Status as ERC20TransferStatus } from "../../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
 import { UserJarData } from "../../../containers/UserJars";
-import { LpIcon, TokenIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon } from "../../components/TokenIcon";
 import { getFormatString } from "../Gauges/GaugeInfo";
 import { uncompoundAPY } from "v1/util/jars";
 import { JarApy } from "./MiniFarmList";

@@ -12,7 +12,7 @@ import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../../containers/Contracts";
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { LpIcon, TokenIcon, MiniIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useDill } from "../../../containers/Dill";
 import { backgroundColor, pickleGreen } from "../../util/constants";
 import { Gauge__factory as GaugeFactory } from "../../../containers/Contracts/factories/Gauge__factory";

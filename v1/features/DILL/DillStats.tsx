@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 import { UseDillOutput } from "../../../containers/Dill";
 import { formatDate } from "../../util/date";
 import { formatPercent } from "../../util/number";
-import PickleIcon from "../../../components/PickleIcon";
+import PickleIcon from "../../components/PickleIcon";
 
 const DataPoint = styled.div`
   font-size: 22px;

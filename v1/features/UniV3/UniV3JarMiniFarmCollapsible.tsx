@@ -11,7 +11,7 @@ import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../../containers/Contracts";
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import Collapse from "../Collapsible/Collapse";
-import { LpIcon, TokenIcon, MiniIcon } from "../../../components/TokenIcon";
+import { LpIcon, TokenIcon, MiniIcon } from "../../components/TokenIcon";
 import { useButtonStatus, ButtonStatus } from "v1/hooks/useButtonStatus";
 import { Balances } from "containers/Balances";
 import { TokenInput } from "./TokenInput";
