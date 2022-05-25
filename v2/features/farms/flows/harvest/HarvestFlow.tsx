@@ -122,7 +122,7 @@ const HarvestFlow: FC<Props> = ({
       return () => (FarmContract as Minichef).harvest(poolId, account);
     } else if (rewarderType === "brinery") {
       if (!PveContract) return;
-      return () => PveContract["claim()"]();
+      return () => PveContract.claim();
     }
 
     // Dill rewards

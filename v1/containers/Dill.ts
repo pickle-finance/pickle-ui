@@ -60,11 +60,11 @@ export function useDill(): UseDillOutput {
           dillContract.locked(address, { gasLimit: 1000000 }),
           dillContract["balanceOf(address)"](address, { gasLimit: 1000000 }),
           dillContract["totalSupply()"]({ gasLimit: 1000000 }),
-          dillContract["supply()"]({ gasLimit: 1000000 }),
+          dillContract.supply({ gasLimit: 1000000 }),
           feeDistributorContract.callStatic["claim(address)"](address, {
             gasLimit: 1000000,
           }),
-          feeDistributorContract["time_cursor()"]({ gasLimit: 1000000 }),
+          feeDistributorContract.time_cursor({ gasLimit: 1000000 }),
         ]);
 
         const lastDistribution = await feeDistributorContract.tokens_per_week(
