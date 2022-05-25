@@ -17,8 +17,7 @@ import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/J
 import { Jar } from "containers/Contracts/Jar";
 import { JarV3 } from "containers/Contracts/JarV3";
 import { VefxsVault } from "containers/Contracts/VefxsVault";
-import { VefxsVault__factory as VefxsVaultFactory} from "containers/Contracts/factories/VefxsVault__factory";
-
+import { VefxsVault__factory as VefxsVaultFactory } from "containers/Contracts/factories/VefxsVault__factory";
 
 import { AppDispatch, useAppDispatch } from "v2/store";
 import { Actions } from "./stateMachineUserInput";
