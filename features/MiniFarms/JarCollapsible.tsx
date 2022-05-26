@@ -494,6 +494,9 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x7128c61da34c27ead5419b8eb50c71ce0b15cd50": (
     <LpIcon swapIconSrc={"/finn.png"} tokenIconSrc={"/usdcmovr.png"} />
   ),
+  "0x493147c85fe43f7b056087a6023df32980bcb2d1": (
+    <LpIcon swapIconSrc={"/solar.png"} tokenIconSrc={"/tokens/stksm.png"} />
+  ),
 
   // Cronos
   "0x1803e360393a472bec6e1a688bdf7048d3076b1a": (
@@ -1378,22 +1381,22 @@ export const JarCollapsible: FC<{
 
     const swapTx = inputToken.isWrapped
       ? await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactTokensForTokens(
-          depositAmt,
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        )
+          .connect(signer)
+          .populateTransaction.swapExactTokensForTokens(
+            depositAmt,
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          )
       : await zapDetails.router
-        .connect(signer)
-        .populateTransaction.swapExactETHForTokens(
-          0,
-          zapDetails.nativePath.path,
-          zapDetails.pickleZapContract.address,
-          BigNumber.from(neverExpireEpochTime),
-        );
+          .connect(signer)
+          .populateTransaction.swapExactETHForTokens(
+            0,
+            zapDetails.nativePath.path,
+            zapDetails.pickleZapContract.address,
+            BigNumber.from(neverExpireEpochTime),
+          );
 
     return transfer({
       token: inputToken.address,
@@ -1439,11 +1442,11 @@ export const JarCollapsible: FC<{
               src={
                 multiFarmsApiKey
                   ? JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
-                  ][multiFarmsApiKey]
+                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_MULTI_FARMS_TO_ICON
+                    ][multiFarmsApiKey]
                   : JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
-                  ]
+                      depositToken.address.toLowerCase() as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                    ]
               }
             />
             <div style={{ width: "100%" }}>
