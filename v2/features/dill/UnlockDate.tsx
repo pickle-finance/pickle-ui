@@ -4,7 +4,7 @@ import { IUserDillStats } from "picklefinance-core/lib/client/UserModel";
 
 import IncreaseLockDateModal from "v2/features/dill/IncreaseLockDateModal";
 import Button from "v2/components/Button";
-import dayjs from "util/dayjs";
+import dayjs from "v1/util/dayjs";
 
 interface Props {
   dill: IUserDillStats;

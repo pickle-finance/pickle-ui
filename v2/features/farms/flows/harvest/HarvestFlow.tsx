@@ -33,6 +33,7 @@ import {
 } from "v2/utils";
 import { useDistributorContract, useDistributorV2Contract } from "v2/features/dill/flows/hooks";
 import { ClaimedEvent } from "v1/containers/Contracts/FeeDistributor";
+import { ClaimedEvent as ClaimedEventV2 } from "v1/containers/Contracts/FeeDistributorV2";
 import ConnectButton from "../../ConnectButton";
 import { useNeedsNetworkSwitch } from "v2/hooks";
 
@@ -194,7 +195,7 @@ const HarvestFlow: FC<Props> = ({
         }),
       );
     } else if (claimableETHV2Formatted > 0 || claimableV2Formatted > 0) {
-      const claimedEvents = eventsByName<ClaimedEvent>(receipt, "Claimed");
+      const claimedEvents = eventsByName<ClaimedEventV2>(receipt, "Claimed");
       pickles = claimedEvents[0].args.amount;
       ETH = claimedEvents[0].args.amount_eth;
       dispatch(
