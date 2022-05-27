@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
-
-import { Footer } from "../v1/features/Footer/Footer";
-import { DillFeature } from "../v1/features/DILL/DILL";
-import { Connection } from "../v1/containers/Connection";
 import { ChainNetwork } from "picklefinance-core";
+
+import { Footer } from "v1/features/Footer/Footer";
+import { DillFeature } from "v1/features/DILL/DILL";
+import { Connection } from "v1/containers/Connection";
 
 const Dill: FC = () => {
   const { chainName } = Connection.useContainer();
@@ -25,6 +25,6 @@ const Dill: FC = () => {
   );
 };
 
-export { getStaticProps } from "../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Dill;

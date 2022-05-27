@@ -20,7 +20,7 @@ export const Logo: FC = () => {
 
   return (
     <ImageContainer>
-      <Link href="/">
+      <Link href="/v1">
         <a aria-label={t("meta.title")}>
           <Image
             src="/pickle.svg"

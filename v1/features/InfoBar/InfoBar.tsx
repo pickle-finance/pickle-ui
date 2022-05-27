@@ -65,14 +65,14 @@ export const InfoBar: FC = () => {
     <div>
       <MaxWidthWrapper>
         <Content>
-          <Link href="/info" passHref>
+          <Link href="/v1/info" passHref>
             <NavItem active={router.pathname.endsWith("/info")}>{t("nav.info")}</NavItem>
           </Link>
-          <Link href="/info/earn" passHref>
-            <NavItem active={router.pathname.startsWith("/info/earn")}>{t("nav.profit")}</NavItem>
+          <Link href="/v1/info/earn" passHref>
+            <NavItem active={router.pathname.endsWith("/info/earn")}>{t("nav.profit")}</NavItem>
           </Link>
-          <Link href="/info/jars" passHref>
-            <NavItem active={router.pathname.startsWith("/info/jars")}>{t("nav.jars")}</NavItem>
+          <Link href="/v1/info/jars" passHref>
+            <NavItem active={router.pathname.endsWith("/info/jars")}>{t("nav.jars")}</NavItem>
           </Link>
         </Content>
       </MaxWidthWrapper>

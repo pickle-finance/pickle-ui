@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
-
-import { Footer } from "../v1/features/Footer/Footer";
-import { Connection } from "../v1/containers/Connection";
-import { FraxFeature } from "v1/features/Frax/Frax";
 import { ChainNetwork } from "picklefinance-core";
+
+import { Footer } from "v1/features/Footer/Footer";
+import { Connection } from "v1/containers/Connection";
+import { FraxFeature } from "v1/features/Frax/Frax";
 
 const Frax: FC = () => {
   const { chainName } = Connection.useContainer();
@@ -25,6 +25,6 @@ const Frax: FC = () => {
   );
 };
 
-export { getStaticProps } from "../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Frax;

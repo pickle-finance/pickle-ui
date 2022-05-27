@@ -71,7 +71,7 @@ export const DillStats: FC<Props> = ({ pickleBalance, dillStats }) => {
           >
             <span>{isFetchingData ? "--" : formatNumber(dillBalanceValue)}</span>
             &nbsp;DILL
-            <img src="./question.svg" style={{ marginLeft: 8, width: 15 }} />
+            <img src="/question.svg" style={{ marginLeft: 8, width: 15 }} />
           </Tooltip>
         </div>
       </DataPoint>

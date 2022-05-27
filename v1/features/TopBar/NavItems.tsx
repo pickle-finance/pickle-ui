@@ -64,13 +64,13 @@ const infoItems = (router: NextRouter) => {
   return (
     <div style={{ padding: "0 10px" }}>
       <p>
-        <Link href="/info/earn" passHref>
-          <NavItem active={router.pathname.startsWith("/info/earn")}>{t("nav.profit")}</NavItem>
+        <Link href="/v1/info/earn" passHref>
+          <NavItem active={router.pathname.endsWith("/info/earn")}>{t("nav.profit")}</NavItem>
         </Link>
       </p>
       <p>
-        <Link href="/info/jars" passHref>
-          <NavItem active={router.pathname.startsWith("/info/jars")}>{t("nav.jars")}</NavItem>
+        <Link href="/v1/info/jars" passHref>
+          <NavItem active={router.pathname.endsWith("/info/jars")}>{t("nav.jars")}</NavItem>
         </Link>
       </p>
     </div>
@@ -84,18 +84,18 @@ export const NavItems: FC = () => {
   return (
     <>
       <NavItemsContainer>
-        <Link href="/farms" passHref>
+        <Link href="/v1/farms" passHref>
           <NavItem active={router.pathname.endsWith("farms")}>{t("nav.jarsAndFarms")}</NavItem>
         </Link>
-        <Link href="/dill" passHref>
-          <NavItem active={router.pathname.startsWith("/dill")}>{t("nav.dill")}</NavItem>
+        <Link href="/v1/dill" passHref>
+          <NavItem active={router.pathname.endsWith("dill")}>{t("nav.dill")}</NavItem>
         </Link>
-        <Link href="/frax" passHref>
-          <NavItem active={router.pathname.startsWith("/frax")}>{t("nav.frax")}</NavItem>
+        <Link href="/v1/frax" passHref>
+          <NavItem active={router.pathname.endsWith("frax")}>{t("nav.frax")}</NavItem>
         </Link>
         <Popover content={infoItems(router)} trigger="hover" style={{ display: "flex" }}>
-          <Link href="/info" passHref>
-            <NavItem active={router.pathname.startsWith("/info")}>{t("nav.info")}</NavItem>
+          <Link href="/v1/info" passHref>
+            <NavItem active={router.pathname.startsWith("/v1/info")}>{t("nav.info")}</NavItem>
           </Link>
         </Popover>
         <Link href="https://feedback.pickle.finance/" passHref>

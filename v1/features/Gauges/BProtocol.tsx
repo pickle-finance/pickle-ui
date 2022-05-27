@@ -155,7 +155,7 @@ export const BProtocol: FC<{ showUserJars: boolean }> = ({ showUserJars }) => {
                 <Data isZero={depositedNum === 0}>
                   <Tooltip text={`${valueStr} LUSD + ${pendingPLqtyStr} pLQTY`}>
                     ${formatString((userValue + +pendingLqtyStr * prices?.lqty).toFixed(2))}
-                    <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
+                    <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
                   </Tooltip>
                 </Data>
                 <Label>{t("balances.depositValue")}</Label>
