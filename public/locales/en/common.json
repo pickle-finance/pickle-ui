@@ -519,7 +519,7 @@
       "withdrawOnly": "This jar is in withdraw-only mode.",
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates",
-      "yourApy": "Your APY: {{ apy }}", 
+      "yourApy": "Your APY: {{ apy }}",
       "autoswap": "Swap deposit tokens to correct ratio"
     },
     "gasPrices": {
@@ -532,7 +532,7 @@
       "close": "Close panel",
       "dashboard": "Dashboard",
       "dill": "DILL",
-      "faq": "F.A.Q.",
+      "docs": "Docs",
       "feedback": "Feedback",
       "jarsAndFarms": "Jars & Farms",
       "networkSettings": "Network settings",
