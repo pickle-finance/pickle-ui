@@ -26,6 +26,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { ComethPairs } from "../v1/containers/ComethPairs";
 import { TopBar } from "../v1/features/TopBar/TopBar";
 import { PickleCore } from "v1/containers/Jars/usePickleCore";
+import V2LinkCard from "v1/components/V2LinkCard";
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
@@ -88,6 +89,7 @@ const Classic: FC<AppProps> = ({ Component, pageProps }) => {
     <GeistProvider theme={geistTheme}>
       <WithContainers>
         <TopBar />
+        <V2LinkCard />
         <Component {...pageProps} />
       </WithContainers>
     </GeistProvider>
