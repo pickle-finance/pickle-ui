@@ -6,15 +6,15 @@ import { appWithTranslation, useTranslation } from "next-i18next";
 /**
  * Global CSS must be in _app.tsx.
  * https://nextjs.org/docs/messages/css-global
- */
-import "../v1/styles/reset.css";
-import "../v1/styles/global.scss";
-import "react-day-picker/lib/style.css";
-
-/**
- * Warp speed styles: Tailwind and custom rules.
+ *
+ * v2 styles: Tailwind and custom rules.
  */
 import "v2/styles/index.scss";
+import "react-day-picker/lib/style.css";
+
+// Legacy v1 styles
+import "v1/styles/reset.css";
+import "v1/styles/global.scss";
 
 import Classic from "../layouts/Classic";
 import WarpSpeed from "../layouts/WarpSpeed";
