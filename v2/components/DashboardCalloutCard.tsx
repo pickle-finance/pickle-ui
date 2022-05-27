@@ -14,7 +14,6 @@ import MoreInfo from "./MoreInfo";
 const DashboardCalloutCard: FC = () => {
   const { t } = useTranslation("common");
   let coreMaxApy = useSelector(CoreSelectors.selectMaxApy);
-  const options = useSelector(CoreSelectors.selectFilters);
   const dispatch = useAppDispatch();
 
   if (!coreMaxApy)

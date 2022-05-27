@@ -363,7 +363,8 @@
       "pickleToken": "PICKLE token",
       "pendingHarvests": "Pending harvests",
       "pickleTitle": "Pickle Finance",
-      "unclaimedRewards": "Unclaimed rewards"
+      "unclaimedRewards": "Unclaimed rewards",
+      "v1Link": "You're interacting with the new Pickle Finance app. You can always access the original app <1>here</1>."
     },
     "dill": {
       "addPickle": "Add PICKLES",
