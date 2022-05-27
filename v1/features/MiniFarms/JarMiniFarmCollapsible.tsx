@@ -885,7 +885,7 @@ export const JarMiniFarmCollapsible: FC<{
                 <Tooltip text={ReactHtmlParser(tooltipText)}>
                   {totalAPY.toFixed(2) + "%" || "--"}
                 </Tooltip>
-                <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
+                <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
                 <Spacer y={1} />
                 <div>
                   <span>{t("balances.apy")}</span>

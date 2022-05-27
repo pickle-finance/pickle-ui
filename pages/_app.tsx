@@ -24,11 +24,11 @@ import useTranslationsHMR from "../v1/hooks/useTranslationsHMR";
 import config from "../next-i18next.config";
 
 const Body: FC<AppProps> = (props) => {
-  if (props.router.pathname.startsWith("/v2")) {
-    return <WarpSpeed {...props} />;
+  if (props.router.pathname.startsWith("/v1")) {
+    return <Classic {...props} />;
   }
 
-  return <Classic {...props} />;
+  return <WarpSpeed {...props} />;
 };
 
 const App: FC<AppProps> = (props) => {

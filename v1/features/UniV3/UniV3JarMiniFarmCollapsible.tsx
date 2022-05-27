@@ -392,7 +392,7 @@ export const UniV3JarMiniFarmCollapsible: FC<{
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {totalAPY.toFixed(2) + "%" || "--"}
               </Tooltip>
-              <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
+              <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>

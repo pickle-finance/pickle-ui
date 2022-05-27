@@ -8,15 +8,15 @@ import CardContent from "@material-ui/core/CardContent";
 import { Page, Input } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../v1/util/api";
-import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../v1/util/constants";
-import InfoCardContent from "../../v1/components/InfoCardContent";
-import EarnRow from "../../v1/components/EarnRow";
-import ThemedTable from "../../v1/components/ThemedTable";
-import { jars } from "../../v1/util/jars";
-import { Connection } from "../../v1/containers/Connection";
-import { InfoBar } from "../../v1/features/InfoBar/InfoBar";
-import { Footer } from "../../v1/features/Footer/Footer";
+import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../../v1/util/api";
+import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../../v1/util/constants";
+import InfoCardContent from "../../../v1/components/InfoCardContent";
+import EarnRow from "../../../v1/components/EarnRow";
+import ThemedTable from "../../../v1/components/ThemedTable";
+import { jars } from "../../../v1/util/jars";
+import { Connection } from "../../../v1/containers/Connection";
+import { InfoBar } from "../../../v1/features/InfoBar/InfoBar";
+import { Footer } from "../../../v1/features/Footer/Footer";
 
 const theme = createMuiTheme({
   palette: {
@@ -291,4 +291,4 @@ export default function Earn() {
   );
 }
 
-export { getStaticProps } from "../../v1/util/locales";
+export { getStaticProps } from "../../../v1/util/locales";

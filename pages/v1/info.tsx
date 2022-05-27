@@ -15,13 +15,13 @@ import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
-
-import { InfoBar } from "../v1/features/InfoBar/InfoBar";
-import { Footer } from "../v1/features/Footer/Footer";
-import { cardColor, pickleGreen, materialBlack } from "../v1/util/constants";
-import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "../v1/util/api";
-import { powerPool, jars } from "../v1/util/jars";
 import clsx from "clsx";
+
+import { InfoBar } from "v1/features/InfoBar/InfoBar";
+import { Footer } from "v1/features/Footer/Footer";
+import { cardColor, pickleGreen, materialBlack } from "v1/util/constants";
+import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "v1/util/api";
+import { powerPool, jars } from "v1/util/jars";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -153,7 +153,7 @@ const PicklePerDayCell = (props: any) => {
     <Tooltip title={<span>{t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}</span>}>
       <TableCell className={classes.farmTableCell}>
         <div className={clsx(classes.cardTitle, classes.cardContent)}>
-          <Avatar variant="square" src="./assets/pickle.png" className={classes.emissionIcon} />
+          <Avatar variant="square" src="/assets/pickle.png" className={classes.emissionIcon} />
           {val.toFixed(precision)} / day
         </div>
       </TableCell>
@@ -203,7 +203,7 @@ const FarmRow = (props: any) => {
 
   const { farm, item, jar, isFarm = true } = props;
   const farmName = jarOptions.find((jar) => jar.toLowerCase() === farm.toLowerCase());
-  const icon = `./assets/${farm.toLowerCase()}.png`;
+  const icon = `/assets/${farm.toLowerCase()}.png`;
   const picklePerDay = (1000 / item.valueBalance) * item.picklePerDay;
 
   if (!item.tokenBalance && !item.valueBalance) {
@@ -266,7 +266,7 @@ const SkeletonCell = () => {
   return (
     <TableCell>
       <Skeleton className={classes.skeletonRow}>
-        <Avatar variant="square" src={"./assets/pickle.png"} className={classes.farmIcon} />
+        <Avatar variant="square" src={"/assets/pickle.png"} className={classes.farmIcon} />
       </Skeleton>
     </TableCell>
   );
@@ -506,4 +506,4 @@ export default function Brining() {
   );
 }
 
-export { getStaticProps } from "../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";

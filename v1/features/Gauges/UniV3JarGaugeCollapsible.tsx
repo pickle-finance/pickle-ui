@@ -500,7 +500,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                 <Tooltip text={ReactHtmlParser(apyRangeTooltipText)}>
                   {totalAPY.toFixed(2) + "%" || "--"}
                 </Tooltip>
-                <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
+                <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
                 <div>
                   <span>{t("balances.APY")}</span>
                 </div>
@@ -521,7 +521,7 @@ export const UniV3JarGaugeCollapsible: FC<{
                               totalAPY + pickleAPYMax,
                             )}`}
                       </span>
-                      <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
+                      <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
                     </div>
                     <Label>{t("balances.apyRange")}</Label>
                   </Tooltip>

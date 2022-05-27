@@ -1476,7 +1476,7 @@ export const JarCollapsible: FC<{
               <Tooltip text={ReactHtmlParser(tooltipText)}>
                 {getFormatString(totalAPY) + "%" || "--"}
               </Tooltip>
-              <img src="./question.svg" width="15px" style={{ marginLeft: 5 }} />
+              <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
               <div>
                 <span>{t("balances.apy")}</span>
               </div>

@@ -2,10 +2,10 @@ import { FC } from "react";
 import { Page, Note, Spacer } from "@geist-ui/react";
 import { ArrowLeft } from "@geist-ui/react-icons";
 import { Trans, useTranslation } from "next-i18next";
-
 import Link from "next/link";
-import { Footer } from "../v1/features/Footer/Footer";
-import { FarmList } from "../v1/features/Farms/FarmList";
+
+import { Footer } from "v1/features/Footer/Footer";
+import { FarmList } from "v1/features/Farms/FarmList";
 
 const Farms: FC = () => {
   const { t } = useTranslation("common");
@@ -42,6 +42,6 @@ const Farms: FC = () => {
   );
 };
 
-export { getStaticProps } from "../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Farms;
