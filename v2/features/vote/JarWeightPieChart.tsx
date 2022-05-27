@@ -24,7 +24,7 @@ const Chart: FC<{
       </div>
     );
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer width={500}>
       <PieChart>
         <Pie
           data={data}
@@ -34,7 +34,7 @@ const Chart: FC<{
           cy="50%"
           label={renderCustomizedLabel}
           labelLine={{ stroke: "rgb(var(--color-foreground-alt-100))" }}
-          outerRadius={140}
+          outerRadius={150}
           strokeWidth={data.length >= 1 ? 1 : 10}
           stroke={"rgb(var(--color-foreground-alt-100))"}
         >

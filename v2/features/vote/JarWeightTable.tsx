@@ -15,7 +15,7 @@ const JarWeightTable: FC<{
       ? core && getMainnetPlatformWeights(core)
       : offchainVoteData && getSidechainPlatformWeights(offchainVoteData, chain);
   return (
-    <div className="flex flex-col mb-10 max-h-full">
+    <div className="flex flex-col mb-10 w-full max-h-[400px]">
       <div className="-my-2 overflow-x-auto">
         <div className="py-2 align-middle inline-block min-w-full">
           <table className="min-w-full table-auto border-collapse">
