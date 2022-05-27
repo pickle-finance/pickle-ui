@@ -25,6 +25,6 @@ const PageTitle: FC = () => {
 
 Brineries.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Brineries;

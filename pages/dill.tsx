@@ -55,6 +55,6 @@ const PageTitle: FC = () => {
 
 Dill.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Dill;

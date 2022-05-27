@@ -99,7 +99,7 @@ const getChainData = async (chain: string): Promise<ChainData> => {
 
 const Back: FC<{ router: NextRouter; text: string }> = ({ router, text }) => (
   <div className="mb-5">
-    <span className="text-accent cursor-pointer" onClick={() => router.push("/v2/stats")}>
+    <span className="text-accent cursor-pointer" onClick={() => router.push("/stats")}>
       {text}
     </span>
   </div>
@@ -107,6 +107,6 @@ const Back: FC<{ router: NextRouter; text: string }> = ({ router, text }) => (
 
 Stats.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Stats;

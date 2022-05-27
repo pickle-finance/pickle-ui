@@ -92,6 +92,6 @@ const SwitchToMainnet: FC<{ t: TFunction }> = ({ t }) => (
 
 Vote.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Vote;

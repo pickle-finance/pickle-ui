@@ -2,9 +2,10 @@ import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { NextRouter, useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import { PickleModelJson } from "picklefinance-core";
+
 import { CoreSelectors } from "v2/store/core";
 import type { PickleFinancePage, JarChartData } from "v2/types";
-import { PickleModelJson } from "picklefinance-core";
 import ChartContainer from "v2/features/stats/jar/ChartContainer";
 import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
@@ -88,7 +89,7 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
 const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router, chain, text }) => (
   <span
     className="text-accent cursor-pointer pb-5"
-    onClick={() => router.push(`/v2/stats/chain?chain=${chain}`)}
+    onClick={() => router.push(`/stats/chain?chain=${chain}`)}
   >
     {text}
   </span>
@@ -96,6 +97,6 @@ const Back: FC<{ router: NextRouter; chain: string; text: string }> = ({ router,
 
 Stats.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Stats;

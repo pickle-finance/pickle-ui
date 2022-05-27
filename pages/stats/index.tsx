@@ -52,6 +52,6 @@ const getPlatformData = async (): Promise<PlatformData> => {
 
 Stats.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Stats;

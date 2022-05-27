@@ -47,6 +47,6 @@ const PageTitle: FC = () => {
 
 Dashboard.PageTitle = PageTitle;
 
-export { getStaticProps } from "../../v1/util/locales";
+export { getStaticProps } from "v1/util/locales";
 
 export default Dashboard;
