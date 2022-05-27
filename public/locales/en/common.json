@@ -440,6 +440,10 @@
       "yourShare": "{{ percentage }} of total DILL"
     },
     "error": "An unexpected error has occured. Try refreshing the page. If the error persists let us know in the #support channel on Discord.",
+    "error404": {
+      "noPickles": "There aren't any pickles here!",
+      "errorMessage": "This is a 404 error, which means the page you are looking for is no longer here or never existed. Try clicking a link in the sidebar."
+    },
     "farms": {
       "allApproved": "All approved!",
       "approvalBalanceError": "Please get your hands on some deposit tokens first!",
