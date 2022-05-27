@@ -47,7 +47,7 @@ const Stats: PickleFinancePage = () => {
 
   return (
     <div className="block lg:flex mb-5 sm:mb-10">
-      <div className="w-full min-w-full mb-4 lg:w-full lg:mr-8 lg:mb-0 xl:w-full">
+      <div className="w-full min-w-full mb-4 lg:mr-8 lg:mb-0">
         <Back router={router} text={t("v2.stats.chain.back")} />
         {tvlChange.length > 0 && tokenPctChangeData.length > 0 && (
           <>

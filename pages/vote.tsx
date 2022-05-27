@@ -43,7 +43,7 @@ const Vote: PickleFinancePage = () => {
                 <MainnetVoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
                 <MainnetVote core={core} user={user} />
                 <hr className="border-foreground-alt-500 mt-5 mb-5" />
-                {/* Uncomment line when offchain voting is fully tested and ready for release
+                {/* Uncomment line below when offchain voting is fully tested and ready for release
                   <OffchainVote core={core} offchainVoteData={offchainVoteData} /> 
                 */}
               </>
@@ -69,10 +69,10 @@ const PageTitle: FC = () => {
 
   return (
     <>
-      <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">
+      <h1 className="font-title font-medium min-w-200 text-2xl sm:text-3xl pt-2">
         {t("v2.dill.vote.title")}
       </h1>
-      <h2 className="font-body font-normal text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
+      <h2 className="font-body font-normal min-w-300 text-foreground-alt-200 text-sm sm:text-base leading-4 sm:leading-6 mt-1">
         {t("v2.dill.vote.description")}
       </h2>
     </>
