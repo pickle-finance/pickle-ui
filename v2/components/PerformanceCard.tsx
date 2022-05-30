@@ -46,12 +46,20 @@ export const getPendingRewardsUsd = (
   for (let i = 0; i < jarData.length; i++) {
     runningUsd += jarData[i].earnedPickles.tokensUSD;
   }
-  if (userdata.dill.claimable) {
-    const wei = BigNumber.from(userdata.dill.claimable);
-    const dillRewardUsd = parseFloat(ethers.utils.formatEther(wei)) * core.prices.pickle;
+  if (userdata.dill.claimable || userdata.dill.totalClaimableTokenV2) {
+    const picklesWei = BigNumber.from(userdata.dill.claimable).add(BigNumber.from(userdata.dill.totalClaimableTokenV2));
+    const dillPickleRewardUsd = parseFloat(ethers.utils.formatEther(picklesWei)) * core.prices.pickle;
 
-    runningUsd += dillRewardUsd;
+    runningUsd += dillPickleRewardUsd;
   }
+
+  if (userdata.dill.totalClaimableETHV2) {
+    const wei = BigNumber.from(userdata.dill.totalClaimableETHV2);
+    const dillPickleRewardUsd = parseFloat(ethers.utils.formatEther(wei)) * core.prices.weth;
+
+    runningUsd += dillPickleRewardUsd;
+  }
+
   return formatUsd(runningUsd);
 };
 
@@ -120,19 +128,25 @@ export const getRewardRowPropertiesForRewards = (
         asset,
         descriptor,
         harvestableAmount: jarData[i].earnedPickles.wei,
+        claimableV1: BigNumber.from(0),
+        claimableEthV2: BigNumber.from(0),
+        claimableTokenV2: BigNumber.from(0),
         rewarderType: "farm",
         network: asset.chain,
       });
     }
   }
 
-  if (userdata.dill && userdata.dill.claimable) {
+  if (userdata.dill && (userdata.dill.claimable || userdata.dill.totalClaimableETHV2 || userdata.dill.totalClaimableTokenV2)) {
     const wei = BigNumber.from(userdata.dill.claimable);
 
     ret.push({
       asset: undefined,
       descriptor: t("v2.dill.dillRewards"),
-      harvestableAmount: wei,
+      harvestableAmount: BigNumber.from(0),
+      claimableV1: BigNumber.from(userdata.dill.claimable),
+      claimableTokenV2: BigNumber.from(userdata.dill.claimableV2),
+      claimableEthV2: BigNumber.from(userdata.dill.claimableETHV2),
       rewarderType: "dill",
       network: ChainNetwork.Ethereum,
     });
