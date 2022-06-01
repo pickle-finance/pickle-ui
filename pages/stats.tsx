@@ -27,7 +27,7 @@ const Stats: PickleFinancePage = () => {
       <div className="w-full mb-4">
         <>
           <div className="flex gap-5">
-            <ChainSelect core={core} setSelectedChain={setSelectedChain} />
+            <ChainSelect setSelectedChain={setSelectedChain} />
             {selectedChain && (
               <JarSelect
                 core={core}

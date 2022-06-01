@@ -133,7 +133,6 @@ const styles: StylesConfig<Filter> = {
 const SearchBar: FC = () => {
   const { t } = useTranslation("common");
   const options = useSelector(CoreSelectors.selectFilters);
-  console.log(options);
   const filters = useSelector(ControlsSelectors.selectFilters);
   const dispatch = useAppDispatch();
 

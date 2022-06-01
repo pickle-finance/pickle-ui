@@ -1,52 +1,35 @@
 import Image from "next/image";
-import { PickleModelJson } from "picklefinance-core";
-import { RawChain } from "picklefinance-core/lib/chain/Chains";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import Select, {
   StylesConfig,
   components,
-  SingleValueProps,
   OptionProps,
   ControlProps,
+  SingleValue,
 } from "react-select";
 import { SearchIcon } from "@heroicons/react/solid";
 import { classNames } from "v2/utils";
-import { useTranslation } from "next-i18next";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
+import { Network } from "../connection/networks";
 
 const ChainSelect: FC<{
-  core: PickleModelJson.PickleModelJson | undefined;
   setSelectedChain: SetChainFunction;
-}> = ({ core, setSelectedChain }) => {
-  const [selectData, setSelectData] = useState<SelectData[]>([
-    { imageSrc: "/public/pickle.svg", label: "Pickle", value: "pickle" },
-  ]);
+}> = ({ setSelectedChain }) => {
+  const networks = useSelector(CoreSelectors.selectNetworks);
+  const options = networksToOptions(networks);
 
-  const chainChange = (chain: SelectData): void => {
-    setSelectedChain(chain.value);
+  const chainChange = (chain: SingleValue<SelectData>): void => {
+    if (chain) setSelectedChain(chain.value);
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      let tmpSelectData: SelectData[] = [...selectData];
-      if (core) {
-        const chains = core?.chains.map(dataToSelect);
-        for (let i = 0; i < chains.length; i++) tmpSelectData.push(chains[i]);
-      }
-      setSelectData(tmpSelectData);
-      // console.log(tmpSelectData);
-    };
-    getData();
-
-    setInterval(getData, 180000); // Updates every 3 minutes seconds
-  }, [core]);
   return (
     <Select
       className="w-1/3 mt-5 mb-5"
       placeholder="Filter By Chain"
       styles={styles}
-      isSearchable={true}
-      onChange={(s) => chainChange(s as SelectData)}
-      options={selectData}
+      onChange={(s) => chainChange(s)}
+      options={options}
       components={{
         Control,
         Option,
@@ -55,7 +38,7 @@ const ChainSelect: FC<{
   );
 };
 
-const styles: StylesConfig<SelectData> = {
+const styles: StylesConfig<SelectData, false> = {
   clearIndicator: (styles) => ({
     ...styles,
     color: "rgb(var(--color-foreground-alt-300))",
@@ -95,7 +78,7 @@ const styles: StylesConfig<SelectData> = {
   }),
 };
 
-const Control = ({ children, ...props }: ControlProps<SelectData, true>) => (
+const Control = ({ children, ...props }: ControlProps<SelectData, false>) => (
   <components.Control {...props}>
     <SearchIcon className="w-6 h-6 text-foreground-alt-200 ml-3 mr-1" />
     {children}
@@ -118,11 +101,9 @@ const OptionImage: FC<SelectData> = ({ imageSrc, label }) => {
   );
 };
 
-const Option = ({ children, ...props }: OptionProps<SelectData, true>) => {
-  const { t } = useTranslation("common");
+const Option = ({ children, ...props }: OptionProps<SelectData, false>) => {
   // Correctly highlight active option when navigating the menu using arrows keys
   const { isFocused } = props;
-  // const { type } = props.data;
 
   return (
     <components.Option {...props} className="group">
@@ -143,11 +124,17 @@ const Option = ({ children, ...props }: OptionProps<SelectData, true>) => {
   );
 };
 
-const dataToSelect = (chain: RawChain): SelectData => ({
-  imageSrc: `/networks/${chain.network.toLowerCase()}.svg`,
-  value: chain.network,
-  label: chain.networkVisible,
-});
+const networksToOptions = (networks: Network[]): SelectData[] => {
+  const options = [{ imageSrc: "/pickle.png", value: "pickle", label: "Pickle" }];
+  for (let i = 0; i < networks.length; i++) {
+    options.push({
+      imageSrc: `/networks/${networks[i].name.toLowerCase()}.png`,
+      value: networks[i].name,
+      label: networks[i].visibleName,
+    });
+  }
+  return options;
+};
 
 interface SelectData {
   imageSrc: string;
