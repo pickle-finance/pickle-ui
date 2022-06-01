@@ -20,9 +20,11 @@ const ChartContainer: FC<{
   };
 
   return (
-    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8 mb-10">
-      <h2 className="font-body font-bold text-xl">{t(`v2.stats.platform.${chart}ChartTitle`)}</h2>
-      <aside className="h-[600px] px-3 py-10">{chartMap[chart]}</aside>
+    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow mb-5">
+      <h2 className="font-body font-bold text-xl p-4">
+        {t(`v2.stats.platform.${chart}ChartTitle`)}
+      </h2>
+      <aside className="xl:h-[500px] sm:h-[400px] pr-4">{chartMap[chart]}</aside>
     </div>
   );
 };

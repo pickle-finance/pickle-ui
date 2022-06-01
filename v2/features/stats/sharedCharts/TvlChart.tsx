@@ -30,8 +30,8 @@ const Chart: FC<{ data: TvlData[] | undefined }> = ({ data }) => {
             tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
             height={75}
             angle={300}
-            tickMargin={35}
-            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
+            tickMargin={25}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -18, fontSize: 12 }}
           />
           <YAxis
             domain={[0, dataMax]}
@@ -41,16 +41,17 @@ const Chart: FC<{ data: TvlData[] | undefined }> = ({ data }) => {
               )
             }
             width={100}
-            padding={{ top: 50 }}
-            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
+            padding={{ top: 25 }}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10, fontSize: 12 }}
             tickCount={9}
           >
             <Label
               value={t("v2.dill.usdValue") as string}
               position="insideLeft"
               angle={-90}
+              offset={20}
               fill="rgb(var(--color-foreground-alt-100))"
-              style={{ textAnchor: "middle" }}
+              style={{ textAnchor: "middle", fontSize: 12 }}
             />
           </YAxis>
           <Tooltip
