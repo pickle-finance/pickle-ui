@@ -1,19 +1,23 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { PickleFinancePage, PlatformData } from "v2/types";
-import ChartContainer from "v2/features/stats/platform/ChartContainer";
-import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
-import ChainSelect from "v2/features/stats/ChainSelect";
+import { PickleFinancePage, PlatformData, SelectData } from "v2/types";
 import { useAppSelector } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
+
+import ChartContainer from "v2/features/stats/platform/ChartContainer";
+import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
+import ChainSelect, { ChainSelectData } from "v2/features/stats/ChainSelect";
 import JarSelect from "v2/features/stats/JarSelect";
-import { ChainNetwork } from "picklefinance-core";
+import Breadcrumbs from "v2/features/stats/Breadcrumbs";
 
 const Stats: PickleFinancePage = () => {
   const core = useAppSelector(CoreSelectors.selectCore);
   const [dataSeries, setDataSeries] = useState<PlatformData>({} as PlatformData);
-  const [selectedChain, setSelectedChain] = useState<String>("");
-  const [selectedJar, setSelectedJar] = useState<String>("");
+
+  const [chain, setChain] = useState({} as ChainSelectData);
+
+  const [selectedJar, setSelectedJar] = useState<String>();
+  const [jar, setJar] = useState({} as SelectData);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -26,14 +30,11 @@ const Stats: PickleFinancePage = () => {
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4">
         <>
+          <Breadcrumbs chain={chain} jar={jar} setChain={setChain} setJar={setJar} />
           <div className="flex gap-5">
-            <ChainSelect setSelectedChain={setSelectedChain} />
-            {selectedChain && (
-              <JarSelect
-                core={core}
-                selectedChain={selectedChain as ChainNetwork}
-                setSelectedJar={setSelectedJar}
-              />
+            <ChainSelect chain={chain} setChain={setChain} setJar={setJar} />
+            {Object.keys(chain).length > 0 && (
+              <JarSelect core={core} chain={chain.value} jar={jar} setJar={setJar} />
             )}
           </div>
           <div className="w-full lg:columns-2 md:columns-1 gap-5">

@@ -12,15 +12,19 @@ import { classNames } from "v2/utils";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 import { Network } from "../connection/networks";
+import { JarSelectData } from "./JarSelect";
 
 const ChainSelect: FC<{
-  setSelectedChain: SetChainFunction;
-}> = ({ setSelectedChain }) => {
+  chain: ChainSelectData;
+  setChain: SetFunction;
+  setJar: SetFunction;
+}> = ({ chain, setChain, setJar }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
   const options = networksToOptions(networks);
 
-  const chainChange = (chain: SingleValue<SelectData>): void => {
-    if (chain) setSelectedChain(chain.value);
+  const chainChange = (c: SingleValue<ChainSelectData>): void => {
+    setChain(c);
+    setJar({} as JarSelectData);
   };
 
   return (
@@ -29,6 +33,7 @@ const ChainSelect: FC<{
       placeholder="Filter By Chain"
       styles={styles}
       onChange={(s) => chainChange(s)}
+      value={Object.keys(chain).length > 0 ? chain : ""}
       options={options}
       components={{
         Control,
@@ -38,7 +43,7 @@ const ChainSelect: FC<{
   );
 };
 
-const styles: StylesConfig<SelectData, false> = {
+const styles: StylesConfig<ChainSelectData, false> = {
   clearIndicator: (styles) => ({
     ...styles,
     color: "rgb(var(--color-foreground-alt-300))",
@@ -78,14 +83,14 @@ const styles: StylesConfig<SelectData, false> = {
   }),
 };
 
-const Control = ({ children, ...props }: ControlProps<SelectData, false>) => (
+const Control = ({ children, ...props }: ControlProps<ChainSelectData, false>) => (
   <components.Control {...props}>
     <SearchIcon className="w-6 h-6 text-foreground-alt-200 ml-3 mr-1" />
     {children}
   </components.Control>
 );
 
-const OptionImage: FC<SelectData> = ({ imageSrc, label }) => {
+const OptionImage: FC<ChainSelectData> = ({ imageSrc, label }) => {
   return (
     <div className="mr-3 w-8 h-8 rounded-full border-3 border-foreground-alt-400">
       <Image
@@ -101,7 +106,7 @@ const OptionImage: FC<SelectData> = ({ imageSrc, label }) => {
   );
 };
 
-const Option = ({ children, ...props }: OptionProps<SelectData, false>) => {
+const Option = ({ children, ...props }: OptionProps<ChainSelectData, false>) => {
   // Correctly highlight active option when navigating the menu using arrows keys
   const { isFocused } = props;
 
@@ -124,8 +129,8 @@ const Option = ({ children, ...props }: OptionProps<SelectData, false>) => {
   );
 };
 
-const networksToOptions = (networks: Network[]): SelectData[] => {
-  const options = [{ imageSrc: "/pickle.png", value: "pickle", label: "Pickle" }];
+const networksToOptions = (networks: Network[]): ChainSelectData[] => {
+  const options: ChainSelectData[] = [];
   for (let i = 0; i < networks.length; i++) {
     options.push({
       imageSrc: `/networks/${networks[i].name.toLowerCase()}.png`,
@@ -136,12 +141,12 @@ const networksToOptions = (networks: Network[]): SelectData[] => {
   return options;
 };
 
-interface SelectData {
+export interface ChainSelectData {
   imageSrc: string;
   value: string;
   label: string;
 }
 
-type SetChainFunction = (property: string) => void;
+type SetFunction = (property: any) => void;
 
 export default ChainSelect;

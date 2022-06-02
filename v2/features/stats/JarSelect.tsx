@@ -5,52 +5,51 @@ import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/Pic
 
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
-  selectedChain: ChainNetwork;
-  setSelectedJar: SetJarFunction;
-}> = ({ core, selectedChain, setSelectedJar }) => {
-  const [selectData, setSelectData] = useState<SelectData[]>([]);
+  chain: String;
+  jar: JarSelectData;
+  setJar: SetJarFunction;
+}> = ({ core, chain, jar, setJar }) => {
+  const [options, setOptions] = useState<JarSelectData[]>([]);
 
-  const jarChange = (jar: SelectData): void => {
-    setSelectedJar(jar.value);
+  const jarChange = (jar: JarSelectData): void => {
+    setJar(jar);
   };
 
   useEffect(() => {
     const getData = async () => {
-      const tmpSelectData = [...selectData];
       if (core) {
-        const activeJars = core?.assets?.jars
-          .filter((x) => x.chain !== selectedChain)
-          .filter((x) => x.farm !== undefined)
-          .filter((x) => x.farm?.farmAddress !== "0x0000000000000000000000000000000000000000")
-          .filter((x) => x.enablement !== AssetEnablement.PERMANENTLY_DISABLED)
-          .filter((x) => x.details?.apiKey !== undefined)
-          .map(dataToSelect);
-        for (let i = 0; i < activeJars.length; i++) tmpSelectData.push(activeJars[i]);
+        console.log(core?.assets?.jars);
+        const jarsOnNetwork = core?.assets?.jars.filter((jar) => {
+          return jar.chain === (chain as ChainNetwork);
+        });
+        const activeJarsOnNetwork = jarsOnNetwork.filter(filterJars);
+        const options = activeJarsOnNetwork.map(jarsToOptions);
+        setOptions(options);
       }
-      setSelectData(tmpSelectData);
     };
     getData();
 
     setInterval(getData, 180000); // Updates every 3 minutes seconds
-  }, [core]);
+  }, [core, chain]);
   return (
     <Select
       className="w-1/3 mt-5 mb-5"
       placeholder={"Filter By Jar"}
       styles={styles}
       isSearchable={true}
-      onChange={(s) => jarChange(s as SelectData)}
-      options={selectData}
+      onChange={(s) => jarChange(s as JarSelectData)}
+      value={Object.keys(jar).length > 0 ? jar : ""}
+      options={options}
     />
   );
 };
 
-const dataToSelect = (data: JarDefinition): SelectData => ({
+const jarsToOptions = (data: JarDefinition): JarSelectData => ({
   value: data.details && data.details.apiKey ? data.details.apiKey : "",
   label: data.details ? `${data.id} (${data.details.apiKey})` : data.id,
 });
 
-const styles: StylesConfig<SelectData> = {
+const styles: StylesConfig<JarSelectData> = {
   clearIndicator: (styles) => ({
     ...styles,
     color: "rgb(var(--color-foreground-alt-300))",
@@ -90,11 +89,16 @@ const styles: StylesConfig<SelectData> = {
   }),
 };
 
-interface SelectData {
+const filterJars = (jar: JarDefinition) => {
+  if (jar.enablement !== AssetEnablement.PERMANENTLY_DISABLED && jar.details?.apiKey !== undefined)
+    return jar;
+};
+
+export interface JarSelectData {
   value: string;
   label: string;
 }
 
-type SetJarFunction = (property: string) => void;
+type SetJarFunction = (property: JarSelectData) => void;
 
 export default JarSelect;

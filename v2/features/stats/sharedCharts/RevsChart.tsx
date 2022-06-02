@@ -97,7 +97,7 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
             )}
             iconType="wye"
             wrapperStyle={{
-              lineHeight: "40px",
+              lineHeight: "25px",
             }}
             // wrapperStyle={{ paddingTop: 25 }}
           />

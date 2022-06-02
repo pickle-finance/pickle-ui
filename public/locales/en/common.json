@@ -635,7 +635,8 @@
         "supply": "No. of Tokens",
         "tokenPrice": "Token Price",
         "value": "Total Value Locked"
-      }
+      },
+      "platformStats": "Pickle Stats"
     },
     "theme": {
       "dark": "Dark",
