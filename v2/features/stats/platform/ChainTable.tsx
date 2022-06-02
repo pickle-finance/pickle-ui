@@ -6,7 +6,7 @@ import ChainRow from "./ChainTableRow";
 const ChainTable: FC<{ chains: PlatformChainData }> = ({ chains }) => {
   const chainNames: string[] = chains ? Object.keys(chains) : [];
   return (
-    <table className="overflow-scroll">
+    <table className="w-full overflow-scroll">
       <ChainHead />
       <tbody className="border border-foreground-alt-400">
         {chainNames.map((chainName) => (

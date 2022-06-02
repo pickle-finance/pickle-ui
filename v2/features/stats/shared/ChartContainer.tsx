@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import TvlChart from "../sharedCharts/TvlChart";
-import RevsChart from "../sharedCharts/RevsChart";
-import { PlatformData } from "v2/types";
+import TvlChart from "./TvlChart";
+import RevsChart from "./RevsChart";
+import { ChainData, PlatformData } from "v2/types";
 import { useTranslation } from "next-i18next";
 
 const ChartContainer: FC<{
   chart: string;
-  dataSeries: PlatformData;
+  dataSeries: PlatformData | ChainData;
 }> = ({ chart, dataSeries }) => {
   const { t } = useTranslation("common");
 

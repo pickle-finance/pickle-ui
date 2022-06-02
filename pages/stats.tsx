@@ -1,23 +1,23 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { PickleFinancePage, PlatformData, SelectData } from "v2/types";
+import { ChainData, PickleFinancePage, PlatformData, SelectData } from "v2/types";
 import { useAppSelector } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
 
-import ChartContainer from "v2/features/stats/platform/ChartContainer";
+import ChartContainer from "v2/features/stats/shared/ChartContainer";
 import ChainTableContainer from "v2/features/stats/platform/ChainTableContainer";
 import ChainSelect, { ChainSelectData } from "v2/features/stats/ChainSelect";
-import JarSelect from "v2/features/stats/JarSelect";
+import JarSelect, { JarSelectData } from "v2/features/stats/JarSelect";
 import Breadcrumbs from "v2/features/stats/Breadcrumbs";
+import ChainStats from "v2/features/stats/chain";
+import JarStats from "v2/features/stats/jar";
 
 const Stats: PickleFinancePage = () => {
   const core = useAppSelector(CoreSelectors.selectCore);
   const [dataSeries, setDataSeries] = useState<PlatformData>({} as PlatformData);
 
   const [chain, setChain] = useState({} as ChainSelectData);
-
-  const [selectedJar, setSelectedJar] = useState<String>();
-  const [jar, setJar] = useState({} as SelectData);
+  const [jar, setJar] = useState({} as JarSelectData);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -37,14 +37,15 @@ const Stats: PickleFinancePage = () => {
               <JarSelect core={core} chain={chain.value} jar={jar} setJar={setJar} />
             )}
           </div>
-          <div className="w-full lg:columns-2 md:columns-1 gap-5">
-            <ChartContainer chart="tvl" dataSeries={dataSeries} />
-            <ChartContainer chart="revs" dataSeries={dataSeries} />
-          </div>
-          <div className="w-full lg:columns-2 md:columns-1 gap-5">
-            <ChainTableContainer chains={dataSeries.chains} />
-            <div></div>
-          </div>
+          {Object.keys(chain).length === 0 && Object.keys(jar).length === 0 && (
+            <PlatformStats dataSeries={dataSeries} />
+          )}
+          {Object.keys(chain).length > 0 && Object.keys(jar).length === 0 && (
+            <ChainStats core={core} chain={chain.value} />
+          )}
+          {Object.keys(chain).length > 0 && Object.keys(jar).length > 0 && (
+            <JarStats core={core} jar={jar.value} />
+          )}
         </>
       </div>
     </div>
@@ -64,9 +65,28 @@ const PageTitle: FC = () => {
   );
 };
 
+const PlatformStats: FC<{ dataSeries: PlatformData }> = ({ dataSeries }) => (
+  <>
+    <div className="w-full lg:columns-2 md:columns-1 gap-5">
+      <ChartContainer chart="tvl" dataSeries={dataSeries} />
+      <ChartContainer chart="revs" dataSeries={dataSeries} />
+    </div>
+    <ChainTableContainer chains={dataSeries.chains} />
+  </>
+);
+
 const getPlatformData = async (): Promise<PlatformData> => {
+  // https://api.pickle.finance/prod/protocol/analytics/
   const url = `${process.env.apiPlatform}`;
   return await fetch(url).then((response) => response.json());
+};
+
+const getChainData = async (chain: string): Promise<ChainData> => {
+  // https://api.pickle.finance/prod/protocol/analytics/chain/{chain}/en
+  const url = `${process.env.apiChain}/${chain}/en`;
+  return await fetch(url)
+    .then((response) => response.json())
+    .catch((e) => console.log(e));
 };
 
 Stats.PageTitle = PageTitle;
