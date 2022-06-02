@@ -49,7 +49,7 @@ const jarsToOptions = (data: JarDefinition): JarSelectData => ({
   label: data.details ? `${data.id} (${data.details.apiKey})` : data.id,
 });
 
-const styles: StylesConfig<JarSelectData> = {
+const styles: StylesConfig<JarSelectData | String, false> = {
   clearIndicator: (styles) => ({
     ...styles,
     color: "rgb(var(--color-foreground-alt-300))",

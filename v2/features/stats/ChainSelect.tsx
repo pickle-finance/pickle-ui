@@ -6,6 +6,7 @@ import Select, {
   OptionProps,
   ControlProps,
   SingleValue,
+  PropsValue,
 } from "react-select";
 import { SearchIcon } from "@heroicons/react/solid";
 import { classNames } from "v2/utils";
