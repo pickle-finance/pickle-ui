@@ -6,7 +6,7 @@ import { useAppSelector } from "v2/store";
 import { AssetWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { jarDecimals } from "v2/utils/user";
-import { jarSupportsStaking } from "v2/store/core.helpers";
+import { isAcceptingDeposits, jarSupportsStaking } from "v2/store/core.helpers";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
@@ -62,6 +62,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
               storeAttribute="jarAllowance"
               chainName={asset.chain}
               visible={!userHasJarAllowance}
+              state={isAcceptingDeposits(asset) ? "enabled" : "disabled"}
               type="jar"
             />
             {userHasJarAllowance && (
@@ -98,6 +99,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
                   storeAttribute="farmAllowance"
                   chainName={asset.chain}
                   visible={!userHasFarmAllowance}
+                  state={isAcceptingDeposits(asset) ? "enabled" : "disabled"}
                   type="farm"
                 />
                 {userHasFarmAllowance && (

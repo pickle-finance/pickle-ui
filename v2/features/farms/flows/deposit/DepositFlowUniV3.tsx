@@ -93,10 +93,15 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
     );
 
     // Non-Frax UniV3 jars have an extra bool argument for zapping
-    const funcSig = `deposit(uint256,uint256${canZap ? ",bool" : ""})`;
+    if (canZap) {
+      return () =>
+        JarContract["deposit(uint256,uint256,bool)"](amount0, amount1, shouldZap, {
+          value: nativeBalance,
+        });
+    }
 
     return () =>
-      JarContract[funcSig](amount0, amount1, ...(canZap ? [shouldZap] : []), {
+      JarContract["deposit(uint256,uint256)"](amount0, amount1, {
         value: nativeBalance,
       });
   };
