@@ -11,11 +11,14 @@ import {
 } from "v2/features/stats/chain/BigMoverUtils";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import { PickleModelJson } from "picklefinance-core";
+import { ChainSelectData } from "./ChainSelect";
+import { JarSelectData } from "./JarSelect";
 
-const ChainStats: FC<{ core: PickleModelJson.PickleModelJson | undefined; chain: string }> = ({
-  core,
-  chain,
-}) => {
+const ChainStats: FC<{
+  core: PickleModelJson.PickleModelJson | undefined;
+  chain: ChainSelectData;
+  jar: JarSelectData;
+}> = ({ core, chain, jar }) => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const [tokenPctChangeData, setTokenPctChangeData] = useState<iBigMoverTableData[]>([]);
   const [tvlChange, setTvlChange] = useState<iBigMoverTableData[]>([]);
@@ -23,7 +26,7 @@ const ChainStats: FC<{ core: PickleModelJson.PickleModelJson | undefined; chain:
   useEffect(() => {
     const getData = async (): Promise<void> => {
       if (chain)
-        getChainData(chain).then((data) => {
+        getChainData(chain.value).then((data) => {
           setChainData(data);
         });
     };
@@ -40,27 +43,29 @@ const ChainStats: FC<{ core: PickleModelJson.PickleModelJson | undefined; chain:
   tokenPctChangeData.sort((a, b) => (a.tokenPriceChange || 0) - (b.tokenPriceChange || 0));
   tvlChange.sort((a, b) => (a.tvlChange || 0) - (b.tvlChange || 0));
 
-  return (
-    <>
-      {tvlChange.length > 0 && tokenPctChangeData.length > 0 && (
-        <>
-          <BigMoverTableContainer type="tvl" tableData={tvlChange} />
-          <BigMoverTableContainer type="tokenPct" tableData={tokenPctChangeData} />
-        </>
-      )}
-      {chainData.assets && core ? (
-        <>
-          <div className="w-full lg:columns-2 md:columns-1 gap-5">
-            <ChartContainer chart="tvl" dataSeries={chainData} />
-            <ChartContainer chart="revs" dataSeries={chainData} />
-          </div>
-          <AssetTableContainer assets={chainData?.assets} core={core} />
-        </>
-      ) : (
-        <LoadingIndicator />
-      )}
-    </>
-  );
+  if (Object.keys(chain).length > 0 && Object.keys(jar).length === 0)
+    return (
+      <>
+        {tvlChange.length > 0 && tokenPctChangeData.length > 0 && (
+          <>
+            <BigMoverTableContainer type="tvl" tableData={tvlChange} />
+            <BigMoverTableContainer type="tokenPct" tableData={tokenPctChangeData} />
+          </>
+        )}
+        {chainData.assets && core ? (
+          <>
+            <div className="w-full lg:columns-2 md:columns-1 gap-5">
+              <ChartContainer chart="tvl" dataSeries={chainData} />
+              <ChartContainer chart="revs" dataSeries={chainData} />
+            </div>
+            <AssetTableContainer assets={chainData?.assets} core={core} />
+          </>
+        ) : (
+          <LoadingIndicator />
+        )}
+      </>
+    );
+  return <></>;
 };
 
 const getChainData = async (chain: string): Promise<ChainData> => {

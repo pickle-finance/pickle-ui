@@ -2,49 +2,56 @@ import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { PickleModelJson } from "picklefinance-core";
 
-import { CoreSelectors } from "v2/store/core";
+import { AssetWithData, CoreSelectors } from "v2/store/core";
 import type { JarChartData } from "v2/types";
 import ChartContainer from "v2/features/stats/jar/ChartContainer";
 import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
+import { ChainSelectData } from "./ChainSelect";
+import { JarSelectData } from "./JarSelect";
 
-const JarStats: FC<{ core: PickleModelJson.PickleModelJson | undefined; jar: string }> = ({
-  core,
-  jar,
-}) => {
+const JarStats: FC<{
+  core: PickleModelJson.PickleModelJson | undefined;
+  chain: ChainSelectData;
+  jar: JarSelectData;
+}> = ({ core, chain, jar }) => {
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
 
-  const asset = assets.find((a) => a.details.apiKey.toLowerCase() === jar.toLowerCase());
+  let asset: AssetWithData | undefined = {} as AssetWithData;
+  if (jar && jar.value)
+    asset = assets.find((a) => a.details.apiKey.toLowerCase() === jar.value.toLowerCase());
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      getJarData(jar).then((data) => setJarData(data));
+      if (jar) getJarData(jar.value).then((data) => setJarData(data));
     };
     getData();
   }, [jar]);
 
-  return (
-    <>
-      <div className="mb-5">
-        {asset && asset.depositTokensInJar && (
-          <FarmsTable singleAsset={asset} hideDescription={true} />
+  if (chain && Object.keys(chain).length > 0 && jar && Object.keys(jar).length > 0)
+    return (
+      <>
+        <div className="mb-5">
+          {asset && asset.depositTokensInJar && (
+            <FarmsTable singleAsset={asset} hideDescription={true} />
+          )}
+        </div>
+        <ChartContainer jarData={jarData} />
+        <br />
+        {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
+        <br />
+        {jarData && jarData.revenueExpenses && jarData.revenueExpenses.recentHarvests[0] && (
+          <RevTableContainer
+            revs={jarData.revenueExpenses}
+            pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
+          />
         )}
-      </div>
-      <ChartContainer jarData={jarData} />
-      <br />
-      {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
-      <br />
-      {jarData && jarData.revenueExpenses && jarData.revenueExpenses.recentHarvests[0] && (
-        <RevTableContainer
-          revs={jarData.revenueExpenses}
-          pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
-        />
-      )}
-    </>
-  );
+      </>
+    );
+  return <></>;
 };
 
 const getJarData = async (jarKey: string): Promise<JarChartData> => {

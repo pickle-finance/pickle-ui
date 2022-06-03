@@ -6,7 +6,6 @@ import Select, {
   OptionProps,
   ControlProps,
   SingleValue,
-  PropsValue,
 } from "react-select";
 import { SearchIcon } from "@heroicons/react/solid";
 import { classNames } from "v2/utils";
@@ -30,7 +29,7 @@ const ChainSelect: FC<{
 
   return (
     <Select
-      className="w-1/3 mt-5 mb-5"
+      className="w-1/3 mt-5 mb-5 z-auto"
       placeholder="Filter By Chain"
       styles={styles}
       onChange={(s) => chainChange(s)}
@@ -67,7 +66,7 @@ const styles: StylesConfig<ChainSelectData, false> = {
     ...styles,
     backgroundColor: "rgb(var(--color-background-light))",
     padding: 8,
-    zIndex: 55,
+    zIndex: 99,
     boxShadow: "0 0 0 1px rgb(var(--color-background-lightest))",
   }),
   singleValue: (styles) => {

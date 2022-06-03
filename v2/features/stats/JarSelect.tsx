@@ -2,10 +2,11 @@ import { FC, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { ChainSelectData } from "./ChainSelect";
 
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
-  chain: String;
+  chain: ChainSelectData;
   jar: JarSelectData;
   setJar: SetJarFunction;
 }> = ({ core, chain, jar, setJar }) => {
@@ -20,7 +21,7 @@ export const JarSelect: FC<{
       if (core) {
         console.log(core?.assets?.jars);
         const jarsOnNetwork = core?.assets?.jars.filter((jar) => {
-          return jar.chain === (chain as ChainNetwork);
+          return jar.chain === (chain.value as ChainNetwork);
         });
         const activeJarsOnNetwork = jarsOnNetwork.filter(filterJars);
         const options = activeJarsOnNetwork.map(jarsToOptions);
@@ -31,17 +32,19 @@ export const JarSelect: FC<{
 
     setInterval(getData, 180000); // Updates every 3 minutes seconds
   }, [core, chain]);
-  return (
-    <Select
-      className="w-1/3 mt-5 mb-5"
-      placeholder={"Filter By Jar"}
-      styles={styles}
-      isSearchable={true}
-      onChange={(s) => jarChange(s as JarSelectData)}
-      value={Object.keys(jar).length > 0 ? jar : ""}
-      options={options}
-    />
-  );
+  if (Object.keys(chain).length > 0)
+    return (
+      <Select
+        className="w-1/3 mt-5 mb-5"
+        placeholder={"Filter By Jar"}
+        styles={styles}
+        isSearchable={true}
+        onChange={(s) => jarChange(s as JarSelectData)}
+        value={Object.keys(jar).length > 0 ? jar : ""}
+        options={options}
+      />
+    );
+  return <></>;
 };
 
 const jarsToOptions = (data: JarDefinition): JarSelectData => ({
