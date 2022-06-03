@@ -16,6 +16,7 @@ import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
 import { roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
+import { isAcceptingDeposits } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
@@ -63,6 +64,7 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             jar={jar}
             visible={!userHasJarAllowance}
             balances={userTokenData}
+            state={isAcceptingDeposits(jar) ? "enabled" : "disabled"}
           />
           {userHasJarAllowance && (
             <div className="grid grid-cols-2 gap-3">
@@ -88,6 +90,7 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             storeAttribute="farmAllowance"
             chainName={jar.chain}
             visible={!userHasFarmAllowance}
+            state={isAcceptingDeposits(jar) ? "enabled" : "disabled"}
             type="farm"
           />
           {userHasFarmAllowance && (
