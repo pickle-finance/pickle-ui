@@ -5,6 +5,7 @@ import { IUserDillStats } from "picklefinance-core/lib/client/UserModel";
 import { formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { ChainNetwork } from "picklefinance-core";
+
 import { CoreSelectors } from "v2/store/core";
 import HarvestFlow from "../farms/flows/harvest/HarvestFlow";
 import { formatDollars } from "v2/utils";
@@ -44,7 +45,7 @@ const Harvest: FC<Props> = ({ dill }) => {
         <div>
           <br></br>
           <p className="text-primary whitespace-pre font-medium text-base">
-            {`${totalEthRewards.toFixed(4)} ETH`}
+            {`${totalEthRewards.toFixed(8)} ETH`}
           </p>
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
             {`(${formatDollars(totalEthRewards * ethPrice)})`}
