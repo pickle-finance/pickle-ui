@@ -40,7 +40,7 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
   const totalEthRewards = parseFloat(ethers.utils.formatEther(details.claimableEthV2));
   const totalPickleRewards = parseFloat(ethers.utils.formatEther(details.claimableTokenV2.add(details.claimableV1).add(details.harvestableAmount)));
 
-  const totalRewards = details.claimableEthV2.add(details.claimableTokenV2).add(details.claimableV1);
+  const totalRewards = details.claimableEthV2.add(details.claimableTokenV2).add(details.claimableV1).add(details.harvestableAmount);
 
   if (totalRewards.lt(threshold)) return null;
 
