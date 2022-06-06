@@ -7,9 +7,9 @@ import { CoreSelectors } from "v2/store/core";
 import ChainSelect, { ChainSelectData } from "v2/features/stats/ChainSelect";
 import JarSelect, { JarSelectData } from "v2/features/stats/JarSelect";
 import Breadcrumbs from "v2/features/stats/Breadcrumbs";
-import ChainStats from "v2/features/stats/chain";
-import JarStats from "v2/features/stats/jar";
-import PlatformStats from "v2/features/stats/platform";
+import ChainStats from "v2/features/stats/ChainStats";
+import JarStats from "v2/features/stats/JarStats";
+import PlatformStats from "v2/features/stats/PlatformStats";
 
 const Stats: PickleFinancePage = () => {
   const core = useAppSelector(CoreSelectors.selectCore);
@@ -25,7 +25,7 @@ const Stats: PickleFinancePage = () => {
           <ChainSelect chain={chain} setChain={setChain} setJar={setJar} />
           <JarSelect core={core} chain={chain} jar={jar} setJar={setJar} />
         </div>
-        <PlatformStats chain={chain} jar={jar} />
+        <PlatformStats chain={chain} jar={jar} core={core} />
         <ChainStats core={core} chain={chain} jar={jar} />
         <JarStats core={core} chain={chain} jar={jar} />
       </div>

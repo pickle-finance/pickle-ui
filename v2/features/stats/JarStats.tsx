@@ -51,7 +51,7 @@ const JarStats: FC<{
         )}
       </>
     );
-  return <></>;
+  return null;
 };
 
 const getJarData = async (jarKey: string): Promise<JarChartData> => {

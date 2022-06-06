@@ -19,7 +19,6 @@ export const JarSelect: FC<{
   useEffect(() => {
     const getData = async () => {
       if (core) {
-        console.log(core?.assets?.jars);
         const jarsOnNetwork = core?.assets?.jars.filter((jar) => {
           return jar.chain === (chain.value as ChainNetwork);
         });

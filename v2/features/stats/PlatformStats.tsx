@@ -1,3 +1,4 @@
+import { PickleModelJson } from "picklefinance-core";
 import { FC, useEffect, useState } from "react";
 import { PlatformData } from "v2/types";
 import { ChainSelectData } from "./ChainSelect";
@@ -8,7 +9,8 @@ import ChartContainer from "./shared/ChartContainer";
 const PlatformStats: FC<{
   chain: ChainSelectData;
   jar: JarSelectData;
-}> = ({ chain, jar }) => {
+  core: PickleModelJson.PickleModelJson | undefined;
+}> = ({ chain, jar, core }) => {
   const [dataSeries, setDataSeries] = useState<PlatformData>({} as PlatformData);
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -24,10 +26,13 @@ const PlatformStats: FC<{
           <ChartContainer chart="tvl" dataSeries={dataSeries} />
           <ChartContainer chart="revs" dataSeries={dataSeries} />
         </div>
-        <ChainTableContainer chains={dataSeries.chains} />
+        <div className="w-full min-w-min lg:columns-2 md:columns-1 gap-5">
+          <ChainTableContainer chains={dataSeries.chains} />
+          <ChartContainer chart="topJars" core={core} />
+        </div>
       </>
     );
-  return <></>;
+  return null;
 };
 
 const getPlatformData = async (): Promise<PlatformData> => {
