@@ -9,8 +9,7 @@ import {
   getTVLChange,
   iBigMoverTableData,
 } from "v2/features/stats/chain/BigMoverUtils";
-import LoadingIndicator from "v2/components/LoadingIndicator";
-import { PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { ChainSelectData } from "./ChainSelect";
 import { JarSelectData } from "./JarSelect";
 
@@ -46,26 +45,19 @@ const ChainStats: FC<{
   if (Object.keys(chain).length > 0 && Object.keys(jar).length === 0)
     return (
       <>
-        {tvlChange.length > 0 && tokenPctChangeData.length > 0 && (
-          <>
-            <BigMoverTableContainer type="tvl" tableData={tvlChange} />
-            <BigMoverTableContainer type="tokenPct" tableData={tokenPctChangeData} />
-          </>
-        )}
-        {chainData.assets && core ? (
-          <>
-            <div className="w-full lg:columns-2 md:columns-1 gap-5">
-              <ChartContainer chart="tvl" dataSeries={chainData} />
-              <ChartContainer chart="revs" dataSeries={chainData} />
-            </div>
-            <AssetTableContainer assets={chainData?.assets} core={core} />
-          </>
-        ) : (
-          <LoadingIndicator />
-        )}
+        <BigMoverTableContainer type="tvl" tableData={tvlChange} />
+        <BigMoverTableContainer type="tokenPct" tableData={tokenPctChangeData} />
+        <div className="w-full lg:columns-2 md:columns-1 gap-5">
+          <ChartContainer chart="tvl" dataSeries={chainData} />
+          <ChartContainer chart="revs" dataSeries={chainData} />
+        </div>
+        <div className="w-full lg:columns-2 md:columns-1 gap-5">
+          <AssetTableContainer chainData={chainData} core={core} />
+          <ChartContainer chart="topJars" core={core} chain={chain.value} />
+        </div>
       </>
     );
-  return <></>;
+  return null;
 };
 
 const getChainData = async (chain: string): Promise<ChainData> => {

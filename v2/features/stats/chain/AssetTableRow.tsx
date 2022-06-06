@@ -25,14 +25,16 @@ const AssetRow: FC<{
       : "0%";
   return (
     <tr className="border border-foreground-alt-400">
-      <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 py-2 pr-2">
+      <td className="text-left text-sm lg:pl-8 sm:pl-4 py-2 pr-2">
         {formatAssetLink(assetKey.toLowerCase())}
       </td>
-      <td className="text-left p-2">{asset && asset.now ? formatDollars(asset.now.value) : "-"}</td>
-      <td className="text-left p-2">
+      <td className="text-left text-sm p-2">
+        {asset && asset.now ? formatDollars(asset.now.value) : "-"}
+      </td>
+      <td className="text-left text-sm p-2">
         {asset && asset.now ? formatDollars(asset.now.value - asset.previous.value) : "-"}
       </td>
-      <td className="text-left p-2">{apyRangeString}</td>
+      <td className="text-left text-sm py-2 pl-2 lg:pr-8 sm:pr-4">{apyRangeString}</td>
     </tr>
   );
 };

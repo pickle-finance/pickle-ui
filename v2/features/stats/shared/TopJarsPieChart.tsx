@@ -1,13 +1,17 @@
 import { FC } from "react";
-import { PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { Cell, LabelList, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { formatDollars } from "v2/utils";
 import CustomTooltip from "./PieChartTooltip";
 
-const TopJarsPieChart: FC<{ core: PickleModelJson.PickleModelJson }> = ({ core }) => {
+const TopJarsPieChart: FC<{ core: PickleModelJson.PickleModelJson; chain?: ChainNetwork }> = ({
+  core,
+  chain,
+}) => {
   const jarData: iJarTvl[] = [];
   for (let n = 0; n < core.assets.jars.length; n++) {
     let jar = core.assets.jars[n];
+    if (chain && jar.chain !== chain) continue;
     if (jar.details && jar.details.harvestStats && jar.details.harvestStats.balanceUSD)
       jarData.push({
         name: jar.farm?.farmNickname ? jar.farm?.farmNickname : undefined,

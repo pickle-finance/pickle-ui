@@ -7,7 +7,7 @@ const ChainTable: FC<{ chains: PlatformChainData }> = ({ chains }) => {
   const chainNames: string[] = chains ? Object.keys(chains) : [];
   if (chains)
     return (
-      <table className="w-full">
+      <table>
         <ChainHead />
         <tbody className="border border-foreground-alt-400">
           {chainNames.map((chainName) => (

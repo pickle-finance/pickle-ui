@@ -4,28 +4,29 @@ import RevsChart from "./RevsChart";
 import TopJarsPieChart from "./TopJarsPieChart";
 import { ChainData, PlatformData } from "v2/types";
 import { useTranslation } from "next-i18next";
-import { PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 
 const ChartContainer: FC<{
   chart: "tvl" | "revs" | "topJars";
   dataSeries?: PlatformData | ChainData;
   core?: PickleModelJson.PickleModelJson | undefined;
-}> = ({ chart, dataSeries, core }) => {
+  chain?: string;
+}> = ({ chart, dataSeries, core, chain }) => {
   const { t } = useTranslation("common");
 
   interface IChartMap {
-    [key: string]: JSX.Element | null;
+    [key: string]: JSX.Element | undefined;
   }
 
   const chartMap: IChartMap = {
-    tvl: dataSeries ? <TvlChart data={dataSeries.tvl} /> : null,
-    revs: dataSeries ? <RevsChart data={dataSeries.revenues} /> : null,
-    topJars: core ? <TopJarsPieChart core={core} /> : null,
+    tvl: dataSeries ? <TvlChart data={dataSeries.tvl} /> : undefined,
+    revs: dataSeries ? <RevsChart data={dataSeries.revenues} /> : undefined,
+    topJars: core ? <TopJarsPieChart core={core} chain={chain as ChainNetwork} /> : undefined,
   };
 
   if (chartMap[chart])
     return (
-      <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow mb-5">
+      <div className="bg-background-light rounded-xl border border-foreground-alt-500 mb-5">
         <h2 className="font-body font-bold text-xl p-4">
           {t(`v2.stats.platform.${chart}ChartTitle`)}
         </h2>

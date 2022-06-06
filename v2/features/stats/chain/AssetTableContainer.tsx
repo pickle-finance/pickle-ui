@@ -1,21 +1,23 @@
 import React, { FC } from "react";
-import { ChainAssetData } from "v2/types";
+import { ChainData } from "v2/types";
 import { useTranslation } from "next-i18next";
 import AssetTable from "./AssetTable";
 import { PickleModelJson } from "picklefinance-core";
 
 const AssetTableContainer: FC<{
-  assets: ChainAssetData;
-  core: PickleModelJson.PickleModelJson;
-}> = ({ assets, core }) => {
+  chainData: ChainData;
+  core: PickleModelJson.PickleModelJson | undefined;
+}> = ({ chainData, core }) => {
   const { t } = useTranslation("common");
-  return (
-    <div className="bg-background-light min-w-min rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
-      <h2 className="font-body font-bold text-xl">{t("v2.stats.chain.assetTableTitle")}</h2>
-      <br />
-      <AssetTable assets={assets} core={core} />
-    </div>
-  );
+  const assets = chainData.assets ? chainData.assets : undefined;
+  if (assets && core)
+    return (
+      <div className="bg-background-light min-w-min max-h-[500px] overflow-y-scroll rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
+        <h2 className="font-body font-bold text-xl mb-5">{t("v2.stats.chain.assetTableTitle")}</h2>
+        <AssetTable assets={assets} core={core} />
+      </div>
+    );
+  return null;
 };
 
 export default AssetTableContainer;
