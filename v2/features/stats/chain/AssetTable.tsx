@@ -20,7 +20,7 @@ const AssetTable: FC<{ assets: ChainAssetData; core: PickleModelJson.PickleModel
   });
 
   return (
-    <table className="min-w-full table-auto">
+    <table className="w-full">
       <AssetTableHead />
       <tbody className="border border-foreground-alt-400">
         {activeJarKeys.map((key) => {

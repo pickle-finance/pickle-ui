@@ -40,7 +40,7 @@ export interface PlatformChainCoreData {
 }
 
 export interface PlatformChainData {
-  [ chain: string ]: PlatformChainCoreData;
+  [chain: string]: PlatformChainCoreData;
 }
 
 export interface PlatformData {
@@ -79,7 +79,7 @@ export interface ChainData {
 }
 
 export interface ChainAssetData {
-  [ assetName: string ]: AssetChangeData;
+  [assetName: string]: AssetChangeData;
 }
 export interface AssetChangeData {
   now: AssetCoreData;
@@ -99,7 +99,7 @@ export interface JarChartData {
   revenueExpenses: AssetRevs;
 }
 interface JarAssetData {
-  [ key: string ]: AssetCoreData[];
+  [key: string]: AssetCoreData[];
 }
 
 interface Component {
@@ -153,3 +153,5 @@ export interface SelectData {
   value: string;
   label: string;
 }
+
+export type SetFunction = (property: any) => void;

@@ -12,9 +12,11 @@ const AssetTableContainer: FC<{
   const assets = chainData.assets ? chainData.assets : undefined;
   if (assets && core)
     return (
-      <div className="bg-background-light min-w-min max-h-[500px] overflow-y-scroll rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
-        <h2 className="font-body font-bold text-xl mb-5">{t("v2.stats.chain.assetTableTitle")}</h2>
-        <AssetTable assets={assets} core={core} />
+      <div className="bg-background-light w-full min-w-min rounded-xl border border-foreground-alt-500 shadow mb-5">
+        <h2 className="font-body font-bold text-xl p-4">{t("v2.stats.chain.assetTableTitle")}</h2>
+        <div className="max-h-[550px] overflow-y-auto p-4">
+          <AssetTable assets={assets} core={core} />
+        </div>
       </div>
     );
   return null;

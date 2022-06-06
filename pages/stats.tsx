@@ -25,7 +25,7 @@ const Stats: PickleFinancePage = () => {
           <ChainSelect chain={chain} setChain={setChain} setJar={setJar} />
           <JarSelect core={core} chain={chain} jar={jar} setJar={setJar} />
         </div>
-        <PlatformStats chain={chain} jar={jar} core={core} />
+        <PlatformStats chain={chain} jar={jar} core={core} setChain={setChain} />
         <ChainStats core={core} chain={chain} jar={jar} />
         <JarStats core={core} chain={chain} jar={jar} />
       </div>

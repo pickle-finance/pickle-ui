@@ -129,7 +129,7 @@ const Option = ({ children, ...props }: OptionProps<ChainSelectData, false>) => 
   );
 };
 
-const networksToOptions = (networks: Network[]): ChainSelectData[] => {
+export const networksToOptions = (networks: Network[]): ChainSelectData[] => {
   const options: ChainSelectData[] = [];
   for (let i = 0; i < networks.length; i++) {
     options.push({

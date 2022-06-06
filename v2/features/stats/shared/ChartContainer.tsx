@@ -5,13 +5,15 @@ import TopJarsPieChart from "./TopJarsPieChart";
 import { ChainData, PlatformData } from "v2/types";
 import { useTranslation } from "next-i18next";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
+import { classNames } from "v2/utils";
 
 const ChartContainer: FC<{
   chart: "tvl" | "revs" | "topJars";
   dataSeries?: PlatformData | ChainData;
   core?: PickleModelJson.PickleModelJson | undefined;
   chain?: string;
-}> = ({ chart, dataSeries, core, chain }) => {
+  className?: string;
+}> = ({ chart, dataSeries, core, chain, className }) => {
   const { t } = useTranslation("common");
 
   interface IChartMap {
@@ -26,7 +28,12 @@ const ChartContainer: FC<{
 
   if (chartMap[chart])
     return (
-      <div className="bg-background-light rounded-xl border border-foreground-alt-500 mb-5">
+      <div
+        className={classNames(
+          "bg-background-light rounded-xl min-w-[500px] border border-foreground-alt-500 mb-5",
+          className,
+        )}
+      >
         <h2 className="font-body font-bold text-xl p-4">
           {t(`v2.stats.platform.${chart}ChartTitle`)}
         </h2>

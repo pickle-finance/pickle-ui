@@ -18,14 +18,16 @@ const CustomTooltip: FC<{ active: any; payload: Payload<ValueType, NameType>[] |
     return (
       <div className="bg-background-light p-5 rounded border border-foreground-alt-300">
         <table>
-          {name && <TooltipRow label={t("v2.stats.tooltips.name")} value={name} />}
-          {tvl && <TooltipRow label={t("v2.stats.tooltips.tvl")} value={formatDollars(tvl)} />}
-          {apr && (
-            <TooltipRow label={t("v2.stats.tooltips.jarApr")} value={formatPercentage(apr)} />
-          )}
-          {apy && (
-            <TooltipRow label={t("v2.stats.tooltips.farmApy")} value={formatPercentage(apy)} />
-          )}
+          <tbody>
+            {name && <TooltipRow label={t("v2.stats.tooltips.name")} value={name} />}
+            {tvl && <TooltipRow label={t("v2.stats.tooltips.tvl")} value={formatDollars(tvl)} />}
+            {apr && (
+              <TooltipRow label={t("v2.stats.tooltips.jarApr")} value={formatPercentage(apr)} />
+            )}
+            {apy && (
+              <TooltipRow label={t("v2.stats.tooltips.farmApy")} value={formatPercentage(apy)} />
+            )}
+          </tbody>
         </table>
       </div>
     );

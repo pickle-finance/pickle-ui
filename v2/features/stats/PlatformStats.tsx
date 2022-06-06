@@ -1,6 +1,6 @@
 import { PickleModelJson } from "picklefinance-core";
 import { FC, useEffect, useState } from "react";
-import { PlatformData } from "v2/types";
+import { PlatformData, SetFunction } from "v2/types";
 import { ChainSelectData } from "./ChainSelect";
 import { JarSelectData } from "./JarSelect";
 import ChainTableContainer from "./platform/ChainTableContainer";
@@ -8,9 +8,10 @@ import ChartContainer from "./shared/ChartContainer";
 
 const PlatformStats: FC<{
   chain: ChainSelectData;
+  setChain: SetFunction;
   jar: JarSelectData;
   core: PickleModelJson.PickleModelJson | undefined;
-}> = ({ chain, jar, core }) => {
+}> = ({ chain, setChain, jar, core }) => {
   const [dataSeries, setDataSeries] = useState<PlatformData>({} as PlatformData);
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -22,12 +23,12 @@ const PlatformStats: FC<{
   if (Object.keys(chain).length === 0 && Object.keys(jar).length === 0)
     return (
       <>
-        <div className="w-full lg:columns-2 md:columns-1 gap-5">
+        <div className="w-full columns-1 lg:columns-2 gap-5">
           <ChartContainer chart="tvl" dataSeries={dataSeries} />
           <ChartContainer chart="revs" dataSeries={dataSeries} />
         </div>
-        <div className="w-full min-w-min lg:columns-2 md:columns-1 gap-5">
-          <ChainTableContainer chains={dataSeries.chains} />
+        <div className="w-full min-w-min grid grid-cols-1 2xl:grid-cols-2 gap-5">
+          <ChainTableContainer chains={dataSeries.chains} setChain={setChain} />
           <ChartContainer chart="topJars" core={core} />
         </div>
       </>
