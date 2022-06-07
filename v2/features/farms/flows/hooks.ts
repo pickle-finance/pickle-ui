@@ -6,19 +6,18 @@ import { ethers } from "ethers";
 import { RawChain, ChainNetwork } from "picklefinance-core/lib/chain/Chains";
 
 // TODO: use pf-core files when they're included in the distribution
-import { Erc20__factory as Erc20Factory } from "containers/Contracts/factories/Erc20__factory";
-import { Erc20 } from "containers/Contracts/Erc20";
-import { Gauge__factory as GaugeFactory } from "containers/Contracts/factories/Gauge__factory";
-import { Gauge } from "containers/Contracts/Gauge";
-import { Minichef__factory as MinichefFactory } from "containers/Contracts/factories/Minichef__factory";
-import { Minichef } from "containers/Contracts/Minichef";
-import { Jar__factory as JarFactory } from "containers/Contracts/factories/Jar__factory";
-import { JarV3__factory as JarV3Factory } from "containers/Contracts/factories/JarV3__factory";
-import { Jar } from "containers/Contracts/Jar";
-import { JarV3 } from "containers/Contracts/JarV3";
-import { VefxsVault } from "containers/Contracts/VefxsVault";
-import { VefxsVault__factory as VefxsVaultFactory} from "containers/Contracts/factories/VefxsVault__factory";
-
+import { Erc20__factory as Erc20Factory } from "v1/containers/Contracts/factories/Erc20__factory";
+import { Erc20 } from "v1/containers/Contracts/Erc20";
+import { Gauge__factory as GaugeFactory } from "v1/containers/Contracts/factories/Gauge__factory";
+import { Gauge } from "v1/containers/Contracts/Gauge";
+import { Minichef__factory as MinichefFactory } from "v1/containers/Contracts/factories/Minichef__factory";
+import { Minichef } from "v1/containers/Contracts/Minichef";
+import { Jar__factory as JarFactory } from "v1/containers/Contracts/factories/Jar__factory";
+import { JarV3__factory as JarV3Factory } from "v1/containers/Contracts/factories/JarV3__factory";
+import { Jar } from "v1/containers/Contracts/Jar";
+import { JarV3 } from "v1/containers/Contracts/JarV3";
+import { VefxsVault } from "v1/containers/Contracts/VefxsVault";
+import { VefxsVault__factory as VefxsVaultFactory } from "v1/containers/Contracts/factories/VefxsVault__factory";
 
 import { AppDispatch, useAppDispatch } from "v2/store";
 import { Actions } from "./stateMachineUserInput";

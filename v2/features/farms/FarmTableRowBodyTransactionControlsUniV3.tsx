@@ -3,12 +3,10 @@ import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
-import Button from "v2/components/Button";
 import { CoreSelectors, JarWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { getUserAssetDataWithPrices, jarDecimals } from "v2/utils/user";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
-import DepositFlow from "./flows/deposit/DepositFlow";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import ApprovalFlowUniV3 from "./flows/approval/ApprovalFlowUniV3";
@@ -18,6 +16,7 @@ import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
 import { roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
+import { isAcceptingDeposits } from "v2/store/core.helpers";
 
 interface Props {
   jar: JarWithData;
@@ -65,11 +64,12 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             jar={jar}
             visible={!userHasJarAllowance}
             balances={userTokenData}
+            state={isAcceptingDeposits(jar) ? "enabled" : "disabled"}
           />
           {userHasJarAllowance && (
             <div className="grid grid-cols-2 gap-3">
               <DepositFlowUniV3 jar={jar} balances={userTokenData} />
-              <WithdrawFlow jar={jar} balances={userTokenData} isUniV3={true} />
+              <WithdrawFlow asset={jar} balances={userTokenData} isUniV3={true} />
             </div>
           )}
         </div>
@@ -90,12 +90,13 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             storeAttribute="farmAllowance"
             chainName={jar.chain}
             visible={!userHasFarmAllowance}
+            state={isAcceptingDeposits(jar) ? "enabled" : "disabled"}
             type="farm"
           />
           {userHasFarmAllowance && (
             <div className="grid grid-cols-2 gap-3">
-              <StakeFlow jar={jar} balances={userTokenData} />
-              <UnstakeFlow jar={jar} balances={userTokenData} />
+              <StakeFlow asset={jar} balances={userTokenData} />
+              <UnstakeFlow asset={jar} balances={userTokenData} />
             </div>
           )}
         </div>
@@ -106,16 +107,16 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
             {t("v2.farms.earnedToken", { token: "PICKLEs" })}
           </p>
           <div className="flex items-end justify-between">
-                <span className="font-title text-primary font-medium text-base leading-5">
-                  {roundToSignificantDigits(picklePending, 3)}
-                </span>
-                <HarvestFlow
-                  rewarderType="farm"
-                  asset={jar}
-                  harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
-                  network={jar.chain}
-                />
-              </div>
+            <span className="font-title text-primary font-medium text-base leading-5">
+              {roundToSignificantDigits(picklePending, 3)}
+            </span>
+            <HarvestFlow
+              rewarderType="farm"
+              asset={jar}
+              harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
+              network={jar.chain}
+            />
+          </div>
         </div>
         <div className="relative">
           {isUserModelLoading && (

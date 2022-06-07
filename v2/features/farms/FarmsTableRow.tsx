@@ -6,33 +6,30 @@ import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
 import BrineryTableRowHeader from "../brinery/BrineryTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
-import { BrineryWithData, JarWithData } from "v2/store/core";
+import { AssetWithData, BrineryWithData, JarWithData } from "v2/store/core";
 import { isBrinery } from "v2/store/core.helpers";
 
 interface Props {
   simple?: boolean;
-  jar: JarWithData | BrineryWithData;
+  asset: AssetWithData | BrineryWithData;
   dashboard?: boolean;
   userDillRatio: number;
   hideDescription?: boolean;
 }
 
-const FarmsTableRow: FC<Props> = ({ jar, simple, dashboard, hideDescription, userDillRatio }) => {
-  if (isBrinery(jar))
+const FarmsTableRow: FC<Props> = ({ asset, simple, dashboard, hideDescription, userDillRatio }) => {
+  if (isBrinery(asset))
     return (
       <>
         <tr>
           <BrineryTableRowHeader
             open={true}
             simple={simple}
-            brinery={jar as BrineryWithData}
+            brinery={asset}
             userDillRatio={userDillRatio}
           />
         </tr>
-        <FarmsTableRowBody
-          jarOrBrinery={jar as BrineryWithData}
-          hideDescription={hideDescription}
-        />
+        <FarmsTableRowBody asset={asset} hideDescription={hideDescription} />
       </>
     );
   if (simple)
@@ -42,7 +39,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, dashboard, hideDescription, use
           <FarmsTableRowHeader
             open={false}
             simple={simple}
-            jar={jar as JarWithData}
+            asset={asset}
             dashboard={dashboard}
             userDillRatio={userDillRatio}
           />
@@ -64,7 +61,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, dashboard, hideDescription, use
               <FarmsTableRowHeader
                 open={open}
                 simple={simple}
-                jar={jar as JarWithData}
+                asset={asset}
                 userDillRatio={userDillRatio}
               />
             </Disclosure.Button>
@@ -79,10 +76,7 @@ const FarmsTableRow: FC<Props> = ({ jar, simple, dashboard, hideDescription, use
               leaveTo="opacity-0"
             >
               <Disclosure.Panel as="tr">
-                <FarmsTableRowBody
-                  jarOrBrinery={jar as JarWithData}
-                  hideDescription={hideDescription}
-                />
+                <FarmsTableRowBody asset={asset} hideDescription={hideDescription} />
               </Disclosure.Panel>
             </Transition>
           </>

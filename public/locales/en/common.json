@@ -49,7 +49,8 @@
       "metis": "Metis",
       "moonbeam": "Moonbeam",
       "optimism": "Optimism",
-      "fantom": "Fantom"
+      "fantom": "Fantom",
+      "gnosis": "Gnosis"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
@@ -339,7 +340,8 @@
       "max": "Max"
     },
     "connection": {
-      "coinbase": "Coinbase",
+      "clvWallet": "CLV Wallet",
+      "coinbase": "Coinbase Wallet",
       "connectWallet": "Connect wallet",
       "disconnectedWallet": "Please connect your wallet to interact. Pickle supports the following networks: ",
       "errorTitle": "Uh oh, we're in a pickle here!",
@@ -362,7 +364,8 @@
       "pickleToken": "PICKLE token",
       "pendingHarvests": "Pending harvests",
       "pickleTitle": "Pickle Finance",
-      "unclaimedRewards": "Unclaimed rewards"
+      "unclaimedRewards": "Unclaimed rewards",
+      "v1Link": "You're interacting with the new Pickle Finance app. You can always access the original app <1>here</1>."
     },
     "dill": {
       "addPickle": "Add PICKLES",
@@ -376,6 +379,7 @@
       "dillAmount": "DILL amount",
       "dillRewards": "DILL rewards",
       "earnedPickles": "Earned PICKLEs",
+      "earnedRewards": "Earned Rewards",
       "estimatedDill": "Estimated to receive",
       "getDill": "Get DILL",
       "historic": "Historic distributions of PICKLE",
@@ -383,7 +387,13 @@
       "lockingUntil": "Locking until",
       "monthlyDillAmount": "Monthly DILL 🔒",
       "monthlyPickleAmount": "Monthly PICKLEs distributed",
+      "rewards": "Rewards",
       "pickle": "PICKLE",
+      "locked": "locked",
+      "inWallet": "in wallet",
+      "noTimeLockFound": "No Time Lock found",
+      "and": "and",
+      "earnedRewardToolTip": "If you haven't claimed for a long time, multiple claim transactions may be required to fully claim the amount.",
       "pickleBalance": "PICKLE Balance",
       "pickleDillRatio": "PICKLEs per 1 DILL ratio",
       "readMore": "Read more",
@@ -430,7 +440,11 @@
       "weeklyPickleAmount": "Weekly PICKLEs distributed",
       "yourShare": "{{ percentage }} of total DILL"
     },
-    "error": "An unexpected error has occured. Try refreshing the page. If the error persists contact the pickle team on Discord. Simply click the link to the Pickle server below and head to the support channel.",
+    "error": "An unexpected error has occured. Try refreshing the page. If the error persists let us know in the #support channel on Discord.",
+    "error404": {
+      "noPickles": "There aren't any pickles here!",
+      "errorMessage": "This is a 404 error, which means the page you are looking for is no longer here or never existed. Try clicking a link in the sidebar."
+    },
     "farms": {
       "allApproved": "All approved!",
       "approvalBalanceError": "Please get your hands on some deposit tokens first!",
@@ -443,6 +457,7 @@
       "asset": "Asset",
       "baseApr": "Base APR",
       "baseAprTooltip": "This is the base APR of the jar, without the effects of compounding",
+      "bProtocolInfo": "This jar has no fees and kickback rate for LQTY is 100%",
       "chain": "Chain",
       "compounding": "Compounding",
       "compoundingTooltip": "This is the most approximate frequency at which this jar performs re-investments",
@@ -478,11 +493,14 @@
       "liquidity": "Liquidity",
       "loadingCoreData": "Loading core data ...",
       "loadingDocs": "Loading docs ...",
+      "loadingInvestments": "Loading investment details ...",
       "loadingUserModel": "Loading your balances ...",
+      "loadingVotes": "Loading vote data ...",
       "matchAllFilters": "Match all filters",
       "matchingAllFilters": "Showing farms matching all filters",
       "metamaskAdd": "Add to Metamask",
       "network": "Network",
+      "new": "NEW",
       "noResults": "No results",
       "notMatchingAllFilters": "Showing farms matching at least one filter",
       "pagination": "Page {{ current }} of {{ total }}",
@@ -507,7 +525,8 @@
       "withdrawOnly": "This jar is in withdraw-only mode.",
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates",
-      "yourApy": "Your APY: {{ apy }}"
+      "yourApy": "Your APY: {{ apy }}",
+      "autoswap": "Swap deposit tokens to correct ratio"
     },
     "gasPrices": {
       "fast": "Fast",
@@ -519,7 +538,7 @@
       "close": "Close panel",
       "dashboard": "Dashboard",
       "dill": "DILL",
-      "faq": "F.A.Q.",
+      "docs": "Docs",
       "feedback": "Feedback",
       "jarsAndFarms": "Jars & Farms",
       "networkSettings": "Network settings",

@@ -94,6 +94,7 @@ const colors: { [token: string]: string } = {
   nett: "#0058f5",
   okex: "#0d74f5",
   optimism: "#ff0420",
+  gnosis: "#06795b",
   pad: "#6366f1",
   pets: "#f3278d",
   pickle: "#48c148",

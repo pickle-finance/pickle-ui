@@ -2,7 +2,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Contract, BigNumber } from "ethers";
 import { toast, ToastOptions } from "react-toastify";
 import { PickleModelJson } from "picklefinance-core";
-import gaugeProxyAbi from "../../../containers/ABIs/gauge-proxy.json";
+import gaugeProxyAbi from "../../../v1/containers/ABIs/gauge-proxy.json";
 import { findJar } from "v2/store/core.helpers";
 
 const GAUGE_PROXY = "0x2e57627ACf6c1812F99e274d0ac61B786c19E74f";
@@ -26,8 +26,8 @@ const castVoteMainnet = (
     newWeights.push(BigNumber.from((voteWeight * 100).toFixed(0)));
   });
   if (sumVotes(selectedJars) !== 100) {
-    console.log(`Sum of jar vote values (${sumVotes(selectedJars)}) is not equal to 100`);
-    toast.error("Sum of Jar Vote Values Must Equal 100", toastSettings);
+    // console.log(`Sum of jar vote values (${sumVotes(selectedJars)}) is not equal to 100`);
+    toast.error(`Sum of Jar Vote Values (${sumVotes(selectedJars)}) Must Equal 100`, toastSettings);
   } else {
     sendRequestToDillVoter(newTokens, newWeights, provider);
   }

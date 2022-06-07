@@ -15,7 +15,7 @@ const JarWeightTable: FC<{
       ? core && getMainnetPlatformWeights(core)
       : offchainVoteData && getSidechainPlatformWeights(offchainVoteData, chain);
   return (
-    <div className="flex flex-col mb-10 max-h-full">
+    <div className="flex flex-col mb-10 w-full max-h-[400px]">
       <div className="-my-2 overflow-x-auto">
         <div className="py-2 align-middle inline-block min-w-full">
           <table className="min-w-full table-auto border-collapse">
@@ -71,7 +71,7 @@ export const JarWeightTableRow: FC<{
   if (jar.toLowerCase() === tableData[0].jar.toLowerCase()) {
     classNameL = "rounded-tl-xl";
     classNameR = "rounded-tr-xl";
-  } else console.log(jar, tableData[0].jar);
+  }
   if (jar === tableData[tableData.length - 1].jar) {
     classNameL = "rounded-bl-xl";
     classNameR = "rounded-br-xl";
@@ -135,7 +135,6 @@ const getSidechainPlatformWeights = (
   chain: string,
 ): iJarWeights[] => {
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
-  console.log(platformWeights);
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
     if (platformWeights[c].chain === chain) {

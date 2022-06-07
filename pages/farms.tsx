@@ -1,32 +1,23 @@
 import { FC } from "react";
-import { Page } from "@geist-ui/react";
 import { useTranslation } from "next-i18next";
 
-import { Footer } from "../features/Footer/Footer";
-import { GaugeList } from "../features/Gauges/GaugeList";
-import { MiniFarmList } from "../features/MiniFarms/MiniFarmList";
-import { Connection } from "../containers/Connection";
-import { noFarms } from "util/constants";
-import { ChainNetwork } from "picklefinance-core";
+import type { PickleFinancePage } from "v2/types";
+import FarmsTable from "v2/features/farms/FarmsTable";
 
-const Gauges: FC = () => {
-  const { chainName } = Connection.useContainer();
+const Farms: PickleFinancePage = () => {
+  return <FarmsTable />;
+};
+
+const PageTitle: FC = () => {
   const { t } = useTranslation("common");
-  const noFarm = noFarms(chainName);
 
   return (
-    <Page>
-      <Page.Content>
-        <h1 style={{ fontSize: `2rem`, fontFamily: `Source Code Pro` }}>
-          {noFarm ? t("info.jars") : t("info.farms")}
-        </h1>
-        {chainName === ChainNetwork.Ethereum ? <GaugeList /> : <MiniFarmList />}
-      </Page.Content>
-      <Footer />
-    </Page>
+    <h1 className="font-title font-medium text-2xl sm:text-3xl pt-2">{t("v2.nav.jarsAndFarms")}</h1>
   );
 };
 
-export { getStaticProps } from "../util/locales";
+Farms.PageTitle = PageTitle;
 
-export default Gauges;
+export { getStaticProps } from "v1/util/locales";
+
+export default Farms;

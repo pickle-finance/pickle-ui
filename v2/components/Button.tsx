@@ -1,22 +1,25 @@
+import { ExternalLinkIcon } from "@heroicons/react/solid";
 import { HTMLAttributes, FC, MouseEventHandler } from "react";
 
 import { classNames, noop } from "../utils";
 
 export type ButtonSize = "small" | "normal" | "large";
 export type ButtonType = "primary" | "secondary";
-type ButtonState = "enabled" | "disabled";
+export type ButtonState = "enabled" | "disabled";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   onClick?: MouseEventHandler<HTMLAnchorElement>;
   size?: ButtonSize;
   type?: ButtonType;
   state?: ButtonState;
+  href?: string;
 }
 
 const Button: FC<Props> = ({
   onClick = noop,
   children,
   className,
+  href,
   size = "normal",
   type = "primary",
   state = "enabled",
@@ -39,9 +42,12 @@ const Button: FC<Props> = ({
           "inline-flex justify-center items-center border-2 text-sm font-bold shadow-sm focus:outline-none transition duration-300 ease-in-out",
           className,
         )}
+        href={href}
         onClick={onClick}
+        {...(href && { target: "_blank", rel: "noopener" })}
       >
         {children}
+        {href && <ExternalLinkIcon className="text-foreground ml-2 h-4 w-4" aria-hidden="true" />}
       </a>
     </div>
   );

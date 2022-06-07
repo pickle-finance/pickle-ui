@@ -5,7 +5,7 @@ import FarmsTableBody from "./FarmsTableBody";
 import FarmControls from "./FarmControls";
 import FarmsTableHeaderCellSortable from "./FarmsTableHeaderCellSortable";
 import { SortType } from "v2/store/controls";
-import { JarWithData } from "v2/store/core";
+import { AssetWithData } from "v2/store/core";
 import Pagination from "./Pagination";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   simple?: boolean;
   dashboard?: boolean;
   title?: string;
-  singleAsset?: JarWithData;
+  singleAsset?: AssetWithData;
   hideDescription?: boolean;
 }
 

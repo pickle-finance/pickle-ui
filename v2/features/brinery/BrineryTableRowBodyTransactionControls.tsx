@@ -11,6 +11,7 @@ import ApprovalFlow from "../farms/flows/approval/ApprovalFlow";
 import DepositFlow from "../farms/flows/deposit/DepositFlow";
 import { roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "../farms/flows/harvest/HarvestFlow";
+import { isAcceptingDeposits } from "v2/store/core.helpers";
 
 interface Props {
   brinery: BrineryWithData;
@@ -50,11 +51,12 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
               storeAttribute="allowance"
               chainName={brinery.chain}
               visible={!userHasBrineryAllowance}
+              state={isAcceptingDeposits(brinery) ? "enabled" : "disabled"}
               type="brinery"
             />
             {userHasBrineryAllowance && (
               <div>
-                <DepositFlow jarOrBrinery={brinery} balances={userBrinery} type="brinery" />
+                <DepositFlow asset={brinery} balances={userBrinery} type="brinery" />
               </div>
             )}
           </div>

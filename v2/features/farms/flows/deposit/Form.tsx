@@ -1,18 +1,23 @@
 import { ChangeEvent, FC, useState } from "react";
 import { useTranslation } from "next-i18next";
+import { BigNumber } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 import Button from "v2/components/Button";
 import ErrorMessage from "../Error";
 import AmountSteps from "v2/components/AmountSteps";
 
 interface Props {
-  balance: number;
+  balance: string;
+  decimals: number;
   nextStep: (amount: string) => void;
 }
 
-const Form: FC<Props> = ({ balance, nextStep }) => {
+const Form: FC<Props> = ({ balance, decimals, nextStep }) => {
   const { t } = useTranslation("common");
-  const [amount, setAmount] = useState<string>(balance.toString());
+
+  const displayBalanceStr = formatUnits(balance, decimals);
+  const [amount, setAmount] = useState<string>(displayBalanceStr);
 
   const invalidAmountError = Error(t("v2.farms.invalidAmount"));
   const [error, setError] = useState<Error | undefined>();
@@ -23,8 +28,9 @@ const Form: FC<Props> = ({ balance, nextStep }) => {
       return;
     }
 
-    const amount = parseFloat(value);
-    const isValid = amount > 0 && amount <= balance;
+    const valueBN = parseUnits(value, decimals);
+
+    const isValid = valueBN.gt(0) && valueBN.lte(BigNumber.from(balance));
 
     isValid ? setError(undefined) : setError(invalidAmountError);
   };
@@ -50,7 +56,7 @@ const Form: FC<Props> = ({ balance, nextStep }) => {
             {t("v2.balances.amount")}
           </p>
           <p className="font-bold text-foreground-alt-300 text-xs tracking-normal leading-4">
-            {t("v2.balances.balance")}: {balance}
+            {t("v2.balances.balance")}: {displayBalanceStr}
           </p>
         </div>
 
@@ -64,8 +70,8 @@ const Form: FC<Props> = ({ balance, nextStep }) => {
           <Button
             size="small"
             onClick={() => {
-              setAmount(balance.toString());
-              validate(balance.toString());
+              setAmount(displayBalanceStr);
+              validate(displayBalanceStr);
             }}
           >
             {t("v2.balances.max")}
@@ -74,7 +80,17 @@ const Form: FC<Props> = ({ balance, nextStep }) => {
       </div>
       <div className="mb-5">
         <AmountSteps
-          setTransactionAmount={(amountShare) => setAmount((balance * amountShare).toString())}
+          setTransactionAmount={(amountShare) =>
+            setAmount(
+              formatUnits(
+                BigNumber.from(balance)
+                  .mul((amountShare * 100).toString())
+                  .div(100)
+                  .toString(),
+                decimals,
+              ),
+            )
+          }
         />
       </div>
       <ErrorMessage error={error} />

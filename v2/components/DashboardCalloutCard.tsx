@@ -3,24 +3,38 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useTranslation, Trans } from "next-i18next";
 import { ArrowRightIcon } from "@heroicons/react/outline";
+import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
+
 import { formatPercentage } from "../utils";
+import { useAppDispatch } from "v2/store";
 import { CoreSelectors } from "v2/store/core";
+import { setSort, SortType } from "v2/store/controls";
 import MoreInfo from "./MoreInfo";
 
 const DashboardCalloutCard: FC = () => {
   const { t } = useTranslation("common");
   let coreMaxApy = useSelector(CoreSelectors.selectMaxApy);
+  const dispatch = useAppDispatch();
 
   if (!coreMaxApy)
     coreMaxApy = {
       name: "",
       chain: "Ethereum",
       apy: 0,
+      tokens: [],
+      protocol: AssetProtocol.UNISWAP,
     };
 
   return (
-    <Link href="/v2/farms" passHref>
-      <div className="group bg-background-light rounded-xl border border-foreground-alt-500 shadow cursor-pointer transition duration-300 ease-in-out hover:bg-background-lightest">
+    <Link href="/farms" passHref>
+      <div
+        className="group bg-background-light rounded-xl border border-foreground-alt-500 shadow cursor-pointer transition duration-300 ease-in-out hover:bg-background-lightest"
+        onClick={() => {
+          coreMaxApy?.tokens &&
+            coreMaxApy.apy &&
+            dispatch(setSort({ type: SortType.Apy, direction: "desc" }));
+        }}
+      >
         <div className="flex justify-between px-5 py-4 sm:px-8 sm:py-5">
           <div className="pr-4">
             <p className="font-body font-bold text-lg sm:text-xl leading-6 mb-1">

@@ -23,20 +23,20 @@ const ChartContainer: FC<{
 
   return (
     <div
-      className={`w-full grid grid-rows-7 rounded-xl border border-foreground-alt-500 p-4 sm:p-8 mb-10`}
+      className={`grid grid-rows-7 w-full min-w-min rounded-xl border border-foreground-alt-500 p-4 sm:p-8 mb-10`}
     >
       {isChainWeight ? (
-        <div className="row-span-1">
+        <div className="row-auto">
           <h2 className="font-body font-bold text-xl">{t("v2.dill.vote.charts.chainWeight")}</h2>
           <TableSwitch showTable={showChainTable} setShowTable={setShowChainTable} />
         </div>
       ) : (
-        <div className="row-span-1">
+        <div className="row-auto">
           <h2 className="font-body font-bold text-xl">{t("v2.dill.vote.charts.jarWeight")}</h2>
           <TableSwitch showTable={showJarTable} setShowTable={setShowJarTable} />
         </div>
       )}
-      <div className="row-start-2">
+      <div className="row-auto">
         {!isChainWeight && core && (
           <ChainSelectSmall
             core={core}
@@ -45,7 +45,7 @@ const ChartContainer: FC<{
           />
         )}
       </div>
-      <aside className="h-[450px] w-full row-start-7 px-3 py-10">
+      <aside className="sm:h-[200px] md:h-[300px] lg:h-[400px] xl:h-[500px] w-full row-auto px-3 py-10">
         {isChainWeight ? (
           <>
             {!showChainTable ? (

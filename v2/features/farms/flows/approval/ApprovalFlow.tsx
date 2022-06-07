@@ -11,7 +11,7 @@ import { ChainNetwork, Chains } from "picklefinance-core";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
-import Button from "v2/components/Button";
+import Button, { ButtonState } from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { stateMachine, Actions, States } from "../stateMachineNoUserInput";
 import AwaitingConfirmationNoUserInput from "../AwaitingConfirmationNoUserInput";
@@ -21,7 +21,7 @@ import Failure from "../Failure";
 import { useTokenContract, useTransaction } from "../hooks";
 import { AppDispatch } from "v2/store";
 import { UserActions } from "v2/store/user";
-import { ApprovalEvent } from "containers/Contracts/Erc20";
+import { ApprovalEvent } from "v1/containers/Contracts/Erc20";
 import { eventsByName } from "../utils";
 
 type ApprovalType = "jar" | "farm" | "dill" | "brinery";
@@ -34,6 +34,7 @@ interface Props {
   storeAttribute: keyof UserTokenData | keyof IUserDillStats | keyof UserBrineryData;
   chainName: ChainNetwork;
   visible: boolean;
+  state: ButtonState;
   type: ApprovalType;
 }
 
@@ -44,6 +45,7 @@ const ApprovalFlow: FC<Props> = ({
   spenderAddress,
   storeAttribute,
   chainName,
+  state,
   visible,
   type,
 }) => {
@@ -110,7 +112,11 @@ const ApprovalFlow: FC<Props> = ({
 
   return (
     <>
-      {visible && <Button onClick={openModal}>{t("v2.actions.approve")}</Button>}
+      {visible && (
+        <Button onClick={openModal} state={state}>
+          {t("v2.actions.approve")}
+        </Button>
+      )}
       <Modal
         isOpen={isModalOpen}
         closeModal={closeModal}

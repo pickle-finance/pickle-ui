@@ -1,15 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import { PickleCore } from "containers/Jars/usePickleCore";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
+import { PickleModelJson } from "picklefinance-core";
 
 // TODO: use pf-core files when they're included in the distribution
-import { Dill__factory as DillFactory } from "containers/Contracts/factories/Dill__factory";
-import { Dill } from "containers/Contracts/Dill";
-import { FeeDistributor__factory as FeeDistributorFactory } from "containers/Contracts/factories/FeeDistributor__factory";
-import { FeeDistributor } from "containers/Contracts/FeeDistributor";
-import { PickleModelJson } from "picklefinance-core";
+import { Dill__factory as DillFactory } from "v1/containers/Contracts/factories/Dill__factory";
+import { Dill } from "v1/containers/Contracts/Dill";
+import { FeeDistributorV2__factory as FeeDistributorFactoryV2 } from "v1/containers/Contracts/factories/FeeDistributorV2__factory";
+import { FeeDistributor__factory as FeeDistributorFactory } from "v1/containers/Contracts/factories/FeeDistributor__factory";
+import { FeeDistributorV2 } from "v1/containers/Contracts/FeeDistributorV2";
+import { FeeDistributor } from "v1/containers/Contracts/FeeDistributor";
 
 export const useDillContract = (address: string) => {
   const { library } = useWeb3React<Web3Provider>();
@@ -21,6 +22,18 @@ export const useDillContract = (address: string) => {
   }, [library, address]);
 
   return DillContract;
+};
+
+export const useDistributorV2Contract = (address: string) => {
+  const { library } = useWeb3React<Web3Provider>();
+
+  const DistributorContract = useMemo<FeeDistributorV2 | undefined>(() => {
+    if (!library) return;
+
+    return FeeDistributorFactoryV2.connect(address, library.getSigner());
+  }, [library, address]);
+
+  return DistributorContract;
 };
 
 export const useDistributorContract = (address: string) => {
