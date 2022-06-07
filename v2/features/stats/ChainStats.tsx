@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import type { ChainData } from "v2/types";
+import type { ChainData, SetFunction } from "v2/types";
 
 import ChartContainer from "v2/features/stats/shared/ChartContainer";
 import AssetTableContainer from "v2/features/stats/chain/AssetTableContainer";
@@ -17,7 +17,8 @@ const ChainStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   chain: ChainSelectData;
   jar: JarSelectData;
-}> = ({ core, chain, jar }) => {
+  setJar: SetFunction;
+}> = ({ core, chain, jar, setJar }) => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const [tokenPctChangeData, setTokenPctChangeData] = useState<iBigMoverTableData[]>([]);
   const [tvlChange, setTvlChange] = useState<iBigMoverTableData[]>([]);
@@ -52,7 +53,7 @@ const ChainStats: FC<{
           <ChartContainer chart="revs" dataSeries={chainData} />
         </div>
         <div className="w-full min-w-min grid grid-cols-1 2xl:grid-cols-2 gap-5">
-          <AssetTableContainer chainData={chainData} core={core} />
+          <AssetTableContainer chainData={chainData} core={core} chain={chain} setJar={setJar} />
           <ChartContainer chart="topJars" core={core} chain={chain.value} />
         </div>
       </>

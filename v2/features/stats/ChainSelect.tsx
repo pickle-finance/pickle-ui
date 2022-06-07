@@ -29,7 +29,7 @@ const ChainSelect: FC<{
 
   return (
     <Select
-      className="w-1/3 mt-5 mb-5 z-auto"
+      className="w-1/3 my-5 z-auto"
       placeholder="Filter By Chain"
       styles={styles}
       onChange={(s) => chainChange(s)}

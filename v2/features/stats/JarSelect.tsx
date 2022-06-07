@@ -12,18 +12,10 @@ export const JarSelect: FC<{
 }> = ({ core, chain, jar, setJar }) => {
   const [options, setOptions] = useState<JarSelectData[]>([]);
 
-  const jarChange = (jar: JarSelectData): void => {
-    setJar(jar);
-  };
-
   useEffect(() => {
     const getData = async () => {
       if (core) {
-        const jarsOnNetwork = core?.assets?.jars.filter((jar) => {
-          return jar.chain === (chain.value as ChainNetwork);
-        });
-        const activeJarsOnNetwork = jarsOnNetwork.filter(filterJars);
-        const options = activeJarsOnNetwork.map(jarsToOptions);
+        const options = coreToOptions(core, chain);
         setOptions(options);
       }
     };
@@ -34,22 +26,36 @@ export const JarSelect: FC<{
   if (Object.keys(chain).length > 0)
     return (
       <Select
-        className="w-1/3 mt-5 mb-5"
+        className="w-1/3 my-5"
         placeholder={"Filter By Jar"}
         styles={styles}
         isSearchable={true}
-        onChange={(s) => jarChange(s as JarSelectData)}
+        onChange={(s) => setJar(s as JarSelectData)}
         value={Object.keys(jar).length > 0 ? jar : ""}
         options={options}
       />
     );
-  return <></>;
+  return null;
 };
 
-const jarsToOptions = (data: JarDefinition): JarSelectData => ({
-  value: data.details && data.details.apiKey ? data.details.apiKey : "",
-  label: data.details ? `${data.id} (${data.details.apiKey})` : data.id,
-});
+export const coreToOptions = (
+  core: PickleModelJson.PickleModelJson | undefined,
+  chain: ChainSelectData,
+): JarSelectData[] => {
+  const jarsOnNetwork =
+    core && core.assets
+      ? core.assets.jars.filter((jar) => jar.chain === (chain.value as ChainNetwork))
+      : [];
+  const jars = jarsOnNetwork.filter(filterJars);
+  const options: JarSelectData[] = [];
+  for (let i = 0; i < jars.length; i++) {
+    options.push({
+      value: jars[i].details && jars[i].details.apiKey ? jars[i].details.apiKey : "",
+      label: jars[i].details ? `${jars[i].id} (${jars[i].details.apiKey})` : jars[i].id,
+    });
+  }
+  return options;
+};
 
 const styles: StylesConfig<JarSelectData | String, false> = {
   clearIndicator: (styles) => ({

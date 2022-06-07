@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { FC } from "react";
 import { Network } from "v2/features/connection/networks";
 import { PlatformChainCoreData, SetFunction } from "v2/types";

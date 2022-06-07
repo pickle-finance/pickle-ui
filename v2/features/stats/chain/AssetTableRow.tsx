@@ -1,12 +1,19 @@
 import Link from "next/link";
+import { PickleModelJson } from "picklefinance-core";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { FC } from "react";
-import { AssetChangeData } from "v2/types";
+import { AssetChangeData, SetFunction } from "v2/types";
 import { formatDollars } from "v2/utils";
+import { ChainSelectData } from "../ChainSelect";
+import { coreToOptions } from "../JarSelect";
 
 const AssetRow: FC<{
   assetKey: string;
   asset: AssetChangeData;
-}> = ({ assetKey, asset }) => {
+  setJar: SetFunction;
+  core: PickleModelJson.PickleModelJson | undefined;
+  chain: ChainSelectData;
+}> = ({ assetKey, asset, setJar, core, chain }) => {
   const assetApyMin =
     asset && asset.now && asset.now.jarApy && asset.now.farmMinApy
       ? (asset.now.jarApy + asset.now.farmMinApy).toFixed(3)
@@ -26,7 +33,7 @@ const AssetRow: FC<{
   return (
     <tr className="border border-foreground-alt-400">
       <td className="text-left text-sm lg:pl-8 sm:pl-4 py-2 pr-2">
-        {formatAssetLink(assetKey.toLowerCase())}
+        <JarControl jarKey={assetKey} setJar={setJar} chain={chain} core={core} />
       </td>
       <td className="text-left text-sm p-2">
         {asset && asset.now ? formatDollars(asset.now.value) : "-"}
@@ -39,10 +46,25 @@ const AssetRow: FC<{
   );
 };
 
-const formatAssetLink = (jarKey: string): JSX.Element => (
-  <Link href={`./jar?jar=${jarKey}`}>
-    <a className="text-accent-light hover:underline">{jarKey.toUpperCase()}</a>
-  </Link>
-);
+const JarControl: FC<{
+  jarKey: string;
+  setJar: SetFunction;
+  chain: ChainSelectData;
+  core: PickleModelJson.PickleModelJson | undefined;
+}> = ({ jarKey, setJar, chain, core }) => {
+  const options = coreToOptions(core, chain);
+  const thisJar = options.find((j) => j.value === jarKey);
+
+  if (thisJar)
+    return (
+      <a
+        className="text-accent-light cursor-pointer hover:underline"
+        onClick={() => setJar(thisJar)}
+      >
+        {thisJar.label.toUpperCase()}
+      </a>
+    );
+  return <a className="text-accent-light cursor-pointer hover:underline">{jarKey.toUpperCase()}</a>;
+};
 
 export default AssetRow;
