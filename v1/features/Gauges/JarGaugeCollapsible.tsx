@@ -179,10 +179,6 @@ export const JAR_DEPOSIT_TOKEN_TO_ICON: {
   "0x38EA452219524Bb87e18dE1C24D3bB59510BD783": (
     <LpIcon swapIconSrc={"/protocols/stargate.png"} tokenIconSrc={"/tokens/usdt.png"} />
   ),
-  // TEMPLE FRAX
-  "0x6021444f1706f15465bEe85463BCc7d7cC17Fc03": (
-    <LpIcon swapIconSrc={"/protocols/temple.png"} tokenIconSrc={"/frax.webp"} />
-  ),
 
   // Polygon Jars
 
@@ -477,7 +473,7 @@ export const JarGaugeCollapsible: FC<{
 
   const depositBalance = zapBalanceStr
     ? balanceRaw
-    : BigNumber.from(balance).mul(DECIMALS_SCALE(depositTokenDecimals));
+    : balance.mul(DECIMALS_SCALE(depositTokenDecimals));
 
   const isZap = inputToken != zapInputTokens[0].symbol;
 
