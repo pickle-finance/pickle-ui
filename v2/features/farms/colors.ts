@@ -121,6 +121,7 @@ const colors: { [token: string]: string } = {
   sushi: "#e45ca9",
   sushiswap: "#e45ca9",
   tethys: "#cbb174",
+  temple: "#bd7a4f",
   treeb: "#343ede",
   tri: "#ec0052",
   trisolaris: "#ec0052",
