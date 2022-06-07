@@ -14,7 +14,7 @@ const BreadCrumbs: FC<{
   return (
     <div className="flex">
       <h3
-        className="lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer"
+        className="lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer hover:text-accent"
         onClick={() => {
           if (chain && jar) {
             setChain({} as ChainSelectData);
@@ -29,7 +29,7 @@ const BreadCrumbs: FC<{
         <>
           <p className="px-2">{">"}</p>
           <h3
-            className="lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer"
+            className="lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer hover:text-accent"
             onClick={() => {
               setJar("");
             }}

@@ -34,21 +34,21 @@ const JarStats: FC<{
   if (chain && Object.keys(chain).length > 0 && jar && Object.keys(jar).length > 0)
     return (
       <>
-        <div className="mb-5">
+        <div className="mb-3">
           {asset && asset.depositTokensInJar && (
             <FarmsTable singleAsset={asset} hideDescription={true} />
           )}
         </div>
         <ChartContainer jarData={jarData} />
-        <br />
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
-        <br />
-        {jarData && jarData.revenueExpenses && jarData.revenueExpenses.recentHarvests[0] && (
-          <RevTableContainer
-            revs={jarData.revenueExpenses}
-            pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
-          />
-        )}
+        {jarData &&
+          jarData.revenueExpenses &&
+          jarData.revenueExpenses.recentHarvests.length > 0 && (
+            <RevTableContainer
+              revs={jarData.revenueExpenses}
+              pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
+            />
+          )}
       </>
     );
   return null;

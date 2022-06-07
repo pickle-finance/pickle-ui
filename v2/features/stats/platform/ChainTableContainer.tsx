@@ -18,8 +18,10 @@ const ChainTableContainer: FC<{
       )}
     >
       <h2 className="font-body font-bold text-xl p-4">{t("v2.stats.platform.chainTableTitle")}</h2>
-      <div className="max-h-[550px] overflow-y-auto p-4">
-        <ChainTable chains={chains} setChain={setChain} />
+      <div className="p-2 pb-4">
+        <div className="max-h-[550px] overflow-y-auto p-2">
+          <ChainTable chains={chains} setChain={setChain} />
+        </div>
       </div>
     </div>
   );

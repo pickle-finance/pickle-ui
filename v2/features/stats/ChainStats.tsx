@@ -52,7 +52,7 @@ const ChainStats: FC<{
           <ChartContainer chart="tvl" dataSeries={chainData} />
           <ChartContainer chart="revs" dataSeries={chainData} />
         </div>
-        <div className="w-full min-w-min grid grid-cols-1 2xl:grid-cols-2 gap-5">
+        <div className="w-full min-w-min grid grid-cols-1 xl:grid-cols-2 gap-5">
           <AssetTableContainer chainData={chainData} core={core} chain={chain} setJar={setJar} />
           <ChartContainer chart="topJars" core={core} chain={chain.value} />
         </div>

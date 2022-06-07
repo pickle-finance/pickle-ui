@@ -21,18 +21,19 @@ const PlatformStats: FC<{
   }, []);
 
   if (Object.keys(chain).length === 0 && Object.keys(jar).length === 0)
-    return (
-      <>
-        <div className="w-full columns-1 lg:columns-2 gap-5">
-          <ChartContainer chart="tvl" dataSeries={dataSeries} />
-          <ChartContainer chart="revs" dataSeries={dataSeries} />
-        </div>
-        <div className="w-full min-w-min grid grid-cols-1 2xl:grid-cols-2 gap-5">
-          <ChainTableContainer chains={dataSeries.chains} setChain={setChain} />
-          <ChartContainer chart="topJars" core={core} />
-        </div>
-      </>
-    );
+    if (Object.keys(dataSeries).length > 0)
+      return (
+        <>
+          <div className="w-full columns-1 lg:columns-2 gap-5">
+            <ChartContainer chart="tvl" dataSeries={dataSeries} />
+            <ChartContainer chart="revs" dataSeries={dataSeries} />
+          </div>
+          <div className="w-full min-w-min grid grid-cols-1 xl:grid-cols-2 gap-5">
+            <ChainTableContainer chains={dataSeries.chains} setChain={setChain} />
+            <ChartContainer chart="topJars" core={core} />
+          </div>
+        </>
+      );
   return null;
 };
 

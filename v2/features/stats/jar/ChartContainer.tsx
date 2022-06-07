@@ -28,7 +28,7 @@ const ChartContainer: FC<{ jarData: JarChartData }> = ({ jarData }) => {
   ];
 
   return (
-    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8">
+    <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow p-4 sm:p-8 mb-5">
       <h2 className="font-body font-bold text-xl">
         {jarData && jarData.apiKey && jarData.apiKey.toUpperCase()}
       </h2>
