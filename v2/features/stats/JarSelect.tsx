@@ -40,11 +40,13 @@ export const JarSelect: FC<{
 
 export const coreToOptions = (
   core: PickleModelJson.PickleModelJson | undefined,
-  chain: ChainSelectData,
+  chain?: ChainSelectData,
 ): JarSelectData[] => {
   const jarsOnNetwork =
     core && core.assets
-      ? core.assets.jars.filter((jar) => jar.chain === (chain.value as ChainNetwork))
+      ? chain
+        ? core.assets.jars.filter((jar) => jar.chain === (chain.value as ChainNetwork))
+        : core.assets.jars
       : [];
   const jars = jarsOnNetwork.filter(filterJars);
   const options: JarSelectData[] = [];

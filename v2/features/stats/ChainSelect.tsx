@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Select, {
   StylesConfig,
   components,
@@ -22,7 +22,7 @@ const ChainSelect: FC<{
   const networks = useSelector(CoreSelectors.selectNetworks);
   const options = networksToOptions(networks);
 
-  const chainChange = (c: SingleValue<ChainSelectData>): void => {
+  const chainChange = (c: SingleValue<ChainSelectData | String>): void => {
     setChain(c);
     setJar({} as JarSelectData);
   };
