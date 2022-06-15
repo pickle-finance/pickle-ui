@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import Select, { StylesConfig } from "react-select";
+import Select, { SingleValue, StylesConfig } from "react-select";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { ChainSelectData } from "./ChainSelect";
@@ -11,6 +11,12 @@ export const JarSelect: FC<{
   setJar: SetJarFunction;
 }> = ({ core, chain, jar, setJar }) => {
   const [options, setOptions] = useState<JarSelectData[]>([]);
+
+  const jarChange = (j: SingleValue<JarSelectData | String>): void => {
+    const jar = (j as JarSelectData).value;
+    window.history.replaceState(0, "", `/stats?jar=${jar}`);
+    setJar(j as JarSelectData);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -30,7 +36,7 @@ export const JarSelect: FC<{
         placeholder={"Filter By Jar"}
         styles={styles}
         isSearchable={true}
-        onChange={(s) => setJar(s as JarSelectData)}
+        onChange={(j) => jarChange(j)}
         value={Object.keys(jar).length > 0 ? jar : ""}
         options={options}
       />

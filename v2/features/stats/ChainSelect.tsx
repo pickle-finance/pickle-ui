@@ -23,6 +23,8 @@ const ChainSelect: FC<{
   const options = networksToOptions(networks);
 
   const chainChange = (c: SingleValue<ChainSelectData | String>): void => {
+    const chain = (c as ChainSelectData).value;
+    window.history.replaceState(0, "", `/stats?chain=${chain}`);
     setChain(c);
     setJar({} as JarSelectData);
   };
