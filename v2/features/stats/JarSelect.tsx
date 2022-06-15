@@ -2,17 +2,40 @@ import { FC, useEffect, useState } from "react";
 import Select, { SingleValue, StylesConfig } from "react-select";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
-import { ChainSelectData } from "./ChainSelect";
-import { NextRouter } from "next/router";
+import { ChainSelectData, networksToOptions } from "./ChainSelect";
+import { NextRouter, useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { CoreSelectors } from "v2/store/core";
 
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   chain: ChainSelectData;
   jar: JarSelectData;
   setJar: SetJarFunction;
-  router: NextRouter;
-}> = ({ core, chain, jar, setJar, router }) => {
+  setChain: SetChainFunction;
+}> = ({ core, chain, jar, setJar, setChain }) => {
   const [options, setOptions] = useState<JarSelectData[]>([]);
+  const networks = useSelector(CoreSelectors.selectNetworks);
+  const chainOptions: ChainSelectData[] = networksToOptions(networks);
+  const router: NextRouter = useRouter();
+
+  const urlJar: string = Array.isArray(router.query.jar)
+    ? router.query.jar[0]
+    : router.query.jar || "";
+
+  if (router.isReady && urlJar !== "" && Object.keys(jar).length === 0) {
+    const thisJar = core?.assets.jars.find((j) => j.details?.apiKey === urlJar);
+    for (let n = 0; n < chainOptions.length; n++) {
+      if (thisJar && chainOptions[n].value === thisJar.chain) {
+        setChain(chainOptions[n]);
+      }
+    }
+    for (let n = 0; n < options.length; n++) {
+      if (thisJar && options[n].value === urlJar) {
+        setJar(options[n]);
+      }
+    }
+  }
 
   const jarChange = (j: SingleValue<JarSelectData | String>): void => {
     const jar = (j as JarSelectData).value;
@@ -118,5 +141,6 @@ export interface JarSelectData {
 }
 
 type SetJarFunction = (property: JarSelectData) => void;
+type SetChainFunction = (property: ChainSelectData) => void;
 
 export default JarSelect;

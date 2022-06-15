@@ -13,17 +13,27 @@ import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 import { Network } from "../connection/networks";
 import { JarSelectData } from "./JarSelect";
-import { NextRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 
 const ChainSelect: FC<{
   chain: ChainSelectData;
   setChain: SetFunction;
   setJar: SetFunction;
-  router: NextRouter;
-}> = ({ chain, setChain, setJar, router }) => {
+}> = ({ chain, setChain, setJar }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
   const options = networksToOptions(networks);
+  const router: NextRouter = useRouter();
 
+  const urlChain: string = Array.isArray(router.query.chain)
+    ? router.query.chain[0]
+    : router.query.chain || "";
+  if (router.isReady && urlChain !== "" && Object.keys(chain).length === 0) {
+    for (let n = 0; n < options.length; n++) {
+      if (options[n].value === urlChain) {
+        setChain(options[n]);
+      }
+    }
+  }
   const chainChange = (c: SingleValue<ChainSelectData | String>): void => {
     const chain = (c as ChainSelectData).value;
     router.push(`/stats?chain=${chain}`);
