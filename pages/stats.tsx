@@ -53,11 +53,11 @@ const Stats: PickleFinancePage = () => {
   return (
     <div className="block lg:flex mb-8 sm:mb-10">
       <div className="w-full mb-4">
-        <Breadcrumbs chain={chain} jar={jar} setChain={setChain} setJar={setJar} />
+        <Breadcrumbs chain={chain} jar={jar} setChain={setChain} setJar={setJar} router={router} />
         {router.isReady && (
           <div className="flex gap-5">
-            <ChainSelect chain={chain} setChain={setChain} setJar={setJar} />
-            <JarSelect core={core} chain={chain} jar={jar} setJar={setJar} />
+            <ChainSelect chain={chain} setChain={setChain} setJar={setJar} router={router} />
+            <JarSelect core={core} chain={chain} jar={jar} setJar={setJar} router={router} />
           </div>
         )}
         <PlatformStats chain={chain} jar={jar} core={core} setChain={setChain} />

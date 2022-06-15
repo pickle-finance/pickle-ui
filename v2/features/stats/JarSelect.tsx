@@ -3,18 +3,20 @@ import Select, { SingleValue, StylesConfig } from "react-select";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { AssetEnablement, JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { ChainSelectData } from "./ChainSelect";
+import { NextRouter } from "next/router";
 
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   chain: ChainSelectData;
   jar: JarSelectData;
   setJar: SetJarFunction;
-}> = ({ core, chain, jar, setJar }) => {
+  router: NextRouter;
+}> = ({ core, chain, jar, setJar, router }) => {
   const [options, setOptions] = useState<JarSelectData[]>([]);
 
   const jarChange = (j: SingleValue<JarSelectData | String>): void => {
     const jar = (j as JarSelectData).value;
-    window.history.replaceState(0, "", `/stats?jar=${jar}`);
+    router.push(`/stats?jar=${jar}`);
     setJar(j as JarSelectData);
   };
 

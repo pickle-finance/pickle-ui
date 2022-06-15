@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import Select, {
   StylesConfig,
   components,
@@ -13,18 +13,20 @@ import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 import { Network } from "../connection/networks";
 import { JarSelectData } from "./JarSelect";
+import { NextRouter } from "next/router";
 
 const ChainSelect: FC<{
   chain: ChainSelectData;
   setChain: SetFunction;
   setJar: SetFunction;
-}> = ({ chain, setChain, setJar }) => {
+  router: NextRouter;
+}> = ({ chain, setChain, setJar, router }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
   const options = networksToOptions(networks);
 
   const chainChange = (c: SingleValue<ChainSelectData | String>): void => {
     const chain = (c as ChainSelectData).value;
-    window.history.replaceState(0, "", `/stats?chain=${chain}`);
+    router.push(`/stats?chain=${chain}`);
     setChain(c);
     setJar({} as JarSelectData);
   };

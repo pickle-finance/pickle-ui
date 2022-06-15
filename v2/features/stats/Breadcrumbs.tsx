@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import { NextRouter, useRouter } from "next/router";
 import { FC } from "react";
 import { toTitleCase } from "v2/utils";
 import { ChainSelectData } from "./ChainSelect";
@@ -9,21 +10,21 @@ const BreadCrumbs: FC<{
   jar: JarSelectData;
   setChain: SetFunction;
   setJar: SetFunction;
-}> = ({ chain, jar, setChain, setJar }) => {
+  router: NextRouter;
+}> = ({ chain, jar, setChain, setJar, router }) => {
   const { t } = useTranslation("common");
   return (
     <div className="flex">
       <h3
-        // href={`/stats`}
         className="lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer hover:text-accent"
         onClick={() => {
           if (chain && jar) {
-            window.history.replaceState(undefined, "", "/stats");
             setChain({} as ChainSelectData);
             setJar("");
+            router.push("/stats");
           } else if (chain !== ({} as ChainSelectData)) {
-            window.history.replaceState(undefined, "", "/stats");
             setChain({});
+            router.push("/stats");
           } else return;
         }}
       >
@@ -33,11 +34,10 @@ const BreadCrumbs: FC<{
         <>
           <p className="px-2">{">"}</p>
           <h3
-            // href={`/stats?chain=${chain.value}`}
             className="lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer hover:text-accent"
             onClick={() => {
               setJar("");
-              window.history.replaceState(0, "", `/stats?chain=${chain.value}`);
+              router.push(`/stats?chain=${chain.value}`);
             }}
           >
             {toTitleCase(chain.label)}
