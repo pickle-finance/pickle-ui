@@ -40,11 +40,12 @@ const TopJarsPieChart: FC<{ core: PickleModelJson.PickleModelJson; chain?: Chain
           innerRadius={100}
           strokeWidth={chartData.length >= 1 ? 1 : 10}
           stroke={"rgb(var(--color-foreground-alt-100))"}
+          isAnimationActive={false}
         >
           {chartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colorPicker(chartData, entry, index)} />
           ))}
-          <LabelList dataKey="jar" position="outside" offset={20} formatter={undefined} />
+          <LabelList dataKey="jar" position="outside" offset={20} />
         </Pie>
         <Tooltip
           content={({ active, payload }) => <CustomTooltip active={active} payload={payload} />}
@@ -55,23 +56,15 @@ const TopJarsPieChart: FC<{ core: PickleModelJson.PickleModelJson; chain?: Chain
 };
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, tvl, name }: iLabel) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, tvl }: iLabel) => {
   const radius = outerRadius * 1.1;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
-    <>
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="bottom"
-      >
-        {formatDollars(tvl)}
-      </text>
-    </>
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? "start" : "end"} dominantBaseline="bottom">
+      {formatDollars(tvl)}
+    </text>
   );
 };
 
