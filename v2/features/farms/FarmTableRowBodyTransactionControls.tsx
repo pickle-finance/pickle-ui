@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
 
 import { useAppSelector } from "v2/store";
-import { AssetWithData } from "v2/store/core";
+import { AssetWithData, CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { jarDecimals } from "v2/utils/user";
 import { jarSupportsStaking } from "v2/store/core.helpers";
@@ -14,21 +14,77 @@ import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
 import { classNames, roundToSignificantDigits } from "v2/utils";
+import { useSelector } from "react-redux";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
 import { useAccount } from "v2/hooks";
+import ZapFlow from "./flows/zap/ZapFlow";
+import { getNativeName } from "./flows/utils";
+import { ChainNetwork, PickleModelJson } from "picklefinance-core";
+import { ChainNativetoken, UserTokenData } from "picklefinance-core/lib/client/UserModel";
 
 interface Props {
   asset: AssetWithData;
 }
 
+const getZapTokens = (
+  userNativeData: ChainNativetoken | undefined,
+  userTokenData: UserTokenData | undefined,
+  asset: AssetWithData,
+  core: PickleModelJson.PickleModelJson | undefined,
+): any => {
+  const componentTokens = userTokenData?.componentTokenBalances || undefined;
+
+  const jarChain = core?.chains.find((chain) => chain.network === asset.chain);
+
+  const nativeName = jarChain ? getNativeName(jarChain.gasTokenSymbol) : undefined;
+  const wrappedName = nativeName && "W" + nativeName;
+
+  return {
+    ...(!componentTokens
+      ? {}
+      : Object.keys(componentTokens).reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.toUpperCase()]: {
+              balance: componentTokens[curr]?.balance,
+              allowance: componentTokens[curr]?.allowance, // TODO: this is only the jar allowance, need to update for specific zap contract/protocol in pf-core
+            },
+          };
+        }, {})),
+    ...(nativeName &&
+      wrappedName && {
+        [nativeName]: {
+          balance: userNativeData?.native.balance,
+          allowance: userNativeData?.native.allowance,
+        },
+        [wrappedName]: {
+          balance: userNativeData?.wrappedBalance,
+          allowance:
+            userNativeData?.wrappedAllowances[
+              Object.keys(userNativeData?.wrappedAllowances!).find((x) => x === asset.chain) || ""
+            ],
+        },
+      }),
+  };
+};
+
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const { t } = useTranslation("common");
   const account = useAccount();
+  const core = useSelector(CoreSelectors.selectCore);
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
+
+  // TODO: Relying on this only shows zap options for component tokens user holds in wallet - could be improved by persisted options (even with 0 balance)
   const userTokenData = useAppSelector((state) =>
     UserSelectors.selectTokenDataById(state, asset.details.apiKey, account),
   );
+
+  const userNativeData = useAppSelector((state) =>
+    UserSelectors.selectNativeTokenDataByChain(state, asset.chain, account),
+  );
+
+  const zapTokens = getZapTokens(userNativeData, userTokenData, asset, core);
 
   const decimals = jarDecimals(asset);
   const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
@@ -54,22 +110,30 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
             <span className="font-title text-primary font-medium text-base leading-5">
               {jarTokens}
             </span>
-            <ApprovalFlow
-              apiKey={asset.details.apiKey}
-              tokenAddress={asset.depositToken.addr}
-              tokenName={asset.depositToken.name}
-              spenderAddress={asset.contract}
-              storeAttribute="jarAllowance"
-              chainName={asset.chain}
-              visible={!userHasJarAllowance}
-              type="jar"
-            />
-            {userHasJarAllowance && (
-              <div className="grid grid-cols-2 gap-3">
-                <DepositFlow asset={asset} balances={userTokenData} type="jar" />
-                <WithdrawFlow asset={asset} balances={userTokenData} />
-              </div>
-            )}
+            <span className="flex gap-3">
+              <ZapFlow
+                asset={asset}
+                nativeBalances={userNativeData}
+                balances={userTokenData}
+                type="jar"
+              />
+              <ApprovalFlow
+                apiKey={asset.details.apiKey}
+                tokenAddress={asset.depositToken.addr}
+                tokenName={asset.depositToken.name}
+                spenderAddress={asset.contract}
+                storeAttribute="jarAllowance"
+                chainName={asset.chain}
+                visible={!userHasJarAllowance}
+                type="jar"
+              />
+              {userHasJarAllowance && (
+                <div className="grid grid-cols-3 gap-3">
+                  <DepositFlow asset={asset} balances={userTokenData} type="jar" />
+                  <WithdrawFlow asset={asset} balances={userTokenData} />
+                </div>
+              )}
+            </span>
           </div>
         </div>
         <div className="relative">

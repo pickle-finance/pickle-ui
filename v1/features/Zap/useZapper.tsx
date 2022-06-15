@@ -52,6 +52,7 @@ export const useZapIn = ({
           address,
         }),
       );
+      console.log("got gas");
 
       const gasPrice = BigNumber.from(gasPrices.fast.toFixed(0))
         .mul(10 ** 9)
@@ -66,6 +67,8 @@ export const useZapIn = ({
             ownerAddress: address,
           }),
         );
+
+        console.log("got approval", approvalState);
         if (!approvalState.isApproved) {
           const { from, to, data } = await fetchRes(
             getZapperApi("/zap-in/pickle/approval-transaction", {
@@ -89,11 +92,23 @@ export const useZapIn = ({
           ownerAddress: address,
         }),
       );
+      console.log(
+        "request: ",
+        getZapperApi("/zap-in/pickle/transaction", {
+          slippagePercentage,
+          gasPrice,
+          poolAddress,
+          sellTokenAddress,
+          sellAmount,
+          ownerAddress: address,
+        }),
+      );
+      console.log("got zap params", { from, to, data, value });
       const zapTx = await signer.sendTransaction({
         from,
         to,
         data,
-        value,
+        value: BigNumber.from(value),
         gasLimit: 800000,
       });
       await zapTx.wait();

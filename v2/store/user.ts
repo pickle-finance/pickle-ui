@@ -205,6 +205,16 @@ const selectTokenDataById = (
 
   return state.user.accounts[account]?.data?.tokens[apiKey.toLowerCase()];
 };
+
+const selectNativeTokenDataByChain = (
+  state: RootState,
+  chain: ChainNetwork,
+  account: string | null | undefined,
+) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.data?.nativeTokens[chain];
+};
 const selectBrineryDataById = (
   state: RootState,
   apiKey: string,
@@ -227,6 +237,7 @@ export const UserSelectors = {
   selectTokenDataById,
   selectUpdatedAt,
   selectBrineryDataById,
+  selectNativeTokenDataByChain,
 };
 
 export default userSlice.reducer;

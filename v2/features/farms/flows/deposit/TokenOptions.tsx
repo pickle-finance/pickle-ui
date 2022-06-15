@@ -6,33 +6,14 @@ import { getNativeName } from "../utils";
 import { TokenSelect } from "./FormUniV3";
 
 const TokenOptions: FC<{
-  token: UniV3Token;
+  options: Array<TokenSelect>;
   selectedToken: SelectOptions;
   setSelectedToken: Dispatch<SetStateAction<TokenSelect>>;
-}> = ({ token, selectedToken, setSelectedToken }) => {
-  const [selectOptions, setSelectOptions] = useState<SelectOptions[]>([]);
-
+}> = ({ selectedToken, setSelectedToken, options }) => {
   const tokenChange = (token: TokenSelect): void => {
     setSelectedToken(token);
   };
 
-  useEffect(() => {
-    const nativeName = getNativeName(token.name);
-    const wrappedName = "W" + nativeName;
-    const options: Array<TokenSelect> = [
-      {
-        label: nativeName,
-        value: "native",
-      },
-      {
-        label: wrappedName,
-        value: "wrapped",
-      },
-    ];
-    setSelectOptions(options);
-  }, []);
-
-  if (!token.isNative) return <>{token.name.toUpperCase()}</>;
   return (
     <>
       <Select
@@ -41,7 +22,7 @@ const TokenOptions: FC<{
         closeMenuOnSelect={true}
         styles={styles}
         onChange={(s) => tokenChange(s as TokenSelect)}
-        options={selectOptions}
+        options={options as SelectOptions[]}
       />
     </>
   );
@@ -81,7 +62,5 @@ interface SelectOptions {
   value: string;
   label: string;
 }
-
-type SetTokenFunction = (chain: SelectOptions) => void;
 
 export default TokenOptions;

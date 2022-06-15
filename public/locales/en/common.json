@@ -525,7 +525,8 @@
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates",
       "yourApy": "Your APY: {{ apy }}",
-      "autoswap": "Swap deposit tokens to correct ratio"
+      "autoswap": "Swap deposit tokens to correct ratio",
+      "zapToToken": "Zap to {{ token }} Jar"
     },
     "gasPrices": {
       "fast": "Fast",
