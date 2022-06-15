@@ -33,7 +33,7 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
 
   if (chartData.length > 0)
     return (
-      <ResponsiveContainer className="w-full">
+      <ResponsiveContainer>
         <ComposedChart data={chartData}>
           <CartesianGrid strokeDasharray="0" stroke="rgb(var(--color-foreground-alt-400))" />
           <XAxis
@@ -41,8 +41,8 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
             tickFormatter={(timestamp) => new Date(timestamp * 1000).toLocaleDateString()}
             height={75}
             angle={300}
-            tickMargin={35}
-            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -20 }}
+            tickMargin={25}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -18, fontSize: 12 }}
           />
           <YAxis
             tickFormatter={(value) =>
@@ -52,16 +52,16 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
             }
             domain={dataMax ? [0, dataMax] : undefined}
             width={100}
-            padding={{ top: 50 }}
-            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10 }}
+            tick={{ fill: "rgb(var(--color-foreground-alt-300))", dx: -10, fontSize: 12 }}
             tickCount={9}
           >
             <Label
               value={t("v2.dill.usdValue") as string}
               position="insideLeft"
               angle={-90}
+              offset={20}
               fill="rgb(var(--color-foreground-alt-100))"
-              style={{ textAnchor: "middle" }}
+              style={{ textAnchor: "middle", fontSize: 12 }}
             />
           </YAxis>
 
@@ -91,10 +91,15 @@ const Chart: FC<{ data: RevenueData[] }> = ({ data }) => {
           />
           <Legend
             formatter={(label: string) => (
-              <span className="text-foreground-alt-200">{t(`v2.stats.tooltips.${label}`)}</span>
+              <span className="text-foreground-alt-200 text-xs">
+                {t(`v2.stats.tooltips.${label}`)}
+              </span>
             )}
             iconType="wye"
-            wrapperStyle={{ paddingTop: 25 }}
+            wrapperStyle={{
+              lineHeight: "25px",
+            }}
+            // wrapperStyle={{ paddingTop: 25 }}
           />
         </ComposedChart>
       </ResponsiveContainer>

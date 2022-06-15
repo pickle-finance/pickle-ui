@@ -616,6 +616,7 @@
         },
         "chainTableTitle": "Chain Stats",
         "revsChartTitle": "Daily Revenue",
+        "topJarsChartTitle": "Top Jars by TVL",
         "tvlChartTitle": "Total Value Locked"
       },
       "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol",
@@ -623,19 +624,24 @@
         "balance": "Token Balance",
         "depositTokenPrice": "Deposit Token Price",
         "farmAllocShare": "Emission Share",
+        "farmApy": "Farm APY",
         "farmPicklePerDay": "Farm Pickles Per Day",
         "harvestable": "Harvestable USD",
+        "id": "Jar ID",
         "jarApr": "Jar APR",
         "ma": "Moving Average",
         "maxApy": "Max. Farm APY",
         "minApy": "Min. Farm APY",
+        "name": "Name",
         "ptokensInFarm": "Percent of pTokens in Farm",
         "ratio": "Ratio of pTokens to Deposit Tokens",
         "revsUsd": "Revenue in USD",
         "supply": "No. of Tokens",
         "tokenPrice": "Token Price",
+        "tvl": "TVL",
         "value": "Total Value Locked"
-      }
+      },
+      "platformStats": "Pickle Stats"
     },
     "theme": {
       "dark": "Dark",

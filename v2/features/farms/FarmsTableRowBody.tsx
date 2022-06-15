@@ -27,7 +27,7 @@ const FarmsTableRowBody: FC<Props> = ({ asset, hideDescription }) => {
   const depositTokenCountString = t("v2.farms.tokens", { amount: tokensInWallet });
 
   const analyticsUrl: string | undefined = asset.details?.apiKey
-    ? "/stats/jar?jar=" + asset.details.apiKey
+    ? "/stats?jar=" + asset.details.apiKey
     : undefined;
 
   const isUniV3 = asset.protocol === AssetProtocol.UNISWAP_V3;
