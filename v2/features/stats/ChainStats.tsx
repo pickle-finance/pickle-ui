@@ -19,6 +19,7 @@ const ChainStats: FC<{
   jar: JarSelectData;
   setJar: SetFunction;
 }> = ({ core, chain, jar, setJar }) => {
+  const debug = false;
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const [tokenPctChangeData, setTokenPctChangeData] = useState<iBigMoverTableData[]>([]);
   const [tvlChange, setTvlChange] = useState<iBigMoverTableData[]>([]);
@@ -35,6 +36,7 @@ const ChainStats: FC<{
 
   useEffect(() => {
     const tokenPriceChangePct = getTokenPriceChangePct(chainData);
+    if (debug) throw "test";
     setTokenPctChangeData(tokenPriceChangePct);
     const tvlChange = getTVLChange(chainData);
     setTvlChange(tvlChange);
