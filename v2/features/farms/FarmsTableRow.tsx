@@ -18,6 +18,10 @@ interface Props {
 }
 
 const FarmsTableRow: FC<Props> = ({ asset, simple, dashboard, hideDescription, userDillRatio }) => {
+  // temporary to filter and UST jars, in future maybe add switch for withdraw only or label these jars permanently disabled
+  if (asset.depositToken.components)
+    for (let i = 0; i < asset.depositToken.components?.length; i++)
+      if (asset.depositToken.components[i] === "ust") return null;
   if (isBrinery(asset))
     return (
       <>
