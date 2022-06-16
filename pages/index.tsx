@@ -3,8 +3,7 @@ import { useTranslation } from "next-i18next";
 
 import type { PickleFinancePage } from "v2/types";
 import PerformanceCard from "v2/components/PerformanceCard";
-import PickleBalanceCard from "v2/components/PickleBalanceCard";
-import DillBalanceCard from "v2/components/DillBalanceCard";
+import PickleDillBalanceCard from "v2/components/PickleDillBalanceCard";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import DashboardCalloutCard from "v2/components/DashboardCalloutCard";
 
@@ -18,8 +17,7 @@ const Dashboard: PickleFinancePage = () => {
           <PerformanceCard />
         </div>
         <div className="flex flex-col md:justify-start 2xl:justify-between">
-          <PickleBalanceCard />
-          <DillBalanceCard />
+          <PickleDillBalanceCard />
         </div>
       </div>
       <FarmsTable title={t("v2.dashboard.joinedFarms")} simple dashboard requiresUserModel />
