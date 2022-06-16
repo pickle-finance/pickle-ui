@@ -357,6 +357,7 @@
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",
+      "lockedPickles": "Locked Pickles",
       "performance": "Performance",
       "picklesInWalletZeroOrOne": "PICKLEs in wallet",
       "picklesInWallet": "PICKLEs on {{ chains }} chains",
