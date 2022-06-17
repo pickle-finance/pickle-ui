@@ -31,7 +31,7 @@ const chainProtocol = (
   dashboard: boolean | undefined,
   t: TFunction,
 ): JSX.Element => {
-  const analyticsUrl = asset.details?.apiKey ? "/stats/jar?jar=" + asset.details.apiKey : undefined;
+  const analyticsUrl = asset.details?.apiKey ? "/stats?jar=" + asset.details.apiKey : undefined;
 
   return (
     <div>
