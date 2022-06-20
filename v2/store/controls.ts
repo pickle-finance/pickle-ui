@@ -46,7 +46,7 @@ const initialState: ControlsState = {
   matchAllFilters: false,
   currentPage: 0,
   sort: {
-    type: SortType.Deposited,
+    type: SortType.None,
     direction: "desc",
   },
 };

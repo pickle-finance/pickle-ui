@@ -20,6 +20,7 @@ import {
   getUserAssetDataWithPrices,
   getUserBrineryDataWithPrices,
   UserAssetDataWithPrices,
+  UserAssetDataWithPricesComponent,
   UserBrineryDataWithPrices,
 } from "v2/utils/user";
 import { getUniV3Tokens } from "v2/utils/univ3";
@@ -250,6 +251,9 @@ const makeAssetsSelector = (options: MakeJarsSelectorOpts = {}) => {
 
       if (sort && sort.type != SortType.None) {
         assetsWithData = orderBy(assetsWithData, [sort.type], [sort.direction]);
+      } else {
+        console.log("sorting");
+        assetsWithData = defaultSortingLogic(assetsWithData);
       }
 
       if (options.paginated) {
@@ -262,6 +266,65 @@ const makeAssetsSelector = (options: MakeJarsSelectorOpts = {}) => {
       return assetsWithData;
     },
   );
+};
+
+const defaultSortingLogic = (assetsWithData: AssetWithData[]): AssetWithData[] => {
+  const ret = assetsWithData.sort((a, b) => {
+    const aHasDeposit = a.deposited && a.deposited > 0;
+    const bHasDeposit = b.deposited && b.deposited > 0;
+
+    if (aHasDeposit && !bHasDeposit) return -1;
+    if (bHasDeposit && !aHasDeposit) return 1;
+    if (aHasDeposit && bHasDeposit) return (a.deposited || 0) > (b.deposited || 0) ? 1 : -1;
+
+    // Neither have deposits
+    // Check enablement
+    if (a.enablement === AssetEnablement.ENABLED && b.enablement !== AssetEnablement.ENABLED)
+      return -1;
+    if (b.enablement === AssetEnablement.ENABLED && a.enablement !== AssetEnablement.ENABLED)
+      return 1;
+    const aHasDepositTokens =
+      a.depositTokensInWallet &&
+      a.depositTokensInWallet.tokensUSD &&
+      a.depositTokensInWallet.tokensUSD > 0;
+    const bHasDepositTokens =
+      b.depositTokensInWallet &&
+      b.depositTokensInWallet.tokensUSD &&
+      b.depositTokensInWallet.tokensUSD > 0;
+
+    if (aHasDepositTokens && !bHasDepositTokens) return 1;
+    if (bHasDepositTokens && !aHasDepositTokens) return -1;
+    if (aHasDepositTokens && bHasDepositTokens)
+      return (a.depositTokensInWallet.tokensUSD || 0) > (b.depositTokensInWallet.tokensUSD || 0)
+        ? 1
+        : -1;
+
+    // Neither is deposited and neither have deposit tokens
+    // Now check component tokens
+    const sumComponents = (v: { [key: string]: UserAssetDataWithPricesComponent }): number => {
+      let totalUSD = 0;
+      const keys: string[] = Object.keys(v);
+      for (let i = 0; i < keys.length; i++) {
+        totalUSD += v[keys[i]].tokensUSD;
+      }
+      return totalUSD;
+    };
+    const aComponentTokensUSD = a.walletComponentTokens
+      ? sumComponents(a.walletComponentTokens)
+      : 0;
+    const bComponentTokensUSD = b.walletComponentTokens
+      ? sumComponents(b.walletComponentTokens)
+      : 0;
+
+    if (aComponentTokensUSD && !bComponentTokensUSD) return 1;
+    if (bComponentTokensUSD && !aComponentTokensUSD) return -1;
+    if (aComponentTokensUSD && bComponentTokensUSD)
+      return aComponentTokensUSD > aComponentTokensUSD ? 1 : -1;
+
+    return 0;
+  });
+  console.log(ret);
+  return ret;
 };
 
 const makeBrinerySelector = (options: MakeJarsSelectorOpts = {}) => {
