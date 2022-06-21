@@ -252,7 +252,6 @@ const makeAssetsSelector = (options: MakeJarsSelectorOpts = {}) => {
       if (sort && sort.type != SortType.None) {
         assetsWithData = orderBy(assetsWithData, [sort.type], [sort.direction]);
       } else {
-        console.log("sorting");
         assetsWithData = defaultSortingLogic(assetsWithData);
       }
 
@@ -275,7 +274,7 @@ const defaultSortingLogic = (assetsWithData: AssetWithData[]): AssetWithData[] =
 
     if (aHasDeposit && !bHasDeposit) return -1;
     if (bHasDeposit && !aHasDeposit) return 1;
-    if (aHasDeposit && bHasDeposit) return (a.deposited || 0) > (b.deposited || 0) ? 1 : -1;
+    if (aHasDeposit && bHasDeposit) return (a.deposited || 0) > (b.deposited || 0) ? -1 : 1;
 
     // Neither have deposits
     // Check enablement
@@ -323,7 +322,6 @@ const defaultSortingLogic = (assetsWithData: AssetWithData[]): AssetWithData[] =
 
     return 0;
   });
-  console.log(ret);
   return ret;
 };
 
