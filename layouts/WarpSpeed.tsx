@@ -2,7 +2,6 @@ import { FC, useEffect } from "react";
 import { Provider } from "react-redux";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { useRouter } from "next/router";
 
 import NavbarMobile from "v2/components/NavbarMobile";
 import LeftNavbar from "v2/components/LeftNavbar";
@@ -18,7 +17,9 @@ import OffchainVotesProvider from "v2/providers/OffchainVotesProvider";
 import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 import Confetti from "v2/components/Confetti";
+import { ErrorMessage } from "v2/components/ErrorBoundary";
 import ErrorBoundary from "v2/components/ErrorBoundary";
+import * as Sentry from "@sentry/react";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -37,7 +38,6 @@ type Props = AppProps & {
 
 const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
   const PageTitle = Component.PageTitle ?? (() => <></>);
-  const { asPath } = useRouter();
 
   useEffect(() => {
     document.querySelector("body")!.classList.remove("classic");
@@ -54,9 +54,16 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
             <TopNavbar PageTitle={PageTitle} />
             <ConnectionStatus />
             <V1LinkCard />
-            <ErrorBoundary key={asPath}>
+            {/* <Sentry.ErrorBoundary
+              fallback={({ error, componentStack }) => {
+                componentDidCatch(error, info) {}
+                return <ErrorMessage />;
+              }}
+            > */}
+            <ErrorBoundary>
               <Component {...pageProps} />
             </ErrorBoundary>
+            {/* </Sentry.ErrorBoundary> */}
             <div className="flex justify-between bg-background mt-4 mb-8">
               <UserBalanceStatus showDetails />
               <BlockNumber />

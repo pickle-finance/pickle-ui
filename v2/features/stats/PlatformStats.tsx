@@ -5,6 +5,7 @@ import { ChainSelectData } from "./ChainSelect";
 import { JarSelectData } from "./JarSelect";
 import ChainTableContainer from "./platform/ChainTableContainer";
 import ChartContainer from "./shared/ChartContainer";
+import * as Sentry from "@sentry/nextjs";
 
 const PlatformStats: FC<{
   chain: ChainSelectData;
@@ -34,6 +35,13 @@ const PlatformStats: FC<{
           </div>
         </>
       );
+  try {
+    throw "error";
+  } catch (err) {
+    console.log("----------------------------------- ERROR -----------------------------------");
+    console.log(err);
+    Sentry.captureException(err);
+  }
   return null;
 };
 

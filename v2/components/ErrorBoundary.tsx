@@ -1,5 +1,7 @@
 import { useTranslation } from "next-i18next";
 import React, { Component, ErrorInfo, FC, ReactNode } from "react";
+// import ErrorBoundary from "@sentry/react";
+import * as Sentry from "@sentry/nextjs";
 
 import { classNames } from "v2/utils";
 import Button from "./Button";
@@ -24,6 +26,8 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
+    Sentry.captureException(error);
+    Sentry.captureMessage("test");
   }
 
   public render() {
@@ -35,7 +39,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-const ErrorMessage: FC<{ className?: string }> = ({ className }) => {
+export const ErrorMessage: FC<{ className?: string }> = ({ className }) => {
   const { t } = useTranslation("common");
 
   return (
