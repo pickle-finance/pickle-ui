@@ -5,7 +5,7 @@ import { AssetWithData, BrineryWithData } from "v2/store/core";
 import { ChainNetwork } from "picklefinance-core";
 import MoreInfo from "v2/components/MoreInfo";
 import { formatPercentage } from "v2/utils";
-import { isBrinery, isExternalAsset, isJar, isStandaloneFarm } from "v2/store/core.helpers";
+import { isBrinery, isExternalAsset, isStandaloneFarm } from "v2/store/core.helpers";
 
 interface Props {
   asset: AssetWithData | BrineryWithData;

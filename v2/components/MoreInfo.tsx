@@ -3,7 +3,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import Tippy from "@tippyjs/react";
 
 const TooltipContent: FC = ({ children }) => (
-  <div className="rounded-lg shadow-lg border border-foreground-alt-500 overflow-hidden">
+  <div className="rounded-lg shadow-lg border border-foreground-alt-300 overflow-hidden">
     <div className="bg-background-light px-3 py-2">
       <div className="text-primary-light text-base font-normal">{children}</div>
     </div>

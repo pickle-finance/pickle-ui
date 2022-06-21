@@ -514,6 +514,7 @@
       "seeFarmDetails": "See farm details",
       "stakedToken": "{{ token }} staked",
       "stakeToken": "Stake {{ token }}",
+      "stakingBenefit": "By staking, you could earn an additional {{ apy }} APY in PICKLE rewards on this asset.",
       "statsAndDocs": "Stats & Docs",
       "strategyAddress": "Strategy Address",
       "success": "Success!",

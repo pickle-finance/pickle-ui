@@ -13,9 +13,10 @@ import DepositFlow from "./flows/deposit/DepositFlow";
 import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
-import { classNames, roundToSignificantDigits } from "v2/utils";
+import { classNames, formatPercentage, roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
 import { useAccount } from "v2/hooks";
+import MoreInfo from "v2/components/MoreInfo";
 
 interface Props {
   asset: AssetWithData;
@@ -42,6 +43,9 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
     ethers.utils.formatUnits(userTokenData?.picklePending || "0", 18),
   );
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
+  const stakingBenefit = asset.aprStats
+    ? formatPercentage(asset.aprStats.apy - asset.aprStats.apr, 3)
+    : "0%";
 
   return (
     <div className="flex space-x-3">
@@ -84,9 +88,20 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
         <>
           <div className="grow self-start">
             <div className="border border-foreground-alt-500 rounded-xl p-4">
-              <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-                {t("v2.farms.stakedToken", { token: asset.depositToken.name })}
-              </p>
+              <div className="flex">
+                <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
+                  {t("v2.farms.stakedToken", { token: asset.depositToken.name })}
+                </p>
+                <MoreInfo>
+                  <div className="text-foreground-alt-200 text-sm">
+                    <p className="text-foreground">
+                      {t("v2.farms.stakingBenefit", {
+                        apy: stakingBenefit,
+                      })}
+                    </p>
+                  </div>
+                </MoreInfo>
+              </div>
               <div className="flex items-end justify-between">
                 <span className="font-title text-primary font-medium text-base leading-5">
                   {farmTokens}
