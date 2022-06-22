@@ -10,7 +10,7 @@ import { classNames } from "v2/utils";
 const ChartContainer: FC<{
   chart: "tvl" | "revs" | "topJars";
   dataSeries?: PlatformData | ChainData;
-  core?: PickleModelJson.PickleModelJson | undefined;
+  core?: PickleModelJson.PickleModelJson;
   chain?: string;
   className?: string;
 }> = ({ chart, dataSeries, core, chain, className }) => {
