@@ -4,7 +4,7 @@ import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
-import { Chains } from "picklefinance-core";
+import { Chains, PickleModelJson } from "picklefinance-core";
 import {
   ChainNativetoken,
   UserBrineryData,
@@ -15,7 +15,7 @@ import { LightningBoltIcon } from "@heroicons/react/solid";
 import { AppDispatch } from "v2/store";
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { AssetWithData, BrineryWithData, JarWithData } from "v2/store/core";
+import { AssetWithData, BrineryWithData, CoreSelectors, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
 import Form from "./Form";
 import { jarDecimals } from "v2/utils/user";
@@ -27,8 +27,11 @@ import { useJarContract, useTransaction } from "../hooks";
 import { TransferEvent } from "v1/containers/Contracts/Jar";
 import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
-import { eventsByName } from "../utils";
+import { eventsByName, getNativeName } from "../utils";
 import { isAcceptingDeposits } from "v2/store/core.helpers";
+import { useSelector } from "react-redux";
+import { TokenSelect } from "../deposit/FormUniV3";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 type DepositType = "jar" | "brinery";
 
@@ -39,11 +42,68 @@ interface Props {
   type: DepositType;
 }
 
+const getZapTokens = (
+  userNativeData: ChainNativetoken | undefined,
+  userTokenData: UserTokenData | undefined,
+  asset: AssetWithData,
+  core: PickleModelJson.PickleModelJson | undefined,
+): any => {
+  const componentTokens = userTokenData?.componentTokenBalances || undefined;
+
+  const jarChain = core?.chains.find((chain) => chain.network === asset.chain);
+
+  const nativeName = jarChain ? getNativeName(jarChain.gasTokenSymbol) : undefined;
+  const wrappedName = nativeName && "W" + nativeName;
+
+  const nativeDecimals =
+    core?.tokens.find((x) => x.chain === asset.chain && x.id === nativeName)?.decimals || 18;
+
+  return {
+    ...(!componentTokens
+      ? {}
+      : Object.keys(componentTokens).reduce((acc, curr) => {
+          const currDecimals =
+            core?.tokens.find((x) => x.chain === asset.chain && x.id === curr.toLowerCase())
+              ?.decimals || 18;
+
+          return {
+            ...acc,
+            [curr.toUpperCase()]: {
+              balance: componentTokens[curr]?.balance,
+              allowance: componentTokens[curr]?.allowance, // TODO: this is only the jar allowance (used in univ3 zaps), need to update for specific zap contract/protocol in pf-core. Can potentially use the same property to express allowance for respective protocol's zap contract, since there's no overlap between univ3 jars and zaps currently
+              decimals: currDecimals,
+              type: "token",
+            },
+          };
+        }, {})),
+    ...(nativeName &&
+      wrappedName && {
+        [nativeName]: {
+          balance: userNativeData?.native.balance,
+          allowance: userNativeData?.native.allowance,
+          decimals: nativeDecimals,
+          type: "wrapped",
+        },
+        [wrappedName]: {
+          balance: userNativeData?.wrappedBalance,
+          allowance:
+            userNativeData?.wrappedAllowances[
+              Object.keys(userNativeData?.wrappedAllowances!).find((x) => x === asset.protocol) ||
+                ""
+            ]?.allowance,
+          decimals: nativeDecimals,
+          type: "native",
+        },
+      }),
+  };
+};
+
 const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances, type }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
   const { account } = useWeb3React<Web3Provider>();
+  const core = useSelector(CoreSelectors.selectCore);
 
   const chain = Chains.get(asset.chain);
   const { contract } = asset;
@@ -51,6 +111,13 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances, type }) => {
 
   const decimals = jarDecimals(asset);
   const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
+
+  const zapTokens = getZapTokens(
+    nativeBalances,
+    balances as UserTokenData,
+    asset as AssetWithData,
+    core,
+  );
 
   const transactionFactory = () => {
     if (!JarContract) return;
@@ -147,9 +214,9 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances, type }) => {
       >
         {current.matches(States.FORM) && (
           <Form
-            balance={balances?.depositTokenBalance || "0"}
-            decimals={decimals}
+            jar={asset as JarWithData}
             nextStep={(amount: string) => send(Actions.SUBMIT_FORM, { amount })}
+            zapTokens={zapTokens}
           />
         )}
         {current.matches(States.AWAITING_CONFIRMATION) && (

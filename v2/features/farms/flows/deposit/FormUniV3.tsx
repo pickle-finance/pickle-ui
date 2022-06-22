@@ -14,7 +14,7 @@ import { useAppSelector } from "v2/store";
 import OnOffToggle from "v2/components/OnOffToggle";
 import { getNativeName } from "../utils";
 
-type TokenType = "native" | "wrapped";
+type TokenType = "native" | "wrapped" | "token";
 
 export interface TokenSelect {
   label: string;

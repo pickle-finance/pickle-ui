@@ -1,8 +1,6 @@
 import { useTranslation } from "next-i18next";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import Select, { StylesConfig } from "react-select";
-import { UniV3Token } from "v2/store/core";
-import { getNativeName } from "../utils";
 import { TokenSelect } from "./FormUniV3";
 
 const TokenOptions: FC<{

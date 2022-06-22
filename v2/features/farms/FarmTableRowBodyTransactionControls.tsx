@@ -21,57 +21,15 @@ import ZapFlow from "./flows/zap/ZapFlow";
 import { getNativeName } from "./flows/utils";
 import { ChainNetwork, PickleModelJson } from "picklefinance-core";
 import { ChainNativetoken, UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { TokenSelect } from "./flows/deposit/FormUniV3";
 
 interface Props {
   asset: AssetWithData;
 }
 
-const getZapTokens = (
-  userNativeData: ChainNativetoken | undefined,
-  userTokenData: UserTokenData | undefined,
-  asset: AssetWithData,
-  core: PickleModelJson.PickleModelJson | undefined,
-): any => {
-  const componentTokens = userTokenData?.componentTokenBalances || undefined;
-
-  const jarChain = core?.chains.find((chain) => chain.network === asset.chain);
-
-  const nativeName = jarChain ? getNativeName(jarChain.gasTokenSymbol) : undefined;
-  const wrappedName = nativeName && "W" + nativeName;
-
-  return {
-    ...(!componentTokens
-      ? {}
-      : Object.keys(componentTokens).reduce((acc, curr) => {
-          return {
-            ...acc,
-            [curr.toUpperCase()]: {
-              balance: componentTokens[curr]?.balance,
-              allowance: componentTokens[curr]?.allowance, // TODO: this is only the jar allowance, need to update for specific zap contract/protocol in pf-core
-            },
-          };
-        }, {})),
-    ...(nativeName &&
-      wrappedName && {
-        [nativeName]: {
-          balance: userNativeData?.native.balance,
-          allowance: userNativeData?.native.allowance,
-        },
-        [wrappedName]: {
-          balance: userNativeData?.wrappedBalance,
-          allowance:
-            userNativeData?.wrappedAllowances[
-              Object.keys(userNativeData?.wrappedAllowances!).find((x) => x === asset.chain) || ""
-            ],
-        },
-      }),
-  };
-};
-
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const { t } = useTranslation("common");
   const account = useAccount();
-  const core = useSelector(CoreSelectors.selectCore);
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
 
@@ -83,8 +41,6 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const userNativeData = useAppSelector((state) =>
     UserSelectors.selectNativeTokenDataByChain(state, asset.chain, account),
   );
-
-  const zapTokens = getZapTokens(userNativeData, userTokenData, asset, core);
 
   const decimals = jarDecimals(asset);
   const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
