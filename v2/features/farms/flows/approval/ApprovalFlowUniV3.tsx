@@ -6,7 +6,7 @@ import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 
-import Button from "v2/components/Button";
+import Button, { ButtonState } from "v2/components/Button";
 import Modal from "v2/components/Modal";
 import { JarWithData } from "v2/store/core";
 import { stateMachine, Actions } from "../stateMachineNoUserInput";
@@ -52,10 +52,11 @@ interface Props {
   jar: JarWithData;
   type: ApprovalType;
   balances: UserTokenData | undefined;
+  state: ButtonState;
   visible: boolean;
 }
 
-const ApprovalFlowUniV3: FC<Props> = ({ jar, visible, type, balances }) => {
+const ApprovalFlowUniV3: FC<Props> = ({ jar, visible, type, state, balances }) => {
   const { t } = useTranslation("common");
   const { account } = useWeb3React<Web3Provider>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -131,7 +132,11 @@ const ApprovalFlowUniV3: FC<Props> = ({ jar, visible, type, balances }) => {
 
   return (
     <>
-      {visible && <Button onClick={openModal}>{t("v2.actions.approve")}</Button>}
+      {visible && (
+        <Button onClick={openModal} state={state}>
+          {t("v2.actions.approve")}
+        </Button>
+      )}
       <Modal isOpen={isModalOpen} closeModal={closeModal} title={t("v2.farms.approveTokens")}>
         <UniV3AwaitingConfirmation
           error={error0 || error1}

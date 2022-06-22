@@ -5,7 +5,7 @@ import { classNames, noop } from "../utils";
 
 export type ButtonSize = "small" | "normal" | "large";
 export type ButtonType = "primary" | "secondary";
-type ButtonState = "enabled" | "disabled";
+export type ButtonState = "enabled" | "disabled";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   onClick?: MouseEventHandler<HTMLAnchorElement>;

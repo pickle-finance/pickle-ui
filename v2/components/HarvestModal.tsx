@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
 import { ChainNetwork } from "picklefinance-core";
+import { formatEther } from "ethers/lib/utils";
 
 import Modal from "./Modal";
 import { roundToSignificantDigits } from "v2/utils";
@@ -19,6 +20,9 @@ export interface RewardRowProps {
   asset: Asset | undefined;
   descriptor: string;
   harvestableAmount: BigNumber;
+  claimableV1: BigNumber;
+  claimableEthV2: BigNumber;
+  claimableTokenV2: BigNumber;
   rewarderType: Rewarder;
   network: ChainNetwork;
 }
@@ -33,14 +37,17 @@ interface RewardRowPropWrapper {
 const threshold = BigNumber.from("1000000000000");
 
 const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
-  const picklePendingAmount = parseFloat(ethers.utils.formatUnits(details.harvestableAmount, 18));
+  const totalEthRewards = parseFloat(ethers.utils.formatEther(details.claimableEthV2));
+  const totalPickleRewards = parseFloat(ethers.utils.formatEther(details.claimableTokenV2.add(details.claimableV1).add(details.harvestableAmount)));
 
-  if (details.harvestableAmount.lt(threshold)) return null;
+  const totalRewards = details.claimableEthV2.add(details.claimableTokenV2).add(details.claimableV1).add(details.harvestableAmount);
+
+  if (totalRewards.lt(threshold)) return null;
 
   return (
     <div className="flex justify-between font-body">
       <div className="flex">
-        <div className="w-12 p-1 bg-background rounded-full mr-4 border-3 border-foreground-alt-400">
+        <div className="w-12 p-1 h-fit bg-background rounded-full mr-4 border-3 border-foreground-alt-400">
           <Image
             src="/pickle-icon.svg"
             width={200}
@@ -55,9 +62,13 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
             {details.descriptor}
           </p>
           <p className="text-primary font-bold text-lg align-bottom leading-6">
-            {roundToSignificantDigits(picklePendingAmount, 5)}
+            {roundToSignificantDigits(totalPickleRewards, 5)}
             <span className="text-foreground text-xs ml-2">PICKLE</span>
           </p>
+          {details.rewarderType == "dill" && <p className="text-primary font-bold text-lg align-bottom leading-6">
+            {roundToSignificantDigits(totalEthRewards, 5)}
+            <span className="text-foreground text-xs ml-2">ETH</span>
+          </p>}
         </div>
       </div>
       <div className="flex items-center">
@@ -67,6 +78,9 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
           buttonSize="small"
           buttonType="secondary"
           harvestableAmount={details.harvestableAmount}
+          claimableV1={details.claimableV1}
+          claimableV2={details.claimableTokenV2}
+          claimableETHV2={details.claimableEthV2}
           network={details.network}
           showNetworkSwitch
         />

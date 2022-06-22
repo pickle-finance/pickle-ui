@@ -43,9 +43,7 @@ const Vote: PickleFinancePage = () => {
                 <MainnetVoteWeightCharts core={core} offchainVoteData={offchainVoteData} />
                 <MainnetVote core={core} user={user} />
                 <hr className="border-foreground-alt-500 mt-5 mb-5" />
-                {/* Uncomment line below when offchain voting is fully tested and ready for release
-                  <OffchainVote core={core} offchainVoteData={offchainVoteData} /> 
-                */}
+                {/* <OffchainVote core={core} offchainVoteData={offchainVoteData} /> */}
               </>
             ) : (
               <LoadingIndicator waitForVoteData />

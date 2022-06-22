@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 import { ChainNetwork } from "picklefinance-core";
 import {
-  UserBrineries,
   IUserDillStats,
   UserData,
   UserTokenData,
@@ -11,7 +10,11 @@ import {
 } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
-import { baseTokenObject, normalizedData } from "./user.helpers";
+import {
+  baseTokenObject,
+  deepMergeIncrementalUserDataUpdate,
+  normalizedData,
+} from "./user.helpers";
 
 interface AccountData {
   data: UserData;
@@ -44,15 +47,21 @@ const userSlice = createSlice({
     ) => {
       const { account, data, type } = action.payload;
       const accountData = state.accounts[account] || ({} as AccountData);
-      /**
-       * Update state incrementally on initial page load. Only
-       * update with the final user model on consequent runs to
-       * avoid UI from going from populated to empty and back.
-       */
-      if (type === "incremental") {
-        if (accountData.updatedAt) return;
 
-        accountData.data = normalizedData(data);
+      if (type === "incremental") {
+        /**
+         * If the timestamp is present, it means we have a full, persisted user model in which
+         * case we have to do a deep merge of incremental data. Otherwise we're in the first
+         * user model run for this account and we can set data directly.
+         */
+        if (accountData.updatedAt) {
+          accountData.data = deepMergeIncrementalUserDataUpdate(
+            accountData.data,
+            normalizedData(data),
+          );
+        } else {
+          accountData.data = normalizedData(data);
+        }
       } else if (type === "final") {
         /**
          * If the user model was updated in the last 30 seconds, it's because of partial

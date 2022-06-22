@@ -19,3 +19,34 @@ export const baseTokenObject: Partial<UserTokenData> = {
 export const normalizedData = (data: UserData): UserData => ({
   ...cloneDeep(data),
 });
+
+export const deepMergeIncrementalUserDataUpdate = (
+  currentData: UserData,
+  newData: UserData,
+): UserData => {
+  const result = {
+    ...currentData,
+    brineries: {
+      ...currentData.brineries,
+      ...newData.brineries,
+    },
+    pickles: {
+      ...currentData.pickles,
+      ...newData.pickles,
+    },
+    tokens: {
+      ...currentData.tokens,
+      ...newData.tokens,
+    },
+  };
+
+  /**
+   * Dill balances return 0s until they load. Skip in that case
+   * so that we don't override current balances.
+   */
+  if (newData.dill.balance !== "0") {
+    result.dill = { ...result.dill, ...newData.dill };
+  }
+
+  return result;
+};

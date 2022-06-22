@@ -6,8 +6,13 @@ import FarmsTableSpacerRow from "./FarmsTableSpacerRow";
 import FarmsTableRowHeader from "./FarmsTableRowHeader";
 import BrineryTableRowHeader from "../brinery/BrineryTableRowHeader";
 import FarmsTableRowBody from "./FarmsTableRowBody";
-import { AssetWithData, BrineryWithData, JarWithData } from "v2/store/core";
+import { AssetWithData, BrineryWithData } from "v2/store/core";
 import { isBrinery } from "v2/store/core.helpers";
+import { useAppSelector } from "v2/store";
+import { UserSelectors } from "v2/store/user";
+import { useAccount } from "v2/hooks";
+import { UserData } from "picklefinance-core/lib/client/UserModel";
+import { AssetEnablement } from "picklefinance-core/lib/model/PickleModelJson";
 
 interface Props {
   simple?: boolean;
@@ -18,6 +23,24 @@ interface Props {
 }
 
 const FarmsTableRow: FC<Props> = ({ asset, simple, dashboard, hideDescription, userDillRatio }) => {
+  const account = useAccount();
+  const userModel: UserData | undefined = useAppSelector((state) =>
+    UserSelectors.selectData(state, account),
+  );
+  // temporary to filter UST jars, in future maybe add switch for withdraw only or label these jars permanently disabled
+  if (asset.depositToken.components)
+    for (let i = 0; i < asset.depositToken.components?.length; i++)
+      if (
+        asset.enablement === AssetEnablement.WITHDRAW_ONLY &&
+        userModel &&
+        userModel.tokens[asset.details.apiKey] &&
+        userModel.tokens[asset.details.apiKey].depositTokenBalance !== "0"
+      ) {
+        return null;
+        // let userInJar = false;
+        // for (let i=0; i<Object.keys(userModel?.tokens).length; i++)
+        //   if (Object.keys(userModel.tokens).includes(asset.depositToken))
+      }
   if (isBrinery(asset))
     return (
       <>

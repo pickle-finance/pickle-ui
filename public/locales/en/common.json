@@ -340,7 +340,8 @@
       "max": "Max"
     },
     "connection": {
-      "coinbase": "Coinbase",
+      "clvWallet": "CLV Wallet",
+      "coinbase": "Coinbase Wallet",
       "connectWallet": "Connect wallet",
       "disconnectedWallet": "Please connect your wallet to interact. Pickle supports the following networks: ",
       "errorTitle": "Uh oh, we're in a pickle here!",
@@ -356,6 +357,7 @@
       "extraBoost": "Pickle Farms give your yield an extra boost via Pickle token rewards",
       "harvestRewards": "Harvest rewards",
       "joinedFarms": "Joined Farms & Jars",
+      "lockedPickles": "Locked Pickles",
       "performance": "Performance",
       "picklesInWalletZeroOrOne": "PICKLEs in wallet",
       "picklesInWallet": "PICKLEs on {{ chains }} chains",
@@ -616,6 +618,7 @@
         },
         "chainTableTitle": "Chain Stats",
         "revsChartTitle": "Daily Revenue",
+        "topJarsChartTitle": "Top Jars by TVL",
         "tvlChartTitle": "Total Value Locked"
       },
       "subtitle": "Stats provide an overview of total value locked (deposited) in the protocol",
@@ -623,19 +626,24 @@
         "balance": "Token Balance",
         "depositTokenPrice": "Deposit Token Price",
         "farmAllocShare": "Emission Share",
+        "farmApy": "Farm APY",
         "farmPicklePerDay": "Farm Pickles Per Day",
         "harvestable": "Harvestable USD",
+        "id": "Jar ID",
         "jarApr": "Jar APR",
         "ma": "Moving Average",
         "maxApy": "Max. Farm APY",
         "minApy": "Min. Farm APY",
+        "name": "Name",
         "ptokensInFarm": "Percent of pTokens in Farm",
         "ratio": "Ratio of pTokens to Deposit Tokens",
         "revsUsd": "Revenue in USD",
         "supply": "No. of Tokens",
         "tokenPrice": "Token Price",
+        "tvl": "TVL",
         "value": "Total Value Locked"
-      }
+      },
+      "platformStats": "Pickle Stats"
     },
     "theme": {
       "dark": "Dark",

@@ -14,7 +14,7 @@ import {
 import ConnectorItem from "./ConnectorItem";
 import coinbase from "public/wallet/coinbase.svg";
 import metamask from "public/wallet/metamask.svg";
-import clover from "public/wallet/clover.svg";
+import clvWallet from "public/wallet/clv.jpeg";
 import walletConnect from "public/wallet/walletconnect.svg";
 import { ConnectionSelectors, setIsModalOpen } from "v2/store/connection";
 import { useAppDispatch } from "v2/store";
@@ -47,8 +47,8 @@ const ConnectWalletModal: FC = () => {
     },
     {
       id: Connectors.Clover,
-      icon: clover,
-      title: t("v2.connection.clover"),
+      icon: clvWallet,
+      title: t("v2.connection.clvWallet"),
       connector: cloverconnect,
     },
   ];
