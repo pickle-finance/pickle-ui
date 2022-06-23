@@ -136,7 +136,11 @@ const styles: StylesConfig<JarSelectData | String, false> = {
 };
 
 const filterJars = (jar: JarDefinition) => {
-  if (jar.enablement !== AssetEnablement.PERMANENTLY_DISABLED && jar.details?.apiKey !== undefined)
+  if (
+    jar.enablement !== AssetEnablement.PERMANENTLY_DISABLED &&
+    jar.enablement !== AssetEnablement.DISABLED &&
+    jar.details?.apiKey !== undefined
+  )
     return jar;
 };
 
