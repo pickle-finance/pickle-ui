@@ -1,4 +1,4 @@
-import { Component, FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { PickleFinancePage } from "v2/types";
 import { useAppSelector } from "v2/store";
@@ -65,7 +65,7 @@ const Loading: FC<{ ready: readyState; page?: "platform" | "chain" | "jar" }> = 
       <div className="flex justify-center items-center py-8 lg:py-32">
         <div className="bg-background-light border border-foreground-alt-300 rounded-xl w-96 h-96">
           <div className="flex justify-center mt-5">
-            <Image src="/animations/waiting.gif" alt="Loading..." width={250} height={250} />
+            <img src="/animations/waiting.gif" alt="Loading..." width={250} height={250} />
           </div>
           <p className="text-xl text-center text-foreground-alt-200 mt-10">Loading Chart Data</p>
         </div>
@@ -88,9 +88,9 @@ const PageTitle: FC = () => {
 };
 
 export interface readyState {
-  platform: Boolean;
-  chain: Boolean;
-  jar: Boolean;
+  platform: boolean;
+  chain: boolean;
+  jar: boolean;
 }
 
 Stats.PageTitle = PageTitle;
