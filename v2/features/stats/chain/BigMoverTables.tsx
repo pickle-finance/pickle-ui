@@ -11,7 +11,7 @@ export const TvlGainsTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) => (
         .slice(-5)
         .reverse()
         .map((data) => (
-          <tr key={"apiKey"}>
+          <tr className="text-foreground-alt-100" key={"apiKey"}>
             <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2">{data.apiKey}</td>
             <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pr-2">
               {data.tvlChange !== undefined ? formatDollars(data.tvlChange, 2) : "error"}
@@ -27,7 +27,7 @@ export const TvlLossesTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) => 
     <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.loss" />
     <tbody className="border border-foreground-alt-400 text-left">
       {data.slice(0, 5).map((data) => (
-        <tr key={"apiKey"}>
+        <tr className="text-foreground-alt-100" key={"apiKey"}>
           <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2">{data.apiKey}</td>
           <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pr-2">
             {data.tvlChange !== undefined ? formatDollars(data.tvlChange, 2) : "error"}
@@ -46,7 +46,7 @@ export const TokenGainsTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) =>
         .slice(-5)
         .reverse()
         .map((data) => (
-          <tr key={"apiKey"}>
+          <tr className="text-foreground-alt-100" key={"apiKey"}>
             <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2">{data.apiKey}</td>
             <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pr-2">
               {data.tokenPriceChange !== undefined
@@ -64,7 +64,7 @@ export const TokenLossesTable: FC<{ data: iBigMoverTableData[] }> = ({ data }) =
     <BigMoverTableHead colB="v2.stats.chain.bigMoversTableHeader.loss" />
     <tbody className="border border-foreground-alt-400 text-left">
       {data.slice(0, 5).map((data) => (
-        <tr key={"apiKey"}>
+        <tr className="text-foreground-alt-100" key={"apiKey"}>
           <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2">{data.apiKey}</td>
           <td className="text-left xl:pl-20 lg:pl-20 md:pl-10 sm:pl-10 pt-2 pr-2">
             {data.tokenPriceChange !== undefined

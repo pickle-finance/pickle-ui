@@ -1,35 +1,33 @@
 import React, { FC } from "react";
 import Select from "react-select";
 
-const pickleWhite = "#ebebeb";
-
 const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
   return (
     <Select
       styles={{
         input: (base) => ({
           ...base,
-          color: pickleWhite,
+          color: "rgb(var(--color-foreground-alt-200))",
         }),
         control: (base) => ({
           ...base,
-          maxWidth: 200,
+          maxWidth: 350,
           marginLeft: 25,
-          backgroundColor: "#111111",
+          backgroundColor: "rgb(var(--color-background))",
           borderWidth: "1px",
-          borderColor: "#475569",
-          color: pickleWhite,
+          borderColor: "rgb(var(--color-foreground-alt-400))",
+          color: "rgb(var(--color-foreground-alt-200))",
         }),
-        menu: (provided, state) => ({
+        menu: (provided) => ({
           ...provided,
           top: 40,
-          maxWidth: 250,
+          maxWidth: 400,
           marginLeft: 25,
           borderRadius: 5,
-          border: "2px solid #475569",
-          backgroundColor: "#111111",
-          color: pickleWhite,
-          scrollbarColor: "dark",
+          borderWidth: "2px",
+          borderColor: "rgb(var(--color-foreground-alt-400))",
+          backgroundColor: "rgb(var(--color-background))",
+          color: "rgb(var(--color-foreground-alt-200))",
         }),
       }}
       theme={(theme) => ({
@@ -37,13 +35,13 @@ const ChartSelect: FC<{ chartChange: any }> = ({ chartChange }) => {
         borderRadius: 5,
         colors: {
           ...theme.colors,
-          text: pickleWhite,
-          primary: "#202020",
-          primary25: "black",
+          text: "rgb(var(--color-foreground-alt-200))",
+          primary: "rgb(var(--color-foreground-alt-300))",
+          primary25: "rgb(var(--color-foreground-alt-400))",
           primary50: "black",
           primary75: "black",
           neutral10: "black",
-          neutral80: pickleWhite,
+          neutral80: "rgb(var(--color-foreground-alt-200))",
         },
       })}
       defaultValue={{ label: "TVL", value: "tvl" }}

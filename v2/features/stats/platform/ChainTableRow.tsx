@@ -9,7 +9,7 @@ const ChainRow: FC<{
   setChain: SetFunction;
   networks: Network[];
 }> = ({ chain, setChain, networks }) => (
-  <tr className="border border-foreground-alt-400">
+  <tr className="border border-foreground-alt-400 text-foreground-alt-100">
     <td className="text-left text-sm lg:pl-8 sm:pl-4 py-2 pr-2">
       <ChainControl chainId={chain.chainId} setChain={setChain} networks={networks} />
     </td>

@@ -9,26 +9,28 @@ import {
   getTVLChange,
   iBigMoverTableData,
 } from "v2/features/stats/chain/BigMoverUtils";
-import { ChainNetwork, PickleModelJson } from "picklefinance-core";
+import { PickleModelJson } from "picklefinance-core";
 import { ChainSelectData } from "./ChainSelect";
-import { JarSelectData } from "./JarSelect";
+import { readyState } from "pages/stats";
 
 const ChainStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   chain: ChainSelectData;
-  jar: JarSelectData;
   setJar: SetFunction;
-}> = ({ core, chain, jar, setJar }) => {
+  ready: readyState;
+  setReady: SetFunction;
+  page: "platform" | "chain" | "jar" | undefined;
+}> = ({ core, chain, setJar, ready, setReady, page }) => {
   const [chainData, setChainData] = useState<ChainData>({} as ChainData);
   const [tokenPctChangeData, setTokenPctChangeData] = useState<iBigMoverTableData[]>([]);
   const [tvlChange, setTvlChange] = useState<iBigMoverTableData[]>([]);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      if (chain)
-        getChainData(chain.value).then((data) => {
-          setChainData(data);
-        });
+      if (Object.keys(chain).length > 0)
+        getChainData(chain.value)
+          .then((data) => setChainData(data))
+          .then(() => setReady((prev: readyState) => ({ ...prev, chain: true })));
     };
     getData();
   }, [chain]);
@@ -40,10 +42,15 @@ const ChainStats: FC<{
     setTvlChange(tvlChange);
   }, [chainData]);
 
+  useEffect(() => {
+    if (tokenPctChangeData.length > 0 && tvlChange.length > 0)
+      setReady((prev: readyState) => ({ ...prev, chain: true }));
+  }, [tokenPctChangeData, tvlChange]);
+
   tokenPctChangeData.sort((a, b) => (a.tokenPriceChange || 0) - (b.tokenPriceChange || 0));
   tvlChange.sort((a, b) => (a.tvlChange || 0) - (b.tvlChange || 0));
 
-  if (Object.keys(chain).length > 0 && Object.keys(jar).length === 0)
+  if (page === "chain" && ready[page])
     return (
       <>
         <BigMoverTableContainer type="tvl" tableData={tvlChange} />
