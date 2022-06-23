@@ -291,8 +291,6 @@ const defaultSortingLogic = (assetsWithData: AssetWithData[]): AssetWithData[] =
       b.depositTokensInWallet.tokensUSD &&
       b.depositTokensInWallet.tokensUSD > 0;
 
-    if (aHasDepositTokens && !bHasDepositTokens) return 1;
-    if (bHasDepositTokens && !aHasDepositTokens) return -1;
     if (aHasDepositTokens && !bHasDepositTokens) return -1;
     if (bHasDepositTokens && !aHasDepositTokens) return 1;
     if (aHasDepositTokens && bHasDepositTokens)
