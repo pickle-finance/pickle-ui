@@ -18,7 +18,9 @@ const BigMoverTableContainer: FC<{
           className,
         )}
       >
-        <h2 className="font-body font-bold text-xl mb-4">{t(`v2.stats.chain.${type}Table`)}</h2>
+        <h2 className="text-foreground-alt-200 font-body font-bold text-xl mb-4">
+          {t(`v2.stats.chain.${type}Table`)}
+        </h2>
         {type === "tvl" && (
           <div className="xl:columns-2 lg:columns-2 md:columns-1 sm:columns-1 gap-4">
             <TvlGainsTable data={tableData} />

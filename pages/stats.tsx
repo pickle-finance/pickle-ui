@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { Component, FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { PickleFinancePage } from "v2/types";
 import { useAppSelector } from "v2/store";
@@ -36,6 +36,7 @@ const Stats: PickleFinancePage = () => {
     ready,
     setReady,
     page,
+    setPage,
   };
 
   return (
@@ -72,6 +73,7 @@ const Loading: FC<{ ready: readyState; page?: "platform" | "chain" | "jar" }> = 
     );
   return null;
 };
+
 const PageTitle: FC = () => {
   const { t } = useTranslation("common");
 

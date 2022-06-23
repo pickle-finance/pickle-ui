@@ -34,7 +34,7 @@ const ChartContainer: FC<{
           className,
         )}
       >
-        <h2 className="font-body font-bold text-xl p-4">
+        <h2 className="font-body font-bold text-xl text-foreground-alt-200 p-4">
           {t(`v2.stats.platform.${chart}ChartTitle`)}
         </h2>
         <aside className="xl:h-[500px] sm:h-[400px] pr-4">{chartMap[chart]}</aside>

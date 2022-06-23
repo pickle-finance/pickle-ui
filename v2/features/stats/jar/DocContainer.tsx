@@ -139,7 +139,7 @@ const RelatedTokens: FC<{ componentTokens: { [key: string]: string }; t: TFuncti
                     </div>
                     <p
                       className={classNames(
-                        "text-xl font-bold mt-3",
+                        "text-xl text-foreground-alt-200 font-bold mt-3",
                         chosenToken === token ? "text-accent" : undefined,
                       )}
                     >
