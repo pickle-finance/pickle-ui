@@ -24,6 +24,7 @@ const FarmsTableRowBody: FC<Props> = ({ asset, hideDescription }) => {
   const { network, needsNetworkSwitch } = useNeedsNetworkSwitch(asset.chain);
 
   const tokensInWallet = asset.depositTokensInWallet.tokensVisible;
+  const tokensInWalletUSD = asset.depositTokensInWallet.tokensUSD;
   const depositTokenCountString = t("v2.farms.tokens", { amount: tokensInWallet });
 
   const analyticsUrl: string | undefined = asset.details?.apiKey
@@ -70,7 +71,7 @@ const FarmsTableRowBody: FC<Props> = ({ asset, hideDescription }) => {
               </p>
             </>
           )) || (
-            <p className="font-title font-medium text-base leading-5">{depositTokenCountString}</p>
+            <p className="font-title font-medium text-base leading-5">{depositTokenCountString} <br/>{tokensInWalletUSD} USD</p>
           )}
           <p className="font-normal text-xs text-foreground-alt-200 mb-6">
             {t("v2.balances.balance")}
