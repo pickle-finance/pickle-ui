@@ -47,8 +47,11 @@ export const getPendingRewardsUsd = (
     runningUsd += jarData[i].earnedPickles.tokensUSD;
   }
   if (userdata.dill.claimable || userdata.dill.totalClaimableTokenV2) {
-    const picklesWei = BigNumber.from(userdata.dill.claimable).add(BigNumber.from(userdata.dill.totalClaimableTokenV2));
-    const dillPickleRewardUsd = parseFloat(ethers.utils.formatEther(picklesWei)) * core.prices.pickle;
+    const picklesWei = BigNumber.from(userdata.dill.claimable).add(
+      BigNumber.from(userdata.dill.totalClaimableTokenV2),
+    );
+    const dillPickleRewardUsd =
+      parseFloat(ethers.utils.formatEther(picklesWei)) * core.prices.pickle;
 
     runningUsd += dillPickleRewardUsd;
   }
@@ -137,7 +140,12 @@ export const getRewardRowPropertiesForRewards = (
     }
   }
 
-  if (userdata.dill && (userdata.dill.claimable || userdata.dill.totalClaimableETHV2 || userdata.dill.totalClaimableTokenV2)) {
+  if (
+    userdata.dill &&
+    (userdata.dill.claimable ||
+      userdata.dill.totalClaimableETHV2 ||
+      userdata.dill.totalClaimableTokenV2)
+  ) {
     const wei = BigNumber.from(userdata.dill.claimable);
 
     ret.push({

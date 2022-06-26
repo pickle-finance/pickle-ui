@@ -2,16 +2,13 @@ import { FC, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { ethers } from "ethers";
 import { useMachine } from "@xstate/react";
-import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { CoreSelectors, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "./stateMachineNoUserInput";
-import AwaitingConfirmation from "../../farms/flows/approval/AwaitingConfirmation";
 import AwaitingReceipt from "../../farms/flows/AwaitingReceipt";
 import Success from "../../farms/flows/Success";
 import Failure from "../../farms/flows/Failure";
 import { useTokenContract, useTransaction } from "../../farms/flows/hooks";
-import { ApprovalEvent } from "containers/Contracts/Erc20";
+import AwaitingConfirmationNoUserInput from "v2/features/farms/flows/AwaitingConfirmationNoUserInput";
 
 import { GPv2VaultRelayerAddress } from "../constants";
 import { useWeb3React } from "@web3-react/core";
@@ -40,11 +37,7 @@ const ApprovalFlow: FC<{
     return () => TokenContract.approve(spenderAddress, amount);
   };
 
-  const callback = (receipt: ethers.ContractReceipt) => {
-    const approvalEvent = receipt.events?.find(
-      ({ event }) => event === "Approval",
-    ) as ApprovalEvent;
-    const approvedAmount = approvalEvent.args[2];
+  const callback = (_receipt: ethers.ContractReceipt) => {
     setVisibleApproval(false);
   };
 
@@ -73,11 +66,12 @@ const ApprovalFlow: FC<{
         title={t("v2.farms.approveToken", { token: token })}
       >
         {current.matches(States.AWAITING_CONFIRMATION) && (
-          <AwaitingConfirmation
-            tokenName={token}
+          <AwaitingConfirmationNoUserInput
+            title={t("v2.farms.givePermission", { token })}
             error={error}
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}
+            cta={t("v2.actions.approve")}
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (

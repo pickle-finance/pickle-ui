@@ -38,9 +38,16 @@ const threshold = BigNumber.from("1000000000000");
 
 const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
   const totalEthRewards = parseFloat(ethers.utils.formatEther(details.claimableEthV2));
-  const totalPickleRewards = parseFloat(ethers.utils.formatEther(details.claimableTokenV2.add(details.claimableV1).add(details.harvestableAmount)));
+  const totalPickleRewards = parseFloat(
+    ethers.utils.formatEther(
+      details.claimableTokenV2.add(details.claimableV1).add(details.harvestableAmount),
+    ),
+  );
 
-  const totalRewards = details.claimableEthV2.add(details.claimableTokenV2).add(details.claimableV1).add(details.harvestableAmount);
+  const totalRewards = details.claimableEthV2
+    .add(details.claimableTokenV2)
+    .add(details.claimableV1)
+    .add(details.harvestableAmount);
 
   if (totalRewards.lt(threshold)) return null;
 
@@ -65,10 +72,12 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
             {roundToSignificantDigits(totalPickleRewards, 5)}
             <span className="text-foreground text-xs ml-2">PICKLE</span>
           </p>
-          {details.rewarderType == "dill" && <p className="text-primary font-bold text-lg align-bottom leading-6">
-            {roundToSignificantDigits(totalEthRewards, 5)}
-            <span className="text-foreground text-xs ml-2">ETH</span>
-          </p>}
+          {details.rewarderType == "dill" && (
+            <p className="text-primary font-bold text-lg align-bottom leading-6">
+              {roundToSignificantDigits(totalEthRewards, 5)}
+              <span className="text-foreground text-xs ml-2">ETH</span>
+            </p>
+          )}
         </div>
       </div>
       <div className="flex items-center">

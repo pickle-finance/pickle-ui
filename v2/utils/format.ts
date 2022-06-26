@@ -8,7 +8,7 @@ export const formatNumber = (value: number, precision = 0): string => {
   });
 
   const result = formatter.format(value);
-  if( parseFloat(result) === 0 && value > 0 ) {
+  if (parseFloat(result) === 0 && value > 0) {
     // We have a problem here. Displaying 0 for non-zero input. Use scientific notation?
     return numberToScientificNotation(value);
   }
@@ -17,9 +17,9 @@ export const formatNumber = (value: number, precision = 0): string => {
 
 export const numberToScientificNotation = (value: number): string => {
   const exponent = Math.floor(value ? Math.log(value) / Math.log(10) : 0);
-  value *= (10**(exponent * -1));
+  value *= 10 ** (exponent * -1);
   return "" + value + "e" + exponent;
-}
+};
 
 export const formatDate = (value: Date): string => {
   const formatter = new Intl.DateTimeFormat("en-US", {

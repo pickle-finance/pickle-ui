@@ -51,8 +51,7 @@ const moduleExports = {
   },
 };
 
-const SentryWebpackPluginOptions = {
-};
+const SentryWebpackPluginOptions = {};
 
 // module.exports = withBundleAnalyzer(moduleExports);
 module.exports = moduleExports;
