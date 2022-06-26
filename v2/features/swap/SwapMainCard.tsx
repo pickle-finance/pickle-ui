@@ -12,6 +12,7 @@ import isEmpty from "lodash/isEmpty";
 import { getAmountWRTDecimal, getAmountWRTUpperDenom } from "./utils";
 import { BigNumber } from "bignumber.js";
 import { FlipTokens } from "./FlipTokens";
+import { Erc20__factory } from "v1/containers/Contracts/factories";
 import {
   DEFAULT_DEADLINE_IN_MIN,
   DEFAULT_SLIPPAGE_TOLERANCE,
@@ -21,7 +22,6 @@ import {
 } from "./constants";
 import { OrderKind } from "@cowprotocol/cow-sdk";
 import ApprovalFlow from "./flow/ApprovalFlow";
-import { Erc20__factory } from "containers/Contracts/factories/Erc20__factory";
 import { CurrencyInput } from "./CurrencyInput";
 import { SwapInfo } from "./SwapInfo";
 import { ConfirmationSwap } from "./ConfirmationSwap";

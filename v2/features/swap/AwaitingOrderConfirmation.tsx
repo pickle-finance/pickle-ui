@@ -14,7 +14,6 @@ const AwaitingOrderConfirmation: FC = () => {
         <Spinner />
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>
-      
     </>
   );
 };

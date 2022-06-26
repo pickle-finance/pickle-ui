@@ -9,8 +9,8 @@ export const getAmountWRTUpperDenom = (amount: string, decimals: number) =>
     .decimalPlaces(6)
     .toString();
 export const convertMintoMicroSec = (val: number) => {
-  return val * 60 * 1000; 
-}
+  return val * 60 * 1000;
+};
 export const calculatePercentage = (val: number): number => {
   return val / 100;
 };
