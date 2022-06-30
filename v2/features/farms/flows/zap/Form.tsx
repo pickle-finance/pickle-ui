@@ -33,7 +33,14 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens }) => {
   const displayBalanceStr = formatUnits(usedBalance, usedDecimals);
   const [amount, setAmount] = useState<string>(displayBalanceStr);
 
-  console.log({ usedBalance, displayBalanceStr });
+  const [printed, setPrinted] = useState(false);
+  const debug = false;
+  if (debug) {
+    if (!printed) {
+      console.log({ usedBalance, displayBalanceStr });
+      setPrinted(true);
+    }
+  }
   const options: Array<TokenSelect> = Object.keys(zapTokens).map((x) => {
     return {
       label: x,

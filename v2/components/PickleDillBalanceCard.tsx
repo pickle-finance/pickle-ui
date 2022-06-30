@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -11,6 +11,10 @@ const DillBalanceCard: FC = () => {
   const { t } = useTranslation("common");
   const account = useAccount();
   const userModel = useAppSelector((state) => UserSelectors.selectData(state, account));
+
+  const debug = false;
+  if (debug) console.log(userModel);
+
   let dill = "0.00";
   let lockedPickles = "0.00";
 

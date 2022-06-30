@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -6,6 +6,7 @@ import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
 import { Chains, PickleModelJson } from "picklefinance-core";
 import {
+  BalanceAllowance,
   ChainNativetoken,
   UserBrineryData,
   UserTokenData,
@@ -30,8 +31,8 @@ import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 import { eventsByName, getNativeName } from "../utils";
 import { isAcceptingDeposits } from "v2/store/core.helpers";
 import { useSelector } from "react-redux";
-import { TokenSelect } from "../deposit/FormUniV3";
-import { solidityKeccak256 } from "ethers/lib/utils";
+// import { TokenSelect } from "../deposit/FormUniV3";
+// import { solidityKeccak256 } from "ethers/lib/utils";
 
 type DepositType = "jar" | "brinery";
 
@@ -47,7 +48,7 @@ const getZapTokens = (
   userTokenData: UserTokenData | undefined,
   asset: AssetWithData,
   core: PickleModelJson.PickleModelJson | undefined,
-): any => {
+): iZapTokens => {
   const componentTokens = userTokenData?.componentTokenBalances || undefined;
 
   const jarChain = core?.chains.find((chain) => chain.network === asset.chain);
@@ -59,30 +60,29 @@ const getZapTokens = (
     core?.tokens.find((x) => x.chain === asset.chain && x.id === nativeName)?.decimals || 18;
 
   return {
-    ...(!componentTokens
-      ? {}
-      : Object.keys(componentTokens).reduce((acc, curr) => {
-          const currDecimals =
-            core?.tokens.find((x) => x.chain === asset.chain && x.id === curr.toLowerCase())
-              ?.decimals || 18;
+    ...(componentTokens &&
+      Object.keys(componentTokens).reduce((acc, curr) => {
+        const currDecimals =
+          core?.tokens.find((x) => x.chain === asset.chain && x.id === curr.toLowerCase())
+            ?.decimals || 18;
 
-          return {
-            ...acc,
-            [curr.toUpperCase()]: {
-              balance: componentTokens[curr]?.balance,
-              allowance: componentTokens[curr]?.allowance, // TODO: this is only the jar allowance (used in univ3 zaps), need to update for specific zap contract/protocol in pf-core. Can potentially use the same property to express allowance for respective protocol's zap contract, since there's no overlap between univ3 jars and zaps currently
-              decimals: currDecimals,
-              type: "token",
-            },
-          };
-        }, {})),
+        return {
+          ...acc,
+          [curr.toUpperCase()]: {
+            balance: componentTokens[curr]?.balance,
+            allowance: componentTokens[curr]?.allowance, // TODO: this is only the jar allowance (used in univ3 zaps), need to update for specific zap contract/protocol in pf-core. Can potentially use the same property to express allowance for respective protocol's zap contract, since there's no overlap between univ3 jars and zaps currently
+            decimals: currDecimals,
+            type: "token",
+          },
+        };
+      }, {})),
     ...(nativeName &&
       wrappedName && {
         [nativeName]: {
           balance: userNativeData?.native.balance,
           allowance: userNativeData?.native.allowance,
           decimals: nativeDecimals,
-          type: "wrapped",
+          type: "native",
         },
         [wrappedName]: {
           balance: userNativeData?.wrappedBalance,
@@ -90,13 +90,22 @@ const getZapTokens = (
             userNativeData?.wrappedAllowances[
               Object.keys(userNativeData?.wrappedAllowances!).find((x) => x === asset.protocol) ||
                 ""
-            ]?.allowance,
+            ],
           decimals: nativeDecimals,
-          type: "native",
+          type: "wrapped",
         },
       }),
   };
 };
+
+interface iZapTokens {
+  [key: string]: iZaps;
+}
+
+interface iZaps extends BalanceAllowance {
+  decimals: number;
+  type: "token" | "wrapped" | "native";
+}
 
 const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances, type }) => {
   const { t } = useTranslation("common");
@@ -119,6 +128,14 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances, type }) => {
     core,
   );
 
+  const debug = true;
+  const [printed, setPrinted] = useState(false);
+  if (debug) {
+    if (!printed) {
+      console.log(zapTokens);
+      setPrinted(true);
+    }
+  }
   const transactionFactory = () => {
     if (!JarContract) return;
 
