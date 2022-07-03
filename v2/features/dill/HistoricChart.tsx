@@ -310,7 +310,7 @@ const HistoricChart: FC = () => {
                  * If the y-axis looks broken it's most likely due to one data point
                  * being outside of this domain and it needs to be adjusted.
                  */
-                domain={[-5000, 250000]}
+                domain={[-10000, 810000]}
                 tickCount={9}
               >
                 <Label
