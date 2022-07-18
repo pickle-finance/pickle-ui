@@ -33,10 +33,22 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
 
-  // TODO: Relying on this only shows zap options for component tokens user holds in wallet - could be improved by persisted options (even with 0 balance)
-  const userTokenData = useAppSelector((state) =>
-    UserSelectors.selectTokenDataById(state, asset.details.apiKey, account),
-  );
+  const userTokenData = useAppSelector((state) => {
+    const tokenData = UserSelectors.selectTokenDataById(state, asset.details.apiKey, account);
+    return tokenData ? tokenData : {
+      assetKey: asset.details.apiKey,
+      componentTokenBalances: asset.depositToken.components?.reduce((acc: any, curr) => {
+        return (acc[curr] = { balance: '0', allowance: '0' }, acc)
+        }, {}
+      ),
+      depositTokenBalance: "0",
+      farmAllowance: "0",
+      jarAllowance: "0",
+      pAssetBalance: "0",
+      pStakedBalance: "0",
+      picklePending: "0",
+    }
+  });
 
   const userNativeData = useAppSelector((state) =>
     UserSelectors.selectNativeTokenDataByChain(state, asset.chain, account),
