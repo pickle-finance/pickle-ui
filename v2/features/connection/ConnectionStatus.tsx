@@ -34,7 +34,7 @@ const chainToChainParams = (chain: RawChain | undefined) => {
     chainName: chain.networkVisible,
     nativeCurrency: {
       name: chain.gasToken.toUpperCase(),
-      symbol: chain.gasToken.toUpperCase(),
+      symbol: chain.gasTokenSymbol.toUpperCase(),
       decimals: 18,
     },
     rpcUrls: chain.rpcs,
