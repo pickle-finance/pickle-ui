@@ -84,8 +84,7 @@ export const tokenDecimals = (apiKey: string | undefined, core: PickleModelJson)
 
 export const enabledPredicate = (asset: Asset) =>
   asset.enablement === AssetEnablement.ENABLED ||
-  asset.enablement === AssetEnablement.WITHDRAW_ONLY ||
-  asset.enablement === AssetEnablement.DEV;
+  asset.enablement === AssetEnablement.WITHDRAW_ONLY;
 
 export const isAcceptingDeposits = (asset: Asset) =>
   asset.enablement !== AssetEnablement.WITHDRAW_ONLY;
