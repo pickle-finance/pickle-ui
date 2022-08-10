@@ -20,7 +20,7 @@ const Dashboard: PickleFinancePage = () => {
           <PickleDillBalanceCard />
         </div>
       </div>
-      <FarmsTable title={t("v2.dashboard.joinedFarms")} simple dashboard requiresUserModel />
+      <FarmsTable title={t("v2.dashboard.joinedFarms")} dashboard requiresUserModel />
       <div className="mt-4">
         <DashboardCalloutCard />
       </div>

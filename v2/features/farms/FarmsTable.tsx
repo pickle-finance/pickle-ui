@@ -32,7 +32,7 @@ const FarmsTable: FC<Props> = ({
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
-            {!simple && !singleAsset && <FarmControls />}
+            {!simple && !singleAsset && !dashboard && <FarmControls />}
             <table className="min-w-full table-auto border-collapse">
               <thead className="bg-background uppercase">
                 <tr>
