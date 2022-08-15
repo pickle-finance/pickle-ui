@@ -149,6 +149,27 @@ export interface ApyChartData {
   maxApy: number;
 }
 
+export interface UserTx {
+  hash: string;
+  transaction_type: string;
+  chain_id: number;
+  timestamp: number;
+  blocknumber: number;
+  indexInBlock: number;
+  transfers: UserTransfer[];
+}
+
+export interface UserTransfer {
+  amount: string;
+  transfer_type: string;
+  log_index: number;
+  fromAddress: string;
+  toAddress: string;
+  tokenAddress: string;
+  price: string;
+}
+
+//end Stats
 export interface SelectData {
   value: string;
   label: string;
