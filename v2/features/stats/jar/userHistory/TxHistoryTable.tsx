@@ -1,8 +1,9 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
+import Link from "v2/components/Link";
 import { FC, Fragment, HTMLAttributes } from "react";
-import { UserTx } from "v2/types";
+import { UserTransfer, UserTx } from "v2/types";
 import { classNames, formatDate } from "v2/utils";
 
 const TxHistoryTable: FC<{ txHistory: UserTx[]; className?: string }> = ({
@@ -15,23 +16,26 @@ const TxHistoryTable: FC<{ txHistory: UserTx[]; className?: string }> = ({
         <table className="min-w-full table-auto border-collapse">
           <thead className="bg-background uppercase">
             <tr>
-              <TxHistoryHeaderCell label="Date/Time" />
-              <TxHistoryHeaderCell label="Block Num." />
-              <TxHistoryHeaderCell label="TX Type" />
-              <TxHistoryHeaderCell label="TX Hash" />
+              <TxTableHeaderCell label="Date/Time" />
+              <TxTableHeaderCell label="Block Num." />
+              <TxTableHeaderCell label="TX Type" />
+              <TxTableHeaderCell label="TX Hash" />
+              {/* Chevron down/up column */}
             </tr>
           </thead>
           <tbody className="text-foreground">
             <TxTableBody txs={txHistory} />
           </tbody>
         </table>
-        {/* <Pagination /> */}
+        {/* <div className="flex justify-center mt-4">
+          <Pagination />
+        </div> */}
       </div>
     </div>
   </div>
 );
 
-const TxHistoryHeaderCell: FC<{ label: string }> = ({ label }) => (
+const TxTableHeaderCell: FC<{ label: string }> = ({ label }) => (
   <th
     scope="col"
     className="px-4 py-1 h-8 text-left text-xs font-bold text-foreground-alt-200 tracking-normal sm:px-6"
@@ -66,8 +70,8 @@ const TxTableRow: FC<{ tx: UserTx }> = ({ tx }) => (
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Disclosure.Panel as="tr">
-              <TxTableRowBody />
+            <Disclosure.Panel>
+              <TransferTable transfers={tx.transfers} />
             </Disclosure.Panel>
           </Transition>
         </>
@@ -125,17 +129,33 @@ const TxTableRowHeader: FC<{ tx: UserTx; open: boolean }> = ({ tx, open }) => {
   );
 };
 
-const TxTableRowBody: FC = () => (
-  <td
-    colSpan={5}
-    className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
-  >
-    <div className="flex">
-      <div className="pt-4 pb-6 flex-shrink-0 mr-6">
-        <p>TESTING</p>
-      </div>
-    </div>
-  </td>
+const TransferTable: FC<{ transfers: UserTransfer[] }> = ({ transfers }) => (
+  <div className="py-2 align-middle inline-block min-w-full">
+    <table className="min-w-full table-auto border-collapse">
+      <tbody>
+        {transfers.map((t) => (
+          <tr
+            key={t.log_index}
+            className="bg-background-light rounded-b-xl p-6 border-t border-foreground-alt-500"
+          >
+            <td>
+              <p className="font-normal text-xs text-foreground-alt-200 mb-6">{t.transfer_type}</p>
+            </td>
+            <td>
+              <Link href="http://www.google.com" className="font-bold" external primary>
+                {t.fromAddress.substring(0, 8) + "..."}
+              </Link>
+            </td>
+            <td>
+              <Link href="http://www.google.com" className="font-bold" external primary>
+                {t.toAddress.substring(0, 8) + "..."}
+              </Link>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 );
 
 const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
