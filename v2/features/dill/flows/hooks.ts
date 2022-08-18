@@ -48,6 +48,7 @@ export const useDistributorContract = (address: string) => {
   return DistributorContract;
 };
 
+// This function doesn't work correctly and is not used in UIv2. DO NOT USE IN UIv2
 export function useProtocolIncome(pickleCore: PickleModelJson.PickleModelJson) {
   const [weeklyProfit, setWeeklyProfit] = useState<number | null>(null);
   const [weeklyDistribution, setWeeklyDistribution] = useState<number | null>(null);

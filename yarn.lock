@@ -6684,10 +6684,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picklefinance-core@^0.4.76:
-  version "0.4.83"
-  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.4.83.tgz#591d72dbcdc06382f9787092e66757a27cc6dee5"
-  integrity sha512-eDP51ApAFDfVXxO5gC0nahn2mMuo2nRXj2u4b9pJegrmmH+P10n3Z1lfADayqpwcX/H4SEXMqXTI6Xro77xT4w==
+picklefinance-core@^0.4.89:
+  version "0.4.89"
+  resolved "https://registry.yarnpkg.com/picklefinance-core/-/picklefinance-core-0.4.89.tgz#f8872152f58263a4e0127c0ac30c9f97ffb476f3"
+  integrity sha512-1RF9m7S+ZFOCW7mdXrUo/aIq/RYdBm+6UFSpm3PRdpaaCGSmbk+u+ZBGOD5rPsCHjtM3rihFnnu4L2fW0kgV0w==
   dependencies:
     "@thanpolas/univ3prices" "^3.0.2"
     "@types/coingecko-api" "^1.0.0"
