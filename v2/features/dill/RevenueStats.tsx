@@ -103,11 +103,11 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                 upcomingDistribution.weeklyEthAmount * ethPrice,
             )}
             <MoreInfo>
-              <div className="flex items-center font-bold text-sm">
+              <div className="flex justify-between items-end font-bold text-sm mb-1">
                 <span className="text-foreground mr-1">
                   {formatNumber(upcomingDistribution.weeklyPickleAmount)}
                 </span>
-                <div className="inline-block w-6 h-6">
+                <div className="inline-block w-5 h-5 ml-2">
                   <Image
                     src="/pickle-icon.svg"
                     width={24}
@@ -118,11 +118,11 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                   />
                 </div>
               </div>
-              <div className="flex items-center font-bold text-sm">
+              <div className="flex justify-between items-end font-bold text-sm mb-1">
                 <span className="text-foreground mr-1">
-                  {formatNumber(upcomingDistribution.weeklyEthAmount)}
+                  {formatNumber(upcomingDistribution.weeklyEthAmount, 2)}
                 </span>
-                <div className="inline-block w-6 h-6">
+                <div className="inline-block w-5 h-5 ml-2">
                   <Image
                     src="/tokens/eth.png"
                     width={24}
