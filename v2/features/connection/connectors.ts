@@ -54,8 +54,8 @@ export const cloverconnect = new CloverConnector({
 });
 
 export const uauthconnect = new UAuthConnector({
-  clientID: "e24b36a0-17c6-4220-b306-cd8ebed90a73",
-  redirectUri: "http://localhost:8000",
+  clientID: process.env.NEXT_PUBLIC_UAUTH_CLIENT_ID,
+  redirectUri: process.env.NEXT_PUBLIC_UAUTH_REDIRECT_URI,
   scope: "openid wallet",
   connectors: { injected, walletconnect },
 });
