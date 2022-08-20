@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import type { Web3Provider } from "@ethersproject/providers";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-import { injected } from "./connectors";
+import { UAuthConnector } from "@uauth/web3-react";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ConnectionSelectors } from "v2/store/connection";
+import { injected } from "./connectors";
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
@@ -80,6 +82,26 @@ export function useInactiveListener(suppress = false) {
     return undefined;
   }, [active, error, suppress, activate]);
 }
+
+export const useUDomain = (connector: AbstractConnector | undefined) => {
+  const [uDomain, setUDomain] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!connector) return;
+
+    const resolveUDomain = async () => {
+      if (connector instanceof UAuthConnector) {
+        const { sub } = await (connector as UAuthConnector).uauth.user();
+        console.log(`user domain: ${sub}`);
+        setUDomain(sub);
+      }
+    };
+
+    resolveUDomain();
+  }, [connector]);
+
+  return uDomain;
+};
 
 export const useENS = (
   address: string | null | undefined,

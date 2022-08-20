@@ -11,7 +11,7 @@ import ConnectWalletButton from "./ConnectWalletButton";
 import { shortenAddress } from "v2/utils";
 import { useAppDispatch } from "v2/store";
 import { setIsManuallyDeactivated } from "v2/store/connection";
-import { useENS } from "./hooks";
+import { useENS, useUDomain } from "./hooks";
 import { useAccount } from "v2/hooks";
 
 const WalletToggleOptions: FC = () => {
@@ -40,7 +40,7 @@ const WalletToggleOptions: FC = () => {
             key={option.name}
             onClick={option.action}
             href="#"
-            className="flex group hover:bg-background-lightest hover:text-primary-light p-2 rounded-lg transition duration-300 ease-in-out"
+            className="flex p-2 transition duration-300 ease-in-out rounded-lg group hover:bg-background-lightest hover:text-primary-light"
           >
             <Icon className="w-5 h-5 mr-3" />
             <span className="text-sm font-bold">{option.name}</span>
@@ -52,9 +52,10 @@ const WalletToggleOptions: FC = () => {
 };
 
 const WalletToggle: FC = () => {
-  const { library, chainId } = useWeb3React<Web3Provider>();
+  const { library, chainId, connector } = useWeb3React<Web3Provider>();
   const account = useAccount();
   const ens = useENS(account, library, chainId);
+  const uDomain = useUDomain(connector);
 
   if (!account) return <ConnectWalletButton />;
 
@@ -62,8 +63,8 @@ const WalletToggle: FC = () => {
     <Popover className="relative shrink-0">
       {() => (
         <>
-          <Popover.Button className="group rounded-xl inline-flex items-center text-sm text-foreground font-bold hover:bg-background-light transition duration-300 ease-in-out focus:outline-none px-4 py-2">
-            <span className="block mr-2">{ens || shortenAddress(account)}</span>
+          <Popover.Button className="inline-flex items-center px-4 py-2 text-sm font-bold transition duration-300 ease-in-out group rounded-xl text-foreground hover:bg-background-light focus:outline-none">
+            <span className="block mr-2">{uDomain || ens || shortenAddress(account)}</span>
             <Davatar
               size={32}
               address={account}
@@ -73,9 +74,9 @@ const WalletToggle: FC = () => {
           </Popover.Button>
 
           <SelectTransition>
-            <Popover.Panel className="absolute z-200 w-full left-1/2 -translate-x-1/2 mt-2 px-2 sm:px-0">
-              <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-foreground-alt-500 overflow-hidden">
-                <div className="relative grid gap-1 bg-background-light p-2">
+            <Popover.Panel className="absolute w-full px-2 mt-2 -translate-x-1/2 z-200 left-1/2 sm:px-0">
+              <div className="overflow-hidden border rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border-foreground-alt-500">
+                <div className="relative grid gap-1 p-2 bg-background-light">
                   <WalletToggleOptions />
                 </div>
               </div>

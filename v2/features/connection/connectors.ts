@@ -1,8 +1,9 @@
+import { CloverConnector } from "@clover-network/clover-connector";
+import { UAuthConnector } from "@uauth/web3-react";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { CloverConnector } from "@clover-network/clover-connector";
 import chains from "./chainIds.json";
 
 export interface Connector {
@@ -17,6 +18,7 @@ export enum Connectors {
   WalletConnect,
   Coinbase,
   Clover,
+  Unstoppable,
 }
 
 const POLLING_INTERVAL = 12000;
@@ -49,4 +51,11 @@ export const walletlink = new WalletLinkConnector({
 
 export const cloverconnect = new CloverConnector({
   supportedChainIds: [1],
+});
+
+export const uauthconnect = new UAuthConnector({
+  clientID: "e24b36a0-17c6-4220-b306-cd8ebed90a73",
+  redirectUri: "http://localhost:8000",
+  scope: "openid wallet",
+  connectors: { injected, walletconnect },
 });

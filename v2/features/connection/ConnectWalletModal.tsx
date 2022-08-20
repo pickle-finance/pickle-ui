@@ -10,12 +10,14 @@ import {
   walletconnect,
   walletlink,
   cloverconnect,
+  uauthconnect,
 } from "./connectors";
 import ConnectorItem from "./ConnectorItem";
 import coinbase from "public/wallet/coinbase.svg";
 import metamask from "public/wallet/metamask.svg";
 import clvWallet from "public/wallet/clv.jpeg";
 import walletConnect from "public/wallet/walletconnect.svg";
+import unstoppableDefault from "public/wallet/unstoppable-default.svg"
 import { ConnectionSelectors, setIsModalOpen } from "v2/store/connection";
 import { useAppDispatch } from "v2/store";
 
@@ -51,6 +53,12 @@ const ConnectWalletModal: FC = () => {
       title: t("v2.connection.clvWallet"),
       connector: cloverconnect,
     },
+    {
+      id: Connectors.Unstoppable,
+      icon: unstoppableDefault,
+      title: t("Login with Unstoppable"),
+      connector: uauthconnect
+    }
   ];
 
   return (
