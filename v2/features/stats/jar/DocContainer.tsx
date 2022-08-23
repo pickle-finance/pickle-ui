@@ -16,7 +16,7 @@ const DocContainer: FC<{ docs: AssetDocumentationResult }> = ({ docs }) => {
         <Social social={social} t={t} />
         <Risks risks={risks} t={t} />
       </div>
-      <RelatedTokens componentTokens={componentTokens} t={t} />
+      {/* <RelatedTokens componentTokens={componentTokens} t={t} /> */}
     </>
   );
 };
@@ -98,7 +98,7 @@ const Risks: FC<{ risks: string[]; t: TFunction }> = ({ risks, t }) => (
   </div>
 );
 
-const RelatedTokens: FC<{ componentTokens: { [key: string]: string }; t: TFunction }> = ({
+export const RelatedTokens: FC<{ componentTokens: { [key: string]: string }; t: TFunction }> = ({
   componentTokens,
   t,
 }) => {

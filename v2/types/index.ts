@@ -142,6 +142,27 @@ export interface Transfer {
   weiSent: string;
 }
 
+export interface UserTx {
+  hash: string;
+  transaction_type: string;
+  chain_id: number;
+  timestamp: number;
+  blocknumber: number;
+  indexInBlock: number;
+  transfers: UserTransfer[];
+}
+
+export interface UserTransfer {
+  amount: string;
+  transfer_type: string;
+  log_index: number;
+  fromAddress: string;
+  toAddress: string;
+  tokenAddress: string;
+  price: string;
+  value: number;
+}
+
 export interface ApyChartData {
   timestamp: number;
   jarApr: number;
