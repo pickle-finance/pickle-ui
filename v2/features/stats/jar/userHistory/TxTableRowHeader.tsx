@@ -1,9 +1,18 @@
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
 import { UserTx } from "v2/types";
 import { classNames, formatDate } from "v2/utils";
+import Link from "v2/components/Link";
 
-const TxTableRowHeader: FC<{ tx: UserTx; open: boolean }> = ({ tx, open }) => {
+const TxTableRowHeader: FC<{
+  tx: UserTx;
+  core: PickleModelJson.PickleModelJson;
+  open: boolean;
+}> = ({ tx, core, open }) => {
+  const chain = core.chains.find((c) => c.chainId == tx.chain_id);
+  const txLink = `${chain?.explorer}/tx/${tx.hash}`;
+  console.log(txLink);
   return (
     <>
       <RowCell className={classNames(!open && "rounded-bl-xl", "rounded-tl-xl flex items-center")}>
@@ -26,13 +35,9 @@ const TxTableRowHeader: FC<{ tx: UserTx; open: boolean }> = ({ tx, open }) => {
         </div>
       </RowCell>
       <RowCell>
-        <p
-          className={classNames(
-            "font-title font-medium text-base leading-5 text-foreground-alt-200",
-          )}
-        >
+        <Link href={txLink} external primary className="font-bold ml-1">
           {tx.hash.slice(0, 5) + "..." + tx.hash.slice(-3)}
-        </p>
+        </Link>
       </RowCell>
       <RowCell className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}>
         <div className="flex justify-end pr-3">

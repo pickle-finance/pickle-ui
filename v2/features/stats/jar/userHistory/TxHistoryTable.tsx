@@ -1,3 +1,4 @@
+import { PickleModelJson } from "picklefinance-core";
 import { FC } from "react";
 import { UserTx } from "v2/types";
 import { classNames } from "v2/utils";
@@ -5,9 +6,10 @@ import TxTableBody from "./TxTableBody";
 
 const TxHistoryTable: FC<{
   txHistory: UserTx[];
+  core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
   className?: string;
-}> = ({ txHistory, addrs, className }) => {
+}> = ({ txHistory, core, addrs, className }) => {
   return (
     <div className={classNames("flex flex-col", className)}>
       <div className="-my-2 overflow-x-auto">
@@ -23,7 +25,7 @@ const TxHistoryTable: FC<{
               </tr>
             </thead>
             <tbody className="text-foreground">
-              <TxTableBody txs={txHistory} addrs={addrs} />
+              <TxTableBody txs={txHistory} core={core} addrs={addrs} />
             </tbody>
           </table>
           {/* <div className="flex justify-center mt-4">

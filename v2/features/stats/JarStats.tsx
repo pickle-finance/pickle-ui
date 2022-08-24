@@ -11,7 +11,6 @@ import FarmsTable from "v2/features/farms/FarmsTable";
 import { JarSelectData } from "./JarSelect";
 import { readyState } from "pages/stats";
 import { useAccount } from "v2/hooks";
-import TxHistoryTable from "./jar/userHistory/TxHistoryContainer";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
@@ -38,7 +37,7 @@ const JarStats: FC<{
 
   const addrs = Object.fromEntries(
     Object.entries({
-      User: "0xfeedc450742ac0d9bb38341d9939449e3270f76f", //account,
+      User: account, //"0xfeedc450742ac0d9bb38341d9939449e3270f76f",
       Jar: assetJar ? assetJar.contract.toLowerCase() : "jar not found",
       Farm: assetJar && assetJar.farm ? assetJar.farm.farmAddress.toLowerCase() : "farm not found",
       Null: "0x0000000000000000000000000000000000000000",
@@ -57,7 +56,7 @@ const JarStats: FC<{
 
   useEffect(() => {
     const getUserJarHistory = async (account: string | null | undefined): Promise<void> => {
-      account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
+      // account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
       account &&
         (await fetch(`https://api.pickle.finance/prod/protocol/userhistory/${account}`)
           .then((resp) => resp.json())
@@ -79,8 +78,8 @@ const JarStats: FC<{
         <ChartContainer jarData={jarData} />
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
         <div className="flex">
-          {userJarHistory && userJarHistory.length > 0 && (
-            <TxHistoryContainer txHistory={userJarHistory} addrs={addrs} t={t} />
+          {userJarHistory && userJarHistory.length > 0 && core && (
+            <TxHistoryContainer txHistory={userJarHistory} core={core} addrs={addrs} t={t} />
           )}
           <div>
             {jarData && jarData.documentation && (
