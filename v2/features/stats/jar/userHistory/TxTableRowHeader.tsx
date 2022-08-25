@@ -11,8 +11,7 @@ const TxTableRowHeader: FC<{
   open: boolean;
 }> = ({ tx, core, open }) => {
   const chain = core.chains.find((c) => c.chainId == tx.chain_id);
-  const txLink = `${chain?.explorer}/tx/${tx.hash}`;
-  console.log(txLink);
+  const txLinkUrl = `${chain?.explorer}/tx/${tx.hash}`;
   return (
     <>
       <RowCell className={classNames(!open && "rounded-bl-xl", "rounded-tl-xl flex items-center")}>
@@ -35,7 +34,7 @@ const TxTableRowHeader: FC<{
         </div>
       </RowCell>
       <RowCell>
-        <Link href={txLink} external primary className="font-bold ml-1">
+        <Link href={txLinkUrl} external primary className="font-bold ml-1">
           {tx.hash.slice(0, 5) + "..." + tx.hash.slice(-3)}
         </Link>
       </RowCell>

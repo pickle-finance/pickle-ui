@@ -142,6 +142,10 @@ export interface Transfer {
   weiSent: string;
 }
 
+export interface UserJarHistory {
+  [apiKey: string]: UserTx[];
+}
+
 export interface UserTx {
   hash: string;
   transaction_type: string;
@@ -161,6 +165,7 @@ export interface UserTransfer {
   tokenAddress: string;
   price: string;
   value: number;
+  decimals?: number;
 }
 
 export interface ApyChartData {

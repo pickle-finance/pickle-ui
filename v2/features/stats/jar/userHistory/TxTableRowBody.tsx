@@ -2,8 +2,9 @@ import { PickleModelJson } from "picklefinance-core";
 import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC } from "react";
 import { UserTransfer } from "v2/types";
-import { classNames, formatNumber } from "v2/utils";
+import { formatNumber } from "v2/utils";
 import Link from "v2/components/Link";
+import { BigNumber } from "ethers";
 
 const TxTableRowBody: FC<{
   transfers: UserTransfer[];
@@ -37,33 +38,44 @@ const TransferDescription: FC<{
   chain: RawChain;
   tmpAddrs: { [addr: string]: string };
 }> = ({ transfer, core, chain, tmpAddrs }) => {
-  const { fromAddr, toAddr, burned, minted, nTokens, value, tokenName } = transferData(
-    transfer,
-    core,
-    tmpAddrs,
-  );
+  const {
+    fromAddr,
+    toAddr,
+    burned,
+    minted,
+    nTokens,
+    nGwei,
+    useGwei,
+    value,
+    tokenName,
+  } = transferData(transfer, core, tmpAddrs);
   const useFromLink = fromAddr.includes("...") && chain !== undefined;
   const useToLink = toAddr.includes("...") && chain !== undefined;
-
+  const nTokensString = useGwei
+    ? `${nGwei} Gwei of ${tokenName} tokens`
+    : `${nTokens}${" " + tokenName} tokens`;
   return (
     <>
       {burned && (
-        <p className="text-xs text-foreground-alt-200">{`${nTokens}${
-          " " + tokenName
-        } tokens ${value} were burned.`}</p>
+        <p className="text-sm text-foreground-alt-200">{`${nTokensString} ${value} were burned.`}</p>
       )}
       {minted && (
         <>
           {useToLink ? (
             <span className="whitespace-nowrap flex">
-              <p className="text-xs text-foreground-alt-200">
-                {`${nTokens}${" " + tokenName} tokens ${value} were minted and sent to`}
+              <p className="text-sm text-foreground-alt-200">
+                {`${nTokensString} ${value} were minted and sent to`}
               </p>
-              <AddrLink chain={chain} addr={toAddr} className="pl-1" />
+              <AddrLink
+                chain={chain}
+                addr={toAddr}
+                linkAddr={transfer.toAddress}
+                className="pl-1"
+              />
             </span>
           ) : (
-            <p className="text-xs text-foreground-alt-200">
-              {`${nTokens}${" " + tokenName} tokens ${value} were minted and sent to ${toAddr}`}
+            <p className="text-sm text-foreground-alt-200">
+              {`${nTokensString} ${value} were minted and sent to ${toAddr}`}
             </p>
           )}
         </>
@@ -72,32 +84,52 @@ const TransferDescription: FC<{
         <>
           {useFromLink && useToLink && (
             <div className="flex inline whitespace-nowrap">
-              <AddrLink chain={chain} addr={fromAddr} className="pr-1" />
-              <p className="text-xs pl-1 text-foreground-alt-200">
-                {`sent ${nTokens}${" " + tokenName} tokens ${value} to `}
+              <AddrLink
+                chain={chain}
+                addr={fromAddr}
+                linkAddr={transfer.fromAddress}
+                className="pr-1"
+              />
+              <p className="text-sm pl-1 text-foreground-alt-200">
+                {`sent ${nTokensString} ${value} to `}
               </p>
-              <AddrLink chain={chain} addr={toAddr} className="pl-1" />
+              <AddrLink
+                chain={chain}
+                addr={toAddr}
+                linkAddr={transfer.toAddress}
+                className="pl-1"
+              />
             </div>
           )}
           {useFromLink && !useToLink && (
-            <div className="flex inline whitespace-nowrap">
-              <AddrLink chain={chain} addr={fromAddr} className="pr-1" />
-              <p className="text-xs pl-1 text-foreground-alt-200">
-                {`sent ${nTokens}${" " + tokenName} tokens ${value} to ${toAddr}`}
+            <div className="flex inline whitespace-nowrap align-center">
+              <AddrLink
+                chain={chain}
+                addr={fromAddr}
+                linkAddr={transfer.fromAddress}
+                className="pr-1"
+              />
+              <p className="text-sm pl-1 text-foreground-alt-200">
+                {`sent ${nTokensString} ${value} to ${toAddr}`}
               </p>
             </div>
           )}
           {!useFromLink && useToLink && (
             <div className="flex inline whitespace-nowrap">
-              <p className="text-xs text-foreground-alt-200">
-                {`${fromAddr} sent ${nTokens}${" " + tokenName} tokens ${value} to`}
+              <p className="text-sm text-foreground-alt-200">
+                {`${fromAddr} sent ${nTokensString} ${value} to`}
               </p>
-              <AddrLink chain={chain} addr={toAddr} className="pl-1" />
+              <AddrLink
+                chain={chain}
+                addr={toAddr}
+                linkAddr={transfer.toAddress}
+                className="pl-1"
+              />
             </div>
           )}
           {!useFromLink && !useToLink && (
-            <p className="text-xs text-foreground-alt-200">
-              {`${fromAddr} sent ${nTokens}${" " + tokenName} tokens ${value} to ${toAddr}`}
+            <p className="text-sm text-foreground-alt-200">
+              {`${fromAddr} sent ${nTokensString} ${value} to ${toAddr}`}
             </p>
           )}
         </>
@@ -106,12 +138,13 @@ const TransferDescription: FC<{
   );
 };
 
-const AddrLink: FC<{ chain: RawChain; addr: string; className?: string }> = ({
+const AddrLink: FC<{ chain: RawChain; addr: string; linkAddr: string; className?: string }> = ({
   chain,
   addr,
+  linkAddr,
   className,
 }) => (
-  <Link href={`${chain.explorer}/${addr}`} primary className={className}>
+  <Link href={`${chain.explorer}/address/${linkAddr}`} external primary className={className}>
     {addr}
   </Link>
 );
@@ -133,8 +166,13 @@ const transferData = (
   const minted = fromAddr === "Null";
   const nTokens =
     transfer.price && transfer.value
-      ? formatNumber(+transfer.price / transfer.value, 8)
-      : "an unknown number of";
+      ? transfer.value / +transfer.price < 1
+        ? formatNumber(transfer.value / +transfer.price, 6)
+        : formatNumber(transfer.value / +transfer.price, 2)
+      : "unknown";
+  const nGwei = formatNumber(BigNumber.from(transfer.amount).div(1e9).toNumber());
+  const useGwei = nTokens === "unknown";
+
   const value = transfer.value ? "(" + formatNumber(transfer.value, 2) + " USD)" : "";
   const tokenName = addrs[transfer.tokenAddress.toLowerCase()] || "";
   return {
@@ -144,6 +182,8 @@ const transferData = (
     burned: burned,
     minted: minted,
     nTokens: nTokens,
+    nGwei: nGwei,
+    useGwei: useGwei,
     value: value,
     tokenName: tokenName,
   };
