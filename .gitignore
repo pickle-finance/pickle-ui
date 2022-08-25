@@ -40,3 +40,5 @@ yarn-error.log*
 # Generated Typechain files
 v1/containers/Contracts/*
 secrets.json
+
+.vim
