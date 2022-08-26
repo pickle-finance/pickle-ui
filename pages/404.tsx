@@ -1,6 +1,7 @@
 import type { PickleFinancePage } from "v2/types";
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
+import Image from "next/image";
 
 const NotFound: PickleFinancePage = () => {
   const { t } = useTranslation("common");
@@ -9,8 +10,14 @@ const NotFound: PickleFinancePage = () => {
     <div className="flex justify-center items-center py-8 lg:py-32">
       <div className="bg-background-light w-4/5 lg:w-1/2 max-w-xl rounded-xl border border-foreground-alt-500 shadow p-6 md:p-12">
         <div className="flex justify-center mt-2">
-          <div className="w-3/5 lg:w-1/2 min-h-[200px]">
-            <img src="/animations/failure.gif" />
+          <div className="w-3/5 lg:w-1/2 min-h-min justify-center flex">
+            <Image
+              unoptimized={true}
+              alt="404"
+              src="/animations/failure.gif"
+              height="200px"
+              width="200px"
+            />
           </div>
         </div>
         <div className="w-full text-center mb-8">
