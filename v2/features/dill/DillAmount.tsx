@@ -9,7 +9,7 @@ import GetDillModal from "v2/features/dill/GetDillModal";
 import Button from "v2/components/Button";
 import MoreInfo from "v2/components/MoreInfo";
 import { CoreSelectors } from "v2/store/core";
-import { formatPercentage, formatDollars, formatDate } from "v2/utils";
+import { formatPercentage, formatDollars } from "v2/utils";
 
 interface Props {
   userDill: IUserDillStats;
@@ -50,17 +50,15 @@ const DillAmount: FC<Props> = ({ userDill, pickles }) => {
               </p>
               <br></br>
               <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-                {pickleLocked.toFixed(4)} {t("v2.dill.pickle")}
+                {pickleLocked.toFixed(2)} {t("v2.dill.pickle")}
                 {" ("}
                 {formatDollars(pickleLocked * picklePrice)}
                 {") "}
                 {t("v2.dill.locked")}
               </h1>
               <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-                {pickleBalance.toFixed(4)} {t("v2.dill.pickle")}
-                {" ("}
-                {formatDollars(pickleBalance * picklePrice)}
-                {") "}
+                {pickleBalance.toFixed(0)} {t("v2.dill.pickle")}
+                {pickleBalance !== 0 ? ` (${formatDollars(pickleBalance * picklePrice)}) ` : " "}
                 {t("v2.dill.inWallet")}
               </h1>
             </div>

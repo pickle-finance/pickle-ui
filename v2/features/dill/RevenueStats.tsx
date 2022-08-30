@@ -22,7 +22,6 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const blockPerWeek = (1 / Chains.get(ChainNetwork.Ethereum).secondsPerBlock) * 60 * 7 * 24 * 60;
 
   const { dillWeeks, totalPickle, pickleLocked, totalDill } = dill;
-  console.log(dillWeeks[dillWeeks.length - 1]);
 
   if (!dillWeeks || !totalPickle || !picklePerBlock || !blockPerWeek) return <></>;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];

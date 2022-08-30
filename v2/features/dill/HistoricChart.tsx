@@ -45,7 +45,6 @@ const HistoricChart: FC = () => {
         tmp.ethAmount * tmp.ethPriceUsd;
       dillByWeek.push(tmp as DistributionDataPoint);
     });
-    // console.log(dillByWeek);
     if (chartMode === "monthly") {
       const dillByMonth = groupMonth(dillByWeek);
       const monthKeys = Object.keys(dillByMonth) as Array<keyof typeof dillByMonth>;
