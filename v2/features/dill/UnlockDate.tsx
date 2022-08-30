@@ -17,8 +17,7 @@ const UnlockDate: FC<Props> = ({ dill }) => {
   const lockEnd = parseFloat(dill?.lockEnd) ? dayjs.unix(parseFloat(dill?.lockEnd)) : undefined;
   const date1 = dayjs();
   const date2 = dayjs(lockEnd);
-  // const lockExpired = date2 < date1;
-  const lockExpired = true;
+  const lockExpired = date2 < date1;
   const duration = dayjs.duration(date2.diff(date1));
   const days = duration.days();
   const years = duration.years();
@@ -36,7 +35,7 @@ const UnlockDate: FC<Props> = ({ dill }) => {
           <p className="py-6 text-primary whitespace-pre font-medium text-base">
             {lockEnd
               ? lockExpired
-                ? t("Lock Expired") //replace this with proper common.json string
+                ? t("v2.dill.lockExpired", { date: dayjs(date2).format("L") }) //replace this with proper common.json string
                 : dayjs(lockEnd).format("LL")
               : "--"}
           </p>
@@ -58,7 +57,7 @@ const UnlockDate: FC<Props> = ({ dill }) => {
         </div>
         {lockExpired ? (
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-            {t("v2.dill.relockOrWithdraw")} {/*replace this with proper common.json string*/}
+            {t("v2.dill.relockOrWithdraw")}
           </h1>
         ) : (
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">

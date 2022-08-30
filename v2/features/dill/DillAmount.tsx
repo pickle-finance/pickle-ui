@@ -23,7 +23,7 @@ const DillAmount: FC<Props> = ({ userDill, pickles }) => {
   const core = useSelector(CoreSelectors.selectCore);
 
   const dillBalance = parseFloat(formatEther(userDill.balance));
-  const totalDill = core?.dill.totalDill || 0;
+  const totalDill = core?.dill?.totalDill || 0;
   const pickleLocked = parseFloat(formatEther(userDill.pickleLocked || "0"));
   const pickleBalance = parseFloat(formatEther(pickles[ChainNetwork.Ethereum] || "0"));
   return (

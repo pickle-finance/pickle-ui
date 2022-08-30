@@ -19,8 +19,10 @@ import { UserActions } from "v2/store/user";
 import { useDillContract } from "../hooks";
 import ErrorMessage from "../../../farms/flows/Error";
 import { useTransaction } from "v2/features/farms/flows/hooks";
+import { formatEther } from "ethers/lib/utils";
+import { IUserDillStats } from "picklefinance-core/lib/client/UserModel";
 
-const WithdrawFlow: FC<Props> = ({ visible, error: balanceError, closeParentModal }) => {
+const WithdrawFlow: FC<Props> = ({ visible, dill, error: balanceError, closeParentModal }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
@@ -87,7 +89,9 @@ const WithdrawFlow: FC<Props> = ({ visible, error: balanceError, closeParentModa
               send(Actions.SUBMIT_FORM);
             }}
           >
-            {`${t("v2.actions.withdraw")} PICKLE`}
+            {`${t("v2.dill.withdraw", {
+              nPickles: parseFloat(formatEther(dill.pickleLocked)).toFixed(2),
+            })}`}
           </Button>
         </>
       )}
@@ -128,6 +132,7 @@ const WithdrawFlow: FC<Props> = ({ visible, error: balanceError, closeParentModa
 
 interface Props {
   visible: boolean;
+  dill: IUserDillStats;
   error: Error | undefined;
   closeParentModal: () => void;
 }

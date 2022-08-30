@@ -21,14 +21,13 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   const blockPerWeek = (1 / Chains.get(ChainNetwork.Ethereum).secondsPerBlock) * 60 * 7 * 24 * 60;
 
+  if (!dill) return <></>;
   const { dillWeeks, totalPickle, pickleLocked, totalDill } = dill;
-
   if (!dillWeeks || !totalPickle || !picklePerBlock || !blockPerWeek) return <></>;
-  const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
 
+  const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
   const ratio = totalDill / pickleLocked;
   const averageLock = Math.round(ratio * 4 * 100) / 100;
-
   const { picklePriceUsd, weeklyPickleAmount, ethPriceUsd, weeklyEthAmount } = dillWeeks[
     dillWeeks.length - 1
   ];

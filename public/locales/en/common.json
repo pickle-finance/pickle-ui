@@ -386,6 +386,7 @@
       "getDill": "Get DILL",
       "historic": "Historic Distributions of DILL Rewards",
       "increaseLockDate": "Increase Lock Date",
+      "lockExpired": "Lock expired {{ date }}",
       "lockingUntil": "Locking until",
       "monthlyDillAmount": "Monthly DILL 🔒",
       "monthlyPickleAmount": "Monthly PICKLEs distributed",
@@ -456,6 +457,8 @@
       },
       "weeklyDillAmount": "Weekly DILL 🔒",
       "weeklyPickleAmount": "Weekly PICKLEs distributed",
+      "withdraw": "Withdraw {{ nPickles }} PICKLEs",
+      "withdrawModalText": "Your lock on {{ nPickles }} PICKLEs ({{ pickleValue }}) expired {{ unlockDate }}",
       "yourShare": "{{ percentage }} of total DILL"
     },
     "error": "An unexpected error has occured. Try refreshing the page. If the error persists let us know in the #support channel on Discord.",
