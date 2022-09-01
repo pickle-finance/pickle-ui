@@ -14,7 +14,29 @@ const localesDir = path.resolve("public/locales");
 //   enabled: process.env.ANALYZE === "true",
 // });
 
+const ContentSecurityPolicy = `
+  default-src 'self'; 
+  style-src 'self' 'unsafe-inline'; 
+  style-src-elem https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline';
+  image-src *;
+  font-src 'self' http://themes.googleusercontent.com https://fonts.googleapis.com https://fonts.gstatic.com ; 
+  script-src 'self' data: https://www.googletagmanager.com;
+`
+
 const moduleExports = {
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            "key": "Content-Security-Policy",
+            "value": ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+          },
+        ]
+      }
+    ]
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -51,7 +73,7 @@ const moduleExports = {
   },
 };
 
-const SentryWebpackPluginOptions = {};
+// const SentryWebpackPluginOptions = {};
 
 // module.exports = withBundleAnalyzer(moduleExports);
 module.exports = moduleExports;
