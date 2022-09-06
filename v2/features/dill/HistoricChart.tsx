@@ -48,10 +48,8 @@ const HistoricChart: FC = () => {
         tmp.ethAmount * tmp.ethPriceUsd;
       dillByWeek.push(tmp as DistributionDataPoint);
     });
-    // console.log(dillByWeek);
     if (chartMode === "monthly") {
       const dillByMonth = groupMonth(dillByWeek);
-      // console.log(dillByMonth);
       const monthKeys = Object.keys(dillByMonth) as Array<keyof typeof dillByMonth>;
       const dillByMonthAggregated = monthKeys.reduce<Array<DistributionDataPoint>>((acc, curr) => {
         const monthData = dillByMonth[curr].reduce<DistributionDataPoint>(
@@ -178,12 +176,8 @@ export type DistributionDataPoint = {
 const groupMonth = (dillStats: DistributionDataPoint[]) => {
   let byMonth: { [key: string]: Array<DistributionDataPoint> } = {};
   dillStats?.map((week) => {
-    console.log(week);
     const date = new Date(week["distributionTime"]);
-    console.log("DATE: ", date);
     const month = (date.getUTCFullYear() - 1970) * 12 + date.getUTCMonth();
-    console.log("MONTH: ", month);
-    console.log(month);
     byMonth[month] = byMonth[month] || [];
     byMonth[month].push(week);
   });
