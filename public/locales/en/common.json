@@ -524,6 +524,7 @@
       "pendingTooltip": "This is the USD amount that your deposit is expected to grow upon the next re-investment of rewards",
       "protocol": "Protocol",
       "pToken": "pTokens represent your appreciating share of the tokens in the Jar",
+      "range": "Range",
       "ratio": "Ratio",
       "ratioTooltip": "The jar's ratio is the amount of underlying deposit tokens per pToken",
       "seeFarmDetails": "See farm details",
