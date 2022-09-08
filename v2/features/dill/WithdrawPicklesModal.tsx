@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 
 const WithdrawPicklesModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
   const { t } = useTranslation("common");
-  const [error, setError] = useState<Error | undefined>(); //probably add function to validate tx is possible
+  const [error, setError] = useState<Error | undefined>();
   const invalidBalance = Error(t("v2.dill.invalidBalance"));
 
   const { account } = useWeb3React<Web3Provider>();

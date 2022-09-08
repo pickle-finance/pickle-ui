@@ -7,6 +7,8 @@ import WithdrawPicklesModal from "v2/features/dill/WithdrawPicklesModal";
 
 import Button from "v2/components/Button";
 import dayjs from "dayjs";
+import { UserActions } from "v2/store/user";
+import { useAppDispatch } from "v2/store";
 
 interface Props {
   dill: IUserDillStats;
@@ -17,13 +19,15 @@ const UnlockDate: FC<Props> = ({ dill }) => {
   const lockEnd = parseFloat(dill?.lockEnd) ? dayjs.unix(parseFloat(dill?.lockEnd)) : undefined;
   const date1 = dayjs();
   const date2 = dayjs(lockEnd);
-  const lockExpired = date2 < date1;
+  // const lockExpired = date2 < date1;
+  const lockExpired = true;
   const duration = dayjs.duration(date2.diff(date1));
   const days = duration.days();
   const years = duration.years();
   const months = duration.months();
   const [increaseLockIsOpen, setIncreaseLockIsOpen] = useState<boolean>(false);
   const [withdrawIsOpen, setWithdrawIsOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -57,7 +61,7 @@ const UnlockDate: FC<Props> = ({ dill }) => {
         </div>
         {lockExpired ? (
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
-            {t("v2.dill.relockOrWithdraw")}
+            {t("v2.dill.withdraw")}
           </h1>
         ) : (
           <h1 className="font-body text-foreground-alt-200 font-normal text-xs leading-4">
@@ -83,7 +87,7 @@ const UnlockDate: FC<Props> = ({ dill }) => {
           dill={dill}
         />
       )}
-      {Boolean(parseFloat(dill?.pickleLocked)) && (
+      {lockExpired && (
         <WithdrawPicklesModal
           isOpen={withdrawIsOpen}
           closeModal={() => setWithdrawIsOpen(false)}
