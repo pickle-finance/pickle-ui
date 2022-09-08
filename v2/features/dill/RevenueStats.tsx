@@ -22,7 +22,6 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const blockPerWeek = (1 / Chains.get(ChainNetwork.Ethereum).secondsPerBlock) * 60 * 7 * 24 * 60;
 
   const { dillWeeks, totalPickle, pickleLocked, totalDill } = dill;
-  console.log(dillWeeks[dillWeeks.length - 1]);
 
   if (!dillWeeks || !totalPickle || !picklePerBlock || !blockPerWeek) return <></>;
   const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
@@ -42,7 +41,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   return (
     <>
       <h1 className="font-body font-bold text-xl mb-4">{t("v2.dill.revenueShareStats")}</h1>
-      <div className="grid grid-cols-2 xl:grid-cols-5 bg-background-light rounded-xl border border-foreground-alt-500 shadow px-6 py-7">
+      <div className="grid grid-cols-2 xl:grid-cols-5 justify-items-center bg-background-light rounded-xl border border-foreground-alt-500 shadow py-7">
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}

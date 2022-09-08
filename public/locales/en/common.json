@@ -648,6 +648,12 @@
           "tvlChange": "TVL Change WoW"
         },
         "chainTableTitle": "Chain Stats",
+        "circulatingSupply": "Pickle Circulating Supply",
+        "locked": "PICKLE Locked for DILL",
+        "marketCap": "PICKLE Market Cap.",
+        "pickle": "PICKLE Info",
+        "pickleSupply": "PICKLE Total Supply",
+        "platformTvl": "Platform TVL",
         "revsChartTitle": "Daily Revenue",
         "topJarsChartTitle": "Top Jars by TVL",
         "tvlChartTitle": "Total Value Locked"

@@ -65,7 +65,13 @@ const Loading: FC<{ ready: readyState; page?: "platform" | "chain" | "jar" }> = 
       <div className="flex justify-center items-center py-8 lg:py-32">
         <div className="bg-background-light border border-foreground-alt-300 rounded-xl w-96 h-96">
           <div className="flex justify-center mt-5">
-            <img src="/animations/waiting.gif" alt="Loading..." width={250} height={250} />
+            <Image
+              loading="eager"
+              src="/animations/waiting.gif"
+              alt="Loading..."
+              width={250}
+              height={250}
+            />
           </div>
           <p className="text-xl text-center text-foreground-alt-200 mt-10">Loading Chart Data</p>
         </div>
