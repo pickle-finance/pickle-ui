@@ -14,7 +14,7 @@ interface Props {
 
 const FarmAPY: FC<Props> = ({ asset, userDillRatio }) => {
   const { t } = useTranslation("common");
-  let aprRangeString, pickleAprMin, pickleAprMax, pickleApr, userStakedNum, userApyString;
+  let aprRangeString, pickleAprMin, pickleAprMax, pickleApr, userStakedNum, userApyString, extraReward;
 
   // Case #1: only jar or brinery, no farm
   if (isBrinery(asset) || isExternalAsset(asset)) {
@@ -46,7 +46,9 @@ const FarmAPY: FC<Props> = ({ asset, userDillRatio }) => {
       } else {
         // Case #3: sidechain with pickle farm
         pickleApr = farmDetails.farmApyComponents[0]?.apr;
-        aprRangeString = formatPercentage((asset.aprStats?.apy || 0) + (pickleApr || 0));
+        const totalApr = farmDetails.farmApyComponents?.reduce((cum, cur) => cum + (cur.apr ?? 0), 0);
+        if (totalApr - pickleApr > 0) extraReward = farmDetails.farmApyComponents[1];
+        aprRangeString = formatPercentage((asset.aprStats?.apy || 0) + (totalApr || 0));
       }
     } else {
       aprRangeString = formatPercentage(asset.aprStats?.apy || 0);
@@ -57,6 +59,7 @@ const FarmAPY: FC<Props> = ({ asset, userDillRatio }) => {
   const highApr = parseFloat(apr) > 10000;
   const { aprStats } = asset;
   const difference = (aprStats?.apy || 0) - (aprStats?.apr || 0);
+  const harvestableStr = t("farms.harvestable");
 
   return (
     <>
@@ -68,16 +71,22 @@ const FarmAPY: FC<Props> = ({ asset, userDillRatio }) => {
           <p className="font-bold text-primary">{`${t("farms.baseAPRs")}`}</p>
           {pickleApr && (
             <div className="flex justify-between items-end">
-              <div className="font-bold mr-2">PICKLE:</div>
+              <div className="font-bold mr-2">PICKLE ({harvestableStr}):</div>
               <div className="text-foreground">{formatPercentage(pickleApr || 0)}</div>
             </div>
           )}
           {pickleAprMin && pickleAprMax && (
             <div className="flex justify-between items-end">
-              <div className="font-bold mr-2">PICKLE:</div>
+              <div className="font-bold mr-2">PICKLE ({harvestableStr}):</div>
               <div className="text-foreground">{`${formatPercentage(
                 pickleAprMin || 0,
               )} ~ ${formatPercentage(pickleAprMax || 0)}`}</div>
+            </div>
+          )}
+          {extraReward && (
+            <div className="flex justify-between items-end">
+              <div className="font-bold mr-2">{`${extraReward.name.toUpperCase()} (${harvestableStr}):`}</div>
+              <div className="text-foreground">{formatPercentage(extraReward.apr || 0)}</div>
             </div>
           )}
           {aprStats?.components.length &&
