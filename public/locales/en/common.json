@@ -501,6 +501,7 @@
       "earnedToken": "{{ token }} earned",
       "enable": "Enable",
       "expand": "Expand",
+      "extraRewardNotice": "Collected upon harvesting PICKLEs",
       "farmAddress": "Farm Address",
       "filter": "Filter by token, protocol, or network",
       "getToken": "Get {{ token }}",
