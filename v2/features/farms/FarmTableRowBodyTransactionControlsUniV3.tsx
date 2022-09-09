@@ -38,6 +38,10 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
   const picklePending = parseFloat(
     ethers.utils.formatUnits(userTokenData?.picklePending || "0", 18),
   );
+  const extraRewardName = userTokenData?.extraReward?.name;
+  const extraRewardPending = parseFloat(
+    ethers.utils.formatUnits(userTokenData?.extraReward?.pending || "0", 18),
+  );
   const decimals = jarDecimals(jar);
   const jarAllowanceToken0 = userTokenData?.componentTokenBalances[jar.token0?.name!].allowance;
   const jarAllowanceToken1 = userTokenData?.componentTokenBalances[jar.token1?.name!].allowance;
@@ -101,6 +105,28 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
           )}
         </div>
       </div>
+      {extraRewardName && (
+        <div className="grow self-start">
+          <div className="border border-foreground-alt-500 rounded-xl p-4">
+            <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-0">
+              {t("v2.farms.earnedToken", { token: extraRewardName.toUpperCase() })}
+            </p>
+            <p className="text-foreground-alt-200 font-medium italic text-xs leading-5 mb-4">
+              {t("v2.farms.extraRewardNotice")}
+            </p>
+            <div className="flex items-end justify-between">
+              <span className="font-title text-primary font-medium text-base leading-5">
+                {roundToSignificantDigits(extraRewardPending, 3)}
+              </span>
+            </div>
+          </div>
+          <div className="relative">
+            {isUserModelLoading && (
+              <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-1" />
+            )}
+          </div>
+        </div>
+      )}
       <div className="grow self-start">
         <div className="border border-foreground-alt-500 rounded-xl p-4">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
