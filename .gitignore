@@ -41,3 +41,5 @@ yarn-error.log*
 v1/containers/Contracts/*
 containers/Contracts/*
 secrets.json
+
+.vim

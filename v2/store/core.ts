@@ -291,12 +291,12 @@ const defaultSortingLogic = (assetsWithData: AssetWithData[]): AssetWithData[] =
       b.depositTokensInWallet.tokensUSD &&
       b.depositTokensInWallet.tokensUSD > 0;
 
-    if (aHasDepositTokens && !bHasDepositTokens) return 1;
-    if (bHasDepositTokens && !aHasDepositTokens) return -1;
+    if (aHasDepositTokens && !bHasDepositTokens) return -1;
+    if (bHasDepositTokens && !aHasDepositTokens) return 1;
     if (aHasDepositTokens && bHasDepositTokens)
       return (a.depositTokensInWallet.tokensUSD || 0) > (b.depositTokensInWallet.tokensUSD || 0)
-        ? 1
-        : -1;
+        ? -1
+        : 1;
 
     // Neither is deposited and neither have deposit tokens
     // Now check component tokens
@@ -315,10 +315,10 @@ const defaultSortingLogic = (assetsWithData: AssetWithData[]): AssetWithData[] =
       ? sumComponents(b.walletComponentTokens)
       : 0;
 
-    if (aComponentTokensUSD && !bComponentTokensUSD) return 1;
-    if (bComponentTokensUSD && !aComponentTokensUSD) return -1;
+    if (aComponentTokensUSD && !bComponentTokensUSD) return -1;
+    if (bComponentTokensUSD && !aComponentTokensUSD) return 1;
     if (aComponentTokensUSD && bComponentTokensUSD)
-      return aComponentTokensUSD > aComponentTokensUSD ? 1 : -1;
+      return aComponentTokensUSD > aComponentTokensUSD ? -1 : 1;
 
     return 0;
   });

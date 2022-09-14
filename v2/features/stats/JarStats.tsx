@@ -3,19 +3,21 @@ import { useSelector } from "react-redux";
 import { PickleModelJson } from "picklefinance-core";
 
 import { AssetWithData, CoreSelectors } from "v2/store/core";
-import type { JarChartData } from "v2/types";
+import type { JarChartData, SetFunction } from "v2/types";
 import ChartContainer from "v2/features/stats/jar/ChartContainer";
 import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
-import { ChainSelectData } from "./ChainSelect";
 import { JarSelectData } from "./JarSelect";
+import { readyState } from "pages/stats";
 
 const JarStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
-  chain: ChainSelectData;
   jar: JarSelectData;
-}> = ({ core, chain, jar }) => {
+  ready: readyState;
+  setReady: SetFunction;
+  page: "platform" | "chain" | "jar" | undefined;
+}> = ({ core, jar, ready, setReady, page }) => {
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
@@ -26,12 +28,15 @@ const JarStats: FC<{
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      if (jar) getJarData(jar.value).then((data) => setJarData(data));
+      if (Object.keys(jar).length > 0)
+        getJarData(jar.value)
+          .then((data) => setJarData(data))
+          .then(() => setReady((prev: readyState) => ({ ...prev, jar: true })));
     };
     getData();
   }, [jar]);
 
-  if (chain && Object.keys(chain).length > 0 && jar && Object.keys(jar).length > 0)
+  if (asset && page === "jar" && ready[page])
     return (
       <>
         <div className="mb-3">

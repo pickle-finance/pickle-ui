@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useMachine } from "@xstate/react";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -52,7 +52,7 @@ const DepositFlow: FC<Props> = ({
   const transactionFactory = () => {
     if (!DillContract) return;
 
-    const amountBN = ethers.utils.parseEther(userInput);
+    const amountBN = userInput ? ethers.utils.parseEther(userInput) : BigNumber.from(0);
 
     return () =>
       dillBalance

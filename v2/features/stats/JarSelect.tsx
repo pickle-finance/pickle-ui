@@ -6,6 +6,7 @@ import { ChainSelectData, networksToOptions } from "./ChainSelect";
 import { NextRouter, useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
+import { SetFunction } from "v2/types";
 
 export const JarSelect: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
@@ -13,7 +14,8 @@ export const JarSelect: FC<{
   jar: JarSelectData;
   setJar: SetJarFunction;
   setChain: SetChainFunction;
-}> = ({ core, chain, jar, setJar, setChain }) => {
+  setPage: SetFunction;
+}> = ({ core, chain, jar, setJar, setChain, setPage }) => {
   const [options, setOptions] = useState<JarSelectData[]>([]);
   const networks = useSelector(CoreSelectors.selectNetworks);
   const chainOptions: ChainSelectData[] = networksToOptions(networks);
@@ -24,14 +26,16 @@ export const JarSelect: FC<{
     : router.query.jar || "";
 
   if (router.isReady && urlJar !== "" && Object.keys(jar).length === 0) {
-    const thisJar = core?.assets.jars.find((j) => j.details?.apiKey === urlJar);
+    const thisJar = core?.assets.jars.find(
+      (j) => j.details?.apiKey.toLowerCase() === urlJar.toLowerCase(),
+    );
     for (let n = 0; n < chainOptions.length; n++) {
       if (thisJar && chainOptions[n].value === thisJar.chain) {
         setChain(chainOptions[n]);
       }
     }
     for (let n = 0; n < options.length; n++) {
-      if (thisJar && options[n].value === urlJar) {
+      if (thisJar && options[n].value.toLowerCase() === urlJar.toLowerCase()) {
         setJar(options[n]);
       }
     }
@@ -41,6 +45,7 @@ export const JarSelect: FC<{
     const jar = (j as JarSelectData).value;
     router.push(`/stats?jar=${jar}`);
     setJar(j as JarSelectData);
+    // setPage("jar");
   };
 
   useEffect(() => {
@@ -131,7 +136,11 @@ const styles: StylesConfig<JarSelectData | String, false> = {
 };
 
 const filterJars = (jar: JarDefinition) => {
-  if (jar.enablement !== AssetEnablement.PERMANENTLY_DISABLED && jar.details?.apiKey !== undefined)
+  if (
+    jar.enablement !== AssetEnablement.PERMANENTLY_DISABLED &&
+    jar.enablement !== AssetEnablement.DISABLED &&
+    jar.details?.apiKey !== undefined
+  )
     return jar;
 };
 

@@ -19,7 +19,9 @@ const BreadCrumbs: FC<{
       <h3
         className={
           "lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer" +
-          (Object.keys(chain).length > 0 ? " text-accent hover:text-primary" : null)
+          (Object.keys(chain).length > 0
+            ? " text-accent hover:text-primary"
+            : " text-foreground-alt-100")
         }
         onClick={() => {
           if (chain && jar) {
@@ -36,11 +38,13 @@ const BreadCrumbs: FC<{
       </h3>
       {chain && Object.keys(chain).length > 0 && (
         <>
-          <p className="px-2">{">"}</p>
+          <p className="text-foreground-alt-100 px-2">{">"}</p>
           <h3
             className={
               "lg:text-xl md:text-md sm:text-sm inline-block cursor-pointer" +
-              (Object.keys(jar).length > 0 ? " text-accent hover:text-primary" : null)
+              (Object.keys(jar).length > 0
+                ? " text-accent hover:text-primary"
+                : " text-foreground-alt-100")
             }
             onClick={() => {
               setJar("");
@@ -53,8 +57,8 @@ const BreadCrumbs: FC<{
       )}
       {Object.keys(jar).length > 0 && (
         <>
-          <p className="px-2">{">"}</p>
-          <h3 className="lg:text-xl md:text-md sm:text-sm">{jar.value}</h3>
+          <p className="text-foreground-alt-100 px-2">{">"}</p>
+          <h3 className="text-foreground-alt-200 lg:text-xl md:text-md sm:text-sm">{jar.value}</h3>
         </>
       )}
     </div>

@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import Image from "next/image";
 import React, { Component, ErrorInfo, FC, ReactNode } from "react";
 
 import { classNames } from "v2/utils";
@@ -47,9 +48,13 @@ const ErrorMessage: FC<{ className?: string }> = ({ className }) => {
         )}
       >
         <div className="flex justify-center mt-2">
-          <div className="w-3/5 lg:w-1/2 min-h-[200px]">
-            <img src="/animations/failure.gif" />
-          </div>
+          <Image
+            alt="Epic Fail"
+            src="/animations/failure.gif"
+            width={250}
+            height={250}
+            loading="eager"
+          />
         </div>
         <div className="w-full text-center mb-8">
           <p className="break-normal text-foreground-alt-200">{t("v2.error")}</p>

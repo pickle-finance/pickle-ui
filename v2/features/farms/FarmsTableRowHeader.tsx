@@ -2,10 +2,10 @@ import { FC, HTMLAttributes } from "react";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { TFunction, useTranslation } from "next-i18next";
-import { PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
+import { AssetProtocol, PickleAsset } from "picklefinance-core/lib/model/PickleModelJson";
 import dayjs from "dayjs";
 
-import { classNames, formatDollars } from "v2/utils";
+import { classNames, formatDollars, formatNumber, roundToSignificantDigits } from "v2/utils";
 import FarmsBadge from "./FarmsBadge";
 import { useSelector } from "react-redux";
 import { AssetWithData, CoreSelectors } from "v2/store/core";
@@ -24,6 +24,37 @@ const RowCell: FC<HTMLAttributes<HTMLElement>> = ({ children, className }) => (
     {children}
   </td>
 );
+
+const uniV3Range = (asset: AssetWithData, t: TFunction) => {
+  const isUniV3 = asset.protocol === AssetProtocol.UNISWAP_V3;
+  const isStable = asset.depositToken.range?.isStable;
+  const isNonUsdPegged = asset.depositToken.range?.isNotUsdPegged;
+
+  const dollarSign = isNonUsdPegged || isStable ? "" : "$";
+
+  if (!isUniV3 || !asset.depositToken.range) return <></>;
+
+  // e.g. Range: $1400 <-> $1900
+  const rangeString = `${t("v2.farms.range")}: ${dollarSign}${roundToSignificantDigits(
+    +(asset.depositToken.range?.lowerUsd || 0),
+    isStable ? 3 : 1,
+  )} ↔ ${dollarSign}${roundToSignificantDigits(
+    +(asset.depositToken.range?.upperUsd || 0),
+    isStable ? 3 : 1,
+  )}`;
+
+  // e.g. BTC/ETH, only required where there's no USD pairing
+  const tokenRatioString = `${
+    isNonUsdPegged || isStable
+      ? `${asset.depositToken.range?.numeratorToken.toUpperCase()} / ${asset.depositToken.range?.denomToken.toUpperCase()}`
+      : ""
+  }`;
+
+  return (
+    <p className="font-normal text-foreground-alt-200">{`${rangeString} ${tokenRatioString}
+    `}</p>
+  );
+};
 
 const chainProtocol = (
   asset: AssetWithData,
@@ -61,6 +92,7 @@ const chainProtocol = (
         </div>
         <p className="italic font-normal text-xs text-foreground-alt-200">{asset.protocol}</p>
       </div>
+      <p>{uniV3Range(asset, t)}</p>
     </div>
   );
 };

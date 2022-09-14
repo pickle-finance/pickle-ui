@@ -7,8 +7,7 @@ import { DillDetails } from "picklefinance-core/lib/model/PickleModelJson";
 import { CoreSelectors } from "v2/store/core";
 import { formatDollars, formatDate, formatNumber, formatPercentage } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
-import { useProtocolIncome } from "./flows/hooks";
-import { ChainNetwork, Chains, PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, Chains } from "picklefinance-core";
 
 interface Props {
   dill: DillDetails;
@@ -21,27 +20,28 @@ const RevenueStats: FC<Props> = ({ dill }) => {
   const picklePrice = useSelector(CoreSelectors.selectPicklePrice);
   const ethPrice = useSelector(CoreSelectors.selectETHPrice);
   const blockPerWeek = (1 / Chains.get(ChainNetwork.Ethereum).secondsPerBlock) * 60 * 7 * 24 * 60;
-  const { weeklyProfit } = useProtocolIncome(core ? core : ({} as PickleModelJson.PickleModelJson));
+
+  if (!dill) return <></>;
   const { dillWeeks, totalPickle, pickleLocked, totalDill } = dill;
 
-  if (!weeklyProfit || !dillWeeks || !totalPickle || !picklePerBlock || !blockPerWeek) return <></>;
-  const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
+  if (!dillWeeks || !totalPickle || !picklePerBlock || !blockPerWeek) return <></>;
 
+  const upcomingDistribution = dillWeeks[dillWeeks.length - 1];
   const ratio = totalDill / pickleLocked;
   const averageLock = Math.round(ratio * 4 * 100) / 100;
-
-  const adjustedEmissions = (picklePerBlock / 10 ** 18) * (1 - totalDill / totalPickle);
-  const dillEmissions = adjustedEmissions * (totalDill / totalPickle);
-  const pickleRewards = ((dillEmissions * blockPerWeek * 52) / dill.totalDill) * 100;
-
-  const ethRewards = (weeklyProfit / (totalDill * picklePrice)) * 52 * 100;
+  const { picklePriceUsd, weeklyPickleAmount, ethPriceUsd, weeklyEthAmount } = dillWeeks[
+    dillWeeks.length - 1
+  ];
+  const pickleRewards =
+    ((picklePriceUsd * weeklyPickleAmount) / (totalDill * picklePrice)) * 52 * 100;
+  const ethRewards = ((ethPriceUsd * weeklyEthAmount) / (totalDill * picklePrice)) * 52 * 100;
 
   const dillAPY = ethRewards + pickleRewards;
 
   return (
     <>
       <h1 className="font-body font-bold text-xl mb-4">{t("v2.dill.revenueShareStats")}</h1>
-      <div className="grid grid-cols-2 xl:grid-cols-5 bg-background-light rounded-xl border border-foreground-alt-500 shadow px-6 py-7">
+      <div className="grid grid-cols-2 xl:grid-cols-5 justify-items-center bg-background-light rounded-xl border border-foreground-alt-500 shadow py-7">
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
             {formatDollars(dill.pickleLocked * picklePrice)}
@@ -79,7 +79,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
         </div>
         <div className="mb-6 xl:mb-0">
           <h2 className="font-title font-medium text-foreground text-lg leading-5">
-            {formatPercentage(dillAPY)}
+            {formatPercentage(dillAPY, 2)}
             <MoreInfo>
               <p className="font-bold text-primary">{`${t("v2.dill.rewards")}`}</p>
               <div className="flex justify-between items-end">
@@ -88,7 +88,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
               </div>
               <div className="flex justify-between items-end">
                 <div className="font-bold text-foreground text-xs mr-2">PICKLE:</div>
-                <div className="text-foreground text-xs">{formatPercentage(pickleRewards)}</div>
+                <div className="text-foreground text-xs">{formatPercentage(pickleRewards, 2)}</div>
               </div>
             </MoreInfo>
           </h2>
@@ -103,11 +103,11 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                 upcomingDistribution.weeklyEthAmount * ethPrice,
             )}
             <MoreInfo>
-              <div className="flex items-center font-bold text-sm">
+              <div className="flex justify-between items-end font-bold text-sm mb-1">
                 <span className="text-foreground mr-1">
                   {formatNumber(upcomingDistribution.weeklyPickleAmount)}
                 </span>
-                <div className="inline-block w-6 h-6">
+                <div className="inline-block w-5 h-5 ml-2">
                   <Image
                     src="/pickle-icon.svg"
                     width={24}
@@ -118,11 +118,11 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                   />
                 </div>
               </div>
-              <div className="flex items-center font-bold text-sm">
+              <div className="flex justify-between items-end font-bold text-sm mb-1">
                 <span className="text-foreground mr-1">
-                  {formatNumber(upcomingDistribution.weeklyEthAmount)}
+                  {formatNumber(upcomingDistribution.weeklyEthAmount, 3)}
                 </span>
-                <div className="inline-block w-6 h-6">
+                <div className="inline-block w-5 h-5 ml-2">
                   <Image
                     src="/tokens/eth.png"
                     width={24}

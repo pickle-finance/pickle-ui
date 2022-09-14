@@ -12,6 +12,7 @@ import DepositFlow from "../farms/flows/deposit/DepositFlow";
 import { roundToSignificantDigits } from "v2/utils";
 import HarvestFlow from "../farms/flows/harvest/HarvestFlow";
 import { isAcceptingDeposits } from "v2/store/core.helpers";
+import { useAccount } from "v2/hooks";
 
 interface Props {
   brinery: BrineryWithData;
@@ -19,7 +20,7 @@ interface Props {
 
 const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
   const { t } = useTranslation("common");
-  const { account } = useWeb3React<Web3Provider>();
+  const account = useAccount();
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
 

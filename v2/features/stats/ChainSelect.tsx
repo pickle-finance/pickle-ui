@@ -12,14 +12,14 @@ import { classNames } from "v2/utils";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 import { Network } from "../connection/networks";
-import { JarSelectData } from "./JarSelect";
 import { NextRouter, useRouter } from "next/router";
 
 const ChainSelect: FC<{
   chain: ChainSelectData;
   setChain: SetFunction;
   setJar: SetFunction;
-}> = ({ chain, setChain, setJar }) => {
+  setPage: SetFunction;
+}> = ({ chain, setChain, setJar, setPage }) => {
   const networks = useSelector(CoreSelectors.selectNetworks);
   const options = networksToOptions(networks);
   const router: NextRouter = useRouter();
@@ -38,7 +38,8 @@ const ChainSelect: FC<{
     const chain = (c as ChainSelectData).value;
     router.push(`/stats?chain=${chain}`);
     setChain(c);
-    setJar({} as JarSelectData);
+    setPage("chain");
+    // setJar({} as JarSelectData);
   };
 
   return (

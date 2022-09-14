@@ -31,7 +31,7 @@ const AssetRow: FC<{
       ? `${asset.now.jarApr}%`
       : "0%";
   return (
-    <tr className="border border-foreground-alt-400">
+    <tr className="border border-foreground-alt-400 text-foreground-alt-100">
       <td className="text-left text-sm lg:pl-8 sm:pl-4 py-2 pr-2">
         <JarControl jarKey={assetKey} setJar={setJar} chain={chain} core={core} />
       </td>

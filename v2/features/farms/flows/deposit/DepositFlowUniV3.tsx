@@ -126,7 +126,9 @@ const DepositFlowUniV3: FC<Props> = ({ jar, balances }) => {
         event.address.toLowerCase() === jar.token1!.address.toLowerCase(),
     )!;
 
-    const pTokenTransferEvent = events.find((event) => event.args.to === account)!;
+    const pTokenTransferEvent = events.find(
+      (event) => event.args.to === account && event.address === jar.contract,
+    )!;
 
     // May not have transfer events if native token involved
     const newToken0Balance = (!token0TransferEvent
