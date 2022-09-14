@@ -30,19 +30,22 @@ const uniV3Range = (asset: AssetWithData, t: TFunction) => {
   const isStable = asset.depositToken.range?.isStable;
   const isNonUsdPegged = asset.depositToken.range?.isNotUsdPegged;
 
-  const dollarSign = isNonUsdPegged ? "" : "$";
+  const dollarSign = isNonUsdPegged || isStable ? "" : "$";
 
-  if (!isUniV3 || isStable || !asset.depositToken.range) return <></>;
+  if (!isUniV3 || !asset.depositToken.range) return <></>;
 
   // e.g. Range: $1400 <-> $1900
   const rangeString = `${t("v2.farms.range")}: ${dollarSign}${roundToSignificantDigits(
     +(asset.depositToken.range?.lowerUsd || 0),
-    1,
-  )} ↔ ${dollarSign}${roundToSignificantDigits(+(asset.depositToken.range?.upperUsd || 0), 1)}`;
+    isStable ? 3 : 1,
+  )} ↔ ${dollarSign}${roundToSignificantDigits(
+    +(asset.depositToken.range?.upperUsd || 0),
+    isStable ? 3 : 1,
+  )}`;
 
   // e.g. BTC/ETH, only required where there's no USD pairing
   const tokenRatioString = `${
-    isNonUsdPegged
+    isNonUsdPegged || isStable
       ? `${asset.depositToken.range?.numeratorToken.toUpperCase()} / ${asset.depositToken.range?.denomToken.toUpperCase()}`
       : ""
   }`;
