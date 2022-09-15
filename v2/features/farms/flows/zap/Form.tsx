@@ -13,7 +13,7 @@ import { CoreSelectors, JarWithData } from "v2/store/core";
 
 interface Props {
   jar: JarWithData;
-  nextStep: (amount: string) => void;
+  nextStep: (amount: string, token: TokenSelect) => void;
   zapTokens: any;
 }
 
@@ -73,7 +73,7 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens }) => {
   const handleFormSubmit = () => {
     if (error) return;
 
-    nextStep(amount);
+    nextStep(amount, selectedToken);
   };
 
   return (

@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useMachine } from "@xstate/react";
 import { ethers } from "ethers";
 import { RawChain, ChainNetwork } from "picklefinance-core/lib/chain/Chains";
+import { AssetProtocol } from "picklefinance-core/lib/model/PickleModelJson";
 
 // TODO: use pf-core files when they're included in the distribution
 import { Erc20__factory as Erc20Factory } from "v1/containers/Contracts/factories/Erc20__factory";
@@ -18,10 +19,15 @@ import { Jar } from "v1/containers/Contracts/Jar";
 import { JarV3 } from "v1/containers/Contracts/JarV3";
 import { VefxsVault } from "v1/containers/Contracts/VefxsVault";
 import { VefxsVault__factory as VefxsVaultFactory } from "v1/containers/Contracts/factories/VefxsVault__factory";
+import { UniswapRouter__factory as UniswapRouterFactory } from "v1/containers/Contracts/factories";
+import { UniswapRouter } from "v1/containers/Contracts/UniswapRouter";
+import { PickleZapV1__factory as PickleZapFactory } from "v1/containers/Contracts/factories/";
+import { PickleZapV1 } from "v1/containers/Contracts/PickleZapV1";
 
-import { AppDispatch, useAppDispatch } from "v2/store";
+import { AppDispatch, useAppDispatch, useAppSelector } from "v2/store";
 import { Actions } from "./stateMachineUserInput";
 import { ThemeActions } from "v2/store/theme";
+import { CoreSelectors } from "v2/store/core";
 
 export const useTokenContract = (address: string) => {
   const { library } = useWeb3React<Web3Provider>();
@@ -61,6 +67,32 @@ export const useFarmContract = (address: string | undefined, chain: RawChain | u
   return FarmContract;
 };
 
+export const useZapContracts = (
+  chain: ChainNetwork | undefined,
+  protocol: AssetProtocol | undefined,
+) => {
+  const { library } = useWeb3React<Web3Provider>();
+  const core = useAppSelector(CoreSelectors.selectCore);
+
+  const swapProtocol = core?.xykSwapProtocols.find((x) => {
+    return x.protocol == protocol && x.chain == chain;
+  });
+
+  const UniV2Router = useMemo<UniswapRouter | undefined>(() => {
+    if (!library || !chain || !protocol || !core || !swapProtocol?.router) return;
+
+    return UniswapRouterFactory.connect(swapProtocol?.router!, library.getSigner());
+  }, [library, chain, protocol]);
+
+  const ZapContract = useMemo<PickleZapV1 | undefined>(() => {
+    if (!library || !chain || !protocol || !core || !swapProtocol?.router) return;
+
+    return PickleZapFactory.connect(swapProtocol?.pickleZapAddress!, library.getSigner());
+  }, [library, chain, protocol]);
+
+  return { UniV2Router, ZapContract };
+};
+
 export const usePveContract = (address: string | undefined) => {
   const { library } = useWeb3React<Web3Provider>();
 
@@ -96,6 +128,7 @@ export const useTransaction = (
   const dispatch = useAppDispatch();
 
   const sendTransaction = async () => {
+    console.log("here");
     if (!transactionFactory) return;
 
     setError(undefined);
@@ -103,6 +136,7 @@ export const useTransaction = (
 
     try {
       const tx = await transactionFactory();
+      console.log(tx);
 
       send(Actions.TRANSACTION_SENT, { txHash: tx.hash });
 

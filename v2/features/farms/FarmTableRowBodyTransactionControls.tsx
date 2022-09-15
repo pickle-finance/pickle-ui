@@ -18,11 +18,6 @@ import { useSelector } from "react-redux";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
 import { useAccount } from "v2/hooks";
 import ZapFlow from "./flows/zap/ZapFlow";
-import { getNativeName } from "./flows/utils";
-import { ChainNetwork, PickleModelJson } from "picklefinance-core";
-import { ChainNativetoken, UserTokenData } from "picklefinance-core/lib/client/UserModel";
-import { TokenSelect } from "./flows/deposit/FormUniV3";
-
 interface Props {
   asset: AssetWithData;
 }
@@ -35,19 +30,20 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
 
   const userTokenData = useAppSelector((state) => {
     const tokenData = UserSelectors.selectTokenDataById(state, asset.details.apiKey, account);
-    return tokenData ? tokenData : {
-      assetKey: asset.details.apiKey,
-      componentTokenBalances: asset.depositToken.components?.reduce((acc: any, curr) => {
-        return (acc[curr] = { balance: '0', allowance: '0' }, acc)
-        }, {}
-      ),
-      depositTokenBalance: "0",
-      farmAllowance: "0",
-      jarAllowance: "0",
-      pAssetBalance: "0",
-      pStakedBalance: "0",
-      picklePending: "0",
-    }
+    return tokenData
+      ? tokenData
+      : {
+          assetKey: asset.details.apiKey,
+          componentTokenBalances: asset.depositToken.components?.reduce((acc: any, curr) => {
+            return (acc[curr] = { balance: "0", allowance: "0" }), acc;
+          }, {}),
+          depositTokenBalance: "0",
+          farmAllowance: "0",
+          jarAllowance: "0",
+          pAssetBalance: "0",
+          pStakedBalance: "0",
+          picklePending: "0",
+        };
   });
 
   const userNativeData = useAppSelector((state) =>
@@ -84,12 +80,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
               {jarTokens}
             </span>
             <span className="flex gap-3">
-              <ZapFlow
-                asset={asset}
-                nativeBalances={userNativeData}
-                balances={userTokenData}
-                type="jar"
-              />
+              <ZapFlow asset={asset} nativeBalances={userNativeData} balances={userTokenData} />
               <ApprovalFlow
                 apiKey={asset.details.apiKey}
                 tokenAddress={asset.depositToken.addr}
