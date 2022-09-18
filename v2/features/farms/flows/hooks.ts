@@ -119,7 +119,11 @@ export const useUniV3JarContract = (address: string) => {
 
 export const useTransaction = (
   transactionFactory: (() => Promise<ethers.ContractTransaction>) | undefined,
-  callback: (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => void,
+  callback: (
+    receipt: ethers.ContractReceipt,
+    dispatch: AppDispatch,
+    value?: ethers.BigNumber,
+  ) => void,
   send: ReturnType<typeof useMachine>[1],
   showConfetti: boolean = false,
 ) => {
@@ -128,7 +132,6 @@ export const useTransaction = (
   const dispatch = useAppDispatch();
 
   const sendTransaction = async () => {
-    console.log("here");
     if (!transactionFactory) return;
 
     setError(undefined);
@@ -136,14 +139,13 @@ export const useTransaction = (
 
     try {
       const tx = await transactionFactory();
-      console.log(tx);
 
       send(Actions.TRANSACTION_SENT, { txHash: tx.hash });
 
       tx.wait()
         .then(
           (receipt) => {
-            callback(receipt, dispatch);
+            callback(receipt, dispatch, tx.value);
             send(Actions.SUCCESS);
 
             if (showConfetti) dispatch(ThemeActions.setIsConfettiOn(true));

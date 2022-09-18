@@ -24,14 +24,15 @@ import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";
 import Failure from "../Failure";
 import { useTransaction, useZapContracts } from "../hooks";
-import { TransferEvent } from "v1/containers/Contracts/Jar";
-import { UserActions } from "v2/store/user";
 import { formatDollars, truncateToMaxDecimals } from "v2/utils";
 import { eventsByName, getNativeName } from "../utils";
 import { isAcceptingDeposits } from "v2/store/core.helpers";
 import { useSelector } from "react-redux";
 import { TokenSelect } from "../deposit/FormUniV3";
 import { neverExpireEpochTime } from "v1/util/constants";
+import { Jar__factory } from "v1/containers/Contracts/factories";
+import { UserActions } from "v2/store/user";
+import { zapInEvent } from "v1/containers/Contracts/PickleZapV1";
 
 interface Props {
   asset: AssetWithData;
@@ -39,13 +40,14 @@ interface Props {
   nativeBalances: ChainNativetoken | undefined;
 }
 
-interface IZapTokens {
+export interface IZapTokens {
   [key: string]: IZaps;
 }
 
-interface IZaps extends BalanceAllowance {
+export interface IZaps extends BalanceAllowance {
   decimals: number;
   type: "token" | "wrapped" | "native";
+  address: string;
 }
 
 const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
@@ -63,9 +65,6 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   const { chain: chainName, protocol } = asset;
   const { UniV2Router, ZapContract } = useZapContracts(chainName, protocol);
 
-  const decimals = jarDecimals(asset);
-  const depositTokenBalanceBN = BigNumber.from(balances?.depositTokenBalance || "0");
-
   const transactionFactory = () => {
     const { token, amount } = current.context;
     if (
@@ -74,10 +73,12 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
       !swapTx ||
       !token ||
       !core ||
-      !asset.depositToken.nativePath
+      !asset.depositToken.nativePath ||
+      !zapTokens
     )
       return;
 
+    const decimals = zapTokens[token.label.toUpperCase()].decimals;
     const depositAmount = ethers.utils.parseUnits(truncateToMaxDecimals(amount), decimals);
 
     // If native token, use 0x0 address
@@ -85,11 +86,6 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
       token.value === "native"
         ? ethers.constants.AddressZero
         : core.tokens.find((coreToken) => {
-            console.log(
-              coreToken.id,
-              token.label.toLowerCase(),
-              getNativeName(jarChain?.gasTokenSymbol!),
-            );
             return (
               (token.label.toLowerCase() === coreToken.id ||
                 getNativeName(jarChain?.gasTokenSymbol!).toLowerCase() === coreToken.id) &&
@@ -119,20 +115,23 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   useEffect(() => {
     const buildAndSetSwapTx = async () => {
       const { token, amount } = current.context;
+      if (!token || !zapTokens) return;
+      const decimals = zapTokens[token.label.toUpperCase()].decimals;
+
       const depositAmount = ethers.utils.parseUnits(truncateToMaxDecimals(amount), decimals);
 
       if (!UniV2Router || !ZapContract || !token || !core || !asset.depositToken.nativePath) return;
 
       setSwapTx(
-        token.value === "wrapped"
-          ? await UniV2Router.populateTransaction.swapExactTokensForTokens(
-              depositAmount,
+        token.value === "native"
+          ? await UniV2Router.populateTransaction.swapExactETHForTokens(
               0,
               asset.depositToken.nativePath?.path || [],
               ZapContract.address,
               BigNumber.from(neverExpireEpochTime),
             )
-          : await UniV2Router.populateTransaction.swapExactETHForTokens(
+          : await UniV2Router.populateTransaction.swapExactTokensForTokens(
+              depositAmount,
               0,
               asset.depositToken.nativePath?.path || [],
               ZapContract.address,
@@ -146,40 +145,91 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
 
   // Update user's zap token balances
   useEffect(() => {
-    console.log("should not be here often");
     setZapTokens(
       getZapTokens(nativeBalances, balances as UserTokenData, asset as AssetWithData, core),
     );
   }, [nativeBalances?.native, nativeBalances?.wrappedBalance, balances?.componentTokenBalances]);
 
-  const callback = (receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
-    if (!account) return;
+  const callback = (
+    receipt: ethers.ContractReceipt,
+    dispatch: AppDispatch,
+    value?: ethers.BigNumber,
+  ) => {
+    if (!account || !zapTokens) return;
+    const { token } = current.context;
 
     /**
-     * This will generate two events:
-     * 1) Transfer of LP tokens from user's wallet to the jar
+     * This will generate two events, queried separately:
+     * 1) Transfer of zapped tokens from user's wallet
      * 2) Mint of pTokens sent to user's wallet
      */
-    const transferEvents = eventsByName<TransferEvent>(receipt, "Transfer");
-    const depositTokenTransferEvent = transferEvents.find((event) => event.args.from === account)!;
-    const pTokenTransferEvent = transferEvents.find((event) => event.args.to === account)!;
+    const IERC20 = new ethers.utils.Interface(Jar__factory.abi);
 
-    const depositTokenBalance = depositTokenBalanceBN
-      .sub(depositTokenTransferEvent.args.value)
+    const transferEventsUnfiltered = receipt.events?.map((event) => {
+      try {
+        const parsedEvent = IERC20.parseLog(event);
+        if (parsedEvent.name === "Transfer") return parsedEvent;
+      } catch {
+        return null;
+      }
+    });
+
+    const transferEvents:
+      | ethers.utils.LogDescription[]
+      | undefined = transferEventsUnfiltered?.flatMap((x) => (x ? [x] : []));
+    const zapEvent = eventsByName<zapInEvent>(receipt, "zapIn")[0];
+
+    const zapTokenTransferEvent = transferEvents?.find((event) => event.args.from === account);
+
+    const zapTokenBalance = BigNumber.from(zapTokens[token?.label || ""].balance || "0")
+      .sub(zapTokenTransferEvent?.args.value || value)
       .toString();
 
     const pTokenBalanceBN = BigNumber.from((balances as UserTokenData)?.pAssetBalance || "0");
-    const pAssetBalance = pTokenBalanceBN.add(pTokenTransferEvent.args.value).toString();
+    const pAssetBalance = pTokenBalanceBN.add(zapEvent.args.tokensRec).toString();
+
+    const tokenKey = token?.label.toLowerCase()!;
     dispatch(
       UserActions.setTokenData({
         account,
         apiKey: asset.details.apiKey,
         data: {
-          depositTokenBalance,
           pAssetBalance,
+          // Only update token balances if one of the component tokens are used
+          ...(token?.value === "token" && {
+            componentTokenBalances: {
+              ...balances?.componentTokenBalances,
+              [tokenKey]: {
+                balance: zapTokenBalance,
+                allowance: balances?.componentTokenBalances[tokenKey].allowance!,
+              },
+            },
+          }),
         },
       }),
     );
+    if (token?.value === "wrapped")
+      dispatch(
+        UserActions.setNativeData({
+          account,
+          chain: asset.chain,
+          isWrapped: true,
+          data: {
+            wrappedBalance: zapTokenBalance,
+          },
+        }),
+      );
+    if (token?.value === "native")
+      dispatch(
+        UserActions.setNativeData({
+          account,
+          chain: asset.chain,
+          isWrapped: true,
+          data: {
+            native: { balance: zapTokenBalance, allowance: ethers.constants.MaxUint256.toString() },
+          },
+        }),
+      );
   };
 
   const { sendTransaction, error, setError, isWaiting } = useTransaction(
@@ -196,11 +246,18 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   const closeModal = () => setIsModalOpen(false);
 
   const equivalentValue = () => {
-    const depositTokenPrice = asset.depositToken.price;
+    const { token, amount } = current.context;
+    const zapTokenPrice = core?.tokens.find((coreToken) => {
+      const tokenMatch =
+        token?.value === "token"
+          ? token?.label.toLowerCase() === coreToken.id
+          : getNativeName(jarChain?.gasTokenSymbol!).toLowerCase() === coreToken.id;
+      return tokenMatch && coreToken.chain == chainName;
+    })?.price;
 
-    if (!depositTokenPrice) return;
+    if (!zapTokenPrice) return;
 
-    const valueUSD = parseFloat(current.context.amount) * depositTokenPrice;
+    const valueUSD = parseFloat(amount) * zapTokenPrice;
 
     return `~ ${formatDollars(valueUSD)}`;
   };
@@ -225,7 +282,9 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
             nextStep={(amount: string, token: TokenSelect) =>
               send(Actions.SUBMIT_FORM, { amount, token })
             }
-            zapTokens={zapTokens}
+            zapTokens={zapTokens!}
+            zapAddress={ZapContract?.address}
+            balances={balances}
           />
         )}
         {current.matches(States.AWAITING_CONFIRMATION) && (
@@ -284,9 +343,11 @@ const getZapTokens = (
   return {
     ...(componentTokens &&
       Object.keys(componentTokens).reduce((acc, curr) => {
-        const currDecimals: number =
-          core?.tokens.find((x) => x.chain === asset.chain && x.id === curr.toLowerCase())
-            ?.decimals || 18;
+        const currToken: PickleModelJson.IExternalToken | undefined = core?.tokens.find(
+          (x) => x.chain === asset.chain && x.id === curr.toLowerCase(),
+        );
+
+        const currDecimals = currToken?.decimals || 18;
 
         return {
           ...acc,
@@ -295,6 +356,7 @@ const getZapTokens = (
             allowance: componentTokens[curr]?.allowance, // TODO: this is only the jar allowance (used in univ3 zaps), need to update for specific zap contract/protocol in pf-core. Can potentially use the same property to express allowance for respective protocol's zap contract, since there's no overlap between univ3 jars and zaps currently
             decimals: currDecimals,
             type: "token",
+            address: currToken?.contractAddr || ethers.constants.AddressZero,
           },
         };
       }, {})),
@@ -305,6 +367,7 @@ const getZapTokens = (
           allowance: userNativeData?.native.allowance,
           decimals: nativeDecimals,
           type: "native",
+          address: ethers.constants.AddressZero,
         },
         [wrappedName]: {
           balance: userNativeData?.wrappedBalance,
@@ -315,6 +378,7 @@ const getZapTokens = (
             ],
           decimals: nativeDecimals,
           type: "wrapped",
+          address: jarChain?.wrappedNativeAddress,
         },
       }),
   };

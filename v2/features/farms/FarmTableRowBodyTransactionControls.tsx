@@ -80,7 +80,9 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
               {jarTokens}
             </span>
             <span className="flex gap-3">
-              <ZapFlow asset={asset} nativeBalances={userNativeData} balances={userTokenData} />
+              {asset.depositToken.nativePath && (
+                <ZapFlow asset={asset} nativeBalances={userNativeData} balances={userTokenData} />
+              )}
               <ApprovalFlow
                 apiKey={asset.details.apiKey}
                 tokenAddress={asset.depositToken.addr}
@@ -93,10 +95,10 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
                 type="jar"
               />
               {userHasJarAllowance && (
-                <div className="grid grid-cols-3 gap-3">
-                  <DepositFlow asset={asset} balances={userTokenData} type="jar" />
-                  <WithdrawFlow asset={asset} balances={userTokenData} />
-                </div>
+                <DepositFlow asset={asset} balances={userTokenData} type="jar" />
+              )}
+              {(userHasJarAllowance || jarTokens > 0) && (
+                <WithdrawFlow asset={asset} balances={userTokenData} />
               )}
             </span>
           </div>

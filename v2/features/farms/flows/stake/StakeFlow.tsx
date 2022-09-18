@@ -81,6 +81,7 @@ const StakeFlow: FC<Props> = ({ asset, balances }) => {
     } else {
       const events = eventsByName<DepositEvent>(receipt, "Deposit");
       amount = events[0].args.amount;
+      console.log(receipt, events);
     }
 
     const pAssetBalance = pTokenBalanceBN.sub(amount).toString();
