@@ -18,7 +18,6 @@ import Modal from "v2/components/Modal";
 import { AssetWithData, CoreSelectors, JarWithData } from "v2/store/core";
 import { stateMachine, Actions, States } from "../stateMachineUserInput";
 import Form from "./Form";
-import { jarDecimals } from "v2/utils/user";
 import AwaitingConfirmation from "../deposit/AwaitingConfirmation";
 import AwaitingReceipt from "../AwaitingReceipt";
 import Success from "../Success";

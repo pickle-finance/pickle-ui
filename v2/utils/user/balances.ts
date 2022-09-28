@@ -120,8 +120,8 @@ export const getUserAssetDataWithPrices = (
     token0 = asset.depositToken.components?.[0];
     token1 = asset.depositToken.components?.[1];
 
-    token0Balance = userTokenDetails.componentTokenBalances[token0 || ""].balance;
-    token1Balance = userTokenDetails.componentTokenBalances[token1 || ""].balance;
+    token0Balance = userTokenDetails.componentTokenBalances?.[token0 || ""]?.balance;
+    token1Balance = userTokenDetails.componentTokenBalances?.[token1 || ""]?.balance;
 
     const token0Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token0Balance?.toString() || "0"),
@@ -197,7 +197,6 @@ export const getUserAssetDataWithPrices = (
     core.prices.pickle || 0,
     1.0,
   );
-  // if (asset.chain === ChainNetwork.Fantom) console.log(asset, walletComponentTokens);
 
   return {
     assetId: asset.details.apiKey,

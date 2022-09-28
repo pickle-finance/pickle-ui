@@ -145,6 +145,7 @@ const FarmsTableRowHeader: FC<Props> = ({ asset, simple, dashboard, open, userDi
   const pendingPicklesAsDollars = asset.earnedPickles.tokensUSD;
   const picklesPending = asset.earnedPickles.tokensVisible;
   const depositTokenCountString = t("v2.farms.tokens", { amount: totalTokensInJarAndFarm });
+  if (asset.id === "B.Protocol BAMM") console.log(asset);
 
   return (
     <>
