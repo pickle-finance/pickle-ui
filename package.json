@@ -91,7 +91,7 @@
     "react-select": "^5.2.1",
     "react-toastify": "^8.2.0",
     "react-tradingview-embed": "^3.0.6",
-    "recharts": "^2.0.8",
+    "recharts": "2.1.12",
     "recharts-scale": "^0.4.3",
     "rooks": "^5.8.0",
     "rxjs": "^6.6.3",
