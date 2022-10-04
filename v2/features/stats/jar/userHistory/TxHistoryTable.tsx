@@ -26,6 +26,7 @@ const TxHistoryTable: FC<{
                 <TxTableHeaderCell label="N Tokens" />
                 <TxTableHeaderCell label="Token Bal." />
                 <TxTableHeaderCell label="Total Cost" />
+                <TxTableHeaderCell label="Profit/Loss" />
                 {/* Chevron down/up column */}
               </tr>
             </thead>

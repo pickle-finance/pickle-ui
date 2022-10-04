@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
-import { classNames, formatDate, formatDollars } from "v2/utils";
+import { classNames, formatDate, formatDollars, formatNumber } from "v2/utils";
 import Link from "v2/components/Link";
 import { UserTxWithPnl } from "../../JarStats";
 
@@ -39,7 +39,7 @@ const TxTableRowHeader: FC<{
         </Link>
       </RowCell>
       <RowCell>
-        <div className="flex items-center">
+        <div className="flex items-end">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
               {formatDollars(tx.value)}
@@ -51,7 +51,11 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {tx.nTokens}
+              {tx.nTokens > 10
+                ? formatNumber(tx.nTokens, 2)
+                : tx.nTokens <= 0
+                ? 0
+                : formatNumber(tx.nTokens, 6)}
             </p>
           </div>
         </div>
@@ -60,7 +64,11 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {tx.totalNTokens}
+              {tx.totalNTokens > 10
+                ? formatNumber(tx.totalNTokens, 2)
+                : tx.totalNTokens <= 0
+                ? 0
+                : formatNumber(tx.totalNTokens, 6)}
             </p>
           </div>
         </div>
@@ -70,6 +78,15 @@ const TxTableRowHeader: FC<{
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
               {formatDollars(tx.totalCost)}
+            </p>
+          </div>
+        </div>
+      </RowCell>
+      <RowCell>
+        <div className="flex items-center">
+          <div className="ml-2">
+            <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
+              {tx.pl ? formatDollars(tx.pl) : "--"}
             </p>
           </div>
         </div>

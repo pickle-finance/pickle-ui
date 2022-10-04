@@ -89,9 +89,9 @@ const JarStats: FC<{
     }
   }, [userHistory]);
 
-  useEffect(() => {
-    console.log(jarHistoryWithPnl);
-  }, [jarHistoryWithPnl]);
+  // useEffect(() => {
+  //   console.log(jarHistoryWithPnl);
+  // }, [jarHistoryWithPnl]);
 
   if (asset && page === "jar" && ready[page])
     return (
@@ -148,6 +148,7 @@ export interface UserTxWithPnl extends UserTx {
   totalNTokens: number;
   totalCostBasis: number;
   totalCost: number;
+  pl?: number;
   totalTradingPnL?: number;
   totalRewardsUSD?: number;
 }
