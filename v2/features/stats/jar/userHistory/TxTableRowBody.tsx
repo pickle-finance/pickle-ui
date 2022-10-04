@@ -83,7 +83,7 @@ const TransferDescription: FC<{
       {!minted && !burned && (
         <>
           {useFromLink && useToLink && (
-            <div className="flex inline whitespace-nowrap">
+            <div className="flex whitespace-nowrap">
               <AddrLink
                 chain={chain}
                 addr={fromAddr}
@@ -102,7 +102,7 @@ const TransferDescription: FC<{
             </div>
           )}
           {useFromLink && !useToLink && (
-            <div className="flex inline whitespace-nowrap align-center">
+            <div className="flex whitespace-nowrap align-center">
               <AddrLink
                 chain={chain}
                 addr={fromAddr}
@@ -115,7 +115,7 @@ const TransferDescription: FC<{
             </div>
           )}
           {!useFromLink && useToLink && (
-            <div className="flex inline whitespace-nowrap">
+            <div className="flex whitespace-nowrap">
               <p className="text-sm text-foreground-alt-200">
                 {`${fromAddr} sent ${nTokensString} ${value} to`}
               </p>

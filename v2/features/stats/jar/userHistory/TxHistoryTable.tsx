@@ -1,31 +1,36 @@
 import { PickleModelJson } from "picklefinance-core";
 import { FC } from "react";
-import { UserTx } from "v2/types";
 import { classNames } from "v2/utils";
+import { UserTxWithPnl } from "../../JarStats";
 import TxTableBody from "./TxTableBody";
 
 const TxHistoryTable: FC<{
-  txHistory: UserTx[];
+  txHistory: UserTxWithPnl[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
+  sort: "old" | "new";
   className?: string;
-}> = ({ txHistory, core, addrs, className }) => {
+}> = ({ txHistory, core, addrs, sort, className }) => {
   return (
     <div className={classNames("flex flex-col", className)}>
-      <div className="-my-2 overflow-x-auto">
-        <div className="py-2 align-middle inline-block min-w-full">
-          <table className="min-w-1/2 table-auto border-collapse">
+      <div className="-my-2 overflow-x-auto overflow-y-hidden min-w-min">
+        <div className="py-2 pr-4 align-middle inline-block min-w-full max-h-[80vh] overflow-y-scroll">
+          <table className="w-full table-auto border-collapse">
             <thead className="bg-background uppercase">
               <tr>
                 <TxTableHeaderCell label="Date/Time" />
                 <TxTableHeaderCell label="Block Num." />
                 <TxTableHeaderCell label="TX Type" />
                 <TxTableHeaderCell label="TX Hash" />
+                <TxTableHeaderCell label="TX Value" />
+                <TxTableHeaderCell label="N Tokens" />
+                <TxTableHeaderCell label="Token Bal." />
+                <TxTableHeaderCell label="Total Cost" />
                 {/* Chevron down/up column */}
               </tr>
             </thead>
             <tbody className="text-foreground">
-              <TxTableBody txs={txHistory} core={core} addrs={addrs} />
+              <TxTableBody txs={txHistory} sort={sort} core={core} addrs={addrs} />
             </tbody>
           </table>
           {/* <div className="flex justify-center mt-4">

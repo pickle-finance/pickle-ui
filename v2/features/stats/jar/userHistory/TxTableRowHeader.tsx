@@ -1,12 +1,12 @@
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
-import { UserTx } from "v2/types";
-import { classNames, formatDate } from "v2/utils";
+import { classNames, formatDate, formatDollars } from "v2/utils";
 import Link from "v2/components/Link";
+import { UserTxWithPnl } from "../../JarStats";
 
 const TxTableRowHeader: FC<{
-  tx: UserTx;
+  tx: UserTxWithPnl;
   core: PickleModelJson.PickleModelJson;
   open: boolean;
 }> = ({ tx, core, open }) => {
@@ -37,6 +37,42 @@ const TxTableRowHeader: FC<{
         <Link href={txLinkUrl} external primary className="font-bold ml-1">
           {tx.hash.slice(0, 5) + "..." + tx.hash.slice(-3)}
         </Link>
+      </RowCell>
+      <RowCell>
+        <div className="flex items-center">
+          <div className="ml-2">
+            <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
+              {formatDollars(tx.value)}
+            </p>
+          </div>
+        </div>
+      </RowCell>
+      <RowCell>
+        <div className="flex items-center">
+          <div className="ml-2">
+            <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
+              {tx.nTokens}
+            </p>
+          </div>
+        </div>
+      </RowCell>
+      <RowCell>
+        <div className="flex items-center">
+          <div className="ml-2">
+            <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
+              {tx.totalNTokens}
+            </p>
+          </div>
+        </div>
+      </RowCell>
+      <RowCell>
+        <div className="flex items-center">
+          <div className="ml-2">
+            <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
+              {formatDollars(tx.totalCost)}
+            </p>
+          </div>
+        </div>
       </RowCell>
       <RowCell className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}>
         <div className="flex justify-end pr-3">

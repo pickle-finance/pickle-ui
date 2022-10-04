@@ -2,22 +2,40 @@ import { Disclosure, Transition } from "@headlessui/react";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC, Fragment } from "react";
-import { UserTx } from "v2/types";
 import { classNames } from "v2/utils";
+import { UserTxWithPnl } from "../../JarStats";
 import TxTableRowBody from "./TxTableRowBody";
 import TxTableRowHeader from "./TxTableRowHeader";
 import TxTableSpacerRow from "./TxTableSpacerRow";
 
 const TxTableBody: FC<{
-  txs: UserTx[];
+  txs: UserTxWithPnl[];
+  sort: "old" | "new";
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-}> = ({ txs, core, addrs }) => (
-  <>{txs && txs.map((tx) => <TxTableRow key={tx.hash} core={core} tx={tx} addrs={addrs} />)}</>
-);
+}> = ({ txs, sort, core, addrs }) => {
+  return (
+    <>
+      {txs &&
+        sort === "old" &&
+        txs
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map((tx) => {
+            return <TxTableRow key={tx.hash} core={core} tx={tx} addrs={addrs} />;
+          })}
+      {txs &&
+        sort === "new" &&
+        txs
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .map((tx) => {
+            return <TxTableRow key={tx.hash} core={core} tx={tx} addrs={addrs} />;
+          })}
+    </>
+  );
+};
 
 const TxTableRow: FC<{
-  tx: UserTx;
+  tx: UserTxWithPnl;
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
 }> = ({ tx, core, addrs }) => {

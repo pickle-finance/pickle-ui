@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { ChainNetwork, PickleModelJson } from "picklefinance-core";
+import { PickleModelJson } from "picklefinance-core";
 
 import { AssetWithData, CoreSelectors } from "v2/store/core";
 import type { JarChartData, SetFunction, UserJarHistory, UserTx } from "v2/types";
@@ -10,12 +10,11 @@ import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import { JarSelectData } from "./JarSelect";
 import { readyState } from "pages/stats";
-import { useAccount } from "v2/hooks";
+// import { useAccount } from "v2/hooks";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
-import Skeleton from "@material-ui/lab/Skeleton";
-import SortToggle from "./jar/userHistory/SortToggle";
+import { generatePnL } from "./jar/userHistory/utils/PnL";
 
 const JarStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
@@ -25,13 +24,14 @@ const JarStats: FC<{
   page: "platform" | "chain" | "jar" | undefined;
 }> = ({ core, jar, ready, setReady, page }) => {
   const { t } = useTranslation("common");
-  const account = useAccount();
-  // const account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
+  // const account = useAccount();
+  const account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
   const [userHistory, setUserHistory] = useState<UserJarHistory>();
-  const [userJarHistory, setUserJarHistory] = useState<UserTx[]>();
+  const [jarHistoryWithPnl, setJarHistoryWithPnl] = useState<UserTxWithPnl[]>();
+
   const [txSort, setTxSort] = useState<"old" | "new">("old");
   let asset: AssetWithData | undefined = {} as AssetWithData;
   let assetJar: JarDefinition | undefined = {} as JarDefinition;
@@ -64,74 +64,67 @@ const JarStats: FC<{
   }, [jar]);
   useEffect(() => {
     const getUserHistory = async (account: string | null | undefined): Promise<void> => {
-      // account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
       account &&
         (await fetch(`https://api.pickle.finance/prod/protocol/userhistory/${account}`)
           .then((resp) => resp.json())
           .then((jsonResp) => {
             setUserHistory(jsonResp);
-            // console.log(jsonResp);
+            // DEBUG_OUT(jsonResp);
           }));
     };
     getUserHistory(account);
   }, [account]);
   useEffect(() => {
-    if (userHistory && userHistory[jar.value]) setUserJarHistory(userHistory[jar.value]);
-  }, [userHistory]);
-  useEffect(() => {
-    if (userJarHistory) {
-      if (txSort === "old")
-        setUserJarHistory(userJarHistory.sort((a, b) => b.timestamp - a.timestamp));
-      if (txSort === "new")
-        setUserJarHistory(userJarHistory.sort((a, b) => a.timestamp - b.timestamp));
+    if (userHistory && userHistory[jar.value]) {
+      let pnl = generatePnL(userHistory[jar.value]);
+      let userJarHistory = userHistory[jar.value];
+      const jarHistoryWithPnl: UserTxWithPnl[] = userJarHistory.map((txn) => {
+        let i = userJarHistory.indexOf(txn);
+        return {
+          ...txn,
+          ...pnl[i],
+        };
+      });
+      setJarHistoryWithPnl(jarHistoryWithPnl);
     }
-  }, [txSort]);
+  }, [userHistory]);
+
+  useEffect(() => {
+    console.log(jarHistoryWithPnl);
+  }, [jarHistoryWithPnl]);
 
   if (asset && page === "jar" && ready[page])
     return (
       <>
-        <div className="mb-3">
+        <div className="mb-3 min-w-min">
           {asset && asset.depositTokensInJar && (
             <FarmsTable singleAsset={asset} hideDescription={true} />
           )}
         </div>
+        {jarHistoryWithPnl && (
+          <TxHistoryContainer
+            txHistory={jarHistoryWithPnl}
+            core={core}
+            addrs={addrs}
+            txSort={txSort}
+            setTxSort={setTxSort}
+            t={t}
+          />
+        )}
         <ChartContainer jarData={jarData} />
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
-        <div className="flex">
-          {userJarHistory && core ? (
-            <TxHistoryContainer
-              txHistory={userJarHistory}
-              core={core}
-              addrs={addrs}
-              txSort={txSort}
-              setTxSort={setTxSort}
-              t={t}
-            />
-          ) : (
-            <Skeleton
-              variant="rect"
-              animation="wave"
-              width="100%"
-              height="100%"
-              style={{
-                backgroundColor: "#FFF",
-                opacity: 0.1,
-              }}
-            />
+        <div>
+          {jarData && jarData.documentation && (
+            <RelatedTokens componentTokens={jarData.documentation.componentTokens} t={t} />
           )}
-          <div>
-            {jarData && jarData.documentation && (
-              <RelatedTokens componentTokens={jarData.documentation.componentTokens} t={t} />
+          {jarData &&
+            jarData.revenueExpenses &&
+            jarData.revenueExpenses.recentHarvests.length > 0 && (
+              <RevTableContainer
+                revs={jarData.revenueExpenses}
+                pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
+              />
             )}
-            {jarData &&
-              jarData.revenueExpenses &&
-              jarData.revenueExpenses.recentHarvests.length > 0 && (
-                <RevTableContainer
-                  revs={jarData.revenueExpenses}
-                  pfCore={core ? core : ({} as PickleModelJson.PickleModelJson)}
-                />
-              )}
-          </div>
         </div>
       </>
     );
@@ -146,5 +139,22 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
     .catch((e) => console.log(e));
   return data;
 };
+
+export interface UserTxWithPnl extends UserTx {
+  action: "deposit" | "withdraw" | "other";
+  value: number;
+  nTokens: number;
+  costBasis: number;
+  totalNTokens: number;
+  totalCostBasis: number;
+  totalCost: number;
+  totalTradingPnL?: number;
+  totalRewardsUSD?: number;
+}
+
+const DEBUG_OUT = (msg: any) => {
+  if (GLOBAL_DEBUG) console.log(msg);
+};
+const GLOBAL_DEBUG = true;
 
 export default JarStats;
