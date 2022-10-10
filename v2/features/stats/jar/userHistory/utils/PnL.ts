@@ -241,8 +241,7 @@ const firstPnlItem = (txn: PnlTxn): PnlTxnWithTotals => {
   };
 };
 
-// TODO stubbed BN functions
-const getCostBasis = (value: number, nTokens: BigNumber, tokenDecimals: number) => {
+const getCostBasis = (value: number, nTokens: BigNumber) => {
   let decimals = 0;
   let costBasis = BigNumber.from(0);
   const usdWei = BigNumber.from(Math.floor(value * 100))
@@ -260,14 +259,14 @@ const getCostBasis = (value: number, nTokens: BigNumber, tokenDecimals: number) 
 const getCost = (nTokens: BigNumber, costBasis: BigNumber, tokenDecimals: number) => {
   let cost = 0;
   if (costBasis.eq(0)) return 0;
-  if (nTokens.gte(ethers.utils.parseEther("1")))
-    cost = nTokens.div(9).div(6).div(costBasis).toNumber() / Math.pow(10, tokenDecimals - 15);
-  else cost = nTokens.div(6).div(costBasis).toNumber() / Math.pow(10, tokenDecimals - 6);
+  cost =
+    nTokens
+      .mul(costBasis)
+      .div(1e6)
+      .div(Math.pow(10, tokenDecimals - 9))
+      .toNumber() / 1e3;
   return cost;
 };
-// const getNDigits = (x: number) => {
-//   return Math.max(Math.floor(Math.log10(Math.abs(x))), 0) + 1;
-// };
 export interface PnlTxn {
   action: "deposit" | "withdraw" | "stake" | "unstake" | "other";
   value: number;
