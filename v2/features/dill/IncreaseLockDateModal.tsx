@@ -41,8 +41,6 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
   const dispatch = useAppDispatch();
   const [progressStatus, setProgressStatus] = useState<string | undefined>(undefined);
 
-  if (!parseFloat(dill?.pickleLocked)) return <></>;
-
   const urlPrefix = `${Chains.get(ChainNetwork.Ethereum).explorer}/tx/`;
 
   // Hack to skip straight to AWAITING_CONFIRMATION
@@ -53,6 +51,7 @@ const IncreaseLockDateModal: FC<Props> = ({ isOpen, closeModal, dill }) => {
   const { account } = useWeb3React<Web3Provider>();
   const DillContract = useDillContract(DILL_ADDRESS);
 
+  if (!parseFloat(dill?.pickleLocked)) return <></>;
   if (!DillContract || !account) return null;
 
   const sendTransaction = async () => {

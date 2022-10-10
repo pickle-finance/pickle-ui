@@ -3,7 +3,8 @@ import { FC, useEffect, useState } from "react";
 import { PlatformData, SetFunction } from "v2/types";
 import ChainTableContainer from "./platform/ChainTableContainer";
 import ChartContainer from "./shared/ChartContainer";
-import { ReadyState } from "pages/stats";
+import { readyState } from "pages/stats";
+import PlatformHeader from "./platform/PlatformHeader";
 
 const PlatformStats: FC<{
   setChain: SetFunction;
@@ -25,6 +26,7 @@ const PlatformStats: FC<{
   if (page === "platform" && ready[page])
     return (
       <>
+        <PlatformHeader core={core} />
         <div className="w-full columns-1 lg:columns-2 gap-5">
           <ChartContainer chart="tvl" dataSeries={dataSeries} />
           <ChartContainer chart="revs" dataSeries={dataSeries} />

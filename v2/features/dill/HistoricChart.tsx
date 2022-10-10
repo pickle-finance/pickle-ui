@@ -10,7 +10,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { RadioGroup } from "@headlessui/react";
 
 import { CoreSelectors } from "v2/store/core";
-import { classNames } from "v2/utils";
+import { classNames, formatDate } from "v2/utils";
 import { DillWeek } from "picklefinance-core/lib/model/PickleModelJson";
 
 const HistoricChart: FC = () => {
@@ -29,12 +29,15 @@ const HistoricChart: FC = () => {
     const dillByWeek: DistributionDataPoint[] = [];
     dillStats.forEach((x, i) => {
       let rewardsUsd = x.weeklyPickleAmount * x.picklePriceUsd + x.weeklyEthAmount * x.ethPriceUsd;
+      const dDate = new Date(x.distributionTime);
       let tmp = {
         ...x,
         pickleAmount: x.weeklyPickleAmount,
         ethAmount: x.weeklyEthAmount,
         dillAmount: x.weeklyDillAmount,
-        distributionTime: new Date(x.distributionTime.toString().split("T")[0]).toDateString(),
+        distributionTime: `${dDate.getUTCFullYear()}-${
+          dDate.getUTCMonth() + 1
+        }-${dDate.getUTCDate()}`,
         rewardsUsd: rewardsUsd,
         totalRewardsUsd: 0,
         usdPerDill: rewardsUsd / x.totalDillAmount,
@@ -45,7 +48,6 @@ const HistoricChart: FC = () => {
         tmp.ethAmount * tmp.ethPriceUsd;
       dillByWeek.push(tmp as DistributionDataPoint);
     });
-    // console.log(dillByWeek);
     if (chartMode === "monthly") {
       const dillByMonth = groupMonth(dillByWeek);
       const monthKeys = Object.keys(dillByMonth) as Array<keyof typeof dillByMonth>;
@@ -64,7 +66,7 @@ const HistoricChart: FC = () => {
               ethPriceUsd: (acc2.ethPriceUsd || 0) + curr2.ethPriceUsd / length,
               rewardsUsd: (acc2.rewardsUsd || 0) + (curr2.rewardsUsd || 0),
               totalRewardsUsd: (acc2.totalRewardsUsd || 0) + (curr2.totalRewardsUsd || 0) / length,
-              distributionTime: monthToDate(curr as number).toDateString(),
+              distributionTime: monthToDate(curr as number).toUTCString(),
               usdPerDill: (acc2.usdPerDill || 0) + (curr2.usdPerDill || 0) / length,
             };
             return acc2;
@@ -175,7 +177,7 @@ const groupMonth = (dillStats: DistributionDataPoint[]) => {
   let byMonth: { [key: string]: Array<DistributionDataPoint> } = {};
   dillStats?.map((week) => {
     const date = new Date(week["distributionTime"]);
-    const month = (date.getFullYear() - 1970) * 12 + date.getMonth();
+    const month = (date.getUTCFullYear() - 1970) * 12 + date.getUTCMonth();
     byMonth[month] = byMonth[month] || [];
     byMonth[month].push(week);
   });

@@ -1,12 +1,13 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
+import { JarDetails } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { useAppSelector } from "v2/store";
 import { AssetWithData } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { jarDecimals } from "v2/utils/user";
-import { isAcceptingDeposits, jarSupportsStaking } from "v2/store/core.helpers";
+import { isAcceptingDeposits, isJar, jarSupportsStaking } from "v2/store/core.helpers";
 import LoadingIndicator from "v2/components/LoadingIndicator";
 import ApprovalFlow from "./flows/approval/ApprovalFlow";
 import DepositFlow from "./flows/deposit/DepositFlow";
@@ -41,6 +42,11 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const picklePending = parseFloat(
     ethers.utils.formatUnits(userTokenData?.picklePending || "0", 18),
   );
+  const extraRewardName = userTokenData?.extraReward?.name;
+  const extraRewardPending = parseFloat(
+    ethers.utils.formatUnits(userTokenData?.extraReward?.pending || "0", 18),
+  );
+
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
   return (
@@ -48,11 +54,16 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
       <div className={classNames(jarSupportsStaking(asset) ? "grow self-start" : "w-1/2")}>
         <div className="border border-foreground-alt-500 rounded-xl p-4">
           <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-            {t("v2.farms.depositedToken", { token: asset.depositToken.name })}
+            p{t("v2.farms.depositedToken", { token: asset.depositToken.name })}
           </p>
           <div className="flex items-end justify-between">
             <span className="font-title text-primary font-medium text-base leading-5">
-              {jarTokens}
+              <p>{jarTokens}</p>
+              {!!(isJar(asset) && jarTokens) && (
+                <p className="text-sm text-foreground-alt-300">
+                  ({asset.depositTokensInJar.tokens} {asset.depositToken.name})
+                </p>
+              )}
             </span>
             <ApprovalFlow
               apiKey={asset.details.apiKey}
@@ -85,7 +96,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
           <div className="grow self-start">
             <div className="border border-foreground-alt-500 rounded-xl p-4">
               <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">
-                {t("v2.farms.stakedToken", { token: asset.depositToken.name })}
+                p{t("v2.farms.stakedToken", { token: asset.depositToken.name })}
               </p>
               <div className="flex items-end justify-between">
                 <span className="font-title text-primary font-medium text-base leading-5">
@@ -111,6 +122,28 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
               </div>
             </div>
           </div>
+          {extraRewardName && (
+            <div className="grow self-start">
+              <div className="border border-foreground-alt-500 rounded-xl p-4">
+                <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-0">
+                  {t("v2.farms.earnedToken", { token: extraRewardName.toUpperCase() })}
+                </p>
+                <p className="text-foreground-alt-200 font-medium italic text-xs leading-5 mb-4">
+                  {t("v2.farms.extraRewardNotice")}
+                </p>
+                <div className="flex items-end justify-between">
+                  <span className="font-title text-primary font-medium text-base leading-5">
+                    {roundToSignificantDigits(extraRewardPending, 3)}
+                  </span>
+                </div>
+              </div>
+              <div className="relative">
+                {isUserModelLoading && (
+                  <LoadingIndicator waitForUserModel className="absolute r-0 t-0 mt-1" />
+                )}
+              </div>
+            </div>
+          )}
           <div className="grow self-start">
             <div className="border border-foreground-alt-500 rounded-xl p-4">
               <p className="font-title text-foreground-alt-200 font-medium text-base leading-5 mb-2">

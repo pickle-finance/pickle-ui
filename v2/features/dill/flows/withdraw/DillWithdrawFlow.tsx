@@ -1,15 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useMachine } from "@xstate/react";
-import { BigNumber, ethers } from "ethers";
-import { useSelector } from "react-redux";
+import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { ChainNetwork, Chains } from "picklefinance-core";
 
 import Button from "v2/components/Button";
 import Modal from "v2/components/Modal";
-import { CoreSelectors } from "v2/store/core";
 import { stateMachine, Actions, States } from "../../../farms/flows/stateMachineUserInput";
 import AwaitingConfirmation from "./AwaitingConfirmation";
 import { AppDispatch } from "v2/store";
@@ -20,30 +18,14 @@ import { DILL_ADDRESS, sleep } from "v2/utils";
 import { UserActions } from "v2/store/user";
 import { useDillContract } from "../hooks";
 import ErrorMessage from "../../../farms/flows/Error";
-import { getEpochSecondForDay } from "../utils";
 import { useTransaction } from "v2/features/farms/flows/hooks";
+import { formatEther } from "ethers/lib/utils";
+import { IUserDillStats } from "picklefinance-core/lib/client/UserModel";
 
-interface Props {
-  visible: boolean;
-  userInput: string;
-  error: Error | undefined;
-  lockTime: Date;
-  dillBalance: number;
-  closeParentModal: () => void;
-}
-
-const DepositFlow: FC<Props> = ({
-  visible,
-  userInput,
-  error: balanceError,
-  lockTime,
-  dillBalance,
-  closeParentModal,
-}) => {
+const WithdrawFlow: FC<Props> = ({ visible, dill, error: balanceError, closeParentModal }) => {
   const { t } = useTranslation("common");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [current, send] = useMachine(stateMachine);
-  const core = useSelector(CoreSelectors.selectCore);
   const chain = Chains.get(ChainNetwork.Ethereum);
 
   const { account } = useWeb3React<Web3Provider>();
@@ -52,25 +34,21 @@ const DepositFlow: FC<Props> = ({
   const transactionFactory = () => {
     if (!DillContract) return;
 
-    const amountBN = userInput ? ethers.utils.parseEther(userInput) : BigNumber.from(0);
-
     return () =>
-      dillBalance
-        ? DillContract.increase_amount(amountBN, {
-            gasLimit: 350000,
-          })
-        : DillContract.create_lock(amountBN, getEpochSecondForDay(lockTime), {
-            gasLimit: 600000,
-          });
+      DillContract.withdraw({
+        gasLimit: 410000,
+      });
   };
 
   const callback = async (_receipt: ethers.ContractReceipt, dispatch: AppDispatch) => {
     if (!DillContract || !account) return;
 
     while (true) {
-      const balance = await DillContract["balanceOf(address)"](account);
+      const balance = await DillContract.locked(account, {
+        gasLimit: 410000,
+      });
 
-      const success = balance.gt(ethers.utils.parseEther(dillBalance.toString()));
+      const success = balance.amount.isZero();
 
       if (success) break;
 
@@ -95,7 +73,7 @@ const DepositFlow: FC<Props> = ({
 
   // Hack to skip straight to AWAITING_CONFIRMATION
   useEffect(() => {
-    send(Actions.SUBMIT_FORM, { amount: userInput });
+    send(Actions.SUBMIT_FORM);
   }, []);
 
   return (
@@ -105,33 +83,29 @@ const DepositFlow: FC<Props> = ({
           <ErrorMessage error={balanceError} />
           <Button
             type="primary"
-            state={parseFloat(userInput) > 0 && !balanceError ? "enabled" : "disabled"}
+            state={!balanceError ? "enabled" : "disabled"}
             onClick={() => {
-              if (parseFloat(userInput) > 0) {
-                openModal();
-                send(Actions.SUBMIT_FORM, { userInput });
-              }
+              openModal();
+              send(Actions.SUBMIT_FORM);
             }}
           >
-            {dillBalance ? t("v2.dill.addPickle") : t("v2.dill.createLock")}
+            {`${t("v2.dill.withdraw", {
+              nPickles: parseFloat(formatEther(dill.pickleLocked)).toFixed(2),
+            })}`}
           </Button>
         </>
       )}
       <Modal
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
-        title={dillBalance ? t("v2.dill.addDill") : t("v2.dill.depositPickle")}
+        title={`${t("v2.actions.withdraw")} PICKLE`}
       >
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmation
-            tokenName={t("v2.dill.pickle")}
-            amount={userInput}
-            depositTokenPrice={core?.prices?.pickle}
             error={error}
             sendTransaction={sendTransaction}
             isWaiting={isWaiting}
             previousStep={() => setIsModalOpen(false)}
-            lockEnd={dillBalance ? undefined : lockTime}
           />
         )}
         {current.matches(States.AWAITING_RECEIPT) && (
@@ -156,4 +130,11 @@ const DepositFlow: FC<Props> = ({
   );
 };
 
-export default DepositFlow;
+interface Props {
+  visible: boolean;
+  dill: IUserDillStats;
+  error: Error | undefined;
+  closeParentModal: () => void;
+}
+
+export default WithdrawFlow;

@@ -106,7 +106,6 @@ const getSidechainPlatformWeights = (
   chain: string,
 ): JarChartData[] => {
   const platformWeights = offchainVoteData ? offchainVoteData.chains || [] : [];
-  // console.log(platformWeights);
   let chartData = [];
   for (let c = 0; c < platformWeights.length; c++) {
     if (platformWeights[c].chain === chain) {
