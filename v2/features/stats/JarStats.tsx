@@ -9,17 +9,18 @@ import DocContainer, { RelatedTokens } from "v2/features/stats/jar/DocContainer"
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import { JarSelectData } from "./JarSelect";
-import { readyState } from "pages/stats";
+import { ReadyState } from "pages/stats";
 // import { useAccount } from "v2/hooks";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
 import { generatePnL } from "./jar/userHistory/utils/PnL";
+import { BigNumber } from "ethers";
 
 const JarStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   jar: JarSelectData;
-  ready: readyState;
+  ready: ReadyState;
   setReady: SetFunction;
   page: "platform" | "chain" | "jar" | undefined;
 }> = ({ core, jar, ready, setReady, page }) => {
@@ -31,6 +32,7 @@ const JarStats: FC<{
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
   const [userHistory, setUserHistory] = useState<UserJarHistory>();
   const [jarHistoryWithPnl, setJarHistoryWithPnl] = useState<UserTxWithPnl[]>();
+  const [historyReady, setHistoryReady] = useState(false);
 
   const [txSort, setTxSort] = useState<"old" | "new">("old");
   let asset: AssetWithData | undefined = {} as AssetWithData;
@@ -58,10 +60,10 @@ const JarStats: FC<{
       if (Object.keys(jar).length > 0)
         getJarData(jar.value)
           .then((data) => setJarData(data))
-          .then(() => setReady((prev: readyState) => ({ ...prev, jar: true })));
+          .then(() => setReady((prev: ReadyState) => ({ ...prev, jar: true })));
     };
     getData();
-  }, [jar]);
+  }, [jar]); // eslint-disable-line
   useEffect(() => {
     const getUserHistory = async (account: string | null | undefined): Promise<void> => {
       account &&
@@ -69,10 +71,10 @@ const JarStats: FC<{
           .then((resp) => resp.json())
           .then((jsonResp) => {
             setUserHistory(jsonResp);
-            // DEBUG_OUT(jsonResp);
           }));
     };
     getUserHistory(account);
+    DEBUG_OUT("- user history loaded");
   }, [account]);
   useEffect(() => {
     if (userHistory && userHistory[jar.value]) {
@@ -85,14 +87,14 @@ const JarStats: FC<{
           ...pnl[i],
         };
       });
+      DEBUG_OUT("- jar history loaded");
       setJarHistoryWithPnl(jarHistoryWithPnl);
     }
-  }, [userHistory]);
-
-  // useEffect(() => {
-  //   console.log(jarHistoryWithPnl);
-  // }, [jarHistoryWithPnl]);
-
+  }, [userHistory]); // eslint-disable-line
+  useEffect(() => {
+    if (userHistory && userHistory[jar.value] && jarHistoryWithPnl && jarHistoryWithPnl.length > 0)
+      setHistoryReady(true);
+  }, [userHistory, jarHistoryWithPnl]); // eslint-disable-line
   if (asset && page === "jar" && ready[page])
     return (
       <>
@@ -101,7 +103,7 @@ const JarStats: FC<{
             <FarmsTable singleAsset={asset} hideDescription={true} />
           )}
         </div>
-        {jarHistoryWithPnl && (
+        {historyReady && (
           <TxHistoryContainer
             txHistory={jarHistoryWithPnl}
             core={core}
@@ -141,12 +143,14 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
 };
 
 export interface UserTxWithPnl extends UserTx {
-  action: "deposit" | "withdraw" | "other";
+  action: "deposit" | "withdraw" | "stake" | "unstake" | "other";
   value: number;
-  nTokens: number;
-  costBasis: number;
-  totalNTokens: number;
-  totalCostBasis: number;
+  nTokens: BigNumber;
+  totalNTokens: BigNumber;
+  tokenDecimals: number;
+  costBasis: BigNumber;
+  totalCostBasis: BigNumber;
+  costBasisDecimals: number;
   totalCost: number;
   pl?: number;
   totalTradingPnL?: number;

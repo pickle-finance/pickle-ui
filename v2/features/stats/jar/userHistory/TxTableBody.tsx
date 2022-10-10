@@ -7,6 +7,7 @@ import { UserTxWithPnl } from "../../JarStats";
 import TxTableRowBody from "./TxTableRowBody";
 import TxTableRowHeader from "./TxTableRowHeader";
 import TxTableSpacerRow from "./TxTableSpacerRow";
+import { uuid } from "uuidv4";
 
 const TxTableBody: FC<{
   txs: UserTxWithPnl[];
@@ -21,7 +22,7 @@ const TxTableBody: FC<{
         txs
           .sort((a, b) => a.timestamp - b.timestamp)
           .map((tx) => {
-            return <TxTableRow key={tx.hash} core={core} tx={tx} addrs={addrs} />;
+            return <TxTableRow key={uuid()} core={core} tx={tx} addrs={addrs} />;
           })}
       {txs &&
         sort === "new" &&

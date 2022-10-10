@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
-import { classNames, formatDate, formatDollars, formatNumber } from "v2/utils";
+import { classNames, formatDate, formatDollars } from "v2/utils";
 import Link from "v2/components/Link";
 import { UserTxWithPnl } from "../../JarStats";
 
@@ -51,11 +51,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {tx.nTokens > 10
-                ? formatNumber(tx.nTokens, 2)
-                : tx.nTokens <= 0
-                ? 0
-                : formatNumber(tx.nTokens, 6)}
+              {tx.nTokens.div(1e9).toNumber() / Math.pow(10, tx.tokenDecimals - 9)}
             </p>
           </div>
         </div>
@@ -64,11 +60,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {tx.totalNTokens > 10
-                ? formatNumber(tx.totalNTokens, 2)
-                : tx.totalNTokens <= 0
-                ? 0
-                : formatNumber(tx.totalNTokens, 6)}
+              {tx.totalNTokens.div(1e9).toNumber() / Math.pow(10, tx.tokenDecimals - 9)}
             </p>
           </div>
         </div>

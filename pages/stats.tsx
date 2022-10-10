@@ -56,7 +56,7 @@ const Stats: PickleFinancePage = () => {
   );
 };
 
-const Loading: FC<{ ready: readyState; page?: "platform" | "chain" | "jar" }> = ({
+const Loading: FC<{ ready: ReadyState; page?: "platform" | "chain" | "jar" }> = ({
   ready,
   page,
 }) => {
@@ -87,7 +87,7 @@ const PageTitle: FC = () => {
   );
 };
 
-export interface readyState {
+export interface ReadyState {
   platform: boolean;
   chain: boolean;
   jar: boolean;
