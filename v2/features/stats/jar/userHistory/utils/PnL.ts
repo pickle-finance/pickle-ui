@@ -57,24 +57,23 @@ const handleZap = (txn: UserTx): PnlTxn => {
   let value = 0;
   let nTokens = BigNumber.from(0);
   let tokenDecimals = 18;
+  let costBasis = 0;
   txn.transfers.forEach((transfer) => {
     if (transfer.transfer_type === "FROM_CALLER") value = +transfer.value.toFixed(2);
     if (transfer.transfer_type === "PTRANSFER") {
       nTokens = BigNumber.from(transfer.amount);
       if (transfer.decimals) tokenDecimals = transfer.decimals;
+      costBasis = +transfer.price;
     }
   });
-  const { costBasis, costBasisDecimals } = getCostBasis(value, nTokens);
   DEBUG_OUT("handleZap VALUE: ", value);
   DEBUG_OUT("handleZap N TOKENS: ", nTokens.toString());
-  DEBUG_OUT("handleZap cost basis: ", costBasis);
   const ret: PnlTxn = {
     action: "deposit",
     value: value,
     nTokens: nTokens,
     tokenDecimals: tokenDecimals,
     costBasis: costBasis,
-    costBasisDecimals: costBasisDecimals,
     hash: txn.hash,
     timestamp: txn.timestamp,
   };
@@ -85,11 +84,13 @@ const handleDeposit = (txn: UserTx) => {
   let value = 0;
   let nTokens = BigNumber.from(0);
   let tokenDecimals = 18;
+  let costBasis = 0;
   txn.transfers.forEach((transfer) => {
     if (transfer.transfer_type === "DEPOSIT") nTokens = BigNumber.from(transfer.amount);
     if (transfer.transfer_type === "WANT_DEPOSIT") {
       value = +transfer.value.toFixed(2);
       if (transfer.decimals) tokenDecimals = transfer.decimals;
+      costBasis = +transfer.price;
     }
   });
   const ret: PnlTxn = {
@@ -97,8 +98,7 @@ const handleDeposit = (txn: UserTx) => {
     value: value,
     nTokens: nTokens,
     tokenDecimals: tokenDecimals,
-    costBasis: BigNumber.from(Math.floor(value * 1e9)).div(nTokens),
-    costBasisDecimals: 9,
+    costBasis: costBasis,
     hash: txn.hash,
     timestamp: txn.timestamp,
   };
@@ -110,11 +110,13 @@ const handleWithdraw = (txn: UserTx) => {
   let value = 0;
   let nTokens = BigNumber.from(0);
   let tokenDecimals = 18;
+  let costBasis = 0;
   txn.transfers.forEach((transfer) => {
     if (transfer.transfer_type === "WITHDRAW") nTokens = BigNumber.from(transfer.amount);
     if (transfer.transfer_type === "WANT_WITHDRAW") {
       value = +transfer.value.toFixed(2);
       if (transfer.decimals) tokenDecimals = transfer.decimals;
+      costBasis = +transfer.price;
     }
   });
   const ret: PnlTxn = {
@@ -122,8 +124,7 @@ const handleWithdraw = (txn: UserTx) => {
     value: value,
     nTokens: nTokens,
     tokenDecimals: tokenDecimals,
-    costBasis: BigNumber.from(Math.floor(value * 1e9)).div(nTokens),
-    costBasisDecimals: 9,
+    costBasis: costBasis,
     hash: txn.hash,
     timestamp: txn.timestamp,
   };
@@ -137,7 +138,11 @@ const getDepositPnlEntry = (
 ): PnlTxnWithTotals => {
   const totalNTokens = pnlWithTotals[i - 1].totalNTokens.add(txn.nTokens);
   const totalCost = pnlWithTotals[i - 1].totalCost + txn.value;
-  const totalCostBasis = BigNumber.from(Math.floor(totalCost * 1e9)).div(totalNTokens);
+
+  const totalCostBasis =
+    BigNumber.from(Math.floor(totalCost * 1e9))
+      .div(totalNTokens)
+      .toNumber() / 1e9;
 
   let lots = [...pnlWithTotals[i - 1].lots];
   lots.push({
@@ -146,7 +151,7 @@ const getDepositPnlEntry = (
     nTokensLocked: BigNumber.from(0),
     tokenDecimals: txn.tokenDecimals,
     costBasis: txn.costBasis,
-    costBasisDecimals: 9,
+    cost: txn.value,
     status: "open",
     timestamp: txn.timestamp,
   });
@@ -178,22 +183,21 @@ const getWithdrawPnlEntry = (
     if (nt.eq(0) || l.status === "closed") return l;
     if (l.nTokensRemaining.sub(nt).gt(0)) {
       let ret = { ...l, nTokensRemaining: l.nTokensRemaining.sub(nt) } as Lot;
-      cost += getCost(l.nTokensRemaining, ret.costBasis, ret.tokenDecimals);
+      cost += l.cost;
       nt = BigNumber.from(0);
       return ret;
     } else {
       let ret = { ...l, nTokensRemaining: BigNumber.from(0), status: "closed" } as Lot;
       nt = nt.sub(l.nTokensRemaining);
-      cost += getCost(l.nTokensRemaining, ret.costBasis, ret.tokenDecimals);
+      cost += l.cost;
       return ret;
     }
   });
-  const totalCost =
-    totalNTokens.mul(totalCostBasis).toNumber() / Math.pow(10, txn.costBasisDecimals);
+  const totalCost = totalNTokens.mul(totalCostBasis).toNumber();
   return {
     ...txn,
     totalNTokens: totalNTokens,
-    totalCostBasis: totalCostBasis,
+    totalCostBasis: totalCostBasis.toNumber(),
     totalCost: totalCost,
     pl: txn.value - cost,
     lots: lots,
@@ -221,7 +225,7 @@ const firstPnlItem = (txn: PnlTxn): PnlTxnWithTotals => {
         nTokensLocked: BigNumber.from(0),
         tokenDecimals: txn.tokenDecimals,
         costBasis: txn.costBasis,
-        costBasisDecimals: txn.costBasisDecimals,
+        cost: txn.value,
         status: "open",
         timestamp: txn.timestamp,
       },
@@ -229,23 +233,9 @@ const firstPnlItem = (txn: PnlTxn): PnlTxnWithTotals => {
   };
 };
 
-const getCostBasis = (value: number, nTokens: BigNumber) => {
-  let decimals = 0;
-  let costBasis = BigNumber.from(0);
-  const usdWei = BigNumber.from(Math.floor(value * 100))
-    .mul(1e9)
-    .mul(1e7);
-  if (usdWei.gte(nTokens)) {
-    costBasis = usdWei.div(nTokens);
-  } else {
-    costBasis = usdWei.mul(1e9).div(nTokens);
-    decimals = 9;
-  }
-  return { costBasis: costBasis, costBasisDecimals: decimals };
-};
-const getCost = (nTokens: BigNumber, costBasis: BigNumber, tokenDecimals: number) => {
+const getCost = (nTokens: BigNumber, costBasis: number, tokenDecimals: number) => {
   let cost = 0;
-  if (costBasis.eq(0)) return 0;
+  if (costBasis === 0) return 0;
   cost =
     nTokens
       .mul(costBasis)
@@ -259,14 +249,13 @@ export interface PnlTxn {
   value: number;
   nTokens: BigNumber;
   tokenDecimals: number;
-  costBasis: BigNumber;
-  costBasisDecimals: number;
+  costBasis: number;
   hash: string;
   timestamp: number;
 }
 export interface PnlTxnWithTotals extends PnlTxn {
   totalNTokens: BigNumber;
-  totalCostBasis: BigNumber;
+  totalCostBasis: number;
   totalCost: number;
   pl?: number;
   // totalTradingPnL?: number;
@@ -278,11 +267,43 @@ interface Lot {
   nTokensRemaining: BigNumber;
   nTokensLocked: BigNumber;
   tokenDecimals: number;
-  costBasis: BigNumber;
-  costBasisDecimals: number;
+  costBasis: number;
+  cost: number;
   status: "open" | "locked" | "closed";
   timestamp: number;
 }
+
+const xTimesTenToTheN = (x: BigNumber | number, n: number) => {
+  if (typeof x === "number") x = BigNumber.from(Math.floor(x * 1e3));
+  while (n > 0) {
+    if (n < 9) {
+      x = x.mul(Math.pow(10, n));
+      n = 0;
+    } else {
+      x = x.mul(Math.pow(10, 9));
+      n -= 9;
+    }
+  }
+  return x.div(1e3);
+};
+const xDivTenToTheN = (x: BigNumber | number, n: number) => {
+  if (typeof x === "number") x = BigNumber.from(Math.floor(x * 1e3));
+  while (n > 0) {
+    if (x.lte(1e9))
+      return {
+        x: x,
+        underflowDigits: n,
+      };
+    if (n < 9) {
+      x = x.div(Math.pow(10, n));
+      n = 0;
+    } else {
+      x = x.div(Math.pow(10, 9));
+      n -= 9;
+    }
+  }
+  return { x: x.div(1e3) };
+};
 
 const DEBUG_OUT = (label: string, msg: any) => {
   if (GLOBAL_DEBUG) console.log(label + "\n", msg);

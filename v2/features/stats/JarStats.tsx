@@ -148,9 +148,8 @@ export interface UserTxWithPnl extends UserTx {
   nTokens: BigNumber;
   totalNTokens: BigNumber;
   tokenDecimals: number;
-  costBasis: BigNumber;
-  totalCostBasis: BigNumber;
-  costBasisDecimals: number;
+  costBasis: number;
+  totalCostBasis: number;
   totalCost: number;
   pl?: number;
   totalTradingPnL?: number;
