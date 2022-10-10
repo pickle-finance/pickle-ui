@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { UserTx } from "v2/types";
 
 export const generatePnL = (userJarHistory: UserTx[]) => {
@@ -64,7 +64,7 @@ const handleZap = (txn: UserTx): PnlTxn => {
       if (transfer.decimals) tokenDecimals = transfer.decimals;
     }
   });
-  const { costBasis, costBasisDecimals } = getCostBasis(value, nTokens, tokenDecimals);
+  const { costBasis, costBasisDecimals } = getCostBasis(value, nTokens);
   DEBUG_OUT("handleZap VALUE: ", value);
   DEBUG_OUT("handleZap N TOKENS: ", nTokens.toString());
   DEBUG_OUT("handleZap cost basis: ", costBasis);
