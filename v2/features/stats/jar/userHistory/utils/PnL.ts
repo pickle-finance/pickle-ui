@@ -2,7 +2,6 @@ import { BigNumber, ethers } from "ethers";
 import { UserTx } from "v2/types";
 
 export const generatePnL = (userJarHistory: UserTx[]) => {
-  // add checks on reverse txn list to find valid starting point
   const pnl: (PnlTxn | undefined)[] = userJarHistory.map((txn) => {
     if (txn.transaction_type === "ZAPIN") {
       return handleZap(txn);
@@ -175,28 +174,17 @@ const getWithdrawPnlEntry = (
   let lots = [...pnlWithTotals[i - 1].lots];
   let nt = txn.nTokens;
   let cost = 0;
-  console.log(lots);
   lots = lots.map((l) => {
     if (nt.eq(0) || l.status === "closed") return l;
     if (l.nTokensRemaining.sub(nt).gt(0)) {
       let ret = { ...l, nTokensRemaining: l.nTokensRemaining.sub(nt) } as Lot;
-      cost += getCost(l.nTokensRemaining, ret.costBasis, ret.tokenDecimals); // ret.nTokens.mul(ret.costBasis).toNumber() / Math.pow(10, ret.costBasisDecimals);
+      cost += getCost(l.nTokensRemaining, ret.costBasis, ret.tokenDecimals);
       nt = BigNumber.from(0);
-      // DEBUG_OUT("COST: ", cost);
-      // DEBUG_OUT("LAST TOKENS REMAINING: ", nt.toString());
       return ret;
     } else {
       let ret = { ...l, nTokensRemaining: BigNumber.from(0), status: "closed" } as Lot;
       nt = nt.sub(l.nTokensRemaining);
-      // DEBUG_OUT("COST BASIS: ", ret.costBasis.toString());
-      // DEBUG_OUT("LOT TOKENS REMAINING: ", l.nTokensRemaining.toString());
-      // DEBUG_OUT("COST BN: ", l.nTokensRemaining.mul(ret.costBasis).toString());
-      console.log(ret);
       cost += getCost(l.nTokensRemaining, ret.costBasis, ret.tokenDecimals);
-      // l.nTokensRemaining.mul(ret.costBasis).div(Math.pow(10, ret.costBasisDecimals)).toNumber() /
-      //   1e3;
-      // DEBUG_OUT("COST: ", cost);
-      // DEBUG_OUT("TOKENS REMAINING: ", nt.toString());
       return ret;
     }
   });
@@ -253,7 +241,6 @@ const getCostBasis = (value: number, nTokens: BigNumber) => {
     costBasis = usdWei.mul(1e9).div(nTokens);
     decimals = 9;
   }
-  console.log("COST BASIS: ", costBasis, decimals);
   return { costBasis: costBasis, costBasisDecimals: decimals };
 };
 const getCost = (nTokens: BigNumber, costBasis: BigNumber, tokenDecimals: number) => {
