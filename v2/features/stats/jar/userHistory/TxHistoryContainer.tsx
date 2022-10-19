@@ -17,9 +17,9 @@ const TxHistoryContainer: FC<{
 
   if (!userPnl || !core) return <></>;
   return (
-    <div className={classNames("pr-5 mb-8", "min-w-min border border-white", className)}>
+    <div className={classNames("pr-5 mb-8 min-w-min", className)}>
       <div className="flex">
-        <h2 className="whitespace-nowrap font-body font-bold text-xl text-foreground-alt-200 mt-3 mb-5">
+        <h2 className="whitespace-nowrap font-body font-bold text-xl text-foreground-alt-200 mt-3 mb-8">
           {"User History"}
         </h2>
         <div className="w-full flex justify-end">

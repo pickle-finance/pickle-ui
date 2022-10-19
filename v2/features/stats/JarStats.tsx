@@ -88,7 +88,6 @@ const JarStats: FC<{
   useEffect(() => {
     if (userHistory && userHistory[jar.value]) {
       let pnl = generatePnL(userHistory[jar.value]);
-      console.log(pnl);
       setUserPnl(pnl);
     }
   }, [userHistory]); // eslint-disable-line
