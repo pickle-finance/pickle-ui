@@ -20,23 +20,32 @@ const CurrentSummary: FC<{ lastTxn: PnlTransactionWrapper; jar: JarDefinition }>
   const rewardsSummedByToken = sumRewardsByToken(lastTxn.pnlRollingDataWithLots.rollingRewards);
   const totalRewards = Object.values(rewardsSummedByToken).reduce((acc, curr) => acc + curr);
   return (
-    <div className="p-4">
-      <h3>Summary</h3>
-      <div className="flex">
-        <div>
-          <p className="pr-4">Open Jar Tokens - {jarTokens}</p>
-          <p className="pr-4">Cost of Open Position - {formatDollars(currentCost)}</p>
-          <p className="pr-4">Value of Open Position - {formatDollars(currentUSDValue)}</p>
-          <p>Unrealized Gain/Loss - {formatDollars(currentUSDValue - currentCost)}</p>
-        </div>
-        <div>
-          <p>Realized Gain/Loss - {sumPnl(lastTxn.pnlRollingDataWithLots.lots)}</p>
-          <p className="pr-4">Total Rewards Received - {formatDollars(totalRewards, 2)}</p>
-        </div>
+    <div className="p-4 mb-12 text-center border border-foreground-alt-200 rounded-xl">
+      <h3 className="text-3xl mb-5 text-foreground-alt-200 underline">Summary</h3>
+      <div className="w-full flex justify-between px-24">
+        <SummaryCard value={jarTokens} label={"Jar Tokens"} />
+        <SummaryCard value={formatDollars(currentCost)} label={"Cost"} />
+        <SummaryCard value={formatDollars(currentUSDValue)} label={"Value"} />
+        <SummaryCard
+          value={formatDollars(currentUSDValue - currentCost)}
+          label={"Unrealized Gain/Loss"}
+        />
+        <SummaryCard value={formatDollars(totalRewards)} label={"Total Rewards"} />
+        <SummaryCard
+          value={sumPnl(lastTxn.pnlRollingDataWithLots.lots)}
+          label={"Realized Gain/Loss"}
+        />
       </div>
     </div>
   );
 };
+
+const SummaryCard: FC<{ value: any; label: string }> = ({ value, label }) => (
+  <div className="bg-background-light rounded-3xl text-center text-foreground-alt-200 w-min p-4">
+    <p className="text-6xl pb-2">{value}</p>
+    <p className="text-xs">{label}</p>
+  </div>
+);
 
 const sumRewardsByToken = (rewards: StakingRewards) => {
   const rewardsSummedByToken: { [tokenAddr: string]: number } = {};
@@ -51,7 +60,7 @@ const sumRewardsByToken = (rewards: StakingRewards) => {
 const sumPnl = (lots: Lot[]) => {
   let realizedProfit = 0;
   lots.forEach((l) => (realizedProfit += l.saleProceedsUSD - l.totalCostUsd));
-  return formatDollars(realizedProfit, 2);
+  return formatDollars(realizedProfit);
 };
 
 export default CurrentSummary;

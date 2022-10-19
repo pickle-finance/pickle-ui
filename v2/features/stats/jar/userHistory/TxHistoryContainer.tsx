@@ -20,6 +20,7 @@ const TxHistoryContainer: FC<{
   )[0];
   return (
     <div className={classNames("pr-5 mb-8 min-w-min", className)}>
+      <CurrentSummary lastTxn={lastTxn} jar={jar} />
       <div className="flex">
         <h2 className="whitespace-nowrap font-body font-bold text-xl text-foreground-alt-200 mt-3 mb-8">
           {"User History"}
@@ -28,7 +29,6 @@ const TxHistoryContainer: FC<{
           <SortToggle txSort={txSort} setTxSort={setTxSort} />
         </div>
       </div>
-      <CurrentSummary lastTxn={lastTxn} jar={jar} />
       {core && <TxHistoryTable userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />}
     </div>
   );
