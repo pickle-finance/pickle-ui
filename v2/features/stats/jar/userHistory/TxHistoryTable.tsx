@@ -1,16 +1,16 @@
 import { PickleModelJson } from "picklefinance-core";
+import { PnlTransactionWrapper } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 import { FC } from "react";
 import { classNames } from "v2/utils";
-import { UserTxWithPnl } from "../../JarStats";
 import TxTableBody from "./TxTableBody";
 
 const TxHistoryTable: FC<{
-  txHistory: UserTxWithPnl[];
+  userPnl: PnlTransactionWrapper[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-  sort: "old" | "new";
+  txSort: "old" | "new";
   className?: string;
-}> = ({ txHistory, core, addrs, sort, className }) => {
+}> = ({ userPnl, core, addrs, txSort, className }) => {
   return (
     <div className={classNames("flex flex-col", className)}>
       <div className="-my-2 overflow-x-auto overflow-y-hidden min-w-min">
@@ -19,19 +19,18 @@ const TxHistoryTable: FC<{
             <thead className="bg-background uppercase">
               <tr>
                 <TxTableHeaderCell label="Date/Time" />
-                <TxTableHeaderCell label="Block Num." />
                 <TxTableHeaderCell label="TX Type" />
                 <TxTableHeaderCell label="TX Hash" />
-                <TxTableHeaderCell label="TX Value" />
-                <TxTableHeaderCell label="N Tokens" />
+                <TxTableHeaderCell label="Jar Tokens" />
                 <TxTableHeaderCell label="Token Bal." />
-                <TxTableHeaderCell label="Total Cost" />
+                <TxTableHeaderCell label="TX Value" />
+                <TxTableHeaderCell label="Rewards" />
                 <TxTableHeaderCell label="Profit/Loss" />
                 {/* Chevron down/up column */}
               </tr>
             </thead>
             <tbody className="text-foreground">
-              <TxTableBody txs={txHistory} sort={sort} core={core} addrs={addrs} />
+              <TxTableBody userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />
             </tbody>
           </table>
           {/* <div className="flex justify-center mt-4">

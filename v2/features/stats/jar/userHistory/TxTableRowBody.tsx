@@ -1,10 +1,10 @@
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC } from "react";
-import { UserTransfer } from "v2/types";
 import { formatNumber } from "v2/utils";
 import Link from "v2/components/Link";
 import { BigNumber } from "ethers";
+import { UserTransfer } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 
 const TxTableRowBody: FC<{
   transfers: UserTransfer[];

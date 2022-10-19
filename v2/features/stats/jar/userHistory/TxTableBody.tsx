@@ -3,44 +3,59 @@ import { PickleModelJson } from "picklefinance-core";
 import { RawChain } from "picklefinance-core/lib/chain/Chains";
 import { FC, Fragment } from "react";
 import { classNames } from "v2/utils";
-import { UserTxWithPnl } from "../../JarStats";
 import TxTableRowBody from "./TxTableRowBody";
 import TxTableRowHeader from "./TxTableRowHeader";
 import TxTableSpacerRow from "./TxTableSpacerRow";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
+import { PnlTransactionWrapper } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 
 const TxTableBody: FC<{
-  txs: UserTxWithPnl[];
-  sort: "old" | "new";
+  userPnl: PnlTransactionWrapper[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-}> = ({ txs, sort, core, addrs }) => {
+  txSort: "old" | "new";
+}> = ({ userPnl, core, addrs, txSort }) => {
   return (
     <>
-      {txs &&
-        sort === "old" &&
-        txs
-          .sort((a, b) => a.timestamp - b.timestamp)
-          .map((tx) => {
-            return <TxTableRow key={uuid()} core={core} tx={tx} addrs={addrs} />;
-          })}
-      {txs &&
-        sort === "new" &&
-        txs
-          .sort((a, b) => b.timestamp - a.timestamp)
-          .map((tx) => {
-            return <TxTableRow key={tx.hash} core={core} tx={tx} addrs={addrs} />;
-          })}
+      {txSort === "old"
+        ? userPnl
+            .sort((a, b) => a.userTransaction.timestamp - b.userTransaction.timestamp)
+            .map((tx) => (
+              <TxTableRow
+                key={uuid()}
+                tx={tx}
+                userPnl={userPnl}
+                txSort={txSort}
+                core={core}
+                addrs={addrs}
+              />
+            ))
+        : userPnl
+            .sort((a, b) => b.userTransaction.timestamp - a.userTransaction.timestamp)
+            .map((tx) => (
+              <TxTableRow
+                key={uuid()}
+                tx={tx}
+                userPnl={userPnl}
+                txSort={txSort}
+                core={core}
+                addrs={addrs}
+              />
+            ))}
     </>
   );
 };
 
 const TxTableRow: FC<{
-  tx: UserTxWithPnl;
+  tx: PnlTransactionWrapper;
+  userPnl: PnlTransactionWrapper[];
+  txSort: "old" | "new";
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-}> = ({ tx, core, addrs }) => {
-  const chain: RawChain | undefined = core.chains.filter((c) => c.chainId === tx.chain_id)[0];
+}> = ({ tx, userPnl, txSort, core, addrs }) => {
+  const chain: RawChain | undefined = core.chains.filter(
+    (c) => c.chainId === tx.userTransaction.chain_id,
+  )[0];
   return (
     <>
       <Disclosure as={Fragment}>
@@ -51,7 +66,15 @@ const TxTableRow: FC<{
               // No hover state when the row is expaned.
               className={classNames(!open && "group", "cursor-pointer")}
             >
-              {core && <TxTableRowHeader tx={tx} core={core} open={open} />}
+              {core && (
+                <TxTableRowHeader
+                  tx={tx}
+                  userPnl={userPnl}
+                  txSort={txSort}
+                  core={core}
+                  open={open}
+                />
+              )}
             </Disclosure.Button>
 
             <Transition
@@ -66,7 +89,7 @@ const TxTableRow: FC<{
               <Disclosure.Panel as="tr">
                 {core && chain && (
                   <TxTableRowBody
-                    transfers={tx.transfers}
+                    transfers={tx.userTransaction.transfers}
                     core={core}
                     chain={chain}
                     addrs={addrs}
