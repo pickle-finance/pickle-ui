@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
-import { classNames, formatDate, formatNumber } from "v2/utils";
+import { classNames, formatDate, formatDollars } from "v2/utils";
 import Link from "v2/components/Link";
 import {
   PnlTransactionWrapper,
@@ -114,7 +114,7 @@ const rewardsArrToValue = (rewards: StakingRewards) => {
     rewards[token].forEach((r) => (totalRewardValue += r.value));
   });
   if (totalRewardValue < 0.01) return "< $0.00";
-  return "$" + formatNumber(totalRewardValue, 2);
+  return formatDollars(totalRewardValue, 2);
 };
 
 const txToPnl = (tx: PnlTransactionWrapper, lastTx: PnlTransactionWrapper) => {
@@ -122,7 +122,7 @@ const txToPnl = (tx: PnlTransactionWrapper, lastTx: PnlTransactionWrapper) => {
   const index = tx.pnlRollingDataWithLots.lots.length - 1;
   const thisTxInFuture = lastTx.pnlRollingDataWithLots.lots[index];
   const pnl = thisTxInFuture.saleProceedsUSD - thisTxInFuture.totalCostUsd;
-  return "$" + formatNumber(pnl, 2);
+  return formatDollars(pnl, 2);
 };
 
 // TODO remove this function once logic is included in core
@@ -130,19 +130,19 @@ const userTxToValue = (tx: UserTx) => {
   let value = "$0";
   if (tx.transaction_type === "DEPOSIT" || tx.transaction_type === "ZAPIN")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "WANT_DEPOSIT") value = "$" + formatNumber(t.value, 2);
+      if (t.transfer_type === "WANT_DEPOSIT") value = formatDollars(t.value, 2);
     });
   if (tx.transaction_type === "WITHDRAW" || tx.transaction_type === "ZAPOUT")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "WANT_WITHDRAW") value = "$" + formatNumber(t.value, 2);
+      if (t.transfer_type === "WANT_WITHDRAW") value = formatDollars(t.value, 2);
     });
   if (tx.transaction_type === "STAKE")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "STAKE") value = "$" + formatNumber(t.value, 2);
+      if (t.transfer_type === "STAKE") value = formatDollars(t.value, 2);
     });
   if (tx.transaction_type === "UNSTAKE")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "UNSTAKE") value = "$" + formatNumber(t.value, 2);
+      if (t.transfer_type === "UNSTAKE") value = formatDollars(t.value, 2);
     });
   return value;
 };

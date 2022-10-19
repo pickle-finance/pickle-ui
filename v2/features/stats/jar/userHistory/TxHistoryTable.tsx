@@ -13,30 +13,29 @@ const TxHistoryTable: FC<{
 }> = ({ userPnl, core, addrs, txSort, className }) => {
   return (
     <div className={classNames("flex flex-col", className)}>
-      <div className="-my-2 overflow-x-auto overflow-y-hidden min-w-min">
-        <div className="py-2 pr-4 align-middle inline-block min-w-full max-h-[80vh] overflow-y-scroll">
-          <table className="w-full table-auto border-collapse">
-            <thead className="bg-background uppercase">
-              <tr>
-                <TxTableHeaderCell label="Date/Time" />
-                <TxTableHeaderCell label="TX Type" />
-                <TxTableHeaderCell label="TX Hash" />
-                <TxTableHeaderCell label="Jar Tokens" />
-                <TxTableHeaderCell label="Token Bal." />
-                <TxTableHeaderCell label="TX Value" />
-                <TxTableHeaderCell label="Rewards" />
-                <TxTableHeaderCell label="Profit/Loss" />
-                {/* Chevron down/up column */}
-              </tr>
-            </thead>
-            <tbody className="text-foreground">
-              <TxTableBody userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />
-            </tbody>
-          </table>
-          {/* <div className="flex justify-center mt-4">
+      <div className="-my-2 overflow-x-auto overflow-y-visible max-h-[50vh]">
+        <table className="w-full table-auto border-collapse">
+          <thead className="bg-background uppercase sticky top-0">
+            <tr>
+              <TxTableHeaderCell label="Date/Time" />
+              <TxTableHeaderCell label="TX Type" />
+              <TxTableHeaderCell label="TX Hash" />
+              <TxTableHeaderCell label="Jar Tokens" />
+              <TxTableHeaderCell label="Token Bal." />
+              <TxTableHeaderCell label="TX Value" />
+              <TxTableHeaderCell label="Rewards" />
+              <TxTableHeaderCell label="Profit/Loss" />
+              <TxTableHeaderCell label="" />
+            </tr>
+          </thead>
+          <tbody className="text-foreground mt-12">
+            <TxTableBody userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />
+          </tbody>
+        </table>
+        {/* <div className="flex justify-center mt-4">
             <Pagination />
           </div> */}
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

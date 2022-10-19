@@ -5,7 +5,7 @@ import { PickleModelJson } from "picklefinance-core";
 import { AssetWithData, CoreSelectors } from "v2/store/core";
 import type { JarChartData, SetFunction } from "v2/types";
 import ChartContainer from "v2/features/stats/jar/ChartContainer";
-import DocContainer, { RelatedTokens } from "v2/features/stats/jar/DocContainer";
+import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import { JarSelectData } from "./JarSelect";
@@ -18,6 +18,7 @@ import {
   PnlTransactionWrapper,
   UserJarHistory,
 } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
+import RelatedTokens from "./jar/RelatedTokens";
 
 const JarStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
@@ -34,8 +35,6 @@ const JarStats: FC<{
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
   const [userHistory, setUserHistory] = useState<UserJarHistory>();
   const [userPnl, setUserPnl] = useState<PnlTransactionWrapper[]>();
-
-  const [historyReady, setHistoryReady] = useState(false);
 
   let asset: AssetWithData | undefined = {} as AssetWithData;
   let assetJar: JarDefinition | undefined = {} as JarDefinition;
@@ -86,27 +85,22 @@ const JarStats: FC<{
 
   // generate pnl report for one jar from user history if/when it loads
   useEffect(() => {
-    if (userHistory && userHistory[jar.value]) {
-      let pnl = generatePnL(userHistory[jar.value]);
+    if (account && userHistory && userHistory[jar.value]) {
+      let pnl = generatePnL(account, userHistory[jar.value]);
+      DEBUG_OUT(pnl);
       setUserPnl(pnl);
     }
   }, [userHistory]); // eslint-disable-line
-
-  // ready page when data loads
-  useEffect(() => {
-    if (userHistory && userHistory[jar.value] && userPnl && userPnl.length > 0)
-      setHistoryReady(true);
-  }, [userHistory, userPnl]); // eslint-disable-line
 
   if (asset && page === "jar" && ready[page])
     return (
       <>
         <div className="mb-3 min-w-min">
-          {asset && asset.depositTokensInJar && (
-            <FarmsTable singleAsset={asset} hideDescription={true} />
-          )}
+          {asset.depositTokensInJar && <FarmsTable singleAsset={asset} hideDescription={true} />}
         </div>
-        {historyReady && <TxHistoryContainer userPnl={userPnl} core={core} addrs={addrs} t={t} />}
+        {userPnl && userPnl.length > 0 && core && assetJar && (
+          <TxHistoryContainer userPnl={userPnl} core={core} addrs={addrs} jar={assetJar} />
+        )}
         <ChartContainer jarData={jarData} />
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}
         <div>

@@ -1,21 +1,23 @@
-import { TFunction } from "next-i18next";
 import { PickleModelJson } from "picklefinance-core";
 import { PnlTransactionWrapper } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
+import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { FC, useState } from "react";
 import { classNames } from "v2/utils";
+import CurrentSummary from "./CurrentSummary";
 import SortToggle from "./SortToggle";
 import TxHistoryTable from "./TxHistoryTable";
 
 const TxHistoryContainer: FC<{
-  userPnl: PnlTransactionWrapper[] | undefined;
-  core: PickleModelJson.PickleModelJson | undefined;
+  userPnl: PnlTransactionWrapper[];
+  core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-  t: TFunction;
+  jar: JarDefinition;
   className?: string;
-}> = ({ userPnl, core, addrs, t, className }) => {
+}> = ({ userPnl, core, addrs, jar, className }) => {
   const [txSort, setTxSort] = useState<"old" | "new">("old");
-
-  if (!userPnl || !core) return <></>;
+  const lastTxn = userPnl.sort(
+    (a, b) => b.userTransaction.timestamp - a.userTransaction.timestamp,
+  )[0];
   return (
     <div className={classNames("pr-5 mb-8 min-w-min", className)}>
       <div className="flex">
@@ -26,6 +28,7 @@ const TxHistoryContainer: FC<{
           <SortToggle txSort={txSort} setTxSort={setTxSort} />
         </div>
       </div>
+      <CurrentSummary lastTxn={lastTxn} jar={jar} />
       {core && <TxHistoryTable userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />}
     </div>
   );
