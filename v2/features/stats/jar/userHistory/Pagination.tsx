@@ -1,12 +1,9 @@
 import { FC, MouseEventHandler } from "react";
-import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/solid";
 
-import { useAppDispatch } from "v2/store";
-import { ControlsSelectors, setCurrentPage } from "v2/store/controls";
-import { CoreSelectors } from "v2/store/core";
 import { classNames } from "v2/utils";
+import { SetFunction } from "v2/types";
 
 enum PageDirection {
   Forward = 1,
@@ -43,24 +40,19 @@ const PaginationArrow: FC<PaginationArrowProps> = ({ currentPage, pageCount, onC
   );
 };
 
-const Pagination: FC = () => {
+const Pagination: FC<{ currentPage: number; setCurrentPage: SetFunction; pageCount: number }> = ({
+  currentPage,
+  setCurrentPage,
+  pageCount,
+}) => {
   const { t } = useTranslation("common");
-  const dispatch = useAppDispatch();
-  const { currentPage, itemsPerPage } = useSelector(ControlsSelectors.selectPaginateParams);
-  const jars = useSelector(CoreSelectors.selectFilteredAssets);
-
-  const pageCount = Math.ceil(jars.length / itemsPerPage);
-
-  const handlePageClick = (direction: PageDirection) => {
+  const handlePageClick = (direction: PageDirection, setCurrentPage: SetFunction) => {
     const newPage = currentPage + direction;
 
     if (newPage < 0 || newPage >= pageCount) return;
 
-    dispatch(setCurrentPage(newPage));
+    setCurrentPage(newPage);
   };
-
-  if (jars.length === 0)
-    return <span className="text-foreground-alt-200">{t("v2.farms.noResults")}</span>;
 
   return (
     <>
@@ -69,7 +61,7 @@ const Pagination: FC = () => {
           type="left"
           currentPage={currentPage}
           pageCount={pageCount}
-          onClick={() => handlePageClick(PageDirection.Back)}
+          onClick={() => handlePageClick(PageDirection.Back, setCurrentPage)}
         />
         <span className="px-3 text-foreground-alt-200">
           {t("v2.farms.pagination", { current: currentPage + 1, total: pageCount })}
@@ -78,7 +70,7 @@ const Pagination: FC = () => {
           type="right"
           currentPage={currentPage}
           pageCount={pageCount}
-          onClick={() => handlePageClick(PageDirection.Forward)}
+          onClick={() => handlePageClick(PageDirection.Forward, setCurrentPage)}
         />
       </div>
     </>

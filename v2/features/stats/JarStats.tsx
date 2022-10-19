@@ -13,7 +13,7 @@ import { ReadyState } from "pages/stats";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
-import { generatePnL } from "picklefinance-core";
+import { UserJarHistoryPnlGenerator } from "picklefinance-core";
 import {
   PnlTransactionWrapper,
   UserJarHistory,
@@ -86,7 +86,7 @@ const JarStats: FC<{
   // generate pnl report for one jar from user history if/when it loads
   useEffect(() => {
     if (account && userHistory && userHistory[jar.value]) {
-      let pnl = generatePnL(account, userHistory[jar.value]);
+      let pnl = new UserJarHistoryPnlGenerator(account, userHistory[jar.value]).generatePnL();
       DEBUG_OUT(pnl);
       setUserPnl(pnl);
     }

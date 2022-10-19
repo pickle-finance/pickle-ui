@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useTranslation } from "next-i18next";
 
 import FarmsTableRow from "./FarmsTableRow";
-import { AssetWithData, CoreSelectors, JarWithData } from "v2/store/core";
+import { AssetWithData, CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { Sort } from "v2/store/controls";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
