@@ -41,7 +41,7 @@ export const useCowSwap = () => {
       userAddress: account,
       validTo: ~~(Date.now() / 1000) + convertMintoMicroSec(deadLine),
     });
-    return quoteResponse.quote;
+    return quoteResponse?.quote;
   };
 
   const sendSwap = async ({
