@@ -44,6 +44,14 @@ const styles: StylesConfig<SelectOptions> = {
     boxShadow: "0 0 0 1px rgb(var(--color-background-lightest))",
     marginLeft: "-15px",
   }),
+  menuList: (base) => ({
+    ...base,
+    maxHeight: "200px",
+
+    "::-webkit-scrollbar": {
+      width: "0px",
+    },
+  }),
   singleValue: (styles) => ({
     ...styles,
     color: "rgb(var(--color-foreground-alt-200))",

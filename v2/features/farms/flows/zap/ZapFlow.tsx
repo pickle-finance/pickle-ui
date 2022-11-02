@@ -4,7 +4,7 @@ import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber, ethers } from "ethers";
 import { useMachine } from "@xstate/react";
-import { Chains, PickleModelJson } from "picklefinance-core";
+import { ChainNetwork, Chains, PickleModelJson } from "picklefinance-core";
 import {
   BalanceAllowance,
   ChainNativetoken,
@@ -32,6 +32,9 @@ import { neverExpireEpochTime } from "v1/util/constants";
 import { Jar__factory } from "v1/containers/Contracts/factories";
 import { UserActions } from "v2/store/user";
 import { zapInEvent } from "v1/containers/Contracts/PickleZapV1";
+import { getListOfTokens } from "../../../swap/useTokenList";
+import { ETH_ADDRESS } from "v1/features/Zap/constants";
+import { useWido, WIDO_ROUTER } from "../useWido";
 
 interface Props {
   asset: AssetWithData;
@@ -56,6 +59,7 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   const [swapTx, setSwapTx] = useState<ethers.PopulatedTransaction | undefined>(undefined);
   const [zapTokens, setZapTokens] = useState<IZapTokens | undefined>(undefined);
   const { account } = useWeb3React<Web3Provider>();
+  const { swapWido } = useWido();
   const core = useSelector(CoreSelectors.selectCore);
 
   const chain = Chains.get(asset.chain);
@@ -66,19 +70,21 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
 
   const transactionFactory = () => {
     const { token, amount } = current.context;
-    if (
-      !UniV2Router ||
-      !ZapContract ||
-      !swapTx ||
-      !token ||
-      !core ||
-      !asset.depositToken.nativePath ||
-      !zapTokens
-    )
-      return;
+    if (!zapTokens || !token) return;
 
-    const decimals = zapTokens[token.label.toUpperCase()].decimals;
+    const selectedToken = zapTokens[token.label.toUpperCase()];
+    const decimals = selectedToken?.decimals;
     const depositAmount = ethers.utils.parseUnits(truncateToMaxDecimals(amount), decimals);
+
+    if (chainName === ChainNetwork.Ethereum)
+      return () =>
+        swapWido({
+          fromToken: selectedToken?.address,
+          toToken: asset.contract,
+          amount: depositAmount,
+        });
+
+    if (!UniV2Router || !ZapContract || !swapTx || !core || !asset.depositToken.nativePath) return;
 
     // If native token, use 0x0 address
     const inputTokenAddress =
@@ -114,7 +120,7 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   useEffect(() => {
     const buildAndSetSwapTx = async () => {
       const { token, amount } = current.context;
-      if (!token || !zapTokens) return;
+      if (!token || !zapTokens || chainName === ChainNetwork.Ethereum) return;
       const decimals = zapTokens[token.label.toUpperCase()].decimals;
 
       const depositAmount = ethers.utils.parseUnits(truncateToMaxDecimals(amount), decimals);
@@ -164,9 +170,9 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
      */
     const IERC20 = new ethers.utils.Interface(Jar__factory.abi);
 
-    const transferEventsUnfiltered = receipt.events?.map((event) => {
+    const transferEventsUnfiltered = receipt.logs?.map((log) => {
       try {
-        const parsedEvent = IERC20.parseLog(event);
+        const parsedEvent = IERC20.parseLog(log);
         if (parsedEvent.name === "Transfer") return parsedEvent;
       } catch {
         return null;
@@ -176,16 +182,16 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
     const transferEvents:
       | ethers.utils.LogDescription[]
       | undefined = transferEventsUnfiltered?.flatMap((x) => (x ? [x] : []));
-    const zapEvent = eventsByName<zapInEvent>(receipt, "zapIn")[0];
+    const pTokenTransferEvent = transferEvents?.find((event) => event.args.to === account)!;
 
     const zapTokenTransferEvent = transferEvents?.find((event) => event.args.from === account);
 
     const zapTokenBalance = BigNumber.from(zapTokens[token?.label || ""].balance || "0")
-      .sub(zapTokenTransferEvent?.args.value || value)
+      .sub(zapTokenTransferEvent?.args.value || value || "0")
       .toString();
 
     const pTokenBalanceBN = BigNumber.from((balances as UserTokenData)?.pAssetBalance || "0");
-    const pAssetBalance = pTokenBalanceBN.add(zapEvent.args.tokensRec).toString();
+    const pAssetBalance = pTokenBalanceBN.add(pTokenTransferEvent.args.value).toString();
 
     const tokenKey = token?.label.toLowerCase()!;
     dispatch(
@@ -195,15 +201,16 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
         data: {
           pAssetBalance,
           // Only update token balances if one of the component tokens are used
-          ...(token?.value === "token" && {
-            componentTokenBalances: {
-              ...balances?.componentTokenBalances,
-              [tokenKey]: {
-                balance: zapTokenBalance,
-                allowance: balances?.componentTokenBalances[tokenKey].allowance!,
+          ...(token?.value === "token" &&
+            chainName != ChainNetwork.Ethereum && {
+              componentTokenBalances: {
+                ...balances?.componentTokenBalances,
+                [tokenKey]: {
+                  balance: zapTokenBalance,
+                  allowance: balances?.componentTokenBalances[tokenKey].allowance!,
+                },
               },
-            },
-          }),
+            }),
         },
       }),
     );
@@ -282,7 +289,7 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
               send(Actions.SUBMIT_FORM, { amount, token })
             }
             zapTokens={zapTokens!}
-            zapAddress={ZapContract?.address}
+            zapAddress={asset.chain === ChainNetwork.Ethereum ? WIDO_ROUTER : ZapContract?.address}
             balances={balances}
           />
         )}
@@ -329,6 +336,36 @@ const getZapTokens = (
   asset: AssetWithData,
   core: PickleModelJson.PickleModelJson | undefined,
 ): IZapTokens => {
+  if (asset.chain === ChainNetwork.Ethereum) {
+    const tokenList = getListOfTokens()[1];
+    const ret = {};
+    return Object.keys(tokenList).reduce(
+      (acc, tokenId) => {
+        const tokenInfo = tokenList[tokenId];
+        const { address, decimals } = tokenInfo.token;
+        acc = {
+          ...acc,
+          [tokenId]: {
+            address,
+            decimals,
+            balance: "0",
+            allowance: "0",
+            type: "token",
+          },
+        };
+        return acc;
+      },
+      {
+        ETH: {
+          address: ETH_ADDRESS,
+          decimals: 18,
+          balance: userNativeData?.native.balance || "0",
+          allowance: "0",
+          type: "native",
+        },
+      },
+    );
+  }
   const componentTokens = userTokenData?.componentTokenBalances || undefined;
 
   const jarChain = core?.chains.find((chain) => chain.network === asset.chain);

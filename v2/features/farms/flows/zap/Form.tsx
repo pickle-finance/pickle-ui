@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
@@ -19,7 +19,9 @@ import { stateMachine } from "../stateMachineNoUserInput";
 import { ApprovalEvent } from "v1/containers/Contracts/Erc20";
 import { UserActions } from "v2/store/user";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
+import { WIDO_ROUTER } from "../useWido";
 import { classNames } from "v2/utils";
+import { ChainNetwork } from "picklefinance-core";
 import Spinner from "v2/components/Spinner";
 
 interface Props {
@@ -42,13 +44,43 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
     label: jarChain?.gasTokenSymbol.toUpperCase() || "",
     value: "native",
   });
+
+  const selectedTokenInfo = zapTokens[selectedToken.label];
+
   const [current, send] = useMachine(stateMachine);
+  const [mainnetTokenIn, setMainnetTokenIn] = useState<{
+    balance: string;
+    allowance: string;
+  } | null>(null);
 
-  const selectedTokenAddress = zapTokens[selectedToken.label].address;
-  const ZapTokenContract = useTokenContract(selectedTokenAddress);
+  const selectedTokenContract = useTokenContract(selectedTokenInfo?.address);
 
-  const usedBalance = zapTokens[selectedToken.label || ""]?.balance;
-  const usedDecimals = zapTokens[selectedToken.label || ""]?.decimals;
+  // Fetching balances and allowances on-the-fly on mainnet - 5s interval
+  const handleTokenBalances = useCallback(async () => {
+    if (!account || jar.chain != ChainNetwork.Ethereum) return;
+    if (!!selectedTokenContract) {
+      const balance = (await selectedTokenContract.balanceOf(account)).toString();
+      const allowance = (await selectedTokenContract.allowance(account, WIDO_ROUTER)).toString();
+      setMainnetTokenIn({ balance, allowance });
+    }
+  }, [account, selectedTokenContract]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleTokenBalances();
+    }, 5_000);
+    return () => clearInterval(interval);
+  }, [handleTokenBalances]);
+
+  useEffect(() => {
+    handleTokenBalances();
+  }, [handleTokenBalances, selectedToken]);
+
+  const selectedTokenObj = zapTokens[selectedToken.label];
+  const ZapTokenContract = useTokenContract(selectedTokenObj.address);
+
+  const usedBalance = mainnetTokenIn?.balance || selectedTokenObj?.balance;
+  const usedDecimals = selectedTokenObj.decimals || selectedTokenObj?.decimals;
 
   const displayBalanceStr = formatUnits(usedBalance, usedDecimals);
   const [amount, setAmount] = useState<string>(displayBalanceStr);
@@ -61,8 +93,11 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
   });
 
   const userHasZapAllowance =
-    parseInt(zapTokens[selectedToken.label || ""]?.allowance || "0") > 0 ||
-    selectedToken.value === "native";
+    parseInt(
+      (jar.chain === ChainNetwork.Ethereum
+        ? mainnetTokenIn?.allowance
+        : selectedTokenObj?.allowance) || "0",
+    ) > 0 || selectedToken.value === "native";
 
   const transactionFactory = () => {
     if (!ZapTokenContract || !zapAddress) return;

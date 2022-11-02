@@ -18,12 +18,15 @@ import { useSelector } from "react-redux";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
 import { useAccount } from "v2/hooks";
 import ZapFlow from "./flows/zap/ZapFlow";
+import { useWido } from "./flows/useWido";
+import { ChainNetwork } from "picklefinance-core";
 interface Props {
   asset: AssetWithData;
 }
 
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const { t } = useTranslation("common");
+  const { supportedTokens } = useWido();
   const account = useAccount();
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
@@ -68,6 +71,12 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
 
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
+  const hasMainnetZap =
+    asset.chain === ChainNetwork.Ethereum &&
+    supportedTokens.some(
+      ({ address }) => ethers.utils.getAddress(address) === ethers.utils.getAddress(asset.contract),
+    );
+
   return (
     <div className="flex space-x-3">
       <div className={classNames(jarSupportsStaking(asset) ? "grow self-start" : "w-1/2")}>
@@ -80,7 +89,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
               {jarTokens}
             </span>
             <span className="flex gap-3">
-              {asset.depositToken.nativePath && (
+              {!!(asset.depositToken.nativePath || hasMainnetZap) && (
                 <ZapFlow asset={asset} nativeBalances={userNativeData} balances={userTokenData} />
               )}
               <ApprovalFlow

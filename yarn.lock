@@ -7529,7 +7529,7 @@ recharts-scale@^0.4.3, recharts-scale@^0.4.4:
   dependencies:
     decimal.js-light "^2.4.1"
 
-recharts@2.0.12:
+recharts@2.1.12:
   version "2.1.12"
   resolved "https://registry.yarnpkg.com/recharts/-/recharts-2.1.12.tgz#2cbc87b0ed386a1328e9bab2b808a5fbce22e59f"
   integrity sha512-dAzEuc9AjM+IF0A33QzEdBEUnyGKJcGUPa0MYm0vd38P3WouQjrj2egBrCNInE7ZcQwN+z3MoT7Rw03u8nP9HA==
@@ -8936,6 +8936,11 @@ wide-align@^1.1.0:
   integrity sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==
   dependencies:
     string-width "^1.0.2 || 2 || 3 || 4"
+
+wido@^0.0.32:
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/wido/-/wido-0.0.32.tgz#be6cdbe1512afdec6a637a2630a605a71d2aca0a"
+  integrity sha512-pT/AKPd5UMYffTU4aQn44MBkZHwv3BCZxylf7m4HqIldQcS2PcYjtf6GEi8AexpdN0uI4r2Vu1KvVUTddOwFtg==
 
 word-wrap@^1.2.3:
   version "1.2.3"
