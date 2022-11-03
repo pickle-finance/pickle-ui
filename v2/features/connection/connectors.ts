@@ -1,16 +1,12 @@
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { WalletLinkConnector } from "@web3-react/walletlink-connector";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { CloverConnector } from "@clover-network/clover-connector";
-import chains from "./chainIds.json";
+import { initializeConnector, Web3ReactHooks } from "@web3-react/core";
+import { Connector } from "@web3-react/types";
 
-export interface Connector {
-  id: Connectors;
-  icon: any;
-  title: string;
-  connector: AbstractConnector;
-}
+import { MetaMask } from "@web3-react/metamask";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnect } from "@web3-react/walletconnect";
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
+
+import chains from "./chainIds.json";
 
 export enum Connectors {
   Metamask,
@@ -34,19 +30,62 @@ export const injected = new InjectedConnector({
   supportedChainIds: chains,
 });
 
-export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: RPC_URLS[1] /*, 137: RPC_URLS[137]*/ }, // web3-react walletconnect connector not compatible
-  bridge: "https://bridge.walletconnect.org",
-  qrcode: true,
-  pollingInterval: POLLING_INTERVAL,
-});
+export const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>(
+  (actions) => new MetaMask({ actions }),
+);
 
-export const walletlink = new WalletLinkConnector({
-  url: RPC_URLS[1],
-  appName: "Pickle Finance",
-  appLogoUrl: "pickle.png",
-});
+export const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
+  (actions) =>
+    new WalletConnect({
+      actions,
+      options: {
+        rpc: Object.keys(RPC_URLS).reduce((acc, chainId) => {
+          const url = RPC_URLS[+chainId as keyof typeof RPC_URLS];
+          return { ...acc, [chainId]: url };
+        }, {}),
+      },
+    }),
+);
 
-export const cloverconnect = new CloverConnector({
-  supportedChainIds: [1],
-});
+export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
+  (actions) =>
+    new CoinbaseWallet({
+      actions,
+      options: {
+        url: RPC_URLS[1],
+      },
+    }),
+);
+
+export function getHooks(connector: Connector): Web3ReactHooks | undefined {
+  if (connector instanceof CoinbaseWallet) return coinbaseWalletHooks;
+  if (connector instanceof MetaMask) return metaMaskHooks;
+  if (connector instanceof WalletConnect) return walletConnectHooks;
+}
+
+export const connectorsAndHooks: [Connector, Web3ReactHooks][] = [
+  [metaMask, metaMaskHooks],
+  [walletConnect, walletConnectHooks],
+  [coinbaseWallet, coinbaseWalletHooks],
+];
+
+export const connectorItemPropsList = [
+  {
+    icon: "metamask.svg",
+    title: "connection.metamask", // translation string
+    connector: metaMask,
+    hooks: metaMaskHooks,
+  },
+  {
+    icon: "walletconnect.svg",
+    title: "connection.walletConnect", // translation string
+    connector: walletConnect,
+    hooks: walletConnectHooks,
+  },
+  {
+    icon: "coinbase.svg",
+    title: "connection.coinbase", // translation string
+    connector: coinbaseWallet,
+    hooks: coinbaseWalletHooks,
+  },
+];

@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, PropsWithChildren } from "react";
 import type { AppProps } from "next/app";
 import { GeistProvider } from "@geist-ui/react";
 
@@ -32,7 +32,7 @@ const getLibrary = (provider: any) => {
   return new Web3Provider(provider);
 };
 
-const WithContainers: FC = ({ children }) => (
+const WithContainers: FC<PropsWithChildren> = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <PickleCore.Provider>
       <Connection.Provider>

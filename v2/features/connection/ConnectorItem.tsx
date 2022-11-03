@@ -47,8 +47,6 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
     connector.id === Connectors.Metamask &&
     (error instanceof NoEthereumProviderError || error instanceof UnsupportedChainIdError);
 
-  resetWalletConnectState(connector.connector);
-
   const handleClick = () => {
     if (disabled) return;
 

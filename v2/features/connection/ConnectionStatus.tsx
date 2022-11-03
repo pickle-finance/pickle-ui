@@ -1,11 +1,16 @@
 import { FC } from "react";
 import Image from "next/image";
 import { Trans, useTranslation } from "next-i18next";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { useWeb3React } from "@web3-react/core";
+
 import type { Web3Provider } from "@ethersproject/providers";
 import { UserRejectedRequestError as UserRejectedRequestErrorInjected } from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { FireIcon } from "@heroicons/react/solid";
+
+import { AddEthereumChainParameter, Connector } from "@web3-react/types";
+import { MetaMask } from "@web3-react/metamask";
+import { WalletConnect } from "@web3-react/walletconnect";
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
 
 import Link from "v2/components/Link";
 import { injected } from "v2/features/connection/connectors";
@@ -16,11 +21,7 @@ import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 
 const isRelevantError = (error: Error | undefined): boolean => {
-  if (
-    error instanceof UnsupportedChainIdError ||
-    error instanceof UserRejectedRequestErrorInjected ||
-    error instanceof UserRejectedRequestErrorWalletConnect
-  ) {
+  if (error instanceof UserRejectedRequestErrorInjected) {
     return true;
   }
 
@@ -30,7 +31,7 @@ const isRelevantError = (error: Error | undefined): boolean => {
 const chainToChainParams = (chain: RawChain | undefined) => {
   if (!chain) return undefined;
   return {
-    chainId: "0x" + chain.chainId.toString(16),
+    chainId: chain.chainId,
     chainName: chain.networkVisible,
     nativeCurrency: {
       name: chain.gasToken.toUpperCase(),
@@ -43,54 +44,41 @@ const chainToChainParams = (chain: RawChain | undefined) => {
 };
 
 export const switchChain = async (
-  library: Web3Provider | undefined,
-  chainId: number,
+  connector: Connector | undefined,
+  desiredChainId: number,
+  currentChainId: number | undefined,
   pfcore: PickleModelJson.PickleModelJson | undefined,
 ): Promise<boolean> => {
-  if (
-    pfcore &&
-    library &&
-    library.provider !== undefined &&
-    library.provider.request !== undefined
-  ) {
-    let method: string;
-    let params: any[];
-    if (chainId === 1) {
-      method = "wallet_switchEthereumChain";
-      params = [{ chainId: "0x1" }];
+  if (!pfcore || !connector) return false;
+  try {
+    if (connector instanceof WalletConnect /* || connector instanceof Network */) {
+      await connector.activate(desiredChainId === -1 ? undefined : desiredChainId);
     } else {
-      method = "wallet_addEthereumChain";
-      const param = chainToChainParams(pfcore.chains.find((x) => x.chainId === chainId));
-      if (param === undefined || param === null) return false;
-      params = [param];
+      await connector.activate(
+        desiredChainId === -1
+          ? undefined
+          : chainToChainParams(pfcore.chains.find((x) => x.chainId === desiredChainId)),
+      );
     }
-    try {
-      await library.provider.request({
-        method: method,
-        params: params,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+    return true;
+  } catch (e) {
+    console.log("switchChainError");
+    console.log(e);
   }
+
   return false;
 };
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
-  const { activate, connector, library } = useWeb3React<Web3Provider>();
+  const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
 
-  resetWalletConnectState(connector);
-  if (
-    error instanceof UserRejectedRequestErrorInjected ||
-    error instanceof UserRejectedRequestErrorWalletConnect
-  ) {
+  if (error instanceof UserRejectedRequestErrorInjected) {
     return (
       <Trans i18nKey="v2.connection.unauthorized">
         Please
-        <Link href="#" className="text-lg" onClick={() => activate(connector || injected)} primary>
+        <Link href="#" className="text-lg" onClick={() => connector.activate()} primary>
           authorize
         </Link>
         Pickle Finance to access your Ethereum account.
@@ -119,7 +107,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
             </div>
             <span
               className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
-              onClick={() => switchChain(library, network.chainId, allCore)}
+              onClick={() => switchChain(connector, network.chainId, chainId, allCore)}
             >
               {network.visibleName}
             </span>

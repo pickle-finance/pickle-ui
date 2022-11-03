@@ -1,15 +1,12 @@
-import { FC, useEffect } from "react";
-import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
+import { FC, useEffect, PropsWithChildren } from "react";
+import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from "@web3-react/core";
 import { useSelector } from "react-redux";
-import { Web3Provider } from "@ethersproject/providers";
 
 import { useEagerConnect, useInactiveListener } from "v2/features/connection/hooks";
-import { injected } from "v2/features/connection/connectors";
+import { connectorsAndHooks, injected } from "v2/features/connection/connectors";
 import { ConnectionSelectors } from "v2/store/connection";
 
-const getLibrary = (provider: any) => new Web3Provider(provider);
-
-const AppWeb3Provider: FC = ({ children }) => {
+const AppWeb3Provider: FC<PropsWithChildren> = ({ children }) => {
   const { active, error, activate, library } = useWeb3React<Web3Provider>();
   const isManuallyDeactivated = useSelector(ConnectionSelectors.selectIsManuallyDeactivated);
 
@@ -30,8 +27,8 @@ const AppWeb3Provider: FC = ({ children }) => {
   return <>{children}</>;
 };
 
-const Provider: FC = ({ children }) => (
-  <Web3ReactProvider getLibrary={getLibrary}>
+const Provider: FC<PropsWithChildren> = ({ children }) => (
+  <Web3ReactProvider connectors={connectorsAndHooks}>
     <AppWeb3Provider>{children}</AppWeb3Provider>
   </Web3ReactProvider>
 );
