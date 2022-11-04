@@ -11,6 +11,8 @@ import { ConnectionSelectors, setIsModalOpen, updateConnectionError } from "v2/s
 import { ConnectionType, getConnection } from "./connectors";
 import { classNames } from "v2/utils";
 import Spinner from "v2/components/Spinner";
+import walletConnect from "public/wallet/walletconnect.svg";
+
 import { resetWalletConnectState } from "./utils";
 import { useTranslation } from "next-i18next";
 import { connect } from "http2";
@@ -60,13 +62,14 @@ const ConnectorItem: FC<Props> = (props) => {
 
   const localizedTitle = t(title); // localize the title
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (disabled) return;
     dispatch(updateConnectionError({ connectionType: connectorId, error: undefined }));
 
     setIsLoading(true);
     try {
-      (connector.activate() as Promise<void>).finally(() => dispatch(setIsModalOpen(false)));
+      await connector.activate();
+      dispatch(setIsModalOpen(false));
     } catch (e) {
       dispatch(updateConnectionError({ connectionType: connectorId, error: (e as Error).message }));
     }
@@ -75,14 +78,14 @@ const ConnectorItem: FC<Props> = (props) => {
   return (
     <a
       href="#"
-      onClick={handleClick}
+      onClick={async () => await handleClick()}
       aria-disabled={disabled}
       className={classNames(
         "flex group outline-none bg-background-lightest rounded-xl py-4 px-6 hover:bg-foreground-alt-500 transition-colors duration-300 ease-in-out",
         disabled && "filter grayscale cursor-not-allowed",
       )}
     >
-      <ConnectorItemIcon {...props} isLoading />
+      <ConnectorItemIcon {...props} isLoading={isLoading} />
       <div className="flex flex-col text-left justify-center">
         <p className="text-foreground text-xl group-hover:text-primary-light transition-colors duration-300 ease-in-out">
           {localizedTitle}

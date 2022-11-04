@@ -5,10 +5,6 @@ import { useSelector } from "react-redux";
 import Modal from "v2/components/Modal";
 import { connectorItemPropsList } from "./connectors";
 import ConnectorItem from "./ConnectorItem";
-import coinbase from "public/wallet/coinbase.svg";
-import metamask from "public/wallet/metamask.svg";
-import clvWallet from "public/wallet/clv.jpeg";
-import walletConnect from "public/wallet/walletconnect.svg";
 import { ConnectionSelectors, setIsModalOpen } from "v2/store/connection";
 import { useAppDispatch } from "v2/store";
 

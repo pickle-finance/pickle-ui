@@ -70,8 +70,6 @@ export const switchChain = async (
     dispatch(
       updateConnectionError({ connectionType: connectorProps?.id, error: (e as Error).message }),
     );
-    console.log("switchChainError");
-    console.log(e);
   }
 
   return false;

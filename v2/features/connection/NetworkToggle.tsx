@@ -11,6 +11,7 @@ import { switchChain } from "./ConnectionStatus";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
 import { Network } from "./networks";
+import { useAppDispatch } from "v2/store";
 
 interface NetworkToggleLabelProps {
   networks: Network[] | undefined;
@@ -52,11 +53,12 @@ const NetworkToggleLabel: FC<NetworkToggleLabelProps> = ({ networks }) => {
 };
 
 const NetworkToggle: FC = () => {
-  const { chainId, active, library } = useWeb3React();
+  const { chainId, isActive, connector } = useWeb3React();
   const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
+  const dispatch = useAppDispatch();
 
-  if (!active) return null;
+  if (!isActive) return null;
 
   return (
     <Popover className="relative mr-3">
@@ -98,7 +100,7 @@ const NetworkToggle: FC = () => {
                         <span
                           className="text-foreground group-hover:text-primary-light text-sm font-bold pr-4 whitespace-nowrap"
                           onClick={() => {
-                            switchChain(library, network.chainId, allCore);
+                            switchChain(connector, network.chainId, chainId, allCore, dispatch);
                           }}
                         >
                           {network.visibleName}

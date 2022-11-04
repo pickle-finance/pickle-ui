@@ -5,13 +5,16 @@ import { MetaMask } from "@web3-react/metamask";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnect } from "@web3-react/walletconnect";
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
+import coinbaseIcon from "public/wallet/coinbase.svg";
+import metamaskIcon from "public/wallet/metamask.svg";
+import walletConnectIcon from "public/wallet/walletconnect.svg";
 
 import chains from "./chainIds.json";
 
 export enum ConnectionType {
-  Metamask,
-  WalletConnect,
-  Coinbase,
+  Metamask = "INJECTED",
+  WalletConnect = "WALLET_CONNECT",
+  Coinbase = "COINBASE",
 }
 
 interface ConnectorProps {
@@ -80,21 +83,21 @@ export const connectorsAndHooks: [Connector, Web3ReactHooks][] = [
 export const connectorItemPropsList: Array<ConnectorProps> = [
   {
     id: ConnectionType.Metamask,
-    icon: "/metamask.svg",
+    icon: metamaskIcon,
     title: "connection.metamask", // translation string
     connector: metaMask,
     hooks: metaMaskHooks,
   },
   {
     id: ConnectionType.WalletConnect,
-    icon: "/walletconnect.svg",
+    icon: walletConnectIcon,
     title: "connection.walletConnect", // translation string
     connector: walletConnect,
     hooks: walletConnectHooks,
   },
   {
     id: ConnectionType.Coinbase,
-    icon: "/coinbase.svg",
+    icon: coinbaseIcon,
     title: "connection.coinbase", // translation string
     connector: coinbaseWallet,
     hooks: coinbaseWalletHooks,
