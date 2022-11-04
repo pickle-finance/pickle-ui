@@ -57,8 +57,7 @@ const ConnectorItem: FC<Props> = (props) => {
   const connectorId = getConnection(connector)?.id;
   const error = useAppSelector((state) => ConnectionSelectors.selectError(state, connectorId));
 
-  const disabled =
-    connectorId === ConnectionType.Metamask && error instanceof NoEthereumProviderError;
+  const disabled = connectorId === ConnectionType.Metamask && error;
 
   const localizedTitle = t(title); // localize the title
 

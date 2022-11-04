@@ -2,7 +2,6 @@ import { initializeConnector, Web3ReactHooks } from "@web3-react/core";
 import { Connector } from "@web3-react/types";
 
 import { MetaMask } from "@web3-react/metamask";
-import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnect } from "@web3-react/walletconnect";
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
 import coinbaseIcon from "public/wallet/coinbase.svg";
@@ -35,10 +34,6 @@ const RPC_URLS = {
   25: "https://evm-cronos.crypto.org",
   1313161554: "https://mainnet.aurora.dev",
 };
-
-export const injected = new InjectedConnector({
-  supportedChainIds: chains,
-});
 
 export const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>(
   (actions) => new MetaMask({ actions }),

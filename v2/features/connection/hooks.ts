@@ -4,81 +4,40 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import type { Web3Provider } from "@ethersproject/providers";
 
-import { injected } from "./connectors";
 import { ConnectionSelectors } from "v2/store/connection";
+import { ConnectionType, metaMask } from "./connectors";
+import { Connector } from "@web3-react/types";
+
+async function connect(connector: Connector) {
+  try {
+    if (connector.connectEagerly) {
+      await connector.connectEagerly();
+    } else {
+      await connector.activate();
+    }
+  } catch (error) {
+    console.debug(`web3-react eager connection error: ${error}`);
+  }
+}
 
 export function useEagerConnect() {
-  const { activate, active } = useWeb3React();
+  const { isActive } = useWeb3React();
   const [tried, setTried] = useState(false);
   const isManuallyDeactivated = useSelector(ConnectionSelectors.selectIsManuallyDeactivated);
 
   useEffect(() => {
-    if (!active && !isManuallyDeactivated) {
-      injected.isAuthorized().then((isAuthorized) => {
-        if (isAuthorized) {
-          // Prevent a race condition on window load by putting activation
-          // into the event loop, see https://github.com/NoahZinsmeister/web3-react/issues/78#issuecomment-937923978
-          setTimeout(
-            () =>
-              activate(injected, undefined, true).catch(() => {
-                setTried(true);
-              }),
-            100,
-          );
-        } else {
-          setTried(true);
-        }
-      });
-    }
-  }, [active]);
-
-  // Wait until we get confirmation of a connection to flip the flag
-  useEffect(() => {
-    if (active) {
+    if (!isActive && !isManuallyDeactivated) {
+      connect(metaMask);
       setTried(true);
     }
-  }, [active]);
+
+    // Wait until we get confirmation of a connection to flip the flag
+    if (isActive) {
+      setTried(true);
+    }
+  }, [isActive]);
 
   return tried;
-}
-
-/**
- * Triggered when none of the MM accounts are connected.
- */
-export function useInactiveListener(suppress = false) {
-  const { active, error, activate } = useWeb3React();
-
-  useEffect(() => {
-    const { ethereum } = window as any;
-
-    if (ethereum?.on && !active && !error && !suppress) {
-      const handleChainChanged = () => {
-        activate(injected, undefined, true).catch((error) => {
-          console.error("Failed to activate after chain changed", error);
-        });
-      };
-
-      const handleAccountsChanged = (accounts: string[]) => {
-        if (accounts.length > 0) {
-          activate(injected, undefined, true).catch((error) => {
-            console.error("Failed to activate after accounts changed", error);
-          });
-        }
-      };
-
-      ethereum.on("chainChanged", handleChainChanged);
-      ethereum.on("accountsChanged", handleAccountsChanged);
-
-      return () => {
-        if (ethereum.removeListener) {
-          ethereum.removeListener("chainChanged", handleChainChanged);
-          ethereum.removeListener("accountsChanged", handleAccountsChanged);
-        }
-      };
-    }
-
-    return undefined;
-  }, [active, error, suppress, activate]);
 }
 
 export const useENS = (

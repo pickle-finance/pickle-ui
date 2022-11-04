@@ -4,7 +4,7 @@ import { ConnectionType } from "v2/features/connection/connectors";
 import { RootState } from ".";
 
 interface ConnectionErrorState {
-  errorByConnectionType: Record<ConnectionType, string | undefined>;
+  errors: Record<ConnectionType, string | undefined>;
 }
 // Record<ConnectionType, string | undefined>;
 interface ConnectionState {
@@ -14,7 +14,7 @@ interface ConnectionState {
 }
 
 const initiaErrorState: ConnectionErrorState = {
-  errorByConnectionType: {
+  errors: {
     [ConnectionType.Metamask]: undefined,
     [ConnectionType.WalletConnect]: undefined,
     [ConnectionType.Coinbase]: undefined,
@@ -42,7 +42,7 @@ const connectionSlice = createSlice({
         payload: { connectionType, error },
       }: { payload: { connectionType: ConnectionType; error: string | undefined } },
     ) {
-      state.errorByConnectionType[connectionType] = error;
+      state.errorByConnectionType.errors[connectionType] = error;
     },
   },
 });
@@ -59,12 +59,14 @@ export const {
 const selectIsManuallyDeactivated = (state: RootState) => state.connection.isManuallyDeactivated;
 const selectIsModalOpen = (state: RootState) => state.connection.isModalOpen;
 const selectError = (state: RootState, type: ConnectionType | undefined) =>
-  type ? state.connection.errorByConnectionType[type] : undefined;
+  type ? state.connection.errorByConnectionType.errors[type] : undefined;
+const selectErrorRaw = (state: RootState) => state.connection.errorByConnectionType;
 
 export const ConnectionSelectors = {
   selectIsManuallyDeactivated,
   selectIsModalOpen,
   selectError,
+  selectErrorRaw,
 };
 
 export default connectionSlice.reducer;
