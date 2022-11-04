@@ -64,12 +64,12 @@ const infoItems = (router: NextRouter) => {
   return (
     <div style={{ padding: "0 10px" }}>
       <p>
-        <Link href="/v1/info/earn" passHref>
+        <Link href="/v1/info/earn" passHref legacyBehavior>
           <NavItem active={router.pathname.endsWith("/info/earn")}>{t("nav.profit")}</NavItem>
         </Link>
       </p>
       <p>
-        <Link href="/v1/info/jars" passHref>
+        <Link href="/v1/info/jars" passHref legacyBehavior>
           <NavItem active={router.pathname.endsWith("/info/jars")}>{t("nav.jars")}</NavItem>
         </Link>
       </p>
@@ -81,32 +81,30 @@ export const NavItems: FC = () => {
   const router = useRouter();
   const { t } = useTranslation("common");
 
-  return (
-    <>
-      <NavItemsContainer>
-        <Link href="/v1/farms" passHref>
-          <NavItem active={router.pathname.endsWith("farms")}>{t("nav.jarsAndFarms")}</NavItem>
+  return <>
+    <NavItemsContainer>
+      <Link href="/v1/farms" passHref legacyBehavior>
+        <NavItem active={router.pathname.endsWith("farms")}>{t("nav.jarsAndFarms")}</NavItem>
+      </Link>
+      <Link href="/v1/dill" passHref legacyBehavior>
+        <NavItem active={router.pathname.endsWith("dill")}>{t("nav.dill")}</NavItem>
+      </Link>
+      <Link href="/v1/frax" passHref legacyBehavior>
+        <NavItem active={router.pathname.endsWith("frax")}>{t("nav.frax")}</NavItem>
+      </Link>
+      <Popover content={infoItems(router)} trigger="hover" style={{ display: "flex" }}>
+        <Link href="/v1/info" passHref legacyBehavior>
+          <NavItem active={router.pathname.startsWith("/v1/info")}>{t("nav.info")}</NavItem>
         </Link>
-        <Link href="/v1/dill" passHref>
-          <NavItem active={router.pathname.endsWith("dill")}>{t("nav.dill")}</NavItem>
-        </Link>
-        <Link href="/v1/frax" passHref>
-          <NavItem active={router.pathname.endsWith("frax")}>{t("nav.frax")}</NavItem>
-        </Link>
-        <Popover content={infoItems(router)} trigger="hover" style={{ display: "flex" }}>
-          <Link href="/v1/info" passHref>
-            <NavItem active={router.pathname.startsWith("/v1/info")}>{t("nav.info")}</NavItem>
-          </Link>
-        </Popover>
-        <Link href="https://feedback.pickle.finance/" passHref>
-          <NavItem target="_blank" rel="noopener noreferrer">
-            {t("nav.feedback")}
-          </NavItem>
-        </Link>
-      </NavItemsContainer>
-      <LanguageSelectContainer>
-        <LanguageSelect type="standalone" />
-      </LanguageSelectContainer>
-    </>
-  );
+      </Popover>
+      <Link href="https://feedback.pickle.finance/" passHref legacyBehavior>
+        <NavItem target="_blank" rel="noopener noreferrer">
+          {t("nav.feedback")}
+        </NavItem>
+      </Link>
+    </NavItemsContainer>
+    <LanguageSelectContainer>
+      <LanguageSelect type="standalone" />
+    </LanguageSelectContainer>
+  </>;
 };

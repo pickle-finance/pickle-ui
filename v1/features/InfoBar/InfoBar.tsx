@@ -65,13 +65,13 @@ export const InfoBar: FC = () => {
     <div>
       <MaxWidthWrapper>
         <Content>
-          <Link href="/v1/info" passHref>
+          <Link href="/v1/info" passHref legacyBehavior>
             <NavItem active={router.pathname.endsWith("/info")}>{t("nav.info")}</NavItem>
           </Link>
-          <Link href="/v1/info/earn" passHref>
+          <Link href="/v1/info/earn" passHref legacyBehavior>
             <NavItem active={router.pathname.endsWith("/info/earn")}>{t("nav.profit")}</NavItem>
           </Link>
-          <Link href="/v1/info/jars" passHref>
+          <Link href="/v1/info/jars" passHref legacyBehavior>
             <NavItem active={router.pathname.endsWith("/info/jars")}>{t("nav.jars")}</NavItem>
           </Link>
         </Content>

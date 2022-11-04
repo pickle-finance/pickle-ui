@@ -15,7 +15,7 @@ import { useENS } from "./hooks";
 import { useAccount } from "v2/hooks";
 
 const WalletToggleOptions: FC = () => {
-  const { deactivate } = useWeb3React<Web3Provider>();
+  const { connector } = useWeb3React<Web3Provider>();
   const { t } = useTranslation("common");
   const dispatch = useAppDispatch();
 
@@ -24,7 +24,11 @@ const WalletToggleOptions: FC = () => {
       name: t("v2.wallet.exit"),
       icon: LogoutIcon,
       action: () => {
-        deactivate();
+        if (connector.deactivate) {
+          connector.deactivate();
+        } else {
+          connector.resetState();
+        }
         dispatch(setIsManuallyDeactivated());
       },
     },

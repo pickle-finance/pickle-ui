@@ -26,7 +26,7 @@ const DashboardCalloutCard: FC = () => {
     };
 
   return (
-    <Link href="/farms" passHref>
+    <Link href="/farms" passHref legacyBehavior>
       <div
         className="group bg-background-light rounded-xl border border-foreground-alt-500 shadow cursor-pointer transition duration-300 ease-in-out hover:bg-background-lightest"
         onClick={() => {

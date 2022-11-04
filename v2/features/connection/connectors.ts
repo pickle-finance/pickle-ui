@@ -8,11 +8,18 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
 
 import chains from "./chainIds.json";
 
-export enum Connectors {
+export enum ConnectionType {
   Metamask,
   WalletConnect,
   Coinbase,
-  Clover,
+}
+
+interface ConnectorProps {
+  id: ConnectionType;
+  icon: string;
+  title: string;
+  connector: Connector;
+  hooks: Web3ReactHooks;
 }
 
 const POLLING_INTERVAL = 12000;
@@ -53,6 +60,7 @@ export const [coinbaseWallet, coinbaseWalletHooks] = initializeConnector<Coinbas
       actions,
       options: {
         url: RPC_URLS[1],
+        appName: "Pickle Finance",
       },
     }),
 );
@@ -69,23 +77,32 @@ export const connectorsAndHooks: [Connector, Web3ReactHooks][] = [
   [coinbaseWallet, coinbaseWalletHooks],
 ];
 
-export const connectorItemPropsList = [
+export const connectorItemPropsList: Array<ConnectorProps> = [
   {
-    icon: "metamask.svg",
+    id: ConnectionType.Metamask,
+    icon: "/metamask.svg",
     title: "connection.metamask", // translation string
     connector: metaMask,
     hooks: metaMaskHooks,
   },
   {
-    icon: "walletconnect.svg",
+    id: ConnectionType.WalletConnect,
+    icon: "/walletconnect.svg",
     title: "connection.walletConnect", // translation string
     connector: walletConnect,
     hooks: walletConnectHooks,
   },
   {
-    icon: "coinbase.svg",
+    id: ConnectionType.Coinbase,
+    icon: "/coinbase.svg",
     title: "connection.coinbase", // translation string
     connector: coinbaseWallet,
     hooks: coinbaseWalletHooks,
   },
 ];
+
+export const getConnection = (c: Connector): ConnectorProps => {
+  const foundConnector = connectorItemPropsList.find((x) => x.connector === c);
+  if (!foundConnector) throw Error("unsupported connector");
+  return foundConnector;
+};

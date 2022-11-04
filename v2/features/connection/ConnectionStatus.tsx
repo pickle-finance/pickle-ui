@@ -13,12 +13,14 @@ import { WalletConnect } from "@web3-react/walletconnect";
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
 
 import Link from "v2/components/Link";
-import { injected } from "v2/features/connection/connectors";
+import { connectorItemPropsList, getConnection, injected } from "v2/features/connection/connectors";
 import { resetWalletConnectState } from "./utils";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain, Chains } from "picklefinance-core/lib/chain/Chains";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
+import { ConnectionSelectors, updateConnectionError } from "v2/store/connection";
+import { useAppDispatch, useAppSelector } from "v2/store";
 
 const isRelevantError = (error: Error | undefined): boolean => {
   if (error instanceof UserRejectedRequestErrorInjected) {
@@ -48,9 +50,12 @@ export const switchChain = async (
   desiredChainId: number,
   currentChainId: number | undefined,
   pfcore: PickleModelJson.PickleModelJson | undefined,
+  dispatch: ReturnType<typeof useAppDispatch>,
 ): Promise<boolean> => {
   if (!pfcore || !connector) return false;
+  const connectorProps = getConnection(connector);
   try {
+    dispatch(updateConnectionError({ connectionType: connectorProps.id, error: undefined }));
     if (connector instanceof WalletConnect /* || connector instanceof Network */) {
       await connector.activate(desiredChainId === -1 ? undefined : desiredChainId);
     } else {
@@ -62,6 +67,9 @@ export const switchChain = async (
     }
     return true;
   } catch (e) {
+    dispatch(
+      updateConnectionError({ connectionType: connectorProps?.id, error: (e as Error).message }),
+    );
     console.log("switchChainError");
     console.log(e);
   }
@@ -70,9 +78,10 @@ export const switchChain = async (
 };
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
-  const { connector, account, chainId } = useWeb3React<Web3Provider>();
+  const { connector, chainId } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
+  const dispatch = useAppDispatch();
 
   if (error instanceof UserRejectedRequestErrorInjected) {
     return (
@@ -107,7 +116,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
             </div>
             <span
               className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
-              onClick={() => switchChain(connector, network.chainId, chainId, allCore)}
+              onClick={() => switchChain(connector, network.chainId, chainId, allCore, dispatch)}
             >
               {network.visibleName}
             </span>
@@ -122,18 +131,13 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
 
 const ConnectionStatus: FC = () => {
   const { t } = useTranslation("common");
-  let { error, chainId } = useWeb3React<Web3Provider>();
+  let { chainId, connector } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId)) return null;
-  if (!error && !(chainId && supportedChains.includes(chainId))) {
-    // App will function with all known chains
-    // supportedChains contains all chains Pickle supports
-    // we want error if chainId is not in supportedChains
-    error = new UnsupportedChainIdError(chainId ? chainId : -1, supportedChains);
-  } else if (!chainId) {
-    error = undefined;
-  } else return null;
+  const connectorId = getConnection(connector)?.id;
+  const error = useAppSelector((state) => ConnectionSelectors.selectError(state, connectorId));
+
+  if (!error) return null;
   return (
     <div className="bg-background-lightest px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-foreground-alt-500">
       <div className="flex font-title mb-2 text-lg items-center">

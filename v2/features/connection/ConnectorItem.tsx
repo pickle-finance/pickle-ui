@@ -1,28 +1,35 @@
 import { FC, useState } from "react";
 import Image from "next/image";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { useWeb3React, Web3ReactHooks } from "@web3-react/core";
+import { Connector } from "@web3-react/types";
+
 import { NoEthereumProviderError } from "@web3-react/injected-connector";
 import type { Web3Provider } from "@ethersproject/providers";
 
-import { useAppDispatch } from "v2/store";
-import { setIsModalOpen } from "v2/store/connection";
-import { Connectors, Connector } from "./connectors";
+import { useAppDispatch, useAppSelector } from "v2/store";
+import { ConnectionSelectors, setIsModalOpen, updateConnectionError } from "v2/store/connection";
+import { ConnectionType, getConnection } from "./connectors";
 import { classNames } from "v2/utils";
 import Spinner from "v2/components/Spinner";
 import { resetWalletConnectState } from "./utils";
+import { useTranslation } from "next-i18next";
+import { connect } from "http2";
 
 interface Props {
+  icon: string;
+  title: string;
   connector: Connector;
+  hooks: Web3ReactHooks;
 }
 
 interface ConnectorItemIconProps extends Props {
   isLoading: boolean;
 }
 
-const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({ connector, isLoading }) => (
+const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({ icon, title, isLoading }) => (
   <div className="relative w-12 h-12 p-1 bg-foreground-alt-400 rounded-full mr-4">
     <Image
-      src={connector.icon}
+      src={icon}
       width={200}
       height={200}
       layout="responsive"
@@ -30,28 +37,39 @@ const ConnectorItemIcon: FC<ConnectorItemIconProps> = ({ connector, isLoading })
         "rounded-full transition-opacity duration-200 ease-linear",
         isLoading && "filter grayscale opacity-40",
       )}
-      alt={connector.title}
-      title={connector.title}
+      alt={title}
+      title={title}
     />
     {/* This is centered given the absolute width of the wrapping div */}
     {isLoading && <Spinner className="absolute top-2 left-2 w-8 h-8" />}
   </div>
 );
 
-const ConnectorItem: FC<Props> = ({ connector }) => {
-  const { error, activate } = useWeb3React<Web3Provider>();
+const ConnectorItem: FC<Props> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation("common");
+
+  const { title, connector, hooks, icon } = props;
+  const { useIsActivating, useIsActive } = hooks;
+  const connectorId = getConnection(connector)?.id;
+  const error = useAppSelector((state) => ConnectionSelectors.selectError(state, connectorId));
 
   const disabled =
-    connector.id === Connectors.Metamask &&
-    (error instanceof NoEthereumProviderError || error instanceof UnsupportedChainIdError);
+    connectorId === ConnectionType.Metamask && error instanceof NoEthereumProviderError;
+
+  const localizedTitle = t(title); // localize the title
 
   const handleClick = () => {
     if (disabled) return;
+    dispatch(updateConnectionError({ connectionType: connectorId, error: undefined }));
 
     setIsLoading(true);
-    activate(connector.connector).finally(() => dispatch(setIsModalOpen(false)));
+    try {
+      (connector.activate() as Promise<void>).finally(() => dispatch(setIsModalOpen(false)));
+    } catch (e) {
+      dispatch(updateConnectionError({ connectionType: connectorId, error: (e as Error).message }));
+    }
   };
 
   return (
@@ -64,10 +82,10 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
         disabled && "filter grayscale cursor-not-allowed",
       )}
     >
-      <ConnectorItemIcon connector={connector} isLoading={isLoading} />
+      <ConnectorItemIcon {...props} isLoading />
       <div className="flex flex-col text-left justify-center">
         <p className="text-foreground text-xl group-hover:text-primary-light transition-colors duration-300 ease-in-out">
-          {connector.title}
+          {localizedTitle}
         </p>
       </div>
     </a>
