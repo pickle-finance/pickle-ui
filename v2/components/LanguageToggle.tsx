@@ -62,20 +62,20 @@ const LanguageToggle: FC = () => {
               <div className="rounded-lg shadow-lg ring-1 ring-background ring-opacity-5 border border-foreground-alt-500 overflow-hidden">
                 <div className="relative grid gap-1 bg-background-light p-2">
                   {languages.map((language) => (
-                    <Link
+                    (<Link
                       key={language.name}
                       href={`/${language.locale}${asPath}`}
                       locale={language.locale}
-                    >
-                      <a className="flex group justify-between items-center hover:bg-background-lightest p-2 rounded-lg transition duration-300 ease-in-out">
-                        <span className="text-foreground group-hover:text-primary-light text-sm font-bold">
-                          {language.name}
-                        </span>
-                        {languageNameFromLocale(locale) === language.name && (
-                          <CheckCircleIcon className="text-primary-light w-4 h-4" />
-                        )}
-                      </a>
-                    </Link>
+                      className="flex group justify-between items-center hover:bg-background-lightest p-2 rounded-lg transition duration-300 ease-in-out">
+
+                      <span className="text-foreground group-hover:text-primary-light text-sm font-bold">
+                        {language.name}
+                      </span>
+                      {languageNameFromLocale(locale) === language.name && (
+                        <CheckCircleIcon className="text-primary-light w-4 h-4" />
+                      )}
+
+                    </Link>)
                   ))}
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import Tippy from "@tippyjs/react";
 import { useTranslation } from "next-i18next";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import MoreInfo from "v2/components/MoreInfo";
 
 import { classNames } from "v2/utils";
@@ -40,7 +40,7 @@ const FarmsBadge: FC<Props> = ({ active }) => {
   );
 };
 
-const TooltipContent: FC = ({ children }) => (
+const TooltipContent: FC<PropsWithChildren> = ({ children }) => (
   <div className="rounded-lg shadow-lg border border-foreground-alt-500 overflow-hidden">
     <div className="bg-background-light px-3 py-2">
       <div className="text-foreground-alt-200 text-base font-normal">{children}</div>

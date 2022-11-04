@@ -1,7 +1,7 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, PropsWithChildren } from "react";
 import { Transition } from "@headlessui/react";
 
-const SelectTransition: FC = ({ children }) => (
+const SelectTransition: FC<PropsWithChildren> = ({ children }) => (
   <Transition
     as={Fragment}
     enter="transition ease-out duration-200"

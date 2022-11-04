@@ -1,5 +1,4 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { CloverConnector } from "@clover-network/clover-connector";
 import { Chains } from "picklefinance-core";
@@ -19,13 +18,6 @@ RPC_URLS[1] = process.env.infura;
 
 export const injected = new InjectedConnector({
   supportedChainIds: Chains.list().map((x) => Chains.get(x).id),
-});
-
-export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: RPC_URLS[1] /*, 137: RPC_URLS[137]*/ }, // web3-react walletconnect connector not compatible
-  bridge: "https://bridge.walletconnect.org",
-  qrcode: true,
-  pollingInterval: POLLING_INTERVAL,
 });
 
 export const walletlink = new WalletLinkConnector({

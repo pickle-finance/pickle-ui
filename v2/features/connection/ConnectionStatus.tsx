@@ -1,26 +1,29 @@
 import { FC } from "react";
 import Image from "next/image";
 import { Trans, useTranslation } from "next-i18next";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { useWeb3React } from "@web3-react/core";
+
 import type { Web3Provider } from "@ethersproject/providers";
 import { UserRejectedRequestError as UserRejectedRequestErrorInjected } from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { FireIcon } from "@heroicons/react/solid";
 
+import { AddEthereumChainParameter, Connector } from "@web3-react/types";
+import { MetaMask } from "@web3-react/metamask";
+import { WalletConnect } from "@web3-react/walletconnect";
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
+
 import Link from "v2/components/Link";
-import { injected } from "v2/features/connection/connectors";
+import { connectorItemPropsList, getConnection, injected } from "v2/features/connection/connectors";
 import { resetWalletConnectState } from "./utils";
 import { PickleModelJson } from "picklefinance-core";
 import { RawChain, Chains } from "picklefinance-core/lib/chain/Chains";
 import { useSelector } from "react-redux";
 import { CoreSelectors } from "v2/store/core";
+import { ConnectionSelectors, updateConnectionError } from "v2/store/connection";
+import { useAppDispatch, useAppSelector } from "v2/store";
 
 const isRelevantError = (error: Error | undefined): boolean => {
-  if (
-    error instanceof UnsupportedChainIdError ||
-    error instanceof UserRejectedRequestErrorInjected ||
-    error instanceof UserRejectedRequestErrorWalletConnect
-  ) {
+  if (error instanceof UserRejectedRequestErrorInjected) {
     return true;
   }
 
@@ -30,7 +33,7 @@ const isRelevantError = (error: Error | undefined): boolean => {
 const chainToChainParams = (chain: RawChain | undefined) => {
   if (!chain) return undefined;
   return {
-    chainId: "0x" + chain.chainId.toString(16),
+    chainId: chain.chainId,
     chainName: chain.networkVisible,
     nativeCurrency: {
       name: chain.gasToken.toUpperCase(),
@@ -43,54 +46,46 @@ const chainToChainParams = (chain: RawChain | undefined) => {
 };
 
 export const switchChain = async (
-  library: Web3Provider | undefined,
-  chainId: number,
+  connector: Connector | undefined,
+  desiredChainId: number,
+  currentChainId: number | undefined,
   pfcore: PickleModelJson.PickleModelJson | undefined,
+  dispatch: ReturnType<typeof useAppDispatch>,
 ): Promise<boolean> => {
-  if (
-    pfcore &&
-    library &&
-    library.provider !== undefined &&
-    library.provider.request !== undefined
-  ) {
-    let method: string;
-    let params: any[];
-    if (chainId === 1) {
-      method = "wallet_switchEthereumChain";
-      params = [{ chainId: "0x1" }];
+  if (!pfcore || !connector) return false;
+  const connectorProps = getConnection(connector);
+  try {
+    dispatch(updateConnectionError({ connectionType: connectorProps.id, error: undefined }));
+    if (connector instanceof WalletConnect /* || connector instanceof Network */) {
+      await connector.activate(desiredChainId === -1 ? undefined : desiredChainId);
     } else {
-      method = "wallet_addEthereumChain";
-      const param = chainToChainParams(pfcore.chains.find((x) => x.chainId === chainId));
-      if (param === undefined || param === null) return false;
-      params = [param];
+      await connector.activate(
+        desiredChainId === -1
+          ? undefined
+          : chainToChainParams(pfcore.chains.find((x) => x.chainId === desiredChainId)),
+      );
     }
-    try {
-      await library.provider.request({
-        method: method,
-        params: params,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+    return true;
+  } catch (e) {
+    dispatch(
+      updateConnectionError({ connectionType: connectorProps?.id, error: (e as Error).message }),
+    );
   }
+
   return false;
 };
 
 const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
-  const { activate, connector, library } = useWeb3React<Web3Provider>();
+  const { connector, chainId } = useWeb3React<Web3Provider>();
   const allCore = useSelector(CoreSelectors.selectCore);
   const networks = useSelector(CoreSelectors.selectNetworks);
+  const dispatch = useAppDispatch();
 
-  resetWalletConnectState(connector);
-  if (
-    error instanceof UserRejectedRequestErrorInjected ||
-    error instanceof UserRejectedRequestErrorWalletConnect
-  ) {
+  if (error instanceof UserRejectedRequestErrorInjected) {
     return (
       <Trans i18nKey="v2.connection.unauthorized">
         Please
-        <Link href="#" className="text-lg" onClick={() => activate(connector || injected)} primary>
+        <Link href="#" className="text-lg" onClick={() => connector.activate()} primary>
           authorize
         </Link>
         Pickle Finance to access your Ethereum account.
@@ -119,7 +114,7 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
             </div>
             <span
               className="text-foreground cursor-pointer group-hover:text-primary-light text-sm font-bold pr-4 transition duration-300 ease-in-out"
-              onClick={() => switchChain(library, network.chainId, allCore)}
+              onClick={() => switchChain(connector, network.chainId, chainId, allCore, dispatch)}
             >
               {network.visibleName}
             </span>
@@ -134,18 +129,13 @@ const ErrorMessage: FC<{ error: Error | undefined }> = ({ error }) => {
 
 const ConnectionStatus: FC = () => {
   const { t } = useTranslation("common");
-  let { error, chainId } = useWeb3React<Web3Provider>();
+  let { chainId, connector } = useWeb3React<Web3Provider>();
   const supportedChains: number[] = Chains.list().map((x) => Chains.get(x).id);
 
-  if (!isRelevantError(error) && chainId && supportedChains.includes(chainId)) return null;
-  if (!error && !(chainId && supportedChains.includes(chainId))) {
-    // App will function with all known chains
-    // supportedChains contains all chains Pickle supports
-    // we want error if chainId is not in supportedChains
-    error = new UnsupportedChainIdError(chainId ? chainId : -1, supportedChains);
-  } else if (!chainId) {
-    error = undefined;
-  } else return null;
+  const connectorId = getConnection(connector)?.id;
+  const error = useAppSelector((state) => ConnectionSelectors.selectError(state, connectorId));
+
+  if (!error) return null;
   return (
     <div className="bg-background-lightest px-6 py-4 sm:px-8 sm:py-6 mb-6 rounded-2xl border border-foreground-alt-500">
       <div className="flex font-title mb-2 text-lg items-center">

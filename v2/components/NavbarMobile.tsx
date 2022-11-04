@@ -17,16 +17,16 @@ const NavbarMobile: FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex-shrink-0 py-8 w-40 -ml-6">
           <Link href="/">
-            <a>
-              <Image
-                src={matchingLogoSrc(theme)}
-                width={158}
-                height={60}
-                layout="responsive"
-                alt="Pickle Finance Logo"
-                priority
-              />
-            </a>
+
+            <Image
+              src={matchingLogoSrc(theme)}
+              width={158}
+              height={60}
+              layout="responsive"
+              alt="Pickle Finance Logo"
+              priority
+            />
+
           </Link>
         </div>
         <div className="flex items-center">
