@@ -43,6 +43,8 @@ const ConnectorItem: FC<Props> = ({ connector }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
+  console.log(connector, error);
+
   const disabled =
     connector.id === Connectors.Metamask &&
     (error instanceof NoEthereumProviderError || error instanceof UnsupportedChainIdError);

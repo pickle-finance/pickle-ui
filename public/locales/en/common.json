@@ -50,7 +50,8 @@
       "moonbeam": "Moonbeam",
       "optimism": "Optimism",
       "fantom": "Fantom",
-      "gnosis": "Gnosis"
+      "gnosis": "Gnosis",
+      "kava": "Kava"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",

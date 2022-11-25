@@ -95,6 +95,7 @@ const colors: { [token: string]: string } = {
   okex: "#0d74f5",
   optimism: "#ff0420",
   gnosis: "#06795b",
+  kava: "#FF423E",
   pad: "#6366f1",
   pets: "#f3278d",
   pickle: "#48c148",
