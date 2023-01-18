@@ -238,13 +238,11 @@ const FormUniV3: FC<Props> = ({
         </div>
       </div>
 
-      {canZap && (
-        <OnOffToggle toggleOn={shouldZap} onChange={() => setShouldZap(!shouldZap)}>
-          <span className="text-sm font-medium text-foreground-alt-200">
-            {t("v2.farms.autoswap")}
-          </span>
-        </OnOffToggle>
-      )}
+      <OnOffToggle toggleOn={shouldZap} onChange={() => setShouldZap(!shouldZap)}>
+        <span className="text-sm font-medium text-foreground-alt-200">
+          {t("v2.farms.autoswap")}
+        </span>
+      </OnOffToggle>
       <ErrorMessage error={error} />
       <Button state={error ? "disabled" : "enabled"} onClick={handleFormSubmit}>
         {t("v2.actions.confirm")}

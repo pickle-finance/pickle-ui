@@ -50,7 +50,8 @@
       "moonbeam": "Moonbeam",
       "optimism": "Optimism",
       "fantom": "Fantom",
-      "gnosis": "Gnosis"
+      "gnosis": "Gnosis",
+      "kava": "Kava"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
@@ -542,6 +543,7 @@
       "statsAndDocs": "Stats & Docs",
       "strategyAddress": "Strategy Address",
       "success": "Success!",
+      "tag": "Tags",
       "token": "Token",
       "tokens": "{{ amount }} Tokens",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",

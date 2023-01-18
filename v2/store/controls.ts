@@ -7,6 +7,7 @@ export enum FilterType {
   Token = "token",
   Protocol = "protocol",
   Network = "network",
+  Tag = "tag",
 }
 
 export type Sort = {

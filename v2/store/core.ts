@@ -25,6 +25,7 @@ import {
 } from "v2/utils/user";
 import { getUniV3Tokens } from "v2/utils/univ3";
 import { allAssets, enabledPredicate } from "./core.helpers";
+import { toTitleCase } from "v2/utils/format";
 
 const apiHost = process.env.apiHost;
 
@@ -142,7 +143,24 @@ const filtersFromCoreData = (data: PickleModelJson): Filter[] => {
     color: brandColor(token),
   }));
 
-  return [...networkFilters, ...protocolFilters, ...tokenFilters];
+  const tagFilters = [
+    ...new Set(
+      data.assets.jars
+        .filter((jar) => jar.tags)
+        .flatMap((jars) => {
+          const { tags } = jars;
+          return tags?.map((tag) => tag);
+        }),
+    ),
+  ].map((tag) => ({
+    type: FilterType.Tag,
+    value: tag || "",
+    label: toTitleCase(tag || ""),
+    imageSrc: tag === "stablecoins" ? `/tokens/usdc.png` : `/gray.png`,
+    color: brandColor("usdc"),
+  }));
+
+  return [...networkFilters, ...protocolFilters, ...tokenFilters, ...tagFilters];
 };
 
 /**
@@ -179,6 +197,11 @@ const selectFilteredAssets = createSelector(
             return jar.chain === filter.value;
           case FilterType.Protocol:
             return jar.protocol === filter.value;
+          case FilterType.Tag:
+            const { tags } = jar;
+            if (!tags) return false;
+            return tags.includes(filter.value);
+
           case FilterType.Token:
             const { components } = jar.depositToken;
 
