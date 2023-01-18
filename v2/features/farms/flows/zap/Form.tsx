@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { BigNumber, ethers } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
@@ -23,6 +23,7 @@ import { WIDO_ROUTER, WIDO_TOKEN_MANAGER } from "../useWido";
 import { classNames } from "v2/utils";
 import { ChainNetwork } from "picklefinance-core";
 import Spinner from "v2/components/Spinner";
+import { ZERO_ADDRESS } from "wido";
 
 interface Props {
   jar: JarWithData;
@@ -54,11 +55,12 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
   } | null>(null);
 
   const selectedTokenContract = useTokenContract(selectedTokenInfo?.address);
+  console.log(selectedTokenContract?.address);
 
   // Fetching balances and allowances on-the-fly on mainnet - 5s interval
   const handleTokenBalances = useCallback(async () => {
     if (!account || jar.chain != ChainNetwork.Ethereum) return;
-    if (!!selectedTokenContract) {
+    if (!!selectedTokenContract && selectedTokenContract.address != ZERO_ADDRESS) {
       const balance = (await selectedTokenContract.balanceOf(account)).toString();
       const allowance = (
         await selectedTokenContract.allowance(account, WIDO_TOKEN_MANAGER)
@@ -75,16 +77,20 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
   }, [handleTokenBalances]);
 
   useEffect(() => {
+    setMainnetTokenIn(null);
+    setAmount("0");
     handleTokenBalances();
   }, [handleTokenBalances, selectedToken]);
 
   const selectedTokenObj = zapTokens[selectedToken.label];
   const ZapTokenContract = useTokenContract(selectedTokenObj.address);
 
-  const usedBalance = mainnetTokenIn?.balance || selectedTokenObj?.balance;
-  const usedDecimals = selectedTokenObj.decimals || selectedTokenObj?.decimals;
+  const useMainnetToken = parseFloat(mainnetTokenIn?.balance || "0") > 0;
 
-  const displayBalanceStr = formatUnits(usedBalance, usedDecimals);
+  const usedBalance = useMainnetToken ? mainnetTokenIn?.balance : selectedTokenObj?.balance;
+  const usedDecimals = selectedTokenObj?.decimals;
+
+  const displayBalanceStr = formatUnits(usedBalance!, usedDecimals);
   const [amount, setAmount] = useState<string>(displayBalanceStr);
 
   const options: Array<TokenSelect> = Object.keys(zapTokens).map((x) => {
