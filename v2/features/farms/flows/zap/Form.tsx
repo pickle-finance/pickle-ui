@@ -19,7 +19,7 @@ import { stateMachine } from "../stateMachineNoUserInput";
 import { ApprovalEvent } from "v1/containers/Contracts/Erc20";
 import { UserActions } from "v2/store/user";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
-import { WIDO_ROUTER } from "../useWido";
+import { WIDO_ROUTER, WIDO_TOKEN_MANAGER } from "../useWido";
 import { classNames } from "v2/utils";
 import { ChainNetwork } from "picklefinance-core";
 import Spinner from "v2/components/Spinner";
@@ -60,7 +60,9 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
     if (!account || jar.chain != ChainNetwork.Ethereum) return;
     if (!!selectedTokenContract) {
       const balance = (await selectedTokenContract.balanceOf(account)).toString();
-      const allowance = (await selectedTokenContract.allowance(account, WIDO_ROUTER)).toString();
+      const allowance = (
+        await selectedTokenContract.allowance(account, WIDO_TOKEN_MANAGER)
+      ).toString();
       setMainnetTokenIn({ balance, allowance });
     }
   }, [account, selectedTokenContract]);

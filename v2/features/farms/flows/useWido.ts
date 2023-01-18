@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useWeb3React } from "@web3-react/core";
-import { approveForZap, quote, getSupportedTokens, Token } from "wido";
+import { quote, getSupportedTokens, Token } from "wido";
 import { BigNumber, ContractTransaction } from "ethers";
 
-export const WIDO_ROUTER = "0x919dF3aDbF5cfC9fcfd43198EDFe5aA5561CB456";
+export const WIDO_ROUTER = "0x7Fb69e8fb1525ceEc03783FFd8a317bafbDfD394";
+export const WIDO_TOKEN_MANAGER = "0xF2F02200aEd0028fbB9F183420D3fE6dFd2d3EcD";
 const MAINNET_CHAIN_ID = 1;
 const ALLOWABLE_SLIPPAGE = 0.3;
 const PICKLE_PROTOCOL_KEY = "pickle.finance";

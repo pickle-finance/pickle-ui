@@ -34,7 +34,7 @@ import { UserActions } from "v2/store/user";
 import { zapInEvent } from "v1/containers/Contracts/PickleZapV1";
 import { getListOfTokens } from "../../../swap/useTokenList";
 import { ETH_ADDRESS } from "v1/features/Zap/constants";
-import { useWido, WIDO_ROUTER } from "../useWido";
+import { useWido, WIDO_TOKEN_MANAGER } from "../useWido";
 
 interface Props {
   asset: AssetWithData;
@@ -289,7 +289,9 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
               send(Actions.SUBMIT_FORM, { amount, token })
             }
             zapTokens={zapTokens!}
-            zapAddress={asset.chain === ChainNetwork.Ethereum ? WIDO_ROUTER : ZapContract?.address}
+            zapAddress={
+              asset.chain === ChainNetwork.Ethereum ? WIDO_TOKEN_MANAGER : ZapContract?.address
+            }
             balances={balances}
           />
         )}
