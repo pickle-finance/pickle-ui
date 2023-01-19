@@ -19,21 +19,19 @@ import { stateMachine } from "../stateMachineNoUserInput";
 import { ApprovalEvent } from "v1/containers/Contracts/Erc20";
 import { UserActions } from "v2/store/user";
 import { UserTokenData } from "picklefinance-core/lib/client/UserModel";
-import { WIDO_ROUTER, WIDO_TOKEN_MANAGER } from "../useWido";
 import { classNames } from "v2/utils";
 import { ChainNetwork } from "picklefinance-core";
 import Spinner from "v2/components/Spinner";
-import { ZERO_ADDRESS } from "wido";
+import { getWidoSpender, ZERO_ADDRESS } from "wido";
 
 interface Props {
   jar: JarWithData;
   nextStep: (amount: string, token: TokenSelect) => void;
   zapTokens: IZapTokens;
-  zapAddress: string | undefined;
   balances: UserTokenData | undefined;
 }
 
-const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => {
+const Form: FC<Props> = ({ jar, nextStep, zapTokens, balances }) => {
   const { t } = useTranslation("common");
   const { account } = useWeb3React<Web3Provider>();
   const dispatch = useAppDispatch();
@@ -46,6 +44,8 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
     value: "native",
   });
 
+  const [zapAddress, setZapAddress] = useState<string | undefined>(undefined);
+
   const selectedTokenInfo = zapTokens[selectedToken.label];
 
   const [current, send] = useMachine(stateMachine);
@@ -55,16 +55,19 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
   } | null>(null);
 
   const selectedTokenContract = useTokenContract(selectedTokenInfo?.address);
-  console.log(selectedTokenContract?.address);
 
   // Fetching balances and allowances on-the-fly on mainnet - 5s interval
   const handleTokenBalances = useCallback(async () => {
     if (!account || jar.chain != ChainNetwork.Ethereum) return;
     if (!!selectedTokenContract && selectedTokenContract.address != ZERO_ADDRESS) {
+      const zapAddress = await getWidoSpender({
+        chainId: 1,
+        fromToken: selectedTokenInfo?.address,
+        toToken: jar.contract,
+      });
       const balance = (await selectedTokenContract.balanceOf(account)).toString();
-      const allowance = (
-        await selectedTokenContract.allowance(account, WIDO_TOKEN_MANAGER)
-      ).toString();
+      const allowance = (await selectedTokenContract.allowance(account, zapAddress)).toString();
+      setZapAddress(zapAddress);
       setMainnetTokenIn({ balance, allowance });
     }
   }, [account, selectedTokenContract]);
@@ -258,8 +261,11 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, zapAddress, balances }) => 
         </Button>
       ) : (
         <Button state={error ? "disabled" : "enabled"} onClick={handleFormSubmit}>
-          {t("v2.actions.confirm")}
+          {t("v2.actions.confirmZap")}
         </Button>
+      )}
+      {jar.chain == ChainNetwork.Ethereum && (
+        <p className="pt-3 font-bold text-foreground-alt-300">{t("v2.actions.poweredBy")}</p>
       )}
     </>
   );

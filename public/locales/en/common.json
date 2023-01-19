@@ -324,15 +324,18 @@
       "back": "Back",
       "close": "Close",
       "confirm": "Confirm",
+      "confirmZap": "Confirm Zap",
       "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
       "harvestAndExit": "Harvest and exit",
       "lock": "Lock",
       "retry": "Retry",
+      "poweredBy": "Powered by Wido",
       "stake": "Stake",
       "unstake": "Unstake",
-      "withdraw": "Withdraw"
+      "withdraw": "Withdraw",
+      "zap": "Zap"
     },
     "balances": {
       "amount": "Amount",

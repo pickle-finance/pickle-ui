@@ -5,7 +5,9 @@ import { quote, getSupportedTokens, Token } from "wido";
 import { BigNumber, ContractTransaction } from "ethers";
 
 export const WIDO_ROUTER = "0x7Fb69e8fb1525ceEc03783FFd8a317bafbDfD394";
-export const WIDO_TOKEN_MANAGER = "0xF2F02200aEd0028fbB9F183420D3fE6dFd2d3EcD";
+
+export const FEE_SHARING = "0xaCfE4511CE883C14c4eA40563F176C3C09b4c47C";
+
 const MAINNET_CHAIN_ID = 1;
 const ALLOWABLE_SLIPPAGE = 0.3;
 const PICKLE_PROTOCOL_KEY = "pickle.finance";
@@ -25,7 +27,6 @@ export const useWido = () => {
     toToken,
     amount,
   }: SwapProps): Promise<ContractTransaction> => {
-    console.log(amount);
     const quoteResult = await quote({
       fromChainId: MAINNET_CHAIN_ID, // Chain Id of from token
       fromToken, // Token address of from token
@@ -34,35 +35,64 @@ export const useWido = () => {
       amount: amount.toString(), // Token amount of from token
       slippagePercentage: ALLOWABLE_SLIPPAGE, // Acceptable max slippage for the swap
       user: account!, // Address of user placing the order.
+      partner: FEE_SHARING, // Address of partner referring the user.
     });
 
-    return signer.sendTransaction({ data: quoteResult.data, to: WIDO_ROUTER, gasLimit: 1_000_000 });
+    return signer.sendTransaction({
+      value: quoteResult.value,
+      data: quoteResult.data,
+      to: quoteResult.to || WIDO_ROUTER,
+    });
   };
 
+  const getWidoSpenderAddress = useMemo(() => {}, []);
+
   const config = {
-    key: "@session",
+    jars: "@jars",
+    tokens: "@tokens",
   };
-  const supportedTokensStored = sessionStorage.getItem(config.key);
+
+  const supportedJarsStored = sessionStorage.getItem(config.jars);
+  const parsedSupportedJars = supportedJarsStored && JSON.parse(supportedJarsStored);
+
+  const supportedTokensStored = sessionStorage.getItem(config.tokens);
   const parsedSupportedTokens = supportedTokensStored && JSON.parse(supportedTokensStored);
+
+  const [supportedJars, setSupportedJars] = useState<Array<Token>>(parsedSupportedJars || []);
 
   const [supportedTokens, setSupportedTokens] = useState<Array<Token>>(parsedSupportedTokens || []);
 
   useEffect(() => {
-    const getSupportedTokensFromWido = async () => {
-      if (!supportedTokensStored?.length) {
-        const supportedTokensRes = await getSupportedTokens({
+    const getSupportedJarsFromWido = async () => {
+      if (!supportedJarsStored?.length) {
+        const supportedJarsRes = await getSupportedTokens({
           chainId: [MAINNET_CHAIN_ID],
           protocol: [PICKLE_PROTOCOL_KEY],
         });
-        setSupportedTokens(supportedTokensRes);
-        sessionStorage.setItem(config.key, JSON.stringify(supportedTokensRes));
+        setSupportedJars(supportedJarsRes);
+        sessionStorage.setItem(config.jars, JSON.stringify(supportedJarsRes));
       }
     };
+
+    const getSupportedTokensFromWido = async () => {
+      if (!supportedTokensStored?.length) {
+        const supportedTokensRes = await getSupportedTokens({
+          chainId: [1], // (Optional) Array of chain ids to filter by
+          protocol: ["dex", "unknown"], // (Optional) Array of protocols to filter by
+        });
+
+        setSupportedTokens(supportedTokensRes);
+        sessionStorage.setItem(config.tokens, JSON.stringify(supportedTokensRes));
+      }
+    };
+
+    getSupportedJarsFromWido();
     getSupportedTokensFromWido();
-  }, [config.key]);
+  }, [config.jars, config.tokens, supportedJarsStored?.length, supportedTokensStored?.length]);
 
   return {
     supportedTokens,
+    supportedJars,
     swapWido,
   };
 };

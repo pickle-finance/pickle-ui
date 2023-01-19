@@ -27,7 +27,7 @@ interface Props {
 
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const { t } = useTranslation("common");
-  const { supportedTokens } = useWido();
+  const { supportedJars } = useWido();
   const account = useAccount();
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
@@ -74,7 +74,7 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
 
   const hasMainnetZap =
     asset.chain === ChainNetwork.Ethereum &&
-    supportedTokens.some(
+    supportedJars.some(
       ({ address }) => ethers.utils.getAddress(address) === ethers.utils.getAddress(asset.contract),
     );
 

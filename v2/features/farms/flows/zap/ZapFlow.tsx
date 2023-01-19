@@ -34,7 +34,8 @@ import { UserActions } from "v2/store/user";
 import { zapInEvent } from "v1/containers/Contracts/PickleZapV1";
 import { getListOfTokens } from "../../../swap/useTokenList";
 import { ETH_ADDRESS } from "v1/features/Zap/constants";
-import { useWido, WIDO_TOKEN_MANAGER } from "../useWido";
+import { useWido } from "../useWido";
+import { Token } from "wido";
 
 interface Props {
   asset: AssetWithData;
@@ -58,8 +59,9 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   const [current, send] = useMachine(stateMachine);
   const [swapTx, setSwapTx] = useState<ethers.PopulatedTransaction | undefined>(undefined);
   const [zapTokens, setZapTokens] = useState<IZapTokens | undefined>(undefined);
+
   const { account } = useWeb3React<Web3Provider>();
-  const { swapWido } = useWido();
+  const { swapWido, supportedTokens } = useWido();
   const core = useSelector(CoreSelectors.selectCore);
 
   const chain = Chains.get(asset.chain);
@@ -85,9 +87,9 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
         });
 
     if (!UniV2Router || !ZapContract || !swapTx || !core || !asset.depositToken.nativePath) return;
+    console.log();
 
-    // If native token, use 0x0 address
-    const inputTokenAddress =
+    const selectedTokenAddress =
       token.value === "native"
         ? ethers.constants.AddressZero
         : core.tokens.find((coreToken) => {
@@ -100,7 +102,7 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
 
     return () =>
       ZapContract.ZapIn(
-        inputTokenAddress,
+        selectedTokenAddress,
         depositAmount,
         asset.depositToken.addr,
         asset.contract,
@@ -151,7 +153,13 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   // Update user's zap token balances
   useEffect(() => {
     setZapTokens(
-      getZapTokens(nativeBalances, balances as UserTokenData, asset as AssetWithData, core),
+      getZapTokens(
+        nativeBalances,
+        balances as UserTokenData,
+        asset as AssetWithData,
+        supportedTokens,
+        core,
+      ),
     );
   }, [nativeBalances?.native, nativeBalances?.wrappedBalance, balances?.componentTokenBalances]);
 
@@ -289,16 +297,13 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
               send(Actions.SUBMIT_FORM, { amount, token })
             }
             zapTokens={zapTokens!}
-            zapAddress={
-              asset.chain === ChainNetwork.Ethereum ? WIDO_TOKEN_MANAGER : ZapContract?.address
-            }
             balances={balances}
           />
         )}
         {current.matches(States.AWAITING_CONFIRMATION) && (
           <AwaitingConfirmation
             title={t("v2.farms.confirmDeposit")}
-            cta={t("v2.actions.deposit")}
+            cta={t("v2.actions.zap")}
             tokenName={current.context.token?.label}
             amount={current.context.amount}
             equivalentValue={equivalentValue()}
@@ -336,37 +341,32 @@ const getZapTokens = (
   userNativeData: ChainNativetoken | undefined,
   userTokenData: UserTokenData | undefined,
   asset: AssetWithData,
+  supportedTokens: Token[],
   core: PickleModelJson.PickleModelJson | undefined,
 ): IZapTokens => {
   if (asset.chain === ChainNetwork.Ethereum) {
-    const tokenList = getListOfTokens()[1];
-    const ret = {};
-    return Object.keys(tokenList).reduce(
-      (acc, tokenId) => {
-        const tokenInfo = tokenList[tokenId];
-        const { address, decimals } = tokenInfo.token;
-        acc = {
-          ...acc,
-          [tokenId]: {
-            address,
-            decimals,
-            balance: "0",
-            allowance: "0",
-            type: "token",
-          },
-        };
-        return acc;
-      },
-      {
-        ETH: {
-          address: ETH_ADDRESS,
-          decimals: 18,
-          balance: userNativeData?.native.balance || "0",
+    const ret = supportedTokens.reduce((acc, token) => {
+      const { address, decimals, symbol } = token;
+      acc = {
+        ...acc,
+        [symbol]: {
+          address,
+          decimals,
+          balance: "0",
           allowance: "0",
-          type: "native",
+          type: "token",
         },
-      },
-    );
+      };
+      return acc;
+    }, {});
+    ret["ETH"] = {
+      address: ETH_ADDRESS,
+      decimals: 18,
+      balance: userNativeData?.native.balance || "0",
+      allowance: "0",
+      type: "native",
+    };
+    return ret;
   }
   const componentTokens = userTokenData?.componentTokenBalances || undefined;
 
