@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useWeb3React } from "@web3-react/core";
-import { quote, getSupportedTokens, Token } from "wido";
+import { quote, getSupportedTokens, Token, getBalances } from "wido";
 import { BigNumber, ContractTransaction } from "ethers";
 
 export const WIDO_ROUTER = "0x7Fb69e8fb1525ceEc03783FFd8a317bafbDfD394";
@@ -62,6 +62,8 @@ export const useWido = () => {
 
   const [supportedTokens, setSupportedTokens] = useState<Array<Token>>(parsedSupportedTokens || []);
 
+  const [supportedTokensWithBalance, setSupportedTokensWithBalance] = useState<Array<Token>>([]);
+
   useEffect(() => {
     const getSupportedJarsFromWido = async () => {
       if (!supportedJarsStored?.length) {
@@ -78,7 +80,6 @@ export const useWido = () => {
       if (!supportedTokensStored?.length) {
         const supportedTokensRes = await getSupportedTokens({
           chainId: [1], // (Optional) Array of chain ids to filter by
-          protocol: ["dex", "unknown"], // (Optional) Array of protocols to filter by
         });
 
         setSupportedTokens(supportedTokensRes);
@@ -86,11 +87,29 @@ export const useWido = () => {
       }
     };
 
+    const getTokensWithUserBalance = async () => {
+      if (supportedTokens.length == 0 || !account) return;
+      const balances = await getBalances(account, [1]);
+      const supportedTokensWithBalance = supportedTokens.filter((token) =>
+        balances.find((balance) => balance.address == token.address),
+      );
+
+      setSupportedTokensWithBalance(supportedTokensWithBalance);
+    };
+
     getSupportedJarsFromWido();
     getSupportedTokensFromWido();
-  }, [config.jars, config.tokens, supportedJarsStored?.length, supportedTokensStored?.length]);
+    getTokensWithUserBalance();
+  }, [
+    config.jars,
+    config.tokens,
+    supportedJarsStored?.length,
+    supportedTokensStored?.length,
+    account,
+  ]);
 
   return {
+    supportedTokensWithBalance,
     supportedTokens,
     supportedJars,
     swapWido,

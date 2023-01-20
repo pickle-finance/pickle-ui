@@ -54,7 +54,7 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, balances }) => {
     allowance: string;
   } | null>(null);
 
-  const selectedTokenContract = useTokenContract(selectedTokenInfo?.address);
+  const selectedTokenContract = useTokenContract(selectedTokenInfo?.address || ZERO_ADDRESS);
 
   // Fetching balances and allowances on-the-fly on mainnet - 5s interval
   const handleTokenBalances = useCallback(async () => {
@@ -85,13 +85,17 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, balances }) => {
     handleTokenBalances();
   }, [handleTokenBalances, selectedToken]);
 
-  const selectedTokenObj = zapTokens[selectedToken.label];
-  const ZapTokenContract = useTokenContract(selectedTokenObj.address);
+  useEffect(() => {
+    setSelectedToken({
+      label: jarChain?.gasTokenSymbol.toUpperCase() || "",
+      value: "native",
+    });
+  }, [account]);
 
   const useMainnetToken = parseFloat(mainnetTokenIn?.balance || "0") > 0;
 
-  const usedBalance = useMainnetToken ? mainnetTokenIn?.balance : selectedTokenObj?.balance;
-  const usedDecimals = selectedTokenObj?.decimals;
+  const usedBalance = useMainnetToken ? mainnetTokenIn?.balance : selectedTokenInfo?.balance;
+  const usedDecimals = selectedTokenInfo?.decimals;
 
   const displayBalanceStr = formatUnits(usedBalance!, usedDecimals);
   const [amount, setAmount] = useState<string>(displayBalanceStr);
@@ -107,13 +111,13 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, balances }) => {
     parseInt(
       (jar.chain === ChainNetwork.Ethereum
         ? mainnetTokenIn?.allowance
-        : selectedTokenObj?.allowance) || "0",
+        : selectedTokenInfo?.allowance) || "0",
     ) > 0 || selectedToken.value === "native";
 
   const transactionFactory = () => {
-    if (!ZapTokenContract || !zapAddress) return;
+    if (!selectedTokenContract || !zapAddress) return;
 
-    return () => ZapTokenContract.approve(zapAddress, ethers.constants.MaxUint256);
+    return () => selectedTokenContract.approve(zapAddress, ethers.constants.MaxUint256);
   };
 
   const callback = (receipt: ethers.ContractReceipt) => {

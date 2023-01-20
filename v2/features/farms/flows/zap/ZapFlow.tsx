@@ -61,7 +61,7 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
   const [zapTokens, setZapTokens] = useState<IZapTokens | undefined>(undefined);
 
   const { account } = useWeb3React<Web3Provider>();
-  const { swapWido, supportedTokens } = useWido();
+  const { swapWido, supportedTokensWithBalance } = useWido();
   const core = useSelector(CoreSelectors.selectCore);
 
   const chain = Chains.get(asset.chain);
@@ -157,11 +157,16 @@ const ZapFlow: FC<Props> = ({ asset, nativeBalances, balances }) => {
         nativeBalances,
         balances as UserTokenData,
         asset as AssetWithData,
-        supportedTokens,
+        supportedTokensWithBalance,
         core,
       ),
     );
-  }, [nativeBalances?.native, nativeBalances?.wrappedBalance, balances?.componentTokenBalances]);
+  }, [
+    nativeBalances?.native,
+    nativeBalances?.wrappedBalance,
+    balances?.componentTokenBalances,
+    supportedTokensWithBalance,
+  ]);
 
   const callback = (
     receipt: ethers.ContractReceipt,
