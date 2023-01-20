@@ -4,7 +4,7 @@ import { BigNumber, ethers } from "ethers";
 import { JarDetails } from "picklefinance-core/lib/model/PickleModelJson";
 
 import { useAppSelector } from "v2/store";
-import { AssetWithData } from "v2/store/core";
+import { AssetWithData, CoreSelectors } from "v2/store/core";
 import { UserSelectors } from "v2/store/user";
 import { jarDecimals } from "v2/utils/user";
 import { isAcceptingDeposits, isJar, jarSupportsStaking } from "v2/store/core.helpers";
@@ -15,20 +15,43 @@ import WithdrawFlow from "./flows/withdraw/WithdrawFlow";
 import StakeFlow from "./flows/stake/StakeFlow";
 import UnstakeFlow from "./flows/unstake/UnstakeFlow";
 import { classNames, roundToSignificantDigits } from "v2/utils";
+import { useSelector } from "react-redux";
 import HarvestFlow from "./flows/harvest/HarvestFlow";
 import { useAccount } from "v2/hooks";
-
+import ZapFlow from "./flows/zap/ZapFlow";
+import { useWido } from "./flows/useWido";
+import { ChainNetwork } from "picklefinance-core";
 interface Props {
   asset: AssetWithData;
 }
 
 const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   const { t } = useTranslation("common");
+  const { supportedJars } = useWido();
   const account = useAccount();
 
   const isUserModelLoading = useAppSelector(UserSelectors.selectIsFetching);
-  const userTokenData = useAppSelector((state) =>
-    UserSelectors.selectTokenDataById(state, asset.details.apiKey, account),
+
+  const userTokenData = useAppSelector((state) => {
+    const tokenData = UserSelectors.selectTokenDataById(state, asset.details.apiKey, account);
+    return tokenData
+      ? tokenData
+      : {
+          assetKey: asset.details.apiKey,
+          componentTokenBalances: asset.depositToken.components?.reduce((acc: any, curr) => {
+            return (acc[curr] = { balance: "0", allowance: "0" }), acc;
+          }, {}),
+          depositTokenBalance: "0",
+          farmAllowance: "0",
+          jarAllowance: "0",
+          pAssetBalance: "0",
+          pStakedBalance: "0",
+          picklePending: "0",
+        };
+  });
+
+  const userNativeData = useAppSelector((state) =>
+    UserSelectors.selectNativeTokenDataByChain(state, asset.chain, account),
   );
 
   const decimals = jarDecimals(asset);
@@ -49,6 +72,12 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
 
   const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
 
+  const hasMainnetZap =
+    asset.chain === ChainNetwork.Ethereum &&
+    supportedJars.some(
+      ({ address }) => ethers.utils.getAddress(address) === ethers.utils.getAddress(asset.contract),
+    );
+
   return (
     <div className="flex space-x-3">
       <div className={classNames(jarSupportsStaking(asset) ? "grow self-start" : "w-1/2")}>
@@ -65,23 +94,28 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
                 </p>
               )}
             </span>
-            <ApprovalFlow
-              apiKey={asset.details.apiKey}
-              tokenAddress={asset.depositToken.addr}
-              tokenName={asset.depositToken.name}
-              spenderAddress={asset.contract}
-              storeAttribute="jarAllowance"
-              chainName={asset.chain}
-              visible={!userHasJarAllowance}
-              state={isAcceptingDeposits(asset) ? "enabled" : "disabled"}
-              type="jar"
-            />
-            {userHasJarAllowance && (
-              <div className="grid grid-cols-2 gap-3">
+            <span className="flex gap-3">
+              {!!(asset.depositToken.nativePath || hasMainnetZap) && (
+                <ZapFlow asset={asset} nativeBalances={userNativeData} balances={userTokenData} />
+              )}
+              <ApprovalFlow
+                apiKey={asset.details.apiKey}
+                tokenAddress={asset.depositToken.addr}
+                tokenName={asset.depositToken.name}
+                spenderAddress={asset.contract}
+                storeAttribute="jarAllowance"
+                chainName={asset.chain}
+                visible={!userHasJarAllowance}
+                state={isAcceptingDeposits(asset) ? "enabled" : "disabled"}
+                type="jar"
+              />
+              {userHasJarAllowance && (
                 <DepositFlow asset={asset} balances={userTokenData} type="jar" />
+              )}
+              {(userHasJarAllowance || jarTokens > 0) && (
                 <WithdrawFlow asset={asset} balances={userTokenData} />
-              </div>
-            )}
+              )}
+            </span>
           </div>
         </div>
         <div className="relative">

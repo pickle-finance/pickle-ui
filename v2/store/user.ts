@@ -7,6 +7,7 @@ import {
   UserData,
   UserTokenData,
   UserBrineryData,
+  ChainNativetoken,
 } from "picklefinance-core/lib/client/UserModel";
 
 import { RootState } from ".";
@@ -113,6 +114,30 @@ const userSlice = createSlice({
 
       state.accounts[account] = accountData;
     },
+
+    setNativeData: (
+      state,
+      action: PayloadAction<{
+        account: string;
+        chain: ChainNetwork;
+        isWrapped: boolean;
+        data: Partial<ChainNativetoken>;
+      }>,
+    ) => {
+      const { account, chain, isWrapped, data } = action.payload;
+      const accountData = state.accounts[account];
+
+      if (!accountData) return;
+
+      const chainNativeData = accountData.data.nativeTokens[chain];
+
+      accountData.data.nativeTokens = {
+        ...accountData.data.nativeTokens,
+        [chain]: { ...chainNativeData, ...data },
+      };
+
+      state.accounts[account] = accountData;
+    },
     setDillData: (
       state,
       action: PayloadAction<{ account: string; data: Partial<IUserDillStats> }>,
@@ -181,6 +206,7 @@ const {
   setIsFetching,
   setDillData,
   setTokenData,
+  setNativeData,
   setTokens,
   setBrineryData,
 } = userSlice.actions;
@@ -192,6 +218,7 @@ export const UserActions = {
   setIsFetching,
   setTokens,
   setTokenData,
+  setNativeData,
   setBrineryData,
 };
 
@@ -213,6 +240,16 @@ const selectTokenDataById = (
   if (!account) return;
 
   return state.user.accounts[account]?.data?.tokens[apiKey.toLowerCase()];
+};
+
+const selectNativeTokenDataByChain = (
+  state: RootState,
+  chain: ChainNetwork,
+  account: string | null | undefined,
+) => {
+  if (!account) return;
+
+  return state.user.accounts[account]?.data?.nativeTokens[chain];
 };
 const selectBrineryDataById = (
   state: RootState,
@@ -236,6 +273,7 @@ export const UserSelectors = {
   selectTokenDataById,
   selectUpdatedAt,
   selectBrineryDataById,
+  selectNativeTokenDataByChain,
 };
 
 export default userSlice.reducer;

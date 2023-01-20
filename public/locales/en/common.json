@@ -324,15 +324,18 @@
       "back": "Back",
       "close": "Close",
       "confirm": "Confirm",
+      "confirmZap": "Confirm Zap",
       "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
       "harvestAndExit": "Harvest and exit",
       "lock": "Lock",
       "retry": "Retry",
+      "poweredBy": "Powered by Wido",
       "stake": "Stake",
       "unstake": "Unstake",
-      "withdraw": "Withdraw"
+      "withdraw": "Withdraw",
+      "zap": "Zap"
     },
     "balances": {
       "amount": "Amount",
@@ -554,7 +557,8 @@
       "withdrawToken": "Withdraw {{ token }}",
       "yieldRates": "Yield rates",
       "yourApy": "Your APY: {{ apy }}",
-      "autoswap": "Swap deposit tokens to correct ratio"
+      "autoswap": "Swap deposit tokens to correct ratio",
+      "zapToToken": "Zap to {{ token }} Jar"
     },
     "swap": {
       "waitingToBeProcessed": "Waiting for your transaction to be processed",

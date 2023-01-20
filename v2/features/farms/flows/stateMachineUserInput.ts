@@ -1,10 +1,12 @@
 import { createMachine, assign } from "xstate";
+import { TokenSelect } from "./deposit/FormUniV3";
 
 interface DepositContext {
   txHash: string | undefined;
   amount: string;
   amount1?: string;
   useNative?: boolean;
+  token?: TokenSelect;
 }
 
 export enum States {
@@ -30,6 +32,7 @@ export const stateMachine = createMachine<DepositContext>({
     txHash: undefined,
     amount: "0",
     amount1: "0",
+    token: undefined,
     useNative: true,
   },
   states: {
@@ -40,6 +43,7 @@ export const stateMachine = createMachine<DepositContext>({
       entry: assign({
         amount: (_context, event) => event.amount,
         amount1: (_context, event) => event.amount1 || undefined,
+        token: (_context, event) => event.token || undefined,
         useNative: (_context, event) => event.useNative || false,
       }),
       on: {

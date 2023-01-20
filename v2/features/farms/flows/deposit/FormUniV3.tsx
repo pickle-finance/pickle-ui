@@ -12,8 +12,9 @@ import { truncateToMaxDecimals } from "v2/utils";
 import TokenOptions from "./TokenOptions";
 import { useAppSelector } from "v2/store";
 import OnOffToggle from "v2/components/OnOffToggle";
+import { getNativeName } from "../utils";
 
-type TokenType = "native" | "wrapped";
+type TokenType = "native" | "wrapped" | "token";
 
 export interface TokenSelect {
   label: string;
@@ -65,6 +66,24 @@ const FormUniV3: FC<Props> = ({
   const usedBalance1 =
     jar.token1?.isNative && selectedToken.value === "native" ? nativeBalance : balance1;
 
+  const nativeName = jar.token0?.isNative
+    ? getNativeName(jar.token0.name)
+    : jar.token1?.isNative
+    ? getNativeName(jar.token1?.name)
+    : undefined;
+
+  const wrappedName = nativeName && "W" + nativeName;
+
+  const options: Array<TokenSelect> = [
+    {
+      label: nativeName || "",
+      value: "native",
+    },
+    {
+      label: wrappedName || "",
+      value: "wrapped",
+    },
+  ];
   const displayBalance0Str = formatUnits(usedBalance0, token0Decimals);
 
   const displayBalance1Str = formatUnits(usedBalance1, token1Decimals);
@@ -142,11 +161,15 @@ const FormUniV3: FC<Props> = ({
   return (
     <>
       <h2 className="text-foreground-alt-100 flex font-title text-lg mb-4 ml-4">
-        <TokenOptions
-          selectedToken={selectedToken}
-          setSelectedToken={setSelectedToken}
-          token={jar.token0!}
-        />{" "}
+        {!jar?.token0?.isNative ? (
+          jar.token0?.name.toUpperCase()
+        ) : (
+          <TokenOptions
+            selectedToken={selectedToken}
+            setSelectedToken={setSelectedToken}
+            options={options}
+          />
+        )}
       </h2>
       <div className="bg-background-lightest rounded-xl px-4 py-2 mb-6">
         <div className="flex justify-between mb-2">
@@ -177,11 +200,15 @@ const FormUniV3: FC<Props> = ({
       </div>
 
       <h2 className="text-foreground-alt-100 flex font-title text-lg mt-6 mb-4 ml-4">
-        <TokenOptions
-          selectedToken={selectedToken}
-          setSelectedToken={setSelectedToken}
-          token={jar.token1!}
-        />
+        {!jar?.token1?.isNative ? (
+          jar.token1?.name.toUpperCase()
+        ) : (
+          <TokenOptions
+            selectedToken={selectedToken}
+            setSelectedToken={setSelectedToken}
+            options={options}
+          />
+        )}
       </h2>
       <div className="bg-background-lightest rounded-xl px-4 py-2 mb-6">
         <div className="flex justify-between mb-2">

@@ -8,6 +8,8 @@ import { UserData } from "picklefinance-core/lib/client/UserModel";
 
 import { bigNumberToTokenNumber, formatNumber } from "../format";
 import { Asset, isJar, tokenDecimals } from "v2/store/core.helpers";
+import { chain } from "lodash";
+import { ChainNetwork } from "picklefinance-core";
 
 export interface UserAssetDataWithPricesComponent {
   wei: BigNumber;
@@ -104,30 +106,34 @@ export const getUserAssetDataWithPrices = (
 
   const decimals = jarDecimals(asset);
 
-  let token0,
-    token1,
+  let token0: string | undefined,
+    token1: string | undefined,
     token0Balance: string,
     token1Balance: string,
     walletComponentTokens: { [key: string]: UserAssetDataWithPricesComponent } = {};
 
-  if (asset.protocol === AssetProtocol.UNISWAP_V3) {
+  if (
+    asset.protocol === AssetProtocol.UNISWAP_V3 ||
+    core.xykSwapProtocols.filter((xykProtocol) => xykProtocol.protocol === asset.protocol).length >
+      0
+  ) {
     token0 = asset.depositToken.components?.[0];
     token1 = asset.depositToken.components?.[1];
 
-    token0Balance = userTokenDetails.componentTokenBalances[token0 || ""].balance;
-    token1Balance = userTokenDetails.componentTokenBalances[token1 || ""].balance;
+    token0Balance = userTokenDetails.componentTokenBalances?.[token0 || ""]?.balance;
+    token1Balance = userTokenDetails.componentTokenBalances?.[token1 || ""]?.balance;
 
     const token0Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token0Balance?.toString() || "0"),
       tokenDecimals(token0, core),
-      core.prices[token0 || 0],
+      core.prices[token0!] || 0,
       1.0,
     );
 
     const token1Wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
       BigNumber.from(token1Balance?.toString() || "0"),
       tokenDecimals(token1, core),
-      core.prices[token1 || 0],
+      core.prices[token1!] || 0,
       1.0,
     );
 
@@ -136,6 +142,33 @@ export const getUserAssetDataWithPrices = (
       walletComponentTokens[token1] = token1Wallet;
     }
   }
+
+  // Native and wrapped balances for zapping
+  const chainNativeToken = userModel.nativeTokens[asset.chain];
+  const chainDetails = core.chains.find((x) => x.network === asset.chain);
+  const nativePrice = core.prices[chainDetails?.wrappedNativeAddress!] || 0;
+  const nativeTokenDetails = core.tokens.find(
+    (x) => x.contractAddr.toUpperCase() === chainDetails?.wrappedNativeAddress!,
+  );
+
+  const { native, wrappedBalance } = chainNativeToken;
+
+  const nativeWallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(native?.balance || "0"),
+    nativeTokenDetails?.decimals || 18,
+    nativePrice,
+    1.0,
+  );
+
+  const wrappedWallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
+    BigNumber.from(wrappedBalance || "0"),
+    nativeTokenDetails?.decimals || 18,
+    nativePrice,
+    1.0,
+  );
+
+  walletComponentTokens.native = nativeWallet;
+  walletComponentTokens.wrapped = wrappedWallet;
 
   const wallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
     BigNumber.from(userTokenDetails.depositTokenBalance),
