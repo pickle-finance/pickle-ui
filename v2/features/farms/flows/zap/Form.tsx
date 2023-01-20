@@ -23,6 +23,7 @@ import { classNames } from "v2/utils";
 import { ChainNetwork } from "picklefinance-core";
 import Spinner from "v2/components/Spinner";
 import { getWidoSpender, ZERO_ADDRESS } from "wido";
+import Link from "v2/components/Link";
 
 interface Props {
   jar: JarWithData;
@@ -269,7 +270,13 @@ const Form: FC<Props> = ({ jar, nextStep, zapTokens, balances }) => {
         </Button>
       )}
       {jar.chain == ChainNetwork.Ethereum && (
-        <p className="pt-3 font-bold text-foreground-alt-300">{t("v2.actions.poweredBy")}</p>
+        <Link href={"https://joinwido.com"}
+          className="pt-3 font-bold text-foreground-alt-300 w-full place-content-center text-base"
+          iconClassName="text-foreground-alt-300"
+          external
+        >
+          {t("v2.actions.poweredBy")}
+        </Link>
       )}
     </>
   );

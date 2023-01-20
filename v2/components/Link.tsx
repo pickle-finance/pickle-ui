@@ -9,9 +9,10 @@ interface Props extends HTMLAttributes<HTMLElement> {
   external?: boolean;
   active?: boolean;
   primary?: boolean;
+  iconClassName?: string;
 }
 
-const AppLink: FC<Props> = ({ active, children, className, external, href, primary, onClick }) => {
+const AppLink: FC<Props> = ({ active, children, className, iconClassName, external, href, primary, onClick }) => {
   return (
     <Link href={href}>
       <a
@@ -31,6 +32,7 @@ const AppLink: FC<Props> = ({ active, children, className, external, href, prima
             className={classNames(
               primary ? "text-accent" : "text-foreground",
               "group-hover:text-primary-light ml-2 flex-shrink-0 h-4 w-4 transition duration-300 ease-in-out",
+              iconClassName
             )}
             aria-hidden="true"
           />
