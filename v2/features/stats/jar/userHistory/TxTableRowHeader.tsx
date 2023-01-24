@@ -1,21 +1,25 @@
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PickleModelJson } from "picklefinance-core";
 import { FC, HTMLAttributes } from "react";
-import { classNames, formatDate, formatDollars } from "v2/utils";
+import { classNames, formatDate, formatDollars, weiToVisibleString } from "v2/utils";
 import Link from "v2/components/Link";
 import {
   PnlTransactionWrapper,
   StakingRewards,
+  UserTransfer,
   UserTx,
 } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
+import { t } from "xstate";
+import { BigNumber } from "ethers";
 
 const TxTableRowHeader: FC<{
   tx: PnlTransactionWrapper;
   userPnl: PnlTransactionWrapper[];
+  allPnlTx: PnlTransactionWrapper[];
   txSort: "old" | "new";
   core: PickleModelJson.PickleModelJson;
   open: boolean;
-}> = ({ tx, userPnl, txSort, core, open }) => {
+}> = ({ tx, userPnl, allPnlTx, txSort, core, open }) => {
   const chain = core.chains.find((c) => c.chainId == tx.userTransaction.chain_id);
   const txLinkUrl = `${chain?.explorer}/tx/${tx.userTransaction.hash}`;
   return (
@@ -43,7 +47,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {"tmp 1"}
+              {userTxToPtokenCount(tx.userTransaction)}
             </p>
           </div>
         </div>
@@ -52,7 +56,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {"tmp 2"}
+            {rollingBalances(userPnl, tx)}
             </p>
           </div>
         </div>
@@ -79,7 +83,7 @@ const TxTableRowHeader: FC<{
       </RowCell>
       <RowCell>
         <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-          {txSort === "old" ? txToPnl(tx, userPnl.slice(-1)[0]) : txToPnl(tx, userPnl[0])}
+          {txSort === "old" ? txToPnl(tx, allPnlTx.slice(-1)[0]) : txToPnl(tx, allPnlTx[0])}
         </p>
       </RowCell>
       <RowCell className={classNames(!open && "rounded-br-xl", "rounded-tr-xl w-10")}>
@@ -121,31 +125,77 @@ const txToPnl = (tx: PnlTransactionWrapper, lastTx: PnlTransactionWrapper) => {
   if (!["ZAPIN", "DEPOSIT"].includes(tx.userTransaction.transaction_type)) return "N/A";
   const index = tx.pnlRollingDataWithLots.lots.length - 1;
   const thisTxInFuture = lastTx.pnlRollingDataWithLots.lots[index];
-  const pnl = thisTxInFuture.saleProceedsUSD - thisTxInFuture.totalCostUsd;
-  return formatDollars(pnl, 2);
+  const fractionOpen = thisTxInFuture.weiRemaining.mul(1000).div(thisTxInFuture.wei).toNumber() / 1000;
+  const fractionClosed = 1 - fractionOpen;
+  if( fractionClosed === 0 ) {
+    return "OPEN";
+  }
+  const pnl = thisTxInFuture.saleProceedsUSD - (fractionClosed * thisTxInFuture.totalCostUsd);
+  const ret = formatDollars(pnl, 2);
+  if( fractionClosed > 0 && fractionClosed < 1) {
+    return ret + " (PARTIAL)";
+  }
+  return ret;
 };
 
-// TODO remove this function once logic is included in core
 const userTxToValue = (tx: UserTx) => {
-  let value = "$0";
+  let userTransfer: UserTransfer | undefined = findMainTransfer(tx);
+  if( !userTransfer ) {
+    return "$0.00";
+  }
+  return formatDollars(userTransfer.value, 2);
+};
+
+const findAllMainTransfers = (tx: UserTx): UserTransfer | undefined => {
+  let test: UserTransfer | undefined = undefined;
   if (tx.transaction_type === "DEPOSIT" || tx.transaction_type === "ZAPIN")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "WANT_DEPOSIT") value = formatDollars(t.value, 2);
+      if (t.transfer_type === "DEPOSIT") test = t;
     });
   if (tx.transaction_type === "WITHDRAW" || tx.transaction_type === "ZAPOUT")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "WANT_WITHDRAW") value = formatDollars(t.value, 2);
+      if (t.transfer_type === "WITHDRAW") test = t;
     });
   if (tx.transaction_type === "STAKE")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "STAKE") value = formatDollars(t.value, 2);
+      if (t.transfer_type === "STAKE") test = t;
     });
   if (tx.transaction_type === "UNSTAKE")
     tx.transfers.forEach((t) => {
-      if (t.transfer_type === "UNSTAKE") value = formatDollars(t.value, 2);
+      if (t.transfer_type === "UNSTAKE") test = t;
     });
-  return value;
-};
+  return test;
+}
+
+const findMainTransfer = (tx: UserTx): UserTransfer | undefined => {
+  let test: UserTransfer | undefined = undefined;
+  if (tx.transaction_type === "DEPOSIT" || tx.transaction_type === "ZAPIN")
+    tx.transfers.forEach((t) => {
+      if (t.transfer_type === "DEPOSIT") test = t;
+    });
+  if (tx.transaction_type === "WITHDRAW" || tx.transaction_type === "ZAPOUT")
+    tx.transfers.forEach((t) => {
+      if (t.transfer_type === "WITHDRAW") test = t;
+    });
+  if (tx.transaction_type === "STAKE")
+    tx.transfers.forEach((t) => {
+      if (t.transfer_type === "STAKE") test = t;
+    });
+  if (tx.transaction_type === "UNSTAKE")
+    tx.transfers.forEach((t) => {
+      if (t.transfer_type === "UNSTAKE") test = t;
+    });
+  return test;
+}
+const userTxToPtokenCount = (tx: UserTx) => {
+  let userTransfer: UserTransfer | undefined = findMainTransfer(tx);
+  if( !userTransfer ) {
+    return "0";
+  }
+  const value = userTransfer ? userTransfer.amount : "0";
+  return weiToVisibleString(value, userTransfer.decimals);
+}
+
 
 const txType: { [key: string]: string } = {
   DEPOSIT: "Deposit",
@@ -155,5 +205,33 @@ const txType: { [key: string]: string } = {
   ZAPIN: "Zap In",
   STAKE_REWARD: "Stake Reward",
 };
+
+const findDepositTokenDecimalCount = (userPnl: PnlTransactionWrapper[]) => {
+  for( let i = 0; i < userPnl.length; i++ ) {
+    if (userPnl[i].userTransaction.transaction_type === "DEPOSIT" || userPnl[i].userTransaction.transaction_type === "ZAPIN") {
+      const transfers = userPnl[i].userTransaction.transfers;
+      for( let j = 0; j < transfers.length; j++ ) {
+        if (transfers[j].transfer_type === "DEPOSIT") 
+          return transfers[j].decimals;
+      }
+    }
+  };
+  return 18;
+}
+const rollingBalances = (userPnl: PnlTransactionWrapper[], tx: PnlTransactionWrapper) => {
+  const weiBalance = tx.pnlRollingDataWithLots.rollingWeiCount.toString();
+  let dec: number = findDepositTokenDecimalCount(userPnl);
+
+  let locked: BigNumber = BigNumber.from(0);
+  let remaining: BigNumber = BigNumber.from(0);
+  for( let i = 0; i < tx.pnlRollingDataWithLots.lots.length; i++ ) {
+    locked = locked.add(tx.pnlRollingDataWithLots.lots[i].weiLocked);
+    remaining = remaining.add(tx.pnlRollingDataWithLots.lots[i].weiRemaining);
+  }
+  const unlocked = remaining.sub(locked);
+  const unlockedStr = weiToVisibleString(unlocked.toString(), dec);
+  const lockedStr = weiToVisibleString(locked.toString(), dec);
+  return unlockedStr + " / " + lockedStr;
+}
 
 export default TxTableRowHeader;

@@ -32,6 +32,13 @@ export const formatDate = (value: Date): string => {
   return formatter.format(value);
 };
 
+export const formatDollarsAddDecimalsForSmallNumbers = (value: number, precision = 0): string => {
+  if( value === 0 )
+    return formatDollars(value, 0);
+  if( value < 10 )
+    return formatDollars(value, 2);
+  return formatDollars(value, 0);
+}
 export const formatDollars = (value: number, precision = 0): string => {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -106,4 +113,26 @@ export const toTitleCase = (str: string | String) => {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join(" ");
+};
+
+export const weiToVisibleString = (wei: string, decimals: number): string => {
+  if( wei === "0") {
+    return "0";
+  }
+  const digits = wei.length; 
+  let order = digits - decimals;
+  if( order > 6 ) {
+    const digitOne = wei.substring(0,1);
+    const digitRest = wei.substring(1, 4);
+    return digitOne + "." + digitRest + "E" + order;
+  } else if( order < -3) {
+    const digitOne = wei.substring(0,1);
+    const digitRest = wei.substring(1, 4);
+    return digitOne + "." + digitRest + "E" + order;
+  } else {
+    const wholes = wei.substring(0,order);
+    const decimals = wei.substring(order+1);
+    return wholes + "." + decimals.substring(0,3);
+  }
+  return wei;
 };

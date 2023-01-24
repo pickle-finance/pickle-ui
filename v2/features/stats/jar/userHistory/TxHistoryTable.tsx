@@ -30,16 +30,16 @@ const TxHistoryTable: FC<{
               <TxTableHeaderCell label="Date/Time" />
               <TxTableHeaderCell label="TX Type" />
               <TxTableHeaderCell label="TX Hash" />
-              <TxTableHeaderCell label="Jar Tokens" />
-              <TxTableHeaderCell label="Token Bal." />
+              <TxTableHeaderCell label="Jar Tokens In Tx" />
+              <TxTableHeaderCell label="Balances (wallet/staked)" />
               <TxTableHeaderCell label="TX Value" />
               <TxTableHeaderCell label="Rewards" />
-              <TxTableHeaderCell label="Profit/Loss When Closed" />
+              <TxTableHeaderCell label="Realized Profit/Loss" />
               <TxTableHeaderCell label="" />
             </tr>
           </thead>
           <tbody className="text-foreground mt-12">
-            <TxTableBody userPnl={displayPnl} core={core} addrs={addrs} txSort={txSort} />
+            <TxTableBody userPnl={displayPnl} allPnlTx={sortedPnl} core={core} addrs={addrs} txSort={txSort} />
           </tbody>
         </table>
         <div className="flex justify-center mt-4">

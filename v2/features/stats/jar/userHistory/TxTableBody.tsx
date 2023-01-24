@@ -11,10 +11,11 @@ import { PnlTransactionWrapper } from "picklefinance-core/lib/client/pnl/UserHis
 
 const TxTableBody: FC<{
   userPnl: PnlTransactionWrapper[];
+  allPnlTx: PnlTransactionWrapper[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
   txSort: "old" | "new";
-}> = ({ userPnl, core, addrs, txSort }) => {
+}> = ({ userPnl, allPnlTx, core, addrs, txSort }) => {
   return (
     <>
       {txSort === "old"
@@ -25,6 +26,7 @@ const TxTableBody: FC<{
                 key={uuid()}
                 tx={tx}
                 userPnl={userPnl}
+                allPnlTx={allPnlTx}
                 txSort={txSort}
                 core={core}
                 addrs={addrs}
@@ -37,6 +39,7 @@ const TxTableBody: FC<{
                 key={uuid()}
                 tx={tx}
                 userPnl={userPnl}
+                allPnlTx={allPnlTx}
                 txSort={txSort}
                 core={core}
                 addrs={addrs}
@@ -49,10 +52,11 @@ const TxTableBody: FC<{
 const TxTableRow: FC<{
   tx: PnlTransactionWrapper;
   userPnl: PnlTransactionWrapper[];
+  allPnlTx: PnlTransactionWrapper[];
   txSort: "old" | "new";
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-}> = ({ tx, userPnl, txSort, core, addrs }) => {
+}> = ({ tx, userPnl, allPnlTx, txSort, core, addrs }) => {
   const chain: RawChain | undefined = core.chains.filter(
     (c) => c.chainId === tx.userTransaction.chain_id,
   )[0];
@@ -70,6 +74,7 @@ const TxTableRow: FC<{
                 <TxTableRowHeader
                   tx={tx}
                   userPnl={userPnl}
+                  allPnlTx={allPnlTx}
                   txSort={txSort}
                   core={core}
                   open={open}
