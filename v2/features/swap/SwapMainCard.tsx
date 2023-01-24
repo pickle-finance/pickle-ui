@@ -252,82 +252,85 @@ const SwapMainCard: FC = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="h-4/5	w-2/5 p-4 border-solid border-2 rounded-2xl bg-green-600">
-        {openConfirmationalModel ? (
-          <ConfirmationSwap
-            token1={token1}
-            token2={token2}
-            confirmationalSwap={confirmationalSwap}
-            setOpenConfirmationalModel={setOpenConfirmationalModel}
-            getFee={getFee}
-            kind={kind}
-            costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
-            slippageTolerance={slippageTolerance}
-          />
-        ) : (
-          <div>
-            <SettingsTab
-              deadline={deadLine}
-              setDeadline={setDeadLine}
-              setSlippageTolerance={setSlippageTolerance}
+      <div className="bg-background-light rounded-2xl border border-foreground-alt-500 shadow">
+        <div className="relative px-6 pt-4 sm:px-8 sm:pt-6 border-b border-foreground-alt-500">
+          {" "}
+          {openConfirmationalModel ? (
+            <ConfirmationSwap
+              token1={token1}
+              token2={token2}
+              confirmationalSwap={confirmationalSwap}
+              setOpenConfirmationalModel={setOpenConfirmationalModel}
+              getFee={getFee}
+              kind={kind}
+              costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
               slippageTolerance={slippageTolerance}
             />
-            <form onSubmit={handleSubmit((form: SwapForm) => openConfirmational(form))}>
-              <CurrencyInput
-                control={control}
-                inputName="amount1"
-                selectorName="token1"
-                list={LIST_WITH_CHAINID}
-                tokenA={token1}
-                tokenB={token2}
-                tokenBalance={token1Balance}
-                setValue={setValue}
-                setKind={setKind}
-                kind={OrderKind.SELL}
+          ) : (
+            <div>
+              <SettingsTab
+                deadline={deadLine}
+                setDeadline={setDeadLine}
+                setSlippageTolerance={setSlippageTolerance}
+                slippageTolerance={slippageTolerance}
               />
-              <div className="text-center mb-4">
-                <FlipTokens onClick={flip} />
-              </div>
-              <CurrencyInput
-                control={control}
-                inputName="amount2"
-                selectorName="token2"
-                list={LIST_WITH_CHAINID}
-                tokenA={token2}
-                tokenB={token1}
-                tokenBalance={token2Balance}
-                setValue={setValue}
-                setKind={setKind}
-                kind={OrderKind.BUY}
-              />
-              <SwapInfo
-                isEligibleQoute={isEligibleQoute}
-                qoute={qoute}
-                costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
-                token1={token1}
-                token2={token2}
-                getFee={getFee}
-                kind={kind}
-              />
-              <ErrorMessage error={errorMessage ?? ""} />
-              <div className={!errorMessage ? "py-3" : ""}>
-                <div className={!visibleApproval ? "pb-3" : "mb-2"}>
-                  <ApprovalFlow
-                    visible={visibleApproval && !qoute.error}
-                    token={token1?.value?.address ?? ""}
-                    setVisibleApproval={setVisibleApproval}
-                  />
+              <form onSubmit={handleSubmit((form: SwapForm) => openConfirmational(form))}>
+                <CurrencyInput
+                  control={control}
+                  inputName="amount1"
+                  selectorName="token1"
+                  list={LIST_WITH_CHAINID}
+                  tokenA={token1}
+                  tokenB={token2}
+                  tokenBalance={token1Balance}
+                  setValue={setValue}
+                  setKind={setKind}
+                  kind={OrderKind.SELL}
+                />
+                <div className="text-center mb-4">
+                  <FlipTokens onClick={flip} />
                 </div>
-                <SwapButtons
-                  disabled={isEmpty(qoute.data) || !!qoute.error || visibleApproval}
-                  type="submit"
-                >
-                  {t("v2.swap.swapSubmitButton")}
-                </SwapButtons>
-              </div>
-            </form>
-          </div>
-        )}
+                <CurrencyInput
+                  control={control}
+                  inputName="amount2"
+                  selectorName="token2"
+                  list={LIST_WITH_CHAINID}
+                  tokenA={token2}
+                  tokenB={token1}
+                  tokenBalance={token2Balance}
+                  setValue={setValue}
+                  setKind={setKind}
+                  kind={OrderKind.BUY}
+                />
+                <SwapInfo
+                  isEligibleQoute={isEligibleQoute}
+                  qoute={qoute}
+                  costOfOneTokenWRTOtherToken={costOfOneTokenWRTOtherToken}
+                  token1={token1}
+                  token2={token2}
+                  getFee={getFee}
+                  kind={kind}
+                />
+                <ErrorMessage error={errorMessage ?? ""} />
+                <div className={!errorMessage ? "py-3" : ""}>
+                  <div className={!visibleApproval ? "pb-3" : "mb-2"}>
+                    <ApprovalFlow
+                      visible={visibleApproval && !qoute.error}
+                      token={token1?.value?.address ?? ""}
+                      setVisibleApproval={setVisibleApproval}
+                    />
+                  </div>
+                  <SwapButtons
+                    disabled={isEmpty(qoute.data) || !!qoute.error || visibleApproval}
+                    type="submit"
+                  >
+                    {t("v2.swap.swapSubmitButton")}
+                  </SwapButtons>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
