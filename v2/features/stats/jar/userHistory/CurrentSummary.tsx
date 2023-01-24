@@ -17,7 +17,9 @@ const CurrentSummary: FC<{ lastTxn: PnlTransactionWrapper; jar: JarDefinition }>
     lastTxn.pnlRollingDataWithLots.rollingWeiCount.gt(0) && jar.depositToken.price
       ? lastTxn.pnlRollingDataWithLots.rollingWeiCount.mul(jar.depositToken.price).toNumber()
       : 0;
+  console.log("rolling data: " + JSON.stringify(lastTxn.pnlRollingDataWithLots));
   const rewardsSummedByToken = sumRewardsByToken(lastTxn.pnlRollingDataWithLots.rollingRewards);
+  console.log("rewardsSummedByToken: " + JSON.stringify(rewardsSummedByToken));
   const totalRewards = Object.values(rewardsSummedByToken).reduce((acc, curr) => acc + curr);
   return (
     <div className="p-4 mb-12 text-center border border-foreground-alt-200 rounded-xl">
@@ -48,6 +50,8 @@ const SummaryCard: FC<{ value: any; label: string }> = ({ value, label }) => (
 );
 
 const sumRewardsByToken = (rewards: StakingRewards) => {
+  console.log("sumRewardsByToken: " + JSON.stringify(rewards));
+
   const rewardsSummedByToken: { [tokenAddr: string]: number } = {};
   Object.keys(rewards).forEach((token) => {
     let tokenRewards = 0;

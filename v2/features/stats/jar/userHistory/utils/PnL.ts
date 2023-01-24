@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { UserTx } from "v2/types";
+import { UserTx } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 
 export const generatePnL = (userJarHistory: UserTx[]) => {
   const pnl: (PnlTxn | undefined)[] = userJarHistory.map((txn) => {

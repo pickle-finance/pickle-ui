@@ -19,6 +19,7 @@ import {
   UserJarHistory,
 } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 import RelatedTokens from "./jar/RelatedTokens";
+import { useAccount } from "v2/hooks";
 
 const JarStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
@@ -28,8 +29,8 @@ const JarStats: FC<{
   page: "platform" | "chain" | "jar" | undefined;
 }> = ({ core, jar, ready, setReady, page }) => {
   const { t } = useTranslation("common");
-  // const account = useAccount();
-  const account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
+  const account = useAccount();
+  //const account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);

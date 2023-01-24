@@ -34,7 +34,7 @@ const TxHistoryTable: FC<{
               <TxTableHeaderCell label="Token Bal." />
               <TxTableHeaderCell label="TX Value" />
               <TxTableHeaderCell label="Rewards" />
-              <TxTableHeaderCell label="Profit/Loss" />
+              <TxTableHeaderCell label="Profit/Loss When Closed" />
               <TxTableHeaderCell label="" />
             </tr>
           </thead>

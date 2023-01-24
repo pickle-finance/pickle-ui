@@ -118,7 +118,7 @@ const rewardsArrToValue = (rewards: StakingRewards) => {
 };
 
 const txToPnl = (tx: PnlTransactionWrapper, lastTx: PnlTransactionWrapper) => {
-  if (!["ZAPIN", "DEPOSIT"].includes(tx.userTransaction.transaction_type)) return "--";
+  if (!["ZAPIN", "DEPOSIT"].includes(tx.userTransaction.transaction_type)) return "N/A";
   const index = tx.pnlRollingDataWithLots.lots.length - 1;
   const thisTxInFuture = lastTx.pnlRollingDataWithLots.lots[index];
   const pnl = thisTxInFuture.saleProceedsUSD - thisTxInFuture.totalCostUsd;
@@ -153,6 +153,7 @@ const txType: { [key: string]: string } = {
   UNSTAKE: "Unstake",
   WITHDRAW: "Withdraw",
   ZAPIN: "Zap In",
+  STAKE_REWARD: "Stake Reward",
 };
 
 export default TxTableRowHeader;
