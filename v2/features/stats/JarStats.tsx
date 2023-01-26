@@ -97,7 +97,7 @@ const JarStats: FC<{
     return (
       <>
         <div className="mb-3 min-w-min">
-          {asset.depositTokensInJar && <FarmsTable singleAsset={asset} hideDescription={true} />}
+          {asset && asset.depositTokensInJar && <FarmsTable singleAsset={asset} hideDescription={true} />}
         </div>
         {userPnl && userPnl.length > 0 && core && assetJar && (
           <TxHistoryContainer userPnl={userPnl} core={core} addrs={addrs} jar={assetJar} />
@@ -134,6 +134,6 @@ const getJarData = async (jarKey: string): Promise<JarChartData> => {
 const DEBUG_OUT = (msg: any) => {
   if (GLOBAL_DEBUG) console.log(msg);
 };
-const GLOBAL_DEBUG = true;
+const GLOBAL_DEBUG = false;
 
 export default JarStats;
