@@ -32,8 +32,6 @@ const DillBalanceCard: FC = () => {
   }
 
   if (userModel && userModel.dill && userModel.dill.balance) {
-    // TODO this specific logic of dividing by 1e18 but then getting 3 decimals seems common.
-    // Might want to extract to a utility
     dill = (BigNumber.from(userModel.dill.balance).div(1e10).div(1e5).toNumber() / 1e3).toString();
     if (userModel.dill.pickleLocked)
       lockedPickles = (

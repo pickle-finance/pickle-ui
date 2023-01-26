@@ -3,13 +3,13 @@ import { FC, useEffect, useState } from "react";
 import { PlatformData, SetFunction } from "v2/types";
 import ChainTableContainer from "./platform/ChainTableContainer";
 import ChartContainer from "./shared/ChartContainer";
-import { readyState } from "pages/stats";
+import { ReadyState } from "pages/stats";
 import PlatformHeader from "./platform/PlatformHeader";
 
 const PlatformStats: FC<{
   setChain: SetFunction;
   core: PickleModelJson.PickleModelJson | undefined;
-  ready: readyState;
+  ready: ReadyState;
   setReady: SetFunction;
   page: "platform" | "chain" | "jar" | undefined;
 }> = ({ setChain, core, ready, setReady, page }) => {
@@ -18,7 +18,7 @@ const PlatformStats: FC<{
     const getData = async (): Promise<void> => {
       getPlatformData()
         .then((platformData) => setDataSeries(platformData))
-        .then(() => setReady((prev: readyState) => ({ ...prev, platform: true })));
+        .then(() => setReady((prev: ReadyState) => ({ ...prev, platform: true })));
     };
     getData();
   }, []);
