@@ -151,7 +151,8 @@ export const getUserAssetDataWithPrices = (
     (x) => x.contractAddr.toUpperCase() === chainDetails?.wrappedNativeAddress!,
   );
 
-  const { native, wrappedBalance } = chainNativeToken;
+  const native = chainNativeToken ? chainNativeToken.native : undefined;
+  const wrappedBalance = chainNativeToken ? chainNativeToken.wrappedBalance : undefined;
 
   const nativeWallet: UserAssetDataWithPricesComponent = createUserAssetDataComponent(
     BigNumber.from(native?.balance || "0"),
