@@ -131,7 +131,7 @@ export const weiToVisibleString = (wei: string, decimals: number): string => {
     return digitOne + "." + digitRest + "E" + order;
   } else {
     const wholes = wei.substring(0,order);
-    const decimals = wei.substring(order+1);
+    const decimals = wei.substring(order);
     return wholes + "." + decimals.substring(0,3);
   }
   return wei;

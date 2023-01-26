@@ -12,6 +12,7 @@ const CurrentSummary: FC<{ lastTxn: PnlTransactionWrapper; jar: JarDefinition }>
   lastTxn,
   jar,
 }) => {
+  console.log(JSON.stringify(lastTxn, null, 2));
   const currentCost = lastTxn.pnlRollingDataWithLots.costOfOpenPositions;
   const decimals = jar.details.decimals || jar.depositToken.decimals || 18;
   const jarTokens = weiToVisibleString(lastTxn.pnlRollingDataWithLots.rollingWeiCount.toString(), decimals);
@@ -19,6 +20,9 @@ const CurrentSummary: FC<{ lastTxn: PnlTransactionWrapper; jar: JarDefinition }>
     (lastTxn.pnlRollingDataWithLots.rollingWeiCount.gt(0) && jar.depositToken.price
       ? weiMulPriceInDollars(lastTxn.pnlRollingDataWithLots.rollingWeiCount, jar.depositToken.price, decimals)
       : 0);
+  console.log(JSON.stringify([currentCost, decimals, jarTokens, currentUSDValue], null, 2));
+  console.log(JSON.stringify([lastTxn.pnlRollingDataWithLots.rollingWeiCount.toString(), jar.depositToken.price, decimals], null, 2));
+
   // console.log("rolling data: " + JSON.stringify(lastTxn.pnlRollingDataWithLots));
   const rewardsSummedByToken = sumRewardsByToken(lastTxn.pnlRollingDataWithLots.rollingRewards);
   // console.log("rewardsSummedByToken: " + JSON.stringify(rewardsSummedByToken));
