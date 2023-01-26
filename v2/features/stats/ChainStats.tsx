@@ -11,13 +11,13 @@ import {
 } from "v2/features/stats/chain/BigMoverUtils";
 import { PickleModelJson } from "picklefinance-core";
 import { ChainSelectData } from "./ChainSelect";
-import { ReadyState } from "pages/stats";
+import { readyState } from "pages/stats";
 
 const ChainStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   chain: ChainSelectData;
   setJar: SetFunction;
-  ready: ReadyState;
+  ready: readyState;
   setReady: SetFunction;
   page: "platform" | "chain" | "jar" | undefined;
 }> = ({ core, chain, setJar, ready, setReady, page }) => {
@@ -30,7 +30,7 @@ const ChainStats: FC<{
       if (Object.keys(chain).length > 0)
         getChainData(chain.value)
           .then((data) => setChainData(data))
-          .then(() => setReady((prev: ReadyState) => ({ ...prev, chain: true })));
+          .then(() => setReady((prev: readyState) => ({ ...prev, chain: true })));
     };
     getData();
   }, [chain]);
@@ -44,7 +44,7 @@ const ChainStats: FC<{
 
   useEffect(() => {
     if (tokenPctChangeData.length > 0 && tvlChange.length > 0)
-      setReady((prev: ReadyState) => ({ ...prev, chain: true }));
+      setReady((prev: readyState) => ({ ...prev, chain: true }));
   }, [tokenPctChangeData, tvlChange]);
 
   tokenPctChangeData.sort((a, b) => (a.tokenPriceChange || 0) - (b.tokenPriceChange || 0));

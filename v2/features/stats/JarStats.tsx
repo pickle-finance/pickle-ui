@@ -9,7 +9,7 @@ import DocContainer from "v2/features/stats/jar/DocContainer";
 import RevTableContainer from "v2/features/stats/jar/RevTableContainer";
 import FarmsTable from "v2/features/farms/FarmsTable";
 import { JarSelectData } from "./JarSelect";
-import { ReadyState } from "pages/stats";
+import { readyState } from "pages/stats";
 import { JarDefinition } from "picklefinance-core/lib/model/PickleModelJson";
 import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
@@ -24,7 +24,7 @@ import { useAccount } from "v2/hooks";
 const JarStats: FC<{
   core: PickleModelJson.PickleModelJson | undefined;
   jar: JarSelectData;
-  ready: ReadyState;
+  ready: readyState;
   setReady: SetFunction;
   page: "platform" | "chain" | "jar" | undefined;
 }> = ({ core, jar, ready, setReady, page }) => {
@@ -64,7 +64,7 @@ const JarStats: FC<{
       if (Object.keys(jar).length > 0)
         getJarData(jar.value)
           .then((data) => setJarData(data))
-          .then(() => setReady((prev: ReadyState) => ({ ...prev, jar: true })));
+          .then(() => setReady((prev: readyState) => ({ ...prev, jar: true })));
     };
     getData();
   }, [jar]); // eslint-disable-line
