@@ -6,12 +6,13 @@ import Pagination from "./Pagination";
 import TxTableBody from "./TxTableBody";
 
 const TxHistoryTable: FC<{
+  wallet: string, 
   userPnl: PnlTransactionWrapper[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
   txSort: "old" | "new";
   className?: string;
-}> = ({ userPnl, core, addrs, txSort, className }) => {
+}> = ({ wallet, userPnl, core, addrs, txSort, className }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const sortedPnl =
     txSort === "old"
@@ -39,7 +40,7 @@ const TxHistoryTable: FC<{
             </tr>
           </thead>
           <tbody className="text-foreground mt-12">
-            <TxTableBody userPnl={displayPnl} allPnlTx={sortedPnl} core={core} addrs={addrs} txSort={txSort} />
+            <TxTableBody wallet={wallet} userPnl={displayPnl} allPnlTx={sortedPnl} core={core} addrs={addrs} txSort={txSort} />
           </tbody>
         </table>
         <div className="flex justify-center mt-4">

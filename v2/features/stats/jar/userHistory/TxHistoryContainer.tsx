@@ -8,12 +8,13 @@ import SortToggle from "./SortToggle";
 import TxHistoryTable from "./TxHistoryTable";
 
 const TxHistoryContainer: FC<{
+  wallet: string;
   userPnl: PnlTransactionWrapper[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
   jar: JarDefinition;
   className?: string;
-}> = ({ userPnl, core, addrs, jar, className }) => {
+}> = ({ wallet, userPnl, core, addrs, jar, className }) => {
   const [txSort, setTxSort] = useState<"old" | "new">("old");
   const lastTxn = userPnl.sort(
     (a, b) => b.userTransaction.timestamp - a.userTransaction.timestamp,
@@ -29,7 +30,7 @@ const TxHistoryContainer: FC<{
           <SortToggle txSort={txSort} setTxSort={setTxSort} />
         </div>
       </div>
-      {core && <TxHistoryTable userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />}
+      {core && <TxHistoryTable wallet={wallet} userPnl={userPnl} core={core} addrs={addrs} txSort={txSort} />}
     </div>
   );
 };

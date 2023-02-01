@@ -100,7 +100,7 @@ const JarStats: FC<{
           {asset && asset.depositTokensInJar && <FarmsTable singleAsset={asset} hideDescription={true} />}
         </div>
         {userPnl && userPnl.length > 0 && core && assetJar && (
-          <TxHistoryContainer userPnl={userPnl} core={core} addrs={addrs} jar={assetJar} />
+          <TxHistoryContainer wallet={account || ""} userPnl={userPnl} core={core} addrs={addrs} jar={assetJar} />
         )}
         <ChartContainer jarData={jarData} />
         {jarData && jarData.documentation && <DocContainer docs={jarData.documentation} />}

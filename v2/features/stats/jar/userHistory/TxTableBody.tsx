@@ -10,12 +10,13 @@ import { v4 as uuid } from "uuid";
 import { PnlTransactionWrapper } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 
 const TxTableBody: FC<{
+  wallet: string,
   userPnl: PnlTransactionWrapper[];
   allPnlTx: PnlTransactionWrapper[];
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
   txSort: "old" | "new";
-}> = ({ userPnl, allPnlTx, core, addrs, txSort }) => {
+}> = ({ wallet, userPnl, allPnlTx, core, addrs, txSort }) => {
   return (
     <>
       {txSort === "old"
@@ -23,6 +24,7 @@ const TxTableBody: FC<{
             .sort((a, b) => a.userTransaction.timestamp - b.userTransaction.timestamp)
             .map((tx) => (
               <TxTableRow
+                wallet={wallet}
                 key={uuid()}
                 tx={tx}
                 userPnl={userPnl}
@@ -36,6 +38,7 @@ const TxTableBody: FC<{
             .sort((a, b) => b.userTransaction.timestamp - a.userTransaction.timestamp)
             .map((tx) => (
               <TxTableRow
+                wallet={wallet}
                 key={uuid()}
                 tx={tx}
                 userPnl={userPnl}
@@ -50,13 +53,14 @@ const TxTableBody: FC<{
 };
 
 const TxTableRow: FC<{
+  wallet: string;
   tx: PnlTransactionWrapper;
   userPnl: PnlTransactionWrapper[];
   allPnlTx: PnlTransactionWrapper[];
   txSort: "old" | "new";
   core: PickleModelJson.PickleModelJson;
   addrs: { [key: string]: string };
-}> = ({ tx, userPnl, allPnlTx, txSort, core, addrs }) => {
+}> = ({ wallet, tx, userPnl, allPnlTx, txSort, core, addrs }) => {
   const chain: RawChain | undefined = core.chains.filter(
     (c) => c.chainId === tx.userTransaction.chain_id,
   )[0];
@@ -72,6 +76,7 @@ const TxTableRow: FC<{
             >
               {core && (
                 <TxTableRowHeader
+                  wallet={wallet}
                   tx={tx}
                   userPnl={userPnl}
                   allPnlTx={allPnlTx}

@@ -13,13 +13,14 @@ import { t } from "xstate";
 import { BigNumber } from "ethers";
 
 const TxTableRowHeader: FC<{
+  wallet: string;
   tx: PnlTransactionWrapper;
   userPnl: PnlTransactionWrapper[];
   allPnlTx: PnlTransactionWrapper[];
   txSort: "old" | "new";
   core: PickleModelJson.PickleModelJson;
   open: boolean;
-}> = ({ tx, userPnl, allPnlTx, txSort, core, open }) => {
+}> = ({ wallet, tx, userPnl, allPnlTx, txSort, core, open }) => {
   const chain = core.chains.find((c) => c.chainId == tx.userTransaction.chain_id);
   const txLinkUrl = `${chain?.explorer}/tx/${tx.userTransaction.hash}`;
   return (
@@ -33,7 +34,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {txType[tx.userTransaction.transaction_type]}
+              {txTypeDbToString(tx.userTransaction.transaction_type)}
             </p>
           </div>
         </div>
@@ -47,7 +48,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {userTxToPtokenCount(tx.userTransaction)}
+              {userTxToPtokenCount(tx.userTransaction, wallet)}
             </p>
           </div>
         </div>
@@ -65,7 +66,7 @@ const TxTableRowHeader: FC<{
         <div className="flex items-center">
           <div className="ml-2">
             <p className="font-title font-medium text-base leading-5 text-foreground-alt-200">
-              {userTxToValue(tx.userTransaction)}
+              {userTxToValue(tx.userTransaction, wallet)}
             </p>
           </div>
         </div>
@@ -122,7 +123,7 @@ const rewardsArrToValue = (rewards: StakingRewards) => {
 };
 
 const txToPnl = (tx: PnlTransactionWrapper, lastTx: PnlTransactionWrapper) => {
-  if (!["ZAPIN", "DEPOSIT"].includes(tx.userTransaction.transaction_type)) return "N/A";
+  if (!["ZAPIN", "DEPOSIT", "AIRDROP"].includes(tx.userTransaction.transaction_type)) return "N/A";
   const index = tx.pnlRollingDataWithLots.lots.length - 1;
   const thisTxInFuture = lastTx.pnlRollingDataWithLots.lots[index];
   const fractionOpen = thisTxInFuture.weiRemaining.mul(1000).div(thisTxInFuture.wei).toNumber() / 1000;
@@ -138,8 +139,8 @@ const txToPnl = (tx: PnlTransactionWrapper, lastTx: PnlTransactionWrapper) => {
   return ret;
 };
 
-const userTxToValue = (tx: UserTx) => {
-  let userTransfer: UserTransfer | undefined = findMainTransfer(tx);
+const userTxToValue = (tx: UserTx, wallet: string) => {
+  let userTransfer: UserTransfer | undefined = findMainTransfer(tx, wallet);
   if( !userTransfer ) {
     return "$0.00";
   }
@@ -167,7 +168,7 @@ const findAllMainTransfers = (tx: UserTx): UserTransfer | undefined => {
   return test;
 }
 
-const findMainTransfer = (tx: UserTx): UserTransfer | undefined => {
+const findMainTransfer = (tx: UserTx, wallet: string): UserTransfer | undefined => {
   let test: UserTransfer | undefined = undefined;
   if (tx.transaction_type === "DEPOSIT" || tx.transaction_type === "ZAPIN")
     tx.transfers.forEach((t) => {
@@ -185,10 +186,18 @@ const findMainTransfer = (tx: UserTx): UserTransfer | undefined => {
     tx.transfers.forEach((t) => {
       if (t.transfer_type === "UNSTAKE") test = t;
     });
+  if (tx.transaction_type === "AIRDROP") {
+    if( wallet && wallet.length > 0 ) {
+      const transfers = tx.transfers.filter((x) => x.toAddress.toLowerCase() === wallet.toLowerCase());
+      if( transfers && transfers.length > 0 ) {
+        test = transfers[0];
+      }
+    }
+  }
   return test;
 }
-const userTxToPtokenCount = (tx: UserTx) => {
-  let userTransfer: UserTransfer | undefined = findMainTransfer(tx);
+const userTxToPtokenCount = (tx: UserTx, wallet: string) => {
+  let userTransfer: UserTransfer | undefined = findMainTransfer(tx, wallet);
   if( !userTransfer ) {
     return "0";
   }
@@ -196,14 +205,19 @@ const userTxToPtokenCount = (tx: UserTx) => {
   return weiToVisibleString(value, userTransfer.decimals);
 }
 
+const txTypeDbToString = (dbVal: string): string => {
+  if( txTypeOverrides[dbVal] ) {
+    return txTypeOverrides[dbVal];
+  }
+  const arr: string[] = dbVal.split("_").map((x) => x.toLowerCase()).map(
+    (x) => x.length === 0 ? "" : x[0].toUpperCase() + (x.length === 1 ? "" : x.substring(1)));
+  return arr.join(" ");
+}
 
-const txType: { [key: string]: string } = {
-  DEPOSIT: "Deposit",
-  STAKE: "Stake",
-  UNSTAKE: "Unstake",
-  WITHDRAW: "Withdraw",
+const txTypeOverrides: { [key: string]: string } = {
   ZAPIN: "Zap In",
-  STAKE_REWARD: "Stake Reward",
+  ZAPOUT: "Zap Out",
+  MIGRATIO: "Migration",
 };
 
 const findDepositTokenDecimalCount = (userPnl: PnlTransactionWrapper[]) => {
