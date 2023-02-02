@@ -194,6 +194,15 @@ const findMainTransfer = (tx: UserTx, wallet: string): UserTransfer | undefined 
       }
     }
   }
+  if (tx.transaction_type === "TRANSFER") {
+    if( wallet && wallet.length > 0 ) {
+      const transfers = tx.transfers.filter((x) => x.toAddress.toLowerCase() === wallet.toLowerCase());
+      if( transfers && transfers.length > 0 ) {
+        test = transfers[0];
+      }
+    }
+  }
+
   return test;
 }
 const userTxToPtokenCount = (tx: UserTx, wallet: string) => {
