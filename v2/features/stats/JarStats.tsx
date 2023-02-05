@@ -15,8 +15,9 @@ import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
 import { UserJarHistoryPnlGenerator } from "picklefinance-core";
 import {
+  HistoryAssetType,
   PnlTransactionWrapper,
-  UserJarHistory,
+  UserHistory,
 } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 import RelatedTokens from "./jar/RelatedTokens";
 import { useAccount } from "v2/hooks";
@@ -34,7 +35,7 @@ const JarStats: FC<{
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const [jarData, setJarData] = useState<JarChartData>({} as JarChartData);
-  const [userHistory, setUserHistory] = useState<UserJarHistory>();
+  const [userHistory, setUserHistory] = useState<UserHistory>();
   const [userPnl, setUserPnl] = useState<PnlTransactionWrapper[]>();
 
   let asset: AssetWithData | undefined = {} as AssetWithData;
@@ -86,8 +87,8 @@ const JarStats: FC<{
 
   // generate pnl report for one jar from user history if/when it loads
   useEffect(() => {
-    if (account && userHistory && userHistory[jar.value]) {
-      let pnl = new UserJarHistoryPnlGenerator(account, userHistory[jar.value]).generatePnL();
+    if (account && userHistory && userHistory.jars[jar.value]) {
+      let pnl = new UserJarHistoryPnlGenerator(account, userHistory.jars[jar.value], HistoryAssetType.JAR).generatePnL();
       DEBUG_OUT(pnl);
       setUserPnl(pnl);
     }

@@ -10,8 +10,9 @@ import { useTranslation } from "next-i18next";
 import TxHistoryContainer from "./jar/userHistory/TxHistoryContainer";
 import { UserJarHistoryPnlGenerator } from "picklefinance-core";
 import {
+  HistoryAssetType,
   PnlTransactionWrapper,
-  UserJarHistory,
+  UserHistory,
 } from "picklefinance-core/lib/client/pnl/UserHistoryInterfaces";
 import { useAccount } from "v2/hooks";
 import { readyState } from "pages/stats";
@@ -32,7 +33,7 @@ const UserStats: FC<{
   //const account = "0xfeedc450742ac0d9bb38341d9939449e3270f76f";
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
-  const [userHistory, setUserHistory] = useState<UserJarHistory>();
+  const [userHistory, setUserHistory] = useState<UserHistory>();
   const [wrappedUserHistory, setWrappedUserHistory] = useState<UserAssetsHistoryWrapper>();
   const [failedUserHistory, setFailedUserHistory] = useState<string[]>();
   
@@ -52,7 +53,7 @@ const UserStats: FC<{
               for( let i = 0; i < keys.length; i++ ) {
                 const v = jsonResp[keys[i]];
                 try {
-                  let pnl = new UserJarHistoryPnlGenerator(account, v).generatePnL();
+                  let pnl = new UserJarHistoryPnlGenerator(account, v.jars, HistoryAssetType.JAR).generatePnL();
                   allAssetsHistory[keys[i]] = pnl;
                 } catch( e ) {
                   failed.push(keys[i]);
