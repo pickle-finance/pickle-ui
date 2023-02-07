@@ -19,7 +19,11 @@ import { readyState } from "pages/stats";
 import { SetFunction } from "v2/types";
 import { UserStatsReady } from "pages/userHistory";
 
-export interface UserAssetsHistoryWrapper {
+export interface UserAllAssetsHistoryWrapper {
+  jars: UserJarsHistoryWrapper;
+}
+
+export interface UserJarsHistoryWrapper {
   [apiKey: string]: PnlTransactionWrapper[];
 }
 
@@ -34,7 +38,7 @@ const UserStats: FC<{
   let assets = useSelector(CoreSelectors.makeAssetsSelector({ filtered: false, paginated: false }));
 
   const [userHistory, setUserHistory] = useState<UserHistory>();
-  const [wrappedUserHistory, setWrappedUserHistory] = useState<UserAssetsHistoryWrapper>();
+  const [wrappedUserHistory, setWrappedUserHistory] = useState<UserAllAssetsHistoryWrapper>();
   const [failedUserHistory, setFailedUserHistory] = useState<string[]>();
   
 
@@ -45,21 +49,33 @@ const UserStats: FC<{
         (await fetch(`https://api.pickle.finance/prod/protocol/userhistory/${account}`)
           .then((resp) => resp.json())
           .then((jsonResp) => {
+            console.log("Just fetched user history");
             if (!JSON.stringify(jsonResp).toLowerCase().includes("invalid wallet")) {
               setUserHistory(jsonResp);
+
+              // Traverse jar results
               const failed: string[] = [];
-              const keys = Object.keys(jsonResp);
-              const allAssetsHistory: UserAssetsHistoryWrapper = {};
+              const keys = Object.keys(jsonResp.jars);
+              const allAssetsHistory: UserJarsHistoryWrapper = {};
               for( let i = 0; i < keys.length; i++ ) {
-                const v = jsonResp[keys[i]];
+                const v = jsonResp.jars[keys[i]];
                 try {
-                  let pnl = new UserJarHistoryPnlGenerator(account, v.jars, HistoryAssetType.JAR).generatePnL();
+                  let pnl = new UserJarHistoryPnlGenerator(account, v, HistoryAssetType.JAR).generatePnL();
                   allAssetsHistory[keys[i]] = pnl;
                 } catch( e ) {
+                  console.log("Failed to load " + keys[i]);
                   failed.push(keys[i]);
                 }
+
+                // TODO traverse standalone farms
+                // TODO traverse brineries 
+                // TODO traverse platform dill / staked pickle
+                
               }
-              setWrappedUserHistory(allAssetsHistory);
+              const allHistory: UserAllAssetsHistoryWrapper = {
+                jars: allAssetsHistory
+              };
+              setWrappedUserHistory(allHistory);
               setFailedUserHistory(failed);
             } else {
               console.info(jsonResp);
@@ -75,8 +91,8 @@ const UserStats: FC<{
     // generate pnl report for one jar from user history if/when it loads
     // let pnl = new UserJarHistoryPnlGenerator(account, userHistory[jar.value]).generatePnL();
     const safeFailed: string[] = failedUserHistory || [];
-    const t1: UserAssetsHistoryWrapper | undefined = wrappedUserHistory;
-    const t2: UserAssetsHistoryWrapper = t1 ? t1 : {};
+    const t1: UserJarsHistoryWrapper | undefined = wrappedUserHistory?.jars;
+    const t2: UserJarsHistoryWrapper = t1 ? t1 : {};
     const keys = Object.keys(t2);
     const allKeys = safeFailed.concat(keys);
     const findJar = (apiKey: string): JarDefinition | undefined => core.assets.jars.find((j) => j && j.details && j.details.apiKey && j.details.apiKey.toLowerCase() === apiKey.toLowerCase());
@@ -99,9 +115,13 @@ const UserStats: FC<{
     return (
       <>
         {allKeys.map((k:string) => 
-          safeFailed.includes(k) ? 
-          (<UserStatFailedComponent core={core} apiKey={k} />)
-          : (<TxHistoryContainer wallet={account || ""} userPnl={t2[k]} core={core} addrs={addrsFor(k)} jar={findJar(k) || {} as JarDefinition} />)
+          {
+            if( safeFailed.includes(k) ) {
+              return (<UserStatFailedComponent core={core} apiKey={k} key={k}/>)
+            } else {
+              return (<TxHistoryContainer key={k} wallet={account || ""} userPnl={t2[k]} core={core} addrs={addrsFor(k)} jar={findJar(k) || {} as JarDefinition} />)
+            }
+          }
         )}
       </>
     );

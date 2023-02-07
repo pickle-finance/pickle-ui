@@ -24,7 +24,7 @@ const TxHistoryContainer: FC<{
       <CurrentSummary lastTxn={lastTxn} jar={jar} />
       <div className="flex">
         <h2 className="whitespace-nowrap font-body font-bold text-xl text-foreground-alt-200 mt-3 mb-8">
-          {"User History"}
+          {"User Transactions for " + jar.depositToken.name}
         </h2>
         <div className="w-full flex justify-end">
           <SortToggle txSort={txSort} setTxSort={setTxSort} />
