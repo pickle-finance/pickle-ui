@@ -1,11 +1,11 @@
-import { VFC } from "react";
 import { Popover } from "@headlessui/react";
-import useSWR from "swr";
-import { useTranslation } from "next-i18next";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { useTranslation } from "next-i18next";
+import { VFC } from "react";
+import useSWR from "swr";
 
-import GasPumpIcon from "./icons/GasPump";
 import { fetcher, formatNumber, GasPriceResponse } from "../utils";
+import GasPumpIcon from "./icons/GasPump";
 import SelectTransition from "./SelectTransition";
 
 const GasPriceIndicatorButtonLabel: VFC<{
@@ -65,7 +65,7 @@ const GasPriceIndicatorOptions: VFC<{
 };
 
 const GasPriceIndicator: VFC = () => {
-  const endpoint = "https://www.etherchain.org/api/gasnow";
+  const endpoint = "https://beaconcha.in/api/v1/execution/gasnow";
   const { data } = useSWR<GasPriceResponse>(endpoint, fetcher, { refreshInterval: 5000 });
 
   return (
