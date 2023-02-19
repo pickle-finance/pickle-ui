@@ -53,7 +53,8 @@ const GetDillModal: FC<Props> = ({ isOpen, closeModal, pickles, dill }) => {
     validate(value);
   };
 
-  const userHasDillAllowance = parseInt(dill?.dillApproval || "0") > 0;
+  const userHasDillAllowance =
+    parseInt(dill?.dillApproval || "0") > parseInt(pickles[ChainNetwork.Ethereum] || "0");
 
   return (
     <Modal

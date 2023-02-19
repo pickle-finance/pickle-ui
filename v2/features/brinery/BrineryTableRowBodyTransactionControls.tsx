@@ -28,7 +28,8 @@ const BrineryTableRowBodyTransactionControls: FC<Props> = ({ brinery }) => {
     UserSelectors.selectBrineryDataById(state, brinery.details.apiKey, account),
   );
 
-  const userHasBrineryAllowance = parseInt(userBrinery?.allowance || "0") > 0;
+  const userHasBrineryAllowance =
+    parseInt(userBrinery?.allowance || "0") > parseInt(userBrinery?.depositTokenBalance || "0");
   const brineryBalance = brinery.brineryBalance.tokens;
 
   const earnedRewards = brinery.earnedRewards.tokens;

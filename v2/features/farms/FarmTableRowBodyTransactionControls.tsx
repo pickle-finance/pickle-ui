@@ -55,7 +55,9 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
   );
 
   const decimals = jarDecimals(asset);
-  const userHasJarAllowance = parseInt(userTokenData?.jarAllowance || "0") > 0;
+  const userHasJarAllowance =
+    parseInt(userTokenData?.jarAllowance || "0") >
+    parseInt(userTokenData?.depositTokenBalance || "0");
   const jarTokens = parseFloat(
     ethers.utils.formatUnits(userTokenData?.pAssetBalance || "0", decimals),
   );
@@ -70,7 +72,8 @@ const FarmsTableRowBodyTransactionControls: FC<Props> = ({ asset }) => {
     ethers.utils.formatUnits(userTokenData?.extraReward?.pending || "0", 18),
   );
 
-  const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
+  const userHasFarmAllowance =
+    parseInt(userTokenData?.farmAllowance || "0") > parseInt(userTokenData?.pAssetBalance || "0");
 
   const hasMainnetZap =
     asset.chain === ChainNetwork.Ethereum &&

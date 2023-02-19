@@ -45,13 +45,17 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
   const decimals = jarDecimals(jar);
   const jarAllowanceToken0 = userTokenData?.componentTokenBalances[jar.token0?.name!].allowance;
   const jarAllowanceToken1 = userTokenData?.componentTokenBalances[jar.token1?.name!].allowance;
+  const userBalanceToken0 = userTokenData?.componentTokenBalances[jar.token0?.name!].balance;
+  const userBalanceToken1 = userTokenData?.componentTokenBalances[jar.token1?.name!].balance;
   const userHasJarAllowance =
-    parseInt(jarAllowanceToken0 || "0") > 0 && parseInt(jarAllowanceToken1 || "0") > 0;
+    parseInt(jarAllowanceToken0 || "0") > parseInt(userBalanceToken0 || "0") &&
+    parseInt(jarAllowanceToken1 || "0") > parseInt(userBalanceToken1 || "0");
   const jarTokens = parseFloat(
     ethers.utils.formatUnits(userTokenData?.pAssetBalance || "0", decimals),
   );
 
-  const userHasFarmAllowance = parseInt(userTokenData?.farmAllowance || "0") > 0;
+  const userHasFarmAllowance =
+    parseInt(userTokenData?.farmAllowance || "0") > parseInt(userTokenData?.pAssetBalance || "0");
 
   return (
     <div className="flex">
