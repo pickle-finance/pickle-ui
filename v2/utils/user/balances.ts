@@ -98,7 +98,11 @@ export const getUserAssetDataWithPrices = (
   core: PickleModelJson | undefined,
   userModel: UserData | undefined,
 ): UserAssetDataWithPrices => {
-  if (core === undefined || userModel === undefined) {
+  if (
+    core === undefined ||
+    userModel === undefined ||
+    userModel.nativeTokens[asset.chain] === undefined
+  ) {
     return userAssetDataZeroEverything();
   }
   const userTokenDetails = userModel.tokens[asset.details.apiKey.toLowerCase()];

@@ -41,7 +41,7 @@ const PlatformStats: FC<{
 };
 
 const getPlatformData = async (): Promise<PlatformData> => {
-  // https://api.pickle.finance/prod/protocol/analytics/
+  // https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/
   const url = `${process.env.apiPlatform}`;
   return await fetch(url)
     .then((response) => response.json())
