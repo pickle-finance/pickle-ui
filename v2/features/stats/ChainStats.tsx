@@ -69,7 +69,7 @@ const ChainStats: FC<{
 };
 
 const getChainData = async (chain: string): Promise<ChainData> => {
-  // https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/chain/{chain}/en
+  // https://api.pickle.finance/prod/protocol/analytics/chain/{chain}/en
   const url = `${process.env.apiChain}/${chain}/en`;
   return await fetch(url)
     .then((response) => response.json())
