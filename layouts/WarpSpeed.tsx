@@ -26,6 +26,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "core-js/proposals/string-match-all";
 import "core-js/stable/array/find-index";
 import V1LinkCard from "v2/components/V1LinkCard";
+import CoinGeckoAttribution from "v2/components/CoinGecko";
 
 type Page<P = {}> = NextPage<P> & {
   PageTitle?: FC;
@@ -60,6 +61,9 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
             <div className="flex justify-between bg-background mt-4 mb-8">
               <UserBalanceStatus showDetails />
               <BlockNumber />
+            </div>
+            <div>
+              <CoinGeckoAttribution />
             </div>
           </div>
         </main>

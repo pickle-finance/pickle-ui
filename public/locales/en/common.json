@@ -578,6 +578,9 @@
       "slow": "Slow",
       "standard": "Standard"
     },
+    "misc": {
+      "coinGeckoAttribution": "Prices data powered by CoinGecko"
+    },
     "nav": {
       "brinery": "Brinery",
       "close": "Close panel",
