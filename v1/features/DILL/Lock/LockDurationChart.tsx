@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { ethers, BigNumber } from "ethers";
-import GaugeChart from "react-gauge-chart";
 import styled from "styled-components";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Trans, useTranslation } from "next-i18next";
@@ -49,19 +48,6 @@ export const LockDurationChart: FC<Props> = ({ dillStats }) => {
 
   return (
     <>
-      <ChartContainer>
-        <GaugeChart
-          id="lock-duration-gauge-chart"
-          nrOfLevels={4}
-          colors={["#FFF", accentColor]}
-          arcWidth={0.2}
-          needleColor={accentColor}
-          needleBaseColor={accentColor}
-          percent={ratio}
-          formatTextValue={() => `${years} years`}
-        />
-      </ChartContainer>
-
       <div>
         <Trans i18nKey="dill.averageLockDuration">
           The average lock duration is currently

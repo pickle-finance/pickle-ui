@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../ABIs/erc20.json";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
@@ -50,9 +50,9 @@ export const useUniV2Apy = (inputGauges: Input): Output => {
       const prefilledDatas = uniV2Gauges
         .map((gauge) => {
           const { a, b } = PAIR_INFO[gauge.token];
-          const tokenA = new MulticallContract(a.address, erc20.abi);
-          const tokenB = new MulticallContract(b.address, erc20.abi);
-          const pair = new MulticallContract(gauge.token, erc20.abi);
+          const tokenA = new MulticallContract(a.address, erc20Abi);
+          const tokenB = new MulticallContract(b.address, erc20Abi);
+          const pair = new MulticallContract(gauge.token, erc20Abi);
           return [
             tokenA.balanceOf(gauge.token),
             tokenB.balanceOf(gauge.token),

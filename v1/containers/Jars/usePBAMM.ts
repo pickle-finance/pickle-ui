@@ -7,7 +7,7 @@ import { ERC20Transfer } from "../Erc20Transfer";
 import { BPAddresses } from "v1/containers/config";
 import { Contracts } from "../Contracts";
 import { PriceIds, Prices } from "../Prices";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../ABIs/erc20.json";
 import BLensABI from "../ABIs/blens.json";
 import { Jar__factory as JarFactory } from "../Contracts/factories/Jar__factory";
 
@@ -27,7 +27,7 @@ export const usePBAMM = () => {
   const [userPendingLqty, setUserPendingLqty] = useState<number>(0);
   const [tvl, setTvl] = useState<number>(0);
 
-  const lusdToken = new Contract(BPAddresses.LUSD, erc20.abi, provider);
+  const lusdToken = new Contract(BPAddresses.LUSD, erc20Abi, provider);
   const bLens = new Contract("0x9dcc156dfdc09bb52c7489e6ce5c1a9c90572064", BLensABI, provider);
   const pLQTYContract = provider && JarFactory.connect(BPAddresses.pLQTY, provider);
 

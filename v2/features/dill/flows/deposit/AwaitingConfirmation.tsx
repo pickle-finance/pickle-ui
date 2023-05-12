@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "next-i18next";
 import dayjs from "dayjs";
+import Image from 'next/image'
 
 import Button from "v2/components/Button";
 import Error from "v2/features/farms/flows/Error";
@@ -37,7 +38,7 @@ const AwaitingConfirmation: FC<Props> = ({
     <>
       <div className="flex justify-center my-2">
         <div className="w-1/2 min-h-[200px]">
-          <img
+          <Image
             src="/animations/working.gif"
             alt={t("v2.prompts.pleaseConfirm")}
             title={t("v2.prompts.pleaseConfirm")}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../ABIs/erc20.json";
 
 import { Connection } from "../Connection";
 import { Contracts } from "../Contracts";
@@ -10,7 +10,7 @@ import { PAIR_INFO as uniV2PairMap } from "../UniV2Pairs";
 import { FarmWithReward } from "./useWithReward";
 import { Contract as MulticallContract } from "ethers-multicall";
 
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 
 const { formatEther } = ethers.utils;
 
@@ -43,9 +43,9 @@ export const useUniV2Apy = (inputFarms: Input): Output => {
       const prefilledDatas = uniV2Farms
         .map((farm) => {
           const { a, b } = PAIR_INFO[farm.lpToken];
-          const tokenA = new MulticallContract(a.address, erc20.abi);
-          const tokenB = new MulticallContract(b.address, erc20.abi);
-          const pair = new MulticallContract(farm.lpToken, erc20.abi);
+          const tokenA = new MulticallContract(a.address, erc20Abi);
+          const tokenB = new MulticallContract(b.address, erc20Abi);
+          const pair = new MulticallContract(farm.lpToken, erc20Abi);
           return [
             tokenA.balanceOf(farm.lpToken),
             tokenB.balanceOf(farm.lpToken),

@@ -1,10 +1,10 @@
 import { Input } from "@geist-ui/react";
 import React, { ReactElement } from "react";
-import NumberFormat, { NumberFormatProps } from "react-number-format";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
 
-export const PercentageInput = (props: NumberFormatProps): ReactElement => {
+export const PercentageInput = (props: NumericFormatProps): ReactElement => {
   return (
-    <NumberFormat
+    <NumericFormat
       {...props}
       customInput={Input}
       suffix="%"
