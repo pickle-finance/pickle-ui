@@ -1,4 +1,4 @@
-import { Input } from "@geist-ui/react";
+import { Input } from "@geist-ui/core";
 import React, { ReactElement } from "react";
 import { NumericFormat, NumericFormatProps } from "react-number-format";
 

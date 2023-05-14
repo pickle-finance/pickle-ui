@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
 import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";

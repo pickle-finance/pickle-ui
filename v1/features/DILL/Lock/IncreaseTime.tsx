@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Radio } from "@geist-ui/core";
 import { Trans, useTranslation } from "next-i18next";
 
 import { Contracts } from "../../../containers/Contracts";
@@ -7,7 +7,7 @@ import { Connection } from "../../../containers/Connection";
 
 import { ERC20Transfer } from "../../../containers/Erc20Transfer";
 import { DayPicker } from "../../../components/DayPicker";
-import { InputProps } from "@geist-ui/react/dist/input/input";
+import { InputProps } from "@geist-ui/core/dist/input/input";
 import { UseDillOutput } from "../../../containers/Dill";
 import {
   dateFromEpoch,

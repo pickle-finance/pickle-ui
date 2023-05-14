@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { useTranslation } from "next-i18next";
-import { Link, Input, Grid, Spacer, Button, Select } from "@geist-ui/react";
+import { Link, Input, Grid, Spacer, Button, Select } from "@geist-ui/core";
 import { formatValue } from "./UniV3JarMiniFarmCollapsible";
 import { UniV3Token } from "v1/containers/Jars/useJarsWithUniV3";
 import erc20Abi from "../../containers/ABIs/erc20.json";

@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
 import { useTranslation } from "next-i18next";
-import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
+import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/core";
 import { toNum, formatValue } from "./UniV3JarGaugeCollapsible";
 import { weth } from "v1/util/univ3";
 import { UniV3Token } from "v1/containers/Jars/useJarsWithUniV3";

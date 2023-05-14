@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Card, Tooltip } from "@geist-ui/react";
+import { Card, Tooltip } from "@geist-ui/core";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";

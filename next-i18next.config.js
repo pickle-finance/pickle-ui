@@ -19,18 +19,19 @@ module.exports = {
       "hi",
       "nl",
     ],
-    fallbackLng: {
-      "zh-CN": ["zh-Hans", "en"],
-      "zh-SG": ["zh-Hans", "en"],
-      "zh-TW": ["zh-Hant", "en"],
-      "zh-HK": ["zh-Hant", "en"],
-      es: ["en"],
-      default: ["en"],
-    },
-    localePath,
-    react: {
-      useSuspense: false,
-    },
   },
+  fallbackLng: {
+    "zh-CN": ["zh-Hans", "en"],
+    "zh-SG": ["zh-Hans", "en"],
+    "zh-TW": ["zh-Hant", "en"],
+    "zh-HK": ["zh-Hant", "en"],
+    es: ["en"],
+    default: ["en"],
+  },
+  localePath,
+  react: {
+    useSuspense: false,
+  },
+
   use: process.env.NODE_ENV === "development" && process.browser ? [HttpBackend] : [],
 };

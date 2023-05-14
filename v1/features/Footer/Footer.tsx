@@ -1,4 +1,4 @@
-import { Page } from "@geist-ui/react";
+import { Page } from "@geist-ui/core";
 import { FC } from "react";
 import styled from "styled-components";
 import { useTranslation } from "next-i18next";

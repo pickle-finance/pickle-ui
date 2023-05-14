@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
-import { Card } from "@geist-ui/react";
+import { Card } from "@geist-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
@@ -13,7 +13,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
-import { Page } from "@geist-ui/react";
+import Image from 'next/image'
+import { Page } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 import clsx from "clsx";
 
@@ -421,7 +422,7 @@ export default function Brining() {
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>
-                <img src="/pickle.png" style={{ width: "24px", verticalAlign: `text-bottom` }} />{" "}
+                <Image src="/pickle.png" alt="" style={{ width: "24px", verticalAlign: `text-bottom` }} />{" "}
                 {t("info.picklePrice")}
               </h2>
               <DataPoint>

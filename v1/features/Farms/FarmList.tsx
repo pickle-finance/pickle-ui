@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { Spacer, Grid, Checkbox, Button } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox, Button } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { FarmCollapsible } from "./FarmCollapsible";

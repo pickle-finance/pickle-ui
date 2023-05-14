@@ -1,6 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Card, Grid } from "@geist-ui/react";
+import { Card, Grid } from "@geist-ui/core";
 import { Prices as PricesContainer } from "../../containers/Prices";
 import { Connection } from "v1/containers/Connection";
 import { ChainNetwork } from "picklefinance-core";

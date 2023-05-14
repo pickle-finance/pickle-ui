@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Trans, useTranslation } from "next-i18next";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
 
 import { Connection } from "../../containers/Connection";

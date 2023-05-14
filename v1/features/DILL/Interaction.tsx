@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Card, Grid } from "@geist-ui/react";
+import { Card, Grid } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { CreateLock } from "./Lock/CreateLock";

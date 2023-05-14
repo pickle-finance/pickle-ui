@@ -163,7 +163,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.17, @babel/runtime@npm:^7.14.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.17, @babel/runtime@npm:^7.14.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.16.7, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.21.5
   resolution: "@babel/runtime@npm:7.21.5"
   dependencies:
@@ -208,17 +208,6 @@ __metadata:
     "@babel/helper-validator-identifier": ^7.14.9
     to-fast-properties: ^2.0.0
   checksum: 6d6bcdfce94b5446520a24087c6dede453e28425af092965b304d4028e9bca79712fd691cdad031e3570c7667bf3206e5f642bcccbfccb33d42ca4a8203587f9
-  languageName: node
-  linkType: hard
-
-"@babel/types@npm:7.8.3":
-  version: 7.8.3
-  resolution: "@babel/types@npm:7.8.3"
-  dependencies:
-    esutils: ^2.0.2
-    lodash: ^4.17.13
-    to-fast-properties: ^2.0.0
-  checksum: c51ec3ad2850940ed87e6db9cb783f4688bb6b589115a335fcc49e292e5fe00a086966b39d5b808d8c7aa7e81b7d4dbd19c2f403ad422c46f526311992b4c1fc
   languageName: node
   linkType: hard
 
@@ -913,22 +902,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@geist-ui/react-icons@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@geist-ui/react-icons@npm:1.0.1"
+"@geist-ui/core@npm:2.3.8":
+  version: 2.3.8
+  resolution: "@geist-ui/core@npm:2.3.8"
+  dependencies:
+    "@babel/runtime": ^7.16.7
   peerDependencies:
-    "@geist-ui/react": ">=1.0.0"
-    react: ">=16.13.0"
-  checksum: 5b8cceccaf35eb679aa7d4aaafe85f980c8af790694eb6815041c0effe91cdf5dfebda6c978c77bd6e6cec7c28142a2011a21151e419cc20d76809e68e848f49
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: 47015f5262455bf0397ff141156580d77c24dff3b938a36300b72cc9c7aedbea5d776ba7f5dbac93555f97629fa2ef90c4dfe87de9d0f0f33b603792386714aa
   languageName: node
   linkType: hard
 
-"@geist-ui/react@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@geist-ui/react@npm:2.0.2"
-  dependencies:
-    styled-jsx: ^3.2.5
-  checksum: 9e0c173d9212393e24210f1cecacea2e885b74659cd9d3b66e09ec75f8f06c18bbfe11a3cb17a91beca65732cae68f2ee1d8e9f6a5acd0c5483c875e9b882b3f
+"@geist-ui/icons@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@geist-ui/icons@npm:1.0.2"
+  peerDependencies:
+    "@geist-ui/core": ">=1.0.0"
+    react: ">=16.13.0"
+  checksum: 9580a4f09e1cda2f05cbce3ad053b8719a691a8e804f6a1d330f10d7814ae7d49e4b2081d5372c6d5067bd32b2e84cbe96ebcb8727529965c68043483408c2ef
   languageName: node
   linkType: hard
 
@@ -3867,7 +3859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-syntax-jsx@npm:6.18.0, babel-plugin-syntax-jsx@npm:^6.18.0":
+"babel-plugin-syntax-jsx@npm:^6.18.0":
   version: 6.18.0
   resolution: "babel-plugin-syntax-jsx@npm:6.18.0"
   checksum: 0c7ce5b81d6cfc01a7dd7a76a9a8f090ee02ba5c890310f51217ef1a7e6163fb7848994bbc14fd560117892e82240df9c7157ad0764da67ca5f2afafb73a7d27
@@ -8428,7 +8420,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.11, lodash@npm:^4.17.13, lodash@npm:^4.17.15, lodash@npm:^4.17.16, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
+"lodash@npm:^4.17.11, lodash@npm:^4.17.15, lodash@npm:^4.17.16, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -9882,8 +9874,8 @@ __metadata:
     "@davatar/react": ^1.11.1
     "@ethersproject/abstract-provider": ^5.7.0
     "@ethersproject/providers": ^5.7.2
-    "@geist-ui/react": 2.0.2
-    "@geist-ui/react-icons": ^1.0.1
+    "@geist-ui/core": 2.3.8
+    "@geist-ui/icons": ^1.0.2
     "@headlessui/react": ^1.7.14
     "@heroicons/react": ^1.0.6
     "@material-ui/core": ^4.12.4
@@ -11975,24 +11967,6 @@ __metadata:
     "@babel/core":
       optional: true
   checksum: a4260ba093086ed50c903ce1e4e564c4162d041238c02d8f9f8d1b259224f54ac49b49e9b4a6e3396c27e688dd870da7552c35ea9622c25aaa4777b2df64bb26
-  languageName: node
-  linkType: hard
-
-"styled-jsx@npm:^3.2.5":
-  version: 3.4.7
-  resolution: "styled-jsx@npm:3.4.7"
-  dependencies:
-    "@babel/types": 7.8.3
-    babel-plugin-syntax-jsx: 6.18.0
-    convert-source-map: 1.7.0
-    loader-utils: 1.2.3
-    source-map: 0.7.3
-    string-hash: 1.1.3
-    stylis: 3.5.4
-    stylis-rule-sheet: 0.0.10
-  peerDependencies:
-    react: 15.x.x || 16.x.x || 17.x.x
-  checksum: f93c0abbcf0fdfcf8aff2f6aaef063129643ff8d05d9503068fa3f823741f1337f171679746a60c0cfa7eaed798574053167fff875628bc792e52291c39b0f6d
   languageName: node
   linkType: hard
 

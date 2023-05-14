@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
-import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/react";
+import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";

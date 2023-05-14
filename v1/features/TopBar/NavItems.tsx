@@ -2,7 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { useRouter, NextRouter } from "next/router";
-import { Popover } from "@geist-ui/react";
+import { Popover } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import LanguageSelect from "../Connection/LanguageSelect";

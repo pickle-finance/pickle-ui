@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Grid, Card } from "@geist-ui/react";
+import { Grid, Card } from "@geist-ui/core";
 import styled from "styled-components";
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";

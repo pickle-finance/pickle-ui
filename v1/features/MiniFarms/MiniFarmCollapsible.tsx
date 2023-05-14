@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip } from "@geist-ui/core";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 

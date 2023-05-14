@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist-ui/react";
+import { Card, Select, Spacer, Input, Button, Link as DisplayLink } from "@geist-ui/core";
 import { getTokenLabel } from "./tokens";
 import { TokenSymbol, useBalance } from "./useBalance";
 import { useZapIn } from "./useZapper";

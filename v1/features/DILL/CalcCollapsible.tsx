@@ -1,6 +1,6 @@
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useState, FC, useEffect } from "react";
-import { Button, Grid, Spacer, Select, Input } from "@geist-ui/react";
+import { Button, Grid, Spacer, Select, Input } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";

@@ -5,8 +5,9 @@ import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
-import { Page, Input } from "@geist-ui/react";
+import { Page, Input } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
+import Image from 'next/image'
 
 import { getUserEarnings, getCoinData, formatUsd, getFarmData } from "../../../v1/util/api";
 import { cardColor, pickleGreen, materialBlack, pickleWhite } from "../../../v1/util/constants";
@@ -93,7 +94,7 @@ export default function Earn() {
 
   useEffect(() => {
     account ? setAccount(account) : setAccount(address);
-  }, account);
+  }, [account, address]);
 
   useEffect(() => {
     const updateAccountData = async () => {
@@ -282,7 +283,7 @@ export default function Earn() {
               onKeyDown={handleAccount}
               width="28rem"
             />
-            <img src="/assets/jar.png" alt="" className={classes.pickle} />
+            <Image src="/assets/jar.png" alt="" className={classes.pickle} />
           </div>
         )}
         <Footer />

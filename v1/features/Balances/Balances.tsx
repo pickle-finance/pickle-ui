@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Card, Grid, Tooltip } from "@geist-ui/react";
+import { Card, Grid, Tooltip } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { useBalances } from "./useBalances";

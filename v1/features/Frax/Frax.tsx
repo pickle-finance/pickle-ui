@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Link, Input, Grid, Spacer, Card, Tooltip } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Card, Tooltip } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { formatEther, parseEther } from "ethers/lib/utils";

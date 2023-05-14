@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import type { AppProps } from "next/app";
-import { GeistProvider } from "@geist-ui/react";
+import { GeistProvider } from "@geist-ui/core";
 
 import { geistTheme } from "../v1/styles/geistTheme";
 import { Balances } from "../v1/containers/Balances";
@@ -86,7 +86,7 @@ const Classic: FC<AppProps> = ({ Component, pageProps }) => {
   }, []);
 
   return (
-    <GeistProvider theme={geistTheme}>
+    <GeistProvider  themes={[geistTheme]} themeType="darkTheme">
       <WithContainers>
         <TopBar />
         <V2LinkCard />

@@ -5,7 +5,7 @@ import { Connection } from "../containers/Connection";
 import { MiniIcon } from "./TokenIcon";
 import { noFarms, someFarms } from "v1/util/constants";
 import { ChainNetwork } from "picklefinance-core";
-import { Spacer } from "@geist-ui/react";
+import { Spacer } from "@geist-ui/core";
 
 export const FarmsIntro: FC = () => {
   const { chainName } = Connection.useContainer();

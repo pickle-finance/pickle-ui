@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Card } from "@geist-ui/react";
+import { Card } from "@geist-ui/core";
 import { Trans } from "next-i18next";
 import Link from "next/link";
 

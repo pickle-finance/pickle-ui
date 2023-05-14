@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import styled from "styled-components";
 
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";

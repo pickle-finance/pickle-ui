@@ -1,4 +1,7 @@
-export const geistTheme = {
+import { Themes } from '@geist-ui/core'
+
+export const geistTheme = Themes.createFromLight({
+  type:"darkTheme",
   palette: {
     accents_1: "#111",
     accents_2: "#333",
@@ -23,4 +26,4 @@ export const geistTheme = {
     shadowLarge: "0 0 0 1px #333",
     portalOpacity: 0.75,
   },
-};
+})

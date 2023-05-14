@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from "react";
-import { Button, Link, Input, Grid, Spacer } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer } from "@geist-ui/core";
 import { parseEther, formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 

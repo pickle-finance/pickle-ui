@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from "react";
-import { Button, Grid, Spacer } from "@geist-ui/react";
+import { Button, Grid, Spacer } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { Contracts } from "../../../containers/Contracts";

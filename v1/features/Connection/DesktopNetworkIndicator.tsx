@@ -5,7 +5,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
-import { Modal, Select, Tooltip } from "@geist-ui/react";
+import { Modal, Select, Tooltip } from "@geist-ui/core";
 import LanguageSelect from "./LanguageSelect";
 import useENS from "v1/hooks/useENS";
 import { PickleCore } from "v1/containers/Jars/usePickleCore";

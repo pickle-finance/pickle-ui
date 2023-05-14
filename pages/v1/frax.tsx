@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Page } from "@geist-ui/react";
+import { Page } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 import { ChainNetwork } from "picklefinance-core";
 

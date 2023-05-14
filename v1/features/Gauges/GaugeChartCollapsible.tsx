@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Spacer, Table } from "@geist-ui/react";
+import { Spacer, Table } from "@geist-ui/core";
 import { UserGaugeData } from "../../containers/UserGauges";
 import Collapse from "../Collapsible/Collapse";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
