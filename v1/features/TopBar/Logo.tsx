@@ -20,18 +20,16 @@ export const Logo: FC = () => {
 
   return (
     <ImageContainer>
-      <Link href="/v1">
-        <a aria-label={t("meta.title")}>
-          <Image
-            src="/pickle.svg"
-            width={158}
-            height={60}
-            layout="responsive"
-            alt={t("meta.titleFull")}
-            title={t("meta.titleFull")}
-            priority
-          />
-        </a>
+      <Link aria-label={t("meta.title")} href="/v1">
+        <Image
+          src="/pickle.svg"
+          width={158}
+          height={60}
+          layout="responsive"
+          alt={t("meta.titleFull")}
+          title={t("meta.titleFull")}
+          priority
+        />
       </Link>
     </ImageContainer>
   );

@@ -14,12 +14,10 @@ const Farms: FC = () => {
     <>
       <Page>
         <Page.Content>
-          <Link href="/farms" passHref>
-            <a style={{ textDecoration: "none" }}>
-              <strong>
-                <ArrowLeft size={13} /> {t("oldFarms.back")}
-              </strong>
-            </a>
+          <Link href="/farms" passHref style={{ textDecoration: "none" }}>
+            <strong>
+              <ArrowLeft size={13} /> {t("oldFarms.back")}
+            </strong>
           </Link>
           <Spacer />
           <Note type="warning" style={{ textAlign: "center" }}>

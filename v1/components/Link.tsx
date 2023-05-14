@@ -8,6 +8,6 @@ import { default as NextLink, LinkProps } from "next/link";
  */
 export const Link: FC<LinkProps> = ({ href, children }) => (
   <NextLink href={href}>
-    <a>{children}</a>
+    {children}
   </NextLink>
 );

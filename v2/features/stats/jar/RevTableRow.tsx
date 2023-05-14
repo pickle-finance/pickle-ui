@@ -31,10 +31,8 @@ const RevRow: FC<{ recentHarvest: RecentHarvest; chainExplorer: string }> = ({
 );
 
 const formatTxLink = (chainExplorer: string, txid: string): JSX.Element => (
-  <Link href={`${chainExplorer}/tx/${txid}`}>
-    <a target="_blank" rel="noreferrer" className="text-accent-light hover:underline">
-      {txid.substring(0, 10) + "..."}
-    </a>
+  <Link href={`${chainExplorer}/tx/${txid}`} target="_blank" rel="noreferrer" className="text-accent-light hover:underline">
+    {txid.substring(0, 10) + "..."}
   </Link>
 );
 

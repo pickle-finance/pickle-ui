@@ -66,15 +66,15 @@ const LanguageToggle: FC = () => {
                       key={language.name}
                       href={`/${language.locale}${asPath}`}
                       locale={language.locale}
+                      className="flex group justify-between items-center hover:bg-background-lightest p-2 rounded-lg transition duration-300 ease-in-out"
+                      passHref
                     >
-                      <a className="flex group justify-between items-center hover:bg-background-lightest p-2 rounded-lg transition duration-300 ease-in-out">
-                        <span className="text-foreground group-hover:text-primary-light text-sm font-bold">
-                          {language.name}
-                        </span>
-                        {languageNameFromLocale(locale) === language.name && (
-                          <CheckCircleIcon className="text-primary-light w-4 h-4" />
-                        )}
-                      </a>
+                      <span className="text-foreground group-hover:text-primary-light text-sm font-bold">
+                        {language.name}
+                      </span>
+                      {languageNameFromLocale(locale) === language.name && (
+                        <CheckCircleIcon className="text-primary-light w-4 h-4" />
+                      )}
                     </Link>
                   ))}
                 </div>
