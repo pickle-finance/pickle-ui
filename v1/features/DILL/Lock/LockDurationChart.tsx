@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { ethers, BigNumber } from "ethers";
 import styled from "styled-components";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/lab/Skeleton";
 import { Trans, useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../../containers/Dill";

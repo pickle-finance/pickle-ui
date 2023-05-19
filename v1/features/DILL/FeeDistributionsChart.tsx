@@ -1,7 +1,7 @@
 import { FC, useState, ReactNode } from "react";
 import dayjs from "v1/util/dayjs";
 import { Card, Radio, Spacer, Text } from "@geist-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/lab/Skeleton";
 import {
   Bar,
   Cell,

@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/lab/Skeleton";
 import useSWR from "swr";
 import { useTranslation } from "next-i18next";
 import { AdvancedChartWidgetProps } from "react-tradingview-embed";

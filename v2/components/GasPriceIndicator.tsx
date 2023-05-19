@@ -1,5 +1,5 @@
 import { Popover } from "@headlessui/react";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/lab/Skeleton";
 import { useTranslation } from "next-i18next";
 import { VFC } from "react";
 import useSWR from "swr";

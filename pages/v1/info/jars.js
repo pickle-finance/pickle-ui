@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import { Page } from "@geist-ui/core";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";

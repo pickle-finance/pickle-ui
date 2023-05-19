@@ -1,4 +1,4 @@
-import { Link } from "@material-ui/core";
+import { Link } from "@mui/material";
 import React, { FC, useMemo } from "react";
 import { Control } from "react-hook-form";
 import { SwapInput } from "./SwapInput";

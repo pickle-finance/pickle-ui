@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Paper from "@mui/material/Paper";
+import { makeStyles } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import {
   materialBlack,
   pickleGreen,
@@ -10,8 +10,8 @@ import {
   graphFill,
   pickleWhite,
 } from "../util/constants";
-import Avatar from "@material-ui/core/Avatar";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Avatar from "@mui/material/Avatar";
+import Skeleton from "@mui/lab/Skeleton";
 import { AreaChart, Area, YAxis, XAxis, Tooltip } from "recharts";
 import dayjs from "v1/util/dayjs";
 import { useTranslation } from "next-i18next";

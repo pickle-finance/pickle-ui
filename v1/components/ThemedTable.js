@@ -1,13 +1,13 @@
 import React from "react";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import TableContainer from "@material-ui/core/TableContainer";
-import { makeStyles } from "@material-ui/core/styles";
-import TableBody from "@material-ui/core/TableBody";
-import TableHead from "@material-ui/core/TableHead";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Table from "@material-ui/core/Table";
-import Paper from "@material-ui/core/Paper";
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
+import TableContainer from "@mui/material/TableContainer";
+import { makeStyles } from "@mui/material/styles";
+import TableBody from "@mui/material/TableBody";
+import TableHead from "@mui/material/TableHead";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
 import { pickleGreen, materialBlack, cardColor } from "../util/constants";
 
 const theme = createMuiTheme({

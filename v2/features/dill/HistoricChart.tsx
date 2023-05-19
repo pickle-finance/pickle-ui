@@ -6,7 +6,7 @@ import dayjs from "v1/util/dayjs";
 import CustomTooltip from "./DillToolTip";
 import ChartSelect, { SelectOptions } from "./ChartSelect";
 import { Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@mui/lab/Skeleton";
 import { RadioGroup } from "@headlessui/react";
 
 import { CoreSelectors } from "v2/store/core";

@@ -6,7 +6,7 @@ import { default as NextLink, LinkProps } from "next/link";
  * Trans i18n component. See:
  * https://github.com/i18next/react-i18next/issues/1090
  */
-export const Link: FC<LinkProps> = ({ href, children }) => (
+export const Link: FC<LinkProps> = ({ href, children }: React.PropsWithChildren<LinkProps>) => (
   <NextLink href={href}>
     {children}
   </NextLink>

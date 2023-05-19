@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import React, { FC, useCallback, useState } from "react";
 import { SwapSelect } from "./SwapSelector";
 import { getAmountWRTUpperDenom } from "./utils";
-import FlipCameraAndroidOutlinedIcon from "@material-ui/icons/FlipCameraAndroidOutlined";
+import FlipCameraAndroidOutlinedIcon from "@mui/icons-material/FlipCameraAndroidOutlined";
 import { OrderKind } from "@cowprotocol/cow-sdk";
 import BigNumber from "bignumber.js";
 

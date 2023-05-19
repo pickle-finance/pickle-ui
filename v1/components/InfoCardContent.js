@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { makeStyles } from "@mui/material/styles";
+import Avatar from "@mui/material/Avatar";
+import Skeleton from "@mui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   cardInfo: {
