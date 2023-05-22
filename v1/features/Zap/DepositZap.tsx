@@ -100,7 +100,6 @@ export const DepositZap: FC = () => {
       </p>
       <h3>{t("zap.deposit")}</h3>
       <Select
-        size="large"
         width="100%"
         style={{ maxWidth: "100%" }}
         value={inputToken}
@@ -132,8 +131,6 @@ export const DepositZap: FC = () => {
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
         width="100%"
-        type="number"
-        size="large"
       />
       <Spacer />
       <Button style={{ width: "100%" }} onClick={handleDeposit} disabled={disableZap()}>

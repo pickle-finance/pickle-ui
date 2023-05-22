@@ -1,7 +1,7 @@
 import { FC, useState, ReactNode } from "react";
 import dayjs from "v1/util/dayjs";
 import { Card, Radio, Spacer, Text } from "@geist-ui/core";
-import Skeleton from "@mui/lab/Skeleton";
+import { Skeleton } from "@mui/material";
 import {
   Bar,
   Cell,
@@ -213,7 +213,7 @@ export const FeeDistributionsChart: FC = () => {
           </ResponsiveContainer>
         ) : (
           <Skeleton
-            variant="rect"
+            variant="rectangular"
             animation="wave"
             width="100%"
             height="100%"

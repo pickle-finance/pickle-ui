@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@mui/material/styles";
+import { styled } from '@mui/material/styles';
 import Grid from "@mui/material/Grid";
 import { Page } from "@geist-ui/core";
 import clsx from "clsx";
@@ -12,19 +12,26 @@ import JarValueChart from "v1/components/JarValueChart";
 import { InfoBar } from "v1/features/InfoBar/InfoBar";
 import { Footer } from "v1/features/Footer/Footer";
 
-export const useStyles = makeStyles(() => ({
-  title: {
+const PREFIX = "V1InfoJars"
+const classes = {
+  title: `${PREFIX}-title`,
+  section: `${PREFIX}-section`,
+  separator: `${PREFIX}-separator`,
+}
+
+const CustomGrid = styled(Grid)(() => ({
+  [`&.${classes.title}`]: {
     marginBottom: "10px",
     fontSize: "2rem",
     letterSpacing: "6px",
   },
-  section: {
+  [`& .${classes.section}`]: {
     color: materialBlack,
   },
-  separator: {
+  [`& .${classes.separator}`]: {
     marginTop: "25px",
   },
-}));
+}))
 
 const chartSkeletons = (charts) =>
   Array.from({ length: charts.length }, (c, i) => ({
@@ -33,8 +40,6 @@ const chartSkeletons = (charts) =>
   }));
 
 export default function Dashboard() {
-  const classes = useStyles();
-
   const [dashboardData, setDashboardData] = useState({
     crvJars: chartSkeletons(crvJars),
     sushiJars: chartSkeletons(sushiJars),
@@ -135,9 +140,9 @@ export default function Dashboard() {
             <JarValueChart jar={tvlJar} />
           </Grid>
 
-          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
+          <CustomGrid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>{t("info.polyJars")}</h1>
-          </Grid>
+          </CustomGrid>
           {dashboardData.polyJars.map((jar) => {
             return (
               <Grid item xs={12} sm={6} key={jar.asset}>
@@ -146,9 +151,9 @@ export default function Dashboard() {
             );
           })}
 
-          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
+          <CustomGrid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>{t("info.arbJars")}</h1>
-          </Grid>
+          </CustomGrid>
           {dashboardData.arbJars.map((jar) => {
             return (
               <Grid item xs={12} sm={6} key={jar.asset}>
@@ -157,9 +162,9 @@ export default function Dashboard() {
             );
           })}
 
-          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
+          <CustomGrid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>pJar 0</h1>
-          </Grid>
+          </CustomGrid>
           {dashboardData.crvJars.map((jar) => {
             return (
               <Grid item xs={12} sm={6} key={jar.asset}>
@@ -167,9 +172,9 @@ export default function Dashboard() {
               </Grid>
             );
           })}
-          <Grid item xs={12} className={clsx(classes.section, classes.separator)}>
+          <CustomGrid item xs={12} className={clsx(classes.section, classes.separator)}>
             <h1>pJar 0.99</h1>
-          </Grid>
+          </CustomGrid>
           {dashboardData.sushiJars.concat(dashboardData.uniJars).map((jar, i) => {
             return (
               <Grid item xs={12} sm={6} key={i}>

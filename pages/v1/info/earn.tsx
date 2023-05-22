@@ -1,6 +1,6 @@
-import { makeStyles, createMuiTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider, StyledEngineProvider, styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import Skeleton from "@mui/lab/Skeleton";
+import { Skeleton } from "@mui/material";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -19,51 +19,30 @@ import { Connection } from "../../../v1/containers/Connection";
 import { InfoBar } from "../../../v1/features/InfoBar/InfoBar";
 import { Footer } from "../../../v1/features/Footer/Footer";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: cardColor,
       light: pickleGreen,
     },
-  },
+  }
 });
-const useStyles = makeStyles((theme) => ({
-  wallet: {
-    fontSize: "1.2rem",
-    backgroundColor: "#0e1d15",
-    boxShadow: `0px 3px ${pickleGreen}`,
-    border: `1px solid ${pickleGreen}`,
-    color: pickleWhite,
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down("md")]: {
-      fontSize: ".6rem",
-    },
-  },
-  balance: {
-    display: "flex",
-    flexDirection: "row",
-    marginRight: theme.spacing(3),
-    fontSize: "1.5rem",
-  },
-  balanceSkeleton: {
-    width: "175px",
-    marginLeft: theme.spacing(1),
-  },
-  earnHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: theme.spacing(2),
-    height: "40px",
-  },
-  jarCardContainer: {
-    display: "flex",
-  },
-  jarCard: {
-    fontSize: "1.4rem",
-    color: materialBlack,
-  },
-  address: {
+
+const PREFIX = "V1InfoEarn"
+const classes = {
+  wallet: `${PREFIX}-wallet`,
+  balance: `${PREFIX}-balance`,
+  balanceSkeleton: `${PREFIX}-balanceSkeleton`,
+  earnHeader: `${PREFIX}-earnHeader`,
+  jarCardContainer: `${PREFIX}-jarCardContainer`,
+  jarCard: `${PREFIX}-jarCard`,
+  address: `${PREFIX}-address`,
+  addressInput: `${PREFIX}-addressInput`,
+  pickle: `${PREFIX}-pickle`,
+}
+
+const CustomPage = styled(Page)(({theme})=>({
+  [`& .${classes.address}`]: {
     display: "flex",
     flexGrow: 1,
     justifyContent: "center",
@@ -71,22 +50,55 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     fontSize: "2rem",
   },
-  addressInput: {
+  [`& .${classes.addressInput}`]: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
     color: pickleWhite,
   },
-  pickle: {
+  [`& .${classes.balance}`]: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: theme.spacing(3),
+    fontSize: "1.5rem",
+  },
+  [`& .${classes.balanceSkeleton}`]: {
+    width: "175px",
+    marginLeft: theme.spacing(1),
+  },
+  [`& .${classes.earnHeader}`]: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: theme.spacing(2),
+    height: "40px",
+  },
+  [`& .${classes.jarCard}`]: {
+    fontSize: "1.4rem",
+    color: materialBlack,
+  },
+  [`& .${classes.jarCardContainer}`]: {
+    display: "flex",
+  },
+  [`& .${classes.pickle}`]: {
     maxHeight: "100%",
     maxWidth: "100%",
     height: "auto",
     width: "auto",
   },
-}));
+  [`& .${classes.wallet}`]: {
+    fontSize: "1.2rem",
+    backgroundColor: "#0e1d15",
+    boxShadow: `0px 3px ${pickleGreen}`,
+    border: `1px solid ${pickleGreen}`,
+    color: pickleWhite,
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+      fontSize: ".6rem",
+    },
+  },
+}))
 
 export default function Earn() {
-  const classes = useStyles();
-
   const { address } = Connection.useContainer();
   const [account, setAccount] = useState(address);
   const [accountData, setAccountData] = useState(undefined);
@@ -149,7 +161,7 @@ export default function Earn() {
     }
   }, [account]);
 
-  const getTokens = (tokens) => {
+  const getTokens = (tokens:number) => {
     if (tokens === 0) {
       return 0;
     }
@@ -202,93 +214,94 @@ export default function Earn() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Page>
-        <InfoBar />
-        {account && (
-          <>
-            <Card className={classes.wallet}>
-              <CardContent>
-                {!account ? (
-                  <Skeleton className={classes.balanceSkeleton} />
-                ) : (
-                  <div className={classes.earnHeader}>
-                    <Typography>{account}</Typography>
-                  </div>
-                )}
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={4}>
-                    <InfoCardContent
-                      title={t("info.depositedBalance")}
-                      value={
-                        accountData
-                          ? formatUsd(
-                              accountData.jarData
-                                .filter((jar) => jar.balance > 0)
-                                .reduce((acc, jar) => {
-                                  return acc + jar.balanceUsd;
-                                }, 0),
-                            )
-                          : accountData
-                      }
-                      subtext={t("info.currentValue")}
-                      icon={"/assets/vault.png"}
-                    />
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <CustomPage>
+          <InfoBar />
+          {account && (
+            <>
+              <Card className={classes.wallet}>
+                <CardContent>
+                  {!account ? (
+                    <Skeleton className={classes.balanceSkeleton} />
+                  ) : (
+                    <div className={classes.earnHeader}>
+                      <Typography>{account}</Typography>
+                    </div>
+                  )}
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={4}>
+                      <InfoCardContent
+                        title={t("info.depositedBalance")}
+                        value={
+                          accountData
+                            ? formatUsd(
+                                accountData.jarData
+                                  .filter((jar) => jar.balance > 0)
+                                  .reduce((acc, jar) => {
+                                    return acc + jar.balanceUsd;
+                                  }, 0),
+                              )
+                            : accountData
+                        }
+                        subtext={t("info.currentValue")}
+                        icon={"/assets/vault.png"}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <InfoCardContent
+                        title={t("info.earnings")}
+                        value={accountData ? formatUsd(accountData.earnings) : accountData}
+                        subtext={t("info.lifetimeValue")}
+                        icon={"/assets/coin.png"}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <InfoCardContent
+                        title={t("info.dailyEmission")}
+                        value={accountData ? accountData.earn : accountData}
+                        subtext={t("info.picklePerDay")}
+                        icon={"/assets/pickle.png"}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={4}>
-                    <InfoCardContent
-                      title={t("info.earnings")}
-                      value={accountData ? formatUsd(accountData.earnings) : accountData}
-                      subtext={t("info.lifetimeValue")}
-                      icon={"/assets/coin.png"}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <InfoCardContent
-                      title={t("info.dailyEmission")}
-                      value={accountData ? accountData.earn : accountData}
-                      subtext={t("info.picklePerDay")}
-                      icon={"/assets/pickle.png"}
-                    />
-                  </Grid>
+                </CardContent>
+              </Card>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6} className={classes.gridItem}>
+                  <h1>{t("info.assets")}</h1>
+                  <ThemedTable
+                    headers={[t("info.asset"), t("info.tokens"), t("info.value")]}
+                    rows={assetRows}
+                  />
                 </Grid>
-              </CardContent>
-            </Card>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6} className={classes.gridItem}>
-                <h1>{t("info.assets")}</h1>
-                <ThemedTable
-                  headers={[t("info.asset"), t("info.tokens"), t("info.value")]}
-                  rows={assetRows}
-                />
+                <Grid item xs={12} md={6} className={classes.gridItem}>
+                  <h1>{t("info.earnings")}</h1>
+                  <ThemedTable
+                    headers={[t("info.asset"), t("info.earnedTokens"), t("info.value")]}
+                    rows={earnRows}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={6} className={classes.gridItem}>
-                <h1>{t("info.earnings")}</h1>
-                <ThemedTable
-                  headers={[t("info.asset"), t("info.earnedTokens"), t("info.value")]}
-                  rows={earnRows}
-                />
-              </Grid>
-            </Grid>
-          </>
-        )}
-        {!account && (
-          <div className={classes.address}>
-            {t("info.brining")}
-            <Input
-              id="account"
-              label={t("info.address")}
-              variant="outlined"
-              className={classes.addressInput}
-              onKeyDown={handleAccount}
-              width="28rem"
-            />
-            <Image src="/assets/jar.png" alt="" className={classes.pickle} />
-          </div>
-        )}
-        <Footer />
-      </Page>
-    </ThemeProvider>
+            </>
+          )}
+          {!account && (
+            <div className={classes.address}>
+              {t("info.brining")}
+              <Input
+                id="account"
+                label={t("info.address") as string}
+                className={classes.addressInput}
+                onKeyDown={handleAccount}
+                width="28rem"
+              />
+              <Image src="/assets/jar.png" alt="" className={classes.pickle} />
+            </div>
+          )}
+          <Footer />
+        </CustomPage>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }
 

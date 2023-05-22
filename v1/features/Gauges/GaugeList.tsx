@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/core";
-import { withStyles } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
 import Switch from "@mui/material/Switch";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { BProtocol } from "./BProtocol";

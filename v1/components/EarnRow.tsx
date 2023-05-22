@@ -1,43 +1,49 @@
 import React from "react";
-import { makeStyles } from "@mui/material/styles";
+import { styled } from '@mui/material/styles';
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Avatar from "@mui/material/Avatar";
 import { materialBlack } from "../util/constants";
 import clsx from "clsx";
 
-const useStyles = makeStyles((theme) => ({
-  asettIcon: {
+const PREFIX = 'V1ComponentEarnRow'
+const classes = {
+  asettIcon: `${PREFIX}-asettIcon`,
+  asset: `${PREFIX}-asset`,
+  tableCell: `${PREFIX}-tableCell`,
+}
+
+const CustomTableCell = styled(TableCell)(({theme})=>({
+  [`& .${classes.asettIcon}`]: {
     height: "25px",
     width: "25px",
     marginRight: theme.spacing(2),
   },
-  asset: {
+  [`& .${classes.asset}`]: {
     display: "flex",
   },
-  tableCell: {
+  [`& .${classes.tableCell}`]: {
     borderBottom: "none",
     color: materialBlack,
     fontSize: "1.1rem",
   },
-}));
+}))
 
 export default function EarnRow(props) {
-  const classes = useStyles();
   const { asset, icon, earned, value } = props;
 
   return (
     <TableRow>
-      <TableCell className={clsx(classes.asset, classes.tableCell)}>
+      <CustomTableCell className={clsx(classes.asset, classes.tableCell)}>
         <Avatar variant="square" src={icon} className={classes.asettIcon} />
         {asset}
-      </TableCell>
-      <TableCell align="right" className={classes.tableCell}>
+      </CustomTableCell>
+      <CustomTableCell align="right" className={classes.tableCell}>
         {earned}
-      </TableCell>
-      <TableCell align="right" className={classes.tableCell}>
+      </CustomTableCell>
+      <CustomTableCell align="right" className={classes.tableCell}>
         {value}
-      </TableCell>
+      </CustomTableCell>
     </TableRow>
   );
 }

@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Davatar from "@davatar/react";
-import Skeleton from "@mui/lab/Skeleton";
+import { Skeleton } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";

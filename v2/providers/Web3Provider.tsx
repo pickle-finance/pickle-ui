@@ -9,7 +9,7 @@ import { ConnectionSelectors } from "v2/store/connection";
 
 const getLibrary = (provider: any) => new Web3Provider(provider);
 
-const AppWeb3Provider: FC = ({ children }) => {
+const AppWeb3Provider: FC<any> = ({ children }) => {
   const { active, error, activate, library } = useWeb3React<Web3Provider>();
   const isManuallyDeactivated = useSelector(ConnectionSelectors.selectIsManuallyDeactivated);
 
@@ -30,7 +30,7 @@ const AppWeb3Provider: FC = ({ children }) => {
   return <>{children}</>;
 };
 
-const Provider: FC = ({ children }) => (
+const Provider: FC<any> = ({ children }) => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <AppWeb3Provider>{children}</AppWeb3Provider>
   </Web3ReactProvider>

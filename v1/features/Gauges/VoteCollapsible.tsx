@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-import styled from "styled-components";
+// import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { useState, FC, useEffect } from "react";
 import { Button, Grid, Spacer } from "@geist-ui/core";
 import Select from "react-select";
@@ -32,7 +33,7 @@ interface HandleBoostReturn {
   weights: number[];
 }
 
-const Label = styled.div`
+const Label = styled('div')`
   font-family: "Source Sans Pro";
 `;
 
@@ -40,11 +41,11 @@ interface DataProps {
   isZero?: boolean;
 }
 
-const Data = styled.div<DataProps>`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: ${(props) => (props.isZero ? "#444" : "unset")};
-`;
+const Data = styled('div')((props:DataProps)=>({
+  textOverflow: "ellipsis",
+  color: props.isZero ? "#444" : "unset",
+  overflow: "hidden",
+}));
 
 const formatPercent = (decimal: number): string => {
   if (decimal) {

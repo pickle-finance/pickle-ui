@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { ethers, BigNumber } from "ethers";
 import styled from "styled-components";
-import Skeleton from "@mui/lab/Skeleton";
+import { Skeleton } from "@mui/material";
 import { Trans, useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../../containers/Dill";
@@ -29,7 +29,7 @@ export const LockDurationChart: FC<Props> = ({ dillStats }) => {
   if (!dillSupply || !pickleLocked) {
     return (
       <Skeleton
-        variant="rect"
+        variant="rectangular"
         animation="wave"
         width="100%"
         height="250px"
