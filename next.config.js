@@ -14,6 +14,8 @@ const localesDir = path.resolve("public/locales");
 //   enabled: process.env.ANALYZE === "true",
 // });
 
+/** @type {import('next').NextConfig} */
+
 const moduleExports = {
   typescript: {
     ignoreBuildErrors: true,
@@ -49,6 +51,7 @@ const moduleExports = {
     };
     return config;
   },
+  reactStrictMode: true,
 };
 
 const SentryWebpackPluginOptions = {};
