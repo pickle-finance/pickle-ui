@@ -41,7 +41,7 @@ const classes = {
   pickle: `${PREFIX}-pickle`,
 }
 
-const CustomPage = styled(Page)(({theme})=>({
+const CustomPage = styled(Page)(({ theme }) => ({
   [`& .${classes.address}`]: {
     display: "flex",
     flexGrow: 1,
@@ -161,7 +161,7 @@ export default function Earn() {
     }
   }, [account]);
 
-  const getTokens = (tokens:number) => {
+  const getTokens = (tokens: number) => {
     if (tokens === 0) {
       return 0;
     }
@@ -236,12 +236,12 @@ export default function Earn() {
                         value={
                           accountData
                             ? formatUsd(
-                                accountData.jarData
-                                  .filter((jar) => jar.balance > 0)
-                                  .reduce((acc, jar) => {
-                                    return acc + jar.balanceUsd;
-                                  }, 0),
-                              )
+                              accountData.jarData
+                                .filter((jar) => jar.balance > 0)
+                                .reduce((acc, jar) => {
+                                  return acc + jar.balanceUsd;
+                                }, 0),
+                            )
                             : accountData
                         }
                         subtext={t("info.currentValue")}
@@ -295,7 +295,20 @@ export default function Earn() {
                 onKeyDown={handleAccount}
                 width="28rem"
               />
-              <Image src="/assets/jar.png" alt="" className={classes.pickle} />
+              <Image
+                src="/assets/jar.png"
+                alt=""
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{
+                  width: "auto",
+                  height: "auto",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                }}
+                // className={classes.pickle}
+                />
             </div>
           )}
           <Footer />

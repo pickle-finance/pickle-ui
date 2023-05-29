@@ -25,9 +25,14 @@ const AwaitingConfirmation: FC<Props> = ({ error, sendTransaction, isWaiting, pr
           <Image
             src="/animations/working.gif"
             alt={t("v2.prompts.pleaseConfirm")}
-            title={t("v2.prompts.pleaseConfirm")}
-            height="200px"
-            width="200px"
+            title={t("v2.prompts.pleaseConfirm") as string}
+            height={0}
+            width={0}
+            sizes="100vw"
+            style={{
+              width: "200px",
+              height: "auto",
+            }}
             loading="eager"
           />
         </div>

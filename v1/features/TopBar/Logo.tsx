@@ -25,7 +25,6 @@ export const Logo: FC = () => {
           src="/pickle.svg"
           width={158}
           height={60}
-          layout="responsive"
           alt={t("meta.titleFull")}
           title={t("meta.titleFull") as string}
           priority

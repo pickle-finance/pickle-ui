@@ -26,7 +26,7 @@ const LeftNavbar: FC = () => {
                 height={140}
                 layout="responsive"
                 alt={t("meta.titleFull")}
-                title={t("meta.titleFull")}
+                title={t("meta.titleFull") as string}
                 priority
               />
             </Link>

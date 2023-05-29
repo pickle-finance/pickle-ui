@@ -390,7 +390,15 @@ export default function Brining() {
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>
-                <Image src="/pickle.png" alt="" style={{ width: "24px", verticalAlign: `text-bottom` }} />{" "}
+                <Image
+                  src="/pickle.png"
+                  alt=""
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{width: "20px",height: "auto",}}
+                />
+                {" "}
                 {t("info.picklePrice")}
               </h2>
               <DataPoint>
