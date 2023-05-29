@@ -3,7 +3,7 @@ import { Spacer, Table } from "@geist-ui/core";
 import { UserGaugeData } from "../../containers/UserGauges";
 import Collapse from "../Collapsible/Collapse";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { Trans, useTranslation } from "next-i18next";
 
 const shadeColor = (color: string, percent: number) => {
@@ -34,7 +34,7 @@ const formatter = (val: number) => {
   return pct.toFixed(2) + "%";
 };
 
-const TableContainer = styled.div`
+const TableContainer = styled('div')`
   display: flex;
   justify-content: center;
 `;

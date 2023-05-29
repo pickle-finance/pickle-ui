@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { Card, Grid, Tooltip } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
@@ -14,13 +14,13 @@ const Container = styled(Grid.Container)`
   font-family: "Source Code Pro", sans-serif;
 `;
 
-const DataPoint = styled.div`
+const DataPoint = styled('div')`
   font-size: 24px;
   display: flex;
   align-items: center;
 `;
 
-const HideOnMobile = styled.div`
+const HideOnMobile = styled('div')`
   @media screen and (max-width: 600px) {
     display: none;
   }

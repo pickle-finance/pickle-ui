@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { Spacer, Grid, Checkbox, Button } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
@@ -26,7 +26,7 @@ import { UserJarData } from "v1/containers/UserJars";
 import { formatEther } from "ethers/lib/utils";
 import { GreenSwitch } from "v1/features/Gauges/GaugeList";
 
-const Container = styled.div`
+const Container = styled('div')`
   padding-top: 1.5rem;
 `;
 

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 
 import { Logo } from "./Logo";
 import { NavItems } from "./NavItems";
@@ -12,12 +12,12 @@ import { MobileNetworkIndicator } from "../Connection/MobileNetworkIndicator";
 import { Connection } from "../../containers/Connection";
 import LanguageSelect from "../Connection/LanguageSelect";
 
-const Container = styled.div`
+const Container = styled('div')`
   border-bottom: 1px solid var(--accent-color);
   box-shadow: var(--accent-glow-color) 0 0 6px 0;
 `;
 
-const MaxWidthWrapper = styled.div`
+const MaxWidthWrapper = styled('div')`
   max-width: 1200px;
   display: flex;
   justify-content: space-between;
@@ -25,7 +25,7 @@ const MaxWidthWrapper = styled.div`
   margin: auto;
 `;
 
-const Content = styled.div`
+const Content = styled('div')`
   padding: 1.5rem;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@ const Content = styled.div`
   }
 `;
 
-const DesktopConnectContainer = styled.div`
+const DesktopConnectContainer = styled('div')`
   display: flex;
   align-items: center;
 

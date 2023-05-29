@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Card, Tooltip } from "@geist-ui/core";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
@@ -9,7 +9,7 @@ import { formatDate } from "../../util/date";
 import { formatPercent } from "../../util/number";
 import PickleIcon from "../../components/PickleIcon";
 
-const DataPoint = styled.div`
+const DataPoint = styled('div')`
   font-size: 22px;
   display: flex;
   flex-wrap: wrap;

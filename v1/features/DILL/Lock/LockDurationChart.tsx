@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { ethers, BigNumber } from "ethers";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { Skeleton } from "@mui/material";
 import { Trans, useTranslation } from "next-i18next";
 
@@ -11,7 +11,7 @@ interface Props {
   dillStats: UseDillOutput;
 }
 
-const ChartContainer = styled.div`
+const ChartContainer = styled('div')`
   margin-top: 18px;
 
   text {

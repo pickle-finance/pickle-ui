@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { formatEther } from "ethers/lib/utils";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "next-i18next";
 
 import { useState, FC, useEffect, ReactNode } from "react";
@@ -30,13 +30,13 @@ const CenteredGrid = styled(Grid)({
   textAlign: "center",
 });
 
-const Data = styled.div<DataProps>`
+const Data = styled('div')<DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${(props) => (props.isZero ? "#444" : "unset")};
 `;
 
-const Label = styled.div`
+const Label = styled('div')`
   font-family: "Source Sans Pro";
 `;
 

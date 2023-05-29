@@ -1,6 +1,6 @@
 import { Page } from "@geist-ui/core";
 import { FC } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "next-i18next";
 import { Connection } from "v1/containers/Connection";
 import { ChainNetwork } from "picklefinance-core";
@@ -14,7 +14,7 @@ const Container = styled(Page.Footer)`
   flex-wrap: wrap;
 `;
 
-const NavItem = styled.a`
+const NavItem = styled('a')`
   font-family: "Source Code Pro", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;

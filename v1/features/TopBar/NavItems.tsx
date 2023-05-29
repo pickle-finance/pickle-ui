@@ -1,5 +1,5 @@
 import { FC } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import Link from "next/link";
 import { useRouter, NextRouter } from "next/router";
 import { Popover } from "@geist-ui/core";
@@ -11,7 +11,7 @@ interface NavItemProps {
   active?: boolean;
 }
 
-export const NavItem = styled.a<NavItemProps>`
+export const NavItem = styled('a')<NavItemProps>`
   font-family: "Source Code Pro", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
@@ -47,12 +47,12 @@ export const NavItem = styled.a<NavItemProps>`
   }
 `;
 
-const NavItemsContainer = styled.div`
+const NavItemsContainer = styled('div')`
   display: flex;
   flex-wrap: wrap;
 `;
 
-const LanguageSelectContainer = styled.div`
+const LanguageSelectContainer = styled('div')`
   @media screen and (min-width: 600px) {
     display: none;
   }

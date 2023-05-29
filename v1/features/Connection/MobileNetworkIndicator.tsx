@@ -1,10 +1,11 @@
 import { FC } from "react";
-import styled, { keyframes } from "styled-components";
+import { styled } from '@mui/material/styles';
+import { keyframes } from "@mui/styled-engine";
 import { Connection } from "../../containers/Connection";
 import Davatar from "@davatar/react";
 import { PickleCore } from "v1/containers/Jars/usePickleCore";
 
-const Container = styled.div`
+const Container = styled('div')`
   display: none;
 
   @media screen and (max-width: 600px) {
@@ -22,18 +23,18 @@ const Container = styled.div`
   }
 `;
 
-const Left = styled.div`
+const Left = styled('div')`
   display: flex;
   align-items: center;
 `;
 
-const Right = styled.div`
+const Right = styled('div')`
   display: flex;
   align-items: center;
   color: #8bc34a;
 `;
 
-const AddressLabel = styled.div`
+const AddressLabel = styled('div')`
   color: #aaa;
   margin-left: 0.5rem;
 `;
@@ -44,12 +45,12 @@ const pulse = keyframes`
   100% { background-color: #8bc34a; }
 `;
 
-const BlockNumber = styled.div`
+const BlockNumber = styled('div')`
   color: #8bc34a;
   text-transform: capitalize;
 `;
 
-const Circle = styled.div`
+const Circle = styled('div')`
   width: 8px;
   height: 8px;
   min-height: 8px;
@@ -61,7 +62,7 @@ const Circle = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
 `;
 
-const ConnectContainer = styled.div`
+const ConnectContainer = styled('div')`
   display: flex;
   a {
     margin-left: 10px;
