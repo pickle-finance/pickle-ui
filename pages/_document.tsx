@@ -8,7 +8,7 @@ import Document, {
 } from "next/document";
 import { ServerStyleSheets as JSSServerStyleSheets } from '@mui/styles';
 import createEmotionServer from '@emotion/server/create-instance';
-import createEmotionCache from './createEmotionCache';
+import createEmotionCache from '../v2/utils/createEmotionCache';
 import React from "react";
 
 // You can find a benchmark of the available CSS minifiers under

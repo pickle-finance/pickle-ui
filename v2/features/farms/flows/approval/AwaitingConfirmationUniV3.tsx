@@ -6,6 +6,7 @@ import Button from "v2/components/Button";
 import Error from "../Error";
 import Spinner from "v2/components/Spinner";
 import { classNames } from "v2/utils";
+import Image from "next/image";
 
 interface Props {
   error: Error | undefined;
@@ -46,10 +47,11 @@ const UniV3AwaitingConfirmation: FC<Props> = ({
     <>
       <div className="flex justify-center my-2">
         <div className="w-1/2 min-h-[200px]">
-          <img
+          <Image
             src="/animations/working.gif"
             alt={t("v2.prompts.pleaseConfirm")}
-            title={t("v2.prompts.pleaseConfirm")}
+            title={t("v2.prompts.pleaseConfirm") as string}
+            fill
           />
         </div>
       </div>

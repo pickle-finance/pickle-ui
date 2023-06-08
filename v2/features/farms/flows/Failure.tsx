@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { shortenAddress } from "v2/utils";
 import Link from "v2/components/Link";
 import Button from "v2/components/Button";
+import Image from "next/image";
 
 interface Props {
   txHash: string | undefined;
@@ -21,7 +22,7 @@ const Failure: FC<Props> = ({ retry, txHash, chainExplorer }) => {
     <>
       <div className="flex justify-center mt-2">
         <div className="w-1/2 min-h-[200px]">
-          <img src="/animations/failure.gif" alt={title} title={title} />
+          <Image src="/animations/failure.gif" alt={title} title={title} fill />
         </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg mb-6">{title}</h2>

@@ -24,7 +24,7 @@ import WarpSpeed from "../layouts/WarpSpeed";
 import useTranslationsHMR from "../v1/hooks/useTranslationsHMR";
 import config from "../next-i18next.config";
 import Script from "next/script";
-import createEmotionCache from "./createEmotionCache";
+import createEmotionCache from "../v2/utils/createEmotionCache";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
