@@ -19,18 +19,18 @@ const LeftNavbar: FC = () => {
       <div className="flex-1 flex flex-col min-h-0 bg-background py-8 border-r border-foreground-alt-500">
         <div className="flex items-center justify-center h-16 flex-shrink-0 px-4 mb-12">
           <div className="w-44">
-            <Link href="/">
-              <a aria-label="Pickle Finance home">
-                <Image
-                  src={matchingLogoSrc(theme)}
-                  width={300}
-                  height={140}
-                  layout="responsive"
-                  alt={t("meta.titleFull")}
-                  title={t("meta.titleFull")}
-                  priority
-                />
-              </a>
+            <Link aria-label="Pickle Finance home" href="/" passHref>
+              <Image
+                src={matchingLogoSrc(theme)}
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{width: "300px", height: "auto",}}
+                // layout="responsive"
+                alt={t("meta.titleFull")}
+                title={t("meta.titleFull") as string}
+                priority
+              />
             </Link>
           </div>
         </div>

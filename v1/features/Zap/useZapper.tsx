@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../../containers/ABIs/erc20.json";
 import { Connection } from "../../containers/Connection";
 import { ETH_ADDRESS } from "./constants";
 
@@ -59,7 +59,7 @@ export const useZapIn = ({
         .toString();
 
       if (!isSellTokenEth) {
-        const TOKEN = new ethers.Contract(sellTokenAddress, erc20.abi, provider);
+        const TOKEN = new ethers.Contract(sellTokenAddress, erc20Abi, provider);
         decimals = await TOKEN.decimals();
         const approvalState = await fetchRes(
           getZapperApi("/zap-in/pickle/approval-state", {

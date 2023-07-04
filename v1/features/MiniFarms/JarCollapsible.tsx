@@ -1,8 +1,7 @@
 import { BigNumber, ethers } from "ethers";
-import styled from "styled-components";
-
+import { styled } from '@mui/material/styles';
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 
 import { Connection } from "../../containers/Connection";
 import { formatEther } from "ethers/lib/utils";
@@ -28,13 +27,13 @@ interface DataProps {
   isZero?: boolean;
 }
 
-const Data = styled.div<DataProps>`
+const Data = styled('div')<DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${(props) => (props.isZero ? "#444" : "unset")};
 `;
 
-const Label = styled.div`
+const Label = styled('div')`
   font-family: "Source Sans Pro";
 `;
 interface ButtonStatus {

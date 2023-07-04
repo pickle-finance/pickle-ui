@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ConnectorItem from "./ConnectorItem";
 import { FC } from "react";
 import type { providers } from "ethers";
-import { Modal, Grid, Button } from "@geist-ui/react";
+import { Modal, Grid, Button } from "@geist-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import { useTranslation } from "next-i18next";
 

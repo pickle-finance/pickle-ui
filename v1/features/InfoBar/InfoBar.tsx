@@ -1,10 +1,10 @@
 import { FC } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
-const MaxWidthWrapper = styled.div`
+const MaxWidthWrapper = styled('div')`
   max-width: 1200px;
   display: flex;
   justify-content: space-between;
@@ -12,7 +12,7 @@ const MaxWidthWrapper = styled.div`
   margin: auto;
 `;
 
-const Content = styled.div`
+const Content = styled('div')`
   padding: 0 1.5rem 1.5rem 0;
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@ interface NavItemProps {
   active?: boolean;
 }
 
-const NavItem = styled.a<NavItemProps>`
+const NavItem = styled('a')<NavItemProps>`
   font-family: "Source Code Pro", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;

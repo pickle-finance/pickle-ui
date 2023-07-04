@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "v2/components/Modal";
-import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useTranslation } from "next-i18next";
 import { DEFAULT_SLIPPAGE_TOLERANCE } from "./constants";
 

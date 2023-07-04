@@ -53,7 +53,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                     src="/pickle-icon.svg"
                     width={24}
                     height={24}
-                    layout="intrinsic"
+                    // layout="intrinsic"
                     alt="PICKLE"
                     title="PICKLE"
                   />
@@ -63,9 +63,9 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                 <div className="inline-block w-6 h-6">
                   <Image
                     src="/dill-icon.png"
-                    width={24}
+                    width={14}
                     height={24}
-                    layout="intrinsic"
+                    // layout="intrinsic"
                     alt="DILL"
                     title="DILL"
                   />
@@ -112,7 +112,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                     src="/pickle-icon.svg"
                     width={24}
                     height={24}
-                    layout="intrinsic"
+                    // layout="intrinsic"
                     alt="PICKLE"
                     title="PICKLE"
                   />
@@ -127,7 +127,7 @@ const RevenueStats: FC<Props> = ({ dill }) => {
                     src="/tokens/eth.png"
                     width={24}
                     height={24}
-                    layout="intrinsic"
+                    // layout="intrinsic"
                     alt="ETH"
                     title="ETH"
                   />

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useTheme, useCurrentState } from "@geist-ui/react";
+import { useTheme, useCurrentState } from "@geist-ui/core";
 import { useCollapseContext } from "./CollapseContext";
-import CollapseGroup from "@geist-ui/react/dist/collapse/collapse-group";
+import CollapseGroup from "@geist-ui/core/dist/collapse/collapse-group";
 import Expand from "./Expand";
 import CollapseIcon from "./CollapseIcon";
 

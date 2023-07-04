@@ -1,6 +1,6 @@
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import { DayPickerInputProps } from "react-day-picker/types/Props";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { colors } from "../styles/theme";
 
 interface DayPickerInputWrapperProps extends Omit<DayPickerInputProps, "classNames"> {
@@ -20,7 +20,7 @@ const DayPickerInputWrapper = ({ className = "", ...rest }: DayPickerInputWrappe
   );
 };
 
-export const DayPicker = styled(DayPickerInputWrapper)({
+export const DayPicker = styled(DayPickerInputWrapper)(()=>({
   ".overlayWrapper": {},
   ".overlay": {
     position: "relative",
@@ -43,4 +43,4 @@ export const DayPicker = styled(DayPickerInputWrapper)({
       },
     },
   },
-});
+}));

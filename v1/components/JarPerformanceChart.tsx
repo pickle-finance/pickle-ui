@@ -1,31 +1,27 @@
 import { materialBlack, pickleGreen, cardColor } from "../util/constants";
 import React, { useState, useEffect, useRef } from "react";
+import { styled } from '@mui/material/styles';
 import { LineChart, Line, YAxis, XAxis, Legend } from "recharts";
-import { makeStyles } from "@material-ui/core/styles";
 import { getTickValues } from "recharts-scale";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Paper from "@material-ui/core/Paper";
+import { Skeleton } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import dayjs from "v1/util/dayjs";
 import { useTranslation } from "next-i18next";
 
-const useStyles = makeStyles((theme) => ({
-  picklePaper: {
-    border: `1px solid ${pickleGreen}`,
-    borderRadius: "3px",
-    backgroundColor: cardColor,
-    color: materialBlack,
-    [theme.breakpoints.up("xs")]: {
-      height: "400px",
-    },
-    [theme.breakpoints.up("md")]: {
-      height: "calc(100vh - 240px)",
-    },
-    overflow: "auto",
+
+const CustomPaper = styled(Paper)(({theme})=>({
+  border: `1px solid ${pickleGreen}`,
+  borderRadius: "3px",
+  backgroundColor: cardColor,
+  color: materialBlack,
+  [theme.breakpoints.up("xs")]: {
+    height: "400px",
   },
-  tagline: {
-    color: materialBlack,
+  [theme.breakpoints.up("md")]: {
+    height: "calc(100vh - 240px)",
   },
-}));
+  overflow: "auto",
+}))
 
 const colors = {
   sCRV: "#81f5ff",
@@ -46,7 +42,6 @@ const formatDate = (tick) => {
 };
 
 export default function JarPerformanceChart(props) {
-  const classes = useStyles();
   const { t } = useTranslation("common");
 
   const targetRef = useRef();
@@ -122,51 +117,49 @@ export default function JarPerformanceChart(props) {
   }, [props.data]);
 
   const yTicks = getTickValues([1, chartData.max]);
-  return (
-    <>
-      <Paper className={classes.picklePaper} ref={targetRef}>
-        {chartData.data.length > 0 ? (
-          <>
-            <LineChart
-              width={dimensions.width}
-              height={dimensions.height}
-              data={chartData.data}
-              margin={{ top: 15, right: 20, left: 0, bottom: 10 }}
-            >
-              <YAxis
-                domain={[1, "dataMax"]}
-                label={{
-                  value: t("balances.ratio"),
-                  angle: -90,
-                  position: "insideLeft",
-                  offset: 15,
-                  fill: materialBlack,
-                }}
-                tick={{ fill: materialBlack }}
-                ticks={yTicks}
-              />
-              <XAxis dataKey="x" tickFormatter={formatDate} tick={{ fill: materialBlack }} />
-              <Legend />
-              {chartData.lines.map((d) => (
-                <Line
-                  type="monotone"
-                  dataKey={d.asset}
-                  stroke={d.stroke}
-                  dot={false}
-                  key={d.asset}
-                />
-              ))}
-            </LineChart>
-          </>
-        ) : (
-          <Skeleton
-            variant="rect"
-            animation="wave"
+  return <>
+    <CustomPaper ref={targetRef}>
+      {chartData.data.length > 0 ? (
+        <>
+          <LineChart
             width={dimensions.width}
             height={dimensions.height}
-          />
-        )}
-      </Paper>
-    </>
-  );
+            data={chartData.data}
+            margin={{ top: 15, right: 20, left: 0, bottom: 10 }}
+          >
+            <YAxis
+              domain={[1, "dataMax"]}
+              label={{
+                value: t("balances.ratio"),
+                angle: -90,
+                position: "insideLeft",
+                offset: 15,
+                fill: materialBlack,
+              }}
+              tick={{ fill: materialBlack }}
+              ticks={yTicks}
+            />
+            <XAxis dataKey="x" tickFormatter={formatDate} tick={{ fill: materialBlack }} />
+            <Legend />
+            {chartData.lines.map((d) => (
+              <Line
+                type="monotone"
+                dataKey={d.asset}
+                stroke={d.stroke}
+                dot={false}
+                key={d.asset}
+              />
+            ))}
+          </LineChart>
+        </>
+      ) : (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width={dimensions.width}
+          height={dimensions.height}
+        />
+      )}
+    </CustomPaper>
+  </>;
 }

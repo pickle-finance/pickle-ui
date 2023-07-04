@@ -69,8 +69,10 @@ const Loading: FC<{ ready: readyState; page?: "platform" | "chain" | "jar" }> = 
               loading="eager"
               src="/animations/waiting.gif"
               alt="Loading..."
-              width={250}
-              height={250}
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{width:"250px",height:"250px"}}
             />
           </div>
           <p className="text-xl text-center text-foreground-alt-200 mt-10">Loading Chart Data</p>

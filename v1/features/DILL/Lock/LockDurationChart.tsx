@@ -1,8 +1,7 @@
 import { FC } from "react";
 import { ethers, BigNumber } from "ethers";
-import GaugeChart from "react-gauge-chart";
-import styled from "styled-components";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { styled } from '@mui/material/styles';
+import { Skeleton } from "@mui/material";
 import { Trans, useTranslation } from "next-i18next";
 
 import { UseDillOutput } from "../../../containers/Dill";
@@ -12,7 +11,7 @@ interface Props {
   dillStats: UseDillOutput;
 }
 
-const ChartContainer = styled.div`
+const ChartContainer = styled('div')`
   margin-top: 18px;
 
   text {
@@ -30,7 +29,7 @@ export const LockDurationChart: FC<Props> = ({ dillStats }) => {
   if (!dillSupply || !pickleLocked) {
     return (
       <Skeleton
-        variant="rect"
+        variant="rectangular"
         animation="wave"
         width="100%"
         height="250px"
@@ -49,19 +48,6 @@ export const LockDurationChart: FC<Props> = ({ dillStats }) => {
 
   return (
     <>
-      <ChartContainer>
-        <GaugeChart
-          id="lock-duration-gauge-chart"
-          nrOfLevels={4}
-          colors={["#FFF", accentColor]}
-          arcWidth={0.2}
-          needleColor={accentColor}
-          needleBaseColor={accentColor}
-          percent={ratio}
-          formatTextValue={() => `${years} years`}
-        />
-      </ChartContainer>
-
       <div>
         <Trans i18nKey="dill.averageLockDuration">
           The average lock duration is currently

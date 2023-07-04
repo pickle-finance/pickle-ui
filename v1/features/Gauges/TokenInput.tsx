@@ -1,12 +1,12 @@
 import { BigNumber, ethers } from "ethers";
 import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import React, { useState, FC, useEffect } from "react";
-import { Trans, useTranslation } from "next-i18next";
-import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/react";
+import { useTranslation } from "next-i18next";
+import { Link, Input, Grid, Spacer, Select, Button } from "@geist-ui/core";
 import { toNum, formatValue } from "./UniV3JarGaugeCollapsible";
 import { weth } from "v1/util/univ3";
 import { UniV3Token } from "v1/containers/Jars/useJarsWithUniV3";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../../containers/ABIs/erc20.json";
 import { Connection } from "v1/containers/Connection";
 
 export const TokenInput: FC<{
@@ -158,7 +158,7 @@ const ApproveButton: FC<{
       }}
       disabled={approved}
       onClick={async () => {
-        const Token = new ethers.Contract(depositTokenAddr, erc20.abi, signer);
+        const Token = new ethers.Contract(depositTokenAddr, erc20Abi, signer);
         const tx = await Token.approve(jarAddr, ethers.constants.MaxUint256);
         await tx.wait();
         setUserApproved(true);

@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import { styled, css } from '@mui/material/styles';
 import Loader from "react-loader-spinner";
 import { FC, MouseEventHandler } from "react";
 
@@ -14,7 +14,7 @@ interface ContainerProps {
   disabled: boolean;
 }
 
-const StyledContainer = styled.div<ContainerProps>`
+const StyledContainer = styled('div')<ContainerProps>`
   width: 100%;
   padding: 0.6rem 0;
   height: 100%;
@@ -42,7 +42,7 @@ const StyledContainer = styled.div<ContainerProps>`
   }
 `;
 
-const LoaderContainer = styled.div`
+const LoaderContainer = styled('div')`
   position: absolute;
   top: 50%;
   left: 50%;

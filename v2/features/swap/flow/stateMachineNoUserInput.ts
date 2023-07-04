@@ -19,6 +19,7 @@ export enum Actions {
 }
 
 export const stateMachine = createMachine<ApprovalContext>({
+  predictableActionArguments: true,
   initial: States.AWAITING_CONFIRMATION,
   context: {
     txHash: undefined,

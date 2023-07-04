@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Grid, Page } from "@geist-ui/react";
+import { Grid, Page } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { Balances } from "v1/features/Balances/Balances";

@@ -1,5 +1,5 @@
 import React, { useState, FC, useEffect } from "react";
-import { Grid, Card } from "@geist-ui/react";
+import { Grid, Card } from "@geist-ui/core";
 import { Trans, useTranslation } from "next-i18next";
 import { TradeButton } from "v1/features/Prices/Prices";
 import { Connection } from "v1/containers/Connection";

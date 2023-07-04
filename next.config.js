@@ -14,6 +14,8 @@ const localesDir = path.resolve("public/locales");
 //   enabled: process.env.ANALYZE === "true",
 // });
 
+/** @type {import('next').NextConfig} */
+
 const moduleExports = {
   typescript: {
     ignoreBuildErrors: true,
@@ -38,7 +40,7 @@ const moduleExports = {
       },
     ];
   },
-  webpack5: true,
+  // webpack5: true,
   webpack(config, context) {
     if (!context.isServer && context.dev) {
       config.plugins.push(new I18NextHMRPlugin({ localesDir }));
@@ -49,6 +51,7 @@ const moduleExports = {
     };
     return config;
   },
+  reactStrictMode: true,
 };
 
 const SentryWebpackPluginOptions = {};

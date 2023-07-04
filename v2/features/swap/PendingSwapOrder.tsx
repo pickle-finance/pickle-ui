@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { shortenAddress } from "v2/utils";
 import Link from "v2/components/Link";
 import Ping from "v2/features/connection/Ping";
+import Image from "next/image";
 
 interface Props {
   orderId: string;
@@ -20,7 +21,15 @@ const PendingSwapOrder: FC<Props> = ({ orderId, explorer }) => {
     <>
       <div className="flex justify-center my-2">
         <div className="w-1/2 min-h-[200px]">
-          <img src="/animations/waiting.gif" alt={title} title={title} />
+          <Image
+            src="/animations/waiting.gif"
+            alt={title}
+            title={title}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "100%" }}
+          />
         </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>

@@ -6,6 +6,7 @@ import Error from "../Error";
 import Spinner from "v2/components/Spinner";
 import { classNames } from "v2/utils";
 import MoreInfo from "v2/components/MoreInfo";
+import Image from "next/image";
 
 interface Props {
   amount: string;
@@ -36,10 +37,13 @@ const AwaitingConfirmation: FC<Props> = ({
     <>
       <div className="flex justify-center my-2">
         <div className="w-1/2 min-h-[200px]">
-          <img
+          <Image
             src="/animations/working.gif"
             alt={t("v2.prompts.pleaseConfirm")}
-            title={t("v2.prompts.pleaseConfirm")}
+            title={t("v2.prompts.pleaseConfirm") as string}
+            width={0}
+            height={0}
+            style={{ width: "200px", height: "auto" }}
           />
         </div>
       </div>

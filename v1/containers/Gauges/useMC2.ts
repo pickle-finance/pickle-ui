@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { Balances } from "../Balances";
 import { Connection } from "../Connection";
 import { Contracts, PICKLE_ETH_SLP } from "../Contracts";
 import { SushiPairs } from "../SushiPairs";
 import { PriceIds, Prices } from "../Prices";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../ABIs/erc20.json";
 import { addresses } from "../SushiPairs";
 import { Contract as MulticallContract } from "ethers-multicall";
 
@@ -48,9 +48,9 @@ export const useMC2 = () => {
       if (_stakedSlp) setSlpStaked(_stakedSlp);
 
       // Value calculations
-      const pickleToken = new MulticallContract(addresses.pickle, erc20.abi);
-      const wethToken = new MulticallContract(addresses.weth, erc20.abi);
-      const slpToken = new MulticallContract(PICKLE_ETH_SLP, erc20.abi);
+      const pickleToken = new MulticallContract(addresses.pickle, erc20Abi);
+      const wethToken = new MulticallContract(addresses.weth, erc20Abi);
+      const slpToken = new MulticallContract(PICKLE_ETH_SLP, erc20Abi);
 
       const { pricePerToken } = await getPairData(PICKLE_ETH_SLP);
       setUserValue(pricePerToken * +formatEther(_stakedSlp || 0));

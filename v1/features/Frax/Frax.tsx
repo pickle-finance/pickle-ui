@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Link, Input, Grid, Spacer, Card, Tooltip } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Card, Tooltip } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -10,7 +10,7 @@ import { useFrax } from "v1/containers/Frax/UseFrax";
 import { ERC20Transfer } from "v1/containers/Erc20Transfer";
 import { FraxAddresses } from "v1/containers/config";
 import { Contracts } from "v1/containers/Contracts";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 
 const formatNumber = (num: number) => {
   return num.toLocaleString(undefined, {
@@ -174,7 +174,7 @@ export const FraxFeature: FC = () => {
   );
 };
 
-const StyledNotice = styled.div`
+const StyledNotice = styled('div')`
   width: "100%";
   textalign: "center";
   paddingtop: "6px";

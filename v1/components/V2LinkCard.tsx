@@ -1,9 +1,8 @@
-import styled from "styled-components";
-import { Card } from "@geist-ui/react";
-import { Trans } from "next-i18next";
+import { styled } from '@mui/material/styles';
+import { Card } from "@geist-ui/core";
 import Link from "next/link";
 
-const Container = styled.div`
+const Container = styled('div')`
   width: 750pt;
   max-width: 100vw;
   margin: 2rem auto 0;

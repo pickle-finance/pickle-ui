@@ -1,12 +1,12 @@
 import { BigNumber, ethers } from "ethers";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { Trans, useTranslation } from "next-i18next";
 
 import React, { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
-import { withStyles } from "@material-ui/core/styles";
-import Switch from "@material-ui/core/Switch";
+import { withStyles } from "tss-react/mui";
+import Switch from "@mui/material/Switch";
 import { Connection } from "../../containers/Connection";
 import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import { Contracts } from "../../containers/Contracts";
@@ -30,13 +30,13 @@ interface DataProps {
   isZero?: boolean;
 }
 
-const Data = styled.div<DataProps>`
+const Data = styled('div') <DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${(props) => (props.isZero ? "#444" : "unset")};
 `;
 
-const Label = styled.div`
+const Label = styled('div')`
   font-family: "Source Sans Pro";
 `;
 
@@ -113,7 +113,21 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const GreenSwitch = withStyles({
+// export const GreenSwitch = withStyles({
+//   switchBase: {
+//     color: backgroundColor,
+//     "&$checked": {
+//       color: pickleGreen,
+//     },
+//     "&$checked + $track": {
+//       backgroundColor: pickleGreen,
+//     },
+//   },
+//   checked: {},
+//   track: {},
+// })(Switch);
+
+export const GreenSwitch = withStyles(Switch, {
   switchBase: {
     color: backgroundColor,
     "&$checked": {
@@ -125,7 +139,7 @@ export const GreenSwitch = withStyles({
   },
   checked: {},
   track: {},
-})(Switch);
+});
 
 export const UniV3JarGaugeCollapsible: FC<{
   jarData: UserJarData;
@@ -164,8 +178,8 @@ export const UniV3JarGaugeCollapsible: FC<{
     token0?.address.toLowerCase() === weth.toLowerCase()
       ? ethToken.token0
       : token1?.address.toLowerCase() === weth.toLowerCase()
-      ? ethToken.token1
-      : ethToken.none;
+        ? ethToken.token1
+        : ethToken.none;
 
   const depositBuilder = () => {
     if (useEth) return defaultDeposit();
@@ -174,27 +188,27 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token0:
           return jarContract
             .connect(signer)
-            [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
-              "0",
-              convertDecimals(deposit1Amount, token1?.decimals),
-              ...(isFrax ? [] : [shouldZap]),
-              {
-                value: parseEther(deposit0Amount),
-                gasLimit: 850000,
-              },
-            );
+          [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
+            "0",
+            convertDecimals(deposit1Amount, token1?.decimals),
+            ...(isFrax ? [] : [shouldZap]),
+            {
+              value: parseEther(deposit0Amount),
+              gasLimit: 850000,
+            },
+          );
         case ethToken.token1:
           return jarContract
             .connect(signer)
-            [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
-              convertDecimals(deposit0Amount, token0?.decimals),
-              "0",
-              ...(isFrax ? [] : [shouldZap]),
-              {
-                value: parseEther(deposit1Amount),
-                gasLimit: 850000,
-              },
-            );
+          [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
+            convertDecimals(deposit0Amount, token0?.decimals),
+            "0",
+            ...(isFrax ? [] : [shouldZap]),
+            {
+              value: parseEther(deposit1Amount),
+              gasLimit: 850000,
+            },
+          );
         case ethToken.none:
         default:
           return defaultDeposit();
@@ -205,12 +219,12 @@ export const UniV3JarGaugeCollapsible: FC<{
   const defaultDeposit = () =>
     jarContract
       .connect(signer)
-      [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
-        convertDecimals(deposit0Amount, token0?.decimals),
-        convertDecimals(deposit1Amount, token1?.decimals),
-        ...(isFrax ? [] : [shouldZap]),
-        { gasLimit: 850000 },
-      );
+    [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
+      convertDecimals(deposit0Amount, token0?.decimals),
+      convertDecimals(deposit1Amount, token1?.decimals),
+      ...(isFrax ? [] : [shouldZap]),
+      { gasLimit: 850000 },
+    );
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
@@ -467,7 +481,7 @@ export const UniV3JarGaugeCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -518,8 +532,8 @@ export const UniV3JarGaugeCollapsible: FC<{
                         {totalAPY + fullApy === 0
                           ? "--%"
                           : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                              totalAPY + pickleAPYMax,
-                            )}`}
+                            totalAPY + pickleAPYMax,
+                          )}`}
                       </span>
                       <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
                     </div>
@@ -802,7 +816,7 @@ export const UniV3JarGaugeCollapsible: FC<{
   );
 };
 
-const StyledNotice = styled.div`
+const StyledNotice = styled('div')`
   width: "100%";
   textalign: "center";
   paddingtop: "6px";

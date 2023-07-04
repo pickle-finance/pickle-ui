@@ -3,6 +3,7 @@ const withOpacityValue = (variable) => {
     opacityValue ? `rgba(var(${variable}), ${opacityValue})` : `rgb(var(${variable}))`;
 };
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./pages/**/*.tsx", "./layouts/*.tsx", "./v2/**/*.tsx"],
   theme: {

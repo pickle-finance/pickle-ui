@@ -52,20 +52,16 @@ export const useWido = () => {
     tokens: "@tokens",
   };
 
-  const supportedJarsStored = sessionStorage.getItem(config.jars);
-  const parsedSupportedJars = supportedJarsStored && JSON.parse(supportedJarsStored);
+  const [supportedJars, setSupportedJars] = useState<Array<Token>>([]);
 
-  const supportedTokensStored = sessionStorage.getItem(config.tokens);
-  const parsedSupportedTokens = supportedTokensStored && JSON.parse(supportedTokensStored);
-
-  const [supportedJars, setSupportedJars] = useState<Array<Token>>(parsedSupportedJars || []);
-
-  const [supportedTokens, setSupportedTokens] = useState<Array<Token>>(parsedSupportedTokens || []);
+  const [supportedTokens, setSupportedTokens] = useState<Array<Token>>([]);
 
   const [supportedTokensWithBalance, setSupportedTokensWithBalance] = useState<Array<Token>>([]);
 
   useEffect(() => {
     const getSupportedJarsFromWido = async () => {
+      const supportedJarsStored = sessionStorage.getItem(config.jars);
+    
       if (!supportedJarsStored?.length) {
         const supportedJarsRes = await getSupportedTokens({
           chainId: [MAINNET_CHAIN_ID],
@@ -77,6 +73,8 @@ export const useWido = () => {
     };
 
     const getSupportedTokensFromWido = async () => {
+      const supportedTokensStored = sessionStorage.getItem(config.tokens);
+
       if (!supportedTokensStored?.length) {
         const supportedTokensRes = await getSupportedTokens({
           chainId: [1], // (Optional) Array of chain ids to filter by
@@ -100,13 +98,7 @@ export const useWido = () => {
     getSupportedJarsFromWido();
     getSupportedTokensFromWido();
     getTokensWithUserBalance();
-  }, [
-    config.jars,
-    config.tokens,
-    supportedJarsStored?.length,
-    supportedTokensStored?.length,
-    account,
-  ]);
+  }, [config.jars, config.tokens, account, supportedTokens]);
 
   return {
     supportedTokensWithBalance,

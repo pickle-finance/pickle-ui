@@ -1,6 +1,5 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
-import { Input } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import React, { ChangeEvent, useCallback, useEffect, useState, KeyboardEvent } from "react";
 import { Control, Controller } from "react-hook-form";

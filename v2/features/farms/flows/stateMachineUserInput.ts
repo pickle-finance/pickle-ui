@@ -27,6 +27,7 @@ export enum Actions {
 }
 
 export const stateMachine = createMachine<DepositContext>({
+  predictableActionArguments: true,
   initial: States.FORM,
   context: {
     txHash: undefined,

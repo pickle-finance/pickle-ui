@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Page, Note, Spacer } from "@geist-ui/react";
-import { ArrowLeft } from "@geist-ui/react-icons";
+import { Page, Note, Spacer } from "@geist-ui/core";
+import { ArrowLeft } from "@geist-ui/icons";
 import { Trans, useTranslation } from "next-i18next";
 import Link from "next/link";
 
@@ -14,12 +14,10 @@ const Farms: FC = () => {
     <>
       <Page>
         <Page.Content>
-          <Link href="/farms" passHref>
-            <a style={{ textDecoration: "none" }}>
-              <strong>
-                <ArrowLeft size={13} /> {t("oldFarms.back")}
-              </strong>
-            </a>
+          <Link href="/farms" passHref style={{ textDecoration: "none" }}>
+            <strong>
+              <ArrowLeft size={13} /> {t("oldFarms.back")}
+            </strong>
           </Link>
           <Spacer />
           <Note type="warning" style={{ textAlign: "center" }}>

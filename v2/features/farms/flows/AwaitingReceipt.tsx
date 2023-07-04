@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { shortenAddress } from "v2/utils";
 import Link from "v2/components/Link";
 import Ping from "v2/features/connection/Ping";
+import Image from "next/image";
 
 interface Props {
   txHash: string | undefined;
@@ -20,7 +21,14 @@ const AwaitingReceipt: FC<Props> = ({ txHash, chainExplorer }) => {
     <>
       <div className="flex justify-center my-2">
         <div className="w-1/2 min-h-[200px]">
-          <img src="/animations/waiting.gif" alt={title} title={title} />
+          <Image
+            src="/animations/waiting.gif"
+            alt={title}
+            title={title}
+            width={0}
+            height={0}
+            style={{ width: "200px", height: "auto" }}
+          />
         </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>

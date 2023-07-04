@@ -1,6 +1,6 @@
 import { createContainer } from "unstated-next";
-import { ethers, Contract } from "ethers";
-import erc20 from "@studydefi/money-legos/erc20";
+import { ethers } from "ethers";
+import erc20Abi from "./ABIs/erc20.json";
 
 import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
@@ -55,9 +55,9 @@ function useComethPairs() {
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new MulticallContract(a.address, erc20.abi);
-    const tokenB = new MulticallContract(b.address, erc20.abi);
-    const pair = new MulticallContract(pairAddress, erc20.abi);
+    const tokenA = new MulticallContract(a.address, erc20Abi);
+    const tokenB = new MulticallContract(b.address, erc20Abi);
+    const pair = new MulticallContract(pairAddress, erc20Abi);
 
     const [numAInPairBN, numBInPairBN, totalSupplyBN] = await multicallProvider.all([
       tokenA.balanceOf(pairAddress),

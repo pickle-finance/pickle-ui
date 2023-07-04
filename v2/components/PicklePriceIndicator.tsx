@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Skeleton } from "@mui/material";
 import useSWR from "swr";
 import { useTranslation } from "next-i18next";
 import { AdvancedChartWidgetProps } from "react-tradingview-embed";
@@ -61,7 +61,7 @@ const PicklePriceIndicator: FC = () => {
             src="/pickle-icon.svg"
             width={200}
             height={200}
-            layout="responsive"
+            // layout="responsive"
             alt="Pickle Finance"
             title="Pickle Finance"
             className="group-hover:scale-110 transition duration-300 ease-in-out"

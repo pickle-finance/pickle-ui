@@ -1,11 +1,11 @@
 import { FC } from "react";
-import styled from "styled-components";
-import { Card, Grid } from "@geist-ui/react";
+import { styled } from '@mui/material/styles';
+import { Card, Grid } from "@geist-ui/core";
 import { Prices as PricesContainer } from "../../containers/Prices";
 import { Connection } from "v1/containers/Connection";
 import { ChainNetwork } from "picklefinance-core";
 
-const DataPoint = styled.div`
+const DataPoint = styled('div')`
   font-size: 24px;
   display: flex;
   align-items: center;
@@ -13,15 +13,15 @@ const DataPoint = styled.div`
   margin-bottom: 0.4rem;
 `;
 
-const Label = styled.div`
+const Label = styled('div')`
   font-family: "Source Sans Pro", sans-serif;
 `;
 
-const Monospace = styled.div`
+const Monospace = styled('div')`
   font-family: "Source Code Pro", sans-serif;
 `;
 
-export const TradeButton = styled.a`
+export const TradeButton = styled('a')`
   box-sizing: border-box;
   display: inline-block;
   padding: 0 1.25rem;

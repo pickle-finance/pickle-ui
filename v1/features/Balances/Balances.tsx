@@ -1,13 +1,12 @@
 import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
-import { Card, Grid, Tooltip } from "@geist-ui/react";
+import { styled } from '@mui/material/styles';
+import { Card, Grid, Tooltip } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { useBalances } from "./useBalances";
 import { Prices } from "../../containers/Prices";
 import { Connection } from "../../containers/Connection";
 import { Prices as PriceComponent } from "../Prices/Prices";
-import { ethers } from "ethers";
 import { getProtocolData } from "v1/util/api";
 import PickleIcon from "../../components/PickleIcon";
 
@@ -15,13 +14,13 @@ const Container = styled(Grid.Container)`
   font-family: "Source Code Pro", sans-serif;
 `;
 
-const DataPoint = styled.div`
+const DataPoint = styled('div')`
   font-size: 24px;
   display: flex;
   align-items: center;
 `;
 
-const HideOnMobile = styled.div`
+const HideOnMobile = styled('div')`
   @media screen and (max-width: 600px) {
     display: none;
   }

@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Grid, Card } from "@geist-ui/react";
-import styled from "styled-components";
+import { Grid, Card } from "@geist-ui/core";
+import { styled } from '@mui/material/styles';
 import { formatEther } from "ethers/lib/utils";
 import { useTranslation } from "next-i18next";
 
@@ -9,7 +9,7 @@ import { DillStats } from "./DillStats";
 import { UseDillOutput } from "../../containers/Dill";
 import PickleIcon from "../../components/PickleIcon";
 
-const DataPoint = styled.div`
+const DataPoint = styled('div')`
   font-size: 22px;
   display: flex;
   align-items: center;

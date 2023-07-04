@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useRouter } from "next/router";
 
-import { Select } from "@geist-ui/react";
+import { Select } from "@geist-ui/core";
 
 interface Props {
   type: "standalone" | "grouped";

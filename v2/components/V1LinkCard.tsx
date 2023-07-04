@@ -14,7 +14,7 @@ const V1LinkCard: VFC = () => {
       <div className="flex items-center font-body text-foreground-alt-200 text-center font-normal text-sm leading-4">
         <InformationCircleIcon className="w-5 h-5 text-accent mr-2" />
         <Trans i18nKey="v2.dashboard.v1Link">
-          You're interacting with the new Pickle Finance app. You can always access the original app
+          {"You're interacting with the new Pickle Finance app. You can always access the original app"}
           <Link href="/v1" primary className="font-bold ml-1">
             here
           </Link>

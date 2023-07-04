@@ -1,5 +1,7 @@
-import styled from "styled-components";
-export const StyledButton = styled.button`
+import { styled } from '@mui/material/styles';
+// import styled from '@mui/styled-engine';
+
+export const StyledButton = styled('button')`
   background: rgb(214, 123, 90);
   font-weight: 800;
   border: 4px solid rgb(2, 30, 52);

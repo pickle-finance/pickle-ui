@@ -1,20 +1,20 @@
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import isEmpty from "lodash/isEmpty";
 import React, { FC, useCallback, useState } from "react";
 import { SwapSelect } from "./SwapSelector";
 import { getAmountWRTUpperDenom } from "./utils";
-import FlipCameraAndroidOutlinedIcon from "@material-ui/icons/FlipCameraAndroidOutlined";
+import FlipCameraAndroidOutlinedIcon from "@mui/icons-material/FlipCameraAndroidOutlined";
 import { OrderKind } from "@cowprotocol/cow-sdk";
 import BigNumber from "bignumber.js";
 
-const InfoDiv = styled.div`
+const InfoDiv = styled('div')`
   color: rgb(197, 218, 239);
   font-size: 16px;
   font-weight: 500;
   margin-top: 2rem;
 `;
 
-const KeyValDiv = styled.div`
+const KeyValDiv = styled('div')`
   display: flex;
   justify-content: space-between;
 `;

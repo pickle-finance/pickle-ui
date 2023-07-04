@@ -1,8 +1,8 @@
-import { ethers, Contract } from "ethers";
+import { ethers } from "ethers";
 import v3PoolABI from "../containers/ABIs/univ3Pool.json";
 
 import univ3prices from "@thanpolas/univ3prices";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "../containers/ABIs/erc20.json";
 import { JAR_DEPOSIT_TOKENS } from "../containers/Jars/jars";
 import { tokenInfo } from "v1/features/Zap/useBalance";
 import { Token } from "@uniswap/sdk-core";
@@ -57,10 +57,10 @@ export const getPoolData = async (pool, token, provider) => {
 
   const tokenPrice = token0 === weth ? wethPrice * ratio : wethPrice / ratio;
 
-  const wethContract = new ethers.Contract(weth, erc20.abi, provider);
+  const wethContract = new ethers.Contract(weth, erc20Abi, provider);
   const wethBalance = ethers.utils.formatUnits(await wethContract.balanceOf(pool), 18);
 
-  const tokenContract = new ethers.Contract(token, erc20.abi, provider);
+  const tokenContract = new ethers.Contract(token, erc20Abi, provider);
   const symbol = await tokenContract.symbol();
   const tokenBalance = ethers.utils.formatUnits(await tokenContract.balanceOf(pool), 18);
 

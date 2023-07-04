@@ -1,8 +1,8 @@
 import { BigNumber, ethers } from "ethers";
 import { Contract as MulticallContract } from "ethers-multicall";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { useState, FC, useEffect, ReactNode } from "react";
-import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/react";
+import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import { useTranslation } from "next-i18next";
 import { Connection } from "../../containers/Connection";
@@ -43,13 +43,13 @@ const formatNumber = (num: number) => {
   });
 };
 
-const Data = styled.div<DataProps>`
+const Data = styled('div')<DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${(props) => (props.isZero ? "#444" : "unset")};
 `;
 
-const Label = styled.div`
+const Label = styled('div')`
   font-family: "Source Sans Pro";
 `;
 
@@ -1223,7 +1223,7 @@ export const getRatioStringAndPendingString = (
     pendingString: userSharePendingStr,
   };
 };
-const StyledNotice = styled.div`
+const StyledNotice = styled('div')`
   width: "100%";
   textalign: "center";
   paddingtop: "6px";

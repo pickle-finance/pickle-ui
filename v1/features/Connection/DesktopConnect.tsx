@@ -1,11 +1,11 @@
 import { FC } from "react";
-import styled from "styled-components";
-import { useModal } from "@geist-ui/react";
+import { styled } from '@mui/material/styles';
+import { useModal } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 
 import { Web3Modal } from "./Web3Modal";
 
-const Connect = styled.button`
+const Connect = styled('button')`
   color: var(--bg-color);
   background: var(--accent-color);
   height: 100%;

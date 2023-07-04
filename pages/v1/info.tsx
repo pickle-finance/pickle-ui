@@ -1,169 +1,138 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
-import { Card } from "@geist-ui/react";
-import Tooltip from "@material-ui/core/Tooltip";
-import Grid from "@material-ui/core/Grid";
-import Avatar from "@material-ui/core/Avatar";
-import Skeleton from "@material-ui/lab/Skeleton";
-import TableBody from "@material-ui/core/TableBody";
-import TableHead from "@material-ui/core/TableHead";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableRow from "@material-ui/core/TableRow";
-import Table from "@material-ui/core/Table";
-import Paper from "@material-ui/core/Paper";
-import { Page } from "@geist-ui/react";
+import { styled } from '@mui/material/styles';
+import { Card } from "@geist-ui/core";
+import Tooltip from "@mui/material/Tooltip";
+import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
+import { Skeleton } from "@mui/material";
+import TableBody from "@mui/material/TableBody";
+import TableHead from "@mui/material/TableHead";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import Image from 'next/image'
+import { Page } from "@geist-ui/core";
 import { useTranslation } from "next-i18next";
 import clsx from "clsx";
 
 import { InfoBar } from "v1/features/InfoBar/InfoBar";
 import { Footer } from "v1/features/Footer/Footer";
-import { cardColor, pickleGreen, materialBlack } from "v1/util/constants";
+import { pickleGreen, materialBlack } from "v1/util/constants";
 import { getProtocolData, getFarmData, getPerformanceData, getCoinData } from "v1/util/api";
 import { powerPool, jars } from "v1/util/jars";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    color: pickleGreen,
-  },
-  claimContent: {
-    justifyContent: "center",
-  },
-  claimLink: {
-    cursor: "pointer",
-    color: "#0492c2",
-    textShadow: "0px 0px 3px #0492c2",
-  },
-  warning: {
-    fontSize: "1rem",
-    display: "flex",
-    color: "red",
-    justifyContent: "center",
-    alignContent: "center",
-  },
-  warningContent: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  warningLink: {
-    textDecoration: "none",
-    marginLeft: "5px",
-    color: pickleGreen,
-  },
-  card: {
-    color: materialBlack,
-    backgroundColor: cardColor,
-    border: `1px solid ${pickleGreen}`,
-    borderRadius: "3px",
-  },
-  cardContent: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tableAsset: {
-    display: "flex",
-    alignItems: "center",
-  },
-  cardIcon: {
-    marginRight: theme.spacing(3),
-    marginLeft: theme.spacing(3),
-  },
-  cardInfo: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  cardTitle: {
-    fontSize: "1rem",
-  },
-  cardValue: {
-    fontSize: "1.6rem",
-    letterSpacing: "2px",
-  },
-  cardSubText: {
-    fontSize: ".8rem",
-  },
-  tagline: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    fontSize: "2rem",
-    letterSpacing: "6px",
-  },
-  subtitle: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(2),
-    fontSize: "1.3rem",
-    letterSpacing: "4px",
-    color: materialBlack,
-  },
-  farmTable: {
-    backgroundColor: "#0e1d15",
-    borderTopLeftRadius: "3px",
-    borderTopRightRadius: "3px",
-    border: `1px solid ${pickleGreen}`,
-  },
-  farmTableCell: {
-    color: materialBlack,
-    borderBottom: "1px solid gray",
-  },
-  farmIcon: {
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(3),
-    height: "25px",
-    width: "25px",
-  },
-  emissionIcon: {
-    marginRight: theme.spacing(1),
-    height: "15px",
-    width: "15px",
-  },
-  disclaimer: {
-    textAlign: "center",
-    fontSize: ".6rem",
-    color: pickleGreen,
-    borderBottom: "none",
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  skeletonRow: {
-    backgroundColor: "darkgreen",
-    opacity: "30%",
-  },
-  pickleHeader: {
-    maxWidth: "80%",
-    margin: "auto",
-  },
-}));
+const PREFIX = "V1Info"
+const classes = {
+  root: `${PREFIX}-root`,
+  claimContent: `${PREFIX}-claimContent`,
+  claimLink: `${PREFIX}-claimLink`,
+  warning: `${PREFIX}-warning`,
+  warningContent: `${PREFIX}-warningContent`,
+  warningLink: `${PREFIX}-warningLink`,
+  card: `${PREFIX}-card`,
+  cardContent: `${PREFIX}-cardContent`,
+  tableAsset: `${PREFIX}-tableAsset`,
+  cardIcon: `${PREFIX}-cardIcon`,
+  cardInfo: `${PREFIX}-cardInfo`,
+  cardTitle: `${PREFIX}-cardTitle`,
+  cardValue: `${PREFIX}-cardValue`,
+  cardSubText: `${PREFIX}-cardSubText`,
+  tagline: `${PREFIX}-tagline`,
+  subtitle: `${PREFIX}-subtitle`,
+  farmTable: `${PREFIX}-farmTable`,
+  farmTableCell: `${PREFIX}-farmTableCell`,
+  farmIcon: `${PREFIX}-farmIcon`,
+  emissionIcon: `${PREFIX}-emissionIcon`,
+  disclaimer: `${PREFIX}-disclaimer`,
+  skeletonRow: `${PREFIX}-skeletonRow`,
+  pickleHeader: `${PREFIX}-pickleHeader`,
+}
 
 const jarOptions = jars.concat([powerPool]);
 
-const DataPoint = styled.div`
+const DataPoint = styled('div')`
   font-size: 24px;
   display: flex;
   align-items: center;
 `;
 
+const FarmTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${classes.farmTableCell}`]: {
+    color: materialBlack,
+    borderBottom: "1px solid gray",
+  },
+  [`& .${classes.cardTitle}`]: {
+    fontSize: "1rem",
+  },
+  [`& .${classes.cardContent}`]: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  [`& .${classes.emissionIcon}`]: {
+    marginRight: theme.spacing(1),
+    height: "15px",
+    width: "15px",
+  },
+  [`& .${classes.farmIcon}`]: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    height: "25px",
+    width: "25px",
+  },
+  [`& .${classes.skeletonRow}`]: {
+    backgroundColor: "darkgreen",
+    opacity: "30%",
+  },
+  [`& .${classes.tableAsset}`]: {
+    display: "flex",
+    alignItems: "center",
+  },
+}))
+
+const PickleHeaderGrid = styled(Grid)(({ theme }) => ({
+  [`&.${classes.pickleHeader}`]: {
+    maxWidth: "80%",
+    margin: "auto",
+  },
+}))
+
+const CardTitleTooltip = styled(Tooltip)(({ theme }) => ({
+  [`&.${classes.cardTitle}`]: {
+    fontSize: "1rem",
+  },
+}))
+
+const FarmTableContainer = styled(TableContainer)(({ theme }) => ({
+  [`&.${classes.farmTable}`]: {
+    backgroundColor: "#0e1d15",
+    borderTopLeftRadius: "3px",
+    borderTopRightRadius: "3px",
+    border: `1px solid ${pickleGreen}`,
+  },
+}))
+
 const PicklePerDayCell = (props: any) => {
   const { t } = useTranslation("common");
-  const classes = useStyles();
   const { val, precision, apy } = props;
 
   return (
     <Tooltip title={<span>{t("info.pickleApy", { percent: (apy * 100).toFixed(2) })}</span>}>
-      <TableCell className={classes.farmTableCell}>
+      <FarmTableCell className={classes.farmTableCell}>
         <div className={clsx(classes.cardTitle, classes.cardContent)}>
           <Avatar variant="square" src="/assets/pickle.png" className={classes.emissionIcon} />
           {val.toFixed(precision)} / day
         </div>
-      </TableCell>
+      </FarmTableCell>
     </Tooltip>
   );
 };
 
 const ApyCell = (props: any) => {
   const { t } = useTranslation("common");
-  const classes = useStyles();
+  // const classes = useStyles();
   const { val, jarIndex, farmIndex, isFarm, precision } = props;
   let cellData = "-";
 
@@ -174,9 +143,9 @@ const ApyCell = (props: any) => {
   }
 
   return (
-    <TableCell className={classes.farmTableCell}>
+    <FarmTableCell className={classes.farmTableCell}>
       <div className={clsx(classes.cardTitle, classes.cardContent)}>{cellData}</div>
-    </TableCell>
+    </FarmTableCell>
   );
 };
 
@@ -198,7 +167,7 @@ const TooltipAndApyCell = (props: any) => {
 };
 
 const FarmRow = (props: any) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { t } = useTranslation("common");
 
   const { farm, item, jar, isFarm = true } = props;
@@ -213,22 +182,22 @@ const FarmRow = (props: any) => {
 
   return (
     <TableRow key={farm}>
-      <TableCell className={classes.farmTableCell}>
+      <FarmTableCell className={classes.farmTableCell}>
         <div className={clsx(classes.cardTitle, classes.tableAsset)}>
           <Avatar variant="square" src={icon} className={classes.farmIcon} />
           {farmName}
         </div>
-      </TableCell>
-      <TableCell className={classes.farmTableCell}>
+      </FarmTableCell>
+      <FarmTableCell className={classes.farmTableCell}>
         <div className={clsx(classes.cardTitle, classes.cardContent)}>
           {formatNumber(item.tokenBalance)}
         </div>
-      </TableCell>
-      <TableCell className={classes.farmTableCell}>
+      </FarmTableCell>
+      <FarmTableCell className={classes.farmTableCell}>
         <div className={clsx(classes.cardTitle, classes.cardContent)}>
           {`${getUSD(item.valueBalance)}`}
         </div>
-      </TableCell>
+      </FarmTableCell>
       {isFarm && <PicklePerDayCell apy={item.apy} val={picklePerDay} precision="3" />}
       <TooltipAndApyCell
         val={jar}
@@ -262,18 +231,18 @@ const FarmRow = (props: any) => {
 };
 
 const SkeletonCell = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
   return (
-    <TableCell>
+    <FarmTableCell>
       <Skeleton className={classes.skeletonRow}>
         <Avatar variant="square" src={"/assets/pickle.png"} className={classes.farmIcon} />
       </Skeleton>
-    </TableCell>
+    </FarmTableCell>
   );
 };
 
 const SkeletonChart = (props: any) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { isFarm = true } = props;
   return (
     <>
@@ -296,7 +265,7 @@ const SkeletonChart = (props: any) => {
 };
 
 const FarmHeaderTooltipAndCell = (props: any) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { tooltipTitleText, cellData, target, isFarm = true } = props;
   const { t } = useTranslation("common");
 
@@ -304,14 +273,14 @@ const FarmHeaderTooltipAndCell = (props: any) => {
     return <span>{t(tooltipTitleText, { target })}</span>;
   };
   return (
-    <Tooltip className={classes.cardTitle} title={tooltipTitle()}>
-      <TableCell className={classes.farmTableCell}>{t(cellData)}</TableCell>
-    </Tooltip>
+    <CardTitleTooltip className={classes.cardTitle} title={tooltipTitle()}>
+      <FarmTableCell className={classes.farmTableCell}>{t(cellData)}</FarmTableCell>
+    </CardTitleTooltip>
   );
 };
 
 const FarmHeader = (props: any) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { isFarm = true } = props;
   const { t } = useTranslation("common");
   const target = isFarm ? t("info.farm") : t("info.jar");
@@ -319,9 +288,9 @@ const FarmHeader = (props: any) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell className={classes.farmTableCell}>
+        <FarmTableCell className={classes.farmTableCell}>
           <div className={classes.cardTitle}>{target}</div>
-        </TableCell>
+        </FarmTableCell>
         <FarmHeaderTooltipAndCell
           tooltipTitleText="info.currentTokenBalance"
           target={target}
@@ -333,9 +302,9 @@ const FarmHeader = (props: any) => {
           cellData="info.value"
         />
         {isFarm && (
-          <TableCell className={classes.farmTableCell}>
+          <FarmTableCell className={classes.farmTableCell}>
             <div className={classes.cardTitle}>Pickle / $1000</div>
-          </TableCell>
+          </FarmTableCell>
         )}
         <FarmHeaderTooltipAndCell
           tooltipTitleText="info.dayApy"
@@ -369,7 +338,7 @@ const getUSD = (value: number) => {
   return `$${formatNumber(value)}`;
 };
 export default function Brining() {
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const [picklePerBlock, setPicklePerBlock] = useState(undefined);
   const [jarInfo, setJarInfo] = useState(undefined);
@@ -404,7 +373,7 @@ export default function Brining() {
     <>
       <Page>
         <InfoBar />
-        <Grid container spacing={5} className={classes.pickleHeader}>
+        <PickleHeaderGrid container spacing={5} className={classes.pickleHeader}>
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>{t("balances.totalValueLocked")}</h2>
@@ -421,7 +390,15 @@ export default function Brining() {
           <Grid item xs={12} sm={6}>
             <Card>
               <h2>
-                <img src="/pickle.png" style={{ width: "24px", verticalAlign: `text-bottom` }} />{" "}
+                <Image
+                  src="/pickle.png"
+                  alt=""
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{width: "20px",height: "auto",}}
+                />
+                {" "}
                 {t("info.picklePrice")}
               </h2>
               <DataPoint>
@@ -436,9 +413,9 @@ export default function Brining() {
               </Card.Footer>
             </Card>
           </Grid>
-        </Grid>
+        </PickleHeaderGrid>
         <h1>{t("info.farms")}</h1>
-        <TableContainer component={Paper} className={classes.farmTable}>
+        <FarmTableContainer component={Paper} className={classes.farmTable}>
           <Table>
             <FarmHeader />
             <TableBody>
@@ -462,9 +439,9 @@ export default function Brining() {
               </TableRow>
             </TableBody>
           </Table>
-        </TableContainer>
+        </FarmTableContainer>
         <h1>{t("info.jars")}</h1>
-        <TableContainer component={Paper} className={classes.farmTable}>
+        <FarmTableContainer component={Paper} className={classes.farmTable}>
           <Table>
             <FarmHeader isFarm={false} />
             <TableBody>
@@ -499,7 +476,7 @@ export default function Brining() {
               )}
             </TableBody>
           </Table>
-        </TableContainer>
+        </FarmTableContainer>
         <Footer />
       </Page>
     </>

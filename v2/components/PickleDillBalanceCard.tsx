@@ -50,7 +50,7 @@ const DillBalanceCard: FC = () => {
               src="/pickle-icon.svg"
               width={48}
               height={48}
-              layout="intrinsic"
+              // layout="intrinsic"
               alt="Pickle Finance"
               title="Pickle Finance"
             />
@@ -70,7 +70,7 @@ const DillBalanceCard: FC = () => {
               src="/dill-icon.png"
               width={48}
               height={48}
-              layout="intrinsic"
+              // layout="intrinsic"
               alt="Pickle Finance"
               title="Pickle Finance"
             />
@@ -86,7 +86,7 @@ const DillBalanceCard: FC = () => {
               src="/pickle-icon.svg"
               width={48}
               height={48}
-              layout="intrinsic"
+              // layout="intrinsic"
               alt="Pickle Finance"
               title="Pickle Finance"
             />

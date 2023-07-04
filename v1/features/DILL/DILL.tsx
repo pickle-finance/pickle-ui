@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Spacer } from "@geist-ui/react";
+import { Spacer } from "@geist-ui/core";
 
 import { Balances } from "./Balances";
 import { Interaction } from "./Interaction";

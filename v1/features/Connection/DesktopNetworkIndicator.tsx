@@ -1,17 +1,18 @@
 import { FC, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import { styled } from '@mui/material/styles';
+import { keyframes } from "@mui/styled-engine";
 import Davatar from "@davatar/react";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Skeleton } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import { Connection } from "../../containers/Connection";
-import { Modal, Select, Tooltip } from "@geist-ui/react";
+import { Modal, Select, Tooltip } from "@geist-ui/core";
 import LanguageSelect from "./LanguageSelect";
 import useENS from "v1/hooks/useENS";
 import { PickleCore } from "v1/containers/Jars/usePickleCore";
 import { MiniIcon } from "v1/components/TokenIcon";
 
-const Container = styled.div`
+const Container = styled('div')`
   font-family: "Menlo", sans-serif;
   text-align: center;
 
@@ -26,7 +27,7 @@ const Container = styled.div`
   }
 `;
 
-const AddressContainer = styled.a`
+const AddressContainer = styled('a')`
   display: flex;
   flex-direction: column;
   padding: 0.5rem 1rem;
@@ -42,25 +43,25 @@ const AddressContainer = styled.a`
   }
 `;
 
-const Address = styled.div`
+const Address = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const AddressLabel = styled.div`
+const AddressLabel = styled('div')`
   color: #aaa;
   font-size: 14px;
   margin-right: 0.5rem;
 `;
 
-const Block = styled.div`
+const Block = styled('div')`
   display: flex;
   justify-content: start;
   margin-top: 6px;
 `;
 
-const BlockBox = styled.a`
+const BlockBox = styled('a')`
   display: flex;
   align-items: center;
   justify-content: start;
@@ -86,7 +87,7 @@ const pulse = keyframes`
   100% { opacity: 1; }
 `;
 
-const BlockNumber = styled.div`
+const BlockNumber = styled('div')`
   color: #5ec591;
   text-transform: capitalize;
   text-decoration: none;
@@ -94,7 +95,7 @@ const BlockNumber = styled.div`
 
 const circleSize = 6;
 
-const Circle = styled.div`
+const Circle = styled('div')`
   width: ${circleSize}px;
   height: ${circleSize}px;
   min-height: ${circleSize}px;

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "next-i18next";
 
 export interface BalancerJarTimerProps {
@@ -86,7 +86,7 @@ export const BalancerJarTimer: FC<BalancerJarTimerProps> = ({
   );
 };
 
-const StyledNotice = styled.div`
+const StyledNotice = styled('div')`
   width: "100%";
   textalign: "center";
   paddingtop: "6px";

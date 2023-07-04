@@ -1,10 +1,9 @@
 import { createContainer } from "unstated-next";
 import { ethers, Contract, BigNumber } from "ethers";
-import erc20 from "@studydefi/money-legos/erc20";
+import erc20Abi from "./ABIs/erc20.json";
 
 import { PriceIds, Prices } from "./Prices";
 import { Connection } from "./Connection";
-import { Contract as MulticallContract } from "ethers-multicall";
 
 export const addresses = {
   pickle: "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
@@ -283,9 +282,9 @@ function useSushiPairs() {
   const getPairData = async (pairAddress: string) => {
     // setup contracts
     const { a, b } = PAIR_INFO[pairAddress];
-    const tokenA = new Contract(a.address, erc20.abi, provider);
-    const tokenB = new Contract(b.address, erc20.abi, provider);
-    const pair = new Contract(pairAddress, erc20.abi, provider);
+    const tokenA = new Contract(a.address, erc20Abi, provider);
+    const tokenB = new Contract(b.address, erc20Abi, provider);
+    const pair = new Contract(pairAddress, erc20Abi, provider);
 
     const [numAInPairBN, numBInPairBN, totalSupplyBN] = await Promise.all([
       tokenA.balanceOf(pairAddress).catch(() => BigNumber.from(0)),
