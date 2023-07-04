@@ -30,7 +30,7 @@ interface DataProps {
   isZero?: boolean;
 }
 
-const Data = styled('div')<DataProps>`
+const Data = styled('div') <DataProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${(props) => (props.isZero ? "#444" : "unset")};
@@ -178,8 +178,8 @@ export const UniV3JarGaugeCollapsible: FC<{
     token0?.address.toLowerCase() === weth.toLowerCase()
       ? ethToken.token0
       : token1?.address.toLowerCase() === weth.toLowerCase()
-      ? ethToken.token1
-      : ethToken.none;
+        ? ethToken.token1
+        : ethToken.none;
 
   const depositBuilder = () => {
     if (useEth) return defaultDeposit();
@@ -188,27 +188,27 @@ export const UniV3JarGaugeCollapsible: FC<{
         case ethToken.token0:
           return jarContract
             .connect(signer)
-            [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
-              "0",
-              convertDecimals(deposit1Amount, token1?.decimals),
-              ...(isFrax ? [] : [shouldZap]),
-              {
-                value: parseEther(deposit0Amount),
-                gasLimit: 850000,
-              },
-            );
+          [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
+            "0",
+            convertDecimals(deposit1Amount, token1?.decimals),
+            ...(isFrax ? [] : [shouldZap]),
+            {
+              value: parseEther(deposit0Amount),
+              gasLimit: 850000,
+            },
+          );
         case ethToken.token1:
           return jarContract
             .connect(signer)
-            [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
-              convertDecimals(deposit0Amount, token0?.decimals),
-              "0",
-              ...(isFrax ? [] : [shouldZap]),
-              {
-                value: parseEther(deposit1Amount),
-                gasLimit: 850000,
-              },
-            );
+          [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
+            convertDecimals(deposit0Amount, token0?.decimals),
+            "0",
+            ...(isFrax ? [] : [shouldZap]),
+            {
+              value: parseEther(deposit1Amount),
+              gasLimit: 850000,
+            },
+          );
         case ethToken.none:
         default:
           return defaultDeposit();
@@ -219,12 +219,12 @@ export const UniV3JarGaugeCollapsible: FC<{
   const defaultDeposit = () =>
     jarContract
       .connect(signer)
-      [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
-        convertDecimals(deposit0Amount, token0?.decimals),
-        convertDecimals(deposit1Amount, token1?.decimals),
-        ...(isFrax ? [] : [shouldZap]),
-        { gasLimit: 850000 },
-      );
+    [`deposit(uint256,uint256${!isFrax ? ",bool" : ""})`](
+      convertDecimals(deposit0Amount, token0?.decimals),
+      convertDecimals(deposit1Amount, token1?.decimals),
+      ...(isFrax ? [] : [shouldZap]),
+      { gasLimit: 850000 },
+    );
 
   const { balance: dillBalance, totalSupply: dillSupply } = useDill();
   const { t } = useTranslation("common");
@@ -481,7 +481,7 @@ export const UniV3JarGaugeCollapsible: FC<{
             <TokenIcon
               src={
                 JAR_DEPOSIT_TOKEN_TO_ICON[
-                  depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
+                depositToken.address as keyof typeof JAR_DEPOSIT_TOKEN_TO_ICON
                 ]
               }
             />
@@ -532,8 +532,8 @@ export const UniV3JarGaugeCollapsible: FC<{
                         {totalAPY + fullApy === 0
                           ? "--%"
                           : `${formatAPY(totalAPY + pickleAPYMin)}~${formatAPY(
-                              totalAPY + pickleAPYMax,
-                            )}`}
+                            totalAPY + pickleAPYMax,
+                          )}`}
                       </span>
                       <img src="/question.svg" width="15px" style={{ marginLeft: 5 }} />
                     </div>

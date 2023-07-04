@@ -19,9 +19,10 @@ const NavbarMobile: FC = () => {
           <Link href="/" passHref>
             <Image
               src={matchingLogoSrc(theme)}
-              width={158}
-              height={60}
-              layout="responsive"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{width: "158px", height: "auto"}}
               alt="Pickle Finance Logo"
               priority
             />

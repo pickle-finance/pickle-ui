@@ -59,7 +59,7 @@ const RewardRow: FC<RewardRowPropWrapper> = ({ details }) => {
             src="/pickle-icon.svg"
             width={200}
             height={200}
-            layout="responsive"
+            // layout="responsive"
             alt="Pickle Finance"
             title="Pickle Finance"
           />

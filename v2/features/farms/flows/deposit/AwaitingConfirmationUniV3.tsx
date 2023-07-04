@@ -45,7 +45,9 @@ const AwaitingConfirmationUniV3: FC<Props> = ({
             src="/animations/working.gif"
             alt={t("v2.prompts.pleaseConfirm")}
             title={t("v2.prompts.pleaseConfirm") as string}
-            fill
+            width={0}
+            height={0}
+            style={{ width: "200px", height: "auto" }}
           />
         </div>
       </div>

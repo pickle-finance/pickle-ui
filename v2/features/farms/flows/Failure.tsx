@@ -22,7 +22,14 @@ const Failure: FC<Props> = ({ retry, txHash, chainExplorer }) => {
     <>
       <div className="flex justify-center mt-2">
         <div className="w-1/2 min-h-[200px]">
-          <Image src="/animations/failure.gif" alt={title} title={title} fill />
+          <Image
+            src="/animations/failure.gif"
+            alt={title}
+            title={title}
+            width={0}
+            height={0}
+            style={{ width: "200px", height: "auto" }}
+          />
         </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg mb-6">{title}</h2>

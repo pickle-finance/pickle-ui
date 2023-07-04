@@ -21,7 +21,14 @@ const AwaitingReceipt: FC<Props> = ({ txHash, chainExplorer }) => {
     <>
       <div className="flex justify-center my-2">
         <div className="w-1/2 min-h-[200px]">
-          <Image src="/animations/waiting.gif" alt={title} title={title} fill />
+          <Image
+            src="/animations/waiting.gif"
+            alt={title}
+            title={title}
+            width={0}
+            height={0}
+            style={{ width: "200px", height: "auto" }}
+          />
         </div>
       </div>
       <h2 className="text-foreground-alt-100 font-title text-lg my-6">{title}</h2>

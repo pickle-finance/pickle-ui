@@ -20,10 +20,10 @@ const LockTimeOptions: FC<Props> = ({ showValue = false, setLockTime, dill }) =>
     : undefined;
 
   const options = [
-    { value: 1 / 4 / 12, unit: t("v2.time.day_plural"), count: 30, weeks: 4.3 },
+    { value: 1 / 4 / 12, unit: t("v2.time.day_plural",{ count: undefined }), count: 30, weeks: 4.3 },
     { value: 1 / 4, unit: t("v2.time.year_singular"), count: 1, weeks: 52.1429 },
-    { value: 1 / 2, unit: t("v2.time.year_plural"), count: 2, weeks: 104.2858 },
-    { value: 1, unit: t("v2.time.year_plural"), count: 4, weeks: 208.5716 },
+    { value: 1 / 2, unit: t("v2.time.year_plural",{ count: undefined }), count: 2, weeks: 104.2858 },
+    { value: 1, unit: t("v2.time.year_plural",{ count: undefined }), count: 4, weeks: 208.5716 },
   ];
 
   const [option, setOption] = useState<number>(4);

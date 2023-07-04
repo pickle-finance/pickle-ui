@@ -197,9 +197,9 @@ const PerformanceCard: FC = () => {
             <div className="bg-background p-2 w-12 h-12 rounded-full mr-6">
               <Image
                 src="/pickle-icon.svg"
-                width={200}
-                height={200}
-                layout="responsive"
+                width={0}
+                height={0}
+                style={{width: "200px", height: "auto"}}
                 alt="Pickle Finance" // TODO i18n
                 title="Pickle Finance" // TODO i18n
               />

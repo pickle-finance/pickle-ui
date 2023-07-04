@@ -22,9 +22,11 @@ const LeftNavbar: FC = () => {
             <Link aria-label="Pickle Finance home" href="/" passHref>
               <Image
                 src={matchingLogoSrc(theme)}
-                width={300}
-                height={140}
-                layout="responsive"
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{width: "300px", height: "auto",}}
+                // layout="responsive"
                 alt={t("meta.titleFull")}
                 title={t("meta.titleFull") as string}
                 priority

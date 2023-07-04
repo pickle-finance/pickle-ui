@@ -31,8 +31,10 @@ const AwaitingConfirmationNoUserInput: FC<Props> = ({
           <Image
             src="/animations/working.gif"
             alt={t("v2.prompts.pleaseConfirm")}
+            width={0}
+            height={0}
+            style={{ width: "200px", height: "auto" }}
             title={t("v2.prompts.pleaseConfirm") as string}
-            fill
           />
         </div>
       </div>

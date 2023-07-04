@@ -61,7 +61,7 @@ const PicklePriceIndicator: FC = () => {
             src="/pickle-icon.svg"
             width={200}
             height={200}
-            layout="responsive"
+            // layout="responsive"
             alt="Pickle Finance"
             title="Pickle Finance"
             className="group-hover:scale-110 transition duration-300 ease-in-out"
