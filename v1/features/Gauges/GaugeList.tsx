@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { formatEther } from "ethers/lib/utils";
 import { Spacer, Grid, Checkbox, Button, Input } from "@geist-ui/core";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "tss-react/mui";
 import Switch from "@mui/material/Switch";
 import { UserGaugeData, UserGauges } from "../../containers/UserGauges";
 import { BProtocol } from "./BProtocol";
@@ -47,7 +47,21 @@ interface Weights {
   [key: string]: number;
 }
 
-export const GreenSwitch = withStyles({
+// export const GreenSwitch = withStyles({
+//   switchBase: {
+//     color: backgroundColor,
+//     "&$checked": {
+//       color: pickleGreen,
+//     },
+//     "&$checked + $track": {
+//       backgroundColor: pickleGreen,
+//     },
+//   },
+//   checked: {},
+//   track: {},
+// })(Switch);
+
+export const GreenSwitch = withStyles(Switch, {
   switchBase: {
     color: backgroundColor,
     "&$checked": {
@@ -59,7 +73,7 @@ export const GreenSwitch = withStyles({
   },
   checked: {},
   track: {},
-})(Switch);
+});
 
 export const GaugeList: FC = () => {
   const { signer, chainName } = Connection.useContainer();

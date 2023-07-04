@@ -5,7 +5,7 @@ import { Trans, useTranslation } from "next-i18next";
 import React, { useState, FC, useEffect, ReactNode } from "react";
 import { Button, Link, Input, Grid, Spacer, Tooltip, Select } from "@geist-ui/core";
 import ReactHtmlParser from "react-html-parser";
-import { withStyles } from "@mui/styles";
+import { withStyles } from "tss-react/mui";
 import Switch from "@mui/material/Switch";
 import { Connection } from "../../containers/Connection";
 import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
@@ -113,7 +113,21 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const GreenSwitch = withStyles({
+// export const GreenSwitch = withStyles({
+//   switchBase: {
+//     color: backgroundColor,
+//     "&$checked": {
+//       color: pickleGreen,
+//     },
+//     "&$checked + $track": {
+//       backgroundColor: pickleGreen,
+//     },
+//   },
+//   checked: {},
+//   track: {},
+// })(Switch);
+
+export const GreenSwitch = withStyles(Switch, {
   switchBase: {
     color: backgroundColor,
     "&$checked": {
@@ -125,7 +139,7 @@ export const GreenSwitch = withStyles({
   },
   checked: {},
   track: {},
-})(Switch);
+});
 
 export const UniV3JarGaugeCollapsible: FC<{
   jarData: UserJarData;
