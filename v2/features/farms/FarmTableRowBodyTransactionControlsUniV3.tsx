@@ -144,6 +144,8 @@ const FarmsTableRowBodyV3TransactionControls: FC<Props> = ({ jar }) => {
               rewarderType="farm"
               asset={jar}
               harvestableAmount={BigNumber.from(userTokenData?.picklePending || 0)}
+              extraHarvestableAmount1={BigNumber.from(userTokenData?.extraReward?.pending || 0)}
+              extraRewardName1={extraRewardName}
               network={jar.chain}
             />
           </div>

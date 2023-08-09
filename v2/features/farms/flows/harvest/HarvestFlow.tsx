@@ -44,6 +44,10 @@ interface Props {
   buttonSize?: ButtonSize;
   buttonType?: ButtonType;
   harvestableAmount?: BigNumber;
+  extraHarvestableAmount1?: BigNumber;
+  extraHarvestableAmount2?: BigNumber;
+  extraRewardName1?: string;
+  extraRewardName2?: string;
   claimableV1?: BigNumber;
   claimableV2?: BigNumber;
   claimableETHV2?: BigNumber;
@@ -62,6 +66,8 @@ const HarvestFlow: FC<Props> = ({
   buttonSize,
   buttonType,
   harvestableAmount,
+  extraHarvestableAmount1,
+  extraRewardName1,
   claimableV1,
   claimableV2,
   claimableETHV2,
@@ -88,13 +94,26 @@ const HarvestFlow: FC<Props> = ({
   const claimableV2Formatted = parseFloat(ethers.utils.formatEther(claimableV2 || 0));
   const claimableETHV2Formatted = parseFloat(ethers.utils.formatEther(claimableETHV2 || 0));
   const harvestableAmountFormatted = parseFloat(ethers.utils.formatEther(harvestableAmount || 0));
+  const extraHarvestableAmountFormatted1 = parseFloat(ethers.utils.formatEther(extraHarvestableAmount1 || 0));
 
-  const pendingRewardAmount =
-    rewarderType === "farm" || rewarderType === "brinery"
-      ? harvestableAmountFormatted
-      : claimableV1Formatted > 0
+  let pendingRewardAmount: number;
+  let pendingExtraReward1 = 0;
+  switch (rewarderType) {
+    case "farm":
+      pendingRewardAmount = harvestableAmountFormatted;
+      pendingExtraReward1 = extraHarvestableAmountFormatted1;
+      break;
+
+    case "brinery":
+      pendingRewardAmount = harvestableAmountFormatted;
+      break;
+  
+    default:
+      pendingRewardAmount = claimableV1Formatted > 0
       ? claimableV1Formatted
       : claimableV2Formatted;
+      break;
+  }
 
   const isEthClaimable =
     rewarderType === "dill" && claimableV1Formatted === 0 && claimableETHV2Formatted > 0;
@@ -235,7 +254,7 @@ const HarvestFlow: FC<Props> = ({
         <Button
           type={buttonType}
           size={buttonSize}
-          state={pendingRewardAmount + claimableETHV2Formatted > 0 ? "enabled" : "disabled"}
+          state={pendingRewardAmount + pendingExtraReward1 + claimableETHV2Formatted > 0 ? "enabled" : "disabled"}
           onClick={openModal}
         >
           {t("v2.farms.harvest")}
@@ -254,6 +273,13 @@ const HarvestFlow: FC<Props> = ({
                           claimableETHV2Formatted,
                           3,
                         )} ETH`
+                      : ""
+                  } ${
+                    pendingExtraReward1
+                      ? ` ${t("v2.dill.and")} ${roundToSignificantDigits(
+                          pendingExtraReward1,
+                          3
+                        )} ${extraRewardName1?.toUpperCase()}`
                       : ""
                   }`}
                 </span>
