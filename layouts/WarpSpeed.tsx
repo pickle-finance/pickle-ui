@@ -19,6 +19,7 @@ import BlockNumber from "v2/features/connection/BlockNumber";
 import UserBalanceStatus from "v2/features/connection/UserBalancesStatus";
 import Confetti from "v2/components/Confetti";
 import ErrorBoundary from "v2/components/ErrorBoundary";
+import ClaimBanner from "v2/components/ClaimBanner";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -54,7 +55,7 @@ const WarpSpeed: FC<Props> = ({ Component, pageProps }) => {
           <div className="px-4 py-2 sm:px-10 sm:py-10 text-foreground">
             <TopNavbar PageTitle={PageTitle} />
             <ConnectionStatus />
-            <V1LinkCard />
+            <ClaimBanner />
             <ErrorBoundary key={asPath}>
               <Component {...pageProps} />
             </ErrorBoundary>
