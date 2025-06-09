@@ -8,6 +8,7 @@ import {
   StarIcon,
   TemplateIcon,
   UserGroupIcon,
+  CashIcon,
 } from "@heroicons/react/solid";
 import { useTranslation } from "next-i18next";
 
@@ -21,24 +22,25 @@ const NavItems: FC<Props> = ({ onClick }) => {
   const { t } = useTranslation("common");
 
   const navigation = [
-    { name: t("v2.nav.dashboard"), href: "/", icon: TemplateIcon },
+    { name: t("nav.dashboard"), href: "/", icon: TemplateIcon },
     {
-      name: t("v2.nav.jarsAndFarms"),
+      name: t("nav.jarsAndFarms"),
       href: "/farms",
       icon: LightningBoltIcon,
     },
-    { name: t("v2.nav.dill"), href: "/dill", icon: UserGroupIcon },
-    { name: t("v2.nav.vote"), href: "/vote", icon: StarIcon },
-    { name: t("v2.nav.brinery"), href: "/brinery", icon: HeartIcon },
-    { name: t("v2.nav.stats"), href: "/stats", icon: ChartBarIcon },
+    { name: t("nav.dill"), href: "/dill", icon: UserGroupIcon },
+    { name: t("nav.vote"), href: "/vote", icon: StarIcon },
+    { name: t("nav.brinery"), href: "/brinery", icon: HeartIcon },
+    { name: t("nav.stats"), href: "/stats", icon: ChartBarIcon },
+    { name: t("nav.claim"), href: "/claim", icon: CashIcon },
     {
-      name: t("v2.nav.docs"),
+      name: t("nav.docs"),
       href: "https://docs.pickle.finance/",
       icon: AcademicCapIcon,
       external: true,
     },
     {
-      name: t("v2.nav.feedback"),
+      name: t("nav.feedback"),
       href: "https://forum.pickle.finance/",
       icon: SpeakerphoneIcon,
       external: true,

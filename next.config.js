@@ -25,7 +25,7 @@ const moduleExports = {
     Fortmatic: "pk_live_3754096A894BEFE4",
     Portis: "8f879477-6443-4f75-8e94-b44aee86a9f7",
     apiChain: "https://api.pickle.finance/prod/protocol/analytics/chain",
-    apiHost: "https://api.pickle.finance/prod",
+    apiHost: "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod",
     apiJar: "https://api.pickle.finance/prod/protocol/analytics/jar",
     apiPlatform: "https://api.pickle.finance/prod/protocol/analytics/platform/en",
   },

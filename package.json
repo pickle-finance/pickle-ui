@@ -10,7 +10,7 @@
   },
   "scripts": {
     "analyze": "ANALYZE=true next build",
-    "dev": "yarn typechain && next",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider yarn typechain && next",
     "build": "yarn typechain && next build",
     "start": "yarn typechain && next start",
     "format": "prettier --write \"./**/*.{json,js,jsx,ts,tsx}\" --ignore-path .gitignore",
