@@ -30,7 +30,7 @@ const ERC20_ABI = [
 // Configuration
 const CONFIG = {
   chainId: 1, // Ethereum Mainnet
-  contractAddress: "0x34397E25dE78931efDd48fa8EC9330217A2EB344", // Test distribution contract
+  contractAddress: "0x63a9Fd263688BB3B7c79305cdD5D91Fb064D7865", 
   distributionDataUrl: "/distribution.json", // URL to fetch distribution data
   tokenDecimals: 6, // USDC has 6 decimals
   etherscanBaseUrl: "https://etherscan.io/tx/", // Base URL for Etherscan transactions
