@@ -297,8 +297,8 @@ const Claim: NextPage = () => {
                     to PICKLE and DILL token holders.
                   </li>
                   <li>
-                    Please withdraw all funds from Pickle Jars before September, 2025, as the the
-                    frontend will be shut down.
+                    Please withdraw all funds from Pickle Jars{" "}
+                    <strong>before September, 2025</strong>, as the the frontend will be shut down.
                   </li>
                 </ul>
                 <p>
