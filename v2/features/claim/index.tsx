@@ -6,10 +6,10 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { CashIcon } from "@heroicons/react/solid";
 
-import Button from "v2/components/Button";
 import { CoreSelectors } from "v2/store/core";
 import { useAppSelector } from "v2/store";
 import ClaimModal from "./components/ClaimModal";
+import Link from "v2/components/Link";
 
 // Contract ABI for the PickleDistribution contract
 const CONTRACT_ABI = [
@@ -175,18 +175,8 @@ const Claim: NextPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <div className="flex items-center space-x-1">
-          <CashIcon className="w-8 h-8 text-accent" />
-          <h1 className="font-title font-medium text-2xl">{t("nav.claim")}</h1>
-        </div>
-        <p className="font-body text-sm text-foreground-alt-200 mt-1">
-          Pickle Finance is sunsetting. PICKLE and DILL holders can claim USDC from the treasury.
-        </p>
-      </div>
-
       <div className="mt-8 grid gap-8 md:grid-cols-1 lg:grid-cols-2">
-        <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow">
+        <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow w-full">
           <div className="px-6 py-4 border-b border-foreground-alt-500">
             <div className="flex justify-between items-center">
               <h2 className="font-title font-medium text-xl">Claim Your USDC</h2>
@@ -279,7 +269,7 @@ const Claim: NextPage = () => {
           </div>
         </div>
 
-        <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow">
+        <div className="bg-background-light rounded-xl border border-foreground-alt-500 shadow w-full">
           <div className="px-6 py-4 border-b border-foreground-alt-500">
             <h2 className="font-title font-medium text-xl">Sunset Information</h2>
           </div>
@@ -299,19 +289,30 @@ const Claim: NextPage = () => {
               <div className="text-md text-foreground-alt-200">
                 <p className="mb-2">After almost 5 years, Pickle Finance is shutting down.</p>
                 <p className="mb-2">
-                  All remaining treasury funds (170,280 USDC) will be distributed proportionally to
-                  PICKLE and DILL token holders.
-                </p>
-                <p className="mb-2">
-                  <strong>Important dates:</strong>
+                  <strong>Important information:</strong>
                 </p>
                 <ul className="list-disc pl-4 mb-2 space-y-1">
-                  <li>June 1, 2025: Snapshot of token balances</li>
-                  <li>June 15, 2025: Distribution claim site goes live</li>
-                  <li>July 1, 2025: All protocol features disabled</li>
-                  <li>December 15, 2025: Last day to claim distribution</li>
+                  <li>
+                    All remaining treasury funds (170,280 USDC) will be distributed proportionally
+                    to PICKLE and DILL token holders.
+                  </li>
+                  <li>
+                    Please withdraw all funds from Pickle Jars before September, 2025, as the the
+                    frontend will be shut down.
+                  </li>
                 </ul>
-                <p>Please withdraw all funds from Pickle jars before July 1, 2025.</p>
+                <p>
+                  See this{" "}
+                  <Link
+                    primary
+                    external
+                    className="font-bold"
+                    href="https://medium.com/@picklefinance/pickle-finance-sunset-information-642554500000"
+                  >
+                    Blog Post
+                  </Link>{" "}
+                  for more information.
+                </p>
               </div>
             </div>
           </div>

@@ -50,7 +50,8 @@
       "moonbeam": "Moonbeam",
       "optimism": "Optimism",
       "fantom": "Fantom",
-      "gnosis": "Gnosis"
+      "gnosis": "Gnosis",
+      "kava": "Kava"
     },
     "switchPrompt": "Please switch to {{ network }} Network",
     "walletConnect": "Wallet Connect",
@@ -275,20 +276,21 @@
     "titleFull": "Pickle Finance — The Future of Finance is Green"
   },
   "nav": {
-    "brinery": "Brinery",
-    "claim": "Claim",
-    "close": "Close panel",
-    "dashboard": "Dashboard",
-    "dill": "DILL",
+    "dill": "Dill",
+    "discord": "Discord",
     "docs": "Docs",
     "feedback": "Feedback",
+    "forum": "Forum",
+    "frax": "Brinery",
+    "github": "Github",
+    "info": "Info",
+    "jars": "Jars",
     "jarsAndFarms": "Jars & Farms",
-    "networkSettings": "Network settings",
-    "next": "Next",
-    "openMenu": "Open main menu",
-    "previous": "Prev",
+    "medium": "Medium",
+    "pickleEth": "PICKLE-ETH",
+    "profit": "Profit",
     "stats": "Stats",
-    "swap": "Swap",
+    "twitter": "Twitter",
     "vote": "Vote"
   },
   "oldFarms": {
@@ -322,15 +324,18 @@
       "back": "Back",
       "close": "Close",
       "confirm": "Confirm",
+      "confirmZap": "Confirm Zap",
       "deposit": "Deposit",
       "enable": "Enable",
       "harvest": "Harvest",
       "harvestAndExit": "Harvest and exit",
       "lock": "Lock",
       "retry": "Retry",
+      "poweredBy": "Powered by Wido",
       "stake": "Stake",
       "unstake": "Unstake",
-      "withdraw": "Withdraw"
+      "withdraw": "Withdraw",
+      "zap": "Zap"
     },
     "balances": {
       "amount": "Amount",
@@ -541,6 +546,7 @@
       "statsAndDocs": "Stats & Docs",
       "strategyAddress": "Strategy Address",
       "success": "Success!",
+      "tag": "Tags",
       "token": "Token",
       "tokens": "{{ amount }} Tokens",
       "tokensDeposited": "You have <1>{{ amount }}</1> pTokens",
@@ -571,6 +577,26 @@
       "fast": "Fast",
       "slow": "Slow",
       "standard": "Standard"
+    },
+    "misc": {
+      "coinGeckoAttribution": "Prices data powered by CoinGecko"
+    },
+    "nav": {
+      "brinery": "Brinery",
+      "claim": "Claim",
+      "close": "Close panel",
+      "dashboard": "Dashboard",
+      "dill": "DILL",
+      "docs": "Docs",
+      "feedback": "Feedback",
+      "jarsAndFarms": "Jars & Farms",
+      "networkSettings": "Network settings",
+      "next": "Next",
+      "openMenu": "Open main menu",
+      "previous": "Prev",
+      "stats": "Stats",
+      "swap": "Swap",
+      "vote": "Vote"
     },
     "prompts": {
       "pleaseConfirm": "Please confirm the transaction",
