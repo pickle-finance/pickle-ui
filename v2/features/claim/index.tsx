@@ -297,6 +297,10 @@ const Claim: NextPage = () => {
                     to PICKLE and DILL token holders.
                   </li>
                   <li>
+                    Only users with a PICKLE (could be locked in DILL) <strong>balance > 300</strong>{" "}
+                    are eligible.
+                  </li>
+                  <li>
                     Please withdraw all funds from Pickle Jars{" "}
                     <strong>before September, 2025</strong>, as the the frontend will be shut down.
                   </li>
