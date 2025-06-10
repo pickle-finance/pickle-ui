@@ -158,8 +158,12 @@ const ClaimModal: FC<ClaimModalProps> = ({ isOpen, closeModal, claimData, onClai
     content = (
       <div className="flex flex-col items-center text-center">
         <img src="/animations/failure.gif" width={120} height={120} alt="Pickle Error" />
-        <h2 className="mt-4 mb-2 text-lg font-bold text-error">{t("v2.claim.error", "Error")}</h2>
-        <div className="mb-4 text-error text-lg font-medium">{errorMessage}</div>
+        <h2 className="mt-4 mb-2 text-lg font-bold text-foreground-alt-100">
+          {t("v2.claim.error", "Error")}
+        </h2>
+        <div className="mb-4 font-mono text-foreground-alt-200 text-lg font-medium">
+          {errorMessage}
+        </div>
         <button
           className="p-3 rounded-xl bg-accent text-foreground-button font-bold w-full mt-6"
           onClick={resetAndClose}
