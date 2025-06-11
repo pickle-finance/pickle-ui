@@ -21,7 +21,7 @@ const ClaimBanner: VFC = () => {
             Claim your share now
           </Link>
           <br />
-          <br /> The frontend will be unavailable in 2 months. Please{" "}
+          <br /> The frontend will be unavailable starting October, 2025. Please{" "}
           <Link href="/farms" primary className="font-bold mx-1">
             withdraw your funds
           </Link>

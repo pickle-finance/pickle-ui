@@ -302,7 +302,7 @@ const Claim: NextPage = () => {
                   </li>
                   <li>
                     Please withdraw all funds from Pickle Jars{" "}
-                    <strong>before September, 2025</strong>, as the the frontend will be shut down.
+                    <strong>before October, 2025</strong>, as the the frontend will be shut down.
                   </li>
                 </ul>
                 <p>
@@ -311,7 +311,7 @@ const Claim: NextPage = () => {
                     primary
                     external
                     className="font-bold"
-                    href="https://medium.com/@picklefinance/pickle-finance-sunset-information-642554500000"
+                    href="https://picklefinance.medium.com/pickle-finance-closing-the-jar-7996fe4ecd94"
                   >
                     Blog Post
                   </Link>{" "}
