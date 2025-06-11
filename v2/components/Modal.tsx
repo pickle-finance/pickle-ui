@@ -12,6 +12,7 @@ interface Props {
   title: string;
   size?: "normal" | "wide" | "xl";
   footer?: ReactElement;
+  children?: React.ReactNode;
 }
 
 const Modal: FC<Props> = ({ isOpen, closeModal, title, children, footer, size = "normal" }) => {

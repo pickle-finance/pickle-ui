@@ -1,6 +1,7 @@
 import { FC, MouseEventHandler } from "react";
 import {
   AcademicCapIcon,
+  CashIcon,
   ChartBarIcon,
   HeartIcon,
   LightningBoltIcon,
@@ -31,6 +32,7 @@ const NavItems: FC<Props> = ({ onClick }) => {
     { name: t("v2.nav.vote"), href: "/vote", icon: StarIcon },
     { name: t("v2.nav.brinery"), href: "/brinery", icon: HeartIcon },
     { name: t("v2.nav.stats"), href: "/stats", icon: ChartBarIcon },
+    { name: t("v2.nav.claim"), href: "/claim", icon: CashIcon },
     {
       name: t("v2.nav.docs"),
       href: "https://docs.pickle.finance/",

@@ -30,10 +30,12 @@ const moduleExports = {
     // apiHost: "https://api.pickle.finance/prod",
     // apiJar: "https://api.pickle.finance/prod/protocol/analytics/jar",
     // apiPlatform: "https://api.pickle.finance/prod/protocol/analytics/platform/en",
-    apiChain: "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/chain",
+    apiChain:
+      "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/chain",
     apiHost: "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod",
     apiJar: "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/jar",
-    apiPlatform: "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/platform/en",
+    apiPlatform:
+      "https://f8wgg18t1h.execute-api.us-west-1.amazonaws.com/prod/protocol/analytics/platform/en",
   },
   i18n,
   async rewrites() {
